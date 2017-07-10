@@ -155,6 +155,7 @@ function googleTranslate(content,tolan,callback){
     agent:agent,
     path: '/language/translate/v2?key='+gkey+'&q='+encodeURIComponent(content)+'&target='+tolan
   };
+  console.log(option);
   var req = https.request(option, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
