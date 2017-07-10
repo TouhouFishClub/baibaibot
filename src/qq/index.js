@@ -113,7 +113,7 @@ class QQ {
             } while (!scanSuccess);
             log.info('(2/5) 二维码扫描完成');
             // remove file, for linux(or macOS ?)
-            childProcess.exec(`rm ${qrcodePath}`);
+            // childProcess.exec(`rm ${qrcodePath}`);
 
             // Step3: find token 'vfwebqq' in cookie
             // NOTICE: the request returns 302 when success. DO NOT REJECT 302.
