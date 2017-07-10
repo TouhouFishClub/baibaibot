@@ -153,7 +153,7 @@ function googleTranslate(content,tolan,callback){
     port: 443,
     method: 'GET',
     agent:agent,
-    path: '/language/translate/v2?key='+gkey+'&q='+encodeURIComponent(content)+'&target='+tolan
+    path: '/language/translate/v2?key='+encodeURIComponent(gkey.trim())+'&q='+encodeURIComponent(content)+'&target='+tolan
   };
   console.log(option);
   var req = https.request(option, function(res) {
