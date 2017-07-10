@@ -155,7 +155,6 @@ function googleTranslate(content,tolan,callback){
     agent:agent,
     path: '/language/translate/v2?key='+encodeURIComponent(gkey.trim())+'&q='+encodeURIComponent(content)+'&target='+tolan
   };
-  console.log(option);
   var req = https.request(option, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
@@ -164,6 +163,7 @@ function googleTranslate(content,tolan,callback){
     });
     res.on('end', function () {
       var data=eval("("+resdata+")");
+      console.log(data);
       var ret = '';
       try{
         ret = data.data.translations[0].translatedText;
