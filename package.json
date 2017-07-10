@@ -1,0 +1,29 @@
+{
+  "name": "qqbot",
+  "version": "0.1.5",
+  "description": "Web QQ client using es7 syntax",
+  "engines": {
+    "node": ">=7.6.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "qq",
+    "qqbot",
+    "webqq",
+    "smartqq"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.16.1",
+    "cookie": "^0.3.1",
+    "log": "^1.4.0",
+    "express": "~4.14.0",
+    "express-ws": ""
+  },
+  "devDependencies": {
+    "@types/cookie": "^0.3.0"
+  }
+}
