@@ -231,6 +231,7 @@ function weatherReply(city,userId,callback){
 
 
 function baikeReply(word,userId,callback){
+  word = word.trim();
   if(word.length>20){
     callback(word+'是什么好吃的？');
     return;
@@ -250,9 +251,10 @@ function baikeReply(word,userId,callback){
         ret=ret+s1[i];
       }
     }
-    if(ret.length>200){
-      ret = ret.substring(0,200)+'.......';
+    if(ret.length>250){
+      ret = ret.substring(0,250)+'.......';
     }
+    ret = ret.replace(/&nbsp/g,'').replace(/\[[0-9]\]/g,'');
     callback(ret.trim());
   },0);
 }
