@@ -237,7 +237,7 @@ function baikeReply(word,userId,callback){
     path: '/item/'+word,
     method: 'GET'
   };
-  var req = https.request(options, function(res) {
+  var req = http.request(options, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
     res.on('data', function (chunk) {
