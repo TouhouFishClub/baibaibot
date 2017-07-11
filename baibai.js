@@ -234,7 +234,7 @@ function baikeReply(word,userId,callback){
   var options = {
     hostname: 'baike.baidu.com',
     port: 80,
-    path: '/item/'+word,
+    path: '/item/'+encodeURIComponent(word),
     method: 'GET'
   };
   var req = http.request(options, function(res) {
