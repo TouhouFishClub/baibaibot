@@ -31,7 +31,7 @@ function handleGroupMsg(msg,qq){
     }
     var c1 = content.substring(1);
     if(c1==""){
-      var ret = "`1+名词=百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n天气预报：城市名+天气\n虾扯蛋：``+对话\n";
+      var ret = "`1+名词：百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n天气预报：城市名+天气\n虾扯蛋：``+对话\n";
       callback(ret);
     }else{
       reply(c1,name,callback);
@@ -254,7 +254,7 @@ function baikeReply(word,userId,callback){
     if(ret.length>250){
       ret = ret.substring(0,250)+'.......';
     }
-    ret = ret.replace(/&nbsp/g,'').replace(/\[[0-9]\]/g,'');
+    ret = ret.replace(/&nbsp;/g,'').replace(/\[[0-9]\]/g,'');
     callback(ret.trim());
   },0);
 }
