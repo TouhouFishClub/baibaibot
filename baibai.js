@@ -250,8 +250,8 @@ function baikeReply(word,userId,callback){
         ret=ret+s1[i];
       }
     }
-    if(ret.length>300){
-      ret = ret.substring(0,300)+'.......';
+    if(ret.length>200){
+      ret = ret.substring(0,200)+'.......';
     }
     callback(ret.trim());
   },0);
