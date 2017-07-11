@@ -56,6 +56,8 @@ function reply(content,userName,callback){
     translateMsg(content.substring(1),'ja',callback);
   }else if(first==3){
     translateMsg(content.substring(1),'en',callback);
+  }else if(first==1){
+    baikeReply(content.substring(1),userName,callback);
   }else{
     translateMsg(content,'zh-CHS',callback)
   }
@@ -226,5 +228,45 @@ function weatherReply(city,userId,callback){
   });
   req.end();
 }
+
+
+function baikeReply(word,userId,callback){
+  var options = {
+    hostname: 'baike.baidu.com',
+    port: 80,
+    path: '/item/'+word,
+    method: 'GET'
+  };
+  var req = https.request(options, function(res) {
+    res.setEncoding('utf8');
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+    res.on('end', function () {
+      console.log(resdata);
+      var n1 = resdata.indexOf('lemma-summary');
+      var n2 = resdata.indexOf('basic-info');
+      var s1 = resdata.substring(n1,n2);
+      var ret = '';
+      var isinner=0;
+      for(var i=0;i<s1.length;i++){
+        if(isinner==0&&s1[i]==">"){
+          isinner=1;
+        }else if(isinner==1&&s1[i]=="<"){
+          isinner=0;
+        }
+        if(isinner){
+          ret=ret+s1[i];
+        }
+      }
+      console.log(ret);
+      callback(ret);
+    });
+  });
+  req.end();
+}
+
+
 
 
