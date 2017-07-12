@@ -5,6 +5,8 @@ var tls = require('tls');
 
 const { QQ, MsgHandler } = require('./qqlib');
 
+const{saveTxt,answer} = require('./lib/mongo');
+
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
         qq.sendBuddyMsg(msg.id, `Hello ${msg.name}`);
@@ -45,7 +47,20 @@ function handleGroupMsg(msg,qq){
       qq.sendGroupMsg(groupid," "+res);
     }
     weatherReply(city,name,callback);
+    return;
   }
+
+  var callback = function(res){
+    qq.sendGroupMsg(groupid," "+res);
+  }
+
+  var ca = content.split('|');
+  if(ca.length==2){
+    saveTxt(ca[0],ca[1],callback);
+    return;
+  }
+
+  answer(content,callback);
 }
 
 function reply(content,userName,callback){
