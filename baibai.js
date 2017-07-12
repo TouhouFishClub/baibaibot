@@ -58,12 +58,12 @@ function handleGroupMsg(msg,qq){
   var ca = content.split('|');
   if(ca.length==2){
     if(ca[0].length<50){
-      saveTxt(ca[0],ca[1],callback);
+      saveTxt(ca[0],ca[1],name,callback);
       return;
     }
   }
 
-  answer(content,callback);
+  answer(content,name,callback);
 }
 
 function reply(content,userName,callback){
