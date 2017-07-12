@@ -33,7 +33,8 @@ function handleGroupMsg(msg,qq){
     }
     var c1 = content.substring(1);
     if(c1==""){
-      var ret = "`1+名词：百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n天气预报：城市名+天气\n虾扯蛋：``+对话\n";
+      var ret = "`1+名词：百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n"
+      ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n虾扯蛋：``+对话\n";
       callback(ret);
     }else{
       reply(c1,name,callback);
