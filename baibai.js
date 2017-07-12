@@ -57,8 +57,10 @@ function handleGroupMsg(msg,qq){
 
   var ca = content.split('|');
   if(ca.length==2){
-    saveTxt(ca[0],ca[1],callback);
-    return;
+    if(ca[0].length<50){
+      saveTxt(ca[0],ca[1],callback);
+      return;
+    }
   }
 
   answer(content,callback);
