@@ -52,9 +52,6 @@ function handleGroupMsg(msg,qq){
   var n = content.indexOf('天气');
   if(n>1&&n<5){
     var city = content.substring(0,n);
-    var callback = function(res){
-      qq.sendGroupMsg(groupid," "+res);
-    }
     weatherReply(city,name,callback);
     return;
   }
