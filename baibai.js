@@ -26,7 +26,8 @@ function handleGroupMsg(msg,qq){
   var groupid = msg.groupId;
   var content = msg.content;
   var name = msg.name;
-  if(name.indexOf('百百')){
+  if(name.indexOf('百百')>=0){
+    console.log(msg);
     return;
   }
   var first = content.substring(0,1);
