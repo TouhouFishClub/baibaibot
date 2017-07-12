@@ -26,15 +26,19 @@ function handleGroupMsg(msg,qq){
   var groupid = msg.groupId;
   var content = msg.content;
   var name = msg.name;
-  console.log(msg);
+  var groupName = msg.groupName;
   if(name&&name.indexOf('百百')>=0){
     return;
   }
+  var callback = function(res){
+    setTimeout(function(){
+      console.log('will send:');
+      qq.sendGroupMsg(groupid," "+res);
+    },1000);
+  }
   var first = content.substring(0,1);
   if(first=='`'||first=='·'||first=='ˋ'){
-    var callback = function(res){
-      qq.sendGroupMsg(groupid," "+res);
-    }
+
     var c1 = content.substring(1);
     if(c1==""){
       var ret = "`1+名词：百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n"
@@ -54,20 +58,15 @@ function handleGroupMsg(msg,qq){
     weatherReply(city,name,callback);
     return;
   }
-
-  var callback = function(res){
-    qq.sendGroupMsg(groupid," "+res);
-  }
-
   var ca = content.split('|');
   if(ca.length==2){
     if(ca[0].length<50){
-      saveTxt(ca[0],ca[1],name,callback);
+      saveTxt(ca[0],ca[1],name,groupName,callback);
       return;
     }
   }
 
-  answer(content,name,callback);
+  answer(content,name,groupName,callback);
 }
 
 function reply(content,userName,callback){
