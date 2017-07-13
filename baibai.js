@@ -25,6 +25,7 @@ new QQ(buddyHandler, groupHandler).run();
 function handleBuddyMsg(msg,qq){
   var name = msg.name;
   var content = msg.content;
+  var id = msg.id;
   var callback = function(res){
     setTimeout(function(){
       if(Math.random()<0.2){
