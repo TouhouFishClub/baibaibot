@@ -9,7 +9,8 @@ const{saveTxt,answer} = require('./lib/mongo');
 
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
-        qq.sendBuddyMsg(msg.id, `Hello ${msg.name}`);
+        console.log(msg);
+        qq.sendBuddyMsg(msg.id, 'baka');
     },
     'buddy'
 );
