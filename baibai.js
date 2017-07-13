@@ -134,20 +134,25 @@ function translateMsg(content,tolan,callback){
         method: 'GET',
       };
       var req = http.request(options, function (res) {
-        res.setEncoding('utf8');
-        var resdata = '';
-        res.on('data', function (chunk) {
-          resdata = resdata + chunk;
-        });
-        res.on('end', function () {
-          var data = eval("("+resdata+")");
-          var ret = data.data?(data.data.definition?data.data.definition:''):'';
-          if(ret!=''){
-            callback(content+"\n"+ret);
-          }else{
-            googleTranslate(content,'zh',callback);
-          }
-        });
+        var code = res.statusCode;
+        if(code==200){
+          res.setEncoding('utf8');
+          var resdata = '';
+          res.on('data', function (chunk) {
+            resdata = resdata + chunk;
+          });
+          res.on('end', function () {
+            var data = eval("("+resdata+")");
+            var ret = data.data?(data.data.definition?data.data.definition:''):'';
+            if(ret!=''){
+              callback(content+"\n"+ret);
+            }else{
+              googleTranslate(content,'zh',callback);
+            }
+          });
+        }else{
+          googleTranslate(content,'zh',callback);
+        }
       });
       req.end();
     }
