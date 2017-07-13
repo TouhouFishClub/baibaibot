@@ -318,13 +318,23 @@ class QQ {
                 break;
             }
         }
-        console.log(group.info.minfo);
+        const members = group.info.minfo
+        if(members){
+            for(let i=0;i<members.length;i++){
+                if(uin==members[i].uid){
+                  this.groupNameMap.set(nameKey, members[i].nick);
+                  return members[i].nick;
+                }
+            }
+        }
+        /*
         if(!group.info.cards){
             group.info.cards=[];
         }
         group.info.cards.some(i => i.muin == uin ? name = i.card : false);
         if (!name) group.info.minfo.some(i => i.uin == uin ? name = i.nick : false);
         this.groupNameMap.set(nameKey, name);
+        */
         return name;
     }
 
