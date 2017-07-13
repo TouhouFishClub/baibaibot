@@ -357,6 +357,7 @@ class QQ {
         const content = msg.result[0].value.content.filter(e => typeof e == 'string').join(' ');
         const { from_uin, send_uin } = msg.result[0].value;
         let msgParsed = { content };
+        console.log(msg);
         switch (msg.result[0].poll_type) {
             case 'message':
                 msgParsed.type = 'buddy';
