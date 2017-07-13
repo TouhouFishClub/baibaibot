@@ -155,6 +155,8 @@ function translateMsg(content,tolan,callback){
         }
       });
       req.end();
+    }else{
+      googleTranslate(content,'zh',callback);
     }
   }else if(tolan=='ja'||tolan=='en'){
     googleTranslate(content,tolan,callback);
