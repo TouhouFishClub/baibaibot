@@ -52,7 +52,7 @@ function handleGroupMsg(msg,qq){
   var content = msg.content;
   var name = msg.name;
   var groupName = msg.groupName;
-  if(name&&name.indexOf('百百')>=0){
+  if(checkSelf(msg)){
     return;
   }
   var callback = function(res){
