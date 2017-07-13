@@ -321,7 +321,7 @@ class QQ {
         const members = group.info.minfo
         if(members){
             for(let i=0;i<members.length;i++){
-                if(uin==members[i].uid){
+                if(uin==members[i].uin){
                   this.groupNameMap.set(nameKey, members[i].nick);
                   return members[i].nick;
                 }
