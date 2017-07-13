@@ -43,7 +43,6 @@ function handleGroupMsg(msg,qq){
   }
   var callback = function(res){
     setTimeout(function(){
-      lastmsg[groupName] = " "+res;
       qq.sendGroupMsg(groupid," "+res);
     },1000);
   }
