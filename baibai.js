@@ -9,8 +9,7 @@ const{saveTxt,answer} = require('./lib/mongo');
 
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
-        console.log(msg);
-        qq.sendBuddyMsg(msg.id, 'baka');
+      handleBuddyMsg(msg,qq);
     },
     'buddy'
 );
@@ -22,6 +21,17 @@ const groupHandler = new MsgHandler(
 );
 
 new QQ(buddyHandler, groupHandler).run();
+
+function handleBuddyMsg(msg,qq){
+  var name = msg.name;
+  var id = msg.id;
+  var content = msg.content;
+  qq.sendBuddyMsg(id, 'baka'+name+':'+content+'喵');
+}
+
+
+
+
 
 
 function checkSelf(msg){
