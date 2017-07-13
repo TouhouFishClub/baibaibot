@@ -200,6 +200,7 @@ class QQ {
 
     getGroup() {
         log.info('开始获取群列表');
+        console.log(this.tokens);
         return this.client.post({
             url: URL.getGroup,
             headers: {
