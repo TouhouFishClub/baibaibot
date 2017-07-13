@@ -318,6 +318,7 @@ class QQ {
                 break;
             }
         }
+        console.log(group);
         if(!group.info.cards){
             group.info.cards=[];
         }
