@@ -200,7 +200,6 @@ class QQ {
 
     getGroup() {
         log.info('开始获取群列表');
-        console.log(this.tokens);
         return this.client.post({
             url: URL.getGroup,
             headers: {
@@ -320,8 +319,6 @@ class QQ {
             }
         }
         const members = group.info.minfo
-        console.log(group.info);
-        console.log(members);
         if(members){
             for(let i=0;i<members.length;i++){
                 if(uin==members[i].uin){
@@ -358,7 +355,6 @@ class QQ {
 
     handelMsgRecv(msg) {
         const content = msg.result[0].value.content.filter(e => typeof e == 'string').join(' ');
-        console.log(msg.result[0].value);
         const { from_uin, send_uin } = msg.result[0].value;
         let msgParsed = { content };
         switch (msg.result[0].poll_type) {
