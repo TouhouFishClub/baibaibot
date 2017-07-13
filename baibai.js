@@ -22,6 +22,31 @@ const groupHandler = new MsgHandler(
 
 new QQ(buddyHandler, groupHandler).run();
 
+var lastmsg = {};
+var myqqid = {};
+
+function checkSelf(msg){
+  var groupid = msg.groupId;
+  var content = msg.content;
+  var name = msg.name;
+  var groupName = msg.groupName;
+  console.log(msg);
+  console.log(lastmsg);
+  console.log(myqqid);
+  if(name&&name.indexOf('百百')>=0){
+    return true;
+  }else{
+    if(content==lastmsg[groupName]){
+      myqqid[groupName]=msg.id;
+      return true;
+    }else if(msg.id==myqqid[groupName]){
+      return true;
+    }else{
+      return false;
+    }
+  }
+}
+
 function handleGroupMsg(msg,qq){
   var groupid = msg.groupId;
   var content = msg.content;
@@ -32,7 +57,7 @@ function handleGroupMsg(msg,qq){
   }
   var callback = function(res){
     setTimeout(function(){
-      console.log('will send:');
+      lastmsg[groupName] = msg.id;
       qq.sendGroupMsg(groupid," "+res);
     },1000);
   }
