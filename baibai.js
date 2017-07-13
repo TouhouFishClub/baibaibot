@@ -61,7 +61,7 @@ function handleGroupMsg(msg,qq){
   }
   var n = content.indexOf('天气');
   if(n>1&&n<5){
-    var city = content.substring(0,n);
+    var city = content.substring(0,n).trim();
     weatherReply(city,name,callback);
     return;
   }
