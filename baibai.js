@@ -25,7 +25,6 @@ new QQ(buddyHandler, groupHandler).run();
 
 function checkSelf(msg){
   var name = msg.name;
-  console.log(msg);
   if(name&&name.indexOf('百百')>=0){
     return true;
   }else{
