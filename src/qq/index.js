@@ -357,7 +357,7 @@ class QQ {
 
     handelMsgRecv(msg) {
         const content = msg.result[0].value.content.filter(e => typeof e == 'string').join(' ');
-        console.log(msg[0].value);
+        console.log(msg.result[0].value);
         const { from_uin, send_uin } = msg.result[0].value;
         let msgParsed = { content };
         switch (msg.result[0].poll_type) {
