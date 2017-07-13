@@ -319,6 +319,8 @@ class QQ {
             }
         }
         const members = group.info.minfo
+        console.log(uin);
+        console.log(members);
         if(members){
             for(let i=0;i<members.length;i++){
                 if(uin==members[i].uin){
