@@ -34,7 +34,9 @@ function handleBuddyMsg(msg,qq){
       qq.sendBuddyMsg(id,res);
     },1000);
   }
-  tulingMsg(name,content,callback);
+  if(content.trim().length>0){
+    tulingMsg(name,content,callback);
+  }
 }
 
 
