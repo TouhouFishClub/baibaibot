@@ -17,16 +17,22 @@ const buddyHandler = new MsgHandler(
 const groupHandler = new MsgHandler(
   (msg,qq) => {
     handleGroupMsg(msg,qq)
-    }, 'group'
+  }, 'group'
 );
 
 new QQ(buddyHandler, groupHandler).run();
 
 function handleBuddyMsg(msg,qq){
   var name = msg.name;
-  var id = msg.id;
-  var content = msg.content;
-  qq.sendBuddyMsg(id, 'baka'+name+':'+content+'喵');
+  var callback = function(res){
+    setTimeout(function(){
+      if(Math.random()<0.2){
+        res = res + "喵~";
+      }
+      qq.sendBuddyMsg(id,res);
+    },1000);
+  }
+  tulingMsg(name,content,callback);
 }
 
 
