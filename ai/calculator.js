@@ -17,6 +17,7 @@ cal = function(str){
       }else if(cha=="）"){
         z=z+")";
       }else if(cha=="×"){
+        willcal = true;
         z=z+"*";
       }else if(cha=="。"){
         z=z+".";
