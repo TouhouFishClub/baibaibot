@@ -21,7 +21,7 @@ cal = function(str){
       can = false;
       break;
     }
-    if(can){
+    if(can&&willcal){
       var ret = eval(str);
       return ret;
     }
