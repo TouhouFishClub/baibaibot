@@ -14,6 +14,8 @@ app.listen(10086,function(){
 const {QQ} = require('./qqlib');
 app.get('/login',function(req,res){
   relogin();
-  res.redirect('/code.png');
+  setTimeout(function(){
+    res.redirect('/code.png');
+  },7000);
 });
 
