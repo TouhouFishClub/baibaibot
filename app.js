@@ -13,9 +13,11 @@ app.listen(10086,function(){
 });
 const {QQ} = require('./qqlib');
 app.get('/login',function(req,res){
-  relogin();
-  setTimeout(function(){
-    res.redirect('/code.png');
-  },7000);
+  fs.unlink('qq-bot.cookie',function(){
+    relogin();
+    setTimeout(function(){
+      res.redirect('/code.png');
+    },5000);
+  })
 });
 

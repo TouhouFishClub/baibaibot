@@ -94,7 +94,7 @@ class QQ {
             // open file, only for linux
             childProcess.exec(`xdg-open ${qrcodePath}`);
 
-            // Step2: 
+            // Step2:
             let scanSuccess = false;
             const quotRegxp = /'[^,]*'/g;
             const ptqrloginURL = URL.getPtqrloginURL(this.client.getCookie('qrsig'));
