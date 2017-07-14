@@ -28,8 +28,12 @@ cal = function(str){
 
     }
     if(can&&willcal){
-      var ret = eval(z);
-      return ret;
+      try{
+        var ret = eval(z);
+        return ret;
+      }catch(e){
+        console.log(e);
+      }
     }
   }
 }
