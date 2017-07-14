@@ -10,7 +10,7 @@ cal = function(str){
       if(cha>=0&cha<=9){
         continue;
       }
-      if(cha==" "||cha=='+'||cha=='-'||cha=="*"||cha=="/"||cha=="9"||cha==")"){
+      if(cha==" "||cha=='+'||cha=='-'||cha=="*"||cha=="/"||cha=="9"||cha==")"||cha=="."){
         continue;
       }
       can = false;

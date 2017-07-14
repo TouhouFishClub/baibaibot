@@ -96,8 +96,10 @@ function handleGroupMsg(msg,qq){
   }
 
   var calret = cal(content);
+  console.log(content,calret)
   if(calret){
     callback(content+"="+ret);
+    return;
   }
   answer(content,name,groupName,callback);
 }
