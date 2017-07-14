@@ -347,7 +347,7 @@ var relogin = function(){
   new QQ(buddyHandler, groupHandler).run();
 }
 
-modules.exports={
+module.exports={
   relogin
 }
 
