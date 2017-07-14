@@ -343,5 +343,12 @@ function httpget(host,path,callback,depth){
 }
 
 
+var relogin = function(){
+  new QQ(buddyHandler, groupHandler).run();
+}
+
+modules.exports={
+  relogin
+}
 
 
