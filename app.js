@@ -11,13 +11,12 @@ const {relogin} = require('./baibai');
 app.listen(10086,function(){
 
 });
-const {QQ} = require('./qqlib');
 app.get('/login',function(req,res){
   fs.unlink('qq-bot.cookie',function(){
     relogin();
     setTimeout(function(){
       res.redirect('/code.png');
-    },5000);
+    },4000);
   })
 });
 

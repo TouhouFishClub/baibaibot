@@ -7,6 +7,8 @@ const { QQ, MsgHandler } = require('./qqlib');
 
 const{saveTxt,answer} = require('./lib/mongo');
 
+const {cal} = require('./ai/calculator');
+
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -93,6 +95,10 @@ function handleGroupMsg(msg,qq){
     }
   }
 
+  var ret = cal(content);
+  if(ret){
+    callback(ret);
+  }
   answer(content,name,groupName,callback);
 }
 
