@@ -95,9 +95,9 @@ function handleGroupMsg(msg,qq){
     }
   }
 
-  var ret = cal(content);
-  if(ret){
-    callback(ret);
+  var calret = cal(content);
+  if(calret){
+    callback(content+"="+ret);
   }
   answer(content,name,groupName,callback);
 }
