@@ -11,7 +11,7 @@ const {cal} = require('./ai/calculator');
 
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
-      handleMsg(msg,qq);
+      handleBuddyMsg(msg,qq);
     },
     'buddy'
 );
@@ -24,7 +24,7 @@ const groupHandler = new MsgHandler(
 
 const discuHandler = new MsgHandler(
   (msg,qq) => {
-    handleGroupMsg(msg,qq,'discu')
+    handleMsg(msg,qq,'discu')
   }, 'discu'
 );
 
