@@ -48,12 +48,18 @@ function handleBuddyMsg(msg,qq){
 }
 
 
-
-
-
-
-
 function handleMsg(msg,qq,type){
+  try{
+    handleMsg_D(msg,qq,type);
+  }catch(e){
+    console.log(e);
+  }
+}
+
+
+
+
+function handleMsg_D(msg,qq,type){
   console.log(msg);
   var groupid = msg.groupId;
   if(type=='discu'){
