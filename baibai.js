@@ -87,7 +87,7 @@ function handleMsg(msg,qq,type){
   }
   if(content.trim()=='天气'){
     if(msg.user){
-      var city = user.city;
+      var city = msg.user.city;
       if(city.length>0&&city.length<5){
         weatherReply(city,name,callback);
       }
