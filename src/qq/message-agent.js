@@ -5,8 +5,8 @@ class MessageAgent {
         this.clientid = clientid || 53999199;
         this.psessionid = psessionid;
         this.font = font || {
-            name: '宋体',
-            size: 10,
+            name: '黑体',
+            size: 12,
             style: [0, 0, 0],
             color: '000000'
         };
