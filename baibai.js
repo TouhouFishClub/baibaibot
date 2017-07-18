@@ -85,6 +85,16 @@ function handleMsg(msg,qq,type){
     }
     return;
   }
+  if(content.trim()=='天气'){
+    if(msg.user){
+      var city = user.city;
+      if(city.length>0&&city.length<5){
+        weatherReply(city,name,callback);
+      }
+    }
+    return;
+  }
+
   var n = content.indexOf('天气');
   if(n>1&&n<5){
     var city = content.substring(0,n).trim();
