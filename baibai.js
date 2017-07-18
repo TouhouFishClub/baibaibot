@@ -62,7 +62,6 @@ function checkSelf(msg){
 }
 
 function handleMsg(msg,qq,type){
-  console.log(msg);
   var groupid = msg.groupId;
   if(type=='discu'){
     groupid = msg.discuId;
@@ -99,8 +98,13 @@ function handleMsg(msg,qq,type){
   var n = content.indexOf('天气');
   if(n>1&&n<5){
     var city = content.substring(0,n).trim();
-    weatherReply(city,name,callback);
+    try{
+      weatherReply(city,name,callback);
+    }catch(e){
+      console.log(e);
+    }
     return;
+
   }
   var ca = content.split('|');
   if(ca.length==2){
