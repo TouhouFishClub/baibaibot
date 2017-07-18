@@ -11,18 +11,24 @@ const {cal} = require('./ai/calculator');
 
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
-      handleBuddyMsg(msg,qq);
+      handleMsg(msg,qq);
     },
     'buddy'
 );
 
 const groupHandler = new MsgHandler(
   (msg,qq) => {
-    handleGroupMsg(msg,qq)
+    handleMsg(msg,qq,'group')
   }, 'group'
 );
 
-new QQ(buddyHandler, groupHandler).run();
+const discuHandler = new MsgHandler(
+  (msg,qq) => {
+    handleGroupMsg(msg,qq,'discu')
+  }, 'discu'
+);
+
+new QQ(buddyHandler, groupHandler,discuHandler).run();
 
 function handleBuddyMsg(msg,qq){
   var name = msg.name;
@@ -55,8 +61,12 @@ function checkSelf(msg){
   }
 }
 
-function handleGroupMsg(msg,qq){
+function handleMsg(msg,qq,type){
+
   var groupid = msg.groupId;
+  if(type=='discu'){
+    groupid = msg.discuId;
+  }
   var content = msg.content;
   var name = msg.name;
   var groupName = msg.groupName;
@@ -65,7 +75,12 @@ function handleGroupMsg(msg,qq){
   }
   var callback = function(res){
     setTimeout(function(){
-      qq.sendGroupMsg(groupid," "+res);
+      if(type=='discu'){
+        qq.sendDiscuMsg(groupid," "+res);
+      }else{
+        qq.sendGroupMsg(groupid," "+res);
+      }
+
     },1000);
   }
   var first = content.substring(0,1);
