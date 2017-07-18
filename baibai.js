@@ -52,14 +52,6 @@ function handleBuddyMsg(msg,qq){
 
 
 
-function checkSelf(msg){
-  var name = msg.name;
-  if(name&&name.indexOf('百百')>=0){
-    return true;
-  }else{
-    return false;
-  }
-}
 
 function handleMsg(msg,qq,type){
   console.log(msg);
@@ -70,9 +62,6 @@ function handleMsg(msg,qq,type){
   var content = msg.content;
   var name = msg.name;
   var groupName = msg.groupName;
-  if(checkSelf(msg)){
-    return;
-  }
   var callback = function(res){
     setTimeout(function(){
       if(type=='discu'){
