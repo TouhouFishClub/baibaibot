@@ -16,7 +16,7 @@ app.get('/login',function(req,res){
     relogin();
     setTimeout(function(){
       res.setHeader('Cache-Control','no-store');
-      res.sendFile('/static/code.png');
+      res.sendFile('./static/code.png');
     },3000);
   })
 });
