@@ -49,6 +49,7 @@ class QQ {
         this.buddyNameMap = new Map();
         this.discuNameMap = new Map();
         this.groupNameMap = new Map();
+        this.userInfoMap = new Map();
         this.client = new Client();
         this.messageAgent = null;
         this.msgHandlers = msgHandlers;
@@ -307,6 +308,32 @@ class QQ {
         });
     }
 
+    getUserInfoInGroup(uin,groupCode){
+        const infoKey = `${groupCode}${uin}`;
+        let info = this.userInfoMap.get(infoKey);
+        if(info){
+            return info;
+        }else{
+          let group;
+          for (let g of this.group) {
+            if (g.gid == groupCode) {
+              group = g;
+              break;
+            }
+          }
+          const members = group.info.minfo;
+          if(members){
+            for(let i=0;i<members.length;i++){
+              if(uin==members[i].uin){
+                this.groupNameMap.set(infoKey, members[i]);
+                return members[i];
+              }
+            }
+          }
+          return {};
+        }
+    }
+
     getNameInGroup(uin, groupCode) {
         const nameKey = `${groupCode}${uin}`;
         let name = this.groupNameMap.get(nameKey);
@@ -318,7 +345,16 @@ class QQ {
                 break;
             }
         }
-        const members = group.info.minfo
+        const members = group.info.minfo;
+        const cards = group.info.cards;
+        if(cards){
+            for(let i=0;i<cards.length;i++){
+                if(uin==cards[i].muin){
+                  this.groupNameMap.set(nameKey, cards[i].card);
+                  return cards[i].cards;
+                }
+            }
+        }
         if(members){
             for(let i=0;i<members.length;i++){
                 if(uin==members[i].uin){
@@ -327,8 +363,6 @@ class QQ {
                 }
             }
         }
-        console.log(group.info.minfo);
-        console.log(group.info.cards);
         /*
         if(!group.info.cards){
             group.info.cards=[];
@@ -371,6 +405,7 @@ class QQ {
                 msgParsed.name = this.getNameInGroup(send_uin, from_uin);
                 msgParsed.groupId = from_uin;
                 msgParsed.groupName = this.getGroupName(from_uin);
+                msgParsed.user = this.getUserInfoInGroup(send_uin, from_uin);
                 break;
             case 'discu_message':
                 msgParsed.type = 'discu';

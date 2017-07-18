@@ -62,6 +62,7 @@ function checkSelf(msg){
 }
 
 function handleMsg(msg,qq,type){
+  console.log(msg);
   var groupid = msg.groupId;
   if(type=='discu'){
     groupid = msg.discuId;
