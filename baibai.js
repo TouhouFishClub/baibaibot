@@ -297,7 +297,7 @@ function weatherReply(city,userId,callback){
           }
           callback(ret);
         }else{
-          ret = city + '是哪里？\n'+userId+' 带我去玩哇';
+          ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇';
           callback(ret);
         }
       });
