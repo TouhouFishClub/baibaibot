@@ -325,7 +325,7 @@ class QQ {
           if(members){
             for(let i=0;i<members.length;i++){
               if(uin==members[i].uin){
-                this.groupNameMap.set(infoKey, members[i]);
+                this.userInfoMap.set(infoKey, members[i]);
                 return members[i];
               }
             }
