@@ -347,7 +347,6 @@ class QQ {
         }
         const members = group.info.minfo;
         const cards = group.info.cards;
-        console.log(cards);
         if(cards){
             for(let i=0;i<cards.length;i++){
                 if(uin==cards[i].muin){
