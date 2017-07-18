@@ -15,7 +15,7 @@ app.get('/login',function(req,res){
   fs.unlink('qq-bot.cookie',function(){
     relogin();
     setTimeout(function(){
-      res.set('Cache-Control','no-store');
+      res.setHeader('Cache-Control','no-store');
       res.redirect('/code.png');
     },4000);
   })
