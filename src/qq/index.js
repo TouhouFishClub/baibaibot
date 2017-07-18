@@ -327,6 +327,8 @@ class QQ {
                 }
             }
         }
+        console.log(group.info.minfo);
+        console.log(group.info.cards);
         /*
         if(!group.info.cards){
             group.info.cards=[];
