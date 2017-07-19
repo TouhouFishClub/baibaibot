@@ -186,9 +186,25 @@ function handleTulingResponse(resdata){
   return ret;
 }
 
+function isword(content){
+  var ret = true;
+  if(content.indexOf(" ")<0){
+    for(var i=0;i<content.length;i++){
+      var cha=content.charCodeAt(i);
+      if((cha>=65&&cha<=90)||(cha>=97&&cha<=122)){
+
+      }else{
+        ret = false;
+        break;
+      }
+    }
+  }
+  return ret;
+}
+
 function translateMsg(content,tolan,callback){
   if(tolan=='zh-CHS'){
-    if(content.indexOf(" ")<0){
+    if(isword(content)){
       var options = {
         hostname: 'api.shanbay.com',
         port: 80,
