@@ -60,7 +60,6 @@ function handleMsg(msg,qq,type){
 
 
 function handleMsg_D(msg,qq,type){
-  console.log(msg);
   var groupid = msg.groupId;
   if(type=='discu'){
     groupid = msg.discuId;

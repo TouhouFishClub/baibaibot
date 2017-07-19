@@ -1,5 +1,5 @@
 cal = function(str){
-  if(str.startsWith("0")||parseInt(str)){
+  if(str.startsWith("0")||str.startsWith("(")||str.startsWith("（")||parseInt(str)){
     can = true;
     willcal = false;
     var z="";
@@ -8,7 +8,9 @@ cal = function(str){
       if(cha>=0&cha<=9){
         z=z+cha;
       }else if(cha=='+'||cha=='-'||cha=="*"||cha=="/"){
-        willcal = true;
+        if(i>0){
+          willcal = true;
+        }
         z=z+cha;
       }else if(cha==" "||cha=="("||cha==")"||cha=="."){
         z=z+cha;
