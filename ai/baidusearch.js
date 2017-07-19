@@ -1,5 +1,5 @@
 var https=require('https');
-
+var http = require('http');
 function baiduSearch(userid,content,callback){
   var path = '/s?wd='+encodeURIComponent(content);
   httpsget('www.baidu.com',path,callback,0);
