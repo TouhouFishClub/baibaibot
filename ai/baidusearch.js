@@ -2,10 +2,7 @@ var https=require('https');
 
 function baiduSearch(userid,content,callback){
   var path = '/s?wd='+encodeURIComponent(content);
-  console.log(path);
-  httpget('www.baidu.com',path,function(resdata){
-
-  },0);
+  httpget('www.baidu.com',path,callback,0);
 }
 
 
