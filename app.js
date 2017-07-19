@@ -26,7 +26,7 @@ app.get('/login',function(req,res){
 
 const {baiduSearch} = require('./ai/baidusearch');
 app.get('/test',function(req,res){
-  baiduSearch('id','123');
+  baiduSearch('id','芙兰');
   res.send('ok');
 });
 

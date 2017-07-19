@@ -8,7 +8,7 @@ const { QQ, MsgHandler } = require('./qqlib');
 const{saveTxt,answer} = require('./lib/mongo');
 
 const {cal} = require('./ai/calculator');
-
+const {baiduSearch} = require('./ai/baidusearch');
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -82,7 +82,8 @@ function handleMsg_D(msg,qq,type){
 
     var c1 = content.substring(1);
     if(c1==""){
-      var ret = "`1+名词：百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n"
+      var ret = "`1+名词：百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n";
+      ret = ret + "`4+内容：百度查询\n";
       ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n虾扯蛋：``+对话\n";
       callback(ret);
     }else{
@@ -137,6 +138,8 @@ function reply(content,userName,callback){
     translateMsg(content.substring(1),'en',callback);
   }else if(first==1){
     baikeReply(content.substring(1),userName,callback);
+  }else if(first==4){
+    baiduSearch(userName,content,callback);
   }else{
     translateMsg(content,'zh-CHS',callback)
   }
