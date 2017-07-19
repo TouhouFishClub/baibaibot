@@ -1,3 +1,5 @@
+var https=require('https');
+var http = require('http');
 function weatherReply(city,userId,callback){
   var options = {
     hostname: 'wthrcdn.etouch.cn',

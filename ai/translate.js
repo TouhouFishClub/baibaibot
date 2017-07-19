@@ -1,3 +1,5 @@
+var https=require('https');
+var http = require('http');
 function isword(content){
   var ret = true;
   if(content.indexOf(" ")<0){

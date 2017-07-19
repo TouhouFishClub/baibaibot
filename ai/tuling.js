@@ -1,3 +1,5 @@
+var https=require('https');
+var http = require('http');
 const tulingApiKey = "9cca8707060f4432800730b2ddfb029b";
 function tulingMsg(userid,content,callback){
   var body={};
