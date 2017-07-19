@@ -68,6 +68,7 @@ function handleBaiduRes(resdata){
     }
   }
   ret = ret.trim();
+  ret = ret.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<')
   return ret;
 }
 
