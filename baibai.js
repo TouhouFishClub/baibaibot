@@ -81,7 +81,7 @@ function handleMsg_D(msg,qq,type){
     },1000);
   }
   var first = content.substring(0,1);
-  if(first=='`'||first=='·'||first=='ˋ'){
+  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"){
 
     var c1 = content.substring(1);
     if(c1==""){
@@ -128,12 +128,17 @@ function handleMsg_D(msg,qq,type){
     callback(content+"="+calret);
     return;
   }
+  if(content.indexOf('百百')>-1){
+    tulingMsg(userName,content,callback);
+    return;
+  }
   answer(content,name,groupName,callback);
+
 }
 
 function reply(content,userName,callback){
   var first = content.substring(0,1);
-  if(first=='`'||first=='·'||first=='ˋ'){
+  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"){
     tulingMsg(userName,content.substring(1),callback);
   }else if(first==2){
     translateMsg(content.substring(1),'ja',callback);
