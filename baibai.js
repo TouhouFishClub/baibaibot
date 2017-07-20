@@ -71,14 +71,16 @@ function handleMsg_D(msg,qq,type){
   var name = msg.name;
   var groupName = msg.groupName;
   var callback = function(res){
-    setTimeout(function(){
-      if(type=='discu'){
-        qq.sendDiscuMsg(groupid," "+res);
-      }else{
-        qq.sendGroupMsg(groupid," "+res);
-      }
+    if(res.trim().length>0){
+      setTimeout(function(){
+        if(type=='discu'){
+          qq.sendDiscuMsg(groupid," "+res);
+        }else{
+          qq.sendGroupMsg(groupid," "+res);
+        }
 
-    },1000);
+      },1000);
+    }
   }
   var first = content.substring(0,1);
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"){

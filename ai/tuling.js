@@ -37,7 +37,7 @@ function handleTulingResponse(resdata){
   }else if(code == 200000){
     ret = data.text+""+data.url;
   }else{
-    ret = '出错了喵';
+    ret = '';
   }
   return ret;
 }
