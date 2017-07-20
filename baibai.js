@@ -129,7 +129,7 @@ function handleMsg_D(msg,qq,type){
     return;
   }
   if(content.indexOf('百百')>-1){
-    tulingMsg(userName,content,callback);
+    tulingMsg(name,content,callback);
     return;
   }
   answer(content,name,groupName,callback);
