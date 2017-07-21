@@ -16,9 +16,11 @@ app.get('/login',function(req,res){
     relogin();
     setTimeout(function(){
       res.setHeader('Cache-Control','no-store');
-      var path = __dirname + '/static/code.png';
-      console.log(path);
-      res.sendFile(path);
+      res.setHeader('Content-Type','image/png');
+      var rd = new Date().getTime()+".png";
+      fs.rename('static/code.png','static/'+rd,function(){
+        res.redirect(rd)
+      });
     },3000);
   })
 });
@@ -26,7 +28,11 @@ app.get('/login',function(req,res){
 
 const {baiduSearch} = require('./ai/baidusearch');
 app.get('/test',function(req,res){
-  baiduSearch('id','芙兰');
-  res.send('ok');
+
+
+  res.setHeader('Cache-Control','no-store');
+  var path = __dirname + '/static/code.png';
+  console.log(path);
+  res.sendFile(path);
 });
 

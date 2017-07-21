@@ -68,7 +68,10 @@ function handleBaiduRes(resdata){
     }
   }
   ret = ret.trim();
-  ret = ret.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<')
+  ret = ret.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<');
+  if(ret.length>250){
+    ret = ret.substring(0,250)+'.......';
+  }
   return ret;
 }
 
