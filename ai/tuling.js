@@ -39,6 +39,9 @@ function handleTulingResponse(resdata){
   }else{
     ret = '';
   }
+  if(ret.indexOf('百百')>-1){
+    ret = ret.replace(/百百/g,'百·百');
+  }
   return ret;
 }
 
