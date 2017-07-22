@@ -27,7 +27,7 @@ function tulingMsg(userid,content,callback){
   req.write(JSON.stringify(body));
   req.end();
 }
-
+var dup=0;
 function handleTulingResponse(resdata){
   var data = eval("("+resdata+")");
   var code = data.code;
@@ -40,7 +40,13 @@ function handleTulingResponse(resdata){
     ret = '';
   }
   if(ret.indexOf('百百')>-1){
-    ret = ret.replace(/百百/g,'百·百');
+    if(dup<3){
+      dup++;
+    }else{
+      ret = ret.replace(/百百/g,'百·百');
+    }
+  }else{
+    dup = 0 
   }
   return ret;
 }
