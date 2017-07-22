@@ -131,10 +131,8 @@ function handleMsg_D(msg,qq,type){
     return;
   }
   if(content.indexOf('百百')>-1){
-    if(Math.random()<0.5){
-        tulingMsg(name,content,callback);
-        return;
-    }
+    tulingMsg(name,content,callback);
+    return;
   }
   answer(content,name,groupName,callback);
 
