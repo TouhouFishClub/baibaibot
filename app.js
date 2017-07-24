@@ -26,13 +26,14 @@ app.get('/login',function(req,res){
 });
 
 
-const {baiduSearch} = require('./ai/baidusearch');
+const {baikeReply} = require('./ai/baidusearch');
 app.get('/test',function(req,res){
+  baikeReply('baka','',function(ret){
+    console.log(ret);
+    res.setHeader('Content-Type','text/plain');
+    res.send(ret);
+  })
 
 
-  res.setHeader('Cache-Control','no-store');
-  var path = __dirname + '/static/code.png';
-  console.log(path);
-  res.sendFile(path);
 });
 
