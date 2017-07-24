@@ -12,6 +12,8 @@ function isword(content){
         break;
       }
     }
+  }else{
+    ret = false;
   }
   return ret;
 }

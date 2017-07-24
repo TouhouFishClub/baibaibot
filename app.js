@@ -27,10 +27,11 @@ app.get('/login',function(req,res){
 
 
 const {baikeReply} = require('./ai/baidusearch');
+const {translateMsg}=require('./ai/translate');
+
 app.get('/test',function(req,res){
-  baikeReply('baka','',function(ret){
+  translateMsg('how are you','zh-CHS',function(ret){
     console.log(ret);
-    res.setHeader('Content-Type','text/plain');
     res.send(ret);
   })
 
