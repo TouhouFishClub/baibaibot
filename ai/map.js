@@ -96,7 +96,7 @@ function parsetransits(transitsData){
   var walk = transitsData.walking_distance;
   var cost = transitsData.cost;
   var segments = transitsData.segments
-  var ret = '总计用时：'+dur+',步行'+walk+'m,费用：￥'+cost+'\n';
+  var ret = '预计用时：'+Math.round(dur/60)+'分,步行'+walk+'m,费用：￥'+cost+'\n';
   for(var k=0;k<segments.length;k++){
     var bus = segments[k].bus.buslines;
     var busnamestr='';
