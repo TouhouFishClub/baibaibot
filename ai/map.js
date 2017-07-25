@@ -72,7 +72,7 @@ function route(type,from,to,callback){
               var transits = data.route.transits;
               var ret = addrf+'--'+addrt+'\n总路程：'+distance+'m,打车费用：'+taxi_cost+'\n';
               for(var i=0;i<transits.length;i++){
-                ret = ret + '方案'+i+':'
+                ret = ret + '方案'+(i+1)+':'
                 ret = ret + parsetransits(transits[i])+'\n';
               }
               if(ret.length>250){

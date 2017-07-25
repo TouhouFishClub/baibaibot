@@ -33,7 +33,7 @@ const {getloc,route} = require('./ai/map');
 
 
 app.get('/test',function(req,res){
-  route(0,'顺义','北京西',function(ret){
+  route(0,'顺义','北京西站',function(ret){
     console.log(ret);
     res.send(ret);
   })
