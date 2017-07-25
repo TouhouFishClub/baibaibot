@@ -70,7 +70,7 @@ function route(type,from,to,callback){
               var distance = data.route.distance;
               var taxi_cost = data.route.taxi_cost;
               var transits = data.route.transits;
-              var ret = '总路程：'+distance+'m,打车费用：'+taxi_cost+'\n';
+              var ret = addrf+'--'+addrt+'\n总路程：'+distance+'m,打车费用：'+taxi_cost+'\n';
               for(var i=0;i<transits.length;i++){
                 ret = ret + '方案'+i+':'
                 ret = ret + parsetransits(transits[i])+'\n';
@@ -114,7 +114,7 @@ function parsetransits(transitsData){
       busnamestr = busnamestr+"/"+busname;
     }
     if(busnamestr.length>2){
-      ret = ret + busnamestr.substring(1) + '('+start+'-->'+end+')\n';
+      ret = ret + busnamestr.substring(1) + '('+start+'--'+end+')\n';
     }
   }
   return ret;
