@@ -13,6 +13,7 @@ const {weatherReply} = require('./ai/weather');
 const {tulingMsg} = require('./ai/tuling');
 const {translateMsg}=require('./ai/translate');
 const {money} = require('./ai/money');
+const {getloc,route} = require('./ai/map');
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -153,6 +154,11 @@ function reply(content,userName,callback){
     baiduSearch(userName,content,callback);
   }else if(first==0){
     callback(money(content.substring(1)));
+  }else if(first==8){
+    var ca = content.substring(1).split('-');
+    if(ca.length==2){
+      route(0,ca[0],ca[1],callback);
+    }
   }else{
     translateMsg(content,'zh-CHS',callback)
   }

@@ -6,7 +6,7 @@ var URL = require('url');
 var fs = require('fs');
 app.use(express.static('./static'));
 
-const {relogin} = require('./baibai');
+//const {relogin} = require('./baibai');
 
 app.listen(10086,function(){
 
@@ -29,12 +29,14 @@ app.get('/login',function(req,res){
 const {baikeReply} = require('./ai/baidusearch');
 const {translateMsg}=require('./ai/translate');
 const {money} = require('./ai/money');
+const {getloc,route} = require('./ai/map');
 
 
 app.get('/test',function(req,res){
-  var s = money('1234560002');
-  console.log(s);
-  res.send(s);
+  route(0,'嘉润花园','北京西',function(ret){
+    console.log(ret);
+    res.send(ret);
+  })
 
 
 });
