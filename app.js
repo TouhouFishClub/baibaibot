@@ -28,12 +28,13 @@ app.get('/login',function(req,res){
 
 const {baikeReply} = require('./ai/baidusearch');
 const {translateMsg}=require('./ai/translate');
+const {money} = require('./ai/money');
+
 
 app.get('/test',function(req,res){
-  translateMsg('how are you','zh-CHS',function(ret){
-    console.log(ret);
-    res.send(ret);
-  })
+  var s = money('1234560002');
+  console.log(s);
+  res.send(s);
 
 
 });

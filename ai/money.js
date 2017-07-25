@@ -1,4 +1,4 @@
-module.exports = function(str){
+var money = function(str){
   var unit = ['元', '万', '亿', '万'];
   var unitrep = ['', '拾', '佰', '仟'];
   var Numlist = [];
@@ -14,7 +14,7 @@ module.exports = function(str){
     // 处理分
     if (f == '0') {
       fz = true;
-      Numlist.push('正')
+      Numlist.push('整')
     } else {
       Numlist.push('分');
       Numlist.push(maparray(f));
@@ -73,3 +73,7 @@ module.exports = function(str){
 }
 
 const maparray = n => ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'][n]
+
+module.exports = {
+  money
+}
