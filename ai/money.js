@@ -3,7 +3,7 @@ module.exports = function(str){
   var unitrep = ['', '拾', '佰', '仟'];
   var Numlist = [];
   if (/^\d{1,16}(\.\d{1,2}){0,1}$/.test(str)) {
-    var numarr = ipt.split('.');
+    var numarr = str.split('.');
     if (!numarr[1]) {
       numarr.push('00')
     } else {
