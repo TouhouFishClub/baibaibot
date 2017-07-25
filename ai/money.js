@@ -66,6 +66,10 @@ var money = function(str){
         }
       }
     }
+    if(Numlist[Numlist.length - 1] == '圆')
+      Numlist.pop()
+    if(Numlist[Numlist.length - 1] == '零')
+      Numlist.pop()
     return Numlist.reverse().join('')
   } else {
     return '输入错误'
