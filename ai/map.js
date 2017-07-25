@@ -4,20 +4,23 @@ function getloc(place,callback){
   var host = "restapi.amap.com";
   var path = "/v3/geocode/geo?address="+encodeURIComponent(place)+"&key="+gaodekey;
   httpget(host,path,function(datastr){
-    var data = JSON.parse(datastr);
-    console.log(data);
-    var status = data.status;
-    if(status==1){
-      var count = data.count;
-      if(count==1){
-        var geo = data.geocodes[0];
-        var addr = geo.formatted_address;
-        var loc = geo.location;
-        var city = geo.city;
-        console.log(geo);
-        var ret = {loc:loc,addr:addr,city:city};
-        callback(ret);
+    try {
+      var data = JSON.parse(datastr);
+      var status = data.status;
+      if (status == 1) {
+        var count = data.count;
+        if (count == 1) {
+          var geo = data.geocodes[0];
+          var addr = geo.formatted_address;
+          var loc = geo.location;
+          var city = geo.city;
+          console.log(geo);
+          var ret = {loc: loc, addr: addr, city: city};
+          callback(ret);
+        }
       }
+    }catch (e){
+      console.log(e);
     }
   })
 }
@@ -59,25 +62,26 @@ function route(type,from,to,callback){
         var loct = geot.loc;
         var host = "restapi.amap.com";
         var path = "/v3/direction/transit/integrated?origin="+locf+"&destination="+loct+"&city="+encodeURIComponent(cityf)+"&key="+gaodekey;
-        console.log(path);
         httpget(host,path,function(resdata){
-          var data = JSON.parse(resdata);
-          var status = data.status;
-          if(status==1){
-            var count = data.count;
-            var distance = data.route.distance;
-            var taxi_cost = data.route.taxi_cost;
-            var transits = data.route.transits;
-            console.log(transits);
-            var ret = '总路程：'+distance+'m,打车费用：'+taxi_cost.toFixed(2)+'\n';
-            for(var i=0;i<transits.length;i++){
-              ret = ret + '方案'+i+':'
-              ret = ret + parsetransits(transits[i])+'\n';
+          try{
+            var data = JSON.parse(resdata);
+            var status = data.status;
+            if(status==1){
+              var distance = data.route.distance;
+              var taxi_cost = data.route.taxi_cost;
+              var transits = data.route.transits;
+              var ret = '总路程：'+distance+'m,打车费用：'+taxi_cost.toFixed(2)+'\n';
+              for(var i=0;i<transits.length;i++){
+                ret = ret + '方案'+i+':'
+                ret = ret + parsetransits(transits[i])+'\n';
+              }
+              if(ret.length>250){
+                ret = ret.substring(0,250)+'....';
+              }
+              callback(ret.trim());
             }
-            if(ret.length>250){
-              ret = ret.substring(0,250)+'....';
-            }
-            callback(ret.trim());
+          }catch (e){
+            console.log(e);
           }
         })
       }else{

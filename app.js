@@ -6,7 +6,7 @@ var URL = require('url');
 var fs = require('fs');
 app.use(express.static('./static'));
 
-//const {relogin} = require('./baibai');
+const {relogin} = require('./baibai');
 
 app.listen(10086,function(){
 
@@ -33,7 +33,7 @@ const {getloc,route} = require('./ai/map');
 
 
 app.get('/test',function(req,res){
-  route(0,'嘉润花园','北京西',function(ret){
+  route(0,'顺义','北京西',function(ret){
     console.log(ret);
     res.send(ret);
   })
