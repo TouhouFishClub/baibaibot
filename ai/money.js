@@ -1,5 +1,5 @@
 var money = function(str){
-  var unit = ['元', '万', '亿', '万'];
+  var unit = ['圆', '万', '亿', '万'];
   var unitrep = ['', '拾', '佰', '仟'];
   var Numlist = [];
   if (/^\d{1,16}(\.\d{1,2}){0,1}$/.test(str)) {
