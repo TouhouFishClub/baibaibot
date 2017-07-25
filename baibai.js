@@ -152,7 +152,7 @@ function reply(content,userName,callback){
   }else if(first==4){
     baiduSearch(userName,content,callback);
   }else if(first==0){
-    callback(money(content));
+    callback(money(content.substring(1)));
   }else{
     translateMsg(content,'zh-CHS',callback)
   }
