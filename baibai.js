@@ -85,7 +85,7 @@ function handleMsg_D(msg,qq,type){
     }
   }
   var first = content.substring(0,1);
-  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"){
+  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
 
     var c1 = content.substring(1);
     if(c1==""){
@@ -142,7 +142,7 @@ function handleMsg_D(msg,qq,type){
 
 function reply(content,userName,callback){
   var first = content.substring(0,1);
-  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"){
+  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
     tulingMsg(userName,content.substring(1),callback);
   }else if(first==2){
     translateMsg(content.substring(1),'ja',callback);
