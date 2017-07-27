@@ -74,7 +74,7 @@ function httpsget(host,path,callback,depth){
 function baikeReply(word,userId,callback){
   word = word.trim();
   if(word.length>20){
-    callback(word+'是什么好吃的？');
+    callback(word+'是什么好吃的？'+userId+'带我去吃哇!');
     return;
   }
   var hostname = 'baike.baidu.com';
@@ -99,6 +99,9 @@ function baikeReply(word,userId,callback){
     ret = ret.replace(/\[[0-9]\]/g,'');
     if(ret.length>250){
       ret = ret.substring(0,250)+'.......';
+    }
+    if(ret.length<3){
+      ret = word+'是什么好吃的？'+userId+'带我去吃哇!';
     }
     callback(ret.trim());
   },0);
@@ -128,7 +131,6 @@ function httpget(host,path,callback,depth){
         callback(resdata);
       });
     }
-
   });
   req.end();
 }
