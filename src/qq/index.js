@@ -8,7 +8,7 @@ const URL = require('./url');
 const Codec = require('../codec');
 const Client = require('../httpclient');
 const MessageAgent = require('./message-agent');
-
+const {urlget} = require('../utils/httpreq');
 const log = global.log || new Log(process.env.LOG_LEVEL || 'info');
 
 const cookiePath = process.env.COOKIE_PATH || './qq-bot.cookie';
@@ -228,6 +228,7 @@ class QQ {
     }
 
     async initInfo() {
+        console.log('开始信息初始化');
         let manyInfo = await Promise.all([
             this.getSelfInfo(),
             this.getBuddy(),

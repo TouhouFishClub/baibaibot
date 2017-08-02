@@ -15,11 +15,15 @@ function transformHeaders(k, v) {
 }
 
 function logResponse(resp) {
+  if(resp){
     log.debug(`HTTP:
 ${(resp.config.method).toUpperCase()} ${resp.config.url}
 Status: ${resp.status} ${resp.statusText}
 Response Headers: ${JSON.stringify(resp.headers, null, 2)}
 Request Headers: ${JSON.stringify(resp.config.headers, transformHeaders, 2)}`);
+  }else{
+    console.log('undefined resp');
+  }
 }
 
 class HttpClient {
@@ -97,14 +101,16 @@ class HttpClient {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Content-Length': Buffer.byteLength(config.data)
         }, this.clientHeaders, config.headers);
-
+        if(config.url=="https://d1.web2.qq.com/channel/poll2"){
+          config.timeout=20000;
+        }
+        console.log('now post:'+config.url);
         return new Promise((resolve, reject) => {
             Axios(config).then(response => {
                 this.handleResponse(response);
                 resolve(response.data);
             }).catch(error => {
-                logResponse(error.response);
-                reject(error);
+                resolve({});
             });
         });
     }

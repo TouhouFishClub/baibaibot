@@ -30,13 +30,15 @@ const {baikeReply} = require('./ai/baidusearch');
 const {translateMsg}=require('./ai/translate');
 const {money} = require('./ai/money');
 const {getloc,route} = require('./ai/map');
-
+const {urlget} = require('./src/utils/httpreq');
 
 app.get('/test',function(req,res){
-  route(0,'顺义','北京西站',function(ret){
-    console.log(ret);
+  var config = {};
+  config.url = 'http://r.x-vv.com';
+  var x= urlget(config).then(function(ret){
     res.send(ret);
-  })
+  });
+
 
 
 });
