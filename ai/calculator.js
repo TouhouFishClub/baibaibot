@@ -60,6 +60,7 @@ cal = function(str){
           willcal = true;
           i=i+1;
         }else if(f=="pow"){
+          willcal = true;
           var s = str.substring(i);
           var n1 = s.indexOf("(")
           var n2 = s.indexOf(")");
