@@ -102,7 +102,7 @@ class HttpClient {
             'Content-Length': Buffer.byteLength(config.data)
         }, this.clientHeaders, config.headers);
         if(config.url=="https://d1.web2.qq.com/channel/poll2"){
-          config.timeout=20000;
+          config.timeout=30000;
         }
         console.log('now post:'+config.url);
         return new Promise((resolve, reject) => {
@@ -110,7 +110,9 @@ class HttpClient {
                 this.handleResponse(response);
                 resolve(response.data);
             }).catch(error => {
-                console.log(error.Error);
+                console.log(error);
+                console.log(111111111);
+                console.log(error.error);
                 resolve({});
             });
         });

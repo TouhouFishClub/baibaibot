@@ -1,7 +1,7 @@
 cal = function(str){
   str = str.toLowerCase();
   var first = str.substring(0,1)
-  if(first==0||first=="("||first=="（"||first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||parseInt(str)){
+  if(first==0||first=="("||first=="（"||first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||first=="e"||first=="π"||parseInt(str)){
     can = true;
     willcal = false;
     var z="";
@@ -84,8 +84,13 @@ cal = function(str){
             can = false;
             break;
           }
-        }if(f.substring(0,2)=="pi"||f.substring(0,1)=="π"){
+        }else if(f.substring(0,2)=="pi"){
           z=z+"Math.PI";
+          i=i+1;
+        }else if(f.substring(0,1)=="π"){
+          z=z+"Math.PI";
+        }else if(f.substring(0,1)=="e"){
+          z=z+"Math.E";
         }else{
           can = false;
           break;
