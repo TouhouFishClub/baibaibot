@@ -1,4 +1,5 @@
 cal = function(str){
+  str = str.toLowerCase();
   var first = str.substring(0,1)
   if(first==0||first=="("||first=="（"||first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||parseInt(str)){
     can = true;
@@ -37,6 +38,7 @@ cal = function(str){
       }else if(cha=="。"){
         z=z+".";
       }else{
+
         var f = str.substring(i,i+3);
         if(f=="sin"||f=="cos"||f=="tan"||f=="log"){
           if(f=="log"){f="log10"};
@@ -82,6 +84,8 @@ cal = function(str){
             can = false;
             break;
           }
+        }if(f.substring(0,2)=="pi"||f.substring(0,1)=="π"){
+          z=z+"Math.PI";
         }else{
           can = false;
           break;
@@ -97,7 +101,9 @@ cal = function(str){
         var ret = eval(z);
         return ret;
       }catch(e){
+        ret = "⑨";
         console.log(e);
+        return ret;
       }
     }
   }
