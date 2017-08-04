@@ -110,9 +110,8 @@ class HttpClient {
                 this.handleResponse(response);
                 resolve(response.data);
             }).catch(error => {
-                console.log(error);
-                console.log(111111111);
-                console.log(error.error);
+                console.log(error.request);
+                console.log(error.message);
                 resolve({});
             });
         });
