@@ -46,9 +46,17 @@ cal = function(str){
             z=z+"(";
             needtail=true;
           }
+          willcal = true;
           i=i+2;
         }else if(f.substring(0,2)=="ln"){
           z=z+"Math.ln";
+          if(str[i+2]=="("||str[i+2]=="（"){
+
+          }else{
+            z=z+"(";
+            needtail=true;
+          }
+          willcal = true;
           i=i+1;
         }else if(f=="pow"){
           var s = str.substring(i);
