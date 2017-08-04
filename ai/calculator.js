@@ -1,6 +1,6 @@
 cal = function(str){
   var first = str.substring(0,1)
-  if(first==0||first=="("||first=="（"first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||parseInt(str)){
+  if(first==0||first=="("||first=="（"||first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||parseInt(str)){
     can = true;
     willcal = false;
     var z="";
