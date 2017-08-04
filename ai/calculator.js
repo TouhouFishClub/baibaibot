@@ -1,5 +1,6 @@
 cal = function(str){
-  if(str.startsWith("0")||str.startsWith("(")||str.startsWith("（")||parseInt(str)){
+  var first = str.substring(0,1)
+  if(first==0||first=="("||first=="（"first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||parseInt(str)){
     can = true;
     willcal = false;
     var z="";
