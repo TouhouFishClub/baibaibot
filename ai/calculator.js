@@ -39,6 +39,7 @@ cal = function(str){
       }else{
         var f = str.substring(i,i+3);
         if(f=="sin"||f=="cos"||f=="tan"||f=="log"){
+          if(f=="log"){f="log10"};
           z=z+"Math."+f;
           if(str[i+3]=="("||str[i+3]=="（"){
 
@@ -49,7 +50,7 @@ cal = function(str){
           willcal = true;
           i=i+2;
         }else if(f.substring(0,2)=="ln"){
-          z=z+"Math.ln";
+          z=z+"Math.log";
           if(str[i+2]=="("||str[i+2]=="（"){
 
           }else{
