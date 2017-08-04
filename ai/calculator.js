@@ -3,6 +3,8 @@ cal = function(str){
     can = true;
     willcal = false;
     var z="";
+    var tmp = "";
+    var needtail = false;
     for(var i=0;i<str.length;i++){
       var cha = str[i];
       if(cha>=0&cha<=9){
@@ -10,6 +12,10 @@ cal = function(str){
       }else if(cha=='+'||cha=='-'||cha=="*"||cha=="/"){
         if(i>0){
           willcal = true;
+        }
+        if(needtail){
+          z=z+")";
+          needtail=false;
         }
         z=z+cha;
       }else if(cha==" "||cha=="("||cha==")"||cha=="."){
@@ -19,16 +25,62 @@ cal = function(str){
       }else if(cha=="）"){
         z=z+")";
       }else if(cha=="×"){
-        willcal = true;
+        if(i>0){
+          willcal = true;
+        }
+        if(needtail){
+          z=z+")";
+          needtail=false;
+        }
         z=z+"*";
       }else if(cha=="。"){
         z=z+".";
       }else{
-        can = false;
-        break;
-      }
+        var f = str.substring(i,i+3);
+        if(f=="sin"||f=="cos"||f=="tan"||f=="log"){
+          z=z+"Math."+f;
+          if(str[i+3]=="("||str[i+3]=="（"){
 
+          }else{
+            z=z+"(";
+            needtail=true;
+          }
+          i=i+2;
+        }else if(f.substring(0,2)=="ln"){
+          z=z+"Math.ln";
+          i=i+1;
+        }else if(f=="pow"){
+          var s = str.substring(i);
+          var n1 = s.indexOf("(")
+          var n2 = s.indexOf(")");
+          if(n1<0||n2<0){
+            n1 = str.indexOf("（")
+            n2 = str.indexOf("）");
+          }
+          if(n1>0&&n2>0&&n2>n1){
+            var powstr = s.substring(n1+1,n2);
+            var pa = powstr.split(",");
+            if(pa.length==2){
+              z=z+"Math.pow("+pa[0]+","+pa[1]+")";
+              i=i+3+n2-n1;
+            }else{
+              can = false;
+              break;
+            }
+          }else{
+            can = false;
+            break;
+          }
+        }else{
+          can = false;
+          break;
+        }
+      }
     }
+    if(needtail){
+      z=z+")"
+    }
+    console.log(z);
     if(can&&willcal){
       try{
         var ret = eval(z);
@@ -39,6 +91,9 @@ cal = function(str){
     }
   }
 }
+
+
+
 
 module.exports={
   cal
