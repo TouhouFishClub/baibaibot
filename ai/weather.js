@@ -117,7 +117,6 @@ function getWeatherByCityCode(cityCode,callback){
           }
         }
       }
-      console.log(title.trim());
       var startstr = 'sky skyid';
       var n1 = resdata.indexOf(startstr);
       var s = resdata.substring(n1-20);
@@ -134,7 +133,7 @@ function getWeatherByCityCode(cityCode,callback){
           }else if(isinner==1&&dh[i]=="<"){
             isinner=0;
           }else if(isinner){
-            if(dh[i]==" "||dh[i]=="\n"){
+            if(dh[i]==" "||dh[i]=="\n"||th[i]=="\t"||th[i]=="\r"){
 
             }else{
               ret=ret+dh[i];
