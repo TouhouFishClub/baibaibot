@@ -112,7 +112,7 @@ function handleMsg_D(msg,qq,type){
   if(n>1&&n<5){
     var city = content.substring(0,n).trim();
     try{
-      getWeatherByCity(city,callback);
+      getWeatherByCity(city,name,callback);
     }catch(e){
       console.log(e);
     }
