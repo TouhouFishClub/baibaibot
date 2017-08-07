@@ -38,7 +38,6 @@ cal = function(str){
       }else if(cha=="。"){
         z=z+".";
       }else{
-
         var f = str.substring(i,i+3);
         if(f=="sin"||f=="cos"||f=="tan"||f=="log"){
           if(f=="log"){f="log10"};

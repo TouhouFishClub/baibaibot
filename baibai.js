@@ -9,7 +9,7 @@ const{saveTxt,answer} = require('./lib/mongo');
 
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
-const {weatherReply} = require('./ai/weather');
+const {weatherReply,getWeatherByCity} = require('./ai/weather');
 const {tulingMsg} = require('./ai/tuling');
 const {translateMsg}=require('./ai/translate');
 const {money} = require('./ai/money');
@@ -102,7 +102,7 @@ function handleMsg_D(msg,qq,type){
     if(msg.user){
       var city = msg.user.city;
       if(city.length>0&&city.length<5){
-        weatherReply(city,name,callback);
+        getWeatherByCity(city,callback);
       }
     }
     return;
@@ -112,7 +112,7 @@ function handleMsg_D(msg,qq,type){
   if(n>1&&n<5){
     var city = content.substring(0,n).trim();
     try{
-      weatherReply(city,name,callback);
+      getWeatherByCity(city,callback);
     }catch(e){
       console.log(e);
     }

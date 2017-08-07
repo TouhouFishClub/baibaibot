@@ -32,14 +32,12 @@ const {money} = require('./ai/money');
 const {getloc,route} = require('./ai/map');
 const {urlget} = require('./src/utils/httpreq');
 const {cal} = require('./ai/calculator')
+const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weather');
+
 
 app.get('/test',function(req,res){
-  var str = "1+sin(2+3)+4+5+cos(6+7)+8+tan(9+10)+pow(3,4)+5+log10+sin5";
-  var ret = cal(str);
-  console.log(ret);
-  res.send(ret+'');
-
-
-
+  getWeatherByCity('北京',function(ret){
+    res.send(ret+"");
+  })
 });
 
