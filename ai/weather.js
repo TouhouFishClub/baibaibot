@@ -100,6 +100,7 @@ function getWeatherByCityCode(cityCode,callback){
       var t1 = resdata.indexOf('crumbs fl');
       var t2 = resdata.indexOf('clearfix cnav');
       var th = resdata.substring(t1,t2);
+      th = th.replace(/>></g,'');
       var title = '';
       var isinner = 0;
       for (var i = 0; i < th.length; i++) {
