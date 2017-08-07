@@ -78,10 +78,10 @@ function getWeatherByCity(city,userId,callback){
             getWeatherByCityCode(ret,userId,callback);
           }
         }
-        if(reply == false){
-          ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇';
-          callback(ret);
-        }
+      }
+      if(reply == false){
+        ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇';
+        callback(ret);
       }
     });
   });
@@ -104,53 +104,58 @@ function getWeatherByCityCode(cityCode,userId,callback){
     res.on('end', function () {
       var t1 = resdata.indexOf('crumbs fl');
       var t2 = resdata.indexOf('clearfix cnav');
-      var th = resdata.substring(t1,t2);
-      var title = '';
-      var isinner = 0;
-      for (var i = 0; i < th.length; i++) {
-        if (isinner == 0 && th[i] == ">") {
-          isinner = 1;
-        } else if (isinner == 1 && th[i] == "<") {
-          isinner = 0;
-        } else if (isinner) {
-          if(th[i]==" "||th[i]=="\n"||th[i]=="\t"||th[i]=="\r"){
-
-          }else{
-            title=title+th[i];
-          }
-        }
-      }
-      title = title.replace(/>/g,'-');
-      var startstr = '<h1>';
-      var n1 = resdata.indexOf('t clearfix');
-      var s = resdata.substring(n1-20);
-      var n = 1;
-      var all=title.trim();
-      var c = 0;
-      while (n > 0&&c<7) {
-        var dh = s.substring(0, n);
-        var ret = '';
-        var isinner=0;
-        for(var i=0;i<dh.length;i++){
-          if(isinner==0&&dh[i]==">"){
-            isinner=1;
-          }else if(isinner==1&&dh[i]=="<"){
-            isinner=0;
-          }else if(isinner){
-            if(dh[i]==" "||dh[i]=="\n"){
+      if(t1<0||t2<0){
+        ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇';
+        callback(ret);
+      }else{
+        var th = resdata.substring(t1,t2);
+        var title = '';
+        var isinner = 0;
+        for (var i = 0; i < th.length; i++) {
+          if (isinner == 0 && th[i] == ">") {
+            isinner = 1;
+          } else if (isinner == 1 && th[i] == "<") {
+            isinner = 0;
+          } else if (isinner) {
+            if(th[i]==" "||th[i]=="\n"||th[i]=="\t"||th[i]=="\r"){
 
             }else{
-              ret=ret+dh[i];
+              title=title+th[i];
             }
           }
         }
-        ret = ret.trim();
-        all=all+ret+"\n";
-        s = s.substring(n+2);
-        n = s.indexOf(startstr);
-        c++;
+        title = title.replace(/>/g,'-');
+        var startstr = '<h1>';
+        var n1 = resdata.indexOf('t clearfix');
+        var s = resdata.substring(n1-20);
+        var n = 1;
+        var all=title.trim();
+        var c = 0;
+        while (n > 0&&c<7) {
+          var dh = s.substring(0, n);
+          var ret = '';
+          var isinner=0;
+          for(var i=0;i<dh.length;i++){
+            if(isinner==0&&dh[i]==">"){
+              isinner=1;
+            }else if(isinner==1&&dh[i]=="<"){
+              isinner=0;
+            }else if(isinner){
+              if(dh[i]==" "||dh[i]=="\n"){
+
+              }else{
+                ret=ret+dh[i];
+              }
+            }
+          }
+          ret = ret.trim();
+          all=all+ret+"\n";
+          s = s.substring(n+2);
+          n = s.indexOf(startstr);
+          c++;
+        }
+        callback(all);
       }
-      callback(all);
     });
   });
   req.end();
