@@ -213,7 +213,8 @@ var relogin = function(){
   if(qqq){
     qqq.destroy();
   }
-  qqq=new QQ(buddyHandler, groupHandler).run();
+  qqq=new QQ(buddyHandler, groupHandler);
+  qqq.run();
 }
 
 module.exports={
