@@ -75,7 +75,7 @@ function getWeatherByCity(city,userId,callback){
             var citycode = ca[0];
             ret = citycode;
             reply = true;
-            getWeatherByCityCode(ret,userId,callback);
+            getWeatherByCityCode(city,ret,userId,callback);
           }
         }
       }
@@ -88,7 +88,7 @@ function getWeatherByCity(city,userId,callback){
   req.end();
 }
 
-function getWeatherByCityCode(cityCode,userId,callback){
+function getWeatherByCityCode(city,cityCode,userId,callback){
   var options = {
     hostname: 'www.weather.com.cn',
     port: 80,
