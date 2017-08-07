@@ -108,7 +108,11 @@ function getWeatherByCityCode(cityCode,callback){
         } else if (isinner == 1 && th[i] == "<") {
           isinner = 0;
         } else if (isinner) {
-          title = title + th[i];
+          if(th[i]==" "||th[i]=="\n"){
+
+          }else{
+            title=title+th[i];
+          }
         }
       }
       var startstr = 'sky skyid';
