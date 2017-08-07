@@ -117,11 +117,12 @@ function getWeatherByCityCode(cityCode,callback){
           }
         }
       }
+      console.log(title.trim());
       var startstr = 'sky skyid';
       var n1 = resdata.indexOf(startstr);
       var s = resdata.substring(n1-20);
       var n = 1;
-      var all=title.trim()+"\n";
+      var all=title.trim();
       var c = 0;
       while (n > 0&&c<7) {
         var dh = s.substring(0, n);
@@ -133,7 +134,7 @@ function getWeatherByCityCode(cityCode,callback){
           }else if(isinner==1&&dh[i]=="<"){
             isinner=0;
           }else if(isinner){
-            if(dh[i]==" "||dh[i]=="\n"||th[i]=="\t"||th[i]=="\r"){
+            if(dh[i]==" "||dh[i]=="\n"){
 
             }else{
               ret=ret+dh[i];
@@ -141,7 +142,6 @@ function getWeatherByCityCode(cityCode,callback){
           }
         }
         ret = ret.trim();
-        ret = ret.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<');
         all=all+ret+"\n";
         s = s.substring(n+10);
         n = s.indexOf(startstr);
