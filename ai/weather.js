@@ -64,8 +64,9 @@ function getWeatherByCity(city,userId,callback){
     });
     res.on('end', function () {
       var reply = false;
-      if(resdata.startsWith("s(")){
-        var arr = eval(resdata.substring(1));
+      var n = resdata.indexOf("(");
+      if(n>0){
+        var arr = eval(resdata.substring(n));
         var ret = "";
         if(arr.length>0){
           var cityref = arr[0].ref;
@@ -152,6 +153,7 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
           n = s.indexOf(startstr);
           c++;
         }
+        console.log(all);
         callback(all.trim());
       }
     });

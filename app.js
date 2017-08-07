@@ -36,7 +36,7 @@ const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weath
 
 
 app.get('/test',function(req,res){
-  getWeatherByCity('望京',function(ret){
+  getWeatherByCity('商丘',function(ret){
     res.send(ret+"");
   })
 });
