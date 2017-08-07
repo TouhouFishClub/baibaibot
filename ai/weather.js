@@ -120,7 +120,7 @@ function getWeatherByCityCode(cityCode,callback){
       var n1 = resdata.indexOf(startstr);
       var s = resdata.substring(n1-20);
       var n = 1;
-      var all=title+"\n";
+      var all=title.trim()+"\n";
       var c = 0;
       while (n > 0&&c<7) {
         var dh = s.substring(0, n);
