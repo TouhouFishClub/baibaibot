@@ -101,6 +101,7 @@ function getWeatherByCityCode(cityCode,callback){
       var t2 = resdata.indexOf('clearfix cnav');
       var th = resdata.substring(t1,t2);
       th = th.replace(/>></g,'>-<');
+      console.log(th);
       var title = '';
       var isinner = 0;
       for (var i = 0; i < th.length; i++) {
@@ -109,13 +110,14 @@ function getWeatherByCityCode(cityCode,callback){
         } else if (isinner == 1 && th[i] == "<") {
           isinner = 0;
         } else if (isinner) {
-          if(th[i]==" "||th[i]=="\n"){
+          if(th[i]==" "||th[i]=="\n"||th[i]=="\t"||th[i]=="\r"){
 
           }else{
             title=title+th[i];
           }
         }
       }
+      console.log(title.trim());
       var startstr = 'sky skyid';
       var n1 = resdata.indexOf(startstr);
       var s = resdata.substring(n1-20);
