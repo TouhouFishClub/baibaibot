@@ -120,17 +120,27 @@ function getWeatherByCityCode(cityCode,callback){
       while (n > 0&&c<7) {
         var dh = s.substring(0, n);
         var ret = '';
-        var isinner = 0;
-        for (var i = 0; i < dh.length; i++) {
-          if (isinner == 0 && dh[i] == ">") {
-            isinner = 1;
-          } else if (isinner == 1 && dh[i] == "<") {
-            isinner = 0;
-          } else if (isinner) {
-            ret = ret + dh[i];
+        var isinner=0;
+        var rn = 0;
+        for(var i=0;i<dh.length;i++){
+          if(isinner==0&&dh[i]==">"){
+            isinner=1;
+          }else if(isinner==1&&dh[i]=="<"){
+            isinner=0;
+          }else if(isinner){
+            if(dh[i]==" "||dh[i]=="\n"){
+              if(rn==0){
+                ret=ret+dh[i];
+              }
+              rn=1;
+            }else{
+              ret=ret+dh[i];
+              rn=0;
+            }
           }
         }
         ret = ret.trim();
+        ret = ret.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<');
         all=all+ret+"\n";
         s = s.substring(n+10);
         n = s.indexOf(startstr);

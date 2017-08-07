@@ -18,7 +18,6 @@ function baiduSearch(userid,content,callback){
       }else if(isinner==1&&s[i]=="<"){
         isinner=0;
       }else if(isinner){
-
         if(s[i]==" "||s[i]=="\n"){
           if(rn==0){
             ret=ret+s[i];
