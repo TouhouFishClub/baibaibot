@@ -152,7 +152,7 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
           n = s.indexOf(startstr);
           c++;
         }
-        callback(all);
+        callback(all.trim());
       }
     });
   });
