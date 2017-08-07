@@ -52,7 +52,16 @@ class QQ {
         this.userInfoMap = new Map();
         this.client = new Client();
         this.messageAgent = null;
+        this.online = true;
         this.msgHandlers = msgHandlers;
+    }
+
+    getOnline(){
+        return this.online;
+    }
+
+    destroy(){
+        this.online=false;
     }
 
     async run() {
@@ -419,6 +428,9 @@ class QQ {
     }
 
     async loopPoll() {
+        if(!this.online){
+            return;
+        }
         log.info('开始接收消息...');
         let failCnt = 0;
         do {

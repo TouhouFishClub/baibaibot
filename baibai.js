@@ -33,7 +33,8 @@ const discuHandler = new MsgHandler(
   }, 'discu'
 );
 
-new QQ(buddyHandler, groupHandler,discuHandler).run();
+var qqq = new QQ(buddyHandler, groupHandler,discuHandler);
+qqq.run();
 
 function handleBuddyMsg(msg,qq){
   var name = msg.name;
@@ -209,7 +210,10 @@ const replyBySwitch = (content, userName, callback) => {
 
 
 var relogin = function(){
-  new QQ(buddyHandler, groupHandler).run();
+  if(qqq){
+    qqq.destroy();
+  }
+  qqq=new QQ(buddyHandler, groupHandler).run();
 }
 
 module.exports={
