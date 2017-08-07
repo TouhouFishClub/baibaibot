@@ -102,7 +102,7 @@ function handleMsg_D(msg,qq,type){
     if(msg.user){
       var city = msg.user.city;
       if(city.length>0&&city.length<5){
-        getWeatherByCity(city,callback);
+        getWeatherByCity(city,name,callback);
       }
     }
     return;

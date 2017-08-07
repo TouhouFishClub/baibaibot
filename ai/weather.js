@@ -50,7 +50,7 @@ function weatherReply(city,userId,callback){
   req.end();
 }
 
-function getWeatherByCity(city,callback){
+function getWeatherByCity(city,userId,callback){
   var options = {
     hostname: 'toy1.weather.com.cn',
     port: 80,
@@ -64,6 +64,7 @@ function getWeatherByCity(city,callback){
       resdata+=chunk;
     });
     res.on('end', function () {
+      var reply = false;
       if(resdata.startsWith("s(")){
         var arr = eval(resdata.substring(1));
         var ret = "";
@@ -73,9 +74,13 @@ function getWeatherByCity(city,callback){
             var ca = cityref.split("~");
             var citycode = ca[0];
             ret = citycode;
-            console.log(ret);
+            reply = true;
             getWeatherByCityCode(ret,callback);
           }
+        }
+        if(reply == false){
+          ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇';
+          callback(ret);
         }
       }
     });
