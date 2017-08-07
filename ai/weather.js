@@ -121,7 +121,6 @@ function getWeatherByCityCode(cityCode,callback){
         var dh = s.substring(0, n);
         var ret = '';
         var isinner=0;
-        var rn = 0;
         for(var i=0;i<dh.length;i++){
           if(isinner==0&&dh[i]==">"){
             isinner=1;
@@ -129,13 +128,9 @@ function getWeatherByCityCode(cityCode,callback){
             isinner=0;
           }else if(isinner){
             if(dh[i]==" "||dh[i]=="\n"){
-              if(rn==0){
-                ret=ret+dh[i];
-              }
-              rn=1;
+
             }else{
               ret=ret+dh[i];
-              rn=0;
             }
           }
         }
