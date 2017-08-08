@@ -9,6 +9,11 @@ function baiduSearch(userid,content,callback){
     var s1 = s0.substring(n1+10);
     var n2 = s1.indexOf('c-container');
     var s = s1.substring(0,n2);
+    var nn1 = s.indexOf('<style');
+    var nn2 = s.indexOf('/style>');
+    if(nn1>0&&nn2>0){
+      s=s.substring(0,nn1)+s.substring(nn2+7);
+    }
     var ret = '';
     var isinner=0;
     var rn = 0;
