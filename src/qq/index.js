@@ -61,6 +61,7 @@ class QQ {
     }
 
     destroy(){
+        console.log('will destroy');
         this.online=false;
     }
 
@@ -428,12 +429,13 @@ class QQ {
     }
 
     async loopPoll() {
-        if(!this.online){
-            return;
-        }
+
         log.info('开始接收消息...');
         let failCnt = 0;
         do {
+            if(!this.online){
+                break;
+            }
             let msgContent;
             try {
                 msgContent = await this.client.post({

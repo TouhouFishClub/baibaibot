@@ -101,6 +101,7 @@ class HttpClient {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Content-Length': Buffer.byteLength(config.data)
         }, this.clientHeaders, config.headers);
+        var t1 = new Date();
         if(config.url=="https://d1.web2.qq.com/channel/poll2"){
           config.timeout=30000;
         }
@@ -110,6 +111,8 @@ class HttpClient {
                 this.handleResponse(response);
                 resolve(response.data);
             }).catch(error => {
+                var t2 = new Date();
+                console.log("time cost:"+(t2.getTime()-t1.getTime()));
                 console.log(error.message);
                 resolve({});
             });
