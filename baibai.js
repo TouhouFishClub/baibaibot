@@ -152,7 +152,7 @@ function reply(content,userName,callback){
   }else if(first==1){
     baikeReply(content.substring(1),userName,callback);
   }else if(first==4){
-    baiduSearch(userName,content,callback);
+    baiduSearch(userName,content.substring(1),callback);
   }else if(first==0){
     callback(money(content.substring(1)));
   }else if(first==8){
