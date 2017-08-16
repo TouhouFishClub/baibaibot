@@ -4,12 +4,13 @@ var expressWs = require('express-ws')(app);
 var util = require('util');
 var URL = require('url');
 var fs = require('fs');
+const opn = require('opn')
 app.use(express.static('./static'));
 
 const {relogin} = require('./baibai');
 
 app.listen(10086,function(){
-
+  opn('http://127.0.0.1:10086/test', {app: ['chrome']})
 });
 app.get('/login',function(req,res){
   fs.unlink('qq-bot.cookie',function(){
@@ -33,11 +34,12 @@ const {getloc,route} = require('./ai/map');
 const {urlget} = require('./src/utils/httpreq');
 const {cal} = require('./ai/calculator')
 const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weather');
-
+const xchange = require('./ai/xchange')
 
 app.get('/test',function(req,res){
-  getWeatherByCity('',function(ret){
-    res.send(ret+"");
-  })
+  res.send(xchange('1.2日元'), res => console.log(res));
+  // getWeatherByCity('',function(ret){
+  //   res.send(ret+"");
+  // })
 });
 
