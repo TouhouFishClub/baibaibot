@@ -80,7 +80,6 @@ const getYQLData = code =>
       .then(response => resolve(response.data))
       .catch(error => {
         console.log(error)
-        resolve({})
       })
   })
 
