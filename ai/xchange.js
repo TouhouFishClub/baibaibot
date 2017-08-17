@@ -12,7 +12,8 @@ module.exports = function(userId, content, callback){
   let res = ''
   switch(content.trim()){
     case '':
-      res = `输入格式为[数字][币种]，如10239.23日元，默认转换为人民币；
+      res = `
+      输入格式为[数字][币种]，如10239.23日元，默认转换为人民币；
       如果只输入币种，则显示汇率信息；
       输入“币种”，可查看支持转换的币种；`
       callback(res)
@@ -46,7 +47,8 @@ const formatData = async (code, money, callback) => {
       /* 输入币值，则进行转换 */
       let rateObj = YQLdata.query.results.rate
       if(rateObj.Rate !== 'N/A'){
-        response = `${rateObj.Date} ${rateObj.Time}
+        response = `
+        ${rateObj.Date} ${rateObj.Time}
         ${money}${codeToCurrency(rateObj.Name.split('/')[0])} = ${(money*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}
         `
       } else {
@@ -58,7 +60,8 @@ const formatData = async (code, money, callback) => {
       let rateObj = YQLdata.query.results.rate
       let rateObjCNY = YQLdataCNY.query.results.rate
       if(rateObj.Rate !== 'N/A' && rateObjCNY.Rate !== 'N/A'){
-        response = `${rateObj.Date} ${rateObj.Time}
+        response = `
+        ${rateObj.Date} ${rateObj.Time}
         1${codeToCurrency(rateObj.Name.split('/')[0])} = ${(1*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}
         ${rateObjCNY.Date} ${rateObjCNY.Time}
         1${codeToCurrency(rateObjCNY.Name.split('/')[0])} = ${(1*rateObjCNY.Rate).toFixed(4)}${codeToCurrency(rateObjCNY.Name.split('/')[1])}
