@@ -60,7 +60,7 @@ const formatData = async (code, money, callback) => {
       if(rateObj.Rate !== 'N/A' && rateObjCNY.Rate !== 'N/A'){
         response = `${rateObj.Date} ${rateObj.Time}
         1${codeToCurrency(rateObj.Name.split('/')[0])} = ${(1*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}
-        response = ${rateObjCNY.Date} ${rateObjCNY.Time}
+        ${rateObjCNY.Date} ${rateObjCNY.Time}
         1${codeToCurrency(rateObjCNY.Name.split('/')[0])} = ${(1*rateObjCNY.Rate).toFixed(4)}${codeToCurrency(rateObjCNY.Name.split('/')[1])}
         `
       } else {
