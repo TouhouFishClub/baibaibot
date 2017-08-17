@@ -29,6 +29,7 @@ app.get('/login',function(req,res){
 app.get('/log',function(req,res){
   var logs = fs.readFileSync('./out.log');
   res.setHeader('Content-Type','text/plain');
+  res.setEncoding('utf-8');
   res.charset = 'utf-8';
   res.send(logs);
 });
