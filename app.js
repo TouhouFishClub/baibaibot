@@ -44,7 +44,7 @@ const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weath
 const xchange = require('./ai/xchange')
 
 app.get('/test',function(req,res){
-  res.send(xchange('QQid', '4美元', callback));
+  res.send(xchange('QQid', '币种', callback));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
@@ -55,6 +55,7 @@ var callback = function(res){
     setTimeout(function(){
 
       console.log(res)
+      console.log('\n=========\n')
 
     },1000);
   }

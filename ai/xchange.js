@@ -16,8 +16,13 @@ module.exports = function(userId, content, callback){
       callback(res)
       break
     case '币种':
-      res = `支持的币种\n${Object.keys(currencyCodeObj).join('、')}`
-      callback(res)
+      let str = Object.keys(currencyCodeObj).join('、')
+      callback('支持的币种')
+      while(str.length){
+        sli = str.slice(0, 250)
+        callback(sli)
+        str = str.split(sli)[1]
+      }
       break
     default:
       let hasMoney
