@@ -76,6 +76,9 @@ function handleMsg_D(msg,qq,type){
   var callback = function(res){
     console.log(name,content,groupName,res);
     if(res.trim().length>0){
+      if(res.length>250){
+        res = res.substring(0,250)+'.......';
+      }
       setTimeout(function(){
         if(type=='discu'){
           qq.sendDiscuMsg(groupid," "+res);
