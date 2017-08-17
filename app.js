@@ -26,6 +26,12 @@ app.get('/login',function(req,res){
   })
 });
 
+app.get('/log',function(req,res){
+  var logs = fs.readFileSync('./out.log');
+  res.setHeader('Content-Type','text/plain');
+  res.send(logs);
+});
+
 
 const {baikeReply} = require('./ai/baidusearch');
 const {translateMsg}=require('./ai/translate');
@@ -37,7 +43,7 @@ const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weath
 const xchange = require('./ai/xchange')
 
 app.get('/test',function(req,res){
-  res.send(xchange('QQid', '美元', res => console.log(JSON.stringify(res))));
+  res.send(xchange('QQid', '5美元', res => console.log(JSON.stringify(res))));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
