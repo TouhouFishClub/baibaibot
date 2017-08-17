@@ -12,7 +12,7 @@ module.exports = function(userId, content, callback){
   let res = ''
   switch(content.trim()){
     case '':
-      res = `输入格式为[数字][币种]，如10239.23日元，默认转换为人民币；\n如果只输入币种，则显示汇率信息；\n输入“币种”，可查看支持转换的币种；`
+      res = `输入格式为\`c[数字][币种]，如10239.23日元，默认转换为人民币；\n如果只输入币种，则显示汇率信息；\n输入“\`c币种”，可查看支持转换的币种；`
       callback(res)
       break
     case '币种':
