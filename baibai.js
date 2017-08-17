@@ -74,6 +74,7 @@ function handleMsg_D(msg,qq,type){
   var name = msg.name;
   var groupName = msg.groupName;
   var callback = function(res){
+    console.log(name,content,groupName,res);
     if(res.trim().length>0){
       setTimeout(function(){
         if(type=='discu'){
