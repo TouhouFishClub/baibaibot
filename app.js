@@ -37,7 +37,7 @@ const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weath
 const xchange = require('./ai/xchange')
 
 app.get('/test',function(req,res){
-  res.send(xchange('QQid', '美元', res => console.log(JSON.stringify(res))));
+  res.send(xchange('QQid', '9美元', res => console.log(JSON.stringify(res))));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })

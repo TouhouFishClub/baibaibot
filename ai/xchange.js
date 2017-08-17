@@ -40,7 +40,7 @@ module.exports = function(userId, content, callback){
 
 
 const formatData = async (code, money, callback) => {
-  let response;
+  let response = '';
   if(code){
     if(money){
       let YQLdata = await getYQLData(`${code}CNY`)
