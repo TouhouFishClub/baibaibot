@@ -45,6 +45,7 @@ const xchange = require('./ai/xchange')
 
 app.get('/test',function(req,res){
   res.send(xchange('QQid', '4美元', res => {
+    console.log("111"+res);
     if(res.trim().length > 0){
       console.log(res)
     }
