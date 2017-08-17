@@ -6,7 +6,7 @@ var tls = require('tls');
 const { QQ, MsgHandler } = require('./qqlib');
 
 const{saveTxt,answer} = require('./lib/mongo');
-
+const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
 const {weatherReply,getWeatherByCity} = require('./ai/weather');
@@ -91,7 +91,7 @@ function handleMsg_D(msg,qq,type){
     var c1 = content.substring(1);
     if(c1==""){
       var ret = "`1+名词：百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n";
-      ret = ret + "`4+内容：百度查询\n`0+数字：大写数字转换\n`8+地点A-地点B：公交查询\n";
+      ret = ret + "`4+内容：百度查询\n`5汇率转换\n`0+数字：大写数字转换\n`8+地点A-地点B：公交查询\n";
       ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n虾扯蛋：``+对话";
       callback(ret);
     }else{
@@ -155,6 +155,8 @@ function reply(content,userName,callback){
     baiduSearch(userName,content.substring(1),callback);
   }else if(first==0){
     callback(money(content.substring(1)));
+  }else if(first==5){
+    callback(xchange(userName,content.substring(1),callback));
   }else if(first==8){
     var ca = content.substring(1).split('-');
     if(ca.length==2){
