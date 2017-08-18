@@ -12,7 +12,7 @@ module.exports = function(userId, content, callback){
   let res = ''
   switch(content.trim()){
     case '':
-      res = `输入格式为\`c[数字][币种]，如10239.23日元，默认转换为人民币；\n如果只输入币种，则显示汇率信息；\n输入“\`c币种”，可查看支持转换的币种；`
+      res = `输入格式为\`c[数字][币种/币种代码]，如10239.23日元，默认转换为人民币；\n如果只输入币种，则显示汇率信息；\n输入“\`c币种”，可查看支持转换的币种；`
       callback(res)
       break
     case '币种':
@@ -94,8 +94,16 @@ const getYQLData = code =>
 
 
 const currencyCodeObj = {
-  "阿联酋迪拉姆" : "AED",
+  "人民币" : "CNY",
+  "美元" : "USD",
+  "日元" : "JPY",
+  "欧元" : "EUR",
+  "英镑" : "GBP",
+  "韩元" : "KRW",
+  "港元" : "HKD",
   "澳元" : "AUD",
+  "加元" : "CAD",
+  "阿联酋迪拉姆" : "AED",
   "澳门元" : "MOP",
   "阿尔及利亚第纳尔" : "DZD",
   "阿曼里亚尔" : "OMR",
@@ -109,11 +117,8 @@ const currencyCodeObj = {
   "丹麦克朗" : "DKK",
   "俄罗斯卢布" : "RUB",
   "菲律宾比索" : "PHP",
-  "港元" : "HKD",
   "哥伦比亚比索" : "COP",
   "哥斯达黎加科朗" : "CRC",
-  "韩元" : "KRW",
-  "加元" : "CAD",
   "捷克克朗" : "CZK",
   "柬埔寨瑞尔" : "KHR",
   "克罗地亚库纳" : "HRK",
@@ -124,17 +129,13 @@ const currencyCodeObj = {
   "罗马尼亚列伊" : "RON",
   "黎巴嫩镑" : "LBP",
   "离岸人民币" : "CNH",
-  "美元" : "USD",
   "缅甸元" : "BUK",
   "马来西亚林吉特" : "MYR",
   "摩洛哥道拉姆" : "MAD",
   "墨西哥元" : "MXN",
   "挪威克朗" : "NOK",
   "南非兰特" : "ZAR",
-  "欧元" : "EUR",
-  "人民币" : "CNY",
   "瑞士法郎" : "CHF",
-  "日元" : "JPY",
   "瑞典克朗" : "SEK",
   "沙特里亚尔" : "SAR",
   "斯里兰卡卢比" : "LKR",
@@ -150,7 +151,6 @@ const currencyCodeObj = {
   "新加坡元" : "SGD",
   "新台币" : "TWD",
   "匈牙利福林" : "HUF",
-  "英镑" : "GBP",
   "约旦第纳尔" : "JOD",
   "伊拉克第纳尔" : "IQD",
   "越南盾" : "VND",
@@ -160,6 +160,7 @@ const currencyCodeObj = {
   "智利比索" : "CLP",
   "以太币" : "ETH",
   "比特币" : "BTC",
+  "莱特币" : "LTB",
 }
 
 const codeCurrencyObj = {
@@ -229,6 +230,7 @@ const codeCurrencyObj = {
   "CLP" : "智利比索",
   "ETH" : "以太币",
   "BTC" : "比特币",
+  "LTB" : "莱特币",
 }
 
 const currencyToCodeSynonyms = str => {
