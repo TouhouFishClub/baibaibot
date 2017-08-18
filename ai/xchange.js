@@ -16,13 +16,13 @@ module.exports = function(userId, content, callback){
       callback(res)
       break
     case '币种':
-      let str = Object.keys(currencyCodeObj).join('、')
-      callback('支持的币种')
+      let str = Object.keys(currencyCodeObj).join('、'), callbackArr = ['支持的币种']
       while(str.length){
         sli = str.slice(0, 250)
-        callback(sli)
+        callbackArr.push(sli)
         str = str.split(sli)[1]
       }
+      callbackArr.forEach(ele => callback(ele))
       break
     default:
       let hasMoney
@@ -30,10 +30,10 @@ module.exports = function(userId, content, callback){
         /* 输入数字 */
         let currency = content.split(hasMoney)[1].split('/n')[0].trim(),
           money = parseFloat(hasMoney)
-        formatData(currencyToCode(currency), money, callback)
+        formatData(currencyToCodeSynonyms(currency), money, callback)
       } else {
         /* 未输入数字 */
-        formatData(currencyToCode(content), null, callback)
+        formatData(currencyToCodeSynonyms(content), null, callback)
       }
   }
 }
@@ -41,7 +41,7 @@ module.exports = function(userId, content, callback){
 
 
 const formatData = async (code, money, callback) => {
-  let response = '';
+  let response = ''
   if(code){
     if(money){
       let YQLdata = await getYQLData(`${code}CNY`)
@@ -221,6 +221,29 @@ const codeCurrencyObj = {
   "INR" : "印度卢比",
   "IDR" : "印尼卢比",
   "CLP" : "智利比索",
+}
+
+const currencyToCodeSynonyms = str => {
+  switch (str){
+    case '港币':
+      return currencyToCode('港元')
+    case '台币':
+      return currencyToCode('新台币')
+    case '毛爷爷':
+    case 'RMB':
+      return currencyToCode('人民币')
+    case '美金':
+    case '刀':
+    case '$':
+      return currencyToCode('美元')
+    case 'DMM':
+      return currencyToCode('日元')
+    default:
+      if(codeToCurrency(str.toUpperCase()))
+        return str.toUpperCase()
+      else
+        return currencyToCode(str)
+  }
 }
 
 const currencyToCode = str => currencyCodeObj[str]
