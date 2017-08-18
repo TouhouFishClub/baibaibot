@@ -48,8 +48,8 @@ const formatData = async (code, money, callback) => {
   let response = ''
   if(code){
     if(money){
-      let YQLdata = await getYQLData(`${code}CNY`)
       /* 输入币值，则进行转换 */
+      let YQLdata = await getYQLData(`${code}CNY`)
       let rateObj = YQLdata.query.results.rate
       if(rateObj.Rate !== 'N/A'){
         response = `${rateObj.Date} ${rateObj.Time}\n${money}${codeToCurrency(rateObj.Name.split('/')[0])} = ${(money*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}`
@@ -57,6 +57,7 @@ const formatData = async (code, money, callback) => {
         response = '币种代码错误'
       }
     } else {
+      /* 未输入币值，则输出当前汇率 */
       let YQLdata = await getYQLData(`${code}CNY`)
       let YQLdataCNY = await getYQLData(`CNY${code}`)
       let rateObj = YQLdata.query.results.rate
@@ -75,6 +76,7 @@ const formatData = async (code, money, callback) => {
 
 const getYQLData = code =>
   new Promise((resolve, reject) => {
+    /* 发起查询请求 */
     Axios.get('https://query.yahooapis.com/v1/public/yql',{
       params: {
         q: `select * from yahoo.finance.xchange where pair in ("${code}")`,
@@ -92,7 +94,7 @@ const getYQLData = code =>
       })
   })
 
-
+/* 币种代码转换 */
 const currencyCodeObj = {
   "人民币" : "CNY",
   "美元" : "USD",
@@ -233,6 +235,7 @@ const codeCurrencyObj = {
   "LTC" : "莱特币",
 }
 
+/* 处理同名 */
 const currencyToCodeSynonyms = str => {
   switch (str){
     case '港币':
