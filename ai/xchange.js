@@ -22,7 +22,10 @@ module.exports = function(userId, content, callback){
         callbackArr.push(sli)
         str = str.split(sli)[1]
       }
-      callbackArr.forEach(ele => callback(ele))
+      callbackArr.forEach(async (ele, idx) => {
+        await wait(idx * 500)
+        callback(ele)
+      })
       break
     default:
       let hasMoney
@@ -38,6 +41,7 @@ module.exports = function(userId, content, callback){
   }
 }
 
+const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
 
 const formatData = async (code, money, callback) => {

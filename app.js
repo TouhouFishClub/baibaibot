@@ -44,9 +44,7 @@ const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weath
 const xchange = require('./ai/xchange')
 
 app.get('/test',function(req,res){
-  res.send(xchange('QQid', '19jpy', callback));
-  res.send(xchange('QQid', '25DMM', callback));
-  res.send(xchange('QQid', '25.23港币', callback));
+  res.send(xchange('QQid', '币种', callback));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
