@@ -12,7 +12,7 @@ module.exports = function(userId, content, callback){
   let res = ''
   switch(content.trim()){
     case '':
-      res = `输入格式为\`c[数字][币种/币种代码]，如10239.23日元，默认转换为人民币；\n如果只输入币种，则显示汇率信息；\n输入“\`c币种”，可查看支持转换的币种；`
+      res = `输入格式为\`c[数字][币种/币种代码]，如10239.23日元，默认转换为人民币；\n可使用“-”来连接两种币种转换，如200日元-美元\n如果只输入币种，则显示汇率信息；\n输入“\`c币种”，可查看支持转换的币种；`
       callback(res)
       break
     case '币种':
@@ -33,10 +33,20 @@ module.exports = function(userId, content, callback){
         /* 输入数字 */
         let currency = content.split(hasMoney)[1].split('/n')[0].trim(),
           money = parseFloat(hasMoney)
-        formatData(currencyToCodeSynonyms(currency), money, callback)
+        if(currency.split('-').length - 1){
+          let codes = currency.split('-')
+          formatData([currencyToCodeSynonyms(codes[0].trim()), currencyToCodeSynonyms(codes[1].trim())], money, callback)
+        } else {
+          formatData([currencyToCodeSynonyms(currency), 'CNY'], money, callback)
+        }
       } else {
         /* 未输入数字 */
-        formatData(currencyToCodeSynonyms(content), null, callback)
+        if(content.split('-').length - 1){
+          let codes = content.split('-')
+          formatData([currencyToCodeSynonyms(codes[0].trim()), currencyToCodeSynonyms(codes[1].trim())], null, callback)
+        } else {
+          formatData([currencyToCodeSynonyms(content), 'CNY'], null, callback)
+        }
       }
   }
 }
@@ -44,12 +54,12 @@ module.exports = function(userId, content, callback){
 const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
 
-const formatData = async (code, money, callback) => {
+const formatData = async (codeArr, money, callback) => {
   let response = ''
-  if(code){
+  if(codeArr){
     if(money){
       /* 输入币值，则进行转换 */
-      let YQLdata = await getYQLData(`${code}CNY`)
+      let YQLdata = await getYQLData(`"${codeArr[0]}${codeArr[1]}"`)
       let rateObj = YQLdata.query.results.rate
       if(rateObj.Rate !== 'N/A'){
         response = `${rateObj.Date} ${rateObj.Time}\n${money}${codeToCurrency(rateObj.Name.split('/')[0])} = ${(money*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}`
@@ -58,12 +68,10 @@ const formatData = async (code, money, callback) => {
       }
     } else {
       /* 未输入币值，则输出当前汇率 */
-      let YQLdata = await getYQLData(`${code}CNY`)
-      let YQLdataCNY = await getYQLData(`CNY${code}`)
+      let YQLdata = await getYQLData(`"${codeArr[0]}${codeArr[1]}","${codeArr[1]}${codeArr[0]}"`)
       let rateObj = YQLdata.query.results.rate
-      let rateObjCNY = YQLdataCNY.query.results.rate
-      if(rateObj.Rate !== 'N/A' && rateObjCNY.Rate !== 'N/A'){
-        response = `${rateObj.Date} ${rateObj.Time}\n1${codeToCurrency(rateObj.Name.split('/')[0])} = ${(1*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}\n${rateObjCNY.Date} ${rateObjCNY.Time}\n1${codeToCurrency(rateObjCNY.Name.split('/')[0])} = ${(1*rateObjCNY.Rate).toFixed(4)}${codeToCurrency(rateObjCNY.Name.split('/')[1])}`
+      if(rateObj[0].Rate !== 'N/A' && rateObj[1].Rate !== 'N/A'){
+        response = `${rateObj[0].Date} ${rateObj[0].Time}\n1${codeToCurrency(rateObj[0].Name.split('/')[0])} = ${(1*rateObj[0].Rate).toFixed(4)}${codeToCurrency(rateObj[0].Name.split('/')[1])}\n${rateObj[1].Date} ${rateObj[1].Time}\n1${codeToCurrency(rateObj[1].Name.split('/')[0])} = ${(1*rateObj[1].Rate).toFixed(4)}${codeToCurrency(rateObj[1].Name.split('/')[1])}`
       } else {
         response = '币种代码错误'
       }
@@ -79,7 +87,7 @@ const getYQLData = code =>
     /* 发起查询请求 */
     Axios.get('https://query.yahooapis.com/v1/public/yql',{
       params: {
-        q: `select * from yahoo.finance.xchange where pair in ("${code}")`,
+        q: `select * from yahoo.finance.xchange where pair in (${code})`,
         format: 'json',
         env: 'store://datatables.org/alltableswithkeys'
       },
