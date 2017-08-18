@@ -158,6 +158,8 @@ const currencyCodeObj = {
   "印度卢比" : "INR",
   "印尼卢比" : "IDR",
   "智利比索" : "CLP",
+  "以太币" : "ETH",
+  "比特币" : "BTC",
 }
 
 const codeCurrencyObj = {
@@ -225,6 +227,8 @@ const codeCurrencyObj = {
   "INR" : "印度卢比",
   "IDR" : "印尼卢比",
   "CLP" : "智利比索",
+  "ETH" : "以太币",
+  "BTC" : "比特币",
 }
 
 const currencyToCodeSynonyms = str => {
