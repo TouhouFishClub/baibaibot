@@ -237,6 +237,7 @@ const currencyToCodeSynonyms = str => {
     case '$':
       return currencyToCode('美元')
     case 'DMM':
+    case 'dmm':
       return currencyToCode('日元')
     default:
       if(codeToCurrency(str.toUpperCase()))
