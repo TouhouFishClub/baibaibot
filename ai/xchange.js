@@ -160,7 +160,7 @@ const currencyCodeObj = {
   "智利比索" : "CLP",
   "以太币" : "ETH",
   "比特币" : "BTC",
-  "莱特币" : "LTB",
+  "莱特币" : "LTC",
 }
 
 const codeCurrencyObj = {
@@ -230,7 +230,7 @@ const codeCurrencyObj = {
   "CLP" : "智利比索",
   "ETH" : "以太币",
   "BTC" : "比特币",
-  "LTB" : "莱特币",
+  "LTC" : "莱特币",
 }
 
 const currencyToCodeSynonyms = str => {
