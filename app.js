@@ -47,7 +47,8 @@ app.get('/test',function(req,res){
   res.send(xchange('QQid', '100美元', callback));
   res.send(xchange('QQid', '100美元-日元', callback));
   res.send(xchange('QQid', '100美元-EUR', callback));
-  res.send(xchange('QQid', 'EUR-日元', callback));
+  res.send(xchange('QQid', 'EUR-100日元', callback));
+  res.send(xchange('QQid', '2300EUR-100日元', callback));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
