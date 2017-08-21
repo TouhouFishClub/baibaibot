@@ -4,6 +4,7 @@ var expressWs = require('express-ws')(app);
 var util = require('util');
 var URL = require('url');
 var fs = require('fs');
+const Axios = require('axios')
 const opn = require('opn')
 app.use(express.static('./static'));
 
@@ -44,11 +45,10 @@ const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weath
 const xchange = require('./ai/xchange')
 
 app.get('/test',function(req,res){
-  res.send(xchange('QQid', '100美元', callback));
-  res.send(xchange('QQid', '100美元-日元', callback));
-  res.send(xchange('QQid', '100美元-EUR', callback));
-  res.send(xchange('QQid', 'EUR-100日元', callback));
-  res.send(xchange('QQid', '2300EUR-100日元', callback));
+  res.send(xchange('QQid', 'ETH', callback));
+  res.send(xchange('QQid', 'BTC', callback));
+  res.send(xchange('QQid', '1.3比特币-美元', callback));
+  res.send(xchange('QQid', 'USD-LTC', callback));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })

@@ -57,23 +57,45 @@ const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 const formatData = async (codeArr, money, callback) => {
   let response = ''
   if(codeArr){
-    if(money){
-      /* 输入币值，则进行转换 */
-      let YQLdata = await getYQLData(`"${codeArr[0]}${codeArr[1]}"`)
-      let rateObj = YQLdata.query.results.rate
-      if(rateObj.Rate !== 'N/A'){
-        response = `${rateObj.Date} ${rateObj.Time}\n${money}${codeToCurrency(rateObj.Name.split('/')[0])} = ${(money*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}`
+    let checkCode = {
+      'ETH': 1,
+      'BTC': 1,
+      'LTC': 1
+    }
+    if((checkCode[codeArr[0]] || checkCode[codeArr[1]]) && (checkCode[codeArr[1]] !== checkCode[codeArr[0]])){
+      let amount
+      if(checkCode[codeArr[0]]){
+        let res = await getCoinbaseData(`${codeArr[0]}-${codeArr[1]}`)
+        amount = res.data.amount
       } else {
-        response = '币种代码错误'
+        let res = await getCoinbaseData(`${codeArr[1]}-${codeArr[0]}`)
+        amount = res.data.amount
+        amount = 1 / amount
+      }
+      if(money){
+        response = `${money}${codeToCurrency(codeArr[0])} = ${(money*amount).toFixed(4)}${codeToCurrency(codeArr[1])}`
+      } else {
+        response = `1${codeToCurrency(codeArr[0])} = ${(1*amount).toFixed(4)}${codeToCurrency(codeArr[1])}\n1${codeToCurrency(codeArr[1])} = ${(1 / amount).toFixed(4)}${codeToCurrency(codeArr[0])}\n`
       }
     } else {
-      /* 未输入币值，则输出当前汇率 */
-      let YQLdata = await getYQLData(`"${codeArr[0]}${codeArr[1]}","${codeArr[1]}${codeArr[0]}"`)
-      let rateObj = YQLdata.query.results.rate
-      if(rateObj[0].Rate !== 'N/A' && rateObj[1].Rate !== 'N/A'){
-        response = `${rateObj[0].Date} ${rateObj[0].Time}\n1${codeToCurrency(rateObj[0].Name.split('/')[0])} = ${(1*rateObj[0].Rate).toFixed(4)}${codeToCurrency(rateObj[0].Name.split('/')[1])}\n${rateObj[1].Date} ${rateObj[1].Time}\n1${codeToCurrency(rateObj[1].Name.split('/')[0])} = ${(1*rateObj[1].Rate).toFixed(4)}${codeToCurrency(rateObj[1].Name.split('/')[1])}`
+      if(money){
+        /* 输入币值，则进行转换 */
+        let YQLdata = await getYQLData(`"${codeArr[0]}${codeArr[1]}"`)
+        let rateObj = YQLdata.query.results.rate
+        if(rateObj.Rate !== 'N/A'){
+          response = `${rateObj.Date} ${rateObj.Time}\n${money}${codeToCurrency(rateObj.Name.split('/')[0])} = ${(money*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}`
+        } else {
+          response = '币种代码错误'
+        }
       } else {
-        response = '币种代码错误'
+        /* 未输入币值，则输出当前汇率 */
+        let YQLdata = await getYQLData(`"${codeArr[0]}${codeArr[1]}","${codeArr[1]}${codeArr[0]}"`)
+        let rateObj = YQLdata.query.results.rate
+        if(rateObj[0].Rate !== 'N/A' && rateObj[1].Rate !== 'N/A'){
+          response = `${rateObj[0].Date} ${rateObj[0].Time}\n1${codeToCurrency(rateObj[0].Name.split('/')[0])} = ${(1*rateObj[0].Rate).toFixed(4)}${codeToCurrency(rateObj[0].Name.split('/')[1])}\n${rateObj[1].Date} ${rateObj[1].Time}\n1${codeToCurrency(rateObj[1].Name.split('/')[0])} = ${(1*rateObj[1].Rate).toFixed(4)}${codeToCurrency(rateObj[1].Name.split('/')[1])}`
+        } else {
+          response = '币种代码错误'
+        }
       }
     }
   } else {
@@ -81,6 +103,20 @@ const formatData = async (codeArr, money, callback) => {
   }
   callback(response)
 }
+
+const getCoinbaseData = code =>
+  new Promise((resolve, reject) => {
+    Axios.get(`https://api.coinbase.com/v2/prices/${code}/spot`, {
+      timeout: 30000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+      }
+    })
+      .then(response => resolve(response.data))
+      .catch(error => {
+        console.log(error)
+      })
+  })
 
 const getYQLData = code =>
   new Promise((resolve, reject) => {
