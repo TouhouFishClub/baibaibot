@@ -288,6 +288,8 @@ const currencyToCodeSynonyms = str => {
       return currencyToCode('新台币')
     case '毛爷爷':
     case 'RMB':
+    case 'rmb':
+    case 'r':
       return currencyToCode('人民币')
     case '美金':
     case '刀':
