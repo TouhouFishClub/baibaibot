@@ -10,12 +10,13 @@ function searchSongByName(userName,songName,callback){
     if(code==200){
       if(data.result.songs){
         var song = data.result.songs[0];
-        console.log(song);
         var id = song.id;
         var songname = song.name;
         var songurl = 'http://music.163.com/song?id='+id;
         callback(songname);
-        callback(songurl);
+        setTimeout(function(){
+          callback(songurl);
+        },500);
       }else{
         callback('不知道'+songName+'是什么歌哇！'+userName+'唱给我听好不好哇！')
       }
