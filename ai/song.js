@@ -4,7 +4,7 @@ const Axios = require('axios')
 
 
 function searchSongByName(userName,songName,callback){
-  var param = 's=aaa&type=1';
+  var param = 's='+encodeURIComponent(songName)+'&type=1';
   getSong(param).then(function(data){
     var code = data.code;
     if(code==200){
