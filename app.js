@@ -43,6 +43,7 @@ const {urlget} = require('./src/utils/httpreq');
 const {cal} = require('./ai/calculator')
 const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weather');
 const xchange = require('./ai/xchange')
+<<<<<<< HEAD
 const kce = require('./ai/kanColleEquip')
 
 app.get('/test',function(req,res){
