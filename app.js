@@ -43,15 +43,17 @@ const {urlget} = require('./src/utils/httpreq');
 const {cal} = require('./ai/calculator')
 const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weather');
 const xchange = require('./ai/xchange')
+const kce = require('./ai/kanColleEquip')
 
 app.get('/test',function(req,res){
-  res.send(xchange('QQid', 'ETH', callback));
-  res.send(xchange('QQid', 'BTC', callback));
-  res.send(xchange('QQid', '1.3比特币-美元', callback));
-  res.send(xchange('QQid', 'USD-LTC', callback));
+  // res.send(xchange('QQid', 'ETH', callback));
+  // res.send(xchange('QQid', 'BTC', callback));
+  // res.send(xchange('QQid', '1.3比特币-美元', callback));
+  // res.send(xchange('QQid', 'USD-LTC', callback));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
+  res.send(kce('QQid', '主炮', callback))
 });
 
 var callback = function(res){

@@ -4,23 +4,146 @@ const _ = require('lodash')
 
 module.exports = function (userId, content, callback) {
   let response
-  //TODO: each data
-  Data.map(item => {
-
-  })
   switch(content){
     case '':
-      response = `\n【说明文字】`
+      response = `\n默认显示当天可改修的装备\n可使用[类型]-[星期]来查看特定星期改修\n可查询某个装备（无视日期）\n支持的装备类型：${checkItemType.join("、")}，部分支持简写\n`
       break;
     default:
+      if(content.split('-').length - 1){
+        //特定周期
+        let sp = content.split('-')
+        response = JSON.stringify(checkIsItemType(sp[0], sp[1]))
+      } else {
+        //当天
+        response = JSON.stringify(checkIsItemType(content, getJSTDayofWeek()))
+      }
 
   }
-  callback(response)
+  console.log(response)
+  //callback(response)
 }
 
-const Data = fs.readJsonSync(path.join(__dirname, 'assets', 'data.json'))
 
-const improveData = _.sortBy(Data, ['icon', 'id'])
+// DataPath = http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json
+const Data = fs.readJsonSync(path.join('assets', 'data.json'))
+
+const itemTypeSynonyms = str => {
+  switch (str){
+    case '小口径':
+    case '小口径主炮':
+      return '小口径主砲'
+    case '中口径':
+    case '中口径主炮':
+      return '小口径主砲'
+    case '大口径':
+    case '大口径主炮':
+      return '大口径主砲'
+    case '主炮':
+      return '主砲'
+    case '副炮':
+      return '副砲'
+    case '鱼雷':
+    case '雷':
+      return '魚雷'
+    case '舰战':
+      return '艦上戦闘機'
+    case '舰爆':
+    case '煎包':
+      return '艦上爆撃機'
+    case '飞机':
+      return '艦上'
+    case '水侦':
+      return '水上偵察機'
+    case '水暴':
+    case '水爆':
+      return '水上爆撃機'
+    case '电探':
+      return '電探'
+    case 'AP弹':
+    case '撤甲弹':
+    case '穿甲弹':
+      return '対艦強化弾'
+    case '机铳':
+      return '対空機銃'
+    case '暴雷':
+    case '爆雷':
+      return '爆雷'
+    case '水听':
+      return 'ソナー'
+    case '机关':
+    case '缶':
+    case '锅炉':
+      return '機関部強化'
+    case '大发':
+    case '大发动艇':
+      return '上陸用舟艇'
+    case 'pad':
+    case 'PAD':
+    case '装甲':
+      return '追加装甲'
+    case '大灯':
+      return '大型探照灯'
+    case '水战':
+      return '水上戦闘機'
+    default:
+      return str
+  }
+}
+
+const checkItemType = Array.from(new Set(_.map(Data, 'type')))
+// types = ["小口径主砲","中口径主砲","大口径主砲","副砲","魚雷","艦上戦闘機","艦上爆撃機","艦上偵察機",
+//          "水上偵察機","水上爆撃機","小型電探","大型電探","対艦強化弾","対空機銃","爆雷","ソナー","機関部強化",
+//          "上陸用舟艇","追加装甲(中型)","追加装甲(大型)","探照灯","大型探照灯","高射装置","特型 内火艇","潜水艦装備","水上戦闘機"]
+
+const checkIsItemType = (str, week) => {
+  let synonymsStr = itemTypeSynonyms(str)
+  let checkReg = new RegExp(synonymsStr, 'g')
+  checkItemType.forEach(ele => {
+    if(checkReg.test(ele)){
+      console.log('>>>>>>' + ele)
+      return searchByType(synonymsStr, week)
+    }
+    return searchByItem(synonymsStr)
+  })
+}
+
+const searchByType = (type, week) => {
+  let searchObj = {}
+  const checkReg = new RegExp(type, 'g')
+  Data.forEach(ele => {
+    if(checkReg.test(ele.type)){
+      let improvementShip = improvementForDay(ele, week);
+      if(improvementShip){
+        if(!searchObj[ele.type]){
+          searchObj[ele.type] = []
+        }
+        searchObj[ele.type].push(improvementShip)
+      }
+    }
+  })
+  console.log(searchObj)
+  return searchObj
+}
+
+const improvementForDay = (item, day) => {
+  day = day % 7
+  let hishos = []
+  item.improvement.map( improvement =>
+    improvement.req.map( req =>
+      req.secretary.map( secretary => {
+        if (day === -1 || req.day[day]) {
+          hishos.push(secretary)
+        }
+      })))
+  if(!hishos.length)
+    return false
+  else
+    return `${item.name}|${hishos.join('/')}`
+}
+
+const searchByItem = item => {
+
+}
 
 const getJSTDayofWeek = () => {
   const date = new Date()
