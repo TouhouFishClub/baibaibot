@@ -98,6 +98,7 @@ function handleMsg_D(msg,qq,type){
     if(f1==""){
       ret = '舰队collection知识库\n';
       ret = ret + ']e:改修查询';
+      callback(ret);
     }else if(f1=="e"){
       kce(name,content.substring(1),callback);
     }
