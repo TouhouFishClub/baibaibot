@@ -92,12 +92,12 @@ function handleMsg_D(msg,qq,type){
     }
   }
   var first = content.substring(0,1);
-  if(first=='%'){
+  if(first=='「'||first==']'||first=='】'){
     var c = content.substring(1);
     var f1 = c.substring(0,1);
     if(f1==""){
       ret = '舰队collection知识库\n';
-      ret = ret + '%e:改修查询';
+      ret = ret + ']e:改修查询';
     }else if(f1=="e"){
       kce(name,content.substring(1),callback);
     }
