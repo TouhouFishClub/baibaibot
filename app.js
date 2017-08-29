@@ -53,7 +53,7 @@ app.get('/test',function(req,res){
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
-  res.send(kce('QQid', '35.6cm連装砲   ', callback))
+  res.send(kce('QQid', '主炮-7           ', callback))
 });
 
 var callback = function(res){

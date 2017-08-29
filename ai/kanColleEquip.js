@@ -12,8 +12,8 @@ module.exports = function (userId, content, callback) {
       if(content.split('-').length - 1){
         //特定周期
         let sp = content.split('-')
-        let week = sp[1].trim() === '' ? getJSTDayofWeek() : sp[1].trim()
-        if(!/\d+/.test(week)){
+        let week = sp[1].trim() === '' ? getJSTDayofWeek() : (sp[1].trim() % 7)
+        if(!/^\d+$/.test(week)){
           week = getJSTDayofWeek()
         }
         if(sp[0] !== '')
@@ -142,7 +142,6 @@ const searchByType = (type, week) => {
 }
 
 const improvementForWeek = (item, week) => {
-  week = week % 7
   let hishos = []
   item.improvement.map( improvement =>
     improvement.req.map( req =>
