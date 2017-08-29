@@ -100,7 +100,7 @@ function handleMsg_D(msg,qq,type){
       ret = ret + '.e:改修查询';
       callback(ret);
     }else if(f1=="e"){
-      kce(name,content.substring(1),callback);
+      kce(name,c.substring(1),callback);
     }
     return;
   }
