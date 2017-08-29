@@ -114,7 +114,7 @@ const checkItemType = Array.from(new Set(_.map(Data, 'type')))
 //          "上陸用舟艇","追加装甲(中型)","追加装甲(大型)","探照灯","大型探照灯","高射装置","特型 内火艇","潜水艦装備","水上戦闘機"]
 
 const checkIsItemType = (str, week) => {
-  let synonymsStr = itemTypeSynonyms(str)
+  let synonymsStr = itemTypeSynonyms(str).replace(/[.()（）]/g, '')
   let checkReg = new RegExp(synonymsStr, 'i')
   for(let i = 0; i < checkItemType.length; i++){
     if(checkReg.test(checkItemType[i])){
@@ -159,7 +159,7 @@ const improvementForWeek = (item, week) => {
 const searchByItem = item => {
   let itemReg = new RegExp(item, 'i'), searchArr = []
   Data.forEach(ele => {
-    if(itemReg.test(ele.name)){
+    if(itemReg.test(ele.name.replace(/[.()（）]/g, ''))){
       searchArr.push(ele)
     }
   })
