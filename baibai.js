@@ -176,6 +176,8 @@ function reply(content,userName,callback){
     callback(money(content.substring(1)));
   }else if(first=='c'||first=='C'){
     xchange(userName,content.substring(1),callback);
+  }else if(first=="e"||first=='E'){
+    kce(name,c.substring(1),callback);
   }else if(first=='s'||first=='S'){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='t'||first=='T'){
