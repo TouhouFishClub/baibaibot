@@ -115,7 +115,7 @@ const checkItemType = Array.from(new Set(_.map(Data, 'type')))
 
 const checkIsItemType = (str, week) => {
   let synonymsStr = itemTypeSynonyms(str)
-  let checkReg = new RegExp(synonymsStr, 'g')
+  let checkReg = new RegExp(synonymsStr, 'ig')
   for(let i = 0; i < checkItemType.length; i++){
     if(checkReg.test(checkItemType[i])){
       return searchByType(synonymsStr, week)
@@ -126,7 +126,7 @@ const checkIsItemType = (str, week) => {
 
 const searchByType = (type, week) => {
   let searchObj = {}
-  const checkReg = new RegExp(type, 'g')
+  const checkReg = new RegExp(type, 'ig')
   Data.forEach(ele => {
     if(checkReg.test(ele.type)){
       let improvementShip = improvementForWeek(ele, week);
@@ -158,7 +158,7 @@ const improvementForWeek = (item, week) => {
 }
 
 const searchByItem = item => {
-  let itemReg = new RegExp(item, 'g'), searchArr = []
+  let itemReg = new RegExp(item, 'ig'), searchArr = []
   Data.forEach(ele => {
     if(itemReg.test(ele.name)){
       searchArr.push(ele)
