@@ -12,15 +12,16 @@ module.exports = function (userId, content, callback) {
       if(content.split('-').length - 1){
         //特定周期
         let sp = content.split('-')
-        response = JSON.stringify(checkIsItemType(sp[0], sp[1]))
+        let week = sp[1] === '' ? getJSTDayofWeek() : sp[1]
+        response = JSON.stringify(checkIsItemType(sp[0], week))
       } else {
         //当天
         response = JSON.stringify(checkIsItemType(content, getJSTDayofWeek()))
       }
-
   }
-  console.log(response)
-  //callback(response)
+  console.log('===response===')
+  //console.log(response)
+  callback(response)
 }
 
 
@@ -34,7 +35,7 @@ const itemTypeSynonyms = str => {
       return '小口径主砲'
     case '中口径':
     case '中口径主炮':
-      return '小口径主砲'
+      return '中口径主砲'
     case '大口径':
     case '大口径主炮':
       return '大口径主砲'
@@ -98,13 +99,12 @@ const checkItemType = Array.from(new Set(_.map(Data, 'type')))
 const checkIsItemType = (str, week) => {
   let synonymsStr = itemTypeSynonyms(str)
   let checkReg = new RegExp(synonymsStr, 'g')
-  checkItemType.forEach(ele => {
-    if(checkReg.test(ele)){
-      console.log('>>>>>>' + ele)
+  for(let i = 0; i < checkItemType.length; i++){
+    if(checkReg.test(checkItemType[i])){
       return searchByType(synonymsStr, week)
     }
-    return searchByItem(synonymsStr)
-  })
+  }
+  return searchByItem(synonymsStr);
 }
 
 const searchByType = (type, week) => {
@@ -112,7 +112,7 @@ const searchByType = (type, week) => {
   const checkReg = new RegExp(type, 'g')
   Data.forEach(ele => {
     if(checkReg.test(ele.type)){
-      let improvementShip = improvementForDay(ele, week);
+      let improvementShip = improvementForWeek(ele, week);
       if(improvementShip){
         if(!searchObj[ele.type]){
           searchObj[ele.type] = []
@@ -122,16 +122,16 @@ const searchByType = (type, week) => {
     }
   })
   console.log(searchObj)
-  return searchObj
+  return renderMessage(0, searchObj, week)
 }
 
-const improvementForDay = (item, day) => {
-  day = day % 7
+const improvementForWeek = (item, week) => {
+  week = week % 7
   let hishos = []
   item.improvement.map( improvement =>
     improvement.req.map( req =>
       req.secretary.map( secretary => {
-        if (day === -1 || req.day[day]) {
+        if (week === -1 || req.day[week]) {
           hishos.push(secretary)
         }
       })))
@@ -143,6 +143,18 @@ const improvementForDay = (item, day) => {
 
 const searchByItem = item => {
 
+}
+
+const renderMessage = (type, itemObj, week) => {
+  switch (type){
+    case 0:
+      let msg = ''
+      Object.keys(itemObj).forEach(ele => {
+        msg += `${ele}\n`
+        msg += itemObj[ele].join('\n').split('|').join('\t')
+      })
+      return `周${['日', '一', '二', '三', '四', '五', '六'][week]}改修\n${msg}`
+  }
 }
 
 const getJSTDayofWeek = () => {
