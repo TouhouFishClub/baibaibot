@@ -12,7 +12,10 @@ module.exports = function (userId, content, callback) {
       if(content.split('-').length - 1){
         //特定周期
         let sp = content.split('-')
-        let week = sp[1] === '' ? getJSTDayofWeek() : sp[1]
+        let week = sp[1].trim() === '' ? getJSTDayofWeek() : sp[1].trim()
+        if(!/\d+/.test(week)){
+          week = getJSTDayofWeek()
+        }
         if(sp[0] !== '')
           response = checkIsItemType(sp[0], week)
         else
