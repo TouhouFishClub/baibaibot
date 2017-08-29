@@ -12,17 +12,17 @@ module.exports = function (userId, content, callback) {
       if(content.split('-').length - 1){
         //特定周期
         let sp = content.split('-')
-        let week = sp[1].trim() === '' ? getJSTDayofWeek() : sp[1].trim()
-        if(!/\d+/.test(week)){
+        let week = sp[1].trim() === '' ? getJSTDayofWeek() : (sp[1].trim() % 7)
+        if(!/^\d+$/.test(week)){
           week = getJSTDayofWeek()
         }
         if(sp[0] !== '')
-          response = checkIsItemType(sp[0], week)
+          response = checkIsItemType(sp[0].trim(), week)
         else
           response = '请输入装备/装备类型'
       } else {
         //当天
-        response = checkIsItemType(content, getJSTDayofWeek())
+        response = checkIsItemType(content.trim(), getJSTDayofWeek())
       }
   }
   //console.log('===response===')
@@ -115,7 +115,7 @@ const checkItemType = Array.from(new Set(_.map(Data, 'type')))
 
 const checkIsItemType = (str, week) => {
   let synonymsStr = itemTypeSynonyms(str)
-  let checkReg = new RegExp(synonymsStr, 'ig')
+  let checkReg = new RegExp(synonymsStr, 'i')
   for(let i = 0; i < checkItemType.length; i++){
     if(checkReg.test(checkItemType[i])){
       return searchByType(synonymsStr, week)
@@ -126,7 +126,7 @@ const checkIsItemType = (str, week) => {
 
 const searchByType = (type, week) => {
   let searchObj = {}
-  const checkReg = new RegExp(type, 'ig')
+  const checkReg = new RegExp(type, 'i')
   Data.forEach(ele => {
     if(checkReg.test(ele.type)){
       let improvementShip = improvementForWeek(ele, week);
@@ -142,7 +142,6 @@ const searchByType = (type, week) => {
 }
 
 const improvementForWeek = (item, week) => {
-  week = week % 7
   let hishos = []
   item.improvement.map( improvement =>
     improvement.req.map( req =>
@@ -158,10 +157,15 @@ const improvementForWeek = (item, week) => {
 }
 
 const searchByItem = item => {
-  let itemReg = new RegExp(item, 'ig'), searchArr = []
+  let itemReg = new RegExp(item, 'i'), searchArr = []
   Data.forEach(ele => {
     if(itemReg.test(ele.name)){
       searchArr.push(ele)
+    }
+  })
+  searchArr.forEach(ele => {
+    if(ele.name === item){
+      searchArr = [ele]
     }
   })
   if(searchArr.length){
@@ -178,7 +182,7 @@ const renderMessage = (type, itemObj, week) => {
       Object.keys(itemObj).forEach(ele => {
         msg += `${ele}\n`
         msg += itemObj[ele].join('\n').split('|').join('  →  ').replace(/None/g, '不需要辅助舰')
-        //msg += '\n'
+        msg += '\n'
       })
       return `周${['日', '一', '二', '三', '四', '五', '六'][week]}改修\n${msg}`
     case 1:
@@ -202,10 +206,10 @@ const renderMessage = (type, itemObj, week) => {
               msg += `周${weekName[index]} : ${ele.join('/').replace(/None/g, '不需要辅助舰')}\n`
             })
             msg += `消耗资源：\n油(${improvement.consume.fuel}) 弹(${improvement.consume.ammo}) 钢(${improvement.consume.steel}) 铝(${improvement.consume.bauxite})\n`
-            msg += `消耗资财：\n【0 - 6】开发资财：${improvement.consume.material[0].development[0]}(${improvement.consume.material[0].development[1]}) 改修资财：${improvement.consume.material[0].improvement[0]}(${improvement.consume.material[0].improvement[1]}) 消耗装备：${improvement.consume.material[0].item.name === '' ? '无' : (improvement.consume.material[0].item.name + ' *' + improvement.consume.material[0].item.count)}\n`
-            msg += `【7 - 10】开发资财：${improvement.consume.material[1].development[0]}(${improvement.consume.material[1].development[1]}) 改修资财：${improvement.consume.material[1].improvement[0]}(${improvement.consume.material[1].improvement[1]}) 消耗装备：${improvement.consume.material[1].item.name === '' ? '无' : (improvement.consume.material[1].item.name + ' *' + improvement.consume.material[1].item.count)}\n`
+            msg += `消耗资材：\n【0 - 6】开发资材：${improvement.consume.material[0].development[0]}(${improvement.consume.material[0].development[1]}) 改修资材：${improvement.consume.material[0].improvement[0]}(${improvement.consume.material[0].improvement[1]}) 消耗装备：${improvement.consume.material[0].item.name === '' ? '无' : (improvement.consume.material[0].item.name + ' *' + improvement.consume.material[0].item.count)}\n`
+            msg += `【7 - 10】开发资材：${improvement.consume.material[1].development[0]}(${improvement.consume.material[1].development[1]}) 改修资材：${improvement.consume.material[1].improvement[0]}(${improvement.consume.material[1].improvement[1]}) 消耗装备：${improvement.consume.material[1].item.name === '' ? '无' : (improvement.consume.material[1].item.name + ' *' + improvement.consume.material[1].item.count)}\n`
             if(improvement.upgrade.name !== ''){
-              msg += `【进化】开发资财：${improvement.consume.material[2].development[0]}(${improvement.consume.material[2].development[1]}) 改修资财：${improvement.consume.material[2].improvement[0]}(${improvement.consume.material[2].improvement[1]}) 消耗装备：${improvement.consume.material[2].item.name === '' ? '无' : (improvement.consume.material[2].item.name + ' *' + improvement.consume.material[2].item.count)}\n`
+              msg += `【进化】开发资材：${improvement.consume.material[2].development[0]}(${improvement.consume.material[2].development[1]}) 改修资材：${improvement.consume.material[2].improvement[0]}(${improvement.consume.material[2].improvement[1]}) 消耗装备：${improvement.consume.material[2].item.name === '' ? '无' : (improvement.consume.material[2].item.name + ' *' + improvement.consume.material[2].item.count)}\n`
               msg += `${item.name} → ${improvement.upgrade.name}\n`
             }
             //msg += `\n`
