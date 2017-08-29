@@ -16,7 +16,7 @@ module.exports = function (userId, content, callback) {
         if(sp[0] !== '')
           response = checkIsItemType(sp[0], week)
         else
-          response = '请输出装备/装备类型'
+          response = '请输入装备/装备类型'
       } else {
         //当天
         response = checkIsItemType(content, getJSTDayofWeek())
