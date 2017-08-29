@@ -179,29 +179,35 @@ const renderMessage = (type, itemObj, week) => {
       })
       return `周${['日', '一', '二', '三', '四', '五', '六'][week]}改修\n${msg}`
     case 1:
-      itemObj.forEach(item => {
-        msg += `${item.name}\n`
-        item.improvement.forEach(improvement => {
-          let weekArr = new Array(7).fill([]), weekName = ['日', '一', '二', '三', '四', '五', '六']
-          improvement.req.forEach(req => {
-            for(let i = 0; i < req.day.length; i++){
-              if(req.day[i])
-                weekArr[i] = weekArr[i].concat(req.secretary)
-            }
-          })
-          weekArr.forEach((ele, index) => {
-            msg += `周${weekName[index]} : ${ele.join('/').replace(/None/g, '不需要辅助舰')}\n`
-          })
-          msg += `消耗资源：\n油(${improvement.consume.fuel}) 弹(${improvement.consume.ammo}) 钢(${improvement.consume.steel}) 铝(${improvement.consume.bauxite})\n`
-          msg += `消耗资财：\n【0 - 6】开发资财：${improvement.consume.material[0].development[0]}(${improvement.consume.material[0].development[1]}) 改修资财：${improvement.consume.material[0].improvement[0]}(${improvement.consume.material[0].improvement[1]}) 消耗装备：${improvement.consume.material[0].item.name === '' ? '无' : (improvement.consume.material[0].item.name + ' *' + improvement.consume.material[0].item.count)}\n`
-          msg += `【7 - 10】开发资财：${improvement.consume.material[1].development[0]}(${improvement.consume.material[1].development[1]}) 改修资财：${improvement.consume.material[1].improvement[0]}(${improvement.consume.material[1].improvement[1]}) 消耗装备：${improvement.consume.material[1].item.name === '' ? '无' : (improvement.consume.material[1].item.name + ' *' + improvement.consume.material[1].item.count)}\n`
-          if(improvement.upgrade.name !== ''){
-            msg += `【进化】开发资财：${improvement.consume.material[2].development[0]}(${improvement.consume.material[2].development[1]}) 改修资财：${improvement.consume.material[2].improvement[0]}(${improvement.consume.material[2].improvement[1]}) 消耗装备：${improvement.consume.material[2].item.name === '' ? '无' : (improvement.consume.material[2].item.name + ' *' + improvement.consume.material[2].item.count)}\n`
-            msg += `${item.name} → ${improvement.upgrade.name}\n`
-          }
-          msg += `\n`
+      if(itemObj.length - 1){
+        itemObj.forEach(item => {
+          msg += `${item.name}\n`
         })
-      })
+      } else {
+        itemObj.forEach(item => {
+          msg += `${item.name}\n`
+          item.improvement.forEach(improvement => {
+            let weekArr = new Array(7).fill([]), weekName = ['日', '一', '二', '三', '四', '五', '六']
+            improvement.req.forEach(req => {
+              for(let i = 0; i < req.day.length; i++){
+                if(req.day[i])
+                  weekArr[i] = weekArr[i].concat(req.secretary)
+              }
+            })
+            weekArr.forEach((ele, index) => {
+              msg += `周${weekName[index]} : ${ele.join('/').replace(/None/g, '不需要辅助舰')}\n`
+            })
+            msg += `消耗资源：\n油(${improvement.consume.fuel}) 弹(${improvement.consume.ammo}) 钢(${improvement.consume.steel}) 铝(${improvement.consume.bauxite})\n`
+            msg += `消耗资财：\n【0 - 6】开发资财：${improvement.consume.material[0].development[0]}(${improvement.consume.material[0].development[1]}) 改修资财：${improvement.consume.material[0].improvement[0]}(${improvement.consume.material[0].improvement[1]}) 消耗装备：${improvement.consume.material[0].item.name === '' ? '无' : (improvement.consume.material[0].item.name + ' *' + improvement.consume.material[0].item.count)}\n`
+            msg += `【7 - 10】开发资财：${improvement.consume.material[1].development[0]}(${improvement.consume.material[1].development[1]}) 改修资财：${improvement.consume.material[1].improvement[0]}(${improvement.consume.material[1].improvement[1]}) 消耗装备：${improvement.consume.material[1].item.name === '' ? '无' : (improvement.consume.material[1].item.name + ' *' + improvement.consume.material[1].item.count)}\n`
+            if(improvement.upgrade.name !== ''){
+              msg += `【进化】开发资财：${improvement.consume.material[2].development[0]}(${improvement.consume.material[2].development[1]}) 改修资财：${improvement.consume.material[2].improvement[0]}(${improvement.consume.material[2].improvement[1]}) 消耗装备：${improvement.consume.material[2].item.name === '' ? '无' : (improvement.consume.material[2].item.name + ' *' + improvement.consume.material[2].item.count)}\n`
+              msg += `${item.name} → ${improvement.upgrade.name}\n`
+            }
+            msg += `\n`
+          })
+        })
+      }
       return msg
     default:
       return '参数错误'
