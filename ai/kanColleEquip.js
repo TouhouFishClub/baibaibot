@@ -175,11 +175,12 @@ const renderMessage = (type, itemObj, week) => {
       Object.keys(itemObj).forEach(ele => {
         msg += `${ele}\n`
         msg += itemObj[ele].join('\n').split('|').join('  →  ').replace(/None/g, '不需要辅助舰')
-        msg += '\n'
+        //msg += '\n'
       })
       return `周${['日', '一', '二', '三', '四', '五', '六'][week]}改修\n${msg}`
     case 1:
       if(itemObj.length - 1){
+        msg += '请选择装备\n'
         itemObj.forEach(item => {
           msg += `${item.name}\n`
         })
@@ -204,7 +205,7 @@ const renderMessage = (type, itemObj, week) => {
               msg += `【进化】开发资财：${improvement.consume.material[2].development[0]}(${improvement.consume.material[2].development[1]}) 改修资财：${improvement.consume.material[2].improvement[0]}(${improvement.consume.material[2].improvement[1]}) 消耗装备：${improvement.consume.material[2].item.name === '' ? '无' : (improvement.consume.material[2].item.name + ' *' + improvement.consume.material[2].item.count)}\n`
               msg += `${item.name} → ${improvement.upgrade.name}\n`
             }
-            msg += `\n`
+            //msg += `\n`
           })
         })
       }
