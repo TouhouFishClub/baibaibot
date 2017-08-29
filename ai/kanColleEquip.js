@@ -182,7 +182,7 @@ const renderMessage = (type, itemObj, week) => {
       Object.keys(itemObj).forEach(ele => {
         msg += `${ele}\n`
         msg += itemObj[ele].join('\n').split('|').join('  →  ').replace(/None/g, '不需要辅助舰')
-        //msg += '\n'
+        msg += '\n'
       })
       return `周${['日', '一', '二', '三', '四', '五', '六'][week]}改修\n${msg}`
     case 1:
