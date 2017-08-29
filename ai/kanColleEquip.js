@@ -13,7 +13,10 @@ module.exports = function (userId, content, callback) {
         //特定周期
         let sp = content.split('-')
         let week = sp[1] === '' ? getJSTDayofWeek() : sp[1]
-        response = checkIsItemType(sp[0], week)
+        if(sp[0] !== '')
+          response = checkIsItemType(sp[0], week)
+        else
+          response = '请输出装备/装备类型'
       } else {
         //当天
         response = checkIsItemType(content, getJSTDayofWeek())
