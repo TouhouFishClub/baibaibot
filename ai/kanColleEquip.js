@@ -13,10 +13,10 @@ module.exports = function (userId, content, callback) {
         //特定周期
         let sp = content.split('-')
         let week = sp[1] === '' ? getJSTDayofWeek() : sp[1]
-        response = JSON.stringify(checkIsItemType(sp[0], week))
+        response = checkIsItemType(sp[0], week)
       } else {
         //当天
-        response = JSON.stringify(checkIsItemType(content, getJSTDayofWeek()))
+        response = checkIsItemType(content, getJSTDayofWeek())
       }
   }
   //console.log('===response===')
