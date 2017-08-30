@@ -42,6 +42,7 @@ module.exports = function (userId, content, callback) {
       return cur
     }
   }))
+  // let sli, str = response
   // while(str.length){
   //   sli = str.slice(0, 250)
   //   callbackArr.push(sli)
