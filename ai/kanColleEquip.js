@@ -143,7 +143,7 @@ const searchByHistory = (userId, content) => {
       }
     }
     if(content === ''){
-      msg = '请选择装备\n'
+      msg = '记忆中的装备\n'
       itemObj.forEach((item, index) => {
         msg += `x${index} | ${item.name}\n`
       })
@@ -160,7 +160,7 @@ const searchByType = (type, week) => {
   Data.forEach(ele => {
     if(checkReg.test(ele.type)){
       let improvementShip = improvementForWeek(ele, week);
-      if(improvementShip){
+      if(improvementShip.split('|')[1] !== '不可改修'){
         if(!searchObj[ele.type]){
           searchObj[ele.type] = []
         }
@@ -181,7 +181,7 @@ const improvementForWeek = (item, week) => {
         }
       })))
   if(!hishos.length)
-    return false
+    return `${item.name}|不可改修`
   else
     return `${item.name}|${hishos.join('/')}`
 }
@@ -219,7 +219,7 @@ const renderMessage = (type, itemObj, week, userId) => {
       if(itemObj.length - 1){
         msg += '请选择装备\n'
         itemObj.forEach((item, index) => {
-          msg += `x${index} | ${item.name}\n`
+          msg += `x${index} | ${improvementForWeek(item, 1).replace('|', '  →  ')}\n`
         })
         userItemObj[userId] = itemObj
       } else {
