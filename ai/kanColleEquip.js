@@ -33,12 +33,20 @@ module.exports = function (userId, content, callback) {
   //console.log('===response===')
   //console.log(response)
   // callback(response)
-  let str = response, callbackArr = [], sli
-  while(str.length){
-    sli = str.slice(0, 250)
-    callbackArr.push(sli)
-    str = str.split(sli)[1]
-  }
+  let strArr = response.split('\n'), callbackArr = []
+  strArr.reduce((pre, cur) => {
+    if(pre.length + cur.length < 250)
+      return `${pre}\n${cur}`
+    else {
+      callbackArr.push(pre)
+      return cur
+    }
+  })
+  // while(str.length){
+  //   sli = str.slice(0, 250)
+  //   callbackArr.push(sli)
+  //   str = str.split(sli)[1]
+  // }
   callbackArr.forEach(async (ele, idx) => {
     await wait(idx * 500)
     callback(ele)
