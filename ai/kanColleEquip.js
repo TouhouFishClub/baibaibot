@@ -223,6 +223,7 @@ const renderMessage = (type, itemObj, week, userId) => {
         })
         userItemObj[userId] = itemObj
       } else {
+        let today = getJSTDayofWeek()
         itemObj.forEach(item => {
           msg += `${item.name}\n`
           item.improvement.forEach(improvement => {
@@ -234,7 +235,7 @@ const renderMessage = (type, itemObj, week, userId) => {
               }
             })
             weekArr.forEach((ele, index) => {
-              msg += `周${weekName[index]} : ${ele.join('/').replace(/None/g, '不需要辅助舰')}\n`
+              msg += `周${weekName[index]}${index === today ? '(今天)' : ''} : ${ele.join('/').replace(/None/g, '不需要辅助舰')}\n`
             })
             msg += `消耗资源：\n油(${improvement.consume.fuel}) 弹(${improvement.consume.ammo}) 钢(${improvement.consume.steel}) 铝(${improvement.consume.bauxite})\n`
             msg += `消耗资材：\n【0 - 6】开发资材：${improvement.consume.material[0].development[0]}(${improvement.consume.material[0].development[1]}) 改修资材：${improvement.consume.material[0].improvement[0]}(${improvement.consume.material[0].improvement[1]}) 消耗装备：${improvement.consume.material[0].item.name === '' ? '无' : (improvement.consume.material[0].item.name + ' *' + improvement.consume.material[0].item.count)}\n`
