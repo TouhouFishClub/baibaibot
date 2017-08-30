@@ -1,28 +1,33 @@
 const fs = require('fs-extra')
 const path = require('path-extra')
 const _ = require('lodash')
+let userItemObj = {}
 
 module.exports = function (userId, content, callback) {
   let response
   switch(content){
     case '':
-      response = `\n默认显示当天可改修的装备\n可使用[类型]-[星期]来查看特定星期改修\n可查询某个装备（无视日期）\n支持的装备类型：${checkItemType.join("、")}，部分支持简写\n`
+      response = `默认显示当天可改修的装备\n可使用[类型]-[星期]来查看特定星期改修\n可查询某个装备（无视日期）\n若查出数个装备，可按照x[序号]（如x2）来查询某个装备的详情\n支持的装备类型：${checkItemType.join("、")}，部分支持简写\n`
       break;
     default:
-      if(content.split('-').length - 1){
-        //特定周期
-        let sp = content.split('-')
-        let week = sp[1].trim() === '' ? getJSTDayofWeek() : (sp[1].trim() % 7)
-        if(!/^\d+$/.test(week)){
-          week = getJSTDayofWeek()
-        }
-        if(sp[0] !== '')
-          response = checkIsItemType(sp[0].trim(), week)
-        else
-          response = '请输入装备/装备类型'
+      if(content.substr(0, 1) === 'x'){
+        response = searchByHistory(userId, content.substr(1).trim())
       } else {
-        //当天
-        response = checkIsItemType(content.trim(), getJSTDayofWeek())
+        if(content.split('-').length - 1){
+          //特定周期
+          let sp = content.split('-')
+          let week = sp[1].trim() === '' ? getJSTDayofWeek() : (sp[1].trim() % 7)
+          if(!/^\d+$/.test(week)){
+            week = getJSTDayofWeek()
+          }
+          if(sp[0] !== '')
+            response = checkIsItemType(userId, sp[0].trim(), week)
+          else
+            response = '请输入装备/装备类型'
+        } else {
+          //当天
+          response = checkIsItemType(userId, content.trim(), getJSTDayofWeek())
+        }
       }
   }
   //console.log('===response===')
@@ -69,8 +74,10 @@ const itemTypeSynonyms = str => {
     case '煎包':
       return '艦上爆撃機'
     case '飞机':
+    case '舰载机':
       return '艦上'
     case '水侦':
+    case '侦察机':
       return '水上偵察機'
     case '水暴':
     case '水爆':
@@ -113,15 +120,38 @@ const checkItemType = Array.from(new Set(_.map(Data, 'type')))
 //          "水上偵察機","水上爆撃機","小型電探","大型電探","対艦強化弾","対空機銃","爆雷","ソナー","機関部強化",
 //          "上陸用舟艇","追加装甲(中型)","追加装甲(大型)","探照灯","大型探照灯","高射装置","特型 内火艇","潜水艦装備","水上戦闘機"]
 
-const checkIsItemType = (str, week) => {
-  let synonymsStr = itemTypeSynonyms(str).replace(/[.()（）]/g, '')
+const checkIsItemType = (userId, str, week) => {
+  let synonymsStr = itemTypeSynonyms(str)
   let checkReg = new RegExp(synonymsStr, 'i')
   for(let i = 0; i < checkItemType.length; i++){
     if(checkReg.test(checkItemType[i])){
       return searchByType(synonymsStr, week)
     }
   }
-  return searchByItem(synonymsStr);
+  return searchByItem(userId, synonymsStr);
+}
+
+const searchByHistory = (userId, content) => {
+  if(userItemObj[userId]){
+    let msg = '', itemObj = userItemObj[userId]
+    if(/^\d+$/.test(content)){
+      if(content > itemObj.length){
+        return '选的数字太大啦'
+      } else {
+        console.log(itemObj[content].name)
+        return searchByItem(userId, itemObj[content].name)
+      }
+    }
+    if(content === ''){
+      msg = '请选择装备\n'
+      itemObj.forEach((item, index) => {
+        msg += `x${index} | ${item.name}\n`
+      })
+      return msg
+    }
+  } else {
+    return '没有记忆过装备'
+  }
 }
 
 const searchByType = (type, week) => {
@@ -156,8 +186,8 @@ const improvementForWeek = (item, week) => {
     return `${item.name}|${hishos.join('/')}`
 }
 
-const searchByItem = item => {
-  let itemReg = new RegExp(item, 'i'), searchArr = []
+const searchByItem = (userId, item) => {
+  let itemReg = new RegExp(item.replace(/[.()（）]/g, ''), 'i'), searchArr = []
   Data.forEach(ele => {
     if(itemReg.test(ele.name.replace(/[.()（）]/g, ''))){
       searchArr.push(ele)
@@ -169,13 +199,13 @@ const searchByItem = item => {
     }
   })
   if(searchArr.length){
-    return renderMessage(1, searchArr)
+    return renderMessage(1, searchArr, '', userId)
   } else {
     return '未找到此装备'
   }
 }
 
-const renderMessage = (type, itemObj, week) => {
+const renderMessage = (type, itemObj, week, userId) => {
   let msg = ''
   switch (type){
     case 0:
@@ -188,9 +218,10 @@ const renderMessage = (type, itemObj, week) => {
     case 1:
       if(itemObj.length - 1){
         msg += '请选择装备\n'
-        itemObj.forEach(item => {
-          msg += `${item.name}\n`
+        itemObj.forEach((item, index) => {
+          msg += `x${index} | ${item.name}\n`
         })
+        userItemObj[userId] = itemObj
       } else {
         itemObj.forEach(item => {
           msg += `${item.name}\n`

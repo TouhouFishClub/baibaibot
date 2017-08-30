@@ -54,6 +54,9 @@ app.get('/test',function(req,res){
   //   res.send(ret+"");
   // })
   res.send(kce('QQid', '203', callback))
+  res.send(kce('QQid', 'x', callback))
+  res.send(kce('QQid', 'x1', callback))
+  res.send(kce('QQid2', 'x1', callback))
 });
 
 var callback = function(res){
