@@ -60,7 +60,8 @@ const formatData = async (codeArr, money, callback) => {
     let checkCode = {
       'ETH': 1,
       'BTC': 1,
-      'LTC': 1
+      'LTC': 1,
+      // 'BCC': 1
     }
     if((checkCode[codeArr[0]] || checkCode[codeArr[1]]) && (checkCode[codeArr[1]] !== checkCode[codeArr[0]])){
       let amount
@@ -207,6 +208,7 @@ const currencyCodeObj = {
   "以太币" : "ETH",
   "比特币" : "BTC",
   "莱特币" : "LTC",
+  // "比特现金" : "BCC",
 }
 
 const codeCurrencyObj = {
@@ -277,6 +279,7 @@ const codeCurrencyObj = {
   "ETH" : "以太币",
   "BTC" : "比特币",
   "LTC" : "莱特币",
+  // "BCC" : "比特现金",
 }
 
 /* 处理同名 */
