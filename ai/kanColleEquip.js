@@ -34,14 +34,14 @@ module.exports = function (userId, content, callback) {
   //console.log(response)
   // callback(response)
   let strArr = response.split('\n'), callbackArr = []
-  strArr.reduce((pre, cur) => {
+  callbackArr.push(strArr.reduce((pre, cur) => {
     if(pre.length + cur.length < 250)
       return `${pre}\n${cur}`
     else {
       callbackArr.push(pre)
       return cur
     }
-  })
+  }))
   // while(str.length){
   //   sli = str.slice(0, 250)
   //   callbackArr.push(sli)
