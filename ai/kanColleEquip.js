@@ -144,7 +144,7 @@ const searchByHistory = (userId, content) => {
   if(userItemObj[userId]){
     let msg = '', itemObj = userItemObj[userId]
     if(/^\d+$/.test(content)){
-      if(content > itemObj.length){
+      if(content >= itemObj.length){
         return '选的数字太大啦'
       } else {
         console.log(itemObj[content].name)
