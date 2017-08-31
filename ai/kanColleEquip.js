@@ -148,7 +148,7 @@ const searchByHistory = (userId, content) => {
         return '选的数字太大啦'
       } else {
         console.log(itemObj[content].name)
-        return searchByItem(userId, itemObj[content].name)
+        return renderMessage('item', [itemObj[content]], '', userId);
       }
     }
     if(content === ''){
@@ -177,7 +177,7 @@ const searchByType = (type, week) => {
       }
     }
   })
-  return renderMessage(0, searchObj, week)
+  return renderMessage('type', searchObj, week)
 }
 
 const improvementForWeek = (item, week) => {
@@ -208,7 +208,7 @@ const searchByItem = (userId, item) => {
     }
   })
   if(searchArr.length){
-    return renderMessage(1, searchArr, '', userId)
+    return renderMessage('item', searchArr, '', userId)
   } else {
     return '未找到此装备'
   }
@@ -217,14 +217,14 @@ const searchByItem = (userId, item) => {
 const renderMessage = (type, itemObj, week, userId) => {
   let msg = ''
   switch (type){
-    case 0:
+    case 'type':
       Object.keys(itemObj).forEach(ele => {
         msg += `${ele}\n`
         msg += itemObj[ele].join('\n').split('|').join('  →  ').replace(/None/g, '不需要辅助舰')
         msg += '\n'
       })
       return `周${['日', '一', '二', '三', '四', '五', '六'][week]}改修\n${msg}`
-    case 1:
+    case 'item':
       if(itemObj.length - 1){
         msg += '请选择装备\n'
         itemObj.forEach((item, index) => {

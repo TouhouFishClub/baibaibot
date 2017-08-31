@@ -47,13 +47,15 @@ const kce = require('./ai/kanColleEquip')
 
 app.get('/test',function(req,res){
   // res.send(xchange('QQid', 'ETH', callback));
-  res.send(xchange('QQid', 'BCC', callback));
+  // res.send(xchange('QQid', 'BCC', callback));
   // res.send(xchange('QQid', '1.3比特币-美元', callback));
   // res.send(xchange('QQid', 'USD-LTC', callback));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
-  // res.send(kce('QQid', '1', callback))
+  res.send(kce('QQid', '41', callback))
+  res.send(kce('QQid', 'x1', callback))
+  res.send(kce('QQid', 'x4', callback))
 });
 
 var callback = function(res){
