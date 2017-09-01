@@ -57,7 +57,7 @@ module.exports = function (userId, content, callback) {
 const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
 // DataPath = http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json
-const Data = fs.readJsonSync(path.join('assets', 'data.json'))
+const Data = fs.readJsonSync(path.join('assets', 'kanColleEquipData.json'))
 
 const itemTypeSynonyms = str => {
   switch (str){

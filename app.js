@@ -44,8 +44,10 @@ const {cal} = require('./ai/calculator')
 const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weather');
 const xchange = require('./ai/xchange')
 const kce = require('./ai/kanColleEquip')
+const updateAll = require('./mongo/db_kcUpdateAll')
 
 app.get('/test',function(req,res){
+  updateAll()
   // res.send(xchange('QQid', 'ETH', callback));
   // res.send(xchange('QQid', 'BCC', callback));
   // res.send(xchange('QQid', '1.3比特币-美元', callback));
@@ -53,9 +55,9 @@ app.get('/test',function(req,res){
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
-  res.send(kce('QQid', '41', callback))
-  res.send(kce('QQid', 'x1', callback))
-  res.send(kce('QQid', 'x4', callback))
+  // res.send(kce('QQid', '41', callback))
+  // res.send(kce('QQid', 'x1', callback))
+  // res.send(kce('QQid', 'x4', callback))
 });
 
 var callback = function(res){
