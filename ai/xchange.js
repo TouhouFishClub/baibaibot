@@ -74,7 +74,8 @@ const formatData = async (codeArr, money, callback) => {
           code = _.reverse(code)
         code = code.join('_').toLowerCase()
         let res = await getOkcoinData(code)
-        let date = new Date(res.date * 1000), ticker = res.ticker, formatDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        const addZero = num => num < 10 ? ('0' + num) : num
+        let date = new Date(res.date * 1000), ticker = res.ticker, formatDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`
         // console.log(res)
         if(money){
           if(codeArr[0] === 'CNY')
