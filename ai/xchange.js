@@ -7,6 +7,7 @@
  *
  */
 const Axios = require('axios')
+const _  = require('lodash')
 
 module.exports = function(userId, content, callback){
   let res = '', defaultCurrency = '人民币'
@@ -61,22 +62,49 @@ const formatData = async (codeArr, money, callback) => {
       'ETH': 1,
       'BTC': 1,
       'LTC': 1,
-      // 'BCC': 1
+      'BCC': 1,
+      'ETC': 1
     }
     if((checkCode[codeArr[0]] || checkCode[codeArr[1]]) && (checkCode[codeArr[1]] !== checkCode[codeArr[0]])){
-      let amount
-      if(checkCode[codeArr[0]]){
-        let res = await getCoinbaseData(`${codeArr[0]}-${codeArr[1]}`)
-        amount = res.data.amount
+      if(codeArr[0] === 'CNY' || codeArr[1] === 'CNY'){
+        let code = _.take(codeArr, 2)
+        if(codeArr[0] === 'CNY')
+          code = _.reverse(code)
+        code = code.join('_').toLowerCase()
+        let res = await getOkcoinData(code)
+        let date = new Date(res.date * 1000), ticker = res.ticker, formatDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        // console.log(res)
+        if(money){
+          if(codeArr[0] === 'CNY')
+            response = `${formatDate}\n${money}${codeToCurrency(codeArr[0])} = ${(money/ticker.last).toFixed(4)}${codeToCurrency(codeArr[1])}`
+          else
+            response = `${formatDate}\n${money}${codeToCurrency(codeArr[0])} = ${(money*ticker.last).toFixed(4)}${codeToCurrency(codeArr[1])}`
+        } else {
+          response = `【${codeToCurrency(code.split('_cny').join('').toUpperCase())}行情】${formatDate}\n买一价：${ticker.buy}\n卖一价：${ticker.sell}\n最新成交价：${ticker.last}\n`
+        }
       } else {
-        let res = await getCoinbaseData(`${codeArr[1]}-${codeArr[0]}`)
-        amount = res.data.amount
-        amount = 1 / amount
-      }
-      if(money){
-        response = `${money}${codeToCurrency(codeArr[0])} = ${(money*amount).toFixed(4)}${codeToCurrency(codeArr[1])}`
-      } else {
-        response = `1${codeToCurrency(codeArr[0])} = ${(1*amount).toFixed(4)}${codeToCurrency(codeArr[1])}\n1${codeToCurrency(codeArr[1])} = ${(1 / amount).toFixed(4)}${codeToCurrency(codeArr[0])}\n`
+        let ignoreCode = {
+          'BCC': 1,
+          'ETC': 1
+        }
+        if(ignoreCode[codeArr[0]] || ignoreCode[codeArr[1]]){
+          let amount
+          if(checkCode[codeArr[0]]){
+            let res = await getCoinbaseData(`${codeArr[0]}-${codeArr[1]}`)
+            amount = res.data.amount
+          } else {
+            let res = await getCoinbaseData(`${codeArr[1]}-${codeArr[0]}`)
+            amount = res.data.amount
+            amount = 1 / amount
+          }
+          if(money){
+            response = `${money}${codeToCurrency(codeArr[0])} = ${(money*amount).toFixed(4)}${codeToCurrency(codeArr[1])}`
+          } else {
+            response = `1${codeToCurrency(codeArr[0])} = ${(1*amount).toFixed(4)}${codeToCurrency(codeArr[1])}\n1${codeToCurrency(codeArr[1])} = ${(1 / amount).toFixed(4)}${codeToCurrency(codeArr[0])}\n`
+          }
+        } else {
+          response = '不支持的转换格式'
+        }
       }
     } else {
       if(money){
@@ -104,6 +132,20 @@ const formatData = async (codeArr, money, callback) => {
   }
   callback(response)
 }
+
+const getOkcoinData = code =>
+  new Promise((resolve, reject) => {
+    Axios.get(`https://www.okcoin.cn/api/v1/ticker.do?symbol=${code}`, {
+      timeout: 30000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+      }
+    })
+      .then(response => resolve(response.data))
+      .catch(error => {
+        console.log(error)
+      })
+  })
 
 const getCoinbaseData = code =>
   new Promise((resolve, reject) => {
@@ -208,7 +250,8 @@ const currencyCodeObj = {
   "以太币" : "ETH",
   "比特币" : "BTC",
   "莱特币" : "LTC",
-  // "比特现金" : "BCC",
+  "比特现金" : "BCC",
+  "经典以太": "ETC",
 }
 
 const codeCurrencyObj = {
@@ -279,7 +322,8 @@ const codeCurrencyObj = {
   "ETH" : "以太币",
   "BTC" : "比特币",
   "LTC" : "莱特币",
-  // "BCC" : "比特现金",
+  "BCC" : "比特现金",
+  "ETC" : "经典以太",
 }
 
 /* 处理同名 */

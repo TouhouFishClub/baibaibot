@@ -47,8 +47,11 @@ const kce = require('./ai/kanColleEquip')
 const updateAll = require('./mongo/db_kcUpdateAll')
 
 app.get('/test',function(req,res){
-  updateAll()
-  // res.send(xchange('QQid', 'ETH', callback));
+  // updateAll()
+  res.send(xchange('QQid', 'etc', callback));
+  res.send(xchange('QQid', 'bcc', callback));
+  res.send(xchange('QQid', 'btc-usd', callback));
+  res.send(xchange('QQid', 'etc-usd', callback));
   // res.send(xchange('QQid', 'BCC', callback));
   // res.send(xchange('QQid', '1.3比特币-美元', callback));
   // res.send(xchange('QQid', 'USD-LTC', callback));
