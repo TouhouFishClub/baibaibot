@@ -8,6 +8,8 @@
  */
 const Axios = require('axios')
 const _  = require('lodash')
+const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+const TIME_OUT = 30000
 
 module.exports = function(userId, content, callback){
   let res = '', defaultCurrency = '人民币'
@@ -136,9 +138,9 @@ const formatData = async (codeArr, money, callback) => {
 const getOkcoinData = code =>
   new Promise((resolve, reject) => {
     Axios.get(`https://www.okcoin.cn/api/v1/ticker.do?symbol=${code}`, {
-      timeout: 30000,
+      timeout: TIME_OUT,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+        'User-Agent': USER_AGENT
       }
     })
       .then(response => resolve(response.data))
@@ -150,9 +152,9 @@ const getOkcoinData = code =>
 const getCoinbaseData = code =>
   new Promise((resolve, reject) => {
     Axios.get(`https://api.coinbase.com/v2/prices/${code}/spot`, {
-      timeout: 30000,
+      timeout: TIME_OUT,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+        'User-Agent': USER_AGENT
       }
     })
       .then(response => resolve(response.data))
@@ -170,9 +172,9 @@ const getYQLData = code =>
         format: 'json',
         env: 'store://datatables.org/alltableswithkeys'
       },
-      timeout: 30000,
+      timeout: TIME_OUT,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+        'User-Agent': USER_AGENT
       }
     })
       .then(response => resolve(response.data))
