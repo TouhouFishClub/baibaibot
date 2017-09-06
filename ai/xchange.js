@@ -89,7 +89,7 @@ const formatData = async (codeArr, money, callback) => {
           'BCC': 1,
           'ETC': 1
         }
-        if(ignoreCode[codeArr[0]] || ignoreCode[codeArr[1]]){
+        if(!(ignoreCode[codeArr[0]] || ignoreCode[codeArr[1]])){
           let amount
           if(checkCode[codeArr[0]]){
             let res = await getCoinbaseData(`${codeArr[0]}-${codeArr[1]}`)
