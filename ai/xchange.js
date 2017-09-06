@@ -71,7 +71,7 @@ const formatData = async (codeArr, money, callback) => {
       if(codeArr[0] === 'CNY' || codeArr[1] === 'CNY'){
         let code = _.take(codeArr, 2)
         if(codeArr[0] === 'CNY')
-          code = _.reverse(code)
+          _.reverse(code)
         code = code.join('_').toLowerCase()
         let res = await getOkcoinData(code)
         const addZero = num => num < 10 ? ('0' + num) : num
