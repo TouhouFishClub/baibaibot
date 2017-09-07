@@ -45,22 +45,12 @@ const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weath
 const xchange = require('./ai/xchange')
 const kce = require('./ai/kanColleEquip')
 const updateAll = require('./mongo/db_kcUpdateAll')
+const {getMapData} = require('./ai/kancolle/kancollemap')
 
 app.get('/test',function(req,res){
-  // updateAll()
-  res.send(xchange('QQid', 'etc', callback));
-  res.send(xchange('QQid', 'bcc', callback));
-  res.send(xchange('QQid', 'btc-usd', callback));
-  res.send(xchange('QQid', 'etc-usd', callback));
-  // res.send(xchange('QQid', 'BCC', callback));
-  // res.send(xchange('QQid', '1.3比特币-美元', callback));
-  // res.send(xchange('QQid', 'USD-LTC', callback));
-  // getWeatherByCity('',function(ret){
-  //   res.send(ret+"");
-  // })
-  // res.send(kce('QQid', '41', callback))
-  // res.send(kce('QQid', 'x1', callback))
-  // res.send(kce('QQid', 'x4', callback))
+  getMapData('5-2','name',function(ret){
+    res.send('ok');
+  })
 });
 
 var callback = function(res){
