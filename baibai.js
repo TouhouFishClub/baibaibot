@@ -16,6 +16,7 @@ const {money} = require('./ai/money');
 const {getloc,route} = require('./ai/map');
 const {searchSongByName} = require('./ai/song');
 const kce = require('./ai/kanColleEquip')
+const {getMapData} = require('./ai/kancolle/kancollemap')
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -178,6 +179,8 @@ function reply(content,userName,callback){
     xchange(userName,content.substring(1),callback);
   }else if(first=="e"||first=='E'){
     kce(userName,content.substring(1),callback);
+  }else if(first=="k"||first=='K'){
+    getMapData(userName,content.substring(1),callback);
   }else if(first=='s'||first=='S'){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='t'||first=='T'){
