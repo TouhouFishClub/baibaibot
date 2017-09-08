@@ -83,11 +83,10 @@ function getMapData(userName,mapid,callback){
     }
     for(var i=0;i<retl.length;i++){
       if(ret.length+retl[i].length>240){
-        callback(ret);
         ret = "";
       }
       if(retl[i]==maxm){
-        ret = ret + '(最大)'+retl[i];
+        ret = ret +retl[i].trim()+'(最大)\n';
       }else{
         ret = ret + retl[i];
       }
@@ -95,7 +94,7 @@ function getMapData(userName,mapid,callback){
     callback(ret);
   });
 }
-
+const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 function getinner(s){
   var isinner=0;
   var rn = 0;
