@@ -35,6 +35,9 @@ function getMapData(userName,mapid,callback){
     var prindex=0;
     var lastpr=0;
     var pointm=[];
+    var maxk=0;
+    var maxm='';
+    var retl=[];
     while(n>0){
       var s = s5.substring(0,n);
       s5 = s5.substring(n+4);
@@ -65,12 +68,27 @@ function getMapData(userName,mapid,callback){
           }
         }
         if(has==false){
+          console.log(m);
+          if(parseInt(m1)>maxk){
+            maxk=parseInt(m1);
+            maxm=m;
+          }
           pointm.push(m);
-          ret=ret+m;
+          retl.push(m);
         }
       }
     }
-    console.log(ret);
+    for(var i=0;i<retl.length;i++){
+      if(ret.length+retl[i].length>240){
+        callback(ret);
+        ret = "";
+      }
+      if(retl[i]==maxm){
+        ret = ret + '(最大)'+retl[i];
+      }else{
+        ret = ret + retl[i];
+      }
+    }
     callback(ret);
   });
 }
