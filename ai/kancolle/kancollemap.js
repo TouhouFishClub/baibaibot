@@ -83,6 +83,7 @@ function getMapData(userName,mapid,callback){
     }
     for(var i=0;i<retl.length;i++){
       if(ret.length+retl[i].length>240){
+        callback(ret);
         ret = "";
       }
       if(retl[i]==maxm){
