@@ -30,8 +30,8 @@ module.exports = function (userId, content, callback) {
         }
       }
   }
-  //console.log('===response===')
-  //console.log(response)
+  console.log('===response===')
+  console.log(response)
   // callback(response)
   let strArr = response.split('\n'), callbackArr = []
   callbackArr.push(strArr.reduce((pre, cur) => {
@@ -143,6 +143,13 @@ const checkIsItemType = (userId, str, week) => {
 const searchByHistory = (userId, content) => {
   if(userItemObj[userId]){
     let msg = '', itemObj = userItemObj[userId]
+    if(content === ''){
+      msg = '记忆中的装备\n'
+      itemObj.forEach((item, index) => {
+        msg += `x${index} | ${item.name}\n`
+      })
+      return msg
+    }
     if(/^\d+$/.test(content)){
       if(content >= itemObj.length){
         return '选的数字太大啦'
@@ -150,13 +157,8 @@ const searchByHistory = (userId, content) => {
         console.log(itemObj[content].name)
         return renderMessage('item', [itemObj[content]], '', userId);
       }
-    }
-    if(content === ''){
-      msg = '记忆中的装备\n'
-      itemObj.forEach((item, index) => {
-        msg += `x${index} | ${item.name}\n`
-      })
-      return msg
+    } else {
+      return '输入格式错误'
     }
   } else {
     return '没有记忆过装备'

@@ -65,7 +65,7 @@ app.get('/test',function(req,res){
   //   res.send(ret+"");
   // })
   res.send(kce('QQid', '小口径', callback))
-  res.send(kce('QQid', 'x1', callback))
+  res.send(kce('QQid', 'xa', callback))
   res.send(kce('QQid', 'x4', callback))
 });
 
