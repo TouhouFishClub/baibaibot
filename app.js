@@ -71,7 +71,7 @@ app.get('/test',function(req,res){
 });
 
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  getMapData('name','5-4',function(){
+  getMapData('name','6-4',function(){
     res.send('ok');
 
   })

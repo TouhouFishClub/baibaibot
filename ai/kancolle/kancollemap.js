@@ -4,6 +4,9 @@ const TIME_OUT = 30000
 
 const getMapDataFromWiki = map =>
   new Promise((resolve, reject) => {
+    if(map=="6-4"||map=="6-5"){
+      map="6-1";
+    }
     Axios.get('https://zh.moegirl.org/'+encodeURIComponent('舰队')+'Collection/'+map, {
       timeout: TIME_OUT,
       headers: {
