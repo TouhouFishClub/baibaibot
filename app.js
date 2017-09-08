@@ -4,6 +4,7 @@ var expressWs = require('express-ws')(app);
 var util = require('util');
 var URL = require('url');
 var fs = require('fs');
+const path = require('path')
 const Axios = require('axios')
 const opn = require('opn')
 app.use(express.static('./static'));
@@ -46,21 +47,26 @@ const xchange = require('./ai/xchange')
 const kce = require('./ai/kanColleEquip')
 const updateAll = require('./mongo/db_kcUpdateAll')
 
+app.get('/showData', function (req, res) {
+  let data = fs.readFileSync(path.join('tools', 'okcoin-data', 'index.html'), 'utf-8');
+  res.send(data);
+})
+
 app.get('/test',function(req,res){
   // updateAll()
-  res.send(xchange('QQid', 'etc', callback));
-  res.send(xchange('QQid', 'bcc', callback));
-  res.send(xchange('QQid', 'btc-usd', callback));
-  res.send(xchange('QQid', 'etc-usd', callback));
+  // res.send(xchange('QQid', 'etc', callback));
+  // res.send(xchange('QQid', 'bcc', callback));
+  // res.send(xchange('QQid', 'btc-usd', callback));
+  // res.send(xchange('QQid', 'etc-usd', callback));
   // res.send(xchange('QQid', 'BCC', callback));
   // res.send(xchange('QQid', '1.3比特币-美元', callback));
   // res.send(xchange('QQid', 'USD-LTC', callback));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
-  // res.send(kce('QQid', '41', callback))
-  // res.send(kce('QQid', 'x1', callback))
-  // res.send(kce('QQid', 'x4', callback))
+  res.send(kce('QQid', '小口径', callback))
+  res.send(kce('QQid', 'x1', callback))
+  res.send(kce('QQid', 'x4', callback))
 });
 
 var callback = function(res){

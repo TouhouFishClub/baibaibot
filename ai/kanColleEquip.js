@@ -134,7 +134,7 @@ const checkIsItemType = (userId, str, week) => {
   let checkReg = new RegExp(synonymsStr, 'i')
   for(let i = 0; i < checkItemType.length; i++){
     if(checkReg.test(checkItemType[i])){
-      return searchByType(synonymsStr, week)
+      return searchByType(userId, synonymsStr, week)
     }
   }
   return searchByItem(userId, synonymsStr);
@@ -163,20 +163,22 @@ const searchByHistory = (userId, content) => {
   }
 }
 
-const searchByType = (type, week) => {
-  let searchObj = {}
+const searchByType = (userId, type, week) => {
+  let searchObj = {}, itemObj = [], count = 0
   const checkReg = new RegExp(type, 'i')
   Data.forEach(ele => {
     if(checkReg.test(ele.type)){
       let improvementShip = improvementForWeek(ele, week);
-      if(improvementShip.split('|')[1] !== '不可改修'){
+      if(improvementShip.split('||')[1] !== '不可改修'){
         if(!searchObj[ele.type]){
           searchObj[ele.type] = []
         }
-        searchObj[ele.type].push(improvementShip)
+        searchObj[ele.type].push(`x${count++} | ${improvementShip}`)
+        itemObj.push(ele)
       }
     }
   })
+  userItemObj[userId] = itemObj
   return renderMessage('type', searchObj, week)
 }
 
@@ -190,9 +192,9 @@ const improvementForWeek = (item, week) => {
         }
       })))
   if(!hishos.length)
-    return `${item.name}|不可改修`
+    return `${item.name}||不可改修`
   else
-    return `${item.name}|${hishos.join('/')}`
+    return `${item.name}||${hishos.join('/')}`
 }
 
 const searchByItem = (userId, item) => {
@@ -220,7 +222,7 @@ const renderMessage = (type, itemObj, week, userId) => {
     case 'type':
       Object.keys(itemObj).forEach(ele => {
         msg += `${ele}\n`
-        msg += itemObj[ele].join('\n').split('|').join('  →  ').replace(/None/g, '不需要辅助舰')
+        msg += itemObj[ele].join('\n').split('||').join('  →  ').replace(/None/g, '不需要辅助舰')
         msg += '\n'
       })
       return `周${['日', '一', '二', '三', '四', '五', '六'][week]}改修\n${msg}`
@@ -228,7 +230,7 @@ const renderMessage = (type, itemObj, week, userId) => {
       if(itemObj.length - 1){
         msg += '请选择装备\n'
         itemObj.forEach((item, index) => {
-          msg += `x${index} | ${improvementForWeek(item, getJSTDayofWeek()).replace('|', '  →  ')}\n`
+          msg += `x${index} | ${improvementForWeek(item, getJSTDayofWeek()).replace('||', '  →  ')}\n`
         })
         userItemObj[userId] = itemObj
       } else {
