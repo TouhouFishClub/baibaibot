@@ -34,7 +34,7 @@ function getMapData(userName,mapid,callback){
     var ret = "";
     var prindex=0;
     var lastpr=0;
-    var lastr="";
+    var pointm=[];
     while(n>0){
       var s = s5.substring(0,n);
       s5 = s5.substring(n+4);
@@ -44,6 +44,7 @@ function getMapData(userName,mapid,callback){
       var pr = point.trim().substring(0,1);
       if(pr==list[prindex]){
         prindex++;
+        pointm=[];
         lastpr=pr;
       }else{
         pr=lastpr;
@@ -56,14 +57,18 @@ function getMapData(userName,mapid,callback){
         var m2 = getinner(k2).trim();
         var m3 = getinner(k3).trim();
         var m = pr+" : "+m1+'/'+m2+'/'+m3+'\n';
-        if(m==lastr){
-
-        }else{
-          lastr=m;
+        var has=false;
+        for(var i=0;i<pointm.length;i++){
+          if(m==pointm[i]){
+            has=true;
+            break;
+          }
+        }
+        if(has==false){
+          pointm.push(m);
           ret=ret+m;
         }
       }
-      console.log(sa);
     }
     console.log(ret);
     callback(ret);
