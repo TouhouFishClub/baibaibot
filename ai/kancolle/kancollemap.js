@@ -20,7 +20,7 @@ const getMapDataFromWiki = map =>
 var list = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 function getMapData(userName,mapid,callback){
   getMapDataFromWiki(mapid).then(function(response){
-    var n1 = response.indexOf('id="5-2');
+    var n1 = response.indexOf('id="'+mapid);
     var s1 = response.substring(n1+5);
     var n2 = s1.indexOf('路线分歧');
     var s2 = s1.substring(n2+5);
@@ -34,6 +34,7 @@ function getMapData(userName,mapid,callback){
     var ret = "";
     var prindex=0;
     var lastpr=0;
+    var lastr="";
     while(n>0){
       var s = s5.substring(0,n);
       s5 = s5.substring(n+4);
@@ -47,13 +48,24 @@ function getMapData(userName,mapid,callback){
       }else{
         pr=lastpr;
       }
-      var k1=sa[sa.length-4]
-      var k2=sa[sa.length-3]
-      var k3=sa[sa.length-2]
+      var k1=(sa[sa.length-4])
+      var k2=(sa[sa.length-3])
+      var k3=(sa[sa.length-2])
       if(k1&&k2&&k3){
-        ret=ret+pr+" : "+getpolit(k1)+'/'+getpolit(k2)+'/'+getpolit(k3)+'\n';
+        var m1 = getinner(k1).trim();
+        var m2 = getinner(k2).trim();
+        var m3 = getinner(k3).trim();
+        var m = pr+" : "+m1+'/'+m2+'/'+m3+'\n';
+        if(m==lastr){
+
+        }else{
+          lastr=m;
+          ret=ret+m;
+        }
       }
+      console.log(sa);
     }
+    console.log(ret);
     callback(ret);
   });
 }
@@ -82,16 +94,6 @@ function getinner(s){
   return ret;
 }
 
-function getpolit(str){
-  var n = str.indexOf('<td')
-  var s1 = str.substring(n+3);
-  var n2 = s1.indexOf('>');
-  var s2 = s1.substring(n2+1);
-  var n3 = s2.indexOf('<');
-  var s3 = s2.substring(0,n3);
-  return s3.trim();
-
-}
 
 module.exports={
   getMapData

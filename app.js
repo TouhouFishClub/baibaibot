@@ -46,6 +46,7 @@ const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weath
 const xchange = require('./ai/xchange')
 const kce = require('./ai/kanColleEquip')
 const updateAll = require('./mongo/db_kcUpdateAll')
+const {getMapData} = require('./ai/kancolle/kancollemap');
 
 app.get('/showData', function (req, res) {
   let data = fs.readFileSync(path.join('tools', 'okcoin-data', 'index.html'), 'utf-8');
@@ -68,6 +69,13 @@ app.get('/test',function(req,res){
   res.send(kce('QQid', 'xa', callback))
   res.send(kce('QQid', 'x4', callback))
 });
+
+app.get('/test2',function(req,res){//这个函数时空专用！^-^
+  getMapData('name','5-4',function(){
+    res.send('ok');
+
+  })
+})
 
 var callback = function(res){
   if(res.trim().length>0){
