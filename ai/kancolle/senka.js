@@ -36,7 +36,8 @@ function searchsenka2(server,userName,name,callback){
         if(mongodata){
           var data = mongodata.d;
           u = JSON.parse(data);
-          c[server]={d:u,ts:data.ts};
+          c[server]={};
+          c[server].ts=data.ts;
           forecast(server);
           searchSenkaByCache(server,userName,name,callback);
         }
