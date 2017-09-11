@@ -17,6 +17,7 @@ const {getloc,route} = require('./ai/map');
 const {searchSongByName} = require('./ai/song');
 const kce = require('./ai/kanColleEquip')
 const {getMapData} = require('./ai/kancolle/kancollemap')
+const {searchsenka} = require('./ai/kancolle/senka');
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -111,7 +112,7 @@ function handleMsg_D(msg,qq,type){
     if(c1==""){
       var ret = "`1+名词：百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n";
       ret = ret + "`4+内容：百度查询\n`c汇率转换\n`0+数字：大写数字转换\n`8+地点A-地点B：公交查询\n";
-      ret = ret + '';
+      ret = ret + '`r+数字：ROLL一个小于该数字的随机整数\n';
       ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n虾扯蛋：``+对话";
       callback(ret);
     }else{
@@ -181,8 +182,12 @@ function reply(content,userName,callback){
     kce(userName,content.substring(1),callback);
   }else if(first=="k"||first=='K'){
     getMapData(userName,content.substring(1),callback);
+  }else if(first=="z"||first=='Z'){
+    searchsenka(userName,content.substring(1),callback);
   }else if(first=='s'||first=='S'){
     searchSongByName(userName,content.substring(1),callback);
+  }else if(first=='r'||first=='R'){
+    callback(Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='t'||first=='T'){
     callback('1"\t"2');
   }else if(first==8){

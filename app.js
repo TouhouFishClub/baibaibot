@@ -47,6 +47,7 @@ const xchange = require('./ai/xchange')
 const kce = require('./ai/kanColleEquip')
 const updateAll = require('./mongo/db_kcUpdateAll')
 const {getMapData} = require('./ai/kancolle/kancollemap');
+const {searchsenka} = require('./ai/kancolle/senka');
 
 app.get('/showData', function (req, res) {
   let data = fs.readFileSync(path.join('tools', 'okcoin-data', 'index.html'), 'utf-8');
@@ -71,10 +72,8 @@ app.get('/test',function(req,res){
 });
 
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  getMapData('name','6-4',function(){
-    res.send('ok');
-
-  })
+  searchsenka(8);
+  res.send('ok');
 })
 
 var callback = function(res){
