@@ -13,7 +13,6 @@ function searchsenka(userName,content,callback){
     if(!ret){
       ret = 'No memory\n';
     }
-    ret = ret + '统计时间：'+new Date(c[server].ts).toLocaleString();
     callback(ret);
   }else{
     var ca = content.split('-');
@@ -71,7 +70,7 @@ function searchSenkaByCache(server,userName,name,callback){
     }else{
       for(var i=0;i<ra.length;i++){
         ret = ret + 'x'+i+'\t|\t'+ra[i]+"\n";
-        memory[userName+"x"+i]=detail[ra[i]];
+        memory[userName+"x"+i]=detail[ra[i]]+ '统计时间：'+new Date(c[server].ts).toLocaleString();
       }
     }
   }
