@@ -8,6 +8,11 @@ var memory = {};
 function searchsenka(userName,content,callback){
   if(content==""){
     callback('输入格式：`z[服务器名或ID]-[用户名]')
+  }else if(name.length==2&&name.substring(0,1)=='x'){
+    ret = memory[userName+name];
+    if(!ret){
+      ret = 'No memory\n';
+    }
   }else{
     var ca = content.split('-');
     if(ca.length==1){
@@ -37,7 +42,7 @@ function searchsenka2(server,userName,name,callback){
           var data = mongodata.d;
           u = JSON.parse(data);
           c[server]={};
-          c[server].ts=data.ts;
+          c[server].ts=mongodata.ts;
           forecast(server);
           searchSenkaByCache(server,userName,name,callback);
         }
@@ -50,11 +55,6 @@ function searchSenkaByCache(server,userName,name,callback){
   var ret = "";
   if(name==""){
     ret = c[server].f;
-  }else if(name.length==2&&name.substring(0,1)=='x'){
-    ret = memory[userName+name];
-    if(!ret){
-      ret = 'No memory\n';
-    }
   }else{
     var detail = c[server].u;
     var keys = Object.keys(detail);
@@ -73,7 +73,6 @@ function searchSenkaByCache(server,userName,name,callback){
       }
     }
   }
-  console.log(c[server].ts);
   ret = ret + '统计时间：'+new Date(c[server].ts).toLocaleString();
   callback(ret);
 }
