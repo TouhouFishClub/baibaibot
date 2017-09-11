@@ -18,9 +18,10 @@ function fight(fromuin,content,members,callback){
       }
     }
   }
-  console.log(from,to);
   if(from&&to){
     fightUser(from,to,callback)
+  }else{
+    callback(to+'是谁？'+from+'砍向了'+to+',造成'+(Math.random()*999999-1999999)+'点伤害');
   }
 }
 
@@ -75,7 +76,7 @@ function battle(data1,data2,db){
     data2.hp=data2.hp-damage;
     damage = generateDamage(data2,data1);
     data2.exp=data2.exp+damage;
-    ret = ret + data1._id+'对'+data2._id+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
+    ret = ret + data2._id+'对'+data1._id+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
     if(damage>data1.hp){
       data1.status=1;
       data1.hp=100;
