@@ -11,16 +11,16 @@ function searchsenka(userName,content,callback){
   }else{
     var ca = content.split('-');
     if(ca.length==1){
-      var server = ca[0];
+      var serverId = parseInt(ca[0]);
       var name = "";
-      searchsenka2(server,userName,name,callback)
+      searchsenka2(serverId,userName,name,callback)
     }else if(ca.length==2){
-      var server = ca[0];
+      var serverId = parseInt(ca[0]);
       var name = ca[1];
-      searchsenka2(server,userName,name,callback)
+      searchsenka2(serverId,userName,name,callback)
     }else{
-      var server = ca[0];
-      searchsenka2(server,userName,"",callback)
+      var serverId = parseInt(ca[0]);
+      searchsenka2(serverId,userName,"",callback)
     }
   }
 }
