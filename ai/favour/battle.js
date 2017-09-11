@@ -1,18 +1,11 @@
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 
-function fight(userName,content,members,callback){
+function fight(fromuin,content,members,callback){
   var from;
   var to;
-  console.log(members);
   for(let i=0;i<members.length;i++){
-    if(userName==members[i].card){
-      from = members[i].nick;
-      if(to){
-        break;
-      }
-    }
-    if(userName==members[i].nick){
+    if(fromuin==members[i].uin){
       from = members[i].nick;
       if(to){
         break;
