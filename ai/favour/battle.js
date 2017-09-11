@@ -21,7 +21,7 @@ function fight(fromuin,content,members,callback){
   if(from&&to){
     fightUser(from,to,callback)
   }else{
-    callback(to+'是谁？'+from+'砍向了'+to+',造成'+(Math.random()*999999-1999999)+'点伤害');
+    callback(content+'是谁？'+from+'砍向了'+content+',造成'+Math.floor(Math.random()*1999999-999999)+'点伤害');
   }
 }
 

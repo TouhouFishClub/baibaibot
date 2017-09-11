@@ -188,7 +188,7 @@ function reply(content,userName,callback,groupid,from){
   }else if(first=='s'||first=='S'){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='r'||first=='R'){
-    callback(Math.floor(Math.random()*parseInt(content.substring(1))));
+    callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='f'||first=='F'){
     fight(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first==8){
