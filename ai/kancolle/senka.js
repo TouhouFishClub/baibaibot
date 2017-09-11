@@ -56,7 +56,7 @@ function searchSenkaByCache(server,userName,name,callback){
       ret = 'No memory\n';
     }
   }else{
-    var detail = u[server].u;
+    var detail = c[server].u;
     var keys = Object.keys(detail);
     var ra = []
     for(var i=0;i<keys.length;i++){
@@ -73,6 +73,7 @@ function searchSenkaByCache(server,userName,name,callback){
       }
     }
   }
+  console.log(c[server].ts);
   ret = ret + '统计时间：'+new Date(c[server].ts).toLocaleString();
   callback(ret);
 }
