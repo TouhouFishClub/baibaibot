@@ -378,6 +378,7 @@ function generateTable(sorttype,server){
       if(!c[server].u){
         c[server].u={};
       }
+      var h = '';
       h = h + '排名：'+(i + 1) + '位(' + senka.lno + '位)\n';
       h = h + senka.name+'\n';
       h = h + '战果值：'+senka.senka + '\n';
