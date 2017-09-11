@@ -6,8 +6,6 @@ var c = {};
 var memory = {};
 
 function searchsenka(userName,content,callback){
-  console.log(content)
-  console.log(memory);
   if(content==""){
     callback('输入格式：`z[服务器名或ID]-[用户名]')
   }else if(content.length==2&&content.substring(0,1)=='x'){
@@ -15,6 +13,8 @@ function searchsenka(userName,content,callback){
     if(!ret){
       ret = 'No memory\n';
     }
+    ret = ret + '统计时间：'+new Date(c[server].ts).toLocaleString();
+    callback(ret);
   }else{
     var ca = content.split('-');
     if(ca.length==1){
@@ -388,7 +388,7 @@ function generateTable(sorttype,server){
       h = h + '最大值：'+max + '\n';
       h = h + '最小值：'+min + '\n';
       h = h + '经验：'+subsenkastr + '\n';
-      h = h + 'ex:'+exstr;
+      h = h + 'ex:'+exstr+'\n';
       c[server].u[senka.name]=h;
     }
 
