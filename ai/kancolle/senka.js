@@ -48,7 +48,7 @@ function searchsenka2(server,userName,name,callback){
 function searchSenkaByCache(server,userName,name,callback){
   var ret = "";
   if(name==""){
-    ret = u[server].f;
+    ret = c[server].f;
   }else if(name.length==2&&name.substring(0,1)=='x'){
     ret = memory[userName+name];
     if(!ret){
