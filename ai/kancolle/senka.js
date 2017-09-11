@@ -32,7 +32,21 @@ function searchsenka(userName,content,callback){
 }
 
 function searchsenka2(server,userName,name,callback){
+  var then = 0;
   if(c[server]){
+    then=c[server].ts;
+  }
+  var now = new Date();
+  var month = now.getMonth();
+  var date = now.getDate();
+  var sub = now.getTime()-new Date(then).getTime();
+  var read = true;
+  if(date<monthOfDay[month]) {
+    if (getDateNo(now) == getDateNo(then) && getRankDateNo(now) == getRankDateNo(then) && sub > 60000) {
+      read = false;
+    }
+  }
+  if(read==false){
     searchSenkaByCache(server,userName,name,callback);
   }else{
     MongoClient.connect(mongourl, function(err, db) {
