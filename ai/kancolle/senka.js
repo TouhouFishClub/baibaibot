@@ -306,7 +306,6 @@ function generateTable(sorttype,server){
               max = last2;
               min = last1;
             }
-            console.log(maxf,minf,max,maxsub,minsub);
             if(senkas==max.senka){
               senka.expfrom = maxsub.expfrom;
               senka.expto = maxsub.expto;
