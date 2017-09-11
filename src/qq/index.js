@@ -345,6 +345,21 @@ class QQ {
         }
     }
 
+    getMemberListInGroup(groupCode){
+      let group;
+      for (let g of this.group) {
+        if (g.gid == groupCode) {
+          group = g;
+          break;
+        }
+      }
+      if(group){
+          return group.info.minfo;
+      }else{
+          return [];
+      }
+    }
+
     getNameInGroup(uin, groupCode) {
         const nameKey = `${groupCode}${uin}`;
         let name = this.groupNameMap.get(nameKey);

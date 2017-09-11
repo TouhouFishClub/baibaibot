@@ -18,6 +18,7 @@ const {searchSongByName} = require('./ai/song');
 const kce = require('./ai/kanColleEquip')
 const {getMapData} = require('./ai/kancolle/kancollemap')
 const {searchsenka} = require('./ai/kancolle/senka');
+const {fight} = require('./ai/favour/battle');
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -188,8 +189,8 @@ function reply(content,userName,callback){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='r'||first=='R'){
     callback(Math.floor(Math.random()*parseInt(content.substring(1))));
-  }else if(first=='t'||first=='T'){
-    callback('1"\t"2');
+  }else if(first=='f'||first=='F'){
+    fight(userName,content,qqq.getMemberListInGroup(),callback);
   }else if(first==8){
     var ca = content.substring(1).split('-');
     if(ca.length==2){
