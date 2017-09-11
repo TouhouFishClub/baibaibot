@@ -79,7 +79,6 @@ function handleMsg_D(msg,qq,type){
   var name = msg.name;
   var groupName = msg.groupName;
   var callback = function(res){
-    console.log(name,content,groupName,res);
     if(res.trim().length>0){
       if(res.length>250){
         res = res.substring(0,250)+'.......';
@@ -117,7 +116,7 @@ function handleMsg_D(msg,qq,type){
       ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n虾扯蛋：``+对话";
       callback(ret);
     }else{
-      reply(c1,name,callback);
+      reply(c1,name,callback,groupid);
     }
     return;
   }
@@ -163,7 +162,7 @@ function handleMsg_D(msg,qq,type){
 
 }
 
-function reply(content,userName,callback){
+function reply(content,userName,callback,groupid){
   var first = content.substring(0,1);
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
     tulingMsg(userName,content.substring(1),callback);
@@ -190,7 +189,7 @@ function reply(content,userName,callback){
   }else if(first=='r'||first=='R'){
     callback(Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='f'||first=='F'){
-    fight(userName,content,qqq.getMemberListInGroup(),callback);
+    fight(userName,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first==8){
     var ca = content.substring(1).split('-');
     if(ca.length==2){

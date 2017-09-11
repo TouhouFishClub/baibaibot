@@ -4,6 +4,7 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 function fight(userName,content,members,callback){
   var from;
   var to;
+  console.log(members);
   for(let i=0;i<members.length;i++){
     if(userName==members[i].card){
       from = members[i].nick;
@@ -24,6 +25,7 @@ function fight(userName,content,members,callback){
       }
     }
   }
+  console.log(from,to);
   if(from&&to){
     fightUser(from,to,callback)
   }
@@ -37,29 +39,35 @@ function fightUser(from,to,callback){
       if (data) {
 
       } else {
-        init = {'_id': userName, hp: 100, mp: 100, tp: 100, gold: 100,lv: 1,exp:0,
+        init = {'_id': from, hp: 100, mp: 100, tp: 100, gold: 100,lv: 1,exp:0,
            str: 9, int: 9, agi: 9, atk:9, def:9, mag:9,luck:9,status:0,
           love: 0}
         data = init;
       }
-      var q2 = {'_id':to};
-      cl_user.findOne(q2,function(err, data2) {
-        if (data2) {
+      if(data.mp<20){
+        callback('mp不足,无法发动攻击');
+      }else{
+        data.mp=data.mp-20;
+        var q2 = {'_id':to};
+        cl_user.findOne(q2,function(err, data2) {
+          if (data2) {
 
-        } else {
-          init = {'_id': userName, hp: 100, mp: 100, tp: 100, gold: 100,lv: 1,exp:0,
-            str: 9, int: 9, agi: 9, atk:9, def:9, mag:9,luck:9,status:0,
-            love: 0}
-          data2 = init;
-        }
-        var ret = battle(data,data2);
-        callback(ret);
-      })
+          } else {
+            init = {'_id': to, hp: 100, mp: 100, tp: 100, gold: 100,lv: 1,exp:0,
+              str: 9, int: 9, agi: 9, atk:9, def:9, mag:9,luck:9,status:0,
+              love: 0}
+            data2 = init;
+          }
+          var ret = battle(data,data2,db);
+          callback(ret);
+        })
+      }
+
     });
   });
 }
 
-function battle(data1,data2){
+function battle(data1,data2,db){
   var ret='';
   var damage = generateDamage(data1,data2);
   ret = ret + data1._id+'对'+data2._id+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
@@ -95,8 +103,8 @@ function generateDamage(data1,data2){
   if(data1.status!=0){
     return 0;
   }else{
-    var atk = a1.atk*(Math.random()*100<a1.luck?3:1);
-    var def = a2.def*(Math.random()*0.5+0.5);
+    var atk = data1.atk*(Math.random()*100<data1.luck?3:1);
+    var def = data2.def*(Math.random()*0.5+0.5);
     if(data2.status==2){
       def = def * 2;
     }
