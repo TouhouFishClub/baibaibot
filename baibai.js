@@ -105,25 +105,26 @@ function handleMsg_D(msg,qq,type){
     }
   }
 
+  /* game system */
   if(content === '开始游戏'){
-    onlineObj[nickname] = 0
+    onlineObj[nickname] = 1
     console.log(`【${nickname}】已登入`)
     callback(`【${nickname}】已登入`)
-  }
-
-  if(onlineObj[nickname]){
-    if(onlineObj[nickname] < 4){
-      if(allGameAction[content.trim().split(' ')[0]]){
-        onlineObj[nickname] = 0
-        DQCore(nickname, content, callback)
+  } else {
+    if(onlineObj[nickname]){
+      if(onlineObj[nickname] < 4){
+        if(allGameAction[content.trim().split(' ')[0]]){
+          onlineObj[nickname] = 1
+          DQCore(nickname, content, callback)
+        } else {
+          onlineObj[nickname] ++
+        }
+        callback(`【${nickname}】${onlineObj[nickname]}`)
       } else {
-        onlineObj[nickname] ++
+        delete onlineObj[nickname]
+        console.log(`【${nickname}】已登出`)
+        callback(`【${nickname}】已登出`)
       }
-      callback(`【${nickname}】${onlineObj[nickname]}`)
-    } else {
-      delete onlineObj[nickname]
-      console.log(`【${nickname}】已登出`)
-      callback(`【${nickname}】已登入`)
     }
   }
 
