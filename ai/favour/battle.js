@@ -154,7 +154,7 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + " `g4:转换为普通状态";
     callback(ret);
   }else if(content==0){
-    getUserInfo(fromuin,content,members,callback);
+    getUserInfo(fromuin,content.substring(1),members,callback);
   }else{
     var userName;
     for (let i = 0; i < members.length; i++) {
