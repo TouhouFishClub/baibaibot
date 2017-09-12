@@ -108,6 +108,7 @@ function handleMsg_D(msg,qq,type){
   if(content === '开始游戏'){
     onlineObj[nickname] = 0
     console.log(`【${nickname}】已登入`)
+    callback(`【${nickname}】已登入`)
   }
 
   if(onlineObj[nickname]){
@@ -118,9 +119,11 @@ function handleMsg_D(msg,qq,type){
       } else {
         onlineObj[nickname] ++
       }
+      callback(`【${nickname}】${onlineObj[nickname]}`)
     } else {
       delete onlineObj[nickname]
       console.log(`【${nickname}】已登出`)
+      callback(`【${nickname}】已登入`)
     }
   }
 
