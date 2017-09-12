@@ -210,7 +210,7 @@ function useMagicOrItem(fromuin,content,members,callback){
                 ret = ret + ",def+1";
               }
               if(Math.random()<0.5){
-                data.def=data.def+1;
+                data.luck=data.luck+1;
                 ret = ret + ",luck+1";
               }
               callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
