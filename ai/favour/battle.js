@@ -97,14 +97,14 @@ function generateDamage(data1,data2){
   if(data1.status!=0){
     return 0;
   }else{
-    var atk = 2*data1.atk*(Math.random()*100<data1.luck?3:1);
+    var atk = data1.atk*(Math.random()*100<data1.luck?3:1)*(Math.random()+0.5);
     var def = data2.def*(Math.random()*0.5+0.5);
     if(data2.status==2){
       def = def * 2;
     }
-    var rate = data1.hp<100?data1.hp:100;
+    var rate = 100+data1.hp<100?data1.hp:100;
     var damage = 0;
-    if(atk<def){
+    if(atk<=def){
       damage = data2.hp*Math.random()*0.1;
     }else{
       damage = (atk-def)*rate/100;
@@ -187,7 +187,7 @@ function useMagicOrItem(fromuin,content,members,callback){
           if(data.gold>=50){
             data.gold=data.gold-50;
             data.mp=data.mp+100;
-            callback(userName+'使用了回复魔法回复了100点HP');
+            callback(userName+'使用了魔法药水回复了100点MP');
           }
         }else if(content==2){
           data.status=2;
