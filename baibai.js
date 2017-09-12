@@ -192,7 +192,7 @@ function reply(content,userName,callback,groupid,from){
   }else if(first=='f'||first=='F'){
     fight(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first=='g'||first=='G'){
-    fight(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+    useMagicOrItem(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first==8){
     var ca = content.substring(1).split('-');
     if(ca.length==2){
