@@ -152,6 +152,7 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + "\g2:转换为防御状态(防御力2倍,不能自然回复HP和MP)";
     ret = ret + "\g3:购买MP药水(消耗50金钱,回复100MP)";
     ret = ret + "\g4:转换为普通状态";
+    callback(ret);
   }else if(content==1){
     getUserInfo(fromuin,content,members,callback);
   }else{
