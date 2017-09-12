@@ -132,10 +132,10 @@ function getUserInfo(fromuin,content,members,callback){
     cl_user.findOne(query, function (err, data) {
       if (data) {
         var ret = data._id + "\n";
-        ret = ret + "hp:" + data.hp + "\tmp:" + data.mp + "\n";
-        ret = ret + "lv:" + data.lv + "\texp:" + data.exp + "\n";
-        ret = ret + "atk:" + data.atk + "\tdef:" + data.def + "\n";
-        ret = ret + "luck:" + data.luck + "\tstatus:" + data.status + "\n";
+        ret = ret + "hp:" + data.hp + "   mp:" + data.mp + "\n";
+        ret = ret + "lv:" + data.lv + "   exp:" + data.exp + "\n";
+        ret = ret + "atk:" + data.atk + "   def:" + data.def + "\n";
+        ret = ret + "luck:" + data.luck + "   status:" + data.status + "\n";
         ret = ret + "gold:" + data.gold + "\n";
         callback(ret);
       } else {
