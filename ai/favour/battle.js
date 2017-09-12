@@ -200,6 +200,7 @@ function useMagicOrItem(fromuin,content,members,callback){
           if(data.exp>100){
             if(data.lv<20){
               data.lv=data.lv+1;
+              data.exp=data.exp-100;
               var ret = "";
               if(Math.random()<0.5){
                 data.atk=data.atk+1;
