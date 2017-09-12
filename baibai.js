@@ -106,7 +106,7 @@ function handleMsg_D(msg,qq,type){
   }
 
   if(content === '开始游戏'){
-    onlineObj[nickname] = 0
+    onlineObj[nickname] = 1
     console.log(`【${nickname}】已登入`)
     callback(`【${nickname}】已登入`)
   }
@@ -114,7 +114,7 @@ function handleMsg_D(msg,qq,type){
   if(onlineObj[nickname]){
     if(onlineObj[nickname] < 4){
       if(allGameAction[content.trim().split(' ')[0]]){
-        onlineObj[nickname] = 0
+        onlineObj[nickname] = 1
         DQCore(nickname, content, callback)
       } else {
         onlineObj[nickname] ++
