@@ -20,7 +20,7 @@ const {searchSongByName} = require('./ai/song');
 const kce = require('./ai/kanColleEquip')
 const {getMapData} = require('./ai/kancolle/kancollemap')
 const {searchsenka} = require('./ai/kancolle/senka');
-const {fight} = require('./ai/favour/battle');
+const {fight,useMagicOrItem} = require('./ai/favour/battle');
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -219,9 +219,11 @@ function reply(content,userName,callback,groupid,from){
   }else if(first=='s'||first=='S'){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='r'||first=='R'){
-    callback(Math.floor(Math.random()*parseInt(content.substring(1))));
+    callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='f'||first=='F'){
     fight(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+  }else if(first=='g'||first=='G'){
+    useMagicOrItem(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first==8){
     var ca = content.substring(1).split('-');
     if(ca.length==2){
