@@ -153,7 +153,7 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + " `g3:购买MP药水(消耗50金钱,回复100MP)\n";
     ret = ret + " `g4:转换为普通状态";
     callback(ret);
-  }else if(content==0){
+  }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1),members,callback);
   }else{
     var userName;
