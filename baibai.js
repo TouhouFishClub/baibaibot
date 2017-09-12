@@ -1,6 +1,8 @@
 var http=require('http');
 var https=require('https');
 var tls = require('tls');
+let onlineObj = {}
+const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 
 
 const { QQ, MsgHandler } = require('./qqlib');
@@ -94,6 +96,35 @@ function handleMsg_D(msg,qq,type){
       },1000);
     }
   }
+
+  let memberListInGroup = qqq.getMemberListInGroup(groupid), nickname
+  for(let i = 0; i < memberListInGroup.length; i++){
+    if(from === memberListInGroup[i].uin) {
+      nickname = memberListInGroup[i].nick
+      break
+    }
+  }
+
+  if(content === '开始游戏'){
+    onlineObj[nickname] = 0
+    console.log(`【${nickname}】已登入`)
+  }
+
+  if(onlineObj[nickname]){
+    if(onlineObj[nickname] < 4){
+      if(allGameAction[content.trim().split(' ')[0]]){
+        onlineObj[nickname] = 0
+        DQCore(nickname, content, callback)
+      } else {
+        onlineObj[nickname] ++
+      }
+    } else {
+      delete onlineObj[nickname]
+      console.log(`【${nickname}】已登出`)
+    }
+  }
+
+
   var first = content.substring(0,1);
   if(first=='.'||first=='。'){
     var c = content.substring(1);
