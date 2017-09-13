@@ -119,6 +119,12 @@ const itemTypeSynonyms = str => {
       return '大型探照灯'
     case '水战':
       return '水上戦闘機'
+    case '战斗粮食':
+      return '戦闘糧食'
+    case '战斗':
+      return '戦闘'
+    case '粮食':
+      return '糧食'
     default:
       return str
   }
