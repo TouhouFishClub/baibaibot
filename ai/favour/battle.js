@@ -151,7 +151,8 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + " `g1:回复魔法(消耗50MP,回复100HP)\n";
     ret = ret + " `g2:转换为防御状态(防御力2倍,不能自然回复HP和MP)\n";
     ret = ret + " `g3:购买MP药水(消耗50金钱,回复100MP)\n";
-    ret = ret + " `g4:转换为普通状态";
+    ret = ret + " `g4:转换为普通状态\n";
+    ret = ret + " `g5:升级,消耗100点经验,等级+1,ATK/DEF/LUCK一定概率+1";
     callback(ret);
   }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1),members,callback);
@@ -195,6 +196,31 @@ function useMagicOrItem(fromuin,content,members,callback){
         }else if(content==4){
           data.status=0;
           callback(userName+'转换为普通状态');
+        }else if(content==5){
+          if(data.exp>100){
+            if(data.lv<20){
+              data.lv=data.lv+1;
+              data.exp=data.exp-100;
+              var ret = "";
+              if(Math.random()<0.5){
+                data.atk=data.atk+1;
+                ret = ret + ",atk+1"
+              }
+              if(Math.random()<0.5){
+                data.def=data.def+1;
+                ret = ret + ",def+1";
+              }
+              if(Math.random()<0.5){
+                data.luck=data.luck+1;
+                ret = ret + ",luck+1";
+              }
+              callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
+            }else{
+              callback(userName+'不能在升级了,请转生后在升级');
+            }
+          }else{
+            callback(userName+'经验不足,不能升级');
+          }
         }
         cl_user.save(data);
       });
