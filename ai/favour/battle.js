@@ -250,7 +250,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             data.status=0;
             callback(userName+'转换为普通状态');
           }
-        }}else if(content==6){
+        }else if(content==6){
         if(data.status!=1){
           data.status=3;
           callback(userName+'转换为攻击状态');
