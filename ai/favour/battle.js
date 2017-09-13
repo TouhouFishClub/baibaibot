@@ -57,6 +57,10 @@ function fight(fromuin,content,members,callback){
 }
 
 function fightUser(from,to,callback){
+  if(from==to){
+    callback(from+'自杀了');
+    return;
+  }
   MongoClient.connect(mongourl, function(err, db) {
     var cl_user = db.collection('cl_user');
     var query = {'_id':from};
@@ -70,7 +74,7 @@ function fightUser(from,to,callback){
         data = init;
       }
       if(data.mp<20){
-        callback('mp不足,无法发动攻击');
+        callback(from+'mp不足,无法发动攻击');
       }else{
         data.mp=data.mp-20;
         var q2 = {'_id':to};
@@ -100,9 +104,9 @@ function battle(data1,data2,db){
   if(damage>data2.hp){
     data2.status=1;
     data2.hp=100;
+    ret = ret + data2._id+'被砍死了,'+data1._id+'获得'+(data2.gold/2)+'金钱';
     data1.gold=data1.gold+Math.floor(data2.gold/2);
     data2.gold=data2.gold-Math.floor(data2.gold/2);
-    ret = ret + data2._id+'被砍死了,'+data1._id+'获得'+(data2.gold/2)+'金钱';
   }else{
     data2.hp=data2.hp-damage;
     damage = generateDamage(data2,data1);
@@ -111,9 +115,9 @@ function battle(data1,data2,db){
     if(damage>data1.hp){
       data1.status=0;
       data1.hp=100;
+      ret = ret + data1._id+'被砍死了,'+data2._id+'获得'+(data1.gold/2)+'金钱';
       data2.gold=data2.gold+Math.floor(data1.gold/2);
       data1.gold=data1.gold-Math.floor(data1.gold/2);
-      ret = ret + data1._id+'被砍死了,'+data2._id+'获得'+(data1.gold/2)+'金钱';
     }else{
       data1.hp=data1.hp-damage;
     }
@@ -261,13 +265,16 @@ function useMagicOrItem(fromuin,content,members,callback){
 
 var timer = 0;
 function regenTimer(){
+  var left = 3600000 - new Date().getTime()%3600000
   if(timer==0){
     timer = 1;
     setTimeout(function(){
-      console.log("now will regen:"+new Date());
       regen();
-      timer = 0;
-    },3600000)
+      setTimeout(function () {
+        timer = 0;
+        regenTimer();
+      },10000);
+    },left)
   }
 }
 
