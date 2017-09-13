@@ -179,7 +179,16 @@ function getUserInfo(fromuin,content,members,callback){
     var query = {'_id': userName};
     cl_user.findOne(query, function (err, data) {
       if (data) {
-        var statusstr = data.status==0?'普通':(data.status==1?'死亡':'防御')
+        var statusstr;
+        if(data.status==0){
+          statusstr='普通';
+        }else if(data.status==1){
+          statusstr='死亡';
+        }else if(data.status==2){
+          statusstr='防御';
+        }else if(data.status==3){
+          statusstr='普通';
+        }
         var ret = data._id + "\n";
         ret = ret + "hp:" + data.hp + "   mp:" + data.mp + "\n";
         ret = ret + "lv:" + data.lv + "   exp:" + data.exp + "\n";
