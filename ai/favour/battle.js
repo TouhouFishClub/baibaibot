@@ -6,7 +6,6 @@ function fight(fromuin,content,members,callback){
   var from;
   var to;
   content=content.trim();
-  console.log(members);
   if(content.substring(0,1)==1&&content.length==2){
     var tmp = tmpfight[fromuin];
     var no = content.substring(1);
