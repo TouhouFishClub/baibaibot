@@ -20,7 +20,7 @@ const {searchSongByName} = require('./ai/song');
 const kce = require('./ai/kanColleEquip')
 const {getMapData} = require('./ai/kancolle/kancollemap')
 const {searchsenka} = require('./ai/kancolle/senka');
-const {fight,useMagicOrItem} = require('./ai/favour/battle');
+const {fight,useMagicOrItem,regenTimer} = require('./ai/favour/battle');
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -42,6 +42,7 @@ const discuHandler = new MsgHandler(
 
 var qqq = new QQ(buddyHandler, groupHandler,discuHandler);
 qqq.run();
+regenTimer();
 
 function handleBuddyMsg(msg,qq){
   var name = msg.name;

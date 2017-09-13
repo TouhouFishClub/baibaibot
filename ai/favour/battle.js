@@ -18,6 +18,7 @@ function fight(fromuin,content,members,callback){
       }
     }
   }
+  console.log(members);
   if(from&&to){
     fightUser(from,to,callback)
   }else{
@@ -124,7 +125,7 @@ function getUserInfo(fromuin,content,members,callback){
       }
     }
   }else{
-    userName=content;
+    userName=content.trim();
   }
   MongoClient.connect(mongourl, function(err, db) {
     var cl_user = db.collection('cl_user');
@@ -152,7 +153,7 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + " `g2:转换为防御状态(防御力2倍,不能自然回复HP和MP)\n";
     ret = ret + " `g3:购买MP药水(消耗50金钱,回复100MP)\n";
     ret = ret + " `g4:转换为普通状态\n";
-    ret = ret + " `g5:升级,消耗100点经验,等级+1,ATK/DEF/LUCK一定概率+1";
+    ret = ret + " `g5:升级,消耗100点经验,ATK/DEF/LUCK一定概率+1";
     callback(ret);
   }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1),members,callback);
@@ -228,9 +229,50 @@ function useMagicOrItem(fromuin,content,members,callback){
   }
 }
 
+var timer = 0;
+function regenTimer(){
+  if(timer==0){
+    timer = 1;
+    setTimeout(function(){
+      console.log("now will regen:"+new Date());
+      regen();
+      timer = 0;
+    },3600000)
+  }
+}
 
+function regen(){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_user = db.collection('cl_user');
+    var query = {};
+    cl_user.find().toArray(function(err, userArr) {
+      for(var i=0;i<userArr.length;i++){
+        var u = userArr[i];
+        if(u.status==0){
+          var update = false;
+          if(u.hp<100){
+            u.hp=u.hp+5;
+            update = true;
+          }
+          if(u.mp<100){
+            u.mp=u.mp+5;
+            update = true;
+          }
+          if(u.gold<100){
+            u.gold=u.gold+5;
+            update = true;
+          }
+          if(update){
+            cl_user.save(u);
+          }
+        }
+      }
+    });
+  });
+}
 
 module.exports={
   fight,
-  useMagicOrItem
+  useMagicOrItem,
+  regenTimer
 }
