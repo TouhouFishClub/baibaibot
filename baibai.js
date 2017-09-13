@@ -180,7 +180,7 @@ function handleMsg_D(msg,qq,type){
   }
   var ca = content.split('|');
   if(ca.length==2){
-    if(ca[0].length<50){
+    if(ca[0].length<50 && ca[0].split(' ').length < 2 && ca[1].split('天气') < 2){
       saveTxt(ca[0],ca[1],name,groupName,callback);
       return;
     }
