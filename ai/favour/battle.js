@@ -73,12 +73,16 @@ function fightUser(from,to,callback){
           love: 0}
         data = init;
       }
-      if(data.mp<20){
+      var mpcost = 20;
+      if(data.status==3){
+        mpcost = 50;
+      }
+      if(data.mp<mpcost){
         callback(from+'mp不足,无法发动攻击');
       }else if(data.status==1){
         callback(from+'死了也想砍'+to+',但砍到了自己,受到'+Math.floor(Math.random()*10000-5000)+'点伤害');
       }else{
-        data.mp=data.mp-20;
+        data.mp=data.mp-mpcost;
         var q2 = {'_id':to};
         cl_user.findOne(q2,function(err, data2) {
           if (data2) {
@@ -143,6 +147,9 @@ function generateDamage(data1,data2){
     if(data2.status==2){
       def = def * 2;
     }
+    if(data1.status==3){
+      atk = atk * 2;
+    }
     var rate = 100+(data1.hp<100?data1.hp:100);
     var damage = 0;
     if(atk<=def){
@@ -194,7 +201,8 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + " `g2:转换为防御状态(防御力2倍,不能自然回复HP和MP)\n";
     ret = ret + " `g3:购买MP药水(消耗50金钱,回复100MP)\n";
     ret = ret + " `g4:转换为普通状态\n";
-    ret = ret + " `g5:升级,消耗100点经验,ATK/DEF/LUCK一定概率+1";
+    ret = ret + " `g5:升级,消耗100点经验,ATK/DEF/LUCK一定概率+1\n";
+    ret = ret + " `g6:转换为攻击状态(攻击力2倍,每次攻击消耗50点MP)\n";
     callback(ret);
   }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1).trim(),members,callback);
@@ -242,7 +250,12 @@ function useMagicOrItem(fromuin,content,members,callback){
             data.status=0;
             callback(userName+'转换为普通状态');
           }
-        }else if(content==5){
+        }}else if(content==6){
+        if(data.status!=1){
+          data.status=3;
+          callback(userName+'转换为攻击状态');
+        }
+      }else if(content==5){
           if(data.exp>100){
             if(data.lv<20){
               data.lv=data.lv+1;
