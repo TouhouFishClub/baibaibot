@@ -187,7 +187,7 @@ function getUserInfo(fromuin,content,members,callback){
         }else if(data.status==2){
           statusstr='防御';
         }else if(data.status==3){
-          statusstr='普通';
+          statusstr='攻击';
         }
         var ret = data._id + "\n";
         ret = ret + "hp:" + data.hp + "   mp:" + data.mp + "\n";
