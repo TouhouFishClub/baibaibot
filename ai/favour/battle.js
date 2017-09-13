@@ -75,8 +75,8 @@ function fightUser(from,to,callback){
       }
       if(data.mp<20){
         callback(from+'mp不足,无法发动攻击');
-      }else if(data2.status==1){
-        callback(from+'想鞭尸'+to+',但砍到了自己,受到'+Math.floor(Math.random()*10000-5000)+'点伤害');
+      }else if(data.status==1){
+        callback(from+'死了也想砍'+to+',但砍到了自己,受到'+Math.floor(Math.random()*10000-5000)+'点伤害');
       }else{
         data.mp=data.mp-20;
         var q2 = {'_id':to};
@@ -89,8 +89,12 @@ function fightUser(from,to,callback){
               love: 0}
             data2 = init;
           }
-          var ret = battle(data,data2,db);
-          callback(ret);
+          if(data2.status==1){
+            callback(from+'想鞭尸'+to+',但砍到了自己,受到'+Math.floor(Math.random()*100000-50000)+'点伤害');
+          }else{
+            var ret = battle(data,data2,db);
+            callback(ret);
+          }
         })
       }
 
