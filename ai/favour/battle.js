@@ -4,6 +4,7 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 function fight(fromuin,content,members,callback){
   var from;
   var to;
+  content=content.trim();
   for(let i=0;i<members.length;i++){
     if(fromuin==members[i].uin){
       from = members[i].nick;
@@ -18,7 +19,6 @@ function fight(fromuin,content,members,callback){
       }
     }
   }
-  console.log(members);
   if(from&&to){
     fightUser(from,to,callback)
   }else{
@@ -125,7 +125,7 @@ function getUserInfo(fromuin,content,members,callback){
       }
     }
   }else{
-    userName=content.trim();
+    userName=content;
   }
   MongoClient.connect(mongourl, function(err, db) {
     var cl_user = db.collection('cl_user');
@@ -156,7 +156,7 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + " `g5:升级,消耗100点经验,ATK/DEF/LUCK一定概率+1";
     callback(ret);
   }else if(content.substring(0,1)==0){
-    getUserInfo(fromuin,content.substring(1),members,callback);
+    getUserInfo(fromuin,content.substring(1).trim(),members,callback);
   }else{
     var userName;
     for (let i = 0; i < members.length; i++) {
