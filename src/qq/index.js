@@ -49,6 +49,7 @@ class QQ {
         this.buddyNameMap = new Map();
         this.discuNameMap = new Map();
         this.groupNameMap = new Map();
+        this.groupInfoMap = {};
         this.userInfoMap = new Map();
         this.client = new Client();
         this.messageAgent = null;
@@ -346,18 +347,39 @@ class QQ {
     }
 
     getMemberListInGroup(groupCode){
-      let group;
-      for (let g of this.group) {
-        if (g.gid == groupCode) {
-          group = g;
-          break;
+        if(this.groupInfoMap[groupCode]){
+            return this.groupInfoMap[groupCode];
+        }else{
+          let group;
+          for (let g of this.group) {
+            if (g.gid == groupCode) {
+              group = g;
+              break;
+            }
+          }
+          const members = group.info.minfo;
+          const cards = group.info.cards;
+          var map = {};
+          if(members){
+            for(let i=0;i<members.length;i++){
+              var uin = members[i].uin;
+              map[uin]=members[i];
+            }
+          }
+          if(cards){
+            for(let i=0;i<cards.length;i++){
+              var uin = cards[i].muin;
+              var card = cards[i].card;
+              map[uin].card=card;
+            }
+          }
+          var ret = []
+          for(var p in map){
+              ret.push(map[p]);
+          }
+          this.groupInfoMap[groupCode]=ret;
+          return ret;
         }
-      }
-      if(group){
-          return group.info.minfo;
-      }else{
-          return [];
-      }
     }
 
     getNameInGroup(uin, groupCode) {
