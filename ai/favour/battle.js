@@ -1,27 +1,58 @@
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 
+var tmpfight = {};
 function fight(fromuin,content,members,callback){
   var from;
   var to;
+  content=content.trim();
+  if(content.substring(0,1)==1&&content.length==2){
+    var tmp = tmpfight[fromuin];
+    var no = content.substring(1);
+    if(tmp){
+      var from=tmp.f;
+      var to = tmp[no];
+      if(from&&to){
+        fightUser(from,to,callback)
+      }
+    }else{
+      callback(from+'砍向了'+'空气'+',造成'+Math.floor(Math.random()*100-50)+'点伤害');
+    }
+    return;
+  }
+  var toa=[];
   for(let i=0;i<members.length;i++){
     if(fromuin==members[i].uin){
       from = members[i].nick;
-      if(to){
-        break;
-      }
     }
-    if(content==members[i].nick){
-      to = content;
-      if(from){
-        break;
-      }
+    if(members[i].nick&&members[i].nick.indexOf(content)>=0){
+      toa.push(members[i].nick);
+      continue;
+    }
+    if(members[i].card&&members[i].card.indexOf(content)>=0){
+      toa.push(members[i].nick);
+      continue;
     }
   }
-  if(from&&to){
-    fightUser(from,to,callback)
+  if(toa.length==1&&from){
+    to=toa[0];
+    if(from&&to){
+      fightUser(from,to,callback)
+    }else{
+      callback(content+'是谁？'+from+'砍向了'+content+',造成'+Math.floor(Math.random()*1999999-999999)+'点伤害');
+    }
   }else{
-    callback(content+'是谁？'+from+'砍向了'+content+',造成'+Math.floor(Math.random()*1999999-999999)+'点伤害');
+    if(toa.length>9){
+      callback(from+'砍向了'+'空气'+',造成'+Math.floor(Math.random()*1000-500)+'点伤害');
+    }else{
+      var ret = "请选择：\n";
+      tmpfight[fromuin]={f:from};
+      for(var i=0;i<toa.length;i++){
+        ret = ret + '`f1'+i+' | '+toa[i]+'\n';
+        tmpfight[fromuin][i]=toa[i]
+      }
+      callback(ret.trim());
+    }
   }
 }
 
@@ -102,10 +133,10 @@ function generateDamage(data1,data2){
     if(data2.status==2){
       def = def * 2;
     }
-    var rate = 100+data1.hp<100?data1.hp:100;
+    var rate = 100+(data1.hp<100?data1.hp:100);
     var damage = 0;
     if(atk<=def){
-      damage = data2.hp*Math.random()*0.1;
+      damage = data2.hp*Math.random()*0.05;
     }else{
       damage = (atk-def)*rate/100;
     }
@@ -152,10 +183,10 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + " `g2:转换为防御状态(防御力2倍,不能自然回复HP和MP)\n";
     ret = ret + " `g3:购买MP药水(消耗50金钱,回复100MP)\n";
     ret = ret + " `g4:转换为普通状态\n";
-    ret = ret + " `g5:升级,消耗100点经验,等级+1,ATK/DEF/LUCK一定概率+1";
+    ret = ret + " `g5:升级,消耗100点经验,ATK/DEF/LUCK一定概率+1";
     callback(ret);
   }else if(content.substring(0,1)==0){
-    getUserInfo(fromuin,content.substring(1),members,callback);
+    getUserInfo(fromuin,content.substring(1).trim(),members,callback);
   }else{
     var userName;
     for (let i = 0; i < members.length; i++) {
@@ -228,9 +259,50 @@ function useMagicOrItem(fromuin,content,members,callback){
   }
 }
 
+var timer = 0;
+function regenTimer(){
+  if(timer==0){
+    timer = 1;
+    setTimeout(function(){
+      console.log("now will regen:"+new Date());
+      regen();
+      timer = 0;
+    },3600000)
+  }
+}
 
+function regen(){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_user = db.collection('cl_user');
+    var query = {};
+    cl_user.find().toArray(function(err, userArr) {
+      for(var i=0;i<userArr.length;i++){
+        var u = userArr[i];
+        if(u.status==0){
+          var update = false;
+          if(u.hp<100){
+            u.hp=u.hp+5;
+            update = true;
+          }
+          if(u.mp<100){
+            u.mp=u.mp+5;
+            update = true;
+          }
+          if(u.gold<100){
+            u.gold=u.gold+5;
+            update = true;
+          }
+          if(update){
+            cl_user.save(u);
+          }
+        }
+      }
+    });
+  });
+}
 
 module.exports={
   fight,
-  useMagicOrItem
+  useMagicOrItem,
+  regenTimer
 }
