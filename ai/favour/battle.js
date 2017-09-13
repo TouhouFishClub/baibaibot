@@ -207,9 +207,9 @@ function useMagicOrItem(fromuin,content,members,callback){
   if(content==""){
     ret = "`g0:查询个人状态,`g0+名字:查询该人物状态\n";
     ret = ret + " `g1:回复魔法(消耗50MP,回复100HP)\n";
-    ret = ret + " `g2:转换为防御状态(防御力2倍,不能自然回复HP和MP)\n";
+    ret = ret + " `g2:转换为防御状态(防御力2倍)\n";
     ret = ret + " `g3:购买MP药水(消耗50金钱,回复100MP)\n";
-    ret = ret + " `g4:转换为普通状态\n";
+    ret = ret + " `g4:转换为普通状态(自然回复HP/MP/GOLD为2倍)\n";
     ret = ret + " `g5:升级,消耗100点经验,ATK/DEF/LUCK一定概率+1\n";
     ret = ret + " `g6:转换为攻击状态(攻击力2倍,每次攻击消耗50点MP)\n";
     callback(ret);
@@ -318,28 +318,31 @@ function regen(){
     cl_user.find().toArray(function(err, userArr) {
       for(var i=0;i<userArr.length;i++){
         var u = userArr[i];
+        var addrate = 1;
         if(u.status==0){
-          var update = false;
-          if(u.hp<100){
-            u.hp=u.hp+5;
-            update = true;
-          }
-          if(u.mp<100){
-            u.mp=u.mp+50;
-            update = true;
-          }
-          if(u.gold<100){
-            u.gold=u.gold+5;
-            update = true;
-          }
-          if(update){
-            cl_user.save(u);
-          }
+          addrate = 2;
+        }
+        var update = false;
+        if(u.hp<100){
+          u.hp=u.hp+5*addrate;
+          update = true;
+        }
+        if(u.mp<100){
+          u.mp=u.mp+50*addrate;
+          update = true;
+        }
+        if(u.gold<100){
+          u.gold=u.gold+5*addrate;
+          update = true;
         }
         if(u.status==1){
+          update = true;
           u.status=0;
+        }
+        if(update){
           cl_user.save(u);
         }
+
       }
     });
   });
