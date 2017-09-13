@@ -172,11 +172,12 @@ function getUserInfo(fromuin,content,members,callback){
     var query = {'_id': userName};
     cl_user.findOne(query, function (err, data) {
       if (data) {
+        var statusstr = data.status==0?'普通':(data.status==1?'死亡':'防御')
         var ret = data._id + "\n";
         ret = ret + "hp:" + data.hp + "   mp:" + data.mp + "\n";
         ret = ret + "lv:" + data.lv + "   exp:" + data.exp + "\n";
         ret = ret + "atk:" + data.atk + "   def:" + data.def + "\n";
-        ret = ret + "luck:" + data.luck + "   status:" + data.status + "\n";
+        ret = ret + "luck:" + data.luck + "   status:" + statusstr + "\n";
         ret = ret + "gold:" + data.gold + "\n";
         callback(ret);
       } else {
