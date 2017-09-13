@@ -303,7 +303,7 @@ function regen(){
             update = true;
           }
           if(u.mp<100){
-            u.mp=u.mp+25;
+            u.mp=u.mp+50;
             update = true;
           }
           if(u.gold<100){
