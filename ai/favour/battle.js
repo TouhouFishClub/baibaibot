@@ -230,9 +230,9 @@ function useMagicOrItem(fromuin,content,members,callback){
   if(content==""){
     ret = "`f+要砍的人：攻击该玩家\n";
     ret = ret + " `g0:查询个人状态,`g0+名字:查询该人物状态\n";
-    ret = ret + " `g1:回复魔法(消耗50MP,回复0-200点HP,HP越少回复越高)\n";
+    ret = ret + " `g1:回复魔法(消耗50MP,回复0-200点HP)\n";
     ret = ret + " `g2:转换为防御状态(防御力2倍)\n";
-    ret = ret + " `g3:购买MP药水(消耗50金钱,回复20-120MP,MP越少回复越高)\n";
+    ret = ret + " `g3:购买MP药水(消耗50金钱,回复20-150MP)\n";
     ret = ret + " `g4:转换为普通状态(自然回复HP/MP/GOLD为2倍)\n";
     ret = ret + " `g5:升级,消耗一定经验值,ATK/DEF/LUCK一定概率+1\n";
     ret = ret + " `g6:转换为攻击状态(攻击力2倍,每次攻击消耗50点MP)\n";
@@ -272,7 +272,7 @@ function useMagicOrItem(fromuin,content,members,callback){
         }else if(content==3){
           if(data.gold>=50){
             data.gold=data.gold-50;
-            var addmp = Math.floor(10000/(100+data.mp)+20*Math.random())
+            var addmp = Math.floor(13000/(100+data.mp)+20*Math.random())
             data.mp=data.mp+addmp;
             callback(userName+'使用了魔法药水回复了'+addmp+'点MP');
           }
