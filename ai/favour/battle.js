@@ -294,7 +294,7 @@ function useMagicOrItem(fromuin,content,members,callback){
         }else if(content==7){
           if(data.gold>60){
             var l = data.lv-1;
-            data.exp=l*51+l*l*(l+1)*(l+1)/4;
+            data.exp=data.exp+l*50+l*l*(l+1)*(l+1)/4;
             data.gold=data.gold-60;
             data.lv=1;
             data.atk=9;
