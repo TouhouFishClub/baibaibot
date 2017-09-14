@@ -112,9 +112,13 @@ function fightUser(from,to,callback){
   });
 }
 
+
+const {battlePlusBeforeDamage,battlePlusAfterDamage} = require('./job');
 function battle(data1,data2,db){
   var ret='';
+  battlePlusBeforeDamage(data1,data2);
   var damage = generateDamage(data1,data2,1);
+  battlePlusAfterDamage(data1,data2);
   ret = ret + data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
   data1.exp=data1.exp+damage;
   if(damage>data2.hp){
