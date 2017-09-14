@@ -139,7 +139,7 @@ function battle(data1,data2,db){
 }
 
 function generateDamage(data1,data2,type){
-  if(data1.status!=0){
+  if(data1.status==1||data1.status==2){
     return 0;
   }else{
     var atk = data1.atk*(Math.random()*100<data1.luck?3:1)*(Math.random()+0.5);
