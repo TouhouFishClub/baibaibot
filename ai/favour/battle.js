@@ -6,7 +6,7 @@ var limitFight = {};
 function fight(fromuin,content,members,callback){
   var from;
   var to;
-  limitFight[fromuin]=now.getTime();
+
   content=content.trim();
   if(content.substring(0,1)==1&&content.length==2){
     var tmp = tmpfight[fromuin];
@@ -71,6 +71,7 @@ function fightUser(from,to,callback){
     callback(from+'疲劳中，无法攻击');
     return;
   }
+  limitFight[from]=now.getTime();
   if(from==to){
     callback(from+'自杀了');
     return;
