@@ -119,7 +119,13 @@ function battle(data1,data2,db){
   data1.exp=data1.exp+damage;
   if(damage>data2.hp){
     data2.status=1;
-    data2.hp=100;
+    if(data2._id=="B1"){
+      data2.hp=2333;
+      data2.atk=data2.atk+1;
+      data2.lv=data2.lv+1;
+    }else{
+      data2.hp=100;
+    }
     ret = ret + data2._id+'被砍死了,失去'+(data2.gold/2)+'金钱,稍后复活\n'+data1._id+'获得'+(15+data2.gold/2)+'金钱';
     data1.gold=data1.gold+Math.floor(15+data2.gold/2);
     data2.gold=data2.gold-Math.floor(data2.gold/2);
@@ -371,11 +377,6 @@ function regen(){
         }
       }
     });
-    var boss = {
-      '_id': "B1", hp: 999, mp: 999, tp: 100, gold: 2333, lv: 1, exp: 0,
-      str: 9, int: 9, agi: 9, atk: 30, def: 0, mag: 9, luck: 9, status: 0,
-      love: 0
-    }
     cl_user.save(boss);
   });
 }
