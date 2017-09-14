@@ -367,7 +367,8 @@ function regen(){
           update = true;
           u.status=0;
 		    if(u._id=="B1"){
-		u.gold=2333;
+		u.gold=u.exp+999;
+			    u.exp=0
     			}
         }
         if(u.hp<100){
