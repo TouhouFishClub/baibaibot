@@ -305,6 +305,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             callback(userName+'金钱不足,无法获得新生');
           }
         }else if(content==5){
+			//callback(userName+Level(data));
           if(data.exp>data.lv*data.lv*data.lv+50){
             if(data.lv<20){
               data.exp=data.exp-data.lv*data.lv*data.lv-50;
