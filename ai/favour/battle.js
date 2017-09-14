@@ -124,7 +124,7 @@ function battle(data1,data2,db){
   if(damage>data2.hp){
     data2.status=1;
     if(data2._id=="B1"){
-      data2.hp=2333;
+      data2.hp=999;
       data2.atk=data2.atk+1;
       data2.lv=data2.lv+1;
     }else{
