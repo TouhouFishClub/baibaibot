@@ -271,7 +271,7 @@ function useMagicOrItem(fromuin,content,members,callback){
       }else if(content==5){
           if(data.exp>data.lv*data.lv*data.lv+50){
             if(data.lv<20){
-              data.exp=data.exp-data.lv*data.lv*data.lv+50;
+              data.exp=data.exp-data.lv*data.lv*data.lv-50;
               data.lv=data.lv+1;
               var ret = "";
               if(Math.random()<0.5){
