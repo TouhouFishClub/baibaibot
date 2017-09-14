@@ -108,25 +108,25 @@ function fightUser(from,to,callback){
 
 function battle(data1,data2,db){
   var ret='';
-  var damage = generateDamage(data1,data2);
-  ret = ret + data1._id+'对'+data2._id+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
+  var damage = generateDamage(data1,data2,1);
+  ret = ret + data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
   data1.exp=data1.exp+damage;
   if(damage>data2.hp){
     data2.status=1;
     data2.hp=100;
     ret = ret + data2._id+'被砍死了,失去'+(data2.gold/2)+'金钱,稍后复活\n'+data1._id+'获得'+(15+data2.gold/2)+'金钱';
-    data1.gold=data1.gold+Math.floor(data2.gold/2);
+    data1.gold=data1.gold+Math.floor(15+data2.gold/2);
     data2.gold=data2.gold-Math.floor(data2.gold/2);
   }else{
     data2.hp=data2.hp-damage;
-    damage = generateDamage(data2,data1);
+    damage = generateDamage(data2,data1,2);
     data2.exp=data2.exp+damage;
-    ret = ret + data2._id+'对'+data1._id+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
+    ret = ret + data2._id+'砍向'+data1._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
     if(damage>data1.hp){
       data1.status=1;
       data1.hp=100;
       ret = ret + data1._id+'被砍死了失去'+(data1.gold/2)+'金钱,稍后复活\n'+data2._id+'获得'+(15+data1.gold/2)+'金钱';
-      data2.gold=data2.gold+Math.floor(data1.gold/2);
+      data2.gold=data2.gold+Math.floor(15+data1.gold/2);
       data1.gold=data1.gold-Math.floor(data1.gold/2);
     }else{
       data1.hp=data1.hp-damage;
@@ -144,22 +144,24 @@ function generateDamage(data1,data2,type){
   }else{
     var atk = data1.atk*(Math.random()*100<data1.luck?3:1)*(Math.random()+0.5);
     var def = data2.def*(Math.random()*0.5+0.5);
-    console.log(data1);
-    console.log(data2);
-    console.log(atk,def);
     if(data2.status==2){
       def = def * 2;
     }
     if(data1.status==3){
       atk = atk * 2;
     }
-    console.log(atk,def);
-    var rate = 100+(data1.hp<100?data1.hp:100);
+    var rate = 80 + data1.lv+(data1.hp<100?data1.hp:100);
+    if(type==2){
+      rate = rate / 2;
+    }
     var damage = 0;
     if(atk<=def){
-      damage = data2.hp*Math.random()*0.05;
+      damage = data2.hp*Math.random()*0.08;
     }else{
       damage = (atk-def)*rate/100;
+    }
+    if(Math.random()*100>data1.lv+80){
+      damage = 0;
     }
     damage = Math.floor(damage);
     return damage;
