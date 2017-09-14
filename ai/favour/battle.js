@@ -381,7 +381,6 @@ function regen(){
         }
       }
     });
-    cl_user.save(boss);
   });
 }
 
