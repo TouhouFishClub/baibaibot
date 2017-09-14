@@ -114,7 +114,7 @@ function battle(data1,data2,db){
   if(damage>data2.hp){
     data2.status=1;
     data2.hp=100;
-    ret = ret + data2._id+'被砍死了,稍后复活\n'+data1._id+'获得'+(data2.gold/2)+'金钱';
+    ret = ret + data2._id+'被砍死了,失去'+(data2.gold/2)+'金钱,稍后复活\n'+data1._id+'获得'+(15+data2.gold/2)+'金钱';
     data1.gold=data1.gold+Math.floor(data2.gold/2);
     data2.gold=data2.gold-Math.floor(data2.gold/2);
   }else{
@@ -125,7 +125,7 @@ function battle(data1,data2,db){
     if(damage>data1.hp){
       data1.status=1;
       data1.hp=100;
-      ret = ret + data1._id+'被砍死了,稍后复活\n'+data2._id+'获得'+(data1.gold/2)+'金钱';
+      ret = ret + data1._id+'被砍死了失去'+(data1.gold/2)+'金钱,稍后复活\n'+data2._id+'获得'+(15+data1.gold/2)+'金钱';
       data2.gold=data2.gold+Math.floor(data1.gold/2);
       data1.gold=data1.gold-Math.floor(data1.gold/2);
     }else{
@@ -138,18 +138,22 @@ function battle(data1,data2,db){
   return ret;
 }
 
-function generateDamage(data1,data2){
+function generateDamage(data1,data2,type){
   if(data1.status!=0){
     return 0;
   }else{
     var atk = data1.atk*(Math.random()*100<data1.luck?3:1)*(Math.random()+0.5);
     var def = data2.def*(Math.random()*0.5+0.5);
+    console.log(data1);
+    console.log(data2);
+    console.log(atk,def);
     if(data2.status==2){
       def = def * 2;
     }
     if(data1.status==3){
       atk = atk * 2;
     }
+    console.log(atk,def);
     var rate = 100+(data1.hp<100?data1.hp:100);
     var damage = 0;
     if(atk<=def){
@@ -191,7 +195,7 @@ function getUserInfo(fromuin,content,members,callback){
         }
         var ret = data._id + "\n";
         ret = ret + "hp:" + data.hp + "   mp:" + data.mp + "\n";
-        ret = ret + "lv:" + data.lv + "   exp:" + data.exp + "\n";
+        ret = ret + "lv:" + data.lv + "   exp:" + data.exp + "/"+(50+data.lv*data.lv*data.lv)+"\n";
         ret = ret + "atk:" + data.atk + "   def:" + data.def + "\n";
         ret = ret + "luck:" + data.luck + "   status:" + statusstr + "\n";
         ret = ret + "gold:" + data.gold + "\n";
@@ -265,10 +269,10 @@ function useMagicOrItem(fromuin,content,members,callback){
           callback(userName+'转换为攻击状态');
         }
       }else if(content==5){
-          if(data.exp>100){
+          if(data.exp>data.lv*data.lv*data.lv+50){
             if(data.lv<20){
+              data.exp=data.exp-data.lv*data.lv*data.lv+50;
               data.lv=data.lv+1;
-              data.exp=data.exp-100;
               var ret = "";
               if(Math.random()<0.5){
                 data.atk=data.atk+1;
@@ -323,6 +327,10 @@ function regen(){
           addrate = 2;
         }
         var update = false;
+        if(u.status==1){
+          update = true;
+          u.status=0;
+        }
         if(u.hp<100){
           u.hp=u.hp+5*addrate;
           update = true;
@@ -335,10 +343,6 @@ function regen(){
           u.gold=u.gold+5*addrate;
           update = true;
         }
-        if(u.status==1){
-          update = true;
-          u.status=0;
-        }
         if(update){
           cl_user.save(u);
         }
@@ -348,8 +352,28 @@ function regen(){
   });
 }
 
+function fixUser(){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_user = db.collection('cl_user');
+    cl_user.find().toArray(function(err, userArr) {
+      for(var i=0;i<userArr.length;i++){
+        var u = userArr[i];
+        var update = false;
+        if(u.lv>1){
+          u.atk=9;
+          u.def=9;
+          u.luck=9;
+          u.exp=u.exp+u.lv*100-100;
+          cl_user.save(u);
+        }
+      }
+    });
+  });
+}
+
 module.exports={
   fight,
   useMagicOrItem,
-  regenTimer
+  regenTimer,
+  fixUser
 }
