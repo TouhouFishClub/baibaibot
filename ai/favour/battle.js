@@ -2,9 +2,17 @@ var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 
 var tmpfight = {};
+var limitFight = {};
 function fight(fromuin,content,members,callback){
   var from;
   var to;
+  var now = new Date();
+  var then = limitFight[fromuin];
+  if(then&&now.getTime()-then<60000){
+    callback('疲劳中，无法攻击');
+    return;
+  }
+  limitFight[fromuin]=now.getTime();
   content=content.trim();
   if(content.substring(0,1)==1&&content.length==2){
     var tmp = tmpfight[fromuin];
