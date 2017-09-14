@@ -211,12 +211,13 @@ function getUserInfo(fromuin,content,members,callback){
 
 function useMagicOrItem(fromuin,content,members,callback){
   if(content==""){
-    ret = "`g0:查询个人状态,`g0+名字:查询该人物状态\n";
+    ret = "`f+要砍的人：攻击该玩家\n";
+    ret = ret + " `g0:查询个人状态,`g0+名字:查询该人物状态\n";
     ret = ret + " `g1:回复魔法(消耗50MP,回复100HP)\n";
     ret = ret + " `g2:转换为防御状态(防御力2倍)\n";
     ret = ret + " `g3:购买MP药水(消耗50金钱,回复100MP)\n";
     ret = ret + " `g4:转换为普通状态(自然回复HP/MP/GOLD为2倍)\n";
-    ret = ret + " `g5:升级,消耗100点经验,ATK/DEF/LUCK一定概率+1\n";
+    ret = ret + " `g5:升级,消耗一定经验值,ATK/DEF/LUCK一定概率+1\n";
     ret = ret + " `g6:转换为攻击状态(攻击力2倍,每次攻击消耗50点MP)\n";
     ret = ret + " `g7:购买重生药水(消耗60金钱,重置等级和经验值)\n";
     callback(ret);
