@@ -20,20 +20,21 @@ function fight(fromuin,content,members,callback){
     }
     return;
   }
-  var toa=[];
+  var tom={};
   for(let i=0;i<members.length;i++){
     if(fromuin==members[i].uin){
       from = members[i].nick;
     }
     if(members[i].nick&&members[i].nick.indexOf(content)>=0){
-      toa.push(members[i].nick);
+      tom[members[i].nick]=1;
       continue;
     }
     if(members[i].card&&members[i].card.indexOf(content)>=0){
-      toa.push(members[i].nick);
+      tom[members[i].nick]=1;
       continue;
     }
   }
+  var toa=Object.keys(tom);
   if(toa.length==1&&from){
     to=toa[0];
     if(from&&to){
