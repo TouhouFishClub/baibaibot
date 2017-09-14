@@ -34,6 +34,11 @@ function fight(fromuin,content,members,callback){
       continue;
     }
   }
+  if(content.substring(0,1)=="B"&&content.length==2){
+    to = content;
+    fightUser(from,to,callback);
+    return;
+  }
   var toa=Object.keys(tom);
   if(toa.length==1&&from){
     to=toa[0];
@@ -239,7 +244,7 @@ function useMagicOrItem(fromuin,content,members,callback){
         if (data) {
 
         } else {
-          init = {
+          var init = {
             '_id': from, hp: 100, mp: 100, tp: 100, gold: 100, lv: 1, exp: 0,
             str: 9, int: 9, agi: 9, atk: 9, def: 9, mag: 9, luck: 9, status: 0,
             love: 0
@@ -366,6 +371,12 @@ function regen(){
         }
       }
     });
+    var boss = {
+      '_id': "B1", hp: 999, mp: 999, tp: 100, gold: 2333, lv: 1, exp: 0,
+      str: 9, int: 9, agi: 9, atk: 30, def: 0, mag: 9, luck: 9, status: 0,
+      love: 0
+    }
+    cl_user.save(boss);
   });
 }
 
