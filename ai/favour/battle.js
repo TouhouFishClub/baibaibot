@@ -127,7 +127,6 @@ function battle(data1,data2,db){
       data2.hp=2333;
       data2.atk=data2.atk+1;
       data2.lv=data2.lv+1;
-      data2.gold=2333;
     }else{
       data2.hp=100;
     }
@@ -367,6 +366,9 @@ function regen(){
         if(u.status==1){
           update = true;
           u.status=0;
+		    if(u._id=="B1"){
+		u.gold=2333;
+    			}
         }
         if(u.hp<100){
           u.hp=u.hp+5*addrate;
