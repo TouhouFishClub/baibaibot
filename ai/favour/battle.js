@@ -127,6 +127,7 @@ function battle(data1,data2,db){
       data2.hp=2333;
       data2.atk=data2.atk+1;
       data2.lv=data2.lv+1;
+      data2.gold=2333;
     }else{
       data2.hp=100;
     }
@@ -229,9 +230,9 @@ function useMagicOrItem(fromuin,content,members,callback){
   if(content==""){
     ret = "`f+要砍的人：攻击该玩家\n";
     ret = ret + " `g0:查询个人状态,`g0+名字:查询该人物状态\n";
-    ret = ret + " `g1:回复魔法(消耗50MP,回复100HP)\n";
+    ret = ret + " `g1:回复魔法(消耗50MP,回复0-200点HP,HP越少回复越高)\n";
     ret = ret + " `g2:转换为防御状态(防御力2倍)\n";
-    ret = ret + " `g3:购买MP药水(消耗50金钱,回复100MP)\n";
+    ret = ret + " `g3:购买MP药水(消耗50金钱,回复20-120MP,MP越少回复越高)\n";
     ret = ret + " `g4:转换为普通状态(自然回复HP/MP/GOLD为2倍)\n";
     ret = ret + " `g5:升级,消耗一定经验值,ATK/DEF/LUCK一定概率+1\n";
     ret = ret + " `g6:转换为攻击状态(攻击力2倍,每次攻击消耗50点MP)\n";
@@ -264,14 +265,16 @@ function useMagicOrItem(fromuin,content,members,callback){
         if(content==1){
           if(data.mp>=50){
             data.mp=data.mp-50;
-            data.hp=data.hp+100;
-            callback(userName+'使用了回复魔法回复了100点HP');
+            var addhp = Math.floor(20000/(100+data.hp))
+            data.hp=data.hp+addhp;
+            callback(userName+'使用了回复魔法回复了'+addhp+'点HP');
           }
         }else if(content==3){
           if(data.gold>=50){
             data.gold=data.gold-50;
-            data.mp=data.mp+100;
-            callback(userName+'使用了魔法药水回复了100点MP');
+            var addmp = Math.floor(10000/(100+data.mp)+20*Math.random())
+            data.mp=data.mp+addmp;
+            callback(userName+'使用了魔法药水回复了'+addmp+'点MP');
           }
         }else if(content==2){
           if(data.status!=1){
