@@ -407,5 +407,6 @@ module.exports={
   fight,
   useMagicOrItem,
   regenTimer,
-  fixUser
+  fixUser,
+  regen
 }
