@@ -218,6 +218,7 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + " `g4:转换为普通状态(自然回复HP/MP/GOLD为2倍)\n";
     ret = ret + " `g5:升级,消耗100点经验,ATK/DEF/LUCK一定概率+1\n";
     ret = ret + " `g6:转换为攻击状态(攻击力2倍,每次攻击消耗50点MP)\n";
+    ret = ret + " `g7:购买重生药水(消耗60金钱,重置等级和经验值)\n";
     callback(ret);
   }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1).trim(),members,callback);
@@ -266,11 +267,24 @@ function useMagicOrItem(fromuin,content,members,callback){
             callback(userName+'转换为普通状态');
           }
         }else if(content==6){
-        if(data.status!=1){
-          data.status=3;
-          callback(userName+'转换为攻击状态');
-        }
-      }else if(content==5){
+          if(data.status!=1){
+            data.status=3;
+            callback(userName+'转换为攻击状态');
+          }
+        }else if(content==7){
+          if(data.gold>60){
+            var l = data.lv-1;
+            data.exp=l*50+l*l*(l+1)*(l+1)/4;
+            data.gold=data.gold-60;
+            data.lv=1;
+            data.atk=9;
+            data.def=9;
+            data.luck=9;
+            callback(userName+'获得了新生,等级降为1');
+          }else{
+            callback(userName+'金钱不足,无法获得新生');
+          }
+        }else if(content==5){
           if(data.exp>data.lv*data.lv*data.lv+50){
             if(data.lv<20){
               data.exp=data.exp-data.lv*data.lv*data.lv-50;
@@ -348,7 +362,6 @@ function regen(){
         if(update){
           cl_user.save(u);
         }
-
       }
     });
   });
