@@ -21,23 +21,23 @@ function LevelUp(data){
 			data.exp=data.exp-expCost;
 			data.lv=data.lv+1;
 			var ret="";
-			var r=Math.random()*Math.ceil(JobInfo[data.job][1];
+			var r=Math.random()*Math.ceil(JobInfo[data.job][1]);
 			if (r<JobInfo[data.job][1])
 				data.atk=data.atk+r;
 			ret=ret+",atk+"+r;
-			r=Math.random()*Math.ceil(JobInfo[data.job][2];
+			r=Math.random()*Math.ceil(JobInfo[data.job][2]);
 			if (r<JobInfo[data.job][2])
 				data.ski=data.ski+r;
 			ret=ret+",ski+"+r;
-			r=Math.random()*Math.ceil(JobInfo[data.job][3];
+			r=Math.random()*Math.ceil(JobInfo[data.job][3]);
 			if (r<JobInfo[data.job][3])
 				data.agi=data.agi+r;
 			ret=ret+",agi+"+r;
-			r=Math.random()*Math.ceil(JobInfo[data.job][4];
+			r=Math.random()*Math.ceil(JobInfo[data.job][4]);
 			if (r<JobInfo[data.job][4])
 				data.luck=data.luck+r;
 			ret=ret+",luck+"+r;
-			r=Math.random()*Math.ceil(JobInfo[data.job][5];
+			r=Math.random()*Math.ceil(JobInfo[data.job][5]);
 			if (r<JobInfo[data.job][5])
 				data.def=data.def+r;
 			ret=ret+",def+"+r;
