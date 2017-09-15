@@ -67,11 +67,25 @@ function fight(fromuin,content,members,callback){
 function fightUser(from,to,callback){
   var now = new Date();
   var then = limitFight[from];
-  if(then&&now.getTime()-then<60000){
-    callback(from+'疲劳中，无法攻击');
+  if(!then){
+    then = {ts:0,c:0};
+  }
+  var thents = then.ts;
+  var thenc = then.c;
+  var tsnew;
+  var cnew;
+  if(now.getTime()-thents>300000){
+    tsnew = now.getTime();
+    cnew = 1;
+  }else{
+    tsnew = thents;
+    cnew = thenc+1;
+  }
+  if(cnew>5){
+    callback(from+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+300000).toLocaleString());
     return;
   }
-  limitFight[from]=now.getTime();
+  limitFight[from]={ts:tsnew,c:cnew};
   if(from==to){
     callback(from+'自杀了');
     return;
