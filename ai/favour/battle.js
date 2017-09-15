@@ -331,7 +331,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             return;
           }
           then.i1 = now.getTime();
-          limitItem[uin]=then;
+          limitItem[fromuin]=then;
           if(data.mp>=50){
             data.mp=data.mp-50;
             var addhp = Math.floor(20000/(100+data.hp))
@@ -353,7 +353,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             return;
           }
           then.i3 = now.getTime();
-          limitItem[uin]=then;
+          limitItem[fromuin]=then;
           if(data.gold>=50){
             data.gold=data.gold-50;
             var addmp = Math.floor(13000/(100+data.mp)+20*Math.random())
