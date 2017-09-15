@@ -317,6 +317,9 @@ function useMagicOrItem(fromuin,content,members,callback){
             data.mp=data.mp-50;
             var addhp = Math.floor(20000/(100+data.hp))
             data.hp=data.hp+addhp;
+            if(data.hp>data.lv*20+200){
+              data.hp=data.lv*20+200;
+            }
             callback(userName+'使用了回复魔法回复了'+addhp+'点HP');
           }
         }else if(content==3){
@@ -324,6 +327,9 @@ function useMagicOrItem(fromuin,content,members,callback){
             data.gold=data.gold-50;
             var addmp = Math.floor(13000/(100+data.mp)+20*Math.random())
             data.mp=data.mp+addmp;
+            if(data.mp>data.lv*20+200){
+              data.mp=data.lv*20+200;
+            }
             callback(userName+'使用了魔法药水回复了'+addmp+'点MP');
           }
         }else if(content==2){
