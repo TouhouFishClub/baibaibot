@@ -185,7 +185,9 @@ function battle(data1,data2,db){
 
 function generateDamage(data1,data2,type){
   if(data1.status==1||data1.status==2){
-    return 0;
+    var damage = 0;
+    var str = data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
+    return [damage,str];
   }else{
     var atk = data1.atk*(Math.random()*100<data1.luck?3:1)*(Math.random()+0.5);
     var def = data2.def*(Math.random()*0.5+0.5);
