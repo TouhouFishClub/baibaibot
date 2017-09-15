@@ -189,6 +189,7 @@ function generateDamage(data1,data2,type){
     var str = data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }else{
+    console.log(data1,data2)
     var atk = data1.atk*(Math.random()*100<data1.luck?3:1)*(Math.random()+0.5);
     var def = data2.def*(Math.random()*0.5+0.5);
     if(data2.status==2){
@@ -212,6 +213,7 @@ function generateDamage(data1,data2,type){
     }
     damage = Math.floor(damage);
     var str = data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
+    console.log(damage,str);
     return [damage,str];
   }
 }
