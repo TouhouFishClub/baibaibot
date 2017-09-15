@@ -149,8 +149,8 @@ function battle(data1,data2,db){
   if(damage>data2.hp){
     data2.status=1;
     if(data2._id=="B1"){
-      data2.hp=999;
-      data2.atk=data2.atk+1;
+      data2.hp=999+data2.lv*50;
+      data2.atk=data2.lv*4+30;
       data2.lv=data2.lv+1;
     }else{
       data2.hp=100;
@@ -188,7 +188,15 @@ function generateDamage(data1,data2,type){
     return [damage,str];
   }else{
     console.log(data1,data2)
-    var atk = data1.atk*(Math.random()*100<data1.luck?2:1)*(Math.random()+0.5);
+    var critical = Math.random()*100<data1.luck;
+    if(type==2){
+      critical=false;
+    }
+    var criticalrate = 1;
+    if(critical){
+      criticalrate = 2.5;
+    }
+    var atk = data1.atk*(criticalrate)*(Math.random()+0.5);
     var def = data2.def*(Math.random()*0.5+0.5);
     if(data2.status==2){
       def = def * 2;
@@ -387,7 +395,7 @@ function useMagicOrItem(fromuin,content,members,callback){
         }else if(content==5){
 			//callback(userName+Level(data));
           if(data.exp>data.lv*data.lv*data.lv+50){
-            if(data.lv<20){
+            if(data.lv<25){
               data.exp=data.exp-data.lv*data.lv*data.lv-50;
               data.lv=data.lv+1;
               var ret = "";
