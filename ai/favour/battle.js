@@ -2,9 +2,11 @@ var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 
 var tmpfight = {};
+var limitFight = {};
 function fight(fromuin,content,members,callback){
   var from;
   var to;
+
   content=content.trim();
   if(content.substring(0,1)==1&&content.length==2){
     var tmp = tmpfight[fromuin];
@@ -63,6 +65,13 @@ function fight(fromuin,content,members,callback){
 }
 
 function fightUser(from,to,callback){
+  var now = new Date();
+  var then = limitFight[from];
+  if(then&&now.getTime()-then<60000){
+    callback(from+'疲劳中，无法攻击');
+    return;
+  }
+  limitFight[from]=now.getTime();
   if(from==to){
     callback(from+'自杀了');
     return;
@@ -126,10 +135,9 @@ function battle(data1,data2,db){
   if(damage>data2.hp){
     data2.status=1;
     if(data2._id=="B1"){
-      data2.hp=2333;
+      data2.hp=999;
       data2.atk=data2.atk+1;
       data2.lv=data2.lv+1;
-      data2.gold=2333;
     }else{
       data2.hp=100;
     }
@@ -372,6 +380,10 @@ function regen(){
         if(u.status==1){
           update = true;
           u.status=0;
+		    if(u._id=="B1"){
+		u.gold=u.exp+999;
+			    u.exp=0
+    			}
         }
         if(u.hp<100){
           u.hp=u.hp+5*addrate;
