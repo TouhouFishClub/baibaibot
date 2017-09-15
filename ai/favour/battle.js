@@ -141,11 +141,9 @@ function fightUser(from,to,callback){
 const {battlePlusBeforeDamage,battlePlusAfterDamage} = require('./job');
 function battle(data1,data2,db){
   var ret='';
-  battlePlusBeforeDamage(data1,data2);
   var damageAndStr = generateDamage(data1,data2,1);
   var damage = damageAndStr[0];
   var dmgstr = damageAndStr[1];
-  battlePlusAfterDamage(data1,data2);
   ret = ret + dmgstr;
   data1.exp=data1.exp+damage;
   if(damage>data2.hp){
@@ -276,6 +274,8 @@ function getUserInfo(fromuin,content,members,callback){
   });
 }
 
+
+var limitItem = {};
 function useMagicOrItem(fromuin,content,members,callback){
   if(content==""){
     ret = "`f+要砍的人：攻击该玩家\n";
@@ -313,6 +313,17 @@ function useMagicOrItem(fromuin,content,members,callback){
           data = init;
         }
         if(content==1){
+          var then = limitItem[uin];
+          var now = new Date();
+          if(!then){
+            then = {i1:0,i3:0};
+          }
+          if(now.getTime()-then.i3<300000){
+            then.id = now.getTime();
+            limitItem[uin]=then;
+            callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i3+300000).toLocaleString());
+            return;
+          }
           if(data.mp>=50){
             data.mp=data.mp-50;
             var addhp = Math.floor(20000/(100+data.hp))
@@ -324,6 +335,17 @@ function useMagicOrItem(fromuin,content,members,callback){
             callback(userName+'使用了回复魔法回复了'+addhp+'点HP');
           }
         }else if(content==3){
+          var then = limitItem[uin];
+          var now = new Date();
+          if(!then){
+            then = {i1:0,i3:0};
+          }
+          if(now.getTime()-then.i3<300000){
+            then.id = now.getTime();
+            limitItem[uin]=then;
+            callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i3+300000).toLocaleString());
+            return;
+          }
           if(data.gold>=50){
             data.gold=data.gold-50;
             var addmp = Math.floor(13000/(100+data.mp)+20*Math.random())
@@ -425,9 +447,9 @@ function regen(){
         if(u.status==1){
           update = true;
           u.status=0;
-		    if(u._id=="B1"){
-		u.gold=u.exp+999;
-			    u.exp=0
+		      if(u._id=="B1"){
+		        u.gold=u.exp+999;
+			      u.exp=0
     			}
         }
         if(u.hp<100){
