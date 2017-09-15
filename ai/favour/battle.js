@@ -64,6 +64,8 @@ function fight(fromuin,content,members,callback){
   }
 }
 
+
+
 function fightUser(from,to,callback){
   var now = new Date();
   var then = limitFight[from];
@@ -214,15 +216,26 @@ function generateDamage(data1,data2,type){
 
 function getUserInfo(fromuin,content,members,callback){
   var userName;
-  if(content==""){
-    for(let i=0;i<members.length;i++){
-      if(fromuin==members[i].uin){
-        userName = members[i].nick;
-        break;
-      }
+  var tom={};
+  for(let i=0;i<members.length;i++){
+    if(fromuin==members[i].uin){
+      from = members[i].nick;
     }
+    if(members[i].nick&&members[i].nick.indexOf(content)>=0){
+      tom[members[i].nick]=1;
+      continue;
+    }
+    if(members[i].card&&members[i].card.indexOf(content)>=0){
+      tom[members[i].nick]=1;
+      continue;
+    }
+  }
+  var toa=Object.keys(tom);
+  if(toa.length==1){
+    userName=toa[0];
   }else{
-    userName=content;
+    callback(content + '是谁？');
+    return;
   }
   MongoClient.connect(mongourl, function(err, db) {
     var cl_user = db.collection('cl_user');
