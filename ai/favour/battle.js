@@ -463,7 +463,7 @@ function regen(){
             u.atk=u.lv*4+30;
             u.lv=u.lv+1;
 
-		        u.gold=u.exp*3+99;
+		        u.gold=u.exp*1.5+99;
 			      u.exp=0
     			}
         }
