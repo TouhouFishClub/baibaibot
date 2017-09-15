@@ -313,7 +313,7 @@ function useMagicOrItem(fromuin,content,members,callback){
           data = init;
         }
         if(content==1){
-          var then = limitItem[uin];
+          var then = limitItem[fromuin];
           var now = new Date();
           if(!then){
             then = {i1:0,i3:0};
@@ -335,7 +335,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             callback(userName+'使用了回复魔法回复了'+addhp+'点HP');
           }
         }else if(content==3){
-          var then = limitItem[uin];
+          var then = limitItem[fromuin];
           var now = new Date();
           if(!then){
             then = {i1:0,i3:0};
