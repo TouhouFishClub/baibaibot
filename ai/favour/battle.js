@@ -215,8 +215,10 @@ function generateDamage(data1,data2,type){
 }
 
 function getUserInfo(fromuin,content,members,callback){
+  content=content.trim();
   var userName;
   var tom={};
+  var from;
   for(let i=0;i<members.length;i++){
     if(fromuin==members[i].uin){
       from = members[i].nick;
@@ -231,7 +233,9 @@ function getUserInfo(fromuin,content,members,callback){
     }
   }
   var toa=Object.keys(tom);
-  if(toa.length==1){
+  if(content==""){
+    userName=from;
+  }(toa.length==1){
     userName=toa[0];
   }else{
     callback(content + '是谁？');
