@@ -235,7 +235,7 @@ function getUserInfo(fromuin,content,members,callback){
   var toa=Object.keys(tom);
   if(content==""){
     userName=from;
-  }(toa.length==1){
+  }else if(toa.length==1){
     userName=toa[0];
   }else{
     callback(content + '是谁？');
