@@ -328,10 +328,10 @@ function useMagicOrItem(fromuin,content,members,callback){
           }
           if(now.getTime()-then.i1<300000){
             then.i1 = now.getTime();
-            limitItem[uin]=then;
             callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i1+300000).toLocaleString());
             return;
           }
+          limitItem[uin]=then;
           if(data.mp>=50){
             data.mp=data.mp-50;
             var addhp = Math.floor(20000/(100+data.hp))
@@ -350,10 +350,10 @@ function useMagicOrItem(fromuin,content,members,callback){
           }
           if(now.getTime()-then.i3<300000){
             then.i3 = now.getTime();
-            limitItem[uin]=then;
             callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i3+300000).toLocaleString());
             return;
           }
+          limitItem[uin]=then;
           if(data.gold>=50){
             data.gold=data.gold-50;
             var addmp = Math.floor(13000/(100+data.mp)+20*Math.random())
