@@ -188,7 +188,7 @@ function generateDamage(data1,data2,type){
     return [damage,str];
   }else{
     console.log(data1,data2)
-    var atk = data1.atk*(Math.random()*100<data1.luck?3:1)*(Math.random()+0.5);
+    var atk = data1.atk*(Math.random()*100<data1.luck?2:1)*(Math.random()+0.5);
     var def = data2.def*(Math.random()*0.5+0.5);
     if(data2.status==2){
       def = def * 2;
@@ -196,7 +196,7 @@ function generateDamage(data1,data2,type){
     if(data1.status==3){
       atk = atk * 2;
     }
-    var rate = 80 + data1.lv+(data1.hp<100?data1.hp:100);
+    var rate = (80 + data1.lv+(data1.hp<200?data1.hp:200))/2;
     if(type==2){
       rate = rate / 2;
     }
