@@ -456,7 +456,12 @@ function regen(){
           update = true;
           u.status=0;
 		      if(u._id=="B1"){
-		        u.gold=u.exp+999;
+
+            u.hp=999+u.lv*50;
+            u.atk=u.lv*4+30;
+            u.lv=u.lv+1;
+
+		        u.gold=u.exp*3+99;
 			      u.exp=0
     			}
         }
