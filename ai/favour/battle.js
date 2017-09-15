@@ -318,10 +318,10 @@ function useMagicOrItem(fromuin,content,members,callback){
           if(!then){
             then = {i1:0,i3:0};
           }
-          if(now.getTime()-then.i3<300000){
-            then.i3 = now.getTime();
+          if(now.getTime()-then.i1<300000){
+            then.i1 = now.getTime();
             limitItem[uin]=then;
-            callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i3+300000).toLocaleString());
+            callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i1+300000).toLocaleString());
             return;
           }
           if(data.mp>=50){
@@ -341,7 +341,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             then = {i1:0,i3:0};
           }
           if(now.getTime()-then.i3<300000){
-            then.id = now.getTime();
+            then.i3 = now.getTime();
             limitItem[uin]=then;
             callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i3+300000).toLocaleString());
             return;
