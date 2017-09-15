@@ -12,7 +12,7 @@ var JobInfo=[
 ['骑士',0.8,0.7,0.7,0.5,0.8],
 ['剑士',0.7,0.8,0.9,0.5,0.6],
 ['盗贼',0.6,0.6,0.9,0.5,0.5]
-]
+]]
 
 function LevelUp(data){
 	expCost=data.lv*data.lv*data.lv+50;
