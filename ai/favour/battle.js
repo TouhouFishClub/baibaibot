@@ -201,6 +201,9 @@ function generateDamage(data1,data2,type){
     if(data2.status==2){
       def = def * 2;
     }
+    if(critical){
+      atk = atk + data2.def;
+    }
     if(data1.status==3){
       atk = atk * 2;
     }
@@ -218,8 +221,7 @@ function generateDamage(data1,data2,type){
       damage = 0;
     }
     damage = Math.floor(damage);
-    var str = data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
-    console.log(damage,str);
+    var str = data1._id+'砍向'+data2._id+'\n'+(critical?'会信一击!':'')+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }
 }
