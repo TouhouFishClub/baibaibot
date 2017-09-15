@@ -319,6 +319,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             data.hp=data.hp+addhp;
             if(data.hp>data.lv*20+200){
               data.hp=data.lv*20+200;
+              addhp = addhp + data.lv*20+200 - data.hp;
             }
             callback(userName+'使用了回复魔法回复了'+addhp+'点HP');
           }
@@ -329,6 +330,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             data.mp=data.mp+addmp;
             if(data.mp>data.lv*20+200){
               data.mp=data.lv*20+200;
+              addmp = addmp + data.lv*20+200 - data.mp;
             }
             callback(userName+'使用了魔法药水回复了'+addmp+'点MP');
           }
