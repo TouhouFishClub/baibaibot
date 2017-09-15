@@ -221,7 +221,7 @@ function generateDamage(data1,data2,type){
       damage = 0;
     }
     damage = Math.floor(damage);
-    var str = data1._id+'砍向'+data2._id+'\n'+(critical?'会信一击!':'')+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
+    var str = data1._id+'砍向'+data2._id+'\n'+(critical?'会心一击!':'')+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }
 }
