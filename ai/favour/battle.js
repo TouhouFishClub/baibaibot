@@ -36,8 +36,8 @@ function fight(fromuin,content,members,callback){
       continue;
     }
   }
-  if(content.substring(0,1)=="B"&&content.length==2){
-    to = content;
+  if(content.substring(0,1).toUpperCase()=="B"&&content.length==2){
+    to = content.toUpperCase();
     fightUser(from,to,callback);
     return;
   }
@@ -233,7 +233,9 @@ function getUserInfo(fromuin,content,members,callback){
     }
   }
   var toa=Object.keys(tom);
-  if(content==""){
+  if(content.substring(0,1).toUpperCase()=="B"&&content.length==2){
+    userName = content.toUpperCase();
+  }else if(content==""){
     userName=from;
   }else if(toa.length==1){
     userName=toa[0];
