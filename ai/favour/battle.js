@@ -36,8 +36,8 @@ function fight(fromuin,content,members,callback){
       continue;
     }
   }
-  if(content.substring(0,1)=="B"&&content.length==2){
-    to = content;
+  if(content.substring(0,1).toUpperCase()=="B"&&content.length==2){
+    to = content.toUpperCase();
     fightUser(from,to,callback);
     return;
   }
@@ -64,14 +64,30 @@ function fight(fromuin,content,members,callback){
   }
 }
 
+
+
 function fightUser(from,to,callback){
   var now = new Date();
   var then = limitFight[from];
-  if(then&&now.getTime()-then<60000){
-    callback(from+'疲劳中，无法攻击');
+  if(!then){
+    then = {ts:0,c:0};
+  }
+  var thents = then.ts;
+  var thenc = then.c;
+  var tsnew;
+  var cnew;
+  if(now.getTime()-thents>300000){
+    tsnew = now.getTime();
+    cnew = 1;
+  }else{
+    tsnew = thents;
+    cnew = thenc+1;
+  }
+  if(cnew>5){
+    callback(from+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+300000).toLocaleString());
     return;
   }
-  limitFight[from]=now.getTime();
+  limitFight[from]={ts:tsnew,c:cnew};
   if(from==to){
     callback(from+'自杀了');
     return;
@@ -125,16 +141,16 @@ function fightUser(from,to,callback){
 const {battlePlusBeforeDamage,battlePlusAfterDamage} = require('./job');
 function battle(data1,data2,db){
   var ret='';
-  battlePlusBeforeDamage(data1,data2);
-  var damage = generateDamage(data1,data2,1);
-  battlePlusAfterDamage(data1,data2);
-  ret = ret + data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
+  var damageAndStr = generateDamage(data1,data2,1);
+  var damage = damageAndStr[0];
+  var dmgstr = damageAndStr[1];
+  ret = ret + dmgstr;
   data1.exp=data1.exp+damage;
   if(damage>data2.hp){
     data2.status=1;
     if(data2._id=="B1"){
-      data2.hp=999;
-      data2.atk=data2.atk+1;
+      data2.hp=999+data2.lv*50;
+      data2.atk=data2.lv*4+30;
       data2.lv=data2.lv+1;
     }else{
       data2.hp=100;
@@ -144,9 +160,11 @@ function battle(data1,data2,db){
     data2.gold=data2.gold-Math.floor(data2.gold/2);
   }else{
     data2.hp=data2.hp-damage;
-    damage = generateDamage(data2,data1,2);
+    var damageAndStr = generateDamage(data2,data1,2);
+    var damage = damageAndStr[0];
+    var dmgstr = damageAndStr[1];
     data2.exp=data2.exp+damage;
-    ret = ret + data2._id+'砍向'+data1._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
+    ret = ret + dmgstr;
     if(damage>data1.hp){
       data1.status=1;
       data1.hp=100;
@@ -165,17 +183,31 @@ function battle(data1,data2,db){
 
 function generateDamage(data1,data2,type){
   if(data1.status==1||data1.status==2){
-    return 0;
+    var damage = 0;
+    var str = data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
+    return [damage,str];
   }else{
-    var atk = data1.atk*(Math.random()*100<data1.luck?3:1)*(Math.random()+0.5);
+    console.log(data1,data2)
+    var critical = Math.random()*100<data1.luck;
+    if(type==2){
+      critical=false;
+    }
+    var criticalrate = 1;
+    if(critical){
+      criticalrate = 2.5;
+    }
+    var atk = data1.atk*(criticalrate)*(Math.random()+0.5);
     var def = data2.def*(Math.random()*0.5+0.5);
     if(data2.status==2){
       def = def * 2;
     }
+    if(critical){
+      atk = atk + data2.def;
+    }
     if(data1.status==3){
       atk = atk * 2;
     }
-    var rate = 80 + data1.lv+(data1.hp<100?data1.hp:100);
+    var rate = (80 + data1.lv+(data1.hp<200?data1.hp:200))/2;
     if(type==2){
       rate = rate / 2;
     }
@@ -189,21 +221,39 @@ function generateDamage(data1,data2,type){
       damage = 0;
     }
     damage = Math.floor(damage);
-    return damage;
+    var str = data1._id+'砍向'+data2._id+'\n'+(critical?'会心一击!':'')+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
+    return [damage,str];
   }
 }
 
 function getUserInfo(fromuin,content,members,callback){
+  content=content.trim();
   var userName;
-  if(content==""){
-    for(let i=0;i<members.length;i++){
-      if(fromuin==members[i].uin){
-        userName = members[i].nick;
-        break;
-      }
+  var tom={};
+  var from;
+  for(let i=0;i<members.length;i++){
+    if(fromuin==members[i].uin){
+      from = members[i].nick;
     }
+    if(members[i].nick&&members[i].nick.indexOf(content)>=0){
+      tom[members[i].nick]=1;
+      continue;
+    }
+    if(members[i].card&&members[i].card.indexOf(content)>=0){
+      tom[members[i].nick]=1;
+      continue;
+    }
+  }
+  var toa=Object.keys(tom);
+  if(content.substring(0,1).toUpperCase()=="B"&&content.length==2){
+    userName = content.toUpperCase();
+  }else if(content==""){
+    userName=from;
+  }else if(toa.length==1){
+    userName=toa[0];
   }else{
-    userName=content;
+    callback(content + '是谁？');
+    return;
   }
   MongoClient.connect(mongourl, function(err, db) {
     var cl_user = db.collection('cl_user');
@@ -234,6 +284,8 @@ function getUserInfo(fromuin,content,members,callback){
   });
 }
 
+
+var limitItem = {};
 function useMagicOrItem(fromuin,content,members,callback){
   if(content==""){
     ret = "`f+要砍的人：攻击该玩家\n";
@@ -271,17 +323,47 @@ function useMagicOrItem(fromuin,content,members,callback){
           data = init;
         }
         if(content==1){
+          var then = limitItem[fromuin];
+          var now = new Date();
+          if(!then){
+            then = {i1:0,i3:0};
+          }
+          if(now.getTime()-then.i1<300000){
+            callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i1+300000).toLocaleString());
+            return;
+          }
+          then.i1 = now.getTime();
+          limitItem[fromuin]=then;
           if(data.mp>=50){
             data.mp=data.mp-50;
             var addhp = Math.floor(20000/(100+data.hp))
             data.hp=data.hp+addhp;
+            if(data.hp>data.lv*20+200){
+              data.hp=data.lv*20+200;
+              addhp = addhp + data.lv*20+200 - data.hp;
+            }
             callback(userName+'使用了回复魔法回复了'+addhp+'点HP');
           }
         }else if(content==3){
+          var then = limitItem[fromuin];
+          var now = new Date();
+          if(!then){
+            then = {i1:0,i3:0};
+          }
+          if(now.getTime()-then.i3<300000){
+            callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i3+300000).toLocaleString());
+            return;
+          }
+          then.i3 = now.getTime();
+          limitItem[fromuin]=then;
           if(data.gold>=50){
             data.gold=data.gold-50;
             var addmp = Math.floor(13000/(100+data.mp)+20*Math.random())
             data.mp=data.mp+addmp;
+            if(data.mp>data.lv*20+200){
+              data.mp=data.lv*20+200;
+              addmp = addmp + data.lv*20+200 - data.mp;
+            }
             callback(userName+'使用了魔法药水回复了'+addmp+'点MP');
           }
         }else if(content==2){
@@ -315,7 +397,7 @@ function useMagicOrItem(fromuin,content,members,callback){
         }else if(content==5){
 			//callback(userName+Level(data));
           if(data.exp>data.lv*data.lv*data.lv+50){
-            if(data.lv<20){
+            if(data.lv<25){
               data.exp=data.exp-data.lv*data.lv*data.lv-50;
               data.lv=data.lv+1;
               var ret = "";
@@ -375,9 +457,14 @@ function regen(){
         if(u.status==1){
           update = true;
           u.status=0;
-		    if(u._id=="B1"){
-		u.gold=u.exp+999;
-			    u.exp=0
+		      if(u._id=="B1"){
+
+            u.hp=999+u.lv*50;
+            u.atk=u.lv*4+30;
+            u.lv=u.lv+1;
+
+		        u.gold=u.exp*1.5+99;
+			      u.exp=0
     			}
         }
         if(u.hp<100){
