@@ -12,7 +12,7 @@ app.use(express.static('./static'));
 const {relogin} = require('./baibai');
 
 app.listen(10086,function(){
-  opn('http://127.0.0.1:10086/test', {app: ['chrome']})
+  //opn('http://127.0.0.1:10086/test', {app: ['chrome']})
 });
 app.get('/login',function(req,res){
   fs.unlink('qq-bot.cookie',function(){

@@ -21,6 +21,12 @@ const kce = require('./ai/kanColleEquip')
 const {getMapData} = require('./ai/kancolle/kancollemap')
 const {searchsenka} = require('./ai/kancolle/senka');
 const {fight,useMagicOrItem,regenTimer} = require('./ai/favour/battle');
+
+const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
+
+
+
+
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -48,6 +54,10 @@ function handleBuddyMsg(msg,qq){
   var name = msg.name;
   var content = msg.content;
   var id = msg.id;
+  if(content=="h"){
+    actionBuddy("",id,qq);
+    return;
+  }
   var callback = function(res){
     setTimeout(function(){
       if(Math.random()<0.2){
@@ -131,18 +141,14 @@ function handleMsg_D(msg,qq,type){
 
 
   var first = content.substring(0,1);
-  if(first=='.'||first=='。'){
-    var c = content.substring(1);
-    var f1 = c.substring(0,1);
-    if(f1==""){
-      ret = '舰队collection知识库\n';
-      ret = ret + '.e:改修查询';
-      callback(ret);
-    }else if(f1=="e"){
-      kce(name,c.substring(1),callback);
-    }
+  if(first=='o'||first=='O'){
+    actionGroup(content.substring(1),from,groupid,qqq.getMemberListInGroup(groupid),qq);
     return;
   }
+  //TODO remove
+  return;
+  
+  
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
 
     var c1 = content.substring(1);
