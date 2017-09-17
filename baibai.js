@@ -108,7 +108,8 @@ function handleMsg_D(msg,qq,type){
     }
   }
 
-  let memberListInGroup = qqq.getMemberListInGroup(groupid), nickname
+  let memberListInGroup = qqq.getMemberListInGroup(groupid);
+  let nickname;
   for(let i = 0; i < memberListInGroup.length; i++){
     if(from === memberListInGroup[i].uin) {
       nickname = memberListInGroup[i].nick
