@@ -147,9 +147,7 @@ function handleMsg_D(msg,qq,type){
     actionGroup(content.substring(1),from,groupid,qqq.getMemberListInGroup(groupid),qq);
     return;
   }
-  //TODO remove
-  return;
-  
+
   
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
 
