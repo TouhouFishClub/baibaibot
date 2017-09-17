@@ -97,8 +97,6 @@ function handleMsg_D(msg,qq,type){
       if(res.length>250){
         res = res.substring(0,250)+'.......';
       }
-      console.log('will send msg');
-      console.log(qqq);
       setTimeout(function(){
         if(type=='discu'){
           qq.sendDiscuMsg(groupid," "+res);
