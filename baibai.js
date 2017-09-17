@@ -97,19 +97,20 @@ function handleMsg_D(msg,qq,type){
       if(res.length>250){
         res = res.substring(0,250)+'.......';
       }
+      console.log('will send msg');
+      console.log(qqq);
       setTimeout(function(){
         if(type=='discu'){
           qq.sendDiscuMsg(groupid," "+res);
         }else{
           qq.sendGroupMsg(groupid," "+res);
         }
-
       },1000);
     }
   }
 
   let memberListInGroup = qqq.getMemberListInGroup(groupid);
-  let nickname;
+  let nickname = "";
   for(let i = 0; i < memberListInGroup.length; i++){
     if(from === memberListInGroup[i].uin) {
       nickname = memberListInGroup[i].nick
