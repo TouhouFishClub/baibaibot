@@ -436,10 +436,10 @@ function useMagicOrItem(fromuin,content,members,callback){
           var next = content.substring(1);
           if(next==""){
             var ret = "请选择：\n";
-            ret = ret +  "`g51:攻击力+1,其他能力一定概率+1";
-            ret = ret +  "`g52:防御力+1,其他能力一定概率+1";
-            ret = ret +  "`g53:幸运+1,其他能力一定概率+1";
-            ret = ret +  "`g54:速度+1,其他能力一定概率+1";
+            ret = ret +  "`g51:攻击力+1,其他能力一定概率+1\n";
+            ret = ret +  "`g52:防御力+1,其他能力一定概率+1\n";
+            ret = ret +  "`g53:幸运+1,其他能力一定概率+1\n";
+            ret = ret +  "`g54:速度+1,其他能力一定概率+1\n";
             callback(ret);
           }else{
             if(data.exp>data.lv*data.lv*data.lv+50){
