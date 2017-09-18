@@ -108,7 +108,11 @@ function fightUser(from,to,callback){
       if(data.status==3){
         mpcost = 50;
       }
-      if(data.mp<mpcost){
+      if(data.status==4){
+        mpcost = 0;
+        data.hp=Math.floor(data.hp/2);
+      }
+      if(data.mp<=mpcost){
         callback(from+'mp不足,无法发动攻击');
       }else if(data.status==1){
         callback(from+'死了也想砍'+to+',但砍到了自己,受到'+Math.floor(Math.random()*10000-5000)+'点伤害');
@@ -173,6 +177,33 @@ function battle(data1,data2,db){
       data1.gold=data1.gold-Math.floor(data1.gold/2);
     }else{
       data1.hp=data1.hp-damage;
+      if(data1.agi>data2.agi*(Math.random()/2+1)){
+        ret = ret + data1._id+'对'+data2._id+'造成了EX袭击\n';
+        var rate = data1.agi/data2.agi-1;
+        var damageAndStr = generateDamage(data1,data2,1);
+        var damage = damageAndStr[0];
+        var dmgstr = damageAndStr[1];
+        damage = Math.floor(damage*rate);
+        ret = ret + dmgstr;
+        data1.exp=data1.exp+damage;
+        if(damage>data2.hp){
+          data2.status=1;
+          if(data2._id=="B1"){
+            data2.hp=999+data2.lv*50;
+            data2.atk=data2.lv*4+30;
+            data2.lv=data2.lv+1;
+          }else{
+            data2.hp=100;
+          }
+          ret = ret + data2._id+'被砍死了,失去'+(data2.gold/2)+'金钱,稍后复活\n'+data1._id+'获得'+(15+data2.gold/2)+'金钱';
+          data1.gold=data1.gold+Math.floor(15+data2.gold/2);
+          data2.gold=data2.gold-Math.floor(data2.gold/2);
+        }else {
+          data2.hp = data2.hp - damage;
+        }
+      }else{
+        ret = ret + "ex袭击未发生";
+      }
     }
   }
   var cl_user = db.collection('cl_user');
@@ -187,7 +218,6 @@ function generateDamage(data1,data2,type){
     var str = data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }else{
-    console.log(data1,data2)
     var critical = Math.random()*100<data1.luck;
     if(type==2){
       critical=false;
@@ -297,6 +327,7 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + " `g5:升级,消耗一定经验值,ATK/DEF/LUCK一定概率+1\n";
     ret = ret + " `g6:转换为攻击状态(攻击力2倍,每次攻击消耗50点MP)\n";
     ret = ret + " `g7:购买重生药水(消耗60金钱,重置等级和经验值)\n";
+    ret = ret + " `g8:转换为狂怒状态(攻击消耗一半HP不消耗MP)\n";
     callback(ret);
   }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1).trim(),members,callback);
@@ -381,6 +412,11 @@ function useMagicOrItem(fromuin,content,members,callback){
             data.status=3;
             callback(userName+'转换为攻击状态');
           }
+        }else if(content==8){
+          if(data.status!=1){
+            data.status=4;
+            callback(userName+'转换为狂怒状态');
+          }
         }else if(content==7){
           if(data.gold>60){
             var l = data.lv-1;
@@ -394,31 +430,58 @@ function useMagicOrItem(fromuin,content,members,callback){
           }else{
             callback(userName+'金钱不足,无法获得新生');
           }
-        }else if(content==5){
-			//callback(userName+Level(data));
-          if(data.exp>data.lv*data.lv*data.lv+50){
-            if(data.lv<25){
-              data.exp=data.exp-data.lv*data.lv*data.lv-50;
-              data.lv=data.lv+1;
-              var ret = "";
-              if(Math.random()<0.5){
-                data.atk=data.atk+1;
-                ret = ret + ",atk+1"
-              }
-              if(Math.random()<0.5){
-                data.def=data.def+1;
-                ret = ret + ",def+1";
-              }
-              if(Math.random()<0.5){
-                data.luck=data.luck+1;
-                ret = ret + ",luck+1";
-              }
-              callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
-            }else{
-              callback(userName+'不能在升级了,请转生后在升级');
-            }
+        }else if(content.substring(0,1)==5){
+          var next = content.substring(1);
+          if(next==""){
+            var ret = "请选择：\n";
+            ret = ret +  "`g51:攻击力+1,其他能力一定概率+1";
+            ret = ret +  "`g52:防御力+1,其他能力一定概率+1";
+            ret = ret +  "`g53:幸运+1,其他能力一定概率+1";
+            ret = ret +  "`g54:速度+1,其他能力一定概率+1";
           }else{
-            callback(userName+'经验不足,不能升级');
+            if(data.exp>data.lv*data.lv*data.lv+50){
+              if(data.lv<25){
+                data.exp=data.exp-data.lv*data.lv*data.lv-50;
+                data.lv=data.lv+1;
+                var ret = "";
+                if(next==1){
+                  data.atk=data.atk+1;
+                  ret = ret + ",atk+1"
+                }else if(next==2){
+                  data.def=data.def+1;
+                  ret = ret + ",def+1";
+                }else if(next==3){
+                  data.luck=data.luck+1;
+                  ret = ret + ",luck+1";
+                }else if(next==4){
+                  data.agi=data.agi+1;
+                  ret = ret + ",agi+1";
+                }else{
+
+                }
+                if(next!=1&&Math.random()<0.5){
+                  data.atk=data.atk+1;
+                  ret = ret + ",atk+1"
+                }
+                if(next!=2&&Math.random()<0.5){
+                  data.def=data.def+1;
+                  ret = ret + ",def+1";
+                }
+                if(next!=3&&Math.random()<0.5){
+                  data.luck=data.luck+1;
+                  ret = ret + ",luck+1";
+                }
+                if(next!=4&&Math.random()<0.5){
+                  data.agi=data.agi+1;
+                  ret = ret + ",agi+1";
+                }
+                callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
+              }else{
+                callback(userName+'不能在升级了,请转生后在升级');
+              }
+            }else{
+              callback(userName+'经验不足,不能升级');
+            }
           }
         }
         cl_user.save(data);
