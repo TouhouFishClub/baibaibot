@@ -434,6 +434,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             data.atk=9;
             data.def=9;
             data.luck=9;
+            data.agi=9;
             callback(userName+'获得了新生,等级降为1');
           }else{
             callback(userName+'金钱不足,无法获得新生');
@@ -468,19 +469,19 @@ function useMagicOrItem(fromuin,content,members,callback){
                 }else{
 
                 }
-                if(next!=1&&Math.random()<0.4){
+                if(next!=1&&Math.random()<0.45){
                   data.atk=data.atk+1;
                   ret = ret + ",atk+1"
                 }
-                if(next!=2&&Math.random()<0.4){
+                if(next!=2&&Math.random()<0.45){
                   data.def=data.def+1;
                   ret = ret + ",def+1";
                 }
-                if(next!=3&&Math.random()<0.4){
+                if(next!=3&&Math.random()<0.45){
                   data.luck=data.luck+1;
                   ret = ret + ",luck+1";
                 }
-                if(next!=4&&Math.random()<0.4){
+                if(next!=4&&Math.random()<0.45){
                   data.agi=data.agi+1;
                   ret = ret + ",agi+1";
                 }
