@@ -319,12 +319,12 @@ var limitItem = {};
 function useMagicOrItem(fromuin,content,members,callback){
   if(content==""){
     ret = "`f+要砍的人：攻击该玩家\n";
-    ret = ret + " `g0:查询个人状态,`g0+名字:查询该人物状态\n";
+    ret = ret + " `g0:查询自己状态,`g0+名字:查询该人物状态\n";
     ret = ret + " `g1:回复魔法(消耗50MP,回复0-200点HP)\n";
     ret = ret + " `g2:转换为防御状态(防御力2倍)\n";
     ret = ret + " `g3:购买MP药水(消耗50金钱,回复20-150MP)\n";
-    ret = ret + " `g4:转换为普通状态(自然回复HP/MP/GOLD为2倍)\n";
-    ret = ret + " `g5:升级,消耗一定经验值,ATK/DEF/LUCK一定概率+1\n";
+    ret = ret + " `g4:转换为普通状态(自然回复2倍)\n";
+    ret = ret + " `g5:升级\n";
     ret = ret + " `g6:转换为攻击状态(攻击力2倍,每次攻击消耗50点MP)\n";
     ret = ret + " `g7:购买重生药水(消耗60金钱,重置等级和经验值)\n";
     ret = ret + " `g8:转换为狂怒状态(攻击消耗一半HP不消耗MP)\n";
