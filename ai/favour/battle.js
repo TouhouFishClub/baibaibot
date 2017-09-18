@@ -462,19 +462,19 @@ function useMagicOrItem(fromuin,content,members,callback){
                 }else{
 
                 }
-                if(next!=1&&Math.random()<0.5){
+                if(next!=1&&Math.random()<0.4){
                   data.atk=data.atk+1;
                   ret = ret + ",atk+1"
                 }
-                if(next!=2&&Math.random()<0.5){
+                if(next!=2&&Math.random()<0.4){
                   data.def=data.def+1;
                   ret = ret + ",def+1";
                 }
-                if(next!=3&&Math.random()<0.5){
+                if(next!=3&&Math.random()<0.4){
                   data.luck=data.luck+1;
                   ret = ret + ",luck+1";
                 }
-                if(next!=4&&Math.random()<0.5){
+                if(next!=4&&Math.random()<0.4){
                   data.agi=data.agi+1;
                   ret = ret + ",agi+1";
                 }
