@@ -178,8 +178,14 @@ function battle(data1,data2,db){
     }else{
       data1.hp=data1.hp-damage;
       if(data1.agi>data2.agi*(Math.random()/2+1)){
-        ret = ret + data1._id+'对'+data2._id+'造成了EX袭击\n';
+        ret = ret + data1._id+'对'+data2._id+'发动了EX袭击\n';
         var rate = data1.agi/data2.agi-1;
+        if(rate<0.5){
+          rate = 0.5;
+        }
+        if(rate>2){
+          rate = 2;
+        }
         var damageAndStr = generateDamage(data1,data2,1);
         var damage = damageAndStr[0];
         var dmgstr = damageAndStr[1];
