@@ -440,6 +440,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             ret = ret +  "`g52:防御力+1,其他能力一定概率+1";
             ret = ret +  "`g53:幸运+1,其他能力一定概率+1";
             ret = ret +  "`g54:速度+1,其他能力一定概率+1";
+            callback(ret);
           }else{
             if(data.exp>data.lv*data.lv*data.lv+50){
               if(data.lv<25){
