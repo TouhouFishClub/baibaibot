@@ -299,13 +299,15 @@ function getUserInfo(fromuin,content,members,callback){
           statusstr='防御';
         }else if(data.status==3){
           statusstr='攻击';
+        }else if(data.status==4){
+          statusstr='狂怒';
         }
         var ret = data._id + "\n";
         ret = ret + "hp:" + data.hp + "   mp:" + data.mp + "\n";
         ret = ret + "lv:" + data.lv + "   exp:" + data.exp + "/"+(50+data.lv*data.lv*data.lv)+"\n";
         ret = ret + "atk:" + data.atk + "   def:" + data.def + "\n";
-        ret = ret + "luck:" + data.luck + "   status:" + statusstr + "\n";
-        ret = ret + "gold:" + data.gold + "\n";
+        ret = ret + "luck:" + data.luck + "   agi:" + data.agi + "\n";
+        ret = ret + "gold:" + data.gold + "   status:" + statusstr + "\n";
         callback(ret);
       } else {
         callback(content + '是谁？');
