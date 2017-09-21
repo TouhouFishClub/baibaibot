@@ -178,9 +178,9 @@ function handleUserOperation(fromuin,content,members,Ncallback){
           user = initUser(userName);
         }
         var data=user;
-        if(data.exp>=data.lv*data.lv*data.lv+50){
+        if(data.exp>=data.lv*100-50){
           if(data.lv<25){
-            data.exp=data.exp-data.lv*data.lv*data.lv-50;
+            data.exp=data.exp-data.lv*100+50;
             data.lv=data.lv+1;
             var ret = "";
             if(next==1){
@@ -389,7 +389,7 @@ function getUserInfoById(userName,callback){
   }
   var ret = data._id + "\n";
   ret = ret + "hp:" + data.hp + "   mp:" + data.mp + "\n";
-  ret = ret + "lv:" + data.lv + "   exp:" + data.exp + "/"+(50+data.lv*data.lv*data.lv)+"\n";
+  ret = ret + "lv:" + data.lv + "   exp:" + data.exp + "/"+(data.lv*100-50)+"\n";
   ret = ret + "atk:" + data.atk + "   def:" + data.def + "\n";
   ret = ret + "luck:" + data.luck + "   agi:" + data.agi + "\n";
   ret = ret + "gold:" + data.gold + "   status:" + statusstr + "\n";
