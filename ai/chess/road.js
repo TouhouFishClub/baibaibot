@@ -74,6 +74,7 @@ function init(){
     cl_maze.findOne(query, function (err, data) {
       if (data) {
         maze = JSON.parse(data.d);
+        userMap = JSON.parse(data.m);
       } else {
         initMaze();
         insertMonsters();
