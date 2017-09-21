@@ -263,6 +263,9 @@ function attack(direction,user,callback){
     }
   }else if(enemy.type==2||enemy.type==3){
     var ret = battle(user,enemy);
+    ret = ret + "hp余量：\n";
+    ret = ret + user._id+":"+user.hp+"\n";
+    ret = ret + enemy._id+":"+enemy.hp+"\n";
     callback(ret);
   }
 }
