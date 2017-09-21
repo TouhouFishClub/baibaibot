@@ -24,7 +24,7 @@ const {fight,useMagicOrItem,regenTimer} = require('./ai/favour/battle');
 
 const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
 
-
+const {handleUserOperation} = require('./ai/chess/road');
 
 
 const buddyHandler = new MsgHandler(
@@ -233,6 +233,8 @@ function reply(content,userName,callback,groupid,from){
     fight(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first=='g'||first=='G'){
     useMagicOrItem(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+  }else if(first=='m'||first=='M'){
+    handleUserOperation(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first==8){
     var ca = content.substring(1).split('-');
     if(ca.length==2){
