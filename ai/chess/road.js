@@ -79,7 +79,7 @@ function init(){
         initMaze();
         insertMonsters();
         insertBoss();
-        cl_maze.save({"_id":"maze",d:JSON.stringify(maze)});
+        cl_maze.save({"_id":"maze",d:JSON.stringify(maze),m:JSON.stringify(userMap)});
       }
     });
   });
