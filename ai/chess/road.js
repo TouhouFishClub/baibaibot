@@ -463,9 +463,13 @@ function handleDeath(data2,data1){
   }
   if(data2.type==2){
     insertMonsters(1)
+    data1.exp=data1.exp+data2.exp;
+    maze[data2.x][data2.y]={type:0,hp:0};
   }
   if(data2.type==3){
     insertBoss(1)
+    data1.exp=data1.exp+data2.exp;
+    maze[data2.x][data2.y]={type:0,hp:0};
   }
   ret = ret + data1._id+"获得"+data2._id+"的所有经验值和金钱";
   return ret;
