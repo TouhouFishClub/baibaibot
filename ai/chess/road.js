@@ -179,7 +179,7 @@ function handleUserOperation(fromuin,content,members,Ncallback){
           user = initUser(userName);
         }
         var data=user;
-        if(data.exp>data.lv*data.lv*data.lv+50){
+        if(data.exp>=data.lv*data.lv*data.lv+50){
           if(data.lv<25){
             data.exp=data.exp-data.lv*data.lv*data.lv-50;
             data.lv=data.lv+1;
@@ -453,7 +453,7 @@ function battle(data1,data2){
   var damage = damageAndStr[0];
   var dmgstr = damageAndStr[1];
   ret = ret + dmgstr;
-  if(damage>data2.hp){
+  if(damage>=data2.hp){
     ret = ret + data2._id+'被砍死了\n';
     ret = ret + handleDeath(data2,data1);
   }else{
@@ -462,7 +462,7 @@ function battle(data1,data2){
     var damage = damageAndStr[0];
     var dmgstr = damageAndStr[1];
     ret = ret + dmgstr;
-    if(damage>data1.hp){
+    if(damage>=data1.hp){
       ret = ret + data1._id+'被砍死了';
       ret = ret + handleDeath(data1,data2);
     }else{
@@ -480,7 +480,7 @@ function battle(data1,data2){
         var damage = damageAndStr[0];
         var dmgstr = damageAndStr[1];
         ret = ret + dmgstr;
-        if(damage>data2.hp){
+        if(damage>=data2.hp){
           ret = ret + data2._id+'被砍死了\n';
           ret = ret + handleDeath(data2,data1);
         }else {
