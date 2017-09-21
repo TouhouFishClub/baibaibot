@@ -253,7 +253,7 @@ function attack(direction,user,callback){
   if(enemy.type==1){
     var damage = Math.floor(user.atk*(Math.random()+0.5));
     enemy.hp=enemy.hp-damage;
-    if(enemy.hp<0){
+    if(enemy.hp<=0){
       user.exp=user.exp+1;
       maze[x][y]=user;
       maze[nx][ny]={type:0,hp:0};
