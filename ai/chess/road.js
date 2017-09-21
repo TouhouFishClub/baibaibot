@@ -91,6 +91,7 @@ function handleUserOperation(fromuin,content,members,Ncallback){
   var callback = function(ret){
     lock=0;
     MongoClient.connect(mongourl, function(err, db) {
+      var cl_maze = db.collection('cl_maze');
       cl_maze.save({"_id":"maze",d:JSON.stringify(maze),m:userMap});
       Ncallback(ret);
     });
