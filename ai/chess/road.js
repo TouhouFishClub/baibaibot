@@ -39,8 +39,7 @@ function initMaze(){
 
  */
 
-function insertMonsters(){
-  var n = Math.floor(Math.sqrt(width*height));
+function insertMonsters(n){
   while(n>0){
     var x = Math.floor(Math.random()*width);
     var y = Math.floor(Math.random()*height);
@@ -53,8 +52,7 @@ function insertMonsters(){
   }
 }
 
-function insertBoss(){
-  var n = 3;
+function insertBoss(n){
   while(n>0){
     var x = Math.floor(Math.random()*width);
     var y = Math.floor(Math.random()*height);
@@ -77,8 +75,8 @@ function init(){
         userMap = JSON.parse(data.m);
       } else {
         initMaze();
-        insertMonsters();
-        insertBoss();
+        insertMonsters(2*Math.floor(Math.sqrt(width*height)));
+        insertBoss(3);
         cl_maze.save({"_id":"maze",d:JSON.stringify(maze),m:JSON.stringify(userMap)});
       }
     });
@@ -140,7 +138,7 @@ function handleUserOperation(fromuin,content,members,Ncallback){
     }else if(first==2){
       content = content.substring(1);
       if(content==""){
-        var ret = "每次移动消耗2MP\n";
+        var ret = "每次攻击消耗2MP\n";
         ret = ret + strHead+"2U:攻击上方\n";
         ret = ret + strHead+"2D:攻击下方\n";
         ret = ret + strHead+"2L:攻击左方\n";
@@ -252,7 +250,6 @@ function attack(direction,user,callback){
     return;
   }
   var enemy = maze[nx][ny];
-  console.log(enemy);
   if(enemy.type==1){
     var damage = Math.floor(user.atk*(Math.random()+0.5));
     enemy.hp=enemy.hp-damage;
@@ -432,16 +429,43 @@ function getMapInfo(x,y,sight){
 }
 
 
+function moveuser(user){
+  var n = 1;
+  while(n>0){
+    x = Math.floor(Math.random()*width);
+    y = Math.floor(Math.random()*height);
+    if(maze[x][y].type==0){
+      n--;
+      maze[x][y]=user;
+      userMap[userName]=[x,y];
+      return user;
+    }
+  }
+}
+
 
 
 function handleDeath(data2,data1){
   var ret = "";
-  data1.exp=data1.exp+data2.exp;
   data1.gold=data1.gold+data2.gold;
   maze[data1.x][data1.y]=data1;
-  maze[data2.x][data2.y]={type:0,hp:0};
   if(data2.type==4){
-    delete(userMap[data2._id]);
+    if(data2.exp>=100){
+      data1.exp=data1.exp+100;
+      ret = ret + data2._id+"用100经验值保护了自己\n";
+      data2.exp=data2.exp-100;
+      moveuser(data2);
+    }else{
+      data1.exp=data1.exp+data2.exp;
+      maze[data2.x][data2.y]={type:0,hp:0};
+      delete(userMap[data2._id]);
+    }
+  }
+  if(data2.type==2){
+    insertMonsters(1)
+  }
+  if(data2.type==3){
+    insertBoss(1)
   }
   ret = ret + data1._id+"获得"+data2._id+"的所有经验值和金钱";
   return ret;
