@@ -91,7 +91,7 @@ function handleUserOperation(fromuin,content,members,Ncallback){
     lock=0;
     MongoClient.connect(mongourl, function(err, db) {
       var cl_maze = db.collection('cl_maze');
-      cl_maze.save({"_id":"maze",d:JSON.stringify(maze),m:userMap});
+      cl_maze.save({"_id":"maze",d:JSON.stringify(maze),m:JSON.stringify(userMap)});
       Ncallback(ret);
     });
   }
@@ -364,6 +364,7 @@ function getUserInfoById(userName,callback){
   var x;
   var y;
   var user;
+  console.log(userMap);
   if(userMap[userName]){
     x = userMap[userName][0];
     y = userMap[userName][1];
@@ -403,8 +404,6 @@ function getMapInfo(x,y,sight){
   var downy = y>sight?(y-sight):0;
   var upy = (y+sight<height)?(y+sight):height;
   var ret = "";
-  console.log(x,y);
-  console.log(leftx,rightx,downy,upy);
   for(var j=upy-1;j>=downy;j--){
     for(var i=leftx;i<rightx;i++){
       var type = maze[i][j].type;
