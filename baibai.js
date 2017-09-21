@@ -24,7 +24,7 @@ const {fight,useMagicOrItem,regenTimer} = require('./ai/favour/battle');
 
 const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
 
-const {handleUserOperation} = require('./ai/chess/road');
+const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
 
 
 const buddyHandler = new MsgHandler(
@@ -49,6 +49,7 @@ const discuHandler = new MsgHandler(
 var qqq = new QQ(buddyHandler, groupHandler,discuHandler);
 qqq.run();
 regenTimer();
+mazeRegenTimer();
 
 function handleBuddyMsg(msg,qq){
   var name = msg.name;

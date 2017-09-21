@@ -569,8 +569,39 @@ function generateDamage(data1,data2,type,rate2){
   }
 }
 
+var timer = 0;
+function mazeRegenTimer(){
+  var left = 3600000 - new Date().getTime()%3600000
+  if(timer==0){
+    timer = 1;
+    setTimeout(function(){
+      regen();
+      setTimeout(function () {
+        timer = 0;
+        regenTimer();
+      },10000);
+    },left)
+  }
+}
+
+function regen(){
+  for(var i=0;i<width;i++){
+    for(var j=0;j<height;j++){
+      if(maze[i][j].type==4){
+        if(maze[i][j].mp<101){
+          maze[i][j].mp=maze[i][j].mp+50;
+        }
+      }
+    }
+  }
+}
+
+
+
+
 module.exports={
-  handleUserOperation
+  handleUserOperation,
+  mazeRegenTimer
 }
 
 
