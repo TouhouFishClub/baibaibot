@@ -111,7 +111,7 @@ function handleMsg_D(msg,qq,type){
   let nickname = "";
   for(let i = 0; i < memberListInGroup.length; i++){
     if(from === memberListInGroup[i].uin) {
-      nickname = memberListInGroup[i].nick
+      nickname = memberListInGroup[i].nick;
       break
     }
   }

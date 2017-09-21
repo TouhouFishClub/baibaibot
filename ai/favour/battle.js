@@ -145,7 +145,7 @@ function fightUser(from,to,callback){
 const {battlePlusBeforeDamage,battlePlusAfterDamage} = require('./job');
 function battle(data1,data2,db){
   var ret='';
-  var damageAndStr = generateDamage(data1,data2,1);
+  var damageAndStr = generateDamage(data1,data2,1,1);
   var damage = damageAndStr[0];
   var dmgstr = damageAndStr[1];
   ret = ret + dmgstr;
@@ -164,7 +164,7 @@ function battle(data1,data2,db){
     data2.gold=data2.gold-Math.floor(data2.gold/2);
   }else{
     data2.hp=data2.hp-damage;
-    var damageAndStr = generateDamage(data2,data1,2);
+    var damageAndStr = generateDamage(data2,data1,2,1);
     var damage = damageAndStr[0];
     var dmgstr = damageAndStr[1];
     data2.exp=data2.exp+damage;
@@ -186,10 +186,9 @@ function battle(data1,data2,db){
         if(rate>2){
           rate = 2;
         }
-        var damageAndStr = generateDamage(data1,data2,1);
+        var damageAndStr = generateDamage(data1,data2,1,rate);
         var damage = damageAndStr[0];
         var dmgstr = damageAndStr[1];
-        damage = Math.floor(damage*rate);
         ret = ret + dmgstr;
         data1.exp=data1.exp+damage;
         if(damage>data2.hp){
@@ -218,7 +217,7 @@ function battle(data1,data2,db){
   return ret;
 }
 
-function generateDamage(data1,data2,type){
+function generateDamage(data1,data2,type,rate){
   if(data1.status==1||data1.status==2){
     var damage = 0;
     var str = data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
@@ -256,7 +255,7 @@ function generateDamage(data1,data2,type){
     if(Math.random()*100>data1.lv+80){
       damage = 0;
     }
-    damage = Math.floor(damage);
+    damage = Math.floor(damage*rate);
     var str = data1._id+'砍向'+data2._id+'\n'+(critical?'会心一击!':'')+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }
