@@ -47,7 +47,7 @@ function insertMonsters(){
     if(maze[x][y].type==0){
       n--;
       var monster = {type:2,_id:"m"+n,hp: 50, mp: 50, tp: 100, gold: 50,lv: 1,exp:50,sight:0,
-        str: 9, int: 9, agi: 9, atk:9, def:0, mag:9,luck:9,status:0};
+        str: 9, int: 9, agi: 9, atk:9, def:0, mag:9,luck:9,status:0,x:x,y:y};
       maze[x][y]=monster;
     }
   }
@@ -61,7 +61,7 @@ function insertBoss(){
     if(maze[x][y].type==0){
       n--;
       var boss = {type:3,_id:"B"+n,hp: 200, mp: 200, tp: 100, gold: 200,lv: 1,exp:200,sight:0,
-        str: 19, int: 9, agi: 9, atk:9, def:9, mag:9,luck:9,status:0};
+        str: 19, int: 9, agi: 9, atk:9, def:9, mag:9,luck:9,status:0,x:x,y:y};
       maze[x][y]=boss;
     }
   }
@@ -101,6 +101,7 @@ function handleUserOperation(fromuin,content,members,Ncallback){
     var ret = strHead+"0:查看自己状态\n";
     ret = ret + strHead+"1:移动\n";
     ret = ret + strHead+"2:攻击\n";
+    ret = ret + strHead+"3:升级\n";
     callback(ret);
   }else{
     var first = content.substring(0,1);
@@ -161,7 +162,67 @@ function handleUserOperation(fromuin,content,members,Ncallback){
           callback(user._id+"MP不足,不能攻击");
         }
       }
+    }else if(first==3){
+      var userName = getUserNameByUin(fromuin,members);
+      var next = content.substring(1);
+      if(next==""){
+        var ret = "请选择：\n";
+        ret = ret +  "`g51:攻击力+1,其他能力一定概率+1\n";
+        ret = ret +  "`g52:防御力+1,其他能力一定概率+1\n";
+        ret = ret +  "`g53:幸运+1,其他能力一定概率+1\n";
+        ret = ret +  "`g54:速度+1,其他能力一定概率+1\n";
+        callback(ret);
+      }else{
+        var uxy = userMap[userName];
+        var user = maze[uxy[0]][uxy[1]];
+        if(!user){
+          user = initUser(userName);
+        }
+        var data=user;
+        if(data.exp>data.lv*data.lv*data.lv+50){
+          if(data.lv<25){
+            data.exp=data.exp-data.lv*data.lv*data.lv-50;
+            data.lv=data.lv+1;
+            var ret = "";
+            if(next==1){
+              data.atk=data.atk+1;
+              ret = ret + ",atk+1"
+            }else if(next==2){
+              data.def=data.def+1;
+              ret = ret + ",def+1";
+            }else if(next==3){
+              data.luck=data.luck+1;
+              ret = ret + ",luck+1";
+            }else if(next==4){
+              data.agi=data.agi+1;
+              ret = ret + ",agi+1";
+            }else{
 
+            }
+            if(next!=1&&Math.random()<0.45){
+              data.atk=data.atk+1;
+              ret = ret + ",atk+1"
+            }
+            if(next!=2&&Math.random()<0.45){
+              data.def=data.def+1;
+              ret = ret + ",def+1";
+            }
+            if(next!=3&&Math.random()<0.45){
+              data.luck=data.luck+1;
+              ret = ret + ",luck+1";
+            }
+            if(next!=4&&Math.random()<0.45){
+              data.agi=data.agi+1;
+              ret = ret + ",agi+1";
+            }
+            callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
+          }else{
+            callback(userName+'不能在升级了,请转生后在升级');
+          }
+        }else{
+          callback(userName+'经验不足,不能升级');
+        }
+      }
     }
   }
 }
