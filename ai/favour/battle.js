@@ -217,7 +217,7 @@ function battle(data1,data2,db){
   return ret;
 }
 
-function generateDamage(data1,data2,type,rate){
+function generateDamage(data1,data2,type,rate2){
   if(data1.status==1||data1.status==2){
     var damage = 0;
     var str = data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
@@ -255,7 +255,7 @@ function generateDamage(data1,data2,type,rate){
     if(Math.random()*100>data1.lv+80){
       damage = 0;
     }
-    damage = Math.floor(damage*rate);
+    damage = Math.floor(damage*rate2);
     var str = data1._id+'砍向'+data2._id+'\n'+(critical?'会心一击!':'')+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }
