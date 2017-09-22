@@ -57,7 +57,7 @@ module.exports = function (userId, content, callback) {
 const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
 const Axios = require('axios')
-const Data;
+let Data;
 Axios.get('http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json', {
   timeout: 6000
 }).then(function(response){
