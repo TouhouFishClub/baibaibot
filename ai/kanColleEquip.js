@@ -62,7 +62,7 @@ Axios.get('http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json', {
   timeout: 6000
 }).then(function(response){
   console.log('read data from wiki');
-  Data = eval("("+response.data+")");
+  Data = response.data;
 }).catch(error => {
   console.log('read data from file');
   Data = fs.readJsonSync(path.join('assets', 'kanColleEquipData.json'))
