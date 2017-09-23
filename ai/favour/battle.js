@@ -449,7 +449,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             callback(ret);
           }else{
             if(data.exp>data.lv*data.lv*data.lv+50){
-              if(data.lv<25){
+              if(data.lv<99){
                 data.exp=data.exp-data.lv*data.lv*data.lv-50;
                 data.lv=data.lv+1;
                 var ret = "";
