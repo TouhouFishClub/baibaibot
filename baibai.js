@@ -98,6 +98,9 @@ function handleMsg_D(msg,qq,type){
       if(res.length>250){
         res = res.substring(0,250)+'.......';
       }
+        if(res.indexOf('百百')>-1){
+            res = res.replace(/百百/g,'百·百');
+        }
       setTimeout(function(){
         if(type=='discu'){
           qq.sendDiscuMsg(groupid," "+res);
