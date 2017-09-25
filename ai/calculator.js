@@ -1,5 +1,8 @@
 cal = function(str){
   str = str.toLowerCase();
+  if(str.length==3&&str[1]=="-"){
+    return undefined;
+  }
   var first = str.substring(0,1)
   if(first==0||first=="("||first=="（"||first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||first=="e"||first=="π"||parseInt(str)){
     can = true;
