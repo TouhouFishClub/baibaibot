@@ -1,5 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_senka';
+var Axois = require('axios');
+
 var monthOfDay=[31,28,31,30,31,30,31,31,30,31,30,31];
 var u = {};
 var c = {};
@@ -49,20 +51,15 @@ function searchsenka2(server,userName,name,callback){
   if(read==false){
     searchSenkaByCache(server,userName,name,callback);
   }else{
-    MongoClient.connect(mongourl, function(err, db) {
-      var cl_calculate_result = db.collection('cl_calculate_result');
-      var query = {'_id':parseInt(server)};
-      cl_calculate_result.findOne(query, function(err, mongodata) {
-        if(mongodata){
-          var data = mongodata.d;
-          u = JSON.parse(data);
-          c[server]={};
-          c[server].ts=mongodata.ts;
-          forecast(server);
-          searchSenkaByCache(server,userName,name,callback);
-        }
-      });
-    });
+    Axios.get('http://127.0.0.1:12450/api/calrank?server='+server, {
+      timeout: 20000
+    }).then(function(response){
+      var str = response.data;
+      u = JSON.parse(str);
+      searchSenkaByCache(server,userName,name,callback);
+    }).catch(error => {
+      console.log(error)
+    })
   }
 }
 

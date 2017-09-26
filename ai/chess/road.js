@@ -1,6 +1,8 @@
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_maze';
 
+var fs = require('fs');
+
 var maze = [];
 var width = 100;
 var height = 100;
@@ -77,6 +79,7 @@ function init(){
         initMaze();
         insertMonsters(2*Math.floor(Math.sqrt(width*height)));
         insertBoss(3);
+
         cl_maze.save({"_id":"maze",d:JSON.stringify(maze),m:JSON.stringify(userMap)});
       }
     });
