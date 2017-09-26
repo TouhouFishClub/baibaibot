@@ -74,8 +74,11 @@ app.get('/test',function(req,res){
 });
 
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  regenm();
-  res.send('ok');
+  searchsenka('aaa','8',function(r){
+    console.log(r);
+    res.send(r);
+  })
+
 })
 
 var callback = function(res){

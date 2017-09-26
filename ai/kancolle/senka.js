@@ -51,11 +51,15 @@ function searchsenka2(server,userName,name,callback){
   if(read==false){
     searchSenkaByCache(server,userName,name,callback);
   }else{
-    Axios.get('http://127.0.0.1:12450/api/calrank?server='+server, {
-      timeout: 20000
+    Axios.get('http://192.168.17.52:12450/api/calrank?server='+server, {
+      timeout: 20000,
+      headers: {}
     }).then(function(response){
-      var str = response.data;
-      u = JSON.parse(str);
+      u = response.data;
+      console.log(u);
+      c[server]={};
+      c[server].ts=new Date().getTime();
+      forecast(server);
       searchSenkaByCache(server,userName,name,callback);
     }).catch(error => {
       console.log(error)
