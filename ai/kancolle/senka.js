@@ -1,6 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_senka';
-var Axois = require('axios');
+var Axios = require('axios');
 
 var monthOfDay=[31,28,31,30,31,30,31,31,30,31,30,31];
 var u = {};
