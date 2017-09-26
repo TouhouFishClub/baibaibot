@@ -83,7 +83,7 @@ function searchSenkaByCache(server,userName,name,callback){
       ret = detail[ra[0]];
     }else{
       for(var i=0;i<ra.length;i++){
-        ret = ret + 'x'+i+'\t|\t'+ra[i]+"\n";
+        ret = ret + ' `zx'+i+'\t|\t'+ra[i]+"\n";
         memory[userName+"x"+i]=detail[ra[i]]+ '统计时间：'+new Date(c[server].ts).toLocaleString();
       }
     }
