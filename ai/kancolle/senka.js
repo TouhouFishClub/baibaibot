@@ -82,6 +82,7 @@ function searchSenkaByCache(server,userName,name,callback){
     if(ra.length==1){
       ret = detail[ra[0]];
     }else{
+      ret = "请选择\n";
       for(var i=0;i<ra.length;i++){
         ret = ret + ' `zx'+i+'\t|\t'+ra[i]+"\n";
         memory[userName+"x"+i]=detail[ra[i]]+ '统计时间：'+new Date(c[server].ts).toLocaleString();
