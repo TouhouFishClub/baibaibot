@@ -11,7 +11,7 @@ function searchsenka(userName,content,callback){
   if(content==""){
     callback('输入格式：`z[服务器名或ID]-[用户名]')
   }else if(content.length==2&&content.substring(0,1)=='x'){
-    ret = memory[userName+name];
+    ret = memory[userName+content];
     if(!ret){
       ret = 'No memory\n';
     }
