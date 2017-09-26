@@ -296,7 +296,7 @@ function move(direction,user,callback){
   user.x=nx;
   user.y=ny;
   maze[nx][ny]=user;
-  maze[x][y].type=0;
+  maze[x][y]={type:0,hp:0};
   userMap[userName]=[nx,ny];
   var ret = userName+"向"+direction+"走了一步\n";
   ret = ret + getMapInfo(nx,ny,user.sight);
@@ -433,6 +433,8 @@ function getMapInfo(x,y,sight){
 
 function moveuser(user){
   var n = 1;
+  var ox = user.x;
+  var oy = user.y;
   while(n>0){
     x = Math.floor(Math.random()*width);
     y = Math.floor(Math.random()*height);
@@ -440,6 +442,7 @@ function moveuser(user){
       n--;
       maze[x][y]=user;
       userMap[userName]=[x,y];
+      user[ox][oy]={type:0,hp:0};
       return user;
     }
   }
@@ -575,23 +578,25 @@ function mazeRegenTimer(){
   if(timer==0){
     timer = 1;
     setTimeout(function(){
-      regen();
+      regenm();
       setTimeout(function () {
         timer = 0;
-        regenTimer();
+        mazeRegenTimer();
       },10000);
     },left)
   }
 }
 
-function regen(){
-  for(var i=0;i<width;i++){
-    for(var j=0;j<height;j++){
-      if(maze[i][j].type==4){
-        if(maze[i][j].mp<101){
-          maze[i][j].mp=maze[i][j].mp+50;
-        }
-      }
+function regenm(){
+  var keys = Object.keys(userMap);
+  for(var i=0;i<keys.length;i++){
+    var uxy = userMap[keys[i]];
+    var x = uxy[0];
+    var y = uxy[1];
+    var user = maze[x][y];
+    if(user.mp<100){
+      user.mp=user.mp+50;
+      maze[x][y]=user;
     }
   }
   MongoClient.connect(mongourl, function(err, db) {
@@ -605,7 +610,8 @@ function regen(){
 
 module.exports={
   handleUserOperation,
-  mazeRegenTimer
+  mazeRegenTimer,
+  regenm
 }
 
 

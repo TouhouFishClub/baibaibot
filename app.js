@@ -49,6 +49,7 @@ const updateAll = require('./mongo/db_kcUpdateAll')
 const {getMapData} = require('./ai/kancolle/kancollemap');
 const {searchsenka} = require('./ai/kancolle/senka');
 const {fixUser,regen} = require('./ai/favour/battle');
+const {regenm} = require('./ai/chess/road');
 
 app.get('/showData', function (req, res) {
   let data = fs.readFileSync(path.join('tools', 'okcoin-data', 'index.html'), 'utf-8');
@@ -73,7 +74,7 @@ app.get('/test',function(req,res){
 });
 
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  regen();
+  regenm();
   res.send('ok');
 })
 
