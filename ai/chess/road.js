@@ -594,6 +594,10 @@ function regen(){
       }
     }
   }
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_maze = db.collection('cl_maze');
+    cl_maze.save({"_id":"maze",d:JSON.stringify(maze),m:JSON.stringify(userMap)});
+  });
 }
 
 
