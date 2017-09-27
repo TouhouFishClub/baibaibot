@@ -7,7 +7,7 @@ module.exports = function (userId, content, callback) {
   let response
   switch(content){
     case '':
-      response = `默认显示当天可改修的装备\n可使用[类型]-[星期]来查看特定星期改修\n可查询某个装备（无视日期）\n若查出数个装备，可按照x[序号]（如x2）来查询某个装备的详情\n支持的装备类型：${checkItemType.join("、")}，部分支持简写\n`
+      response = `默认显示当天可改修的装备\n可使用[类型]-[星期]来查看特定星期改修\n可查询某个装备（无视日期）\n若查出数个装备，可按照x[序号]（如x2）来查询某个装备的详情\n可通过+[改修等级]（如+max、+7）来查询某个装备消耗资源\n支持的装备类型：${checkItemType.join("、")}，部分支持简写\n`
       break;
     default:
       let sp = content.split('+'), query = sp[0], star = sp[1]
