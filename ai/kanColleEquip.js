@@ -55,7 +55,7 @@ module.exports = function (userId, content, callback) {
 }
 
 const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
-
+let checkItemType=[]
 const Axios = require('axios')
 let Data;
 Axios.get('http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json', {
@@ -63,9 +63,11 @@ Axios.get('http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json', {
 }).then(function(response){
   console.log('read data from wiki');
   Data = response.data;
+  checkItemType = Array.from(new Set(_.map(Data, 'type')))
 }).catch(error => {
   console.log('read data from file');
   Data = fs.readJsonSync(path.join('assets', 'kanColleEquipData.json'))
+  checkItemType = Array.from(new Set(_.map(Data, 'type')))
   console.log(error)
 });
 
@@ -142,7 +144,7 @@ const itemTypeSynonyms = str => {
   }
 }
 
-const checkItemType = Array.from(new Set(_.map(Data, 'type')))
+
 // types = ["小口径主砲","中口径主砲","大口径主砲","副砲","魚雷","艦上戦闘機","艦上爆撃機","艦上偵察機",
 //          "水上偵察機","水上爆撃機","小型電探","大型電探","対艦強化弾","対空機銃","爆雷","ソナー","機関部強化",
 //          "上陸用舟艇","追加装甲(中型)","追加装甲(大型)","探照灯","大型探照灯","高射装置","特型 内火艇","潜水艦装備","水上戦闘機"]
