@@ -62,14 +62,15 @@ app.get('/test',function(req,res){
   // res.send(xchange('QQid', 'btc-usd', callback));
   // res.send(xchange('QQid', 'etc-usd', callback));
   // res.send(xchange('QQid', 'BCC', callback));
-  // res.send(xchange('QQid', '1.3比特币-美元', callback));
+  // res.send(xchange('QQid', '美元', callback));
+  // res.send(xchange('QQid', 'jpy', callback));
   // res.send(xchange('QQid', 'USD-LTC', callback));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
-  res.send(kce('QQid', '小口径', callback))
-  res.send(kce('QQid', 'xa', callback))
-  res.send(kce('QQid', 'x4', callback))
+  res.send(kce('QQid', '127', callback))
+  // res.send(kce('QQid', 'xa', callback))
+  res.send(kce('QQid', 'x0+6', callback))
 });
 
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
