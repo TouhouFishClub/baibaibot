@@ -12,7 +12,7 @@ app.use(express.static('./static'));
 const {relogin} = require('./baibai');
 
 app.listen(10086,function(){
-  opn('http://127.0.0.1:10086/test', {app: ['chrome']})
+  //opn('http://127.0.0.1:10086/test', {app: ['chrome']})
 });
 app.get('/login',function(req,res){
   fs.unlink('qq-bot.cookie',function(){
@@ -49,6 +49,7 @@ const updateAll = require('./mongo/db_kcUpdateAll')
 const {getMapData} = require('./ai/kancolle/kancollemap');
 const {searchsenka} = require('./ai/kancolle/senka');
 const {fixUser,regen} = require('./ai/favour/battle');
+const {regenm} = require('./ai/chess/road');
 
 app.get('/showData', function (req, res) {
   let data = fs.readFileSync(path.join('tools', 'okcoin-data', 'index.html'), 'utf-8');
@@ -74,8 +75,11 @@ app.get('/test',function(req,res){
 });
 
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  regen();
-  res.send('ok');
+  searchsenka('aaa','8',function(r){
+    console.log(r);
+    res.send(r);
+  })
+
 })
 
 var callback = function(res){

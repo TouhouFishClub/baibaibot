@@ -1,5 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_senka';
+var Axios = require('axios');
+
 var monthOfDay=[31,28,31,30,31,30,31,31,30,31,30,31];
 var u = {};
 var c = {};
@@ -9,7 +11,7 @@ function searchsenka(userName,content,callback){
   if(content==""){
     callback('输入格式：`z[服务器名或ID]-[用户名]')
   }else if(content.length==2&&content.substring(0,1)=='x'){
-    ret = memory[userName+name];
+    ret = memory[userName+content];
     if(!ret){
       ret = 'No memory\n';
     }
@@ -49,20 +51,18 @@ function searchsenka2(server,userName,name,callback){
   if(read==false){
     searchSenkaByCache(server,userName,name,callback);
   }else{
-    MongoClient.connect(mongourl, function(err, db) {
-      var cl_calculate_result = db.collection('cl_calculate_result');
-      var query = {'_id':parseInt(server)};
-      cl_calculate_result.findOne(query, function(err, mongodata) {
-        if(mongodata){
-          var data = mongodata.d;
-          u = JSON.parse(data);
-          c[server]={};
-          c[server].ts=mongodata.ts;
-          forecast(server);
-          searchSenkaByCache(server,userName,name,callback);
-        }
-      });
-    });
+    Axios.get('http://192.168.17.52:12450/api/calrank?server='+server, {
+      timeout: 20000,
+      headers: {}
+    }).then(function(response){
+      u = response.data;
+      c[server]={};
+      c[server].ts=u.ts;
+      forecast(server);
+      searchSenkaByCache(server,userName,name,callback);
+    }).catch(error => {
+      console.log(error)
+    })
   }
 }
 
@@ -82,8 +82,9 @@ function searchSenkaByCache(server,userName,name,callback){
     if(ra.length==1){
       ret = detail[ra[0]];
     }else{
+      ret = "请选择\n";
       for(var i=0;i<ra.length;i++){
-        ret = ret + 'x'+i+'\t|\t'+ra[i]+"\n";
+        ret = ret + ' `zx'+i+'\t|\t'+ra[i]+"\n";
         memory[userName+"x"+i]=detail[ra[i]]+ '统计时间：'+new Date(c[server].ts).toLocaleString();
       }
     }

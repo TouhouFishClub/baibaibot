@@ -357,28 +357,32 @@ class QQ {
               break;
             }
           }
-          const members = group.info.minfo;
-          const cards = group.info.cards;
-          var map = {};
-          if(members){
-            for(let i=0;i<members.length;i++){
-              var uin = members[i].uin;
-              map[uin]=members[i];
+          if(group){
+            const members = group.info.minfo;
+            const cards = group.info.cards;
+            var map = {};
+            if(members){
+              for(let i=0;i<members.length;i++){
+                var uin = members[i].uin;
+                map[uin]=members[i];
+              }
             }
-          }
-          if(cards){
-            for(let i=0;i<cards.length;i++){
-              var uin = cards[i].muin;
-              var card = cards[i].card;
-              map[uin].card=card;
+            if(cards){
+              for(let i=0;i<cards.length;i++){
+                var uin = cards[i].muin;
+                var card = cards[i].card;
+                map[uin].card=card;
+              }
             }
-          }
-          var ret = []
-          for(var p in map){
+            var ret = []
+            for(var p in map){
               ret.push(map[p]);
+            }
+            this.groupInfoMap[groupCode]=ret;
+            return ret;
+          }else{
+            return [];
           }
-          this.groupInfoMap[groupCode]=ret;
-          return ret;
         }
     }
 

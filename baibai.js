@@ -21,6 +21,12 @@ const kce = require('./ai/kanColleEquip')
 const {getMapData} = require('./ai/kancolle/kancollemap')
 const {searchsenka} = require('./ai/kancolle/senka');
 const {fight,useMagicOrItem,regenTimer} = require('./ai/favour/battle');
+
+const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
+
+const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
+
+
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -43,11 +49,16 @@ const discuHandler = new MsgHandler(
 var qqq = new QQ(buddyHandler, groupHandler,discuHandler);
 qqq.run();
 regenTimer();
+mazeRegenTimer();
 
 function handleBuddyMsg(msg,qq){
   var name = msg.name;
   var content = msg.content;
   var id = msg.id;
+  if(content=="h"){
+    actionBuddy("",id,qq);
+    return;
+  }
   var callback = function(res){
     setTimeout(function(){
       if(Math.random()<0.2){
@@ -87,21 +98,24 @@ function handleMsg_D(msg,qq,type){
       if(res.length>250){
         res = res.substring(0,250)+'.......';
       }
+        if(res.indexOf('百百')>-1){
+            res = res.replace(/百百/g,'百·百');
+        }
       setTimeout(function(){
         if(type=='discu'){
           qq.sendDiscuMsg(groupid," "+res);
         }else{
           qq.sendGroupMsg(groupid," "+res);
         }
-
       },1000);
     }
   }
 
-  let memberListInGroup = qqq.getMemberListInGroup(groupid), nickname
+  let memberListInGroup = qqq.getMemberListInGroup(groupid);
+  let nickname = "";
   for(let i = 0; i < memberListInGroup.length; i++){
     if(from === memberListInGroup[i].uin) {
-      nickname = memberListInGroup[i].nick
+      nickname = memberListInGroup[i].nick;
       break
     }
   }
@@ -131,18 +145,12 @@ function handleMsg_D(msg,qq,type){
 
 
   var first = content.substring(0,1);
-  if(first=='.'||first=='。'){
-    var c = content.substring(1);
-    var f1 = c.substring(0,1);
-    if(f1==""){
-      ret = '舰队collection知识库\n';
-      ret = ret + '.e:改修查询';
-      callback(ret);
-    }else if(f1=="e"){
-      kce(name,c.substring(1),callback);
-    }
+  if(first=='o'||first=='O'){
+    actionGroup(content.substring(1),from,groupid,qqq.getMemberListInGroup(groupid),qq);
     return;
   }
+
+  
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
 
     var c1 = content.substring(1);
@@ -229,6 +237,8 @@ function reply(content,userName,callback,groupid,from){
     fight(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first=='g'||first=='G'){
     useMagicOrItem(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+  }else if(first=='m'||first=='M'){
+    handleUserOperation(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first==8){
     var ca = content.substring(1).split('-');
     if(ca.length==2){
