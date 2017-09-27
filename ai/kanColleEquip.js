@@ -64,9 +64,10 @@ module.exports = function (userId, content, callback) {
 }
 
 const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
-let checkItemType=[]
+
 const Axios = require('axios')
-let Data;
+let Data = fs.readJsonSync(path.join('assets', 'kanColleEquipData.json'));
+let checkItemType = Array.from(new Set(_.map(Data, 'type')))
 Axios.get('http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json', {
   timeout: 6000
 }).then(function(response){
@@ -75,8 +76,6 @@ Axios.get('http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json', {
   checkItemType = Array.from(new Set(_.map(Data, 'type')))
 }).catch(error => {
   console.log('read data from file');
-  Data = fs.readJsonSync(path.join('assets', 'kanColleEquipData.json'))
-  checkItemType = Array.from(new Set(_.map(Data, 'type')))
   console.log(error)
 });
 

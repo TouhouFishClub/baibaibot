@@ -12,7 +12,7 @@ app.use(express.static('./static'));
 const {relogin} = require('./baibai');
 
 app.listen(10086,function(){
-  //opn('http://127.0.0.1:10086/test', {app: ['chrome']})
+  opn('http://127.0.0.1:10086/test', {app: ['chrome']})
 });
 app.get('/login',function(req,res){
   fs.unlink('qq-bot.cookie',function(){
@@ -69,7 +69,7 @@ app.get('/test',function(req,res){
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
-  res.send(kce('QQid', '127', callback))
+  res.send(kce('QQid', '飞机+7', callback))
   // res.send(kce('QQid', 'xa', callback))
   res.send(kce('QQid', 'x0+6', callback))
 });
