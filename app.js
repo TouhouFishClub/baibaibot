@@ -65,6 +65,11 @@ app.get('/test',function(req,res){
   // res.send(xchange('QQid', 'BCC', callback));
   // res.send(xchange('QQid', '美元', callback));
    res.send(xchange('QQid', 'jpy', callback));
+  res.send(xchange('QQid', '日元-jpy', callback));
+  // res.send(xchange('QQid', '美元-日元', callback));
+  // res.send(xchange('QQid', '20000韩元-日元', callback));
+  // res.send(xchange('QQid', '20000韩元-阿联酋迪拉姆', callback));
+  // res.send(xchange('QQid', 'jpy', callback));
   // res.send(xchange('QQid', 'USD-LTC', callback));
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
@@ -72,6 +77,9 @@ app.get('/test',function(req,res){
   //res.send(kce('QQid', '飞机+7', callback))
   // res.send(kce('QQid', 'xa', callback))
   //res.send(kce('QQid', 'x0+6', callback))
+  // res.send(kce('QQid', '飞机+7', callback))
+  // res.send(kce('QQid', 'xa', callback))
+  // res.send(kce('QQid', 'x0+6', callback))
 });
 
 app.get('/test2',function(req,res){//这个函数时空专用！^-^

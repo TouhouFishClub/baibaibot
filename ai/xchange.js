@@ -110,23 +110,40 @@ const formatData = async (codeArr, money, callback) => {
         }
       }
     } else {
-      if(money){
-        /* 输入币值，则进行转换 */
-        let YQLdata = await getYQLData(`"${codeArr[0]}${codeArr[1]}"`)
+      let YQLcode = money ? `"${codeArr[0]}${codeArr[1]}"` : `"${codeArr[0]}${codeArr[1]}","${codeArr[1]}${codeArr[0]}"`
+      try {
+        let YQLdata = await getYQLData(YQLcode)
         let rateObj = YQLdata.query.results.rate
-        if(rateObj.Rate !== 'N/A'){
-          response = `${rateObj.Date} ${rateObj.Time}\n${money}${codeToCurrency(rateObj.Name.split('/')[0])} = ${(money*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}`
+        if(money ? rateObj.Rate !== 'N/A' : rateObj[0].Rate !== 'N/A'){
+          if(money){
+            /* 输入币值，则进行转换 */
+            response = `${rateObj.Date} ${rateObj.Time}\n${money}${codeToCurrency(rateObj.Name.split('/')[0])} = ${(money*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}`
+          } else {
+            /* 未输入币值，则输出当前汇率 */
+            response = `${rateObj[0].Date} ${rateObj[0].Time}\n1${codeToCurrency(rateObj[0].Name.split('/')[0])} = ${(1*rateObj[0].Rate).toFixed(4)}${codeToCurrency(rateObj[0].Name.split('/')[1])}\n${rateObj[1].Date} ${rateObj[1].Time}\n1${codeToCurrency(rateObj[1].Name.split('/')[0])} = ${(1*rateObj[1].Rate).toFixed(4)}${codeToCurrency(rateObj[1].Name.split('/')[1])}`
+          }
         } else {
           response = '币种代码错误'
         }
-      } else {
-        /* 未输入币值，则输出当前汇率 */
-        let YQLdata = await getYQLData(`"${codeArr[0]}${codeArr[1]}","${codeArr[1]}${codeArr[0]}"`)
-        let rateObj = YQLdata.query.results.rate
-        if(rateObj[0].Rate !== 'N/A' && rateObj[1].Rate !== 'N/A'){
-          response = `${rateObj[0].Date} ${rateObj[0].Time}\n1${codeToCurrency(rateObj[0].Name.split('/')[0])} = ${(1*rateObj[0].Rate).toFixed(4)}${codeToCurrency(rateObj[0].Name.split('/')[1])}\n${rateObj[1].Date} ${rateObj[1].Time}\n1${codeToCurrency(rateObj[1].Name.split('/')[0])} = ${(1*rateObj[1].Rate).toFixed(4)}${codeToCurrency(rateObj[1].Name.split('/')[1])}`
+      } catch(err){
+        const fixerData = await getFixerData(codeArr[0])
+        if(!fixerData.error){
+          if(codeArr[0] === codeArr[1]){
+            response = '不允许兑换相同货币'
+          } else {
+            if(fixerData.rates[codeArr[1]]){
+              const rateData = parseFloat(fixerData.rates[codeArr[1]])
+              if(money){
+                response = `${fixerData.date}\n${money}${codeToCurrency(codeArr[0])} = ${(money*rateData).toFixed(4)}${codeToCurrency(codeArr[1])}`
+              } else {
+                response = `${fixerData.date}\n1${codeToCurrency(codeArr[0])} = ${rateData.toFixed(4)}${codeToCurrency(codeArr[1])}\n1${codeToCurrency(codeArr[1])} = ${(1/rateData).toFixed(4)}${codeToCurrency(codeArr[0])}`
+              }
+            } else {
+              response = '该接口不支持此币种'
+            }
+          }
         } else {
-          response = '币种代码错误'
+          response = fixerData.error
         }
       }
     }
@@ -169,9 +186,28 @@ const getYQLData = code =>
     /* 发起查询请求 */
     Axios.get('https://query.yahooapis.com/v1/public/yql',{
       params: {
-        q: `select * from yahoo.finance.xchange where pair in (${code})`,
+        q: encodeURIComponent(`select * from yahoo.finance.xchange where pair in (${code})`),
         format: 'json',
         env: 'store://datatables.org/alltableswithkeys'
+      },
+      timeout: TIME_OUT,
+      headers: {
+        'User-Agent': USER_AGENT
+      }
+    })
+      .then(response => resolve(response.data))
+      .catch(error => {
+        // console.log(error)
+        console.log('=== YQL request failure ===')
+        reject('fail')
+      })
+  })
+
+const getFixerData = code =>
+  new Promise((resolve, reject) => {
+    Axios.get('http://api.fixer.io/latest', {
+      params: {
+        base: code
       },
       timeout: TIME_OUT,
       headers: {
