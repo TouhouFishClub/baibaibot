@@ -297,7 +297,7 @@ const renderMessage = (type, itemObj, week, userId, star) => {
               msg += `消耗装备：`
               let eatMsg = ''
               _.forEach(eatEquip, (val, key) => {
-                eatMsg += `${key} * ${val} `
+                eatMsg += `\n${key} * ${val} `
               })
               msg += eatMsg === '' ? '无': eatMsg
             } else {
