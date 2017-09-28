@@ -364,7 +364,7 @@ function useMagicOrItem(fromuin,content,members,callback){
           var then = limitItem[fromuin];
           var now = new Date();
           if(!then){
-            then = {i1:0,i3:0};
+            then = {i1:0,i3:0,i7:0};
           }
           if(now.getTime()-then.i1<300000){
             callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i1+300000).toLocaleString());
@@ -386,7 +386,7 @@ function useMagicOrItem(fromuin,content,members,callback){
           var then = limitItem[fromuin];
           var now = new Date();
           if(!then){
-            then = {i1:0,i3:0};
+            then = {i1:0,i3:0,i7:0};
           }
           if(now.getTime()-then.i3<300000){
             callback(userName+'的回复魔法CD中！回复时间：'+new Date(then.i3+300000).toLocaleString());
@@ -425,6 +425,15 @@ function useMagicOrItem(fromuin,content,members,callback){
             callback(userName+'转换为狂怒状态');
           }
         }else if(content==7){
+          var now = new Date();
+          if(!then){
+            then = {i1:0,i3:0,i7:0};
+          }
+          if(now.getTime()-then.i7<300000){
+            callback(userName+'的重生魔法CD中！回复时间：'+new Date(then.i7+300000).toLocaleString());
+            return;
+          }
+          then.i7 = now.getTime();
           if(data.gold>60){
             var l = data.lv-1;
             data.exp=data.exp+l*50+l*l*(l+1)*(l+1)/4;
