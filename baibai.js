@@ -119,6 +119,15 @@ function handleMsg_D(msg,qq,type){
       break
     }
   }
+  if(content.substring(0,2)=='自杀'){
+    var minutes = content.substring(2);
+    if(minutes==""){
+      qqq.shutupGroupMember(groupid,from,Math.floor(Math.random()*600));
+    }else if(minutes>=1&&minutes<10){
+      qqq.shutupGroupMember(groupid,from,minutes*60);
+    }
+    return;
+  }
 
   /* game system */
   if(content === '开始游戏'){
@@ -157,7 +166,7 @@ function handleMsg_D(msg,qq,type){
     if(c1==""){
       var ret = "`1+名词：百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n";
       ret = ret + "`4+内容：百度查询\n`c汇率转换\n`0+数字：大写数字转换\n`8+地点A-地点B：公交查询\n";
-      ret = ret + '`r+数字：ROLL一个小于该数字的随机整数\n';
+      ret = ret + '`r+数字：ROLL一个小于该数字的随机整数\n自杀:自己被禁言1-10分钟\n';
       ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n虾扯蛋：``+对话";
       callback(ret);
     }else{

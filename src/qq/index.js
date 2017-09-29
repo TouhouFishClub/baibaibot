@@ -46,6 +46,8 @@ class QQ {
         this.buddy = {};
         this.discu = {};
         this.group = {};
+        this.gn2gid = new Map();
+        this.gn2qq = new Map();
         this.buddyNameMap = new Map();
         this.discuNameMap = new Map();
         this.groupNameMap = new Map();
@@ -69,6 +71,8 @@ class QQ {
     async run() {
         await this.login();
         await this.initInfo();
+        await this.getGroupList();
+        await this.getGroupMembers();
         await this.loopPoll();
     }
 
@@ -551,6 +555,86 @@ class QQ {
         log.info(`发消息给群 ${this.getGroupName(gid)} : ${content}`);
         return resp;
     }
+
+    shutupGroupMember(groupCode,uin,seconds){
+        let group;
+        let groupName;
+        for (let g of this.group) {
+          if (g.gid == groupCode) {
+            group = g;
+            groupName = g.name;
+            break;
+          }
+        }
+        if(group){
+          const members = group.info.minfo;
+          var userName;
+          if(members){
+            for(let i=0;i<members.length;i++){
+              if(uin==members[i].uin) {
+                  userName = members[i].nick;
+                  break;
+              }
+            }
+          }
+          var userqq = this.gn2qq[userName];
+          var groupqq = this.gn2gid[groupName].gc;
+          if(userqq&&groupqq){
+            var url = "http://qinfo.clt.qq.com/cgi-bin/qun_info/set_group_shutup"
+            var shutup = encodeURIComponent('[{"uin":'+userqq+',"t":'+seconds+'}]');
+            var data = "gc="+groupqq+"&bkn=845745155&shutup_list="+shutup;
+            console.log(shutup,data);
+            this.client.extraPost(url,data);
+            log.info('禁言：'+data);
+          }
+        }
+    }
+
+    async getGroupList(){
+        var url = "http://qun.qq.com/cgi-bin/qun_mgr/get_group_list";
+        var data = "bkn=845745155";
+        const resp = await this.client.extraPost(url,data);
+        log.info('群列表：'+data);
+        var manageList = resp.manage;
+        var joinList = resp.join;
+        for(var i=0;i<joinList.length;i++){
+            var gn = joinList[i].gn;
+            this.gn2gid[gn]=joinList[i];
+        }
+        for(var i=0;i<manageList.length;i++){
+            var gn = manageList[i].gn;
+            this.gn2gid[gn]=manageList[i];
+        }
+    }
+
+    async getGroupMembers(){
+        var str = fs.readFileSync("src/groupMembers/576067828","utf-8");
+        var stra = str.split("\n");
+          var c = 1;
+          for(var i=0;i<stra.length;i++){
+            var e = stra[i].trim();
+            if(e==c){
+              c++;
+              var l1 = stra[i+2];
+              var l2 = stra[i+3];
+              i=i+2;
+              var la1 = l1.split("\t");
+              var la2 = l2.split("\t");
+              var qqcode;
+              var username;
+              if(la1.length>2){
+                qqcode = la1[0];
+                username = stra[i-1].trim();
+              }else{
+                qqcode = la2[0];
+                username = stra[i].trim();
+              }
+              this.gn2qq[username]=qqcode;
+              console.log(qqcode,username);
+            }
+          }
+    }
+
 }
 
 module.exports = QQ;
