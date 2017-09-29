@@ -4,7 +4,7 @@ cal = function(str){
     return undefined;
   }
   var first = str.substring(0,1)
-  if(first==0||first=="("||first=="（"||first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||first=="e"||first=="π"||parseInt(str)){
+  if(first=="√"||first==0||first=="("||first=="（"||first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||first=="e"||first=="π"||parseInt(str)){
     can = true;
     willcal = false;
     var z="";
@@ -63,6 +63,16 @@ cal = function(str){
           }
           willcal = true;
           i=i+1;
+        }else if(f.substring(0,1)=="√"){
+          z=z+"Math.sqrt";
+          if(str[i+1]=="("||str[i+1]=="（"){
+
+          }else{
+            z=z+"(";
+            needtail=true;
+          }
+          willcal = true;
+          i=i+0;
         }else if(f=="pow"){
           willcal = true;
           var s = str.substring(i);
