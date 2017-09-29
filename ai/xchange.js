@@ -186,7 +186,7 @@ const getYQLData = code =>
     /* 发起查询请求 */
     Axios.get('https://query.yahooapis.com/v1/public/yql',{
       params: {
-        q: encodeURIComponent(`select * from yahoo.finance.xchange where pair in (${code})`),
+        q: `select * from yahoo.finance.xchange where pair in (${code})`,
         format: 'json',
         env: 'store://datatables.org/alltableswithkeys'
       },
