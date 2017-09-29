@@ -435,6 +435,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             ret = ret +  "`g94:消耗500金币，一定概率速度-1，一定概率速度+1\n";
             callback(ret);
           }else{
+            console.log("next:"+next);
             if(data.gold>500){
               var ret = "消耗了500金钱";
               data.gold=data.gold-500;

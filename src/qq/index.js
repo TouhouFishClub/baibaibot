@@ -71,8 +71,8 @@ class QQ {
     async run() {
         await this.login();
         await this.initInfo();
-        await this.getGroupList();
-        await this.getGroupMembers();
+        //await this.getGroupList();
+        //await this.getGroupMembers();
         await this.loopPoll();
     }
 
