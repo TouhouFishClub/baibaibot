@@ -63,6 +63,8 @@ app.get('/test',function(req,res){
   // res.send(xchange('QQid', 'btc-usd', callback));
   // res.send(xchange('QQid', 'etc-usd', callback));
   // res.send(xchange('QQid', 'BCC', callback));
+  // res.send(xchange('QQid', '美元', callback));
+   res.send(xchange('QQid', 'jpy', callback));
   res.send(xchange('QQid', '日元-jpy', callback));
   // res.send(xchange('QQid', '美元-日元', callback));
   // res.send(xchange('QQid', '20000韩元-日元', callback));
@@ -72,6 +74,9 @@ app.get('/test',function(req,res){
   // getWeatherByCity('',function(ret){
   //   res.send(ret+"");
   // })
+  //res.send(kce('QQid', '飞机+7', callback))
+  // res.send(kce('QQid', 'xa', callback))
+  //res.send(kce('QQid', 'x0+6', callback))
   // res.send(kce('QQid', '飞机+7', callback))
   // res.send(kce('QQid', 'xa', callback))
   // res.send(kce('QQid', 'x0+6', callback))
