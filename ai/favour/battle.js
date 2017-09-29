@@ -438,7 +438,7 @@ function useMagicOrItem(fromuin,content,members,callback){
             console.log("next:"+next);
             if(data.gold>200){
               var ret = "消耗了200金钱";
-              data.gold=data.gold-500;
+              data.gold=data.gold-200;
               if(next==1){
                 if(Math.random()<0.51){
                   data.atk=data.atk+1;
