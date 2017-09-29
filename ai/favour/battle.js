@@ -425,19 +425,19 @@ function useMagicOrItem(fromuin,content,members,callback){
             data.status=4;
             callback(userName+'转换为狂怒状态');
           }
-        }else if(content==9){
+        }else if(content.substring(0,1)==9){
           var next = content.substring(1);
           if(next==""){
             var ret = "请选择：\n";
-            ret = ret +  "`g91:消耗500金币，一定概率攻击力-1，一定概率攻击力+1\n";
-            ret = ret +  "`g92:消耗500金币，一定概率防御力-1，一定概率防御力+1\n";
-            ret = ret +  "`g93:消耗500金币，一定概率幸运-1，一定概率幸运+1\n";
-            ret = ret +  "`g94:消耗500金币，一定概率速度-1，一定概率速度+1\n";
+            ret = ret +  "`g91:消耗200金币，一定概率攻击力-1，一定概率攻击力+1\n";
+            ret = ret +  "`g92:消耗200金币，一定概率防御力-1，一定概率防御力+1\n";
+            ret = ret +  "`g93:消耗200金币，一定概率幸运-1，一定概率幸运+1\n";
+            ret = ret +  "`g94:消耗200金币，一定概率速度-1，一定概率速度+1\n";
             callback(ret);
           }else{
             console.log("next:"+next);
-            if(data.gold>500){
-              var ret = "消耗了500金钱";
+            if(data.gold>200){
+              var ret = "消耗了200金钱";
               data.gold=data.gold-500;
               if(next==1){
                 if(Math.random()<0.51){
