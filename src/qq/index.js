@@ -582,7 +582,7 @@ class QQ {
           if(userqq&&groupqq){
             var url = "http://qinfo.clt.qq.com/cgi-bin/qun_info/set_group_shutup"
             var shutup = encodeURIComponent('[{"uin":'+userqq+',"t":'+seconds+'}]');
-            var data = "gc="+groupqq+"&bkn=845745155&shutup_list="+shutup;
+            var data = "gc="+groupqq+"&bkn=1657909858&shutup_list="+shutup;
             console.log(shutup,data);
             this.client.extraPost(url,data);
             log.info('禁言：'+data);
@@ -592,7 +592,7 @@ class QQ {
 
     async getGroupList(){
         var url = "http://qun.qq.com/cgi-bin/qun_mgr/get_group_list";
-        var data = "bkn=845745155";
+        var data = "bkn=1657909858";
         const resp = await this.client.extraPost(url,data);
         log.info('群列表：'+data);
         var manageList = resp.manage;
