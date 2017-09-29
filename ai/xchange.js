@@ -59,7 +59,7 @@ const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
 const formatData = async (codeArr, money, callback) => {
   let response = ''
-  if(codeArr){
+  if(codeArr && ! codeArr[0] && !codeArr[1]){
     let checkCode = {
       'ETH': 1,
       'BTC': 1,
@@ -127,6 +127,7 @@ const formatData = async (codeArr, money, callback) => {
         }
       } catch(err){
         const fixerData = await getFixerData(codeArr[0])
+        console.log(codeArr)
         if(!fixerData.error){
           if(codeArr[0] === codeArr[1]){
             response = '不允许兑换相同货币'
