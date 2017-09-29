@@ -59,7 +59,7 @@ const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
 const formatData = async (codeArr, money, callback) => {
   let response = ''
-  if(codeArr && ! codeArr[0] && !codeArr[1]){
+  if(codeArr && !!codeArr[0] && !!codeArr[1]){
     let checkCode = {
       'ETH': 1,
       'BTC': 1,
