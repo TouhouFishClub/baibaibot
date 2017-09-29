@@ -137,6 +137,27 @@ class HttpClient {
             });
         });
     }
+
+    extraPost(url,data){
+      var config = {};
+      config.url=url;
+      config.method = 'post';
+      config.data=data;
+      config.headers = Object.assign(this.clientHeaders,{
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Referer':'http://qinfo.clt.qq.com/member.html'
+      });
+      return new Promise((resolve, reject) => {
+        Axios(config).then(response => {
+          this.handleResponse(response);
+          console.log(response.data);
+          resolve(response.data);
+        }).catch(error => {
+          logResponse(error.response);
+          reject(error);
+        });
+      });
+    }
 }
 
 module.exports = HttpClient;
