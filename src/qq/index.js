@@ -595,6 +595,7 @@ class QQ {
         var data = "bkn=1657909858";
         const resp = await this.client.extraPost(url,data);
         log.info('群列表：'+data);
+        console.log(resp);
         var manageList = resp.manage;
         var joinList = resp.join;
         for(var i=0;i<joinList.length;i++){
