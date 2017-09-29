@@ -150,6 +150,7 @@ class HttpClient {
       return new Promise((resolve, reject) => {
         Axios(config).then(response => {
           this.handleResponse(response);
+          console.log(response.data);
           resolve(response.data);
         }).catch(error => {
           logResponse(error.response);
