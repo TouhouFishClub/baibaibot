@@ -577,35 +577,42 @@ class QQ {
               }
             }
           }
-          var userqq = this.gn2qq[userName];
-          var groupqq = this.gn2gid[groupName].gc;
-          if(userqq&&groupqq){
-            var url = "http://qinfo.clt.qq.com/cgi-bin/qun_info/set_group_shutup"
-            var shutup = encodeURIComponent('[{"uin":'+userqq+',"t":'+seconds+'}]');
-            var data = "gc="+groupqq+"&bkn=1657909858&shutup_list="+shutup;
-            console.log(shutup,data);
-            this.client.extraPost(url,data);
-            log.info('禁言：'+data);
+          if(groupName.indexOf('咸鱼')>0){
+            var userqq = this.gn2qq[userName];
+            var groupqq = 205700800;
+            if(userqq&&groupqq){
+              var url = "http://qinfo.clt.qq.com/cgi-bin/qun_info/set_group_shutup"
+              var shutup = encodeURIComponent('[{"uin":'+userqq+',"t":'+seconds+'}]');
+              var data = "gc="+groupqq+"&bkn=1657909858&shutup_list="+shutup;
+              console.log(shutup,data);
+              this.client.extraPost(url,data);
+              log.info('禁言：'+data);
+            }
           }
         }
     }
 
     async getGroupList(){
-        var url = "http://qun.qq.com/cgi-bin/qun_mgr/get_group_list";
-        var data = "bkn=1657909858";
-        const resp = await this.client.extraPost(url,data);
-        log.info('群列表：'+data);
-        console.log(resp);
-        var manageList = resp.manage;
-        var joinList = resp.join;
-        for(var i=0;i<joinList.length;i++){
+        try{
+          var url = "http://qun.qq.com/cgi-bin/qun_mgr/get_group_list";
+          var data = "bkn=1657909858";
+          const resp = await this.client.extraPost(url,data);
+          log.info('群列表：'+data);
+          console.log(resp);
+          var manageList = resp.manage;
+          var joinList = resp.join;
+          for(var i=0;i<joinList.length;i++){
             var gn = joinList[i].gn;
             this.gn2gid[gn]=joinList[i];
-        }
-        for(var i=0;i<manageList.length;i++){
+          }
+          for(var i=0;i<manageList.length;i++){
             var gn = manageList[i].gn;
             this.gn2gid[gn]=manageList[i];
+          }
+        }catch(e){
+           console.log(e);
         }
+
     }
 
     async getGroupMembers(){
