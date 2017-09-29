@@ -127,7 +127,6 @@ const formatData = async (codeArr, money, callback) => {
         }
       } catch(err){
         const fixerData = await getFixerData(codeArr[0])
-        console.log(codeArr)
         if(!fixerData.error){
           if(codeArr[0] === codeArr[1]){
             response = '不允许兑换相同货币'
