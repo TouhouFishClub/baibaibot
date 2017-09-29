@@ -608,7 +608,7 @@ class QQ {
     }
 
     async getGroupMembers(){
-        var str = fs.readFileSync("src/groupMembers/576067828","utf-8");
+        var str = fs.readFileSync("src/groupMembers/205700800","utf-8");
         var stra = str.split("\n");
           var c = 1;
           for(var i=0;i<stra.length;i++){
