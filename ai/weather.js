@@ -7,6 +7,7 @@ function weatherReply(city,userId,callback){
     path: '/weather_mini?city='+encodeURIComponent(city),
     method: 'GET'
   };
+  console.log(options);
   var req = http.request(options, function (res) {
     var encoding = res.headers['content-encoding'];
     var chunks = [];
@@ -60,6 +61,7 @@ function getWeatherByCity(city,userId,callback){
     path: '/search?cityname='+encodeURIComponent(city)+'&callback=s',
     method: 'GET'
   };
+  console.log(options);
   var req = http.request(options, function (res) {
     var resdata = "";
     res.on('data', function (chunk) {
@@ -101,6 +103,7 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
     path: '/weather/'+cityCode+'.shtml',
     method: 'GET'
   };
+  console.log(options);
   var req = http.request(options, function (res) {
     var resdata = "";
     res.on('data', function (chunk) {
