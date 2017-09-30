@@ -119,6 +119,7 @@ function handleMsg_D(msg,qq,type){
       break
     }
   }
+  /*
   if(content.substring(0,2)=='自杀'){
     var minutes = content.substring(2);
     if(minutes==""){
@@ -128,6 +129,7 @@ function handleMsg_D(msg,qq,type){
     }
     return;
   }
+  */
 
   /* game system */
   if(content === '开始游戏'){

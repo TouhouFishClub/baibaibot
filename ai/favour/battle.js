@@ -335,6 +335,7 @@ function useMagicOrItem(fromuin,content,members,callback){
     ret = ret + " `g6:转换为攻击状态(攻击力2倍,每次攻击消耗50点MP)\n";
     ret = ret + " `g7:购买重生药水(消耗60金钱,重置等级和经验值)\n";
     ret = ret + " `g8:转换为狂怒状态(攻击消耗一半HP不消耗MP)\n";
+    ret = ret + " `g9:乾坤一掷\n";
     callback(ret);
   }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1).trim(),members,callback);
@@ -423,6 +424,61 @@ function useMagicOrItem(fromuin,content,members,callback){
           if(data.status!=1){
             data.status=4;
             callback(userName+'转换为狂怒状态');
+          }
+        }else if(content.substring(0,1)==9){
+          var next = content.substring(1);
+          if(next==""){
+            var ret = "请选择：\n";
+            ret = ret +  "`g91:消耗200金币，一定概率攻击力-1，一定概率攻击力+1\n";
+            ret = ret +  "`g92:消耗200金币，一定概率防御力-1，一定概率防御力+1\n";
+            ret = ret +  "`g93:消耗200金币，一定概率幸运-1，一定概率幸运+1\n";
+            ret = ret +  "`g94:消耗200金币，一定概率速度-1，一定概率速度+1\n";
+            callback(ret);
+          }else{
+            console.log("next:"+next);
+            if(data.gold>200){
+              var ret = "消耗了200金钱";
+              data.gold=data.gold-200;
+              if(next==1){
+                if(Math.random()<0.51){
+                  data.atk=data.atk+1;
+                  ret = ret + ",atk+1"
+                }else{
+                  data.atk=data.atk-1;
+                  ret = ret + ",atk-1"
+                }
+              }
+              if(next==2){
+                if(Math.random()<0.51){
+                  data.def=data.def+1;
+                  ret = ret + ",def+1"
+                }else{
+                  data.def=data.def-1;
+                  ret = ret + ",def-1"
+                }
+              }
+              if(next==3){
+                if(Math.random()<0.51){
+                  data.luck=data.luck+1;
+                  ret = ret + ",luck+1"
+                }else{
+                  data.luck=data.luck-1;
+                  ret = ret + ",luck-1"
+                }
+              }
+              if(next==4){
+                if(Math.random()<0.51){
+                  data.agi=data.agi+1;
+                  ret = ret + ",agi+1"
+                }else{
+                  data.agi=data.agi-1;
+                  ret = ret + ",agi-1"
+                }
+              }
+              callback(ret);
+            }else{
+              callback(userName+"金钱不足");
+            }
           }
         }else if(content==7){
           var now = new Date();
