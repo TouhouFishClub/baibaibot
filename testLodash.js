@@ -1,8 +1,9 @@
 const _ = require('lodash')
 var users = [
-  { 'user': 'barney',  'active': true },
-  { 'user': 'fred',    'active': false },
-  { 'user': 'pebbles', 'active': false }
+  { 'user': 'barney',  'count': 1 },
+  { 'user': 'fred',    'count': 3 },
+  { 'user': 'pebbles', 'count': 2 }
 ];
 
-console.log(_.includes({ 'a': 'aab', 'b': 'bc' }, 'aab'))
+console.log(_.sortBy(users, 'count'))
+console.log(users)

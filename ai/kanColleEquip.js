@@ -76,7 +76,7 @@ Axios.get('http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json', {
   checkItemType = Array.from(new Set(_.map(Data, 'type')))
 }).catch(error => {
   console.log('read data from file');
-  console.log(error)
+  //console.log(error)
 });
 
 // DataPath = http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json
