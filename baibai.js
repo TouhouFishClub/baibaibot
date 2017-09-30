@@ -18,6 +18,7 @@ const {money} = require('./ai/money');
 const {getloc,route} = require('./ai/map');
 const {searchSongByName} = require('./ai/song');
 const kce = require('./ai/kanColleEquip')
+const kcq = require('./ai/kanColleQuest')
 const {getMapData} = require('./ai/kancolle/kancollemap')
 const {searchsenka} = require('./ai/kancolle/senka');
 const {fight,useMagicOrItem,regenTimer} = require('./ai/favour/battle');
@@ -236,6 +237,8 @@ function reply(content,userName,callback,groupid,from){
     xchange(userName,content.substring(1),callback);
   }else if(first=="e"||first=='E'){
     kce(userName,content.substring(1),callback);
+  }else if(first=="q"||first=='Q'){
+    kcq(userName,content.substring(1),callback);
   }else if(first=="k"||first=='K'){
     getMapData(userName,content.substring(1),callback);
   }else if(first=="z"||first=='Z'){
