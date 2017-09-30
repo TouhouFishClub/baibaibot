@@ -35,7 +35,6 @@ app.get('/log',function(req,res){
   res.send(logs);
 });
 
-
 const {baikeReply} = require('./ai/baidusearch');
 const {translateMsg}=require('./ai/translate');
 const {money} = require('./ai/money');
@@ -84,7 +83,7 @@ app.get('/test',function(req,res){
 });
 
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  searchsenka('aaa','8',function(r){
+  weatherReply('武汉','8',function(r){
     console.log(r);
     res.send(r);
   })

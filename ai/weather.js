@@ -46,6 +46,9 @@ function weatherReply(city,userId,callback){
         }
       });
     });
+    res.on('error',function(error){
+      console.log(error);
+    })
   });
   req.end();
 }
@@ -84,6 +87,9 @@ function getWeatherByCity(city,userId,callback){
         callback(ret);
       }
     });
+    res.on('error',function(error){
+      console.log(error);
+    })
   });
   req.end();
 }
@@ -157,6 +163,9 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
         callback(all.trim());
       }
     });
+    res.on('error',function(error){
+      console.log(error);
+    })
   });
   req.end();
 }
