@@ -93,6 +93,10 @@ function getWeatherByCity(city,userId,callback){
       console.log(error);
     })
   });
+  req.setTimeout(5000,function(){
+    ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇!';
+    callback(ret);
+  });
   req.end();
 }
 
@@ -169,6 +173,10 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
     res.on('error',function(error){
       console.log(error);
     })
+  });
+  req.setTimeout(5000,function(){
+    ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇!';
+    callback(ret);
   });
   req.end();
 }
