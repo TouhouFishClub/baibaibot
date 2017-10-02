@@ -157,3 +157,17 @@ const renderMsg = (userId, dataObj, type) => {
       return str
   }
 }
+
+const rewardMsg = dataObj => {
+  let str = ''
+  str += '获得资源：\n'
+  if(dataObj.reward_fuel)
+    str += `油：${dataObj.reward_fuel} `
+  if(dataObj.reward_ammo)
+    str += `弹：${dataObj.reward_ammo} `
+  if(dataObj.reward_steel)
+    str += `钢：${dataObj.reward_steel} `
+  if(dataObj.reward_bauxite)
+    str += `铝：${dataObj.reward_bauxite} `
+  str += '\n'
+}
