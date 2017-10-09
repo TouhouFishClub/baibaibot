@@ -31,7 +31,7 @@ module.exports = function(userId, context, callback){
       })
       dataSource.push(obj)
     })
-    console.log('=== complete ===')
+    console.log('=== init kancolle quest data complete ===')
     isInit = true
   }
 
@@ -139,6 +139,8 @@ const renderMsg = (userId, dataObj, type) => {
   switch(type){
     case 'all':
       str += `${dataObj.wiki_id} - ${dataObj.chinese_title}\n${dataObj.chinese_detail}\n`
+      str += rewardMsg(dataObj)
+      str += questInfo(dataObj.requirements)
       if(dataObj.prerequisite.length){
         str += `【前置任务】\n`
         dataObj.prerequisite.forEach(gameId => {
@@ -170,4 +172,36 @@ const rewardMsg = dataObj => {
   if(dataObj.reward_bauxite)
     str += `铝：${dataObj.reward_bauxite} `
   str += '\n'
+  if(dataObj.reward_other)
+    dataObj.reward_other.forEach(ele => {
+      str += ele.name
+      if(ele.amount)
+        str += ` * ${ele.amount} \n`
+    })
+}
+
+const questInfo = dataObj => {
+  let str = '任务描述：'
+  try {
+    switch(dataObj.category){
+      case 'fleet':
+      case 'sortie':
+      case 'sink':
+      case 'a-gou':
+      case 'expedition':
+      case 'simple':
+      case 'excercise':
+      case 'modelconversion':
+      case 'scrapequipment':
+      case 'equipexchange':
+      case 'modernization':
+      case 'and':
+      default:
+        str += '不支持的任务类型'
+    }
+  } catch(err){
+    console.log('=== 任务详情生成失败 ===')
+    // console.log(err)
+  }
+  return str
 }
