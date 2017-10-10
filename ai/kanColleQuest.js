@@ -1,6 +1,7 @@
 const fs = require('fs-extra')
 const path = require('path-extra')
 const _ = require('lodash')
+const KEYWORDS_LIMIT = 10
 let userQuestObj = {}
 let isInit = false
 let dataSource = []
@@ -9,6 +10,8 @@ let dataForId = {}
 let wikiId2Id = {}
 
 module.exports = function(userId, context, callback){
+  const timeInfo = `search by ${context}`
+  console.time(timeInfo)
   if(!isInit){
     // DataPath = https://kcwikizh.github.io/kcdata/quest/poi.json
     fs.readJsonSync(path.join('assets', 'kanColleQuestData.json')).forEach(ele => {
@@ -28,19 +31,19 @@ module.exports = function(userId, context, callback){
       })
       dataSource.push(obj)
     })
-    console.log('=== complete ===')
+    console.log('=== init kancolle quest data complete ===')
     isInit = true
   }
 
   let response = ''
   if(context.trim() === ''){
-    response = `查询任务信息\n可通过关键词（最多5个，用|隔开）查询，也可通过kcwiki编号查询`
+    response = `查询任务信息\n可通过关键词（最多${KEYWORDS_LIMIT}个，用|隔开）查询，也可通过kcwiki编号查询`
   } else {
-    if(/^[A-G](\d{1,3}|([a-z]\d{1,2}){1})$/.test(context)){
+    if(/^[A-Z]{1,2}(\d{1,3}|([a-z]\d{1,2}){1})$/.test(context)){
       response = searchQuestByWikiId(userId, context, 'all')
     } else {
       let keywords = context.split('|')
-      if(keywords.length <= 5){
+      if(keywords.length <= KEYWORDS_LIMIT){
         let searchArr = [], maxCount = 0
         dataSource.forEach(ele => {
           let count = 0
@@ -74,16 +77,36 @@ module.exports = function(userId, context, callback){
           if(searchArr.length >= 5){
             str += '仅显示前5条，如果没有搜索到任务，请输入更多关键字'
           }
+          if(searchArr.length == 0){
+            str += '未找到相关任务，请检查关键词'
+          }
           response = str
         }
-        console.log(searchArr)
+        // console.log(searchArr)
       } else {
-        response = '只能输入最多5个关键字'
+        response = `只能输入最多${KEYWORDS_LIMIT}个关键字`
       }
     }
   }
-  console.log(response)
+  // console.log(response)
+  console.timeEnd(timeInfo)
+
+  let strArr = response.split('\n'), callbackArr = []
+  callbackArr.push(strArr.reduce((pre, cur) => {
+    if(pre.length + cur.length < 250)
+      return `${pre}\n${cur}`
+    else {
+      callbackArr.push(pre)
+      return cur
+    }
+  }))
+  callbackArr.forEach(async (ele, idx) => {
+    await wait(idx * 500)
+    callback(ele)
+  })
 }
+
+const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
 const searchWikiIdById = (id, type) => {
   switch(type){
@@ -116,6 +139,8 @@ const renderMsg = (userId, dataObj, type) => {
   switch(type){
     case 'all':
       str += `${dataObj.wiki_id} - ${dataObj.chinese_title}\n${dataObj.chinese_detail}\n`
+      str += rewardMsg(dataObj)
+      str += questInfo(dataObj.requirements)
       if(dataObj.prerequisite.length){
         str += `【前置任务】\n`
         dataObj.prerequisite.forEach(gameId => {
@@ -133,4 +158,50 @@ const renderMsg = (userId, dataObj, type) => {
       str += `${dataObj.wiki_id} - ${dataObj.chinese_title}\n`
       return str
   }
+}
+
+const rewardMsg = dataObj => {
+  let str = ''
+  str += '获得资源：\n'
+  if(dataObj.reward_fuel)
+    str += `油：${dataObj.reward_fuel} `
+  if(dataObj.reward_ammo)
+    str += `弹：${dataObj.reward_ammo} `
+  if(dataObj.reward_steel)
+    str += `钢：${dataObj.reward_steel} `
+  if(dataObj.reward_bauxite)
+    str += `铝：${dataObj.reward_bauxite} `
+  str += '\n'
+  if(dataObj.reward_other)
+    dataObj.reward_other.forEach(ele => {
+      str += ele.name
+      if(ele.amount)
+        str += ` * ${ele.amount} \n`
+    })
+}
+
+const questInfo = dataObj => {
+  let str = '任务描述：'
+  try {
+    switch(dataObj.category){
+      case 'fleet':
+      case 'sortie':
+      case 'sink':
+      case 'a-gou':
+      case 'expedition':
+      case 'simple':
+      case 'excercise':
+      case 'modelconversion':
+      case 'scrapequipment':
+      case 'equipexchange':
+      case 'modernization':
+      case 'and':
+      default:
+        str += '不支持的任务类型'
+    }
+  } catch(err){
+    console.log('=== 任务详情生成失败 ===')
+    // console.log(err)
+  }
+  return str
 }
