@@ -97,6 +97,7 @@ function getWeatherByCity(city,userId,callback){
     })
   });
   req.setTimeout(5000,function(){
+    req.end();
     failed = failed+1;
     ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇!';
     if(failed>2){
@@ -183,6 +184,7 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
     })
   });
   req.setTimeout(5000,function(){
+    req.end();
     failed = failed + 1;
     if(failed>2){
       ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇!';
