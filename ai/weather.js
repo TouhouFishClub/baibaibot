@@ -54,6 +54,8 @@ function weatherReply(city,userId,callback){
   req.end();
 }
 
+
+var failed = 0;
 function getWeatherByCity(city,userId,callback){
   var options = {
     hostname: 'toy1.weather.com.cn',
@@ -68,6 +70,7 @@ function getWeatherByCity(city,userId,callback){
       resdata+=chunk;
     });
     res.on('end', function () {
+      failed = 0;
       var reply = false;
       var n = resdata.indexOf("(");
       if(n>0){
@@ -94,8 +97,13 @@ function getWeatherByCity(city,userId,callback){
     })
   });
   req.setTimeout(5000,function(){
+    failed = failed+1;
     ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇!';
-    callback(ret);
+    if(failed>2){
+      callback(ret);
+    }else{
+      getWeatherByCity(city,userId,callback)
+    }
   });
   req.end();
 }
@@ -107,13 +115,13 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
     path: '/weather/'+cityCode+'.shtml',
     method: 'GET'
   };
-  console.log(options);
   var req = http.request(options, function (res) {
     var resdata = "";
     res.on('data', function (chunk) {
       resdata += chunk;
     });
     res.on('end', function () {
+      failed = 0;
       var t1 = resdata.indexOf('crumbs fl');
       var t2 = resdata.indexOf('clearfix cnav');
       if(t1<0||t2<0){
@@ -175,8 +183,13 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
     })
   });
   req.setTimeout(5000,function(){
-    ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇!';
-    callback(ret);
+    failed = failed + 1;
+    if(failed>2){
+      ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇!';
+      callback(ret);
+    }else{
+      getWeatherByCityCode(city,cityCode,userId,callback);
+    }
   });
   req.end();
 }
