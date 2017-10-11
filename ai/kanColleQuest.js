@@ -15,7 +15,10 @@ module.exports = function(userId, context, callback){
   if(!isInit){
     // DataPath = https://kcwikizh.github.io/kcdata/quest/poi.json
     fs.readJsonSync(path.join('assets', 'kanColleQuestData.json')).forEach(ele => {
-      dataForId[ele.game_id] = ele
+      dataForId[ele.game_id] = Object.assign({}, ele, {
+        "chinese_title": ele.name,
+        "chinese_detail": ele.detail
+      })
       wikiId2Id[ele.wiki_id] = ele.game_id
     })
     // DataPathSource = http://kcwikizh.github.io/kcdata/quest/all.json
@@ -140,7 +143,7 @@ const renderMsg = (userId, dataObj, type) => {
     case 'all':
       str += `${dataObj.wiki_id} - ${dataObj.chinese_title}\n${dataObj.chinese_detail}\n`
       str += rewardMsg(dataObj)
-      str += questInfo(dataObj.requirements)
+      str += `任务描述：${questInfo(dataObj.requirements)}\n`
       if(dataObj.prerequisite.length){
         str += `【前置任务】\n`
         dataObj.prerequisite.forEach(gameId => {
@@ -178,20 +181,137 @@ const rewardMsg = dataObj => {
       if(ele.amount)
         str += ` * ${ele.amount} \n`
     })
+  return str
 }
 
 const questInfo = dataObj => {
-  let str = '任务描述：'
+  let str = ''
   try {
     switch(dataObj.category){
       case 'fleet':
+        str += `编组${reqInfo(dataObj.groups, 'groups')}`
+        if(dataObj.fleetid)
+          str += `，限第${dataObj.fleetid}舰队`
+        if(dataObj.disallowed)
+          str += `，${dataObj.disallowed}不可`
+        break
       case 'sortie':
+        str += dataObj.map || ''
+        if(dataObj.boss){
+          str += `BOSS战${reqInfo(dataObj.result, 'result')}`
+        } else {
+          str += '出击'
+        }
+        if(dataObj.times)
+          str += `${dataObj.times}次`
+        str += `需要${reqInfo(dataObj.groups, 'groups')}`
+        if(dataObj.fleetid)
+          str += `，限第${dataObj.fleetid}舰队`
+        if(dataObj.disallowed)
+          str += `，${dataObj.disallowed}不可`
+        break
       case 'sink':
+        str += `击沉${reqInfo(dataObj.ship, 'shipType')}${dataObj.amount}只`
+        break
       case 'a-gou':
+        str += "S胜利6次, BOSS战胜利12次, 进行BOSS战24次, 出击36次(一次出击多次战斗算一次)"
+        break
       case 'expedition':
+        let expeditionArr = []
+        dataObj.objects.forEach(ele => {
+          let expId = ''
+          if(ele.id)
+            if(_.isArray(ele.id))
+              expId = ele.id.join('/')
+            else
+              expId = ele.id
+          expeditionArr.push(`远征${expId}成功${ele.times}次`)
+        })
+        str += expeditionArr.join('，')
+        if(dataObj.resources){
+          str += '，消耗'
+          str += dataObj.resources[0] ? (dataObj.resources[0] + '油') : ''
+          str += dataObj.resources[1] ? (dataObj.resources[1] + '弹') : ''
+          str += dataObj.resources[2] ? (dataObj.resources[2] + '钢') : ''
+          str += dataObj.resources[3] ? (dataObj.resources[3] + '铝') : ''
+        }
+        if(dataObj.groups)
+          str += `需要${reqInfo(dataObj.groups, 'groups')}`
+        if(dataObj.disallowed)
+          str += `，${dataObj.disallowed}不可`
+        break
       case 'simple':
+        switch(dataObj.subcategory){
+          case 'equipment':
+            str += `废弃装备${dataObj.times}次`
+            break
+          case 'ship':
+            str += `建造舰船${dataObj.times}次`
+            break
+          case 'scrapequipment':
+            str += `废弃装备${dataObj.times}次`
+            if(dataObj.batch)
+              str += '，可一次性废弃'
+            break
+          case 'scrapship':
+            str += `解体舰船${dataObj.times}次`
+            break
+          case 'modernization':
+            str += `近代化改造成功${dataObj.times}次`
+            break
+          case 'improvement':
+            str += `装备改修${dataObj.times}次(失败也可)`
+            break
+          case 'resupply':
+            str += `进行补给${dataObj.times}次`
+            break
+          case 'repair':
+            str += `入渠${dataObj.times}次`
+            break
+          case 'battle':
+            str += `进行${dataObj.times}次战斗`
+            break
+          default:
+            str += '任务未找到'
+        }
+        break
       case 'excercise':
+        str += '演习'
+        if(dataObj.victory)
+          str += '胜利'
+        str += `${dataObj.times}次`
+        if(dataObj.daily)
+          str += '，限一日内'
+        break
       case 'modelconversion':
+        str += `秘书舰${dataObj.secretary || '空母'}搭载未上锁的`
+        str += dataObj.fullyskilled ? '、满熟练度的' : ''
+        str += dataObj.maxmodified ? '、改修Max的' : ''
+        str += dataObj.equipment
+        str += '，然后'
+        let flag = 0
+        if(dataObj.scraps){
+          flag = 1
+          str += '废弃'
+          let scrapArr = []
+          dataObj.scraps.forEach(ele => {
+            scrapArr.push(`${ele.name}${ele.amount}只`)
+          })
+          str += scrapArr.join('、')
+        }
+        if(dataObj.consumptions){
+          if(flag)
+            str += '，同时'
+          str += '消耗'
+          let consumptionsArr = []
+          dataObj.consumptions.forEach(ele => {
+            consumptionsArr.push(`${ele.name}${ele.amount}个`)
+          })
+          str += consumptionsArr.join('、')
+        }
+        if(dataObj.use_skilled_crew)
+          str += '，同时消耗一个熟练搭乘员'
+        break
       case 'scrapequipment':
       case 'equipexchange':
       case 'modernization':
@@ -204,4 +324,52 @@ const questInfo = dataObj => {
     // console.log(err)
   }
   return str
+}
+
+const reqInfo = (data, type) => {
+  switch(type){
+    case 'result':
+      return {
+        "クリア": "完成全图",
+        "S": "获得S胜",
+        "A": "获得A胜或以上",
+        "B": "获得B胜或以上",
+        "C": "获得C败或以上"
+      }[data] || ''
+    case 'shipType':
+      return {
+        "艦": "任意舰船",
+        "他の艦": "其它舰船",
+        "駆逐": "驱逐",
+        "軽巡": "轻巡",
+        "重巡": "重巡",
+        "航巡": "航巡",
+        "水母": "水母",
+        "空母": "空母",
+        "装母": "装母",
+        "軽母": "轻母",
+        "戦艦": "战舰",
+        "低速戦艦": "低速战舰",
+        "航戦": "航战",
+        "高速艦": "高速舰船",
+        "潜水艦": "潜水艇",
+        "潜水空母": "潜水空母",
+        "潜水母艦": "潜水母舰(大鲸)",
+        "敵補給艦": "补给舰",
+        "敵潜水艦": "潜水舰",
+        "敵空母": "空母",
+        "敵軽母": "轻母",
+      }[data] || data
+    case 'groups':
+      let groupArr = []
+      data.groups.forEach(ele => {
+        let data = reqInfo(ele.ship, 'shipType')
+        if(ele.amount)
+          data += `${ele.amount}艘`
+        if(ele.flagship)
+          data += '旗舰'
+        groupArr.push(data)
+      })
+      return groupArr.join(' + ')
+  }
 }
