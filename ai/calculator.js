@@ -118,9 +118,7 @@ cal = function(str){
         var ret = eval(z);
         return ret;
       }catch(e){
-        ret = "⑨";
         console.log(e);
-        return ret;
       }
     }
   }

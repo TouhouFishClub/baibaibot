@@ -69,7 +69,9 @@ function handleBuddyMsg(msg,qq){
     },1000);
   }
   if(content.trim().length>0){
-    tulingMsg(name,content,callback);
+    if(name.indexOf('百百')==-1){
+      tulingMsg(name,content,callback);
+    }
   }
 }
 
@@ -100,7 +102,7 @@ function handleMsg_D(msg,qq,type){
         res = res.substring(0,250)+'.......';
       }
         if(res.indexOf('百百')>-1){
-            res = res.replace(/百百/g,'百·百');
+            res = res.replace(/百百/g,'百');
         }
       setTimeout(function(){
         if(type=='discu'){
@@ -169,8 +171,8 @@ function handleMsg_D(msg,qq,type){
     if(c1==""){
       var ret = "`1+名词：百科查询\n翻译成中文：`+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n";
       ret = ret + "`4+内容：百度查询\n`c汇率转换\n`0+数字：大写数字转换\n`8+地点A-地点B：公交查询\n";
-      ret = ret + '`r+数字：ROLL一个小于该数字的随机整数\n自杀:自己被禁言1-10分钟\n';
-      ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n虾扯蛋：``+对话";
+      ret = ret + '`r+数字：ROLL一个小于该数字的随机整数\n`g砍人\n`m迷宫\n';
+      ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n闲聊：``+对话";
       callback(ret);
     }else{
       reply(c1,name,callback,groupid,from);
