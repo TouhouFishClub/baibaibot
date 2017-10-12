@@ -78,10 +78,10 @@ app.get('/test',function(req,res){
   // res.send(kce('QQid', '飞机+7', callback))
   // res.send(kce('QQid', 'xa', callback))
   // res.send(kce('QQid', 'x0+6', callback))
-  res.send(kcq('QQid', '翔鹤|瑞鹤|南西|北方|第五', callback))
-  res.send(kcq('QQid', '以结|强力羁绊舰娘作为|旗舰|舰娘|消灭敌人中枢！|4-3|第1舰队|最初的|初めて|二人です', callback))
-  res.send(kcq('QQid', '', callback))
-  res.send(kcq('QQid', 'BAKABAKABAKA', callback))
+  res.send(kcq('QQid', 'B93', callback))
+  // res.send(kcq('QQid', '以结|强力羁绊舰娘作为|旗舰|舰娘|消灭敌人中枢！|4-3|第1舰队|最初的|初めて|二人です', callback))
+  // res.send(kcq('QQid', '', callback))
+  // res.send(kcq('QQid', 'BAKABAKABAKA', callback))
 });
 
 app.get('/test2',function(req,res){//这个函数时空专用！^-^

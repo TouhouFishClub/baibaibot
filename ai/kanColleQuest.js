@@ -143,7 +143,7 @@ const renderMsg = (userId, dataObj, type) => {
     case 'all':
       str += `${dataObj.wiki_id} - ${dataObj.chinese_title}\n${dataObj.chinese_detail}\n`
       str += rewardMsg(dataObj)
-      str += `任务描述：${questInfo(dataObj.requirements)}\n`
+      str += `【任务描述】\n${questInfo(dataObj.requirements)}\n`
       if(dataObj.prerequisite.length){
         str += `【前置任务】\n`
         dataObj.prerequisite.forEach(gameId => {
@@ -164,16 +164,18 @@ const renderMsg = (userId, dataObj, type) => {
 }
 
 const rewardMsg = dataObj => {
-  let str = ''
-  str += '获得资源：\n'
+  let str = '', rewards = ''
+  str += '【获得资源】\n'
   if(dataObj.reward_fuel)
-    str += `油：${dataObj.reward_fuel} `
+    rewards += `油：${dataObj.reward_fuel} `
   if(dataObj.reward_ammo)
-    str += `弹：${dataObj.reward_ammo} `
+    rewards += `弹：${dataObj.reward_ammo} `
   if(dataObj.reward_steel)
-    str += `钢：${dataObj.reward_steel} `
+    rewards += `钢：${dataObj.reward_steel} `
   if(dataObj.reward_bauxite)
-    str += `铝：${dataObj.reward_bauxite} `
+    rewards += `铝：${dataObj.reward_bauxite} `
+  if(rewards !== '')
+    str += rewards
   str += '\n'
   if(dataObj.reward_other)
     dataObj.reward_other.forEach(ele => {
@@ -230,10 +232,10 @@ const questInfo = dataObj => {
         str += expeditionArr.join('，')
         if(dataObj.resources){
           str += '，消耗'
-          str += dataObj.resources[0] ? (dataObj.resources[0] + '油') : ''
-          str += dataObj.resources[1] ? (dataObj.resources[1] + '弹') : ''
-          str += dataObj.resources[2] ? (dataObj.resources[2] + '钢') : ''
-          str += dataObj.resources[3] ? (dataObj.resources[3] + '铝') : ''
+          str += dataObj.resources[0] ? (dataObj.resources[0] + '油 ') : ''
+          str += dataObj.resources[1] ? (dataObj.resources[1] + '弹 ') : ''
+          str += dataObj.resources[2] ? (dataObj.resources[2] + '钢 ') : ''
+          str += dataObj.resources[3] ? (dataObj.resources[3] + '铝 ') : ''
         }
         if(dataObj.groups)
           str += `需要${reqInfo(dataObj.groups, 'groups')}`
@@ -288,40 +290,109 @@ const questInfo = dataObj => {
         str += dataObj.fullyskilled ? '、满熟练度的' : ''
         str += dataObj.maxmodified ? '、改修Max的' : ''
         str += dataObj.equipment
-        str += '，然后'
-        let flag = 0
+        let flag = 0, exInfo = ''
         if(dataObj.scraps){
           flag = 1
-          str += '废弃'
+          exInfo += '废弃'
           let scrapArr = []
           dataObj.scraps.forEach(ele => {
             scrapArr.push(`${ele.name}${ele.amount}只`)
           })
-          str += scrapArr.join('、')
+          exInfo += scrapArr.join('、')
         }
         if(dataObj.consumptions){
           if(flag)
-            str += '，同时'
-          str += '消耗'
+            exInfo += '，同时'
+          exInfo += '消耗'
           let consumptionsArr = []
           dataObj.consumptions.forEach(ele => {
             consumptionsArr.push(`${ele.name}${ele.amount}个`)
           })
-          str += consumptionsArr.join('、')
+          exInfo += consumptionsArr.join('、')
         }
         if(dataObj.use_skilled_crew)
-          str += '，同时消耗一个熟练搭乘员'
+          exInfo += '，同时消耗一个熟练搭乘员'
+        if(exInfo)
+          str += `，然后${exInfo}`
         break
       case 'scrapequipment':
+        str += '废弃'
+        let itemArr = []
+        dataObj.list.forEach(ele => {
+          itemArr.push(`${ele.name}${ele.amount}只`)
+        })
+        str += itemArr.join('、')
+        break
       case 'equipexchange':
+        if(dataObj.scraps){
+          str += '废弃'
+          let itemArr = []
+          dataObj.scraps.forEach(ele => {
+            itemArr.push(`${ele.name}${ele.amount}只`)
+          })
+          str += itemArr.join('、')
+        }
+        if(dataObj.equipments){
+          if(str)
+            str += '，'
+          str += '准备'
+          let itemArr = []
+          dataObj.equipments.forEach(ele => {
+            itemArr.push(`${ele.name}${ele.amount}只`)
+          })
+          str += itemArr.join('、')
+        }
+        if(dataObj.resources){
+          if(str)
+            str += '，'
+          str += '消耗'
+          str += dataObj.resources[0] ? (dataObj.resources[0] + '油 ') : ''
+          str += dataObj.resources[1] ? (dataObj.resources[1] + '弹 ') : ''
+          str += dataObj.resources[2] ? (dataObj.resources[2] + '钢 ') : ''
+          str += dataObj.resources[3] ? (dataObj.resources[3] + '铝 ') : ''
+        }
+        if(dataObj.consumptions){
+          if(str)
+            str += '，'
+          str += '消耗'
+          let itemArr = []
+          dataObj.consumptions.forEach(ele => {
+            itemArr.push(`${ele.name}${ele.amount}个`)
+          })
+          str += itemArr.join('、')
+        }
+        break
       case 'modernization':
+        if(dataObj.resources){
+          str += '准备'
+          str += dataObj.resources[0] ? (dataObj.resources[0] + '油 ') : ''
+          str += dataObj.resources[1] ? (dataObj.resources[1] + '弹 ') : ''
+          str += dataObj.resources[2] ? (dataObj.resources[2] + '钢 ') : ''
+          str += dataObj.resources[3] ? (dataObj.resources[3] + '铝 ') : ''
+        }
+        str += `对${dataObj.ship}近代化改造成功${dataObj.times}次`
+        if(dataObj.consumptions){
+          str += '，每次消耗'
+          let shipArr = []
+          dataObj.consumptions.forEach(ele => {
+            shipArr.push(`${ele.shipshipArr}${ele.amount}个`)
+          })
+          str += shipArr.join('、')
+        }
+        break
       case 'and':
+        let questArr = []
+        dataObj.list.forEach(ele => {
+          questArr.push(questInfo(ele))
+        })
+        str += questArr.join(' 以及 ')
+        break
       default:
         str += '不支持的任务类型'
     }
   } catch(err){
     console.log('=== 任务详情生成失败 ===')
-    // console.log(err)
+    console.log(err)
   }
   return str
 }
