@@ -174,7 +174,7 @@ const rewardMsg = dataObj => {
     rewards += `钢：${dataObj.reward_steel} `
   if(dataObj.reward_bauxite)
     rewards += `铝：${dataObj.reward_bauxite} `
-  if(rewards !== '')
+  if(rewards)
     str += rewards
   str += '\n'
   if(dataObj.reward_other)
@@ -182,6 +182,8 @@ const rewardMsg = dataObj => {
       str += ele.name
       if(ele.amount)
         str += ` * ${ele.amount} \n`
+      else
+        str += '\n'
     })
   return str
 }
