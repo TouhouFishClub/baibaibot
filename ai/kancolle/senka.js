@@ -398,7 +398,7 @@ function generateTable(sorttype,server){
       h = h + '排名：'+(i + 1) + '位(' + senka.lno + '位)\n';
       h = h + senka.name+'\n';
       h = h + '当前战果：'+senka.senka + '\n';
-      h = h + '战果(ex)：'+min + '-'+max+'\n';
+      h = h + '战果(ex)：'+(min==max?max:(min+'-'+max))+'\n';
       h = h + '经验：'+subsenkastr + '\n';
       h = h + 'ex:'+exstr+'\n';
       c[server].u[senka.name]=h;
