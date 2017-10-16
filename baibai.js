@@ -28,6 +28,8 @@ const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
 const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
 
 
+const {getKancollStaffTweet} = require('./ai/twitter');
+
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -237,6 +239,8 @@ function reply(content,userName,callback,groupid,from){
     callback(money(content.substring(1)));
   }else if(first=='c'||first=='C'){
     xchange(userName,content.substring(1),callback);
+  }else if(first=='t'||first=='T'){
+    getKancollStaffTweet(content.substring(1),userName,callback);
   }else if(first=="e"||first=='E'){
     kce(userName,content.substring(1),callback);
   }else if(first=="q"||first=='Q'){

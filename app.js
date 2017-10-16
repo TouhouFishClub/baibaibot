@@ -50,6 +50,8 @@ app.get('/log',function(req,res){
 // const {searchsenka} = require('./ai/kancolle/senka');
 // const {fixUser,regen} = require('./ai/favour/battle');
 // const {regenm} = require('./ai/chess/road');
+const {init} = require('./ai/twitter');
+
 const kcq = require('./ai/kanColleQuest');
 
 
@@ -83,12 +85,9 @@ app.get('/test',function(req,res){
   // res.send(kcq('QQid', '', callback))
   // res.send(kcq('QQid', 'BAKABAKABAKA', callback))
 });
-
+init();
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  searchsenka('aaa','8',function(r){
-    console.log(r);
-    res.send(r);
-  })
+
 
 })
 
