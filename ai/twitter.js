@@ -1,16 +1,10 @@
 var Twitter = require('twitter');
 
-var client = new Twitter({
-  consumer_key: 'AjXqw0Z427tM5KQWX1Us4yV3t',
-  consumer_secret: 'FAxsWzw70i94HpfWqYndlzhHHMQDSPWznq6k2GPv39TLs9IPMr',
-  access_token_key: '439162276-pFl421iVDgC5z9PauUi4dOMcTnpJ7koQb6RpXvIM',
-  access_token_secret: 'aLlLLKRxBaJg9JrkG3ZHq5ns30mANKxYx7cCFZwASkfpC',
-  request_options: {
-    proxy: 'http://192.168.17.62:3128'
-  }
-});
+var client;
 
 
+
+init();
 
 function getKancollStaffTweet(content,UserName,callback){
   var skip=0;
@@ -27,6 +21,7 @@ function getKancollStaffTweet(content,UserName,callback){
       callback(ret);
     }else{
       console.log(error);
+      init();
     }
   });
 }
@@ -72,7 +67,15 @@ function stream(groups,callback){
 
 
 function init(){
-  console.log(111);
+  client= new Twitter({
+    consumer_key: 'AjXqw0Z427tM5KQWX1Us4yV3t',
+    consumer_secret: 'FAxsWzw70i94HpfWqYndlzhHHMQDSPWznq6k2GPv39TLs9IPMr',
+    access_token_key: '439162276-pFl421iVDgC5z9PauUi4dOMcTnpJ7koQb6RpXvIM',
+    access_token_secret: 'aLlLLKRxBaJg9JrkG3ZHq5ns30mANKxYx7cCFZwASkfpC',
+    request_options: {
+      proxy: 'http://192.168.17.62:3128'
+    }
+  });
 }
 
 
