@@ -24,25 +24,30 @@ function getKancollStaffTweet(content,UserName,callback){
   });
 }
 
-function stream(groups,callback){
+function stream(groups,callback) {
   zgroups = groups;
   zcallback = callback;
+}
+startstream();
+function startstream(){
   client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
     console.log('will start stream');
-    console.log("groups：");
-    var pushlist = [];
-    var keys = Object.keys(groups);
-    if(keys.length>0){
-      for (let g of groups) {
-        if(g.name.indexOf('咸鱼')>0||g.name.indexOf('吱')>0){
-          pushlist.push(g.gid);
-        }
-      }
-    }
-    console.log(pushlist);
     stream.on('data', function(event) {
-      console.log('got event:'+new Date(event.created_at).toLocaleString());
       if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status){
+
+        var pushlist = [];
+        var keys = Object.keys(groups);
+        if(keys.length>0){
+          for (let g of groups) {
+            if(g.name.indexOf('咸鱼')>0||g.name.indexOf('吱')>0){
+              pushlist.push(g.gid);
+            }
+          }
+        }
+        console.log(pushlist);
+        console.log('got event:'+new Date(event.created_at).toLocaleString());
+
+
         var text = event.text;
         var ts = new Date(event.created_at);
         var tsstr = ts.toLocaleString();
@@ -59,7 +64,7 @@ function stream(groups,callback){
     stream.on('error', function(error) {
       console.log(error);
       init();
-      stream(zgroups,zcallback);
+      startstream();
     });
   });
 
