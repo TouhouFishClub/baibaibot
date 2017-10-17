@@ -31,7 +31,6 @@ function getKancollStaffTweet(content,UserName,callback){
   });
 }
 
-
 function stream(groups,callback){
 
   client.stream('statuses/filter', {follow: '294025417'}, function(stream) {
