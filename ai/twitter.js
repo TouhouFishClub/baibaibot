@@ -2,9 +2,8 @@ var Twitter = require('twitter');
 
 var client;
 
-
-
-init();
+var zgroups;
+var zcallback;
 
 function getKancollStaffTweet(content,UserName,callback){
   var skip=0;
@@ -21,17 +20,16 @@ function getKancollStaffTweet(content,UserName,callback){
       callback(ret);
     }else{
       console.log(error);
-      init();
     }
   });
 }
 
 function stream(groups,callback){
-
+  zgroups = groups;
+  zcallback = callback;
   client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
     console.log('will start stream');
     console.log("groups：");
-
     var pushlist = [];
     var keys = Object.keys(groups);
     if(keys.length>0){
@@ -59,6 +57,8 @@ function stream(groups,callback){
     });
     stream.on('error', function(error) {
       console.log(error);
+      init();
+      stream(zgroups,zcallback);
     });
   });
 
