@@ -41,6 +41,7 @@ function stream(groups,callback){
     }
     console.log(pushlist);
     stream.on('data', function(event) {
+      console.log('got event:'+new Date(event.created_at).toLocaleString());
       if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status){
         var text = event.text;
         var ts = new Date(event.created_at);
