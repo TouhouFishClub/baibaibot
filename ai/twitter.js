@@ -41,7 +41,7 @@ function stream(groups,callback){
     var keys = Object.keys(groups);
     if(keys.length>0){
       for (let g of groups) {
-        if(g.name.indexOf('咸鱼')>0){
+        if(g.name.indexOf('咸鱼')>0||g.name.indexOf('吱')>0){
           pushlist.push(g.gid);
         }
       }
