@@ -63,15 +63,15 @@ setTimeout(function(){
         res = res.replace(/百百/g,'百');
       }
       setTimeout(function(){
-        if(type=='discu'){
-          qq.sendDiscuMsg(groupid," "+res);
-        }else{
-          qq.sendGroupMsg(groupid," "+res);
-        }
+          qqq.sendGroupMsg(groupid," "+res);
       },1000);
     }
   }
-  stream(qqq.group,callback);
+  console.log(111);
+  console.log(qqq.group);
+  if(qqq.group){
+    stream(qqq.group,callback);
+  }
 },5000);
 
 

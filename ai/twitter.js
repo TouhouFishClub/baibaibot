@@ -33,25 +33,35 @@ function getKancollStaffTweet(content,UserName,callback){
 
 function stream(groups,callback){
 
-  client.stream('statuses/filter', {follow: '294025417'}, function(stream) {
+  client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
     console.log('will start stream');
     console.log("groups：");
 
     var pushlist = [];
-    for (let g of groups) {
-      if(g.name.indexOf('咸鱼')>0){
-        pushlist.push(g.gid);
+    var keys = Object.keys(groups);
+    if(keys.length>0){
+      for (let g of groups) {
+        if(g.name.indexOf('咸鱼')>0){
+          pushlist.push(g.gid);
+        }
       }
     }
     console.log(pushlist);
     stream.on('data', function(event) {
-      var text = event.text;
-      var tsstr = new Date(event.created_at).toLocaleString();
-      var ret = text+"\n"+tsstr;
-      for(var i=0;i<pushlist.length;i++){
-        callback(pushlist[i],ret);
+      console.log(event);
+      if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status){
+        var text = event.text;
+        var ts = new Date(event.created_at);
+        var tsstr = ts.toLocaleString();
+        var ret = text+"\n"+tsstr;
+        var now = new Date();
+        if(now.getTime()-ts.getTime()<60000){
+          for(var i=0;i<pushlist.length;i++){
+            callback(pushlist[i],ret);
+          }
+          console.log(ret);
+        }
       }
-      console.log(ret);
     });
     stream.on('error', function(error) {
       console.log(error);
