@@ -59,6 +59,8 @@ class QQ {
         this.msgHandlers = msgHandlers;
     }
 
+
+
     getOnline(){
         return this.online;
     }
@@ -591,6 +593,10 @@ class QQ {
           }
         }
     }
+
+      getGroups(){
+        return this.group;
+      }
 
     async getGroupList(){
         try{

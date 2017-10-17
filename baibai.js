@@ -28,7 +28,7 @@ const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
 const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
 
 
-const {getKancollStaffTweet} = require('./ai/twitter');
+const {getKancollStaffTweet,stream} = require('./ai/twitter');
 
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
@@ -53,6 +53,27 @@ var qqq = new QQ(buddyHandler, groupHandler,discuHandler);
 qqq.run();
 regenTimer();
 mazeRegenTimer();
+setTimeout(function(){
+  var callback = function(groupid,res){
+    if(res.trim().length>0){
+      if(res.length>250){
+        res = res.substring(0,250)+'.......';
+      }
+      if(res.indexOf('百百')>-1){
+        res = res.replace(/百百/g,'百');
+      }
+      setTimeout(function(){
+        if(type=='discu'){
+          qq.sendDiscuMsg(groupid," "+res);
+        }else{
+          qq.sendGroupMsg(groupid," "+res);
+        }
+      },1000);
+    }
+  }
+  stream(qqq.group,callback);
+},5000);
+
 
 function handleBuddyMsg(msg,qq){
   var name = msg.name;

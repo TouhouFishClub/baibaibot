@@ -99,6 +99,7 @@ function forecast(server){
   var bsenka20 = u.tail[20];
   var bsenka100 = u.tail[100];
   var bsenka500 = u.tail[500];
+  generateTable(3,server);
   sortby(0,server);
   var qsenka5 = u.d[4].senka;
   var qsenka20 = u.d[19].senka;
@@ -167,6 +168,9 @@ function generateTable(sorttype,server){
       var senka = data.d[i];
       var z = data.d[i].z;
       var zcleared=0;
+      var expfrom = senka.expfrom;
+      var expto = senka.expto;
+      var exlist = senka.exlist;
       if(Math.floor(((month+1)/3)%4)==Math.floor(((z+1)/3))%4){
         if(z>=0){
           zcleared=350;
@@ -175,16 +179,43 @@ function generateTable(sorttype,server){
       if(now.getDate()==monthOfDay[now.getMonth()]&&now.getHours()>=14){
         if(senka.ex>1025&&senka.ex<1035){
           zcleared=350;
+          z=-1;
         }
-        if(senka.ex<960){
+        if(senka.ex<960&&senka.ex>950){
           zcleared=350;
+          z=-1;
+        }
+        if (Math.abs(expfrom - zexfrom) < 1200000 && Math.abs(expto - zexto) < 1200000 &&senka.ex<950) {
+          zcleared=350;
+          z=-1;
+        }
+        if(senka.ex<950){
+          if(senka.max){
+            if(exlist){
+              var zc = 0;
+              for(var w=0;w<exlist.length;w++){
+                var xex = parseInt(exlist[w]);
+                if(xex>420){
+                  zc=1;
+                }
+              }
+              var ruex = senka.max-senka.senka;
+              var hiddenex = 1380-senka.ex-ruex;
+              if(hiddenex>420){
+                zc=1;
+              }
+              if(zc==0){
+                zcleared=350;
+                z=-1;
+              }
+            }
+          }
         }
       }
 
 
       var subsenkastr = senka.subsenka;
-      var expfrom = senka.expfrom;
-      var expto = senka.expto;
+
       var basets = senka.basets;
 
       if (Math.abs(expfrom - zexpfrom) > 1200000 || Math.abs(expto - zexpto) > 1200000) {

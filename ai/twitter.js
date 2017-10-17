@@ -23,7 +23,7 @@ function getKancollStaffTweet(content,UserName,callback){
     console.log('get tweets')
     if (!error) {
       var tw = tweets[skip];
-      var ret = tw.text+"\n"+tw.created_at
+      var ret = tw.text+"\n"+new Date(tw.created_at).toLocaleString();
       callback(ret);
     }else{
       console.log(error);
@@ -31,24 +31,31 @@ function getKancollStaffTweet(content,UserName,callback){
   });
 }
 
-function stream(){
-  var stream = client.stream('statuses/filter', {track: 'javascript'});
-  stream.on('data', function(event) {
-    console.log(event && event.text);
-  });
 
-  stream.on('error', function(error) {
-    throw error;
-  });
+function stream(groups,callback){
 
-// You can also get the stream in a callback if you prefer.
-  client.stream('statuses/filter', {track: 'javascript'}, function(stream) {
+  client.stream('statuses/filter', {follow: '294025417'}, function(stream) {
+    console.log('will start stream');
+    console.log("groups：");
+
+    var pushlist = [];
+    for (let g of groups) {
+      if(g.name.indexOf('咸鱼')>0){
+        pushlist.push(g.gid);
+      }
+    }
+    console.log(pushlist);
     stream.on('data', function(event) {
-      console.log(event && event.text);
+      var text = event.text;
+      var tsstr = new Date(event.created_at).toLocaleString();
+      var ret = text+"\n"+tsstr;
+      for(var i=0;i<pushlist.length;i++){
+        callback(pushlist[i],ret);
+      }
+      console.log(ret);
     });
-
     stream.on('error', function(error) {
-      throw error;
+      console.log(error);
     });
   });
 
@@ -63,5 +70,6 @@ function init(){
 
 module.exports={
   init,
-  getKancollStaffTweet
+  getKancollStaffTweet,
+  stream
 }
