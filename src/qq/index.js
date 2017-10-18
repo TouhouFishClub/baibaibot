@@ -160,7 +160,12 @@ class QQ {
             this.tokens.vfwebqq = vfwebqqResp.result.vfwebqq;
             log.info('(4/5) 获取 vfwebqq 成功');
         } catch (err) {
-            childProcess.execSync(`rm ${cookiePath}`);
+            try{
+              childProcess.execSync(`rm ${cookiePath}`);
+            }catch(e3){
+
+            }
+
             log.info('(-/5) Cookie 已失效，切换到扫码登录');
             return this.login();
         }
