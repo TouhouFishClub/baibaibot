@@ -259,15 +259,14 @@ class QQ {
         let manyInfo = await Promise.all([
             this.getSelfInfo(),
             this.getBuddy(),
-            this.getOnlineBuddies(),
             this.getDiscu(),
             this.getGroup()
         ]);
         log.debug(JSON.stringify(manyInfo, null, 4));
         this.selfInfo = manyInfo[0].result;
         this.buddy = manyInfo[1].result;
-        this.discu = manyInfo[3].result.dnamelist;
-        this.group = manyInfo[4].result.gnamelist;
+        this.discu = manyInfo[2].result.dnamelist;
+        this.group = manyInfo[3].result.gnamelist;
         let promises = this.group.map(async e => {
             const rawInfo = await this.getGroupInfo(e.code);
             return e.info = rawInfo.result;
