@@ -28,6 +28,7 @@ function stream(groups,callback) {
   zgroups = groups;
   zcallback = callback;
 }
+init();
 startstream();
 function startstream(){
   client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
