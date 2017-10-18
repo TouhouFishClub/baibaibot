@@ -13,7 +13,7 @@ module.exports = {
     },
     ptqrloginReferer: 'https://ui.ptlogin2.qq.com/cgi-bin/login?daid=164&target=self&style=16&mibao_css=m_webqq&appid=501004106&enable_qlogin=0&no_verifyimg=1&s_url=http%3A%2F%2Fw.qq.com%2Fproxy.html&f_url=loginerroralert&strong_login=1&login_state=10&t=20131024001',
     ptlogin4Referer: 'http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1',
-    getVfwebqqURL: ptwebqq => `http://s.web2.qq.com/api/getvfwebqq?ptwebqq=${ptwebqq}&clientid=53999199&psessionid=&t=${Math.random()}`,
+    getVfwebqqURL: ptwebqq => `https://s.web2.qq.com/api/getvfwebqq?ptwebqq=${ptwebqq}&clientid=53999199&psessionid=&t=${Math.random()}`,
     vfwebqqReferer: 'http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1',
     login2: 'http://d1.web2.qq.com/channel/login2',
     login2Origin: 'http://d1.web2.qq.com',
