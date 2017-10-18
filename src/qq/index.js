@@ -90,7 +90,12 @@ class QQ {
                     break beforeGotVfwebqq;
                 } catch (err) {
                     this.tokens.ptwebqq = '';
-                    childProcess.exec(`rm ${cookiePath}`);
+                    try{
+                      childProcess.exec(`rm ${cookiePath}`);
+                    }catch(e2){
+
+                    }
+
                     log.info('(-/5) Cookie 文件非法，自动登录失败');
                 }
             }
