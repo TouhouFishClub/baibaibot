@@ -35,7 +35,7 @@ function startstream(){
     stream.on('data', function(event) {
       console.log('got event:');
       errcount=0;
-      if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status){
+      if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status&&!event.in_reply_to_user_id){
         var pushlist = [];
         var keys = Object.keys(zgroups);
         if(keys.length>0){
