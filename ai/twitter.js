@@ -1,7 +1,7 @@
 var Twitter = require('twitter');
 
 var client;
-
+var errcount = 0;
 var zgroups;
 var zcallback;
 
@@ -33,8 +33,8 @@ function startstream(){
   client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
     console.log('will start stream');
     stream.on('data', function(event) {
+      errcount=0;
       if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status){
-
         var pushlist = [];
         var keys = Object.keys(zgroups);
         if(keys.length>0){
@@ -63,8 +63,12 @@ function startstream(){
     });
     stream.on('error', function(error) {
       console.log(error);
-      init();
-      startstream();
+      errcount++;
+      if(errcount<5){
+        setTimeout(function(){
+          streaminit();
+        },errcount*60000);
+      }
     });
   });
 
@@ -72,7 +76,7 @@ function startstream(){
 
 
 
-function init(){
+function streaminit(){
   client= new Twitter({
     consumer_key: 'AjXqw0Z427tM5KQWX1Us4yV3t',
     consumer_secret: 'FAxsWzw70i94HpfWqYndlzhHHMQDSPWznq6k2GPv39TLs9IPMr',
@@ -82,11 +86,12 @@ function init(){
       proxy: 'http://192.168.17.62:3128'
     }
   });
+  startstream();
 }
 
 
 module.exports={
-  init,
+  streaminit,
   getKancollStaffTweet,
   stream
 }

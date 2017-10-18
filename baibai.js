@@ -28,7 +28,7 @@ const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
 const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
 
 
-const {getKancollStaffTweet,stream} = require('./ai/twitter');
+const {getKancollStaffTweet,stream,streaminit} = require('./ai/twitter');
 
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
