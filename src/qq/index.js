@@ -160,6 +160,7 @@ class QQ {
             this.tokens.vfwebqq = vfwebqqResp.result.vfwebqq;
             log.info('(4/5) 获取 vfwebqq 成功');
         } catch (err) {
+            console.log(err);
             try{
               childProcess.execSync(`rm ${cookiePath}`);
             }catch(e3){
