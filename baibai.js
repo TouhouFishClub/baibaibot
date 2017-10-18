@@ -53,26 +53,31 @@ var qqq = new QQ(buddyHandler, groupHandler,discuHandler);
 qqq.run();
 regenTimer();
 mazeRegenTimer();
-setTimeout(function(){
-  var callback = function(groupid,res){
-    if(res.trim().length>0){
-      if(res.length>250){
-        res = res.substring(0,250)+'.......';
-      }
-      if(res.indexOf('百百')>-1){
-        res = res.replace(/百百/g,'百');
-      }
-      setTimeout(function(){
+streaminit();
+streamgroup();
+function streamgroup(){
+  setTimeout(function(){
+    var callback = function(groupid,res){
+      if(res.trim().length>0){
+        if(res.length>250){
+          res = res.substring(0,250)+'.......';
+        }
+        if(res.indexOf('百百')>-1){
+          res = res.replace(/百百/g,'百');
+        }
+        setTimeout(function(){
           qqq.sendGroupMsg(groupid," "+res);
-      },1000);
+        },1000);
+      }
     }
-  }
-  console.log(111);
-  console.log(qqq.group);
-  if(qqq.group){
-    stream(qqq.group,callback);
-  }
-},5000);
+    console.log(111);
+    console.log(qqq.group);
+    if(qqq.group){
+      stream(qqq.group,callback);
+    }
+  },5000);
+}
+
 
 
 function handleBuddyMsg(msg,qq){
@@ -340,6 +345,9 @@ var relogin = function(){
   }
   qqq=new QQ(buddyHandler, groupHandler,discuHandler);
   qqq.run();
+  setTimeout(function(){
+    streamgroup();
+  },30000);
 }
 
 module.exports={
