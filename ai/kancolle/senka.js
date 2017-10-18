@@ -239,10 +239,23 @@ function generateTable(sorttype,server){
           exstr = exstr + '('+(z+1)+'月已完成Z作战)';
         }
 
-        if (senka.fsenkats == 0 && getDateNo(senka.expfrom) == 0) {
+        if (senka.fsenkats == 0 && Math.abs(expfrom - zexpfrom) < 1200000) {
           data.d[i].except=senka.subsenka + senka.fsenka + 1380 - zcleared;
           data.d[i].max=data.d[i].except;
           data.d[i].min=data.d[i].except;
+        }else if(senka.fsenkats == 0 && getDateNo(expfrom)==0 && new Date(basets).getMonth()<month){
+          var minsenka = senka.fsenka+senka.subsenka+1380-zcleared;
+          var maxsenka = senka.fsenka+senka.subsenka+senka.subbase+1380-zcleared;
+          var max2 = Math.floor(minsenka + (expfrom-zexfrom)*0.00001);
+          if(max2<maxsenka){
+            maxsenka=max2;
+          }
+          var max3 = senka.senka + 1380 - senka.ex-zcleared;
+          if(max3<maxsenka){
+            maxsenka=max3;
+          }
+          data.d[i].max=maxsenka;
+          data.d[i].min=minsenka;
         }  else if (ensure) {
           data.d[i].except=senka.senka + 1380 - zcleared - senka.ex;
           data.d[i].max=data.d[i].except;

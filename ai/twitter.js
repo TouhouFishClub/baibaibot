@@ -33,6 +33,7 @@ function startstream(){
   client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
     console.log('will start stream');
     stream.on('data', function(event) {
+      console.log('got event:');
       errcount=0;
       if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status){
         var pushlist = [];
@@ -57,7 +58,7 @@ function startstream(){
           for(var i=0;i<pushlist.length;i++){
             zcallback(pushlist[i],ret);
           }
-          console.log(ret);
+          console.log(event);
         }
       }
     });
