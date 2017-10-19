@@ -41,7 +41,7 @@ app.get('/log',function(req,res){
 // const {getloc,route} = require('./ai/map');
 // const {urlget} = require('./src/utils/httpreq');
 // const {cal} = require('./ai/calculator')
-// const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weather');
+ const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weather');
 // const xchange = require('./ai/xchange')
 // const kce = require('./ai/kanColleEquip')
 // const updateAll = require('./mongo/db_kcUpdateAll')
@@ -85,8 +85,10 @@ app.get('/test',function(req,res){
   // res.send(kcq('QQid', 'BAKABAKABAKA', callback))
 });
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-
-
+  getWeatherByCity('香港','id',function(ret){
+    console.log(ret);
+    res.send(ret);
+  })
 })
 
 var callback = function(res){

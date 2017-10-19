@@ -96,11 +96,11 @@ function getWeatherByCity(city,userId,callback){
       console.log(error);
     })
   });
-  req.setTimeout(10000,function(){
+  req.setTimeout(8000,function(){
     req.end();
     failed = failed+1;
     ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇!';
-    if(failed>1){
+    if(failed>2){
       callback(ret);
     }else{
       getWeatherByCity(city,userId,callback)
@@ -150,7 +150,7 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
         var n1 = resdata.indexOf('t clearfix');
         var s = resdata.substring(n1-20);
         var n = 1;
-        var all=title.trim();
+        var all='';
         var c = 0;
         while (n > 0&&c<7) {
           var dh = s.substring(0, n);
@@ -175,8 +175,8 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
           n = s.indexOf(startstr);
           c++;
         }
-        console.log(all);
-        callback(all.trim());
+
+        getAqiByCitycode(title,all.trim(),cityCode,userId,callback);
       }
     });
     res.on('error',function(error){
@@ -197,8 +197,77 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
 }
 
 
+function getAqiByCitycode(title,str,cityCode,userId,callback){
+  var options = {
+    hostname: 'd1.weather.com.cn',
+    port: 80,
+    path: '/aqi_all/'+cityCode+'.html',
+    headers:{
+      Referer:'http://www.weather.com.cn/air/'
+    },
+    method: 'GET'
+  };
+  var req = http.request(options, function (res) {
+    var resdata = "";
+    res.on('data', function (chunk) {
+      resdata += chunk;
+    });
+    res.on('end', function () {
+      var code = res.statusCode;
+      if(code != 200){
+        var ret = title + "\n\n"+str;
+        callback(ret);
+      }else{
+        aqidata = eval(resdata.substring(10));
+        var list = aqidata.data;
+        var aqi;
+        for(var i=0;i<list.length;i++){
+          if(list[list.length-i-1].t1!=''){
+            aqi = list[list.length-i-1].t1;
+            break;
+          }
+        }
+        var ret = title + "\n空气质量指数："+aqi+"\n\n"+str;
+        callback(ret);
+      }
+    });
+    res.on('error',function(error){
+      console.log(error);
+    });
+  });
+  req.setTimeout(10000,function(){
+    req.end();
+    var ret = title + "\n\n"+str;
+    callback(ret);
+  });
+  req.end();
+}
 
 
+
+function getinner(s){
+  var isinner=0;
+  var rn = 0;
+  var ret = "";
+  for(var i=0;i<s.length;i++){
+    if(isinner==0&&s[i]==">"){
+      isinner=1;
+    }else if(isinner==1&&s[i]=="<"){
+      isinner=0;
+    }else if(isinner){
+      if(s[i]==" "||s[i]=="\n"){
+        if(rn==0){
+          ret=ret+s[i];
+        }
+        rn=1;
+      }else{
+        ret=ret+s[i];
+        rn=0;
+      }
+    }
+  }
+  return ret;
+}
 
 
 
