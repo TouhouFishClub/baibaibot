@@ -218,7 +218,7 @@ function handleMsg_D(msg,qq,type){
   }
 
   var n = content.indexOf('天气');
-  if(n>1&&n<10){
+  if(n>1&&n<10&&content.length==n+2){
     var city = content.substring(0,n).trim();
     try{
       getWeatherByCity(city,name,callback);
