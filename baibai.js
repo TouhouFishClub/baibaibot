@@ -286,7 +286,7 @@ function reply(content,userName,callback,groupid,from,groupName){
         callback('为防止刷屏，当前关闭游戏功能');
       }
   }else if(first=='g'||first=='G'){
-      if(groupName.indexOf('咸鱼')>0||groupName.indexOf('百游戏')>0||(new Date().getHours()<=7&&new Date().getHours()>=1)){
+      if(groupName.indexOf('咸鱼')>0||groupName.indexOf('百游戏')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
         useMagicOrItem(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
       }else{
         callback('为防止刷屏，当前关闭游戏功能');
