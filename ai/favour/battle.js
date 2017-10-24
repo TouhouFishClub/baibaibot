@@ -595,14 +595,19 @@ function regen(){
           update = true;
           u.status=0;
 		      if(u._id=="B1"){
-
             u.hp=999+u.lv*50;
             u.atk=u.lv*4+30;
             u.lv=u.lv+1;
-
-		        u.gold=u.exp*1.5+99;
+		        u.gold=u.gold+u.exp*1.5+99;
 			      u.exp=0
     			}
+          if(u._id=="B2"){
+            u.hp=u.lv*100+u.exp;
+            u.atk=Math.floor(9+u.lv*5+u.exp/20);
+            u.agi=Math.floor(u.lv+u.exp/100);
+            u.lv=u.lv+1;
+            u.gold=u.gold+u.exp;
+          }
         }
         if(u.hp<100){
           u.hp=u.hp+5*addrate;
