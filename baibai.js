@@ -203,7 +203,7 @@ function handleMsg_D(msg,qq,type){
       ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n闲聊：``+对话";
       callback(ret);
     }else{
-      reply(c1,name,callback,groupid,from);
+      reply(c1,name,callback,groupid,from,groupName);
     }
     return;
   }
@@ -249,7 +249,7 @@ function handleMsg_D(msg,qq,type){
 
 }
 
-function reply(content,userName,callback,groupid,from){
+function reply(content,userName,callback,groupid,from,groupName){
   var first = content.substring(0,1);
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
     tulingMsg(userName,content.substring(1),callback);
@@ -280,9 +280,17 @@ function reply(content,userName,callback,groupid,from){
   }else if(first=='r'||first=='R'){
     callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='f'||first=='F'){
-    fight(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+      if(groupName.indexOf('咸鱼')>0||groupName.indexOf('百游戏')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
+        fight(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+      }else{
+        callback('为防止刷屏，当前关闭游戏功能');
+      }
   }else if(first=='g'||first=='G'){
-    useMagicOrItem(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+      if(groupName.indexOf('咸鱼')>0||groupName.indexOf('百游戏')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
+        useMagicOrItem(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+      }else{
+        callback('为防止刷屏，当前关闭游戏功能');
+      }
   }else if(first=='m'||first=='M'){
     handleUserOperation(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first==8){

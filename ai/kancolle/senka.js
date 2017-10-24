@@ -126,8 +126,8 @@ function forecast(server){
   var furture500 = (senka500-frontmap[500]-1380)*rate+frontmap[500]+1380;
   var h='本月战果预测:\n';
   h=h+'排名|榜单|当前|当前(ex)|月底\n';
-  h=h+'5位'+bsenka5+'|'+qsenka5+'|'+senka5+'|'+furture5.toFixed(0)+'\n';
-  h=h+'20位'+bsenka20+'|'+qsenka20+'|'+senka20+'|'+furture20.toFixed(0)+'\n';
+  h=h+'  5位'+bsenka5+'|'+qsenka5+'|'+senka5+'|'+furture5.toFixed(0)+'\n';
+  h=h+' 20位'+bsenka20+'|'+qsenka20+'|'+senka20+'|'+furture20.toFixed(0)+'\n';
   h=h+'100位'+bsenka100+'|'+qsenka100+'|'+senka100+'|'+furture100.toFixed(0)+'\n';
   h=h+'500位'+bsenka500+'|'+qsenka500+'|'+senka500+'|'+furture500.toFixed(0)+'\n';
   c[server].f=h;
