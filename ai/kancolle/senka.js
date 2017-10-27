@@ -111,8 +111,8 @@ function forecast(server){
   var senka20 = u.d[19].max;
   var senka100 = u.d[99].max;
   var senka500 = u.d[499].max;
-  var fromts = u.expfrom;
-  var tots = u.expto;
+  var fromts = u.zexpfrom;
+  var tots = u.zexpto;
   var frontmap = u.front;
   var now = new Date();
   var month = now.getMonth();
@@ -158,7 +158,7 @@ function generateTable(sorttype,server){
     var zexto = data.zexto;
     var zexpfrom = data.zexpfrom;
     var zexpto = data.zexpto;
-    var minmap = data.min;
+    var minmap = data.minmap;
     var frontmap = data.front;
     var now = new Date();
     var month = now.getMonth();
