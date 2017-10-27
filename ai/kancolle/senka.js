@@ -154,10 +154,10 @@ function generateTable(sorttype,server){
   var data = u;
   var result = data.r;
   if(true) {
-    var zexfrom = data.exfrom;
-    var zexto = data.exto;
-    var zexpfrom = data.expfrom;
-    var zexpto = data.expto;
+    var zexfrom = data.zexfrom;
+    var zexto = data.zexto;
+    var zexpfrom = data.zexpfrom;
+    var zexpto = data.zexpto;
     var minmap = data.min;
     var frontmap = data.front;
     var now = new Date();
