@@ -42,7 +42,8 @@ module.exports = function(userId, context, callback){
   if(context.trim() === ''){
     response = `查询任务信息\n可通过关键词（最多${KEYWORDS_LIMIT}个，用|隔开）查询，也可通过kcwiki编号查询`
   } else {
-    if(/^[A-Z]{1,2}(\d{1,3}|([a-z]\d{1,2}){1})$/.test(context)){
+    // if(/^[A-Z]{1,2}(\d{1,3}|([a-z]\d{1,2}){1})$/i.test(context)){
+    if(/^[a-z]{0,2}\d{0,3}$/i.test(context)){
       response = searchQuestByWikiId(userId, context, 'all')
     } else {
       let keywords = context.split('|')
