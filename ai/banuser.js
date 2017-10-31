@@ -11,7 +11,7 @@ function banuser(content,userName,callback) {
     timeout: 6000,
     headers: {}
   }).then(function(response){
-    callback('H已被口球'+time+'秒');
+    console.log('kh');
   }).catch(error => {
     console.log(error)
   })
