@@ -44,7 +44,7 @@ function searchsenka2(server,userName,name,callback){
   var sub = now.getTime()-new Date(then).getTime();
   var read = true;
   if(date<monthOfDay[month]) {
-    if (getDateNo(now) == getDateNo(then) && getRankDateNo(now) == getRankDateNo(then) && sub > 60000) {
+    if (then>0&&getDateNo(now) == getDateNo(then) && getRankDateNo(now) == getRankDateNo(then) && sub > 60000) {
       read = false;
     }
   }
