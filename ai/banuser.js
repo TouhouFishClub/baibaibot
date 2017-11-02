@@ -24,7 +24,6 @@ function banuser(content,userName,callback) {
 var qmap={};
 
 function banUserbyName(name,seconds){
-  console.log(qmap);
   console.log(name)
   if(qmap.c){
     if(qmap[name]){
