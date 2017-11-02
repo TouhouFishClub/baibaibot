@@ -50,7 +50,9 @@ module.exports = function(nickname, content, callback,nickname2){
     rouletteObj.gameActionCount = 0
     rouletteObj.gamersArr = []
     rouletteObj.magazineArr = []
-    callback('游戏结束')
+    setTimeout(() => {
+      callback('游戏结束')
+    }, 500)
   }
 
   rouletteGameAction = () => {
@@ -99,12 +101,14 @@ module.exports = function(nickname, content, callback,nickname2){
   }
 
   checkAliveGamer = () => {
-    if(rouletteObj.gamersArr.length > 1 && rouletteObj.gameActionCount < 5){
-      getNextGamer()
-    } else {
-      callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('、')}】`)
-      rouletteGameOver()
-    }
+    setTimeout(() => {
+      if(rouletteObj.gamersArr.length > 1 && rouletteObj.gameActionCount < 5){
+        getNextGamer()
+      } else {
+        callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('、')}】`)
+        rouletteGameOver()
+      }
+    }, 500)
   }
 
 }
