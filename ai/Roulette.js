@@ -97,7 +97,6 @@ module.exports = function(nickname, content, callback, nickname2){
         callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。`)
         break
     }
-    rouletteObj.gamersArr = rouletteObj.gamersArr.filter(ele => ele !== rouletteObj.now)
     checkAliveGamer()
   }
 
