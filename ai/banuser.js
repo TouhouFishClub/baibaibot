@@ -66,6 +66,6 @@ function banUserbyName(name,seconds){
 
 
 module.exports={
-  banUserbyName,
+  banuser,
   banUserbyName
 }
