@@ -24,7 +24,6 @@ function banuser(content,userName,callback) {
 var qmap={};
 
 function banUserbyName(name,seconds){
-  console.log(name)
   if(qmap.c){
     if(qmap[name]){
       console.log(qmap[name]);
@@ -46,7 +45,11 @@ function banUserbyName(name,seconds){
           var name = user.nickname;
           var card = user.card;
           var qq = user.user_id;
-          qmap[name]={name:name,card:card,qq:qq};
+          if(card.length>0){
+            qmap[card]={name:name,card:card,qq:qq};
+          }else{
+            qmap[name]={name:name,card:card,qq:qq};
+          }
         }
         if(qmap[name]){
           Axios.get(surl+'set_group_ban?group_id=205700800&user_id='+qmap[name].qq+'&duration='+seconds);
