@@ -188,6 +188,14 @@ function handleMsg_D(msg,qq,type){
   }
 
 
+  if(
+    content === '俄罗斯轮盘' ||
+    content === '加入' ||
+    content === '开枪'
+  ){
+    roulette(content,name,callback)
+    return
+  }
 
   var first = content.substring(0,1);
   if(first=='o'||first=='O'){
@@ -253,13 +261,6 @@ function handleMsg_D(msg,qq,type){
 }
 
 function reply(content,userName,callback,groupid,from,groupName){
-  if(
-    content === '俄罗斯轮盘' ||
-    content === '加入' ||
-    content === '开枪'
-  ){
-    roulette(content,userName,callback)
-  }
   var first = content.substring(0,1);
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
     tulingMsg(userName,content.substring(1),callback);
