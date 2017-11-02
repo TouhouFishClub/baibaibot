@@ -254,8 +254,8 @@ function handleMsg_D(msg,qq,type){
 
 function reply(content,userName,callback,groupid,from,groupName){
   if(
-    content === '俄罗斯轮盘' &&
-    content === '加入' &&
+    content === '俄罗斯轮盘' ||
+    content === '加入' ||
     content === '开枪'
   ){
     roulette(content,userName,callback)
