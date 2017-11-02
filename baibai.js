@@ -190,8 +190,17 @@ function handleMsg_D(msg,qq,type){
 
   if(
     content === '俄罗斯轮盘' ||
+    content === '俄羅斯輪盤' ||
     content === '加入' ||
-    content === '开枪'
+    content === '加入' ||
+    content === 'join' ||
+    content === '參加' ||
+    content === '参加' ||
+    content === '开枪' ||
+    content === '开火' ||
+    content === 'fire' ||
+    content === '開火' ||
+    content === '開槍'
   ){
     roulette(name,content,callback,nickname)
     return
