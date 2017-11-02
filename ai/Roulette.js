@@ -8,7 +8,7 @@ let rouletteObj = {
   magazineArr: []
 }
 const {banUserbyName} = require('./banuser');
-module.exports = function(nickname, content, callback,nickname2){
+module.exports = function(nickname, content, callback, nickname2){
   // console.log('=== in game ===')
   /* roulette system */
   if(content === '俄罗斯轮盘' || content === '俄羅斯輪盤'){
@@ -74,13 +74,14 @@ module.exports = function(nickname, content, callback,nickname2){
       killGamer(2)
     } else {
       callback(`【${rouletteObj.now}】生无可恋地把扣动扳机，然而什么都没有发生。`)
+      rouletteObj.gamersArr.push(rouletteObj.now)
       rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
       checkAliveGamer()
     }
   }
 
   getNextGamer = () => {
-    rouletteObj.now = rouletteObj.gamersArr[rouletteObj.gameActionCount % rouletteObj.gamersArr.length]
+    rouletteObj.now = rouletteObj.gamersArr.shift()
     callback(`下一个【${rouletteObj.now}】`)
     rouletteTimer = setTimeout(() => {killGamer(1)}, 15000)
   }
@@ -102,7 +103,7 @@ module.exports = function(nickname, content, callback,nickname2){
 
   checkAliveGamer = () => {
     setTimeout(() => {
-      if(rouletteObj.gamersArr.length > 1 && rouletteObj.gameActionCount < 5){
+      if(rouletteObj.gamersArr.length > 1 && rouletteObj.gameActionCount < 6){
         getNextGamer()
       } else {
         callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('、')}】`)
