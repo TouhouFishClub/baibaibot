@@ -10,15 +10,17 @@ let rouletteObj = {
 module.exports = function(nickname, content, callback){
   // console.log('=== in game ===')
   /* roulette system */
-  if(content === '俄罗斯轮盘'){
+  if(content === '俄罗斯轮盘' || content === '俄羅斯輪盤'){
     if(!rouletteObj.gameStart){
       rouletteObj.gameStart = true
       rouletteObj.gamers = []
       rouletteTimer = setTimeout(() => {checkRouletteGammers()}, 60000)
-      callback('生死有命，富贵在天！\n俄罗斯轮盘将在 60 秒后开始。\n参加：加入\n开枪：开枪')
+      callback('生死有命，富贵在天！\n俄罗斯轮盘将在 60 秒后开始。\n参加：加入/参加/join\n开枪：开枪/开火/fire')
     }
   }
-  if(rouletteObj.gameStart && !rouletteObj.gameAction && content === '加入'){
+  if(rouletteObj.gameStart && !rouletteObj.gameAction &&
+    (content === '加入' || content === '加入' || content === 'join' || content === '參加' || content === '参加')
+  ){
     if(rouletteObj.gamers[nickname]){
       callback(`【${nickname}】已经坐上赌桌`)
     } else {
@@ -60,7 +62,9 @@ module.exports = function(nickname, content, callback){
     checkAliveGamer()
   }
 
-  if(rouletteObj.gameStart && rouletteObj.gameAction && content === '开枪' && rouletteObj.now === nickname){
+  if(rouletteObj.gameStart && rouletteObj.gameAction &&
+    (content === '开枪' || content === '开火' || content === 'fire' || content === '開火' || content === '開槍' )
+    && rouletteObj.now === nickname){
     clearTimeout(rouletteTimer)
     if(rouletteObj.magazineArr[rouletteObj.gameActionCount]){
       rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
