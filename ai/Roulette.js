@@ -63,6 +63,7 @@ module.exports = function(nickname, content, callback){
   if(rouletteObj.gameStart && rouletteObj.gameAction && content === '开枪' && rouletteObj.now === nickname){
     clearTimeout(rouletteTimer)
     if(rouletteObj.magazineArr[rouletteObj.gameActionCount]){
+      rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
       killGamer(2)
     } else {
       callback(`【${rouletteObj.now}】生无可恋地把扣动扳机，然而什么都没有发生。`)
