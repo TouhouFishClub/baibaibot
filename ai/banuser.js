@@ -34,7 +34,7 @@ function banUserbyName(name,seconds){
 
     }
   }else{
-    Axios.get(surl+'/get_group_member_list?group_id=205700800', {
+    Axios.get(surl+'get_group_member_list?group_id=205700800', {
       timeout: 6000,
       headers: {}
     }).then(function(response){
