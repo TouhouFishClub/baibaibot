@@ -2,14 +2,6 @@ var http=require('http');
 var https=require('https');
 var tls = require('tls');
 let onlineObj = {}
-let rouletteObj = {
-  gameStart: false,
-  gameAction: false,
-  gamers: {},
-  gameActionCount: 0,
-  gamersArr: [],
-  magazineArr: []
-}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 
 
@@ -37,6 +29,8 @@ const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
 const {banuser} = require('./ai/banuser');
 
 const {getKancollStaffTweet,stream,streaminit} = require('./ai/twitter');
+
+const roulette = require('./ai/Roulette')
 
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
@@ -193,94 +187,6 @@ function handleMsg_D(msg,qq,type){
     }
   }
 
-  /* roulette system */
-  let rouletteTimer
-  if(content === '俄罗斯轮盘'){
-    if(!rouletteObj.gameStart){
-      rouletteObj.gameStart = true
-      rouletteObj.gamers = []
-      rouletteTimer = setTimeout(checkRouletteGammers, 60000)
-      callback('生死有命，富贵在天！\n俄罗斯轮盘将在 60 秒后开始。\n参加：加入\n开枪：开枪')
-    }
-  }
-  if(rouletteObj.gameStart && !rouletteObj.gameAction && content === '加入'){
-    callback(`【${nickname}】坐上了赌桌`)
-    rouletteObj.gamers[nickname] = 1
-    if(Object.keys(rouletteObj.gamers).length === 6){
-      clearTimeout(rouletteTimer)
-      rouletteGameAction()
-    }
-  }
-
-  const checkRouletteGammers = () => {
-    if(Object.keys(rouletteObj.gamers).length < 2){
-      callback('参加人数不足')
-      rouletteGameOver()
-    } else {
-      rouletteGameAction()
-    }
-  }
-
-  const rouletteGameOver = () => {
-    rouletteObj.gameStart = false
-    rouletteObj.gameAction = false
-    rouletteObj.gamers = []
-    rouletteObj.gameActionCount = 0
-    rouletteObj.gamersArr = []
-    rouletteObj.magazineArr = []
-    callback('游戏结束')
-  }
-
-  const rouletteGameAction = () => {
-    rouletteObj.gameAction = true
-    for(let i = 0; i < 6; i++){
-      rouletteObj.magazineArr.push(Math.random() < 0.5? 0: 1)
-      rouletteObj.gamers.sort(() => Math.random() < 0.5 ? -1: 1)
-    }
-    callback(`赌局开始！\n弹匣为空，重新上膛(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
-    checkAliveGamer()
-  }
-
-  if(rouletteObj.gameStart && rouletteObj.gameAction && content === '开枪' && rouletteObj.now === nickname){
-    if(rouletteObj.magazineArr[rouletteObj.gameActionCount]){
-      killGamer(2)
-    } else {
-      callback(`【${rouletteObj.now}】生无可恋地把扣动扳机，然而什么都没有发生。`)
-      rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
-      checkAliveGamer()
-    }
-  }
-
-  const getNextGamer = () => {
-    clearTimeout(rouletteTimer)
-    rouletteObj.now = rouletteObj.gamers[rouletteObj.gameActionCount % rouletteObj.gamers.length]
-    callback(`下一个【${rouletteObj.now}】`)
-    rouletteTimer = setTimeout(() => {killGamer(1)}, 15000)
-  }
-
-  const killGamer = type => {
-    switch(type){
-      case 1:
-        callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。`)
-        break
-      case 2:
-        callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。`)
-        break
-    }
-    rouletteObj.gamers = rouletteObj.gamers.filter(ele => ele !== rouletteObj.now)
-    checkAliveGamer()
-  }
-
-  const checkAliveGamer = () => {
-    if(rouletteObj.gamers.length > 1 && rouletteObj.gameActionCount < 5){
-      getNextGamer()
-    } else {
-      callback(`赌局结束！幸存者：【${rouletteObj.gamers.join('、')}】`)
-      rouletteGameOver()
-    }
-  }
-
-
 
 
   var first = content.substring(0,1);
@@ -347,6 +253,13 @@ function handleMsg_D(msg,qq,type){
 }
 
 function reply(content,userName,callback,groupid,from,groupName){
+  if(
+    content === '俄罗斯轮盘' &&
+    content === '加入' &&
+    content === '开枪'
+  ){
+    roulette(content,userName,callback)
+  }
   var first = content.substring(0,1);
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
     tulingMsg(userName,content.substring(1),callback);

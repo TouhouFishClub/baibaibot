@@ -41,7 +41,7 @@ app.get('/log',function(req,res){
 // const {getloc,route} = require('./ai/map');
 // const {urlget} = require('./src/utils/httpreq');
 // const {cal} = require('./ai/calculator')
- const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weather');
+//  const {weatherReply,getWeatherByCity,getWeatherByCityCode} = require('./ai/weather');
 // const xchange = require('./ai/xchange')
 // const kce = require('./ai/kanColleEquip')
 // const updateAll = require('./mongo/db_kcUpdateAll')
@@ -49,9 +49,10 @@ app.get('/log',function(req,res){
 // const {searchsenka} = require('./ai/kancolle/senka');
 // const {fixUser,regen} = require('./ai/favour/battle');
 // const {regenm} = require('./ai/chess/road');
-const {streaminit} = require('./ai/twitter');
+// const {streaminit} = require('./ai/twitter');
 
-const kcq = require('./ai/kanColleQuest');
+// const kcq = require('./ai/kanColleQuest');
+const roulette = require('./ai/Roulette')
 
 
 app.get('/test',function(req,res){
@@ -79,7 +80,29 @@ app.get('/test',function(req,res){
   // res.send(kce('QQid', '飞机+7', callback))
   // res.send(kce('QQid', 'xa', callback))
   // res.send(kce('QQid', 'x0+6', callback))
-  res.send(kcq('QQid', 'B93', callback))
+  res.send(roulette('QQ1', '俄罗斯轮盘', callback))
+  setTimeout(() => {
+    res.send(roulette('QQ1', '加入', callback))
+  },500)
+  setTimeout(() => {
+    res.send(roulette('QQ2', '加入', callback))
+  },1000)
+  setTimeout(() => {
+    res.send(roulette('QQ2', '加入', callback))
+  },1200)
+  setTimeout(() => {
+    res.send(roulette('QQ3', '加入', callback))
+  },1500)
+  setTimeout(() => {
+    res.send(roulette('QQ1', '开枪', callback))
+    res.send(roulette('QQ2', '开枪', callback))
+    res.send(roulette('QQ3', '开枪', callback))
+  },3500)
+  setTimeout(() => {
+    res.send(roulette('QQ1', '开枪', callback))
+    res.send(roulette('QQ2', '开枪', callback))
+    res.send(roulette('QQ3', '开枪', callback))
+  },4000)
   // res.send(kcq('QQid', '以结|强力羁绊舰娘作为|旗舰|舰娘|消灭敌人中枢！|4-3|第1舰队|最初的|初めて|二人です', callback))
   // res.send(kcq('QQid', '', callback))
   // res.send(kcq('QQid', 'BAKABAKABAKA', callback))
