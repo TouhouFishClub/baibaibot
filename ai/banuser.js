@@ -62,5 +62,5 @@ function banUserbyName(name,seconds){
 
 module.exports={
   banUserbyName,
-  getqqByName
+  banUserbyName
 }
