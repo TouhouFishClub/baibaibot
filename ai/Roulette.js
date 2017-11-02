@@ -8,7 +8,7 @@ let rouletteObj = {
   magazineArr: []
 }
 const {banUserbyName} = require('./banuser');
-module.exports = function(nickname, content, callback,nickname){
+module.exports = function(nickname, content, callback,nickname2){
   // console.log('=== in game ===')
   /* roulette system */
   if(content === '俄罗斯轮盘'){
@@ -82,11 +82,11 @@ module.exports = function(nickname, content, callback,nickname){
   killGamer = type => {
     switch(type){
       case 1:
-        banUserbyName(nickname,300);
+        banUserbyName(nickname2,300);
         callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。`)
         break
       case 2:
-        banUserbyName(nickname,300);
+        banUserbyName(nickname2,300);
         callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。`)
         break
     }
