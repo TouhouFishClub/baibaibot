@@ -276,6 +276,7 @@ function handleMsg_D(msg,qq,type){
       getNextGamer()
     } else {
       callback(`赌局结束！幸存者：【${rouletteObj.gamers.join('、')}】`)
+      rouletteGameOver()
     }
   }
 
