@@ -202,7 +202,7 @@ function handleMsg_D(msg,qq,type){
     content === '開火' ||
     content === '開槍'
   ){
-    roulette(name,content,callback)
+    roulette(name,content,callback,nickname)
     return
   }
 
