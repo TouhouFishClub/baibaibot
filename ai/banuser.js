@@ -12,14 +12,26 @@ function banuser(content,userName,callback) {
       time=Math.floor(Math.random()*3600);
     }
   }
-  banUserbyName(userName,time);
-  console.log(userName);
-  setTimeout(function(){
-    banUserbyName(userName,0);
-  },time+1000);
+  if(Math.random()<0.3){
+    banUserbyName(userName,time);
+    setTimeout(function(){
+      banUserbyName(userName,0);
+    },time+1000);
+  }else{
+    var qq=705886109;
+    banUserbyQQ(qq,time);
+    setTimeout(function(){
+      banUserbyQQ(qq,0);
+    },time+1000);
+  }
 }
 
 var qmap={};
+
+function banUserbyQQ(qq,seconds){
+  Axios.get(surl+'set_group_ban?group_id=205700800&user_id='+qq+'&duration='+seconds);
+}
+
 
 function banUserbyName(name,seconds){
   if(qmap.c){
@@ -40,13 +52,13 @@ function banUserbyName(name,seconds){
         qmap.c=1;
         for(var i=0;i<list.length;i++){
           var user = list[i];
-          var name = user.nickname;
+          var namec = user.nickname;
           var card = user.card;
           var qq = user.user_id;
           if(card.length>0){
-            qmap[card]={name:name,card:card,qq:qq};
+            qmap[card]={name:namec,card:card,qq:qq};
           }else{
-            qmap[name]={name:name,card:card,qq:qq};
+            qmap[namec]={name:namec,card:card,qq:qq};
           }
         }
         if(qmap[name]){
