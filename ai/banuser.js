@@ -32,7 +32,7 @@ function banUserbyQQ(qq,seconds){
   }).then(function(response){
     setTimeout(function(){
       Axios.get(surl+'set_group_ban?group_id=205700800&user_id='+qq+'&duration='+0);
-    },time);
+    },seconds);
   }).catch(error => {
     console.log(error)
   })
