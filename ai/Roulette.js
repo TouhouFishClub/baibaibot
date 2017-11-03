@@ -8,7 +8,7 @@ let rouletteObj = {
   magazineArr: []
 }
 const {banUserbyName} = require('./banuser');
-module.exports = function(nickname, content, callback, nickname2){
+module.exports = function(nickname, content, callback){
   // console.log('=== in game ===')
   /* roulette system */
   if(content === '俄罗斯轮盘' || content === '俄羅斯輪盤'){
@@ -73,7 +73,18 @@ module.exports = function(nickname, content, callback, nickname2){
       rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
       killGamer(2)
     } else {
-      callback(`【${rouletteObj.now}】生无可恋地把扣动扳机，然而什么都没有发生。`)
+      switch (Math.ceil(3 * Math.random())){
+        case 1:
+          callback(`【${rouletteObj.now}】生无可恋地把扣动扳机，然而什么都没有发生。`)
+          break
+        case 2:
+          callback(`【${rouletteObj.now}】毫无茫然地把扣动扳机，然而什么都没有发生。`)
+          break
+        case 3:
+          callback(`【${rouletteObj.now}】毫不犹豫地把扣动扳机，然而什么都没有发生。`)
+          break
+
+      }
       rouletteObj.gamersArr.push(rouletteObj.now)
       rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
       checkAliveGamer()
@@ -89,12 +100,22 @@ module.exports = function(nickname, content, callback, nickname2){
   killGamer = type => {
     switch(type){
       case 1:
-        banUserbyName(rouletteObj.now,300);
+        banUserbyName(rouletteObj.now ,300);
         callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。`)
         break
       case 2:
-        banUserbyName(rouletteObj.now,300);
-        callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。`)
+        banUserbyName(rouletteObj.now ,300);
+        switch (Math.ceil(3 * Math.random())){
+          case 1:
+            callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。`)
+            break
+          case 2:
+            callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了吃瓜群众的怀中。`)
+            break
+          case 3:
+            callback(`砰的一声，【${rouletteObj.now}】倒在了血泊中。`)
+            break
+        }
         break
     }
     checkAliveGamer()
