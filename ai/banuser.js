@@ -12,7 +12,7 @@ function banuser(content,userName,callback) {
       time=Math.floor(Math.random()*3600);
     }
   }
-  if(Math.random()<0.3){
+  if(Math.random()<0.4){
     banUserbyName(userName,time);
     setTimeout(function(){
       banUserbyName(userName,0);
@@ -20,16 +20,22 @@ function banuser(content,userName,callback) {
   }else{
     var qq=705886109;
     banUserbyQQ(qq,time);
-    setTimeout(function(){
-      banUserbyQQ(qq,0);
-    },time+1000);
   }
 }
 
 var qmap={};
 
 function banUserbyQQ(qq,seconds){
-  Axios.get(surl+'set_group_ban?group_id=205700800&user_id='+qq+'&duration='+seconds);
+  Axios.get(surl+'set_group_ban?group_id=205700800&user_id='+qq+'&duration='+seconds,{
+    timeout: 6000,
+    headers: {}
+  }).then(function(response){
+    setTimeout(function(){
+      Axios.get(surl+'set_group_ban?group_id=205700800&user_id='+qq+'&duration='+0);
+    },time);
+  }).catch(error => {
+    console.log(error)
+  })
 }
 
 
