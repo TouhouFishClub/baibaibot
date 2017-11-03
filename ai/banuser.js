@@ -13,6 +13,7 @@ function banuser(content,userName,callback) {
     }
   }
   banUserbyName(userName,time);
+  console.log(userName);
   setTimeout(function(){
     banUserbyName(userName,0);
   },time+500);
