@@ -7,6 +7,7 @@ let rouletteObj = {
   gamersArr: [],
   magazineArr: []
 }
+let death={};
 const {banUserbyName} = require('./banuser');
 module.exports = function(nickname, content, callback){
   // console.log('=== in game ===')
@@ -22,14 +23,22 @@ module.exports = function(nickname, content, callback){
   if(rouletteObj.gameStart && !rouletteObj.gameAction &&
     (content === '加入' || content === '加入' || content === 'join' || content === '參加' || content === '参加')
   ){
-    if(rouletteObj.gamers[nickname]){
-      callback(`【${nickname}】已经坐上赌桌`)
-    } else {
-      callback(`【${nickname}】坐上了赌桌`)
-      rouletteObj.gamers[nickname] = 1
-      if(Object.keys(rouletteObj.gamers).length === 6){
-        clearTimeout(rouletteTimer)
-        rouletteGameAction()
+    if(death[nickname]) {
+      var now = new Date().getTime();
+      var then = death[nickname];
+      if (now < then) {
+        callback(`【${nickname}】已经死亡,无法坐上赌桌,复活时间：【${new Date(then).toLocaleString()}】`)
+      } else {
+        if (rouletteObj.gamers[nickname]) {
+          callback(`【${nickname}】已经坐上赌桌`)
+        } else {
+          callback(`【${nickname}】坐上了赌桌`)
+          rouletteObj.gamers[nickname] = 1
+          if (Object.keys(rouletteObj.gamers).length === 6) {
+            clearTimeout(rouletteTimer)
+            rouletteGameAction()
+          }
+        }
       }
     }
   }
@@ -101,10 +110,12 @@ module.exports = function(nickname, content, callback){
     switch(type){
       case 1:
         banUserbyName(rouletteObj.now ,300);
+        death[rouletteObj.now]=new Date(new Date().getTime()+300000).getTime();
         callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。`)
         break
       case 2:
         banUserbyName(rouletteObj.now ,300);
+        death[rouletteObj.now]=new Date(new Date().getTime()+300000).getTime();
         switch (Math.ceil(3 * Math.random())){
           case 1:
             callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。`)
