@@ -23,21 +23,24 @@ module.exports = function(nickname, content, callback){
   if(rouletteObj.gameStart && !rouletteObj.gameAction &&
     (content === '加入' || content === '加入' || content === 'join' || content === '參加' || content === '参加')
   ){
+    var can=true
     if(death[nickname]) {
       var now = new Date().getTime();
       var then = death[nickname];
       if (now < then) {
+        can = false;
         callback(`【${nickname}】已经死亡,无法坐上赌桌,复活时间：【${new Date(then).toLocaleString()}】`)
+      }
+    }
+    if(can){
+      if (rouletteObj.gamers[nickname]) {
+        callback(`【${nickname}】已经坐上赌桌`)
       } else {
-        if (rouletteObj.gamers[nickname]) {
-          callback(`【${nickname}】已经坐上赌桌`)
-        } else {
-          callback(`【${nickname}】坐上了赌桌`)
-          rouletteObj.gamers[nickname] = 1
-          if (Object.keys(rouletteObj.gamers).length === 6) {
-            clearTimeout(rouletteTimer)
-            rouletteGameAction()
-          }
+        callback(`【${nickname}】坐上了赌桌`)
+        rouletteObj.gamers[nickname] = 1
+        if (Object.keys(rouletteObj.gamers).length === 6) {
+          clearTimeout(rouletteTimer)
+          rouletteGameAction()
         }
       }
     }
