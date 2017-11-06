@@ -434,6 +434,9 @@ function generateTable(sorttype,server){
         senka.max=senka.senka;
         senka.min=senka.senka;
       }
+      if(frontex>0){
+        exstr=exstr+"(+"+frontex+")"
+      }
       var max = senka.max;
       var min = senka.min;
       if(!c[server].u){
