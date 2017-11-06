@@ -53,7 +53,7 @@ function banUserbyName(name,seconds){
         }
       }
       if(qq>0){
-        Axios.get(surl+'set_group_ban?group_id=205700800&user_id='+qmap[name].qq+'&duration='+seconds);
+        Axios.get(surl+'set_group_ban?group_id=205700800&user_id='+qq+'&duration='+seconds);
       }
     }
   }else{
