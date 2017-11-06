@@ -48,7 +48,7 @@ function banUserbyName(name,seconds){
       var qq=0;
       for(var p in qmap){
         if(p.startsWith(name)){
-          qq=qmap[name].qq;
+          qq=qmap[p].qq;
           break;
         }
       }
