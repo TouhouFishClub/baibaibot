@@ -140,7 +140,7 @@ module.exports = function(nickname, content, callback){
       if(rouletteObj.gamersArr.length > 1 && rouletteObj.gameActionCount < 6){
         getNextGamer()
       } else {
-        callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('、')}】,枪内子弹(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
+        callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('】、【')}】,枪内子弹(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
         rouletteGameOver()
       }
     }, 500)
