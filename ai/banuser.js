@@ -12,7 +12,7 @@ function banuser(content,userName,callback) {
       time=Math.floor(Math.random()*3600);
     }
   }
-  if(Math.random()<0.66){
+  if(Math.random()<0.55){
     banUserbyName(userName,time);
     setTimeout(function(){
       banUserbyName(userName,0);
