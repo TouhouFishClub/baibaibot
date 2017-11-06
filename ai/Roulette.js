@@ -73,7 +73,7 @@ module.exports = function(nickname, content, callback){
       rouletteObj.magazineArr.push(Math.random() < 0.5? 0: 1)
       rouletteObj.gamersArr = Object.keys(rouletteObj.gamers).sort(() => Math.random() < 0.5 ? -1: 1)
     }
-    callback(`赌局开始！\n弹匣为空，重新上膛(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
+    callback(`赌局开始！\n弹匣为空，重新上膛`)
     checkAliveGamer()
   }
 
@@ -140,7 +140,7 @@ module.exports = function(nickname, content, callback){
       if(rouletteObj.gamersArr.length > 1 && rouletteObj.gameActionCount < 6){
         getNextGamer()
       } else {
-        callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('、')}】`)
+        callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('】、【')}】,枪内子弹(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
         rouletteGameOver()
       }
     }, 500)
