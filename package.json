@@ -24,6 +24,7 @@
     "https-proxy-agent": "^2.0.0",
     "log": "^1.4.0",
     "mongodb": "^2.2.30",
+    "body-parser": "",
     "twitter": ""
   },
   "devDependencies": {

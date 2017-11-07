@@ -7,7 +7,8 @@ const path = require('path')
 const Axios = require('axios')
 const opn = require('opn')
 app.use(express.static('./static'));
-
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
 const {relogin} = require('./baibai');
 
 app.listen(10086,function(){
