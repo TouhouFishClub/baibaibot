@@ -12,7 +12,7 @@ function banuser(content,userName,callback) {
       time=Math.floor(Math.random()*3600);
     }
   }
-  if(Math.random()<0.45){
+  if(Math.random()<0.49){
     banUserbyName(userName,time);
     setTimeout(function(){
       banUserbyName(userName,0);
@@ -40,6 +40,7 @@ function banUserbyQQ(qq,seconds){
 
 
 function banUserbyName(name,seconds){
+  console.log(name);
   if(qmap.c){
     if(qmap[name]){
       console.log(qmap[name]);
