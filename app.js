@@ -27,11 +27,10 @@ app.get('/login',function(req,res){
   })
 });
 
-app.get('/log',function(req,res){
-  var logs = fs.readFileSync('./out.log');
-  res.setHeader('Content-Type','text/plain');
-  res.charset = 'utf-8';
-  res.send(logs);
+app.post('/event',function(req,res){
+  console.log(req.query);
+  console.log(req.body);
+  res.send('ok');
 });
 
 
@@ -113,6 +112,8 @@ app.get('/test2',function(req,res){//这个函数时空专用！^-^
     res.send(ret);
   })
 })
+
+
 
 var callback = function(res){
   if(res.trim().length>0){
