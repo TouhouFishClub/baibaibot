@@ -171,6 +171,7 @@ function generateTable(sorttype,server){
       var expfrom = senka.expfrom;
       var expto = senka.expto;
       var exlist = senka.exlist;
+      var frontex = senka.frontex?senka.frontex:0;
       if(Math.floor(((month+1)/3)%4)==Math.floor(((z+1)/3))%4){
         if(z>=0){
           zcleared=350;
@@ -240,7 +241,7 @@ function generateTable(sorttype,server){
         }
 
         if (senka.fsenkats == 0 && Math.abs(expfrom - zexpfrom) < 1200000) {
-          data.d[i].except=senka.subsenka + senka.fsenka + 1380 - zcleared;
+          data.d[i].except=senka.subsenka + senka.fsenka + 1380 - zcleared-frontex;
           data.d[i].max=data.d[i].except;
           data.d[i].min=data.d[i].except;
         }else if(senka.fsenkats == 0 && getDateNo(expfrom)==0 && new Date(basets).getMonth()<month){
@@ -254,8 +255,8 @@ function generateTable(sorttype,server){
           if(max3<maxsenka){
             maxsenka=max3;
           }
-          data.d[i].max=maxsenka;
-          data.d[i].min=minsenka;
+          data.d[i].max=maxsenka-frontex;
+          data.d[i].min=minsenka-frontex;
         }  else if (ensure) {
           data.d[i].except=senka.senka + 1380 - zcleared - senka.ex;
           data.d[i].max=data.d[i].except;
@@ -285,8 +286,8 @@ function generateTable(sorttype,server){
             }
           }
 
-          data.d[i].max=maxsenka;
-          data.d[i].min=minsenka;
+          data.d[i].max=maxsenka-frontex;
+          data.d[i].min=minsenka-frontex;
         }
 
       } else if (type == 3) {
@@ -312,8 +313,8 @@ function generateTable(sorttype,server){
             maxsenka=maxsenka4;
           }
         }
-        data.d[i].max=maxsenka;
-        data.d[i].min=minsenka;
+        data.d[i].max=maxsenka-frontex;
+        data.d[i].min=minsenka-frontex;
       } else if (type == 2) {
         var senkalist = senka.senkalist;
         var maylist = senka.may;
@@ -432,6 +433,9 @@ function generateTable(sorttype,server){
       if(senka.max<senka.senka){
         senka.max=senka.senka;
         senka.min=senka.senka;
+      }
+      if(frontex>0){
+        exstr=exstr+"(+"+frontex+")"
       }
       var max = senka.max;
       var min = senka.min;
