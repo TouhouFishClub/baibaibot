@@ -178,21 +178,22 @@ function generateTable(sorttype,server){
         }
       }
       if(now.getDate()==monthOfDay[now.getMonth()]&&now.getHours()>=14){
-        if(senka.ex>1025&&senka.ex<1035){
+        if(senka.ex>1025&&senka.ex<1035&&!frontex){
           zcleared=350;
           z=-1;
         }
-        if(senka.ex<960&&senka.ex>950){
+        if(senka.ex<960&&senka.ex>950&&!frontex){
           zcleared=350;
           z=-1;
         }
-        if (Math.abs(expfrom - zexfrom) < 1200000 && Math.abs(expto - zexto) < 1200000 &&senka.ex<950) {
+        if (Math.abs(expfrom - zexfrom) < 1200000 && Math.abs(expto - zexto) < 1200000 &&frontex+senka.ex<950) {
           zcleared=350;
           z=-1;
         }
-        if(senka.ex<950){
+        if(frontex+senka.ex<950){
           if(senka.max){
             if(exlist){
+              exlist.push(frontex);
               var zc = 0;
               for(var w=0;w<exlist.length;w++){
                 var xex = parseInt(exlist[w]);
