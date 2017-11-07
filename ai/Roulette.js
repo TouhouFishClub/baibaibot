@@ -113,12 +113,12 @@ module.exports = function(nickname, content, callback){
     switch(type){
       case 1:
         banUserbyName(rouletteObj.now ,300);
-        death[rouletteObj.now]=new Date(new Date().getTime()+300000).getTime();
+        death[rouletteObj.now]=new Date(new Date().getTime()+1000000).getTime();
         callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。`)
         break
       case 2:
         banUserbyName(rouletteObj.now ,300);
-        death[rouletteObj.now]=new Date(new Date().getTime()+300000).getTime();
+        death[rouletteObj.now]=new Date(new Date().getTime()+1000000).getTime();
         switch (Math.ceil(3 * Math.random())){
           case 1:
             callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。`)
