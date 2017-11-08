@@ -117,7 +117,7 @@ function forecast(server){
   var now = new Date();
   var month = now.getMonth();
   var days = monthOfDay[month];
-  var totalts = days*86400000-3600000*4;
+  var totalts = (days+1)*86400000-3600000*4;
   var dur = tots-fromts;
   var rate = totalts/dur;
   var furture5 = (senka5-frontmap[5]-1380)*rate+frontmap[5]+1380;
