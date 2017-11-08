@@ -20,8 +20,8 @@ function banuser(content,userName,callback) {
     },time+1000);
   }else if(rd<0.7&&qmap.c){
     var namelist = Object.keys(qmap);
-    var user = namelist[Math.floor(Math.random()*namelist.length)];
-    console.log(user);
+    var name = namelist[Math.floor(Math.random()*namelist.length)];
+    var user = qmap[name];
     if(user&&user.qq){
       banUserbyQQ(user.qq,time);
     }
