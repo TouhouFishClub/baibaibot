@@ -21,6 +21,7 @@ function banuser(content,userName,callback) {
   }else if(rd<0.7&&qmap.c){
     var namelist = Object.keys(qmap);
     var user = namelist[Math.floor(Math.random()*namelist.length)];
+    console.log(user);
     if(user&&user.qq){
       banUserbyQQ(user.qq,time);
     }
