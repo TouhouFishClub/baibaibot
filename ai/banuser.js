@@ -12,11 +12,18 @@ function banuser(content,userName,callback) {
       time=Math.floor(Math.random()*3600);
     }
   }
-  if(Math.random()<0.49){
+  var rd = Math.random();
+  if(rd<0.4){
     banUserbyName(userName,time);
     setTimeout(function(){
       banUserbyName(userName,0);
     },time+1000);
+  }else if(rd<0.7&&qmap.c){
+    var namelist = Object.keys(qmap);
+    var user = namelist[Math.floor(Math.random()*namelist.length)];
+    if(user&&user.qq){
+      banUserbyQQ(user.qq,time);
+    }
   }else{
     var qq=705886109;
     banUserbyQQ(qq,time);
