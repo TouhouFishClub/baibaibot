@@ -1,6 +1,35 @@
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_senka';
 var Axios = require('axios');
+var https=require('https');
+var http = require('http');
+
+function httpget(host,port,path,callback){
+  var options = {
+    hostname: host,
+    port: port,
+    path: path,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+    },
+    method: 'GET'
+  };
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    var code = res.statusCode;
+    if(code==200){
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        callback(resdata);
+      });
+    }
+  });
+  req.end();
+
+
 
 var monthOfDay=[31,28,31,30,31,30,31,31,30,31,30,31];
 var u = {};
@@ -51,19 +80,14 @@ function searchsenka2(server,userName,name,callback){
   if(read==false){
     searchSenkaByCache(server,userName,name,callback);
   }else{
-    Axios.get('http://127.0.0.1:12450/api/calrank?server='+server, {
-      timeout: 30000,
-      headers: {}
-    }).then(function(response){
+    httpget('127.0.0.1',12450,'/api/calrank?server='+server,function(res){
+      var response = JSON.parse(res);
       u = response.data;
       c[server]={};
       c[server].ts=u.ts;
       forecast(server);
       searchSenkaByCache(server,userName,name,callback);
-    }).catch(error => {
-      console.log(error);
-      console.log('error occured');
-    })
+    });
   }
 }
 
