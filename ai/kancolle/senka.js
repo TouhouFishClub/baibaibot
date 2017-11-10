@@ -52,7 +52,7 @@ function searchsenka2(server,userName,name,callback){
     searchSenkaByCache(server,userName,name,callback);
   }else{
     Axios.get('http://192.168.17.52:12450/api/calrank?server='+server, {
-      timeout: 20000,
+      timeout: 30000,
       headers: {}
     }).then(function(response){
       u = response.data;
@@ -61,7 +61,8 @@ function searchsenka2(server,userName,name,callback){
       forecast(server);
       searchSenkaByCache(server,userName,name,callback);
     }).catch(error => {
-      console.log(error)
+      console.log(error);
+      console.log('error occured');
     })
   }
 }
@@ -117,9 +118,9 @@ function forecast(server){
   var now = new Date();
   var month = now.getMonth();
   var days = monthOfDay[month];
-  var totalts = (days+1)*86400000-3600000*4;
+  var totalts = (days)*86400000-3600000*4;
   var dur = tots-fromts;
-  var rate = totalts/dur;
+  var rate = totalts/dur*1.1;
   var furture5 = (senka5-frontmap[5]-1380)*rate+frontmap[5]+1380;
   var furture20 = (senka20-frontmap[20]-1380)*rate+frontmap[20]+1380;
   var furture100 = (senka100-frontmap[100]-1380)*rate+frontmap[100]+1380;
