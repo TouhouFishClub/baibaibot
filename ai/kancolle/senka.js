@@ -55,9 +55,11 @@ function searchsenka2(server,userName,name,callback){
       timeout: 20000,
       headers: {}
     }).then(function(response){
+      console.log(111);
       u = response.data;
       c[server]={};
       c[server].ts=u.ts;
+      console.log(222);
       forecast(server);
       searchSenkaByCache(server,userName,name,callback);
     }).catch(error => {
