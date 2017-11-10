@@ -51,7 +51,7 @@ function searchsenka2(server,userName,name,callback){
   if(read==false){
     searchSenkaByCache(server,userName,name,callback);
   }else{
-    Axios.get('http://192.168.17.52:12450/api/calrank?server='+server, {
+    Axios.get('http://127.0.0.1:12450/api/calrank?server='+server, {
       timeout: 30000,
       headers: {}
     }).then(function(response){
