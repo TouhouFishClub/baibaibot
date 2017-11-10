@@ -4,7 +4,7 @@ var Axios = require('axios');
 var https=require('https');
 var http = require('http');
 
-function httpget(host,port,path,callback){
+function httpget(host,port,path,callback) {
   var options = {
     hostname: host,
     port: port,
@@ -14,10 +14,10 @@ function httpget(host,port,path,callback){
     },
     method: 'GET'
   };
-  var req = http.request(options, function(res) {
+  var req = http.request(options, function (res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
-    if(code==200){
+    if (code == 200) {
       var resdata = '';
       res.on('data', function (chunk) {
         resdata = resdata + chunk;
@@ -28,6 +28,7 @@ function httpget(host,port,path,callback){
     }
   });
   req.end();
+}
 
 
 
