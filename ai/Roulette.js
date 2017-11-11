@@ -137,7 +137,7 @@ module.exports = function(nickname, content, callback){
           break
       }
       checkAliveGamer();
-    });
+    }
   }
 
   checkAliveGamer = () => {
@@ -145,13 +145,12 @@ module.exports = function(nickname, content, callback){
       if(rouletteObj.gamersArr.length > 1 && rouletteObj.gameActionCount < 6){
         getNextGamer()
       } else {
-        var r="";
         rouletteObj.gamersArr.forEach(function(name){
           saveDeath(name,0,function(ret){
-            r=r+"【"+name+"】"+ret+"\n";
+
           });
         });
-        callback(`赌局结束！幸存者：\n${r},枪内子弹(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
+        callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('】、【')}】,枪内子弹(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
         rouletteGameOver()
       }
     }, 500)
