@@ -1,3 +1,6 @@
+var MongoClient = require('mongodb').MongoClient;
+var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
+
 let rouletteTimer
 let rouletteObj = {
   gameStart: false,
@@ -114,20 +117,28 @@ module.exports = function(nickname, content, callback){
       case 1:
         banUserbyName(rouletteObj.now ,300);
         death[rouletteObj.now]=new Date(new Date().getTime()+1000000).getTime();
-        callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。`)
+        saveDeath(rouletteObj.now,1,function(ret){
+          callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。\n总死亡次数${ret}`);
+        })
         break
       case 2:
         banUserbyName(rouletteObj.now ,300);
         death[rouletteObj.now]=new Date(new Date().getTime()+1000000).getTime();
         switch (Math.ceil(3 * Math.random())){
           case 1:
-            callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。`)
-            break
+            saveDeath(rouletteObj.now,1,function(ret){
+              callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。\n总死亡次数${ret}`);
+            })
+            break;
           case 2:
-            callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了吃瓜群众的怀中。`)
+            saveDeath(rouletteObj.now,1,function(ret){
+              callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了吃瓜群众的怀中。\n总死亡次数${ret}`);
+            })
             break
           case 3:
-            callback(`砰的一声，【${rouletteObj.now}】倒在了血泊中。`)
+            saveDeath(rouletteObj.now,1,function(ret){
+              callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了血泊中。\n总死亡次数${ret}`);
+            })
             break
         }
         break
@@ -145,5 +156,23 @@ module.exports = function(nickname, content, callback){
       }
     }, 500)
   }
-
 }
+
+
+function saveDeath(userName,IsDeath,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    var query = {'_id':userName};
+    var cl_roulette_game = db.collection('cl_roulette_game');
+    cl_roulette_game.findOne(query, function(err, data) {
+      if(data){
+        data.d=data.d+1;
+        data.death=data.death+IsDeath;
+      }else{
+        data = {'_id':userName,d:1,death:IsDeath}
+      }
+      cl_roulette_game.save(data);
+      callback(data.death+"/"+data.d);
+    });
+  });
+}
+
