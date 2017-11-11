@@ -113,37 +113,31 @@ module.exports = function(nickname, content, callback){
   }
 
   killGamer = type => {
-    switch(type){
-      case 1:
-        banUserbyName(rouletteObj.now ,300);
-        death[rouletteObj.now]=new Date(new Date().getTime()+1000000).getTime();
-        saveDeath(rouletteObj.now,1,function(ret){
-          callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。\n总死亡次数${ret}`);
-        })
-        break
-      case 2:
-        banUserbyName(rouletteObj.now ,300);
-        death[rouletteObj.now]=new Date(new Date().getTime()+1000000).getTime();
-        switch (Math.ceil(3 * Math.random())){
-          case 1:
-            saveDeath(rouletteObj.now,1,function(ret){
-              callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。\n总死亡次数${ret}`);
-            })
-            break;
-          case 2:
-            saveDeath(rouletteObj.now,1,function(ret){
-              callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了吃瓜群众的怀中。\n总死亡次数${ret}`);
-            })
-            break
-          case 3:
-            saveDeath(rouletteObj.now,1,function(ret){
-              callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了血泊中。\n总死亡次数${ret}`);
-            })
-            break
-        }
-        break
+    saveDeath(rouletteObj.now,1,function(ret) {
+      switch (type) {
+        case 1:
+          banUserbyName(rouletteObj.now, 300);
+          death[rouletteObj.now] = new Date(new Date().getTime() + 1000000).getTime();
+          callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。\n${ret}`)
+          break
+        case 2:
+          banUserbyName(rouletteObj.now, 300);
+          death[rouletteObj.now] = new Date(new Date().getTime() + 1000000).getTime();
+          switch (Math.ceil(3 * Math.random())) {
+            case 1:
+              callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。\n${ret}`)
+              break
+            case 2:
+              callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了吃瓜群众的怀中。\n${ret}`)
+              break
+            case 3:
+              callback(`砰的一声，【${rouletteObj.now}】倒在了血泊中。\n${ret}`)
+              break
+          }
+          break
+      }
+      checkAliveGamer();
     }
-    checkAliveGamer()
   }
 
   checkAliveGamer = () => {
@@ -151,7 +145,13 @@ module.exports = function(nickname, content, callback){
       if(rouletteObj.gamersArr.length > 1 && rouletteObj.gameActionCount < 6){
         getNextGamer()
       } else {
-        callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('】、【')}】,枪内子弹(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
+        var r="";
+        rouletteObj.gamersArr.forEach(function(name){
+          saveDeath(name,0,function(ret){
+            r=r+"【"+name+"】"+ret+"\n";
+          });
+        });
+        callback(`赌局结束！幸存者：\n${r},枪内子弹(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
         rouletteGameOver()
       }
     }, 500)
