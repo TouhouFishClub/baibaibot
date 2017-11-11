@@ -137,7 +137,7 @@ module.exports = function(nickname, content, callback){
           break
       }
       checkAliveGamer();
-    }
+    });
   }
 
   checkAliveGamer = () => {
