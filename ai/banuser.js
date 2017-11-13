@@ -18,16 +18,13 @@ function banuser(content,userName,callback) {
     setTimeout(function(){
       banUserbyName(userName,0);
     },time+1000);
-  }else if(rd<0.7&&qmap.c){
+  }else if(qmap.c){
     var namelist = Object.keys(qmap);
     var name = namelist[Math.floor(Math.random()*namelist.length)];
     var user = qmap[name];
     if(user&&user.qq){
       banUserbyQQ(user.qq,time);
     }
-  }else{
-    var qq=705886109;
-    banUserbyQQ(qq,time);
   }
 }
 
