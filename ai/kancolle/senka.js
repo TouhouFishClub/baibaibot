@@ -51,6 +51,32 @@ function searchsenka2(server,userName,name,callback){
   if(read==false){
     searchSenkaByCache(server,userName,name,callback);
   }else{
+    var options = {
+      hostname: "192.168.17.52",
+      port: 12450,
+      path: "/api/calrank?server="+server,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+      },
+      method: 'GET'
+    };
+    http.request(options, function (res) {
+      res.setEncoding('utf8');
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        u = eval("("+resdata+")");
+        c[server]={};
+        c[server].ts=u.ts;
+        console.log(222);
+        forecast(server);
+        searchSenkaByCache(server,userName,name,callback);
+      });
+    }).end();
+
+    /*
     Axios.get('http://192.168.17.52:12450/api/calrank?server='+server, {
       timeout: 20000,
       headers: {}
@@ -65,6 +91,8 @@ function searchsenka2(server,userName,name,callback){
     }).catch(error => {
       console.log(error)
     })
+    */
+
   }
 }
 
