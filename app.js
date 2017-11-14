@@ -109,7 +109,7 @@ app.get('/test',function(req,res){
   // res.send(kcq('QQid', 'BAKABAKABAKA', callback))
 });
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  pairReply('芙兰是个大笨蛋','id',function(ret){
+  pairReply('芙兰是个aa大笨蛋','id',function(ret){
     console.log(ret);
     res.send(ret);
   })
