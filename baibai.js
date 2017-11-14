@@ -27,7 +27,7 @@ const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
 
 const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
 const {banuser} = require('./ai/banuser');
-
+const {pairReply}=require('./ai/pairAI');
 const {getKancollStaffTweet,stream,streaminit} = require('./ai/twitter');
 
 const roulette = require('./ai/Roulette')
@@ -287,6 +287,8 @@ function reply(content,userName,callback,groupid,from,groupName){
     banuser(content.substring(1),userName,callback);
   }else if(first=='c'||first=='C'){
     xchange(userName,content.substring(1),callback);
+  }else if(first=='d'||first=='D'){
+    pairReply(content.substring(1),userName,callback);
   }else if(first=='t'||first=='T'){
     getKancollStaffTweet(content.substring(1),userName,callback);
   }else if(first=="e"||first=='E'){

@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 const {relogin} = require('./baibai');
 
 app.listen(10086,function(){
-  opn('http://127.0.0.1:10086/test', {app: ['chrome']})
+  opn('http://127.0.0.1:10086/test2', {app: ['chrome']})
 });
 app.get('/login',function(req,res){
   fs.unlink('qq-bot.cookie',function(){
@@ -53,6 +53,7 @@ app.post('/event',function(req,res){
 
 // const kcq = require('./ai/kanColleQuest');
 const roulette = require('./ai/Roulette')
+const {pairReply}=require('./ai/pairAI');
 
 
 app.get('/test',function(req,res){
@@ -108,7 +109,7 @@ app.get('/test',function(req,res){
   // res.send(kcq('QQid', 'BAKABAKABAKA', callback))
 });
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  getWeatherByCity('香港','id',function(ret){
+  pairReply('芙兰是个大笨蛋','id',function(ret){
     console.log(ret);
     res.send(ret);
   })
