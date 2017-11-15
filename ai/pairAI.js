@@ -3,7 +3,7 @@ var http = require('http');
 
 
 function pairReply(content,UserName,callback){
-  if(content.length<3||content.length>15){
+  if(content.length<3||content.length>25){
 
   }else{
     var xlocker = "";
