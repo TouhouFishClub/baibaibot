@@ -49,7 +49,7 @@ function handleTulingResponse(resdata){
   }else if(code == 200000){
     ret = data.text+""+data.url;
   }else{
-    ret = '';
+    ret = '玩累了，明天再来喵～';
   }
   if(ret.indexOf('百百')>-1){
     if(dup<3){
