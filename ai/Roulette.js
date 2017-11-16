@@ -8,6 +8,7 @@ let rouletteObj = {
   gamers: {},
   gameActionCount: 0,
   gamersArr: [],
+  callback:function(){},
   magazineArr: []
 }
 let death={};
@@ -20,6 +21,7 @@ module.exports = function(nickname, content, callback){
       rouletteObj.gameStart = true
       rouletteObj.gamers = []
       rouletteTimer = setTimeout(() => {checkRouletteGammers()}, 60000)
+      rouletteObj.callback=callback
       callback('生死有命，富贵在天！\n俄罗斯轮盘将在 60 秒后开始。\n参加：加入/参加/join\n开枪：开枪/开火/fire')
     }else{
       callback('请稍后再试');
@@ -37,14 +39,14 @@ module.exports = function(nickname, content, callback){
       var then = death[nickname];
       if (now < then) {
         can = false;
-        callback(`【${nickname}】已经死亡,无法坐上赌桌,复活时间：【${new Date(then).toLocaleString()}】`)
+        rouletteObj.callback(`【${nickname}】已经死亡,无法坐上赌桌,复活时间：【${new Date(then).toLocaleString()}】`)
       }
     }
     if(can){
       if (rouletteObj.gamers[nickname]) {
-        callback(`【${nickname}】已经坐上赌桌`)
+        rouletteObj.callback(`【${nickname}】已经坐上赌桌`)
       } else {
-        callback(`【${nickname}】坐上了赌桌`)
+        rouletteObj.callback(`【${nickname}】坐上了赌桌`)
         rouletteObj.gamers[nickname] = 1
         if (Object.keys(rouletteObj.gamers).length === 6) {
           clearTimeout(rouletteTimer)
@@ -56,7 +58,7 @@ module.exports = function(nickname, content, callback){
 
   checkRouletteGammers = () => {
     if(Object.keys(rouletteObj.gamers).length < 2){
-      callback('参加人数不足')
+      rouletteObj.callback('参加人数不足')
       rouletteGameOver()
     } else {
       rouletteGameAction()
@@ -71,7 +73,7 @@ module.exports = function(nickname, content, callback){
     rouletteObj.gamersArr = []
     rouletteObj.magazineArr = []
     setTimeout(() => {
-      callback('游戏结束')
+      rouletteObj.callback('游戏结束')
     }, 500)
   }
 
@@ -81,7 +83,7 @@ module.exports = function(nickname, content, callback){
       rouletteObj.magazineArr.push(Math.random() < 0.5? 0: 1)
       rouletteObj.gamersArr = Object.keys(rouletteObj.gamers).sort(() => Math.random() < 0.5 ? -1: 1)
     }
-    callback(`赌局开始！\n弹匣为空，重新上膛`)
+    rouletteObj.callback(`赌局开始！\n弹匣为空，重新上膛`)
     checkAliveGamer()
   }
 
@@ -95,13 +97,13 @@ module.exports = function(nickname, content, callback){
     } else {
       switch (Math.ceil(3 * Math.random())){
         case 1:
-          callback(`【${rouletteObj.now}】生无可恋地把扣动扳机，然而什么都没有发生。`)
+          rouletteObj.callback(`【${rouletteObj.now}】生无可恋地把扣动扳机，然而什么都没有发生。`)
           break
         case 2:
-          callback(`【${rouletteObj.now}】毫无茫然地把扣动扳机，然而什么都没有发生。`)
+          rouletteObj.callback(`【${rouletteObj.now}】毫无茫然地把扣动扳机，然而什么都没有发生。`)
           break
         case 3:
-          callback(`【${rouletteObj.now}】毫不犹豫地把扣动扳机，然而什么都没有发生。`)
+          rouletteObj.callback(`【${rouletteObj.now}】毫不犹豫地把扣动扳机，然而什么都没有发生。`)
           break
 
       }
@@ -113,7 +115,7 @@ module.exports = function(nickname, content, callback){
 
   getNextGamer = () => {
     rouletteObj.now = rouletteObj.gamersArr.shift()
-    callback(`下一个【${rouletteObj.now}】`)
+    rouletteObj.callback(`下一个【${rouletteObj.now}】`)
     rouletteTimer = setTimeout(() => {killGamer(1)}, 15000)
   }
 
@@ -123,20 +125,20 @@ module.exports = function(nickname, content, callback){
         case 1:
           banUserbyName(rouletteObj.now, 300);
           death[rouletteObj.now] = new Date(new Date().getTime() + 1000000).getTime();
-          callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。\n${ret}`)
+          rouletteObj.callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。\n${ret}`)
           break
         case 2:
           banUserbyName(rouletteObj.now, 300);
           death[rouletteObj.now] = new Date(new Date().getTime() + 1000000).getTime();
           switch (Math.ceil(3 * Math.random())) {
             case 1:
-              callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。\n${ret}`)
+              rouletteObj.callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了赌桌上。\n${ret}`)
               break
             case 2:
-              callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了吃瓜群众的怀中。\n${ret}`)
+              rouletteObj.callback(`砰！一声枪声响起，【${rouletteObj.now}】倒在了吃瓜群众的怀中。\n${ret}`)
               break
             case 3:
-              callback(`砰的一声，【${rouletteObj.now}】倒在了血泊中。\n${ret}`)
+              rouletteObj.callback(`砰的一声，【${rouletteObj.now}】倒在了血泊中。\n${ret}`)
               break
           }
           break
@@ -155,7 +157,7 @@ module.exports = function(nickname, content, callback){
 
           });
         });
-        callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('】、【')}】,枪内子弹(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
+        rouletteObj.callback(`赌局结束！幸存者：【${rouletteObj.gamersArr.join('】、【')}】,枪内子弹(${rouletteObj.magazineArr.reduce((p, c) => p + c)}/6)`)
         rouletteGameOver()
       }
     }, 500)
