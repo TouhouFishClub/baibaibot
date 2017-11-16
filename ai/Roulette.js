@@ -23,6 +23,7 @@ module.exports = function(nickname, content, callback){
       callback('生死有命，富贵在天！\n俄罗斯轮盘将在 60 秒后开始。\n参加：加入/参加/join\n开枪：开枪/开火/fire')
     }else{
       callback('请稍后再试');
+      return;
     }
   }
   if(rouletteObj.gameStart && !rouletteObj.gameAction &&
