@@ -272,7 +272,7 @@ function handleMsg_D(msg,qq,type){
 function reply(content,userName,callback,groupid,from,groupName){
   var first = content.substring(0,1);
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
-    tulingMsg(userName,content.substring(1),callback);
+    tulingMsg(userName,content.substring(1),callback,groupid);
   }else if(first==2){
     translateMsg(content.substring(1),'ja',callback);
   }else if(first==3){

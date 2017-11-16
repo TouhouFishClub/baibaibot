@@ -1,11 +1,14 @@
 var https=require('https');
 var http = require('http');
 const tulingApiKey = "9cca8707060f4432800730b2ddfb029b";
-function tulingMsg(userid,content,callback){
+
+
+
+function tulingMsg(userid,content,callback,groupid){
   var body={};
   body.key=tulingApiKey;
   body.info=content;
-  body.userid=userid;
+  body.userid=groupid;
   var options = {
     hostname: 'www.tuling123.com',
     port: 80,
