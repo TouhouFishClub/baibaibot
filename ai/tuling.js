@@ -2,9 +2,18 @@ var https=require('https');
 var http = require('http');
 const tulingApiKey = "9cca8707060f4432800730b2ddfb029b";
 
+var limit = {};
 
 
 function tulingMsg(userid,content,callback,groupid){
+  var then=limit[groupid];
+  if(then){
+    if(new Date().getTime()-then<3000){
+      callback('喵～');
+      return;
+    }
+  }
+  limit[groupid]=new Date().getTime();
   var body={};
   body.key=tulingApiKey;
   body.info=content;
