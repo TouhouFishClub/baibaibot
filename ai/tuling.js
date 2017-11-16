@@ -9,7 +9,7 @@ function tulingMsg(userid,content,callback,groupid){
   var then=limit[groupid];
   if(then){
     if(new Date().getTime()-then<3000){
-      callback('喵～');
+      callback('太快了喵～');
       return;
     }
   }
