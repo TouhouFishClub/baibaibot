@@ -10,6 +10,7 @@ function getShipReply(content,userName,callback) {
     ret = ret + "如【`l37-3】37-3甲难度Boss点S胜\n";
     ret = ret + "前面加l为模拟器如【`ll4-5//S】模拟一次4-5boss点S胜打捞\n";
     callback(ret);
+    return;
   }
   var first = content.substring(0,1);
   var simulator = 0;
