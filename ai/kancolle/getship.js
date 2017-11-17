@@ -101,10 +101,10 @@ function reply(host,path,simulator,callback){
           callback(res1);
         }
         if(res2.length>0){
-          setTimeout(function(){callback(res2)},1000);
+          //setTimeout(function(){callback(res2)},1000);
         }
         if(res3.length>0){
-          setTimeout(function(){callback(res3)},2000);
+          //setTimeout(function(){callback(res3)},2000);
         }
       }
     }
