@@ -54,7 +54,7 @@ app.post('/event',function(req,res){
 // const kcq = require('./ai/kanColleQuest');
 const roulette = require('./ai/Roulette')
 const {pairReply}=require('./ai/pairAI');
-
+const {getShipReply}=require('./ai/kancolle/getship');
 
 app.get('/test',function(req,res){
   // updateAll()
@@ -109,7 +109,7 @@ app.get('/test',function(req,res){
   // res.send(kcq('QQid', 'BAKABAKABAKA', callback))
 });
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  pairReply('芙兰是个aa大笨蛋','id',function(ret){
+  getShipReply('l3-5','id',function(ret){
     console.log(ret);
     res.send(ret);
   })
