@@ -1,7 +1,10 @@
 var https=require('https');
 var http = require('http');
 const {getShipRare} = require('./drop_map');
+var limit = {};
 function getShipReply(content,userName,callback) {
+
+
   if(content==""){
     var ret = "打捞统计/模拟器\n";
     ret = ret + "输入格式【`l地图ID/难度/胜败/地点】\n";
@@ -17,6 +20,14 @@ function getShipReply(content,userName,callback) {
   if(first=="l"||first=="L"){
     simulator = userName;
     content=content.substring(1);
+    var then=limit[userName];
+    if(then){
+      if(new Date().getTime()-then<30000){
+        callback(userName+'打捞太快了，休息一会吧');
+        return;
+      }
+    }
+    limit[userName]=new Date().getTime();
   }
   content=content.toUpperCase();
   var ca = content.split('/');
