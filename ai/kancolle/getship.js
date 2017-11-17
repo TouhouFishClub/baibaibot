@@ -3,8 +3,7 @@ var http = require('http');
 const {getShipRare} = require('./drop_map');
 var limit = {};
 function getShipReply(content,userName,callback) {
-
-
+  content=content.trim();
   if(content==""){
     var ret = "打捞统计/模拟器\n";
     ret = ret + "输入格式【`l地图ID/难度/胜败/地点】\n";
@@ -29,7 +28,7 @@ function getShipReply(content,userName,callback) {
     }
     limit[userName]=new Date().getTime()+30000;
   }
-  content=content.toUpperCase();
+  content=content.trim().toUpperCase();
   var ca = content.split('/');
   if (ca.length < 2) {
     ca.push("甲");
