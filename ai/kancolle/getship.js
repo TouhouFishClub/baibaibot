@@ -4,16 +4,6 @@ const {getShipRare} = require('./drop_map');
 var limit = {};
 function getShipReply(content,userName,callback) {
   content=content.trim();
-  if(content==""){
-    var ret = "打捞统计/模拟器\n";
-    ret = ret + "输入格式【`l地图ID/难度/胜败/地点】\n";
-    ret = ret + "如【`l39-7/乙/A/U】39-7乙难度U点A胜\n";
-    ret = ret + "可简写,难度默认甲,胜败默认S胜,地点默认BOSS点\n";
-    ret = ret + "如【`l37-3】37-3甲难度Boss点S胜\n";
-    ret = ret + "前面加l为模拟器如【`ll4-5//S】模拟一次4-5boss点S胜打捞\n";
-    callback(ret);
-    return;
-  }
   var first = content.substring(0,1);
   var simulator = 0;
   if(first=="l"||first=="L"){
@@ -29,6 +19,16 @@ function getShipReply(content,userName,callback) {
     limit[userName]=new Date().getTime()+30000;
   }
   content=content.trim().toUpperCase();
+  if(content==""){
+    var ret = "打捞统计/模拟器\n";
+    ret = ret + "输入格式【`l地图ID/难度/胜败/地点】\n";
+    ret = ret + "如【`l39-7/乙/A/U】39-7乙难度U点A胜\n";
+    ret = ret + "可简写,难度默认甲,胜败默认S胜,地点默认BOSS点\n";
+    ret = ret + "如【`l37-3】37-3甲难度Boss点S胜\n";
+    ret = ret + "前面加l为模拟器如【`ll4-5//S】模拟一次4-5boss点S胜打捞\n";
+    callback(ret);
+    return;
+  }
   var ca = content.split('/');
   if (ca.length < 2) {
     ca.push("甲");
@@ -137,6 +137,8 @@ function httpsget(host,path,depth,callback){
     if(depth<5&&(code==301||code==302)){
       var location = res.headers.location;
       httpsget(host,location,depth+1,callback);
+    }else if(code!=200){
+
     }else{
       var resdata = '';
       res.on('data', function (chunk) {
