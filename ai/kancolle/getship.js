@@ -22,12 +22,12 @@ function getShipReply(content,userName,callback) {
     content=content.substring(1);
     var then=limit[userName];
     if(then){
-      if(new Date().getTime()-then<30000){
-        callback(userName+'打捞太快了，休息一会吧');
+      if(new Date().getTime()<then){
+        callback(userName+'打捞太快了,休息一会吧\n恢复时间：'+new Date(then).toLocaleTimeString());
         return;
       }
     }
-    limit[userName]=new Date().getTime();
+    limit[userName]=new Date().getTime()+30000;
   }
   content=content.toUpperCase();
   var ca = content.split('/');
