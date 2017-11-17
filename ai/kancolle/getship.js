@@ -144,7 +144,6 @@ function getlocation(map,callback){
   var host = "db.kcwiki.org";
   var path = "/drop/map/"+map;
   httpsgetRedirect(host,path,0,function(url){
-    console.log(url);
     var n = url.lastIndexOf("SAB.html");
     var defaultPoint = url.substring(n-2,n-1);
     callback(defaultPoint);
@@ -169,7 +168,6 @@ function httpsgetRedirect(host,path,depth,callback){
       var location = res.headers.location;
       httpsget(host,location,depth+1,callback);
     }else{
-      console.log(path);
       callback(path);
     }
   });
