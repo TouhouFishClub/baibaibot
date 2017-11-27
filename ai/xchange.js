@@ -61,11 +61,7 @@ const formatData = async (codeArr, money, callback) => {
   let response = ''
   if(codeArr && !!codeArr[0] && !!codeArr[1]){
     let checkCode = {
-      'ETH': 1,
-      'BTC': 1,
-      'LTC': 1,
-      'BCC': 1,
-      'ETC': 1
+
     }
     if((checkCode[codeArr[0]] || checkCode[codeArr[1]]) && (checkCode[codeArr[1]] !== checkCode[codeArr[0]])){
       if(codeArr[0] === 'CNY' || codeArr[1] === 'CNY'){
@@ -155,7 +151,7 @@ const formatData = async (codeArr, money, callback) => {
 
 const getOkcoinData = code =>
   new Promise((resolve, reject) => {
-    Axios.get(`https://www.okcoin.cn/api/v1/ticker.do?symbol=${code}`, {
+    Axios.get(`https://www.okex.com/api/v1/future_ticker.do?symbol=${code}_usd&contract_type=this_week`, {
       timeout: TIME_OUT,
       headers: {
         'User-Agent': USER_AGENT
