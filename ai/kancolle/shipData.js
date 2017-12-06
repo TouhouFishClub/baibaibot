@@ -143,9 +143,9 @@ function outputship(shipid,callback){
 
 function getItemNameById(id){
   if(id==undefined){
-    return "不可装备";
+    return "〇";
   }else if(id==''){
-    return "未装备";
+    return "〇";
   }else{
     return items[id].name.zh_cn;
   }
