@@ -85,7 +85,7 @@ const formatData = async (codeArr, money, callback) => {
           else
             response = `${formatDate}\n${money}${codeToCurrency(codeArr[0])} = ${(money*ticker.last).toFixed(4)}${codeToCurrency(codeArr[1])}`
         } else {
-          response = `【${codeToCurrency(code.split('_cny').join('').toUpperCase())}行情】${formatDate}\n买一价：$${ticker.buy}\n卖一价：$${ticker.sell}\n最新成交价：$${ticker.last}\n`
+          response = `【${codeToCurrency(code.split('_usdt').join('').toUpperCase())}行情】${formatDate}\n买一价：$${ticker.buy}\n卖一价：$${ticker.sell}\n最新成交价：$${ticker.last}\n`
         }
       } else {
         let ignoreCode = {
@@ -291,8 +291,9 @@ const currencyCodeObj = {
   "以太币" : "ETH",
   "比特币" : "BTC",
   "莱特币" : "LTC",
-  "比特现金" : "BCC",
+  "比特现金" : "BCH",
   "经典以太": "ETC",
+  "EOS币": "EOS",
 }
 
 const codeCurrencyObj = {
