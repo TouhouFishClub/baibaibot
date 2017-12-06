@@ -32,6 +32,8 @@ const {getKancollStaffTweet,stream,streaminit} = require('./ai/twitter');
 const {getShipReply}=require('./ai/kancolle/getship');
 const roulette = require('./ai/Roulette')
 
+const {kancolleInfo} = require('./ai/kancolle/shipData');
+
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
       handleBuddyMsg(msg,qq);
@@ -298,7 +300,7 @@ function reply(content,userName,callback,groupid,from,groupName){
   }else if(first=="q"||first=='Q'){
     kcq(userName,content.substring(1),callback);
   }else if(first=="k"||first=='K'){
-    getMapData(userName,content.substring(1),callback);
+    kancolleInfo(content.substring(1),userName,callback);
   }else if(first=="z"||first=='Z'){
     searchsenka(userName,content.substring(1),callback);
   }else if(first=='s'||first=='S'){

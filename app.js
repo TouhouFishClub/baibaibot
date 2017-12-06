@@ -54,8 +54,10 @@ app.post('/event',function(req,res){
 // const kcq = require('./ai/kanColleQuest');
 const roulette = require('./ai/Roulette')
 const {pairReply}=require('./ai/pairAI');
-const {getShipReply}=require('./ai/kancolle/getship');
-
+const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,searchShipByName}=require('./ai/kancolle/shipData');
+loadShip();
+loadItem();
+loadSuffix();
 app.get('/test',function(req,res){
   // updateAll()
   // res.send(xchange('QQid', 'etc', callback));
@@ -109,10 +111,8 @@ app.get('/test',function(req,res){
   // res.send(kcq('QQid', 'BAKABAKABAKA', callback))
 });
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  getShipReply('l3-5','id',function(ret){
-    console.log(ret);
-    res.send(ret);
-  })
+  searchShipByName('Z1');
+  res.send('ok');
 })
 
 
