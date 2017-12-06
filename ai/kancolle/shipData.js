@@ -117,17 +117,20 @@ function outputship(shipid,callback){
     ammostr=ammostr+"/"+shiplist[i].consum.ammo;
   }
   ret=ret+"弹耗："+ammostr.substring(1)+"\n";
-
-  var equipstr="";
-  for(var k=0;k<4;k++){
-    for(var i=0;i<shiplist.length;i++){
-      equipstr=equipstr+(i==0?"":"/")+getItemNameById(shiplist[i].equip[k])+"("+(shiplist[i].slot[k]?shiplist[i].slot[k]:0)+")";
-    }
-    equipstr=equipstr+'\n';
-  }
-  ret=ret+equipstr.substring(1)+"\n";
-
   callback(ret);
+  ret = "";
+  setTimeout(function(){
+    var equipstr="";
+    for(var k=0;k<4;k++){
+      for(var i=0;i<shiplist.length;i++){
+        equipstr=equipstr+(i==0?"":"/")+getItemNameById(shiplist[i].equip[k])+"("+(shiplist[i].slot[k]?shiplist[i].slot[k]:0)+")";
+      }
+      equipstr=equipstr+'\n';
+    }
+    ret=ret+equipstr.substring(1)+"\n";
+    callback(ret);
+  },500);
+
 }
 
 function getItemNameById(id){
@@ -215,8 +218,6 @@ function loadShip(){
           }
         }
       }
-      console.log(ships[103]);
-      console.log(ships[297]);
     });
   });
 }
