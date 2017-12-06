@@ -364,8 +364,9 @@ const codeCurrencyObj = {
   "ETH" : "以太币",
   "BTC" : "比特币",
   "LTC" : "莱特币",
-  "BCC" : "比特现金",
+  "BCH" : "比特现金",
   "ETC" : "经典以太",
+  "EOS" : "EOS币",
 }
 
 /* 处理同名 */
