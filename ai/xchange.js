@@ -156,7 +156,7 @@ const formatData = async (codeArr, money, callback) => {
 
 const getOkcoinData = code =>
   new Promise((resolve, reject) => {
-    Axios.get(`https://www.okex.com/api/v1/future_ticker.do?symbol=${code}&contract_type=this_week`, {
+    Axios.get(`https://www.okex.com/api/v1/ticker.do?symbol=${code}`, {
       timeout: TIME_OUT,
       headers: {
         'User-Agent': USER_AGENT
