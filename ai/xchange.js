@@ -65,7 +65,8 @@ const formatData = async (codeArr, money, callback) => {
       'BTC': 1,
       'LTC': 1,
       'BCH': 1,
-      'ETC': 1
+      'ETC': 1,
+      'EOS': 1
     }
     if((checkCode[codeArr[0]] || checkCode[codeArr[1]]) && (checkCode[codeArr[1]] !== checkCode[codeArr[0]])){
       if(codeArr[0] === 'CNY' || codeArr[1] === 'CNY'){
