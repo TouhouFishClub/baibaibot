@@ -6,12 +6,16 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 function kancolleInfo(content,userName,callback){
   if(content==""){
 
+  }else if(content.substring(0,1)=="s"){
+    var shipid = content.substring(1);
+    outputship(shipid,callback);
   }else{
-    searchShipByName(content,callback);
+    searchShipByName(content,userName,callback);
   }
 }
 
-function searchShipByName(name,callback){
+var memory={};
+function searchShipByName(name,userName,callback){
   var keys = Object.keys(ships);
   var ret = {};
   for(var i=0;i<keys.length;i++){
@@ -30,7 +34,11 @@ function searchShipByName(name,callback){
   if(candidate.length==1){
     outputship(candidate[0],callback);
   }else{
-
+    var ret = "请选择：";
+    for(var i=0;i<candidate.length;i++){
+      ret = ret + "`ks"+candidate[i]+" | "+ships[candidate[i]].name.zh_cn+"\n";
+    }
+    callback(ret);
   }
 }
 
@@ -127,7 +135,7 @@ function outputship(shipid,callback){
       }
       equipstr=equipstr+'\n';
     }
-    ret=ret+equipstr.substring(1)+"\n";
+    ret=ret+equipstr+"\n";
     callback(ret);
   },500);
 
