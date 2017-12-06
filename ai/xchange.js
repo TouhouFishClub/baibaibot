@@ -64,7 +64,7 @@ const formatData = async (codeArr, money, callback) => {
       'ETH': 1,
       'BTC': 1,
       'LTC': 1,
-      'BCC': 1,
+      'BCH': 1,
       'ETC': 1
     }
     if((checkCode[codeArr[0]] || checkCode[codeArr[1]]) && (checkCode[codeArr[1]] !== checkCode[codeArr[0]])){
@@ -83,7 +83,7 @@ const formatData = async (codeArr, money, callback) => {
           else
             response = `${formatDate}\n${money}${codeToCurrency(codeArr[0])} = ${(money*ticker.last).toFixed(4)}${codeToCurrency(codeArr[1])}`
         } else {
-          response = `【${codeToCurrency(code.split('_cny').join('').toUpperCase())}行情】${formatDate}\n买一价：${ticker.buy}\n卖一价：${ticker.sell}\n最新成交价：${ticker.last}\n`
+          response = `【${codeToCurrency(code.split('_cny').join('').toUpperCase())}行情】${formatDate}\n买一价：$${ticker.buy}\n卖一价：$${ticker.sell}\n最新成交价：$${ticker.last}\n`
         }
       } else {
         let ignoreCode = {
