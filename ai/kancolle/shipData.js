@@ -34,7 +34,7 @@ function searchShipByName(name,userName,callback){
   if(candidate.length==1){
     outputship(candidate[0],callback);
   }else{
-    var ret = "请选择：";
+    var ret = "请选择：\n";
     for(var i=0;i<candidate.length;i++){
       ret = ret + "`ks"+candidate[i]+" | "+ships[candidate[i]].name.zh_cn+"\n";
     }
