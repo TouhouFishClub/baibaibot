@@ -3,7 +3,7 @@ var http = require('http');
 
 var timer = 0;
 function pushTask(){
-  var left = 3600000 - new Date().getTime()%3600000;
+  var left = 1800000 - new Date().getTime()%1800000;
   console.log('left:'+left);
   if(timer==0){
     timer = 1;
