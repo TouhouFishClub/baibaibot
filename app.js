@@ -55,9 +55,11 @@ app.post('/event',function(req,res){
 const roulette = require('./ai/Roulette')
 const {pairReply}=require('./ai/pairAI');
 const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,searchShipByName}=require('./ai/kancolle/shipData');
+const {pushTask} = require('./ai/push');
 loadShip();
 loadItem();
 loadSuffix();
+pushTask();
 app.get('/test',function(req,res){
   // updateAll()
   // res.send(xchange('QQid', 'etc', callback));
@@ -111,7 +113,7 @@ app.get('/test',function(req,res){
   // res.send(kcq('QQid', 'BAKABAKABAKA', callback))
 });
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  searchShipByName('Z1');
+  pushToGroup();
   res.send('ok');
 })
 

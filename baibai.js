@@ -389,7 +389,8 @@ var relogin = function(){
 }
 
 module.exports={
-  relogin
+  relogin,
+  qqq
 }
 
 
