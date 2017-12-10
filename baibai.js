@@ -388,9 +388,14 @@ var relogin = function(){
   },30000);
 }
 
+var getGroupList = function(){
+    return qqq.group;
+}
+
 module.exports={
   relogin,
-  qqq
+  qqq,
+  getGroupList
 }
 
 
