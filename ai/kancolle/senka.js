@@ -202,6 +202,9 @@ function generateTable(sorttype,server){
       var expto = senka.expto;
       var exlist = senka.exlist;
       var frontex = senka.frontex?senka.frontex:0;
+      if(frontex>10&&frontex<75){
+        frontex=75;
+      }
       if(Math.floor(((month+1)/3)%4)==Math.floor(((z+1)/3))%4){
         if(z>=0){
           zcleared=350;
