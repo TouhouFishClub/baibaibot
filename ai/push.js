@@ -41,8 +41,49 @@ function handleGroupPush(group,qqq){
       qqq.sendGroupMsg(gid,ret);
     }
     getPrice(callback);
+    setTimeout(function(){
+      getBitFlyer(callback);
+    },500);
   }
 }
+
+function getBitFlyer(callback){
+  var options = {
+    hostname: "api.bitflyer.jp",
+    port: 443,
+    path: '/v1/ticker?product_code=BTC_JPY',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+    },
+    method: 'GET'
+  };
+  var req = https.request(options, function(res) {
+    res.setEncoding('utf8');
+    var code = res.statusCode;
+    if(code==200){
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        parseBitFinexRes(resdata,callback);
+      });
+    }else{
+
+    }
+  });
+  req.end();
+}
+
+function parseBitFinexRes(resdata,callback){
+  var data = eval('('+resdata+')');
+  var btc_jpy = data.best_bid;
+  var now = new Date();
+  var ret = "比特币行情(Bitflyer)："+now.toLocaleString()+"\n";
+  ret = ret + "BTC:"+btc_jpy+"円";
+  callback(ret);
+}
+
 
 function getPrice(callback){
   var options = {
