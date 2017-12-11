@@ -20,8 +20,8 @@ function pushTask(){
 
 
 function pushToGroup(){
-  const {qqq} = require('../baibai');
-  var groups = qqq.group;
+  const {getGroupList} = require('../baibai');
+  var groups = getGroupList();
   if(groups){
     for(var i=0;i<groups.length;i++){
       var group = groups[i];
