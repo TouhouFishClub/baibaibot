@@ -55,7 +55,7 @@ app.post('/event',function(req,res){
 const roulette = require('./ai/Roulette')
 const {pairReply}=require('./ai/pairAI');
 const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,searchShipByName}=require('./ai/kancolle/shipData');
-const {pushTask} = require('./ai/push');
+const {pushTask,pushToGroup} = require('./ai/push');
 loadShip();
 loadItem();
 loadSuffix();

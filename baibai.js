@@ -392,9 +392,13 @@ var getGroupList = function(){
     return qqq.group;
 }
 
+var getQQQ = function(){
+  return qqq;
+}
+
 module.exports={
   relogin,
-  qqq,
+  getQQQ,
   getGroupList
 }
 

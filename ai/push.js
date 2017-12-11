@@ -20,8 +20,9 @@ function pushTask(){
 
 
 function pushToGroup(){
-  const {getGroupList} = require('../baibai');
+  const {getQQQ,getGroupList} = require('../baibai');
   var groups = getGroupList();
+  var qqq = getQQQ();
   if(groups){
     for(var i=0;i<groups.length;i++){
       var group = groups[i];
@@ -66,7 +67,7 @@ function getBitFlyer(callback){
         resdata = resdata + chunk;
       });
       res.on('end', function () {
-        parseBitFinexRes(resdata,callback);
+        parseBitFlyerRes(resdata,callback);
       });
     }else{
 
@@ -75,7 +76,7 @@ function getBitFlyer(callback){
   req.end();
 }
 
-function parseBitFinexRes(resdata,callback){
+function parseBitFlyerRes(resdata,callback){
   var data = eval('('+resdata+')');
   var btc_jpy = data.best_bid;
   var now = new Date();
@@ -123,7 +124,7 @@ function parseBitFinexRes(resdata,callback){
     var price = p[7];
     ret = ret + name + ":$"+price+"\n";
   }
-  callback(ret);
+  callback(ret.trim());
 }
 
 
