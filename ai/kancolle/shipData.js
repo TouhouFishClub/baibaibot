@@ -304,7 +304,6 @@ function saveDB(resstr,type){
 }
 
 function updateData(data,cl_kancoll_ship,query){
-  console.log(query);
   cl_kancoll_ship.findOne(query, function(err, olddata) {
     if (olddata) {
       if(olddata.time_modified<data.time_modified){
