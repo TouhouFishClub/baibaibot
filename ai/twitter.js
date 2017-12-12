@@ -29,6 +29,16 @@ function stream(groups,callback) {
   zcallback = callback;
 }
 
+function pushTwitterMsg(group,qqq,ret){
+  var gn = group.name;
+  var gid = group.gid;
+  if(gn.indexOf('喵喵')>=0){
+    console.log(gn,gid);
+    qqq.sendGroupMsg(gid,ret);
+  }
+}
+
+
 function startstream(){
   client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
     console.log('will start stream');
@@ -36,29 +46,19 @@ function startstream(){
       console.log('got event:');
       errcount=0;
       if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status&&!event.in_reply_to_user_id){
-        var pushlist = [];
-        var keys = Object.keys(zgroups);
-        if(keys.length>0){
-          for (let g of zgroups) {
-            if(g.name.indexOf('咸鱼')>0||g.name.indexOf('吱')>0){
-              pushlist.push(g.gid);
-            }
-          }
-        }
-        console.log(pushlist);
-        console.log('got event:'+new Date(event.created_at).toLocaleString());
-
-
+        const {getQQQ,getGroupList} = require('../baibai');
+        var groups = getGroupList();
+        var qqq = getQQQ();
+        console.log(event);
         var text = event.text;
         var ts = new Date(event.created_at);
         var tsstr = ts.toLocaleString();
         var ret = text+"\n"+tsstr;
         var now = new Date();
         if(now.getTime()-ts.getTime()<60000){
-          for(var i=0;i<pushlist.length;i++){
-            zcallback(pushlist[i],ret);
+          for(var i=0;i<groups.length;i++){
+            pushTwitterMsg(group,qqq,ret);
           }
-          console.log(event);
         }
       }
     });

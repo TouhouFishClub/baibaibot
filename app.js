@@ -56,10 +56,8 @@ const roulette = require('./ai/Roulette')
 const {pairReply}=require('./ai/pairAI');
 const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,searchShipByName}=require('./ai/kancolle/shipData');
 const {pushTask,pushToGroup} = require('./ai/push');
-loadShip();
-loadItem();
-loadSuffix();
-pushTask();
+updateShipDB();
+updateItemDB();
 app.get('/test',function(req,res){
   // updateAll()
   // res.send(xchange('QQid', 'etc', callback));
