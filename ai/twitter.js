@@ -57,7 +57,7 @@ function startstream(){
         var now = new Date();
         if(now.getTime()-ts.getTime()<60000){
           for(var i=0;i<groups.length;i++){
-            pushTwitterMsg(group,qqq,ret);
+            pushTwitterMsg(groups[i],qqq,ret);
           }
         }
       }
