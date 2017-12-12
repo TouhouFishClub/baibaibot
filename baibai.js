@@ -38,6 +38,7 @@ const {pushTask,pushToGroup} = require('./ai/push');
 loadShip();
 updateShipDB();
 updateItemDB();
+loadSuffix();
 pushTask();
 
 
