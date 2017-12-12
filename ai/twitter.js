@@ -32,7 +32,7 @@ function stream(groups,callback) {
 function pushTwitterMsg(group,qqq,ret){
   var gn = group.name;
   var gid = group.gid;
-  if(gn.indexOf('喵喵')>=0){
+  if(gn.indexOf('咸鱼')>=0||gn.indexOf('バウル')>=0){
     console.log(gn,gid);
     qqq.sendGroupMsg(gid,ret);
   }
@@ -51,6 +51,11 @@ function startstream(){
         var qqq = getQQQ();
         console.log(event);
         var text = event.text;
+        if(event.extended_tweet){
+          if(event.extended_tweet.full_text){
+            test = event.extended_tweet.full_text;
+          }
+        }
         var ts = new Date(event.created_at);
         var tsstr = ts.toLocaleString();
         var ret = text+"\n"+tsstr;
