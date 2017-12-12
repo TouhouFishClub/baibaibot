@@ -33,6 +33,12 @@ const {getShipReply}=require('./ai/kancolle/getship');
 const roulette = require('./ai/Roulette')
 
 const {kancolleInfo} = require('./ai/kancolle/shipData');
+const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,searchShipByName}=require('./ai/kancolle/shipData');
+const {pushTask,pushToGroup} = require('./ai/push');
+updateShipDB();
+updateItemDB();
+pushTask();
+
 
 const buddyHandler = new MsgHandler(
     (msg, qq) => {
