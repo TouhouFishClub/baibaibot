@@ -36,6 +36,7 @@ const {kancolleInfo} = require('./ai/kancolle/shipData');
 const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,searchShipByName}=require('./ai/kancolle/shipData');
 const {pushTask,pushToGroup} = require('./ai/push');
 loadShip();
+loadItem();
 updateShipDB();
 updateItemDB();
 loadSuffix();
