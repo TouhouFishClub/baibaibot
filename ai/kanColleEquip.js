@@ -260,7 +260,7 @@ const renderMessage = (type, itemObj, week, userId, star) => {
       if(itemObj.length - 1){
         msg += '请选择装备\n'
         itemObj.forEach((item, index) => {
-          msg += `x${index} | ${improvementForWeek(item, getJSTDayofWeek()).replace('||', '  →  ')}\n`
+          msg += `\`ex${index} | ${improvementForWeek(item, getJSTDayofWeek()).replace('||', '  →  ')}\n`
         })
         userItemObj[userId] = itemObj
       } else {
