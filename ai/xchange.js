@@ -8,6 +8,7 @@
  */
 const Axios = require('axios')
 const _  = require('lodash')
+const {getPrice} = require('./push');
 const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
 const TIME_OUT = 30000
 
@@ -17,6 +18,10 @@ module.exports = function(userId, content, callback){
     case '':
       res = `输入格式为\`c[数字][币种/币种代码]，如10239.23日元，默认转换为${defaultCurrency}；\n可使用“-”来连接两种币种转换，如200日元-美元\n如果只输入币种，则显示汇率信息；\n输入“\`c币种”，可查看支持转换的币种；`
       callback(res)
+      break
+    case 'b':
+    case 'B':
+      getPrice(callback);
       break
     case '币种':
       let str = Object.keys(currencyCodeObj).join('、'), callbackArr = ['支持的币种']

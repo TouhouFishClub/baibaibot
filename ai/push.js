@@ -130,5 +130,6 @@ function parseBitFinexRes(resdata,callback){
 
 module.exports={
   pushToGroup,
-  pushTask
+  pushTask,
+  getPrice
 }
