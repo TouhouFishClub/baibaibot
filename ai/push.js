@@ -153,7 +153,7 @@ function parseBitFinexRes(resdata,usd_cny,callback){
     var p = list[i];
     var name = p[0].substring(1,4);
     var price = p[7];
-    ret = ret + name + ":$"+price+" \t￥"+(usd_cny*price).toFixed(2)+"\n";
+    ret = ret + name + ":$"+price+"   \t￥"+(usd_cny*price).toFixed(2)+"\n";
   }
   ret = ret + "1$="+usd_cny+"1￥";
   callback(ret.trim());
