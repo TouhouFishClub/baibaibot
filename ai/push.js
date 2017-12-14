@@ -17,6 +17,7 @@ function pushTask(){
   }
 }
 
+var failed=0;
 function getCurrency(callback){
   var options = {
     hostname: "api.fixer.io",
@@ -36,12 +37,22 @@ function getCurrency(callback){
         resdata = resdata + chunk;
       });
       res.on('end', function () {
+        failed=0;
         var data = eval('('+resdata+')');
         var usd_cny=data.rates.CNY;
         callback(usd_cny);
       });
     }else{
       callback(0);
+    }
+  });
+  req.setTimeout(5000,function(){
+    req.end();
+    failed = failed + 1;
+    if(failed>1){
+      callback(0);
+    }else{
+      getCurrency(callback);
     }
   });
   req.end();
@@ -100,6 +111,15 @@ function getBitFlyer(callback){
       });
     }else{
 
+    }
+  });
+  req.setTimeout(5000,function(){
+    req.end();
+    failed = failed + 1;
+    if(failed>1){
+      callback('bitfinex BOOM!');
+    }else{
+      getBitFlyer(callback);
     }
   });
   req.end();
