@@ -19,6 +19,7 @@ function pushTask(){
 
 var failed=0;
 function getCurrency(callback){
+  console.log('will get currency');
   var options = {
     hostname: "api.fixer.io",
     port: 80,
@@ -89,6 +90,7 @@ function handleGroupPush(group,qqq){
 }
 
 function getBitFlyer(callback){
+  console.log('will get bitflyer');
   var options = {
     hostname: "api.bitflyer.jp",
     port: 443,
@@ -142,6 +144,7 @@ function parseBitFlyerRes(resdata,callback){
 
 
 function getPrice(callback){
+  console.log('will get bitfinex');
   getCurrency(function(usd_cny){
     var options = {
       hostname: "api.bitfinex.com",
