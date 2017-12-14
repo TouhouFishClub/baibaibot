@@ -9,7 +9,7 @@ var memory = {};
 
 function searchsenka(userName,content,callback){
   if(content==""){
-    callback('输入格式：`z[服务器名或ID]-[用户名]')
+    callback('输入格式：`z[服务器ID]-[用户名]')
   }else if(content.length==2&&content.substring(0,1)=='x'){
     ret = memory[userName+content];
     if(!ret){
@@ -24,7 +24,7 @@ function searchsenka(userName,content,callback){
       searchsenka2(serverId,userName,name,callback)
     }else if(ca.length==2){
       var serverId = parseInt(ca[0]);
-      var name = ca[1];
+      var name = ca[1].trim();
       searchsenka2(serverId,userName,name,callback)
     }else{
       var serverId = parseInt(ca[0]);
