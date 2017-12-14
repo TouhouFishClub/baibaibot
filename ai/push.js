@@ -102,6 +102,7 @@ function getBitFlyer(callback){
     res.setEncoding('utf8');
     var code = res.statusCode;
     if(code==200){
+      failed=0;
       var resdata = '';
       res.on('data', function (chunk) {
         resdata = resdata + chunk;
@@ -110,7 +111,12 @@ function getBitFlyer(callback){
         parseBitFlyerRes(resdata,callback);
       });
     }else{
-
+      failed = failed + 1;
+      if(failed>1){
+        callback('bitfinex BOOM!');
+      }else{
+        getBitFlyer(callback);
+      }
     }
   });
   req.setTimeout(5000,function(){
@@ -150,6 +156,7 @@ function getPrice(callback){
       res.setEncoding('utf8');
       var code = res.statusCode;
       if(code==200){
+        failed=0;
         var resdata = '';
         res.on('data', function (chunk) {
           resdata = resdata + chunk;
@@ -158,7 +165,21 @@ function getPrice(callback){
           parseBitFinexRes(resdata,usd_cny,callback);
         });
       }else{
-
+        failed = failed + 1;
+        if(failed>1){
+          callback('bitfinex BOOM!');
+        }else{
+          getPrice(callback);
+        }
+      }
+    });
+    req.setTimeout(5000,function(){
+      req.end();
+      failed = failed + 1;
+      if(failed>1){
+        callback('bitfinex BOOM!');
+      }else{
+        getPrice(callback);
       }
     });
     req.end();
