@@ -17,6 +17,35 @@ function pushTask(){
   }
 }
 
+function getCurrency(callback){
+  var options = {
+    hostname: "api.fixer.io",
+    port: 80,
+    path: '/latest?base=USD',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+    },
+    method: 'GET'
+  };
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    var code = res.statusCode;
+    if(code==200){
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        var data = eval('('+resdata+')');
+        var usd_cny=data.rates.CNY;
+        callback(usd_cny);
+      });
+    }else{
+      callback(0);
+    }
+  });
+  req.end();
+}
 
 
 function pushToGroup(){
@@ -87,34 +116,36 @@ function parseBitFlyerRes(resdata,callback){
 
 
 function getPrice(callback){
-  var options = {
-    hostname: "api.bitfinex.com",
-    port: 443,
-    path: '/v2/tickers?symbols=tBTCUSD,tLTCUSD,tETHUSD,tETCUSD,tBCHUSD,tEOSUSD',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
-    },
-    method: 'GET'
-  };
-  var req = https.request(options, function(res) {
-    res.setEncoding('utf8');
-    var code = res.statusCode;
-    if(code==200){
-      var resdata = '';
-      res.on('data', function (chunk) {
-        resdata = resdata + chunk;
-      });
-      res.on('end', function () {
-        parseBitFinexRes(resdata,callback);
-      });
-    }else{
+  getCurrency(function(usd_cny){
+    var options = {
+      hostname: "api.bitfinex.com",
+      port: 443,
+      path: '/v2/tickers?symbols=tBTCUSD,tLTCUSD,tETHUSD,tETCUSD,tBCHUSD,tEOSUSD',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+      },
+      method: 'GET'
+    };
+    var req = https.request(options, function(res) {
+      res.setEncoding('utf8');
+      var code = res.statusCode;
+      if(code==200){
+        var resdata = '';
+        res.on('data', function (chunk) {
+          resdata = resdata + chunk;
+        });
+        res.on('end', function () {
+          parseBitFinexRes(resdata,usd_cny,callback);
+        });
+      }else{
 
-    }
-  });
-  req.end();
+      }
+    });
+    req.end();
+  })
 }
 
-function parseBitFinexRes(resdata,callback){
+function parseBitFinexRes(resdata,usd_cny,callback){
   var list = eval('('+resdata+')');
   var now = new Date();
   var ret = "数字货币行情(Bitfinex)："+now.toLocaleString()+"\n";
@@ -122,8 +153,9 @@ function parseBitFinexRes(resdata,callback){
     var p = list[i];
     var name = p[0].substring(1,4);
     var price = p[7];
-    ret = ret + name + ":$"+price+"\n";
+    ret = ret + name + ":$"+price+" \t￥"+(usd_cny*price).toFixed(2)+"\n";
   }
+  ret = ret + "1$="+usd_cny+"1￥";
   callback(ret.trim());
 }
 
