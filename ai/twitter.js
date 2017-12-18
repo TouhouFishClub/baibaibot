@@ -29,23 +29,38 @@ function stream(groups,callback) {
   zcallback = callback;
 }
 
-function pushTwitterMsg(group,qqq,ret){
+function pushTwitterMsg(group,twitterid,qqq,ret){
   var gn = group.name;
   var gid = group.gid;
-  if(gn.indexOf('咸鱼')>=0||gn.indexOf('バウル')>=0){
-    console.log(gn,gid);
-    qqq.sendGroupMsg(gid,ret);
+  if(twitterid=='294025417'){
+    if(gn.indexOf('咸鱼')>=0||gn.indexOf('バウル')>=0){
+      console.log(gn,gid);
+      qqq.sendGroupMsg(gid,ret);
+    }
+  }
+  if(twitterid=='3833285893'){
+    if(gn.indexOf('咸鱼')>=0){
+      console.log(gn,gid);
+      qqq.sendGroupMsg(gid,ret);
+    }
+  }
+  if(twitterid=='856385582401966080'){
+    if(gn.indexOf('咸鱼')>=0){
+      console.log(gn,gid);
+      qqq.sendGroupMsg(gid,ret);
+    }
   }
 }
 
 
 function startstream(){
-  client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
+  client.stream('statuses/filter', {follow: '294025417,3833285893,856385582401966080'}, function(stream) {
     console.log('will start stream');
     stream.on('data', function(event) {
       console.log('got event:');
       errcount=0;
       if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status&&!event.in_reply_to_user_id){
+        console.log(event);
         const {getQQQ,getGroupList} = require('../baibai');
         var groups = getGroupList();
         var qqq = getQQQ();
@@ -60,9 +75,10 @@ function startstream(){
         var tsstr = ts.toLocaleString();
         var ret = text+"\n"+tsstr;
         var now = new Date();
+        var twitterscrname=event.user.id;
         if(now.getTime()-ts.getTime()<60000){
           for(var i=0;i<groups.length;i++){
-            pushTwitterMsg(groups[i],qqq,ret);
+            pushTwitterMsg(groups[i],twitterscrname,qqq,ret);
           }
         }
       }
