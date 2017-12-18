@@ -115,7 +115,7 @@ function getBitFlyer(callback){
     }else{
       failed = failed + 1;
       if(failed>1){
-        callback('bitfinex BOOM!');
+        callback('bitflyer BOOM!');
       }else{
         getBitFlyer(callback);
       }
