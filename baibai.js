@@ -198,20 +198,20 @@ function handleMsg_D(msg,qq,type){
     }
   }
 
-
+  var rcontent=content.trim();
   if(
-    content === '俄罗斯轮盘' ||
-    content === '俄羅斯輪盤' ||
-    content === '加入' ||
-    content === '加入' ||
-    content === 'join' ||
-    content === '參加' ||
-    content === '参加' ||
-    content === '开枪' ||
-    content === '开火' ||
-    content === 'fire' ||
-    content === '開火' ||
-    content === '開槍'
+    rcontent === '俄罗斯轮盘' ||
+    rcontent === '俄羅斯輪盤' ||
+    rcontent === '加入' ||
+    rcontent === '加入' ||
+    rcontent === 'join' ||
+    rcontent === '參加' ||
+    rcontent === '参加' ||
+    rcontent === '开枪' ||
+    rcontent === '开火' ||
+    rcontent === 'fire' ||
+    rcontent === '開火' ||
+    rcontent === '開槍'
   ){
     roulette(name,content,callback)
     return
@@ -223,7 +223,7 @@ function handleMsg_D(msg,qq,type){
     return;
   }
 
-  
+
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
 
     var c1 = content.substring(1);
@@ -238,7 +238,7 @@ function handleMsg_D(msg,qq,type){
     }
     return;
   }
-  if(content.trim()=='天气'){
+  if(rcontent=='天气'){
     if(msg.user){
       var city = msg.user.city;
       if(city.length>0&&city.length<5){
@@ -249,7 +249,7 @@ function handleMsg_D(msg,qq,type){
   }
 
   var n = content.indexOf('天气');
-  if(n>1&&n<10&&content.length==n+2){
+  if(n>1&&n<10&&rcontent.length==n+2){
     var city = content.substring(0,n).trim();
     try{
       getWeatherByCity(city,name,callback);
