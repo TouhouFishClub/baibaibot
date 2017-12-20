@@ -148,7 +148,7 @@ var proxy = 'http://192.168.17.62:3128';
 var agent = new HttpsProxyAgent(proxy);
 
 function getBifFinex(usd_cny,callback,withproxy){
-  console.log('will get bitfinex');
+  console.log('will get bitfinex:'+withproxy);
   var options = {
     hostname: "api.bitfinex.com",
     port: 443,
