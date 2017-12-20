@@ -49,12 +49,7 @@ function getCurrency(callback){
   });
   req.setTimeout(5000,function(){
     req.end();
-    failed = failed + 1;
-    if(failed>1){
-      callback(0);
-    }else{
-      getCurrency(callback);
-    }
+    callback(0);
   });
   req.end();
 }
@@ -125,7 +120,7 @@ function getBitFlyer(callback){
     req.end();
     failed = failed + 1;
     if(failed>1){
-      callback('bitfinex BOOM!');
+      callback('bitflyer BOOM!');
     }else{
       getBitFlyer(callback);
     }
