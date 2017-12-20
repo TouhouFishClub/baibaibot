@@ -38,7 +38,6 @@ function getCurrency(callback){
         resdata = resdata + chunk;
       });
       res.on('end', function () {
-        failed=0;
         var data = eval('('+resdata+')');
         var usd_cny=data.rates.CNY;
         callback(usd_cny);
@@ -182,7 +181,7 @@ function getBifFinex(usd_cny,callback){
     if(failed>1){
       callback('bitfinex BOOM!');
     }else{
-      getPrice(callback);
+      getBifFinex(usd_cny,callback);
     }
   });
   req.end();
