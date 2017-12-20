@@ -141,47 +141,51 @@ function parseBitFlyerRes(resdata,callback){
 function getPrice(callback){
   console.log('will get bitfinex');
   getCurrency(function(usd_cny){
-    var options = {
-      hostname: "api.bitfinex.com",
-      port: 443,
-      path: '/v2/tickers?symbols=tBTCUSD,tLTCUSD,tETHUSD,tETCUSD,tBCHUSD,tEOSUSD',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
-      },
-      method: 'GET'
-    };
-    var req = https.request(options, function(res) {
-      res.setEncoding('utf8');
-      var code = res.statusCode;
-      if(code==200){
-        failed=0;
-        var resdata = '';
-        res.on('data', function (chunk) {
-          resdata = resdata + chunk;
-        });
-        res.on('end', function () {
-          parseBitFinexRes(resdata,usd_cny,callback);
-        });
-      }else{
-        failed = failed + 1;
-        if(failed>1){
-          callback('bitfinex BOOM!');
-        }else{
-          getPrice(callback);
-        }
-      }
-    });
-    req.setTimeout(5000,function(){
-      req.end();
+    getBifFinex(usd_cny,callback);
+  })
+}
+
+function getBifFinex(usd_cny,callback){
+  var options = {
+    hostname: "api.bitfinex.com",
+    port: 443,
+    path: '/v2/tickers?symbols=tBTCUSD,tLTCUSD,tETHUSD,tETCUSD,tBCHUSD,tEOSUSD',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+    },
+    method: 'GET'
+  };
+  var req = https.request(options, function(res) {
+    res.setEncoding('utf8');
+    var code = res.statusCode;
+    if(code==200){
+      failed=0;
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        parseBitFinexRes(resdata,usd_cny,callback);
+      });
+    }else{
       failed = failed + 1;
       if(failed>1){
         callback('bitfinex BOOM!');
       }else{
         getPrice(callback);
       }
-    });
+    }
+  });
+  req.setTimeout(5000,function(){
     req.end();
-  })
+    failed = failed + 1;
+    if(failed>1){
+      callback('bitfinex BOOM!');
+    }else{
+      getPrice(callback);
+    }
+  });
+  req.end();
 }
 
 function parseBitFinexRes(resdata,usd_cny,callback){
