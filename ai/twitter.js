@@ -54,7 +54,7 @@ function pushTwitterMsg(group,twitterid,qqq,ret){
 
 
 function startstream(){
-  client.stream('statuses/filter', {follow: '294025417,3833285893,856385582401966080'}, function(stream) {
+  client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
     console.log('will start stream');
     stream.on('data', function(event) {
       console.log('got event:');
