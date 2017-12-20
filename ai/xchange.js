@@ -8,7 +8,7 @@
  */
 const Axios = require('axios')
 const _  = require('lodash')
-const {getPrice} = require('./push');
+const {getPrice,getBitFlyer} = require('./push');
 const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
 const TIME_OUT = 30000
 
@@ -22,6 +22,10 @@ module.exports = function(userId, content, callback){
     case 'b':
     case 'B':
       getPrice(callback);
+      break
+    case 'l':
+    case 'L':
+      getBitFlyer(callback);
       break
     case '币种':
       let str = Object.keys(currencyCodeObj).join('、'), callbackArr = ['支持的币种']

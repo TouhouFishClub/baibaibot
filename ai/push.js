@@ -207,5 +207,6 @@ function parseBitFinexRes(resdata,usd_cny,callback){
 module.exports={
   pushToGroup,
   pushTask,
-  getPrice
+  getPrice,
+  getBitFlyer
 }
