@@ -138,13 +138,17 @@ function parseBitFlyerRes(resdata,callback){
 
 
 function getPrice(callback){
-  console.log('will get bitfinex');
   getCurrency(function(usd_cny){
     getBifFinex(usd_cny,callback);
   })
 }
 
-function getBifFinex(usd_cny,callback){
+var HttpsProxyAgent = require('https-proxy-agent')
+var proxy = 'http://192.168.17.62:3128';
+var agent = new HttpsProxyAgent(proxy);
+
+function getBifFinex(usd_cny,callback,withproxy){
+  console.log('will get bitfinex');
   var options = {
     hostname: "api.bitfinex.com",
     port: 443,
@@ -154,6 +158,9 @@ function getBifFinex(usd_cny,callback){
     },
     method: 'GET'
   };
+  if(withproxy){
+    options.agent=agent;
+  }
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
@@ -178,10 +185,10 @@ function getBifFinex(usd_cny,callback){
   req.setTimeout(5000,function(){
     req.end();
     failed = failed + 1;
-    if(failed>1){
+    if(failed>2){
       callback('bitfinex BOOM!');
     }else{
-      getBifFinex(usd_cny,callback);
+      getBifFinex(usd_cny,callback,true);
     }
   });
   req.end();
