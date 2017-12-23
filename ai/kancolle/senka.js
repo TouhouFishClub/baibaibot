@@ -219,29 +219,41 @@ function generateTable(sorttype,server){
           zcleared=350;
           z=-1;
         }
-        if (Math.abs(expfrom - zexfrom) < 1200000 && Math.abs(expto - zexto) < 1200000 &&frontex+senka.ex<950) {
-          zcleared=350;
-          z=-1;
+        if (Math.abs(expfrom - zexfrom) < 1200000 && Math.abs(expto - zexto) < 1200000 && ex < 330) {
+          zcleared = 350
+          zComplete = -1
         }
-        if(frontex+senka.ex<950){
-          if(senka.max){
+        if(ex + frontex < 950){
+          if(max){
             if(exlist){
               exlist.push(frontex);
-              var zc = 0;
-              for(var w=0;w<exlist.length;w++){
-                var xex = parseInt(exlist[w]);
-                if(xex>420){
-                  zc=1;
-                }
+              let zc = 0
+              exlist.forEach(ele => {
+                var aex=parseInt(ele);
+              if(aex>345&&aex<355){
+                zc = 1
               }
-              var ruex = senka.max-senka.senka;
-              var hiddenex = 1380-senka.ex-ruex;
-              if(hiddenex>420){
-                zc=1;
+              if(aex>420&&aex<430){
+                zc = 1
               }
-              if(zc==0){
-                zcleared=350;
-                z=-1;
+              if(aex>445&&aex<455){
+                zc = 1
+              }
+              if(aex>495&&aex<505){
+                zc = 1
+              }
+              if(aex>510){
+                zc = 1
+              }
+            })
+              let ruex = max - senka
+              let hiddenex = 1380 - ex - ruex
+              if((hiddenex>345&&hiddenex<355)||hiddenex > 420){
+                zc = 1
+              }
+              if(zc === 0){
+                zcleared = 350
+                zComplete = -1
               }
             }
           }
