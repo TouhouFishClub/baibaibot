@@ -152,7 +152,7 @@ function getBifFinex(usd_cny,callback,withproxy){
   var options = {
     hostname: "api.bitfinex.com",
     port: 443,
-    path: '/v2/tickers?symbols=tBTCUSD,tLTCUSD,tETHUSD,tETCUSD,tBCHUSD,tEOSUSD',
+    path: '/v2/tickers?symbols=tBTCUSD,tLTCUSD,tETHUSD,tETCUSD,tBCHUSD,tEOSUSD,tXRPUSD,tDSHUSD',
     headers: {
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
