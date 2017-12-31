@@ -280,7 +280,7 @@ function generateTable(sorttype,server){
           exstr = exstr + senka.ex + '    (' + new Date(exfrom).toLocaleString() + '----' + new Date(exto).toLocaleString() + ')';
         }
         if(zcleared>0){
-          exstr = exstr + '('+(z+1)+'月已完成Z作战)';
+          exstr = exstr + '('+(zComplete+1)+'月已完成Z作战)';
         }
 
         if (senka.fsenkats == 0 && Math.abs(expfrom - zexpfrom) < 1200000) {
