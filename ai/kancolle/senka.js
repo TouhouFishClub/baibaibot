@@ -223,8 +223,8 @@ function generateTable(sorttype,server){
           zcleared = 350
           zComplete = -1
         }
-        if(ex + frontex < 950){
-          if(true){
+        if(senka.ex + frontex < 950){
+          if(max){
             if(exlist){
               exlist.push(frontex);
               let zc = 0
@@ -246,13 +246,11 @@ function generateTable(sorttype,server){
                 zc = 1
               }
             });
-              if(max){
                 let ruex = max - senka
                 let hiddenex = 1380 - ex - ruex
                 if((hiddenex>345&&hiddenex<355)||hiddenex > 420){
                   zc = 1
                 }
-              }
               if(zc === 0){
                 zcleared = 350
                 zComplete = -1
