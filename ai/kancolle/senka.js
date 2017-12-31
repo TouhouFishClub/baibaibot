@@ -202,6 +202,7 @@ function generateTable(sorttype,server){
       var expto = senka.expto;
       var exlist = senka.exlist;
       var frontex = senka.frontex?senka.frontex:0;
+      var ex=senka.ex;
       if(frontex>10&&frontex<75){
         frontex=75;
       }
