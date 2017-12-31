@@ -205,19 +205,16 @@ function generateTable(sorttype,server){
       if(frontex>10&&frontex<75){
         frontex=75;
       }
-      if(Math.floor(((month+1)/3)%4)==Math.floor(((z+1)/3))%4){
-        if(z>=0){
-          zcleared=350;
+      if(Math.floor((month + 1) / 3) === Math.floor((z + 1) / 3) && z >= 0){
+        zcleared = 350
+      } else if (ignore || (now.getDate() === monthOfDay[now.getMonth()] && now.getHours() >= 14)){
+        if(ex > 1025 && ex < 1035 && !frontex){
+          zcleared = 350
+          zComplete = -1
         }
-      }
-      if(now.getDate()==monthOfDay[now.getMonth()]&&now.getHours()>=14){
-        if(senka.ex>1025&&senka.ex<1035&&!frontex){
-          zcleared=350;
-          z=-1;
-        }
-        if(senka.ex<960&&senka.ex>950&&!frontex){
-          zcleared=350;
-          z=-1;
+        if(ex < 960 && ex > 950 && !frontex){
+          zcleared = 350
+          zComplete = -1
         }
         if (Math.abs(expfrom - zexfrom) < 1200000 && Math.abs(expto - zexto) < 1200000 && ex < 330) {
           zcleared = 350
@@ -230,27 +227,27 @@ function generateTable(sorttype,server){
               let zc = 0
               exlist.forEach(ele => {
                 var aex=parseInt(ele);
-              if(aex>345&&aex<355){
-                zc = 1
-              }
-              if(aex>420&&aex<430){
-                zc = 1
-              }
-              if(aex>445&&aex<455){
-                zc = 1
-              }
-              if(aex>495&&aex<505){
-                zc = 1
-              }
-              if(aex>510){
-                zc = 1
-              }
-            });
-                let ruex = max - senka
-                let hiddenex = 1380 - ex - ruex
-                if((hiddenex>345&&hiddenex<355)||hiddenex > 420){
+                if(aex>345&&aex<355){
                   zc = 1
                 }
+                if(aex>420&&aex<430){
+                  zc = 1
+                }
+                if(aex>445&&aex<455){
+                  zc = 1
+                }
+                if(aex>495&&aex<505){
+                  zc = 1
+                }
+                if(aex>510){
+                  zc = 1
+                }
+              })
+              let ruex = max - senka
+              let hiddenex = 1380 - ex - ruex
+              if((hiddenex>345&&hiddenex<355)||hiddenex > 420){
+                zc = 1
+              }
               if(zc === 0){
                 zcleared = 350
                 zComplete = -1
