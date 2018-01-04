@@ -51,6 +51,7 @@ function searchsenka2(server,userName,name,callback){
   if(read==false){
     searchSenkaByCache(server,userName,name,callback);
   }else{
+    console.log('will get');
     var options = {
       hostname: "192.168.17.52",
       port: 12450,
