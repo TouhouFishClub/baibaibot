@@ -53,7 +53,7 @@ function searchsenka2(server,userName,name,callback){
   }else{
     console.log('will get');
     var options = {
-      hostname: "192.168.17.52",
+      hostname: "127.0.0.1",
       port: 12450,
       path: "/api/calrank?server="+server,
       headers: {
