@@ -289,7 +289,7 @@ function generateTable(sorttype,server){
           data.d[i].except=senka.subsenka + senka.fsenka + 1380 - zcleared-frontex;
           data.d[i].max=data.d[i].except;
           data.d[i].min=data.d[i].except;
-        }else if(senka.fsenkats == 0 && getDateNo(expfrom)==0 && new Date(basets).getMonth()<month){
+        }else if(senka.fsenkats == 0 && getDateNo(expfrom)==0 && new Date(basets).getYear()*12+new Date(basets).getMonth()<month+now.getYear()*12){
           var minsenka = senka.fsenka+senka.subsenka+1380-zcleared;
           var maxsenka = senka.fsenka+senka.subsenka+senka.subbase+1380-zcleared;
           var max2 = Math.floor(minsenka + (expfrom-zexfrom)*0.00001);
@@ -324,7 +324,7 @@ function generateTable(sorttype,server){
           }
           var maxsenka4 = -1;
           var maxsenka5 = -1;
-          if(new Date(basets).getMonth()<month){
+          if(new Date(basets).getYear()*12+new Date(basets).getMonth()<month+now.getYear()*12){
             maxsenka4 = senka.subsenka+senka.subbase+minmap[0]+1380-zcleared;
             if(maxsenka4<maxsenka){
               maxsenka=maxsenka4;
@@ -352,7 +352,7 @@ function generateTable(sorttype,server){
         if(maxsenka3<maxsenka){
           maxsenka=maxsenka3;
         }
-        if(new Date(basets).getMonth()<month){
+        if(new Date(basets).getYear()*12+new Date(basets).getMonth()<month+now.getYear()*12){
           var maxsenka4 = senka.subsenka+senka.subbase+1380-zcleared;
           if(maxsenka4<maxsenka){
             maxsenka=maxsenka4;
