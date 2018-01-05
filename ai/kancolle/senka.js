@@ -207,7 +207,7 @@ function generateTable(sorttype,server){
       if(frontex>10&&frontex<75){
         frontex=75;
       }
-      if(Math.floor((month + 1) / 3) === Math.floor((z + 1) / 3) && z >= 0){
+      if((Math.floor((month + 1) / 3)%4) === (Math.floor((z + 1) / 3)%4) && z >= 0){
         zcleared = 350
       } else if ( (now.getDate() === monthOfDay[now.getMonth()] && now.getHours() >= 14)){
         if(ex > 1025 && ex < 1035 && !frontex){
