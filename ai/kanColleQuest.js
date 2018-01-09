@@ -10,6 +10,7 @@ let dataForId = {}
 let wikiId2Id = {}
 
 module.exports = function(userId, context, callback){
+  context=context.trim();
   const timeInfo = `search by ${context}`
   console.time(timeInfo)
   if(!isInit){

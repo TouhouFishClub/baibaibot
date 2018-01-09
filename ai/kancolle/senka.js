@@ -8,6 +8,7 @@ var c = {};
 var memory = {};
 
 function searchsenka(userName,content,callback){
+  content=content.trim();
   if(content==""){
     callback('输入格式：`z[服务器ID]-[用户名]')
   }else if(content.length==2&&content.substring(0,1)=='x'){
