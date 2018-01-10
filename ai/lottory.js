@@ -32,7 +32,7 @@ function lottoryReply(content,userName,Ncallback){
       ret = ret + "取小数点后3位有效数字为518,与518最接近的人为B,差距为136,中奖的幸运儿就是B";
       callback(ret);
       setTimeout(function(){
-        getlottory();
+        getlottory(callback);
       },60000)
     }
   }else if(content.length==3){
@@ -55,9 +55,9 @@ function lottoryReply(content,userName,Ncallback){
   }
 }
 
-function getlottory(){
+function getlottory(callback){
   console.log(info);
-  var ret = "报名选手共"+Object.keys(info).length+"人：\n";
+  var ret = "报名选手共"+(Object.keys(info).length-2)+"人：\n";
   var sum = 0;
   for(var p in info){
     if(p!="start"&&p!="going") {
@@ -93,6 +93,7 @@ function getlottory(){
   ret = ret + "\n中奖幸运儿是："+ minp+",恭喜！";
   info={};
   console.log(ret);
+  callback(ret);
 }
 
 
