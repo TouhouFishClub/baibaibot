@@ -1,5 +1,23 @@
 var info={};
-function lottoryReply(content,userName,callback){
+
+const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
+
+function lottoryReply(content,userName,Ncallback){
+  var callback=function(response){
+    let strArr = response.split('\n'), callbackArr = []
+    callbackArr.push(strArr.reduce((pre, cur) => {
+      if(pre.length + cur.length < 250)
+        return `${pre}\n${cur}`
+      else {
+        callbackArr.push(pre)
+        return cur
+      }
+    }))
+    callbackArr.forEach(async (ele, idx) => {
+      await wait(idx * 500)
+      Ncallback(ele)
+    })
+  }
   if(content==""){
     if(info.going){
       callback('抽奖正在进行中');
@@ -13,6 +31,9 @@ function lottoryReply(content,userName,callback){
       ret = ret + "那么321+654+987=1962,³√1962=12.518904727821093\n";
       ret = ret + "取小数点后3位有效数字为518,与518最接近的人为B,差距为136,中奖的幸运儿就是B";
       callback(ret);
+      setTimeout(function(){
+        getlottory();
+      },60000)
     }
   }else if(content.length==3){
     if(info.going){
