@@ -75,6 +75,12 @@ function getlottory(callback){
   ret = ret + "报名选手幸运数字之和为："+sum+"\n";
   ret = ret + "³√"+sum+"="+sqr+"\n";
   var n1 = sqr-Math.floor(sqr);
+  if(n1==0){
+    ret = ret + '由于'+sum+'是完全立方数,此局抽奖无效';
+    callback(ret);
+    info={};
+    return;
+  }
   while(n1<=100){
     n1=n1*10;
   }
