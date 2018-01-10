@@ -1,5 +1,5 @@
 cal = function(str){
-  str = str.toLowerCase();
+  str = str.toLowerCase().trim();
   if(str.length==3&&str[1]=="-"){
     return undefined;
   }
