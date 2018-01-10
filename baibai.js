@@ -35,6 +35,8 @@ const roulette = require('./ai/Roulette')
 const {kancolleInfo} = require('./ai/kancolle/shipData');
 const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,searchShipByName}=require('./ai/kancolle/shipData');
 const {pushTask,pushToGroup} = require('./ai/push');
+
+const {lottoryReply,getlottory} = require('./ai/lottory');
 loadShip();
 loadItem();
 updateShipDB();
@@ -221,6 +223,9 @@ function handleMsg_D(msg,qq,type){
   if(first=='o'||first=='O'){
     actionGroup(content.substring(1),from,groupid,qqq.getMemberListInGroup(groupid),qq);
     return;
+  }
+  if(first=="*"||first=='×'){
+    lottoryReply(content.substring(1),name,callback);
   }
 
 

@@ -55,6 +55,8 @@ app.post('/event',function(req,res){
 const roulette = require('./ai/Roulette')
 const {pairReply}=require('./ai/pairAI');
 
+const {lottoryReply,getlottory} = require('./ai/lottory');
+
 app.get('/test',function(req,res){
   // updateAll()
   // res.send(xchange('QQid', 'etc', callback));
@@ -108,7 +110,11 @@ app.get('/test',function(req,res){
   // res.send(kcq('QQid', 'BAKABAKABAKA', callback))
 });
 app.get('/test2',function(req,res){//这个函数时空专用！^-^
-  pushToGroup();
+  lottoryReply('','aaa',function(r){console.log(r)})
+  lottoryReply('321','aaa',function(r){console.log(r)})
+  lottoryReply('654','bbb',function(r){console.log(r)})
+  lottoryReply('987','ccc',function(r){console.log(r)})
+  getlottory()
   res.send('ok');
 })
 
