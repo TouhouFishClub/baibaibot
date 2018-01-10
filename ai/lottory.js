@@ -25,12 +25,13 @@ function lottoryReply(content,userName,Ncallback){
       info={};
       info.start=new Date();
       info.going=1;
-      var ret = "抽奖将在1分钟后开始\n请每位选手选一个100-999的幸运数字\n输入格式为“`l”+三位数.比如“`l123”\n";
+      var ret = "抽奖将在1分钟后开始\n请每位选手选一个100-999的幸运数字\n输入格式为“*”+三位数.比如“*123”\n";
       ret = ret + "中奖的幸运儿为与‘所有人幸运数字之和的立方根取小数点后3位有效数字’最接近的人\n";
       ret = ret + "比如ABC3人抽奖,A的幸运数字为321,B的幸运数字为654,C的幸运数字为987\n";
       ret = ret + "那么321+654+987=1962,³√1962=12.518904727821093\n";
-      ret = ret + "取小数点后3位有效数字为518,与518最接近的人为B,差距为136,中奖的幸运儿就是B";
-      callback(ret);
+      ret = ret + "取小数点后3位有效数字为518,与518最接近的人为B,差距为136,中奖的幸运儿就是B\n";
+      ret = ret + "如果两个人差距相同,则两个人同时中奖,那请你们两个继续抽奖吧";
+      callback(ret.length);
       setTimeout(function(){
         getlottory(callback);
       },60000)
