@@ -19,7 +19,9 @@ function lottoryReply(content,userName,Ncallback){
     })
   }
   if(content==""){
-    if(info.going){
+    var then = info.start;
+    var now = new Date();
+    if(info.going&&then&&now.getTime()-then.getTime()<90000){
       callback('抽奖正在进行中');
     }else{
       info={};
@@ -30,7 +32,7 @@ function lottoryReply(content,userName,Ncallback){
       ret = ret + "比如ABC3人抽奖,A的幸运数字为321,B的幸运数字为654,C的幸运数字为987\n";
       ret = ret + "那么321+654+987=1962,³√1962=12.518904727821093\n";
       ret = ret + "取小数点后3位有效数字为518,与518最接近的人为B,差距为136,中奖的幸运儿就是B\n";
-      ret = ret + "如果两个人差距相同,则两个人同时中奖,那请你们两个继续抽奖吧\n";
+      ret = ret + "如果两个人差距相同,则两个人同时中奖\n";
       ret = ret + "抽奖将在1分钟后开始\n请各位幸运儿抓紧时间报名\n祝好运";
       console.log(ret.length)
       callback(ret);
