@@ -103,7 +103,7 @@ function searchSenkaByCache(server,userName,name,callback){
   if(name==""){
     ret = c[server].f;
   }else if(name=="1"){
-
+    ret = c[server].headstr;
   }else{
     var detail = c[server].u;
     var keys = Object.keys(detail);
@@ -114,7 +114,7 @@ function searchSenkaByCache(server,userName,name,callback){
       }
     }
     if(ra.length==1){
-      ret = c[server].headstr;
+      ret = c[server].f;
     }else{
       ret = "请选择\n";
       for(var i=0;i<ra.length;i++){
@@ -196,7 +196,7 @@ function generateTable(sorttype,server){
     var frontmap = data.front;
     var now = new Date();
     var month = now.getMonth();
-    var headstr = '';
+    var headstr = '排名|当前|当前(ex)|经验|EX\n';
     for (var i = 0; i < data.d.length; i++) {
       var type = data.d[i].type;
       var senka = data.d[i];
