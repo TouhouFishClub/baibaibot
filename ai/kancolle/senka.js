@@ -102,6 +102,8 @@ function searchSenkaByCache(server,userName,name,callback){
   var ret = "";
   if(name==""){
     ret = c[server].f;
+  }else if(name=="1"){
+
   }else{
     var detail = c[server].u;
     var keys = Object.keys(detail);
@@ -112,7 +114,7 @@ function searchSenkaByCache(server,userName,name,callback){
       }
     }
     if(ra.length==1){
-      ret = detail[ra[0]];
+      ret = c[server].headstr;
     }else{
       ret = "请选择\n";
       for(var i=0;i<ra.length;i++){
@@ -194,7 +196,7 @@ function generateTable(sorttype,server){
     var frontmap = data.front;
     var now = new Date();
     var month = now.getMonth();
-
+    var headstr = '';
     for (var i = 0; i < data.d.length; i++) {
       var type = data.d[i].type;
       var senka = data.d[i];
@@ -497,8 +499,12 @@ function generateTable(sorttype,server){
       h = h + '经验：'+subsenkastr + '\n';
       h = h + 'ex:'+exstr+'\n';
       c[server].u[senka.name]=h;
+      if(i<10){
+        headstr = headstr + senka.name+'\n|' + '位(' + senka.lno + '位)|'+senka.senka+'|'+(min==max?max:(min+'-'+max))+'|'+subsenkastr+'|'+exstr+"\n";
+      }
     }
-
+    c[server].headstr=headstr;
+    console.log(headstr);
   }
 }
 
