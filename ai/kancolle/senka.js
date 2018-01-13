@@ -137,7 +137,7 @@ function searchSenkaByCache(server,userName,name,callback){
       }
     }
     if(ra.length==1){
-      ret = c[server][ra[0]];
+      ret = detail[ra[0]];
     }else{
       ret = "请选择\n";
       for(var i=0;i<ra.length;i++){
