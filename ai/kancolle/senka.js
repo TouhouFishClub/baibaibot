@@ -24,10 +24,11 @@ function searchsenka(userName,content,Ncallback){
       return cur
     }
   }))
-  callbackArr.forEach(async (ele, idx) => {
-    await wait(idx * 500)
-    Ncallback(ele)
-  })
+    callbackArr.forEach(async (ele, idx) => {
+      await wait(idx * 500)
+      Ncallback(ele)
+    })
+  }
 
 
   content=content.trim();
