@@ -7,7 +7,29 @@ var u = {};
 var c = {};
 var memory = {};
 
-function searchsenka(userName,content,callback){
+
+const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
+
+
+
+function searchsenka(userName,content,Ncallback){
+
+  var callback=function(response){
+    let strArr = response.split('\n'), callbackArr = []
+    callbackArr.push(strArr.reduce((pre, cur) => {
+        if(pre.length + cur.length < 190)
+    return `${pre}\n${cur}`
+    else {
+      callbackArr.push(pre)
+      return cur
+    }
+  }))
+  callbackArr.forEach(async (ele, idx) => {
+    await wait(idx * 500)
+    Ncallback(ele)
+  })
+
+
   content=content.trim();
   if(content==""){
     callback('输入格式：`z[服务器ID]-[用户名]')
@@ -114,7 +136,7 @@ function searchSenkaByCache(server,userName,name,callback){
       }
     }
     if(ra.length==1){
-      ret = c[server].f;
+      ret = c[server][ra[0]];
     }else{
       ret = "请选择\n";
       for(var i=0;i<ra.length;i++){
