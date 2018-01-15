@@ -524,7 +524,7 @@ function generateTable(sorttype,server){
       h = h + 'ex:'+exstr+'\n';
       c[server].u[senka.name]=h;
       if(i<10){
-        headarr[i] = i+ '位(' + senka.lno + '位)'+senka.name+'\n' +senka.senka+'|'+(min==max?max:(min+'-'+max))+'|'+subsenkastr+'|'+exstr+"\n";
+        headarr[i] = (i+1)+ '位(' + senka.lno + '位)'+senka.name+'\n' +senka.senka+'|'+(min==max?max:(min+'-'+max))+'|'+subsenkastr+'|'+exstr+"\n";
       }
     }
     for(var i=0;i<10;i++){
