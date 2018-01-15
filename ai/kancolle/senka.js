@@ -17,7 +17,7 @@ function searchsenka(userName,content,Ncallback){
   var callback=function(response){
     let strArr = response.split('\n'), callbackArr = []
     callbackArr.push(strArr.reduce((pre, cur) => {
-        if(pre.length + cur.length < 190)
+        if(pre.length + cur.length < 250)
     return `${pre}\n${cur}`
     else {
       callbackArr.push(pre)
