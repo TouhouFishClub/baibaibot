@@ -219,7 +219,7 @@ function generateTable(sorttype,server){
     var frontmap = data.front;
     var now = new Date();
     var month = now.getMonth();
-    var headstr = '排名|当前|当前(ex)|经验|EX\n';
+    var headstr = '当前|当前(ex)|经验|EX\n';
     var headarr = [];
     for (var i = 0; i < data.d.length; i++) {
       var type = data.d[i].type;
@@ -524,7 +524,7 @@ function generateTable(sorttype,server){
       h = h + 'ex:'+exstr+'\n';
       c[server].u[senka.name]=h;
       if(i<10){
-        headarr[i-1] = senka.name+'\n' +i+ '位(' + senka.lno + '位)|'+senka.senka+'|'+(min==max?max:(min+'-'+max))+'|'+subsenkastr+'|'+exstr+"\n";
+        headarr[i] = i+ '位(' + senka.lno + '位)'+senka.name+'\n' +senka.senka+'|'+(min==max?max:(min+'-'+max))+'|'+subsenkastr+'|'+exstr+"\n";
       }
     }
     for(var i=0;i<10;i++){
