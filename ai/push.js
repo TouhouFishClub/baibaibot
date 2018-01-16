@@ -94,6 +94,9 @@ function getBitFlyer(callback){
     },
     method: 'GET'
   };
+  if(withproxy){
+    options.agent=agent;
+  }
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
@@ -108,7 +111,7 @@ function getBitFlyer(callback){
       });
     }else{
       failed = failed + 1;
-      if(failed>1){
+      if(failed>2){
         callback('bitflyer BOOM!');
       }else{
         getBitFlyer(callback);
@@ -121,7 +124,7 @@ function getBitFlyer(callback){
     if(failed>1){
       callback('bitflyer BOOM!');
     }else{
-      getBitFlyer(callback);
+      getBitFlyer(callback,true);
     }
   });
   req.end();
