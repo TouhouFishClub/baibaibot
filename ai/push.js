@@ -83,7 +83,7 @@ function handleGroupPush(group,qqq){
   }
 }
 
-function getBitFlyer(callback){
+function getBitFlyer(callback,withproxy){
   console.log('will get bitflyer');
   var options = {
     hostname: "api.bitflyer.jp",
