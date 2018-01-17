@@ -68,7 +68,7 @@ function startstream(){
         var text = event.text;
         if(event.extended_tweet){
           if(event.extended_tweet.full_text){
-            test = event.extended_tweet.full_text;
+            text = event.extended_tweet.full_text;
           }
         }
         var ts = new Date(event.created_at);
