@@ -33,7 +33,7 @@ function pushTwitterMsg(group,twitterid,qqq,ret){
   var gn = group.name;
   var gid = group.gid;
   if(twitterid=='294025417'){
-    if(gn.indexOf('咸鱼')>=0||gn.indexOf('ウル')>=0){
+    if(gn.indexOf('咸鱼')>=0||gn.indexOf('秃')>=0){
       console.log(gn,gid);
       qqq.sendGroupMsg(gid,ret);
     }
