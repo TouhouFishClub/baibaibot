@@ -56,8 +56,6 @@ function userinit(){
 //var reply=["我不爱你了","喜欢O(∩_∩)O我怎么办？","你辣么萌，你爸妈造吗","我只是帅呆了"];
 
 function searchsenka(userName,content,Ncallback){
-  Ncallback('我不爱你了');
-  return;
   var callback=function(response){
     let strArr = response.split('\n'), callbackArr = []
     callbackArr.push(strArr.reduce((pre, cur) => {
