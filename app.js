@@ -46,7 +46,7 @@ app.post('/event',function(req,res){
 // const kce = require('./ai/kanColleEquip')
 // const updateAll = require('./mongo/db_kcUpdateAll')
 // const {getMapData} = require('./ai/kancolle/kancollemap');
-// const {searchsenka} = require('./ai/kancolle/senka');
+ const {userinit} = require('./ai/kancolle/senka');
 // const {fixUser,regen} = require('./ai/favour/battle');
 // const {regenm} = require('./ai/chess/road');
 // const {streaminit} = require('./ai/twitter');
@@ -57,6 +57,7 @@ const {pairReply}=require('./ai/pairAI');
 
 const {lottoryReply,getlottory} = require('./ai/lottory');
 
+userinit();
 app.get('/test',function(req,res){
   // updateAll()
   // res.send(xchange('QQid', 'etc', callback));

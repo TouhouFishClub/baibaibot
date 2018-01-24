@@ -1,19 +1,63 @@
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_senka';
 var Axios = require('axios');
+var fs = require('fs');
 var http = require('http');
 var monthOfDay=[31,28,31,30,31,30,31,31,30,31,30,31];
 var u = {};
 var c = {};
 var memory = {};
-
+var usermap = {};
 
 const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
+function userinit(){
+  var user = fs.readFileSync("static/61.txt","utf-8");
+  var ku = fs.readFileSync("static/p2.txt","utf-8");
+  var sa = user.split('\n');
 
+
+  var c = 1;
+  var qlist = [];
+  var qmap={};
+  for(var i=0;i<sa.length;i++){
+    var e = sa[i].trim();
+    if(e==c){
+      c++;
+      var name = sa[i+1];
+      var l1 = sa[i+2];
+      var l2 = sa[i+3];
+      i=i+2;
+      var la1 = l1.split("\t");
+      var la2 = l2.split("\t");
+      if(la1.length>2){
+        qlist.push([la1[0],name]);
+        qmap[la1[0]]=name;
+      }else{
+        qlist.push([la2[0],name]);
+        qmap[la2[0]]=name;
+      }
+    }
+  }
+
+  var ka = ku.split('\n');
+  for(var i=0;i<ka.length;i++){
+    var e = ka[i];
+    var ea = e.split("|");
+    if(ea.length==2){
+      var n = ea[1].indexOf("QQ:");
+      var qnum = ea[1].substring(n+3).trim();
+      usermap[qmap[qnum]]=ea[0].trim();
+    }
+  }
+  console.log(usermap);
+}
+
+//var reply=["我不爱你了","喜欢O(∩_∩)O我怎么办？","你辣么萌，你爸妈造吗","我只是帅呆了"];
 
 function searchsenka(userName,content,Ncallback){
-
+  Ncallback('我不爱你了');
+  return;
   var callback=function(response){
     let strArr = response.split('\n'), callbackArr = []
     callbackArr.push(strArr.reduce((pre, cur) => {
@@ -561,7 +605,8 @@ getRankDateNo = function(now){
 }
 
 module.exports={
-  searchsenka
+  searchsenka,
+  userinit
 }
 
 

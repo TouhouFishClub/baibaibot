@@ -239,7 +239,7 @@ function handleMsg_D(msg,qq,type){
       ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n闲聊：``+对话";
       callback(ret);
     }else{
-      reply(c1,name,callback,groupid,from,groupName);
+      reply(c1,name,callback,groupid,from,groupName,nickname);
     }
     return;
   }
@@ -285,7 +285,7 @@ function handleMsg_D(msg,qq,type){
 
 }
 
-function reply(content,userName,callback,groupid,from,groupName){
+function reply(content,userName,callback,groupid,from,groupName,nickname){
   var first = content.substring(0,1);
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
     tulingMsg(userName,content.substring(1),callback,groupid);
