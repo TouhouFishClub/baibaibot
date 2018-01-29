@@ -35,6 +35,8 @@ const roulette = require('./ai/Roulette')
 const {kancolleInfo} = require('./ai/kancolle/shipData');
 const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,searchShipByName}=require('./ai/kancolle/shipData');
 const {pushTask,pushToGroup} = require('./ai/push');
+const {replayReply} = require('./ai/replay');
+
 
 const {lottoryReply,getlottory} = require('./ai/lottory');
 loadShip();
@@ -139,19 +141,22 @@ function handleMsg_D(msg,qq,type){
   var content = msg.content;
   var name = msg.name;
   var groupName = msg.groupName;
-  var callback = function(res){
+  var callback = function(res,blank){
     if(res.trim().length>0){
-      if(res.length>250){
+      if(res.length>254){
         res = res.substring(0,250)+'.......';
       }
         if(res.indexOf('百百')>-1){
             res = res.replace(/百百/g,'百');
         }
       setTimeout(function(){
+        if(!blank){
+          res = " "+res
+        }
         if(type=='discu'){
-          qq.sendDiscuMsg(groupid," "+res);
+          qq.sendDiscuMsg(groupid,res);
         }else{
-          qq.sendGroupMsg(groupid," "+res);
+          qq.sendGroupMsg(groupid,res);
         }
       },1000);
     }
@@ -282,6 +287,9 @@ function handleMsg_D(msg,qq,type){
     return;
   }
   answer(content,name,groupName,callback);
+  if(nickname.indexOf('百百')==-1){
+    replayReply(content,name,groupid,callback);
+  }
 
 }
 
