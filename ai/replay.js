@@ -8,7 +8,7 @@ function replayReply(content,userName,groupuin,callback){
       var um = lst.m;
       if(!um){
         var c = lst.c;
-        if(c>2){
+        if(c>1){
           memory[groupuin]={l:content,c:c+1,m:true};
           callback(content,true);
         }else{
