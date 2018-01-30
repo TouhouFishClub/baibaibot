@@ -53,7 +53,6 @@ function userinit(){
   console.log(usermap);
 }
 
-//var reply=["我不爱你了","喜欢O(∩_∩)O我怎么办？","你辣么萌，你爸妈造吗","我只是帅呆了"];
 
 function searchsenka(userName,content,Ncallback){
   var callback=function(response){
@@ -71,7 +70,10 @@ function searchsenka(userName,content,Ncallback){
       Ncallback(ele)
     })
   }
-
+  if(new Date().getMonth()==1){
+    callback('宇宙的爱');
+    return;
+  }
 
   content=content.trim();
   if(content==""){
