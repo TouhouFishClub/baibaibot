@@ -121,7 +121,7 @@ function searchsenka2(server,userName,name,callback){
   }else{
     console.log('will get');
     var options = {
-      hostname: "127.0.0.1",
+      hostname: "192.168.17.52",
       port: 12450,
       path: "/api/calrank?server="+server,
       headers: {
@@ -129,6 +129,7 @@ function searchsenka2(server,userName,name,callback){
       },
       method: 'GET'
     };
+    console.log(options)
     http.request(options, function (res) {
       res.setEncoding('utf8');
       var resdata = '';
@@ -298,6 +299,7 @@ function generateTable(sorttype,server){
           if(max){
             if(exlist){
               exlist.push(frontex);
+
               let zc = 0
               exlist.forEach(ele => {
                 var aex=parseInt(ele);
@@ -317,7 +319,7 @@ function generateTable(sorttype,server){
                   zc = 1
                 }
               })
-              let ruex = max - senka
+              let ruex = max - senka.senka
               let hiddenex = 1380 - ex - ruex
               if((hiddenex>345&&hiddenex<355)||hiddenex > 420){
                 zc = 1
