@@ -296,7 +296,7 @@ function generateTable(sorttype,server){
           zComplete = -1
         }
         if(senka.ex + frontex < 950){
-          if(max){
+          if(senka.max){
             if(exlist){
               exlist.push(frontex);
 
@@ -319,8 +319,12 @@ function generateTable(sorttype,server){
                   zc = 1
                 }
               })
-              let ruex = max - senka.senka
+              let ruex = senka.max - senka.senka
               let hiddenex = 1380 - ex - ruex
+              if(senka.name=='アサギ'){
+                console.log(exlist);
+                console.log(hiddenex,senka.max,senka.senka,ex);
+              }
               if((hiddenex>345&&hiddenex<355)||hiddenex > 420){
                 zc = 1
               }
@@ -403,6 +407,10 @@ function generateTable(sorttype,server){
             if(maxsenka4<maxsenka){
               maxsenka=maxsenka4;
             }
+          }
+          if(senka.name=='アサギ'){
+            console.log(senka.name);
+            console.log(maxsenka1,minsenka,maxsenka2,maxsenka3,zcleared);
           }
 
           data.d[i].max=maxsenka-frontex;

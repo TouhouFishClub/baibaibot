@@ -57,6 +57,7 @@ const {pairReply}=require('./ai/pairAI');
 
 const {lottoryReply,getlottory} = require('./ai/lottory');
 
+//searchsenka('aaa','8',function(w){console.log(w)});
 app.get('/test',function(req,res){
   // updateAll()
   // res.send(xchange('QQid', 'etc', callback));
