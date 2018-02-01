@@ -190,7 +190,7 @@ function parseHTRes(resdata,callback){
   var data = eval('('+resdata+')');
   var ch=data.ch;
   var symbol = ch.split(".")[1];
-  var price = data.close;
+  var price = data.tick.close;
   var now = new Date();
   var ret = "火币行情："+now.toLocaleString()+"\n";
   ret = ret + symbol+":"+price.toFixed(8);
