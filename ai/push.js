@@ -139,10 +139,70 @@ function parseBitFlyerRes(resdata,callback){
   callback(ret);
 }
 
+function getHT(callback,withproxy){
+  console.log('will get bitflyer');
+  var options = {
+    hostname: "api.huobi.pro",
+    port: 443,
+    path: '/market/detail/merged?symbol=htusdt',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+    },
+    method: 'GET'
+  };
+  if(withproxy){
+    options.agent=agent;
+  }
+  var req = https.request(options, function(res) {
+    res.setEncoding('utf8');
+    var code = res.statusCode;
+    if(code==200){
+      failed=0;
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        parseHTRes(resdata,callback);
+      });
+    }else{
+      failed = failed + 1;
+      if(failed>2){
+        callback('huobi BOOM!');
+      }else{
+        getHT(callback);
+      }
+    }
+  });
+  req.setTimeout(5000,function(){
+    req.end();
+    failed = failed + 1;
+    if(failed>1){
+      callback('huobi BOOM!');
+    }else{
+      getHT(callback,true);
+    }
+  });
+  req.end();
+}
+
+function parseHTRes(resdata,callback){
+  var data = eval('('+resdata+')');
+  var ch=data.ch;
+  var symbol = ch.split(".")[1];
+  var price = data.close;
+  var now = new Date();
+  var ret = "火币行情："+now.toLocaleString()+"\n";
+  ret = ret + symbol+":"+price.toFixed(8);
+  callback(ret);
+}
+
+
 
 function getPrice(callback){
   getCurrency(function(usd_cny){
     getBifFinex(usd_cny,callback);
+    getHT(callback,false);
   })
 }
 
