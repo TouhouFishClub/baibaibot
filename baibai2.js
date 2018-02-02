@@ -65,7 +65,7 @@ function handleMsg_D(msgObj,response){
     groupid = msg.discuId;
   }
   var from = msgObj.user_id;
-  var content = msg.message;
+  var content = msgObj.message;
   var name = "username-bycache";
   var groupName = "groupname-bycache";
   var callback = function(res,blank){
