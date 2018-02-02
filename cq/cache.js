@@ -6,8 +6,8 @@ function getUserNameInGroup(qq,gid){
     return getUserNameInGroupByCache(cache[gid],qq);
   }else{
     var options = {
-      host: '192.168.17.52:23334',
-      port: 80,
+      host: '192.168.17.52',
+      port: 23334,
       path: '/get_group_member_list?group_id='+gid,
       method: 'GET',
       headers: {
@@ -52,7 +52,54 @@ function getUserNameInGroupByCache(data,qq){
   return 'card error:'+qq;
 }
 
+function getUserNickInGroupByCache(data,qq){
+  if(data){
+    if(data[qq]){
+      var card = data[qq].card;
+      var nick = data[qq].nickname;
+      return nick;
+    }
+  }
+  return 'nick error:'+qq;
+}
+
+var gcache = {};
+function getGroupName(gid){
+  if(gcache[gid]){
+    return gcache[gid].group_name;
+  }else{
+    var options = {
+      host: '192.168.17.52',
+      port: 23334,
+      path: '/get_group_list',
+      method: 'GET',
+      headers: {
+
+      }
+    };
+    var req = http.request(options, function(res) {
+      res.setEncoding('utf8');
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        var data = eval('('+resdata+')');
+        for(var i=0;i<data.data.length;i++){
+          var group = data.data[i];
+          var groupid = group.group_id;
+          gcache[groupid]=group;
+        }
+        return gcache[gid].group_name;
+      });
+    });
+    req.end();
+  }
+}
+
 
 module.exports={
-  getUserNameInGroup
+  getUserNameInGroup,
+  getUserNickInGroupByCache,
+  getGroupName
 }

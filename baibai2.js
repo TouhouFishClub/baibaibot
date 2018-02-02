@@ -36,6 +36,7 @@ const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,sea
 const {pushTask,pushToGroup} = require('./ai/push');
 const {replayReply} = require('./ai/replay');
 
+const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName} = require('./cq/cache');
 
 const {lottoryReply,getlottory} = require('./ai/lottory');
 loadShip();
@@ -66,34 +67,39 @@ function handleMsg_D(msgObj,response){
   }
   var from = msgObj.user_id;
   var content = msgObj.message;
-  var name = "username-bycache";
-  var groupName = "groupname-bycache";
+  var name = getUserNameInGroup(from,groupid);
+  var nickname = getUserNickInGroupByCache(from,groupid);
+  var groupName = getGroupName(groupid);
+  var hassend = false
   var callback = function(res,blank){
     if(res.trim().length>0){
       setTimeout(function(){
         if(!blank){
-          res = " "+res
+          res = ""+res
         }
         var ret = {at_sender:false,reply:res};
         console.log(ret);
-        response.send(JSON.stringify(ret));
+        if(!hassend){
+          hassend=true;
+          response.send(JSON.stringify(ret));
+        }else{
+          var options = {
+            host: '192.168.17.52',
+            port: 23334,
+            path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
+            method: 'GET',
+            headers: {
+
+            }
+          };
+          var req = http.request(options);
+          req.end();
+        }
       },1000);
     }
   }
 
-  if(true){
-    callback('12345:\n66\t77\t88\n'+content);
-    return;
-  }
 
-  let memberListInGroup = qqq.getMemberListInGroup(groupid);
-  let nickname = "";
-  for(let i = 0; i < memberListInGroup.length; i++){
-    if(from === memberListInGroup[i].uin) {
-      nickname = memberListInGroup[i].nick;
-      break
-    }
-  }
   /*
   if(content.substring(0,2)=='自杀'){
     var minutes = content.substring(2);
@@ -105,29 +111,6 @@ function handleMsg_D(msgObj,response){
     return;
   }
   */
-
-  /* game system */
-  if(content === '开始游戏'){
-    onlineObj[nickname] = 1
-    console.log(`【${nickname}】已登入`)
-    callback(`【${nickname}】已登入`)
-  } else {
-    if(onlineObj[nickname]){
-      if(onlineObj[nickname] < 4){
-        if(allGameAction[content.trim().split(' ')[0]]){
-          onlineObj[nickname] = 1
-          DQCore(nickname, content, callback)
-        } else {
-          onlineObj[nickname] ++
-        }
-        callback(`【${nickname}】${onlineObj[nickname]}`)
-      } else {
-        delete onlineObj[nickname]
-        console.log(`【${nickname}】已登出`)
-        callback(`【${nickname}】已登出`)
-      }
-    }
-  }
 
   var rcontent=content.trim();
   if(
@@ -147,12 +130,7 @@ function handleMsg_D(msgObj,response){
     roulette(name,rcontent,callback)
     return
   }
-
   var first = content.substring(0,1);
-  if(first=='o'||first=='O'){
-    actionGroup(content.substring(1),from,groupid,qqq.getMemberListInGroup(groupid),qq);
-    return;
-  }
   if(first=="*"||first=='×'){
     lottoryReply(content.substring(1),name,callback);
   }
