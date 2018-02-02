@@ -47,9 +47,9 @@ pushTask();
 
 
 
-function handleMsg(msg,qq,type){
+function handleMsg(msgObj,res){
   try{
-    handleMsg_D(msg,qq,type);
+    handleMsg_D(msgObj,res);
   }catch(e){
     console.log(e);
   }
@@ -58,7 +58,7 @@ function handleMsg(msg,qq,type){
 
 
 
-function handleMsg_D(msgObj,res){
+function handleMsg_D(msgObj,response){
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   if(type=='discu'){
@@ -70,23 +70,19 @@ function handleMsg_D(msgObj,res){
   var groupName = "groupname-bycache";
   var callback = function(res,blank){
     if(res.trim().length>0){
-      if(res.length>254){
-        res = res.substring(0,250)+'.......';
-      }
-        if(res.indexOf('百百')>-1){
-            res = res.replace(/百百/g,'百');
-        }
       setTimeout(function(){
         if(!blank){
           res = " "+res
         }
-        if(type=='discu'){
-          qq.sendDiscuMsg(groupid,res);
-        }else{
-          qq.sendGroupMsg(groupid,res);
-        }
+        var ret = {at_sender:false,reply:'HHHH:\n'+content};
+        console.log(ret);
+        response.send(JSON.stringify(ret));
       },1000);
     }
+  }
+
+  if(true){
+    return;
   }
 
   let memberListInGroup = qqq.getMemberListInGroup(groupid);

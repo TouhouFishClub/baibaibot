@@ -10,6 +10,7 @@ app.use(express.static('./static'));
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 const {relogin} = require('./baibai');
+const {handleMsg} = require('./baibai2');
 
 app.listen(10086,function(){
   opn('http://127.0.0.1:10086/test2', {app: ['chrome']})
@@ -31,7 +32,7 @@ app.get('/login',function(req,res){
 app.post('/event',function(req,res){
   console.log(req.query);
   console.log(req.body);
-  res.send('ok');
+  handleMsg(req,body,res);
 });
 
 
