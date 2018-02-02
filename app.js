@@ -32,7 +32,7 @@ app.get('/login',function(req,res){
 app.post('/event',function(req,res){
   console.log(req.query);
   console.log(req.body);
-  handleMsg(req,body,res);
+  handleMsg(req.body,res);
 });
 
 
