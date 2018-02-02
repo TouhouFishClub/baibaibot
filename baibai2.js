@@ -74,7 +74,7 @@ function handleMsg_D(msgObj,response){
         if(!blank){
           res = " "+res
         }
-        var ret = {at_sender:false,reply:'HHHH:\n'+content};
+        var ret = {at_sender:false,reply:res};
         console.log(ret);
         response.send(JSON.stringify(ret));
       },1000);
@@ -82,6 +82,7 @@ function handleMsg_D(msgObj,response){
   }
 
   if(true){
+    callback('12345:\n66\t77\t88\n'+content);
     return;
   }
 
