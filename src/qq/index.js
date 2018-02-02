@@ -10,6 +10,8 @@ const Client = require('../httpclient');
 const MessageAgent = require('./message-agent');
 const {urlget} = require('../utils/httpreq');
 const log = global.log || new Log(process.env.LOG_LEVEL || 'info');
+const {getGroupMask} = require('./vreq');
+
 
 const cookiePath = process.env.COOKIE_PATH || './qq-bot.cookie';
 const qrcodePath = process.env.QRCODE_PATH || './static/code.png';
@@ -231,6 +233,11 @@ class QQ {
 
     getGroup() {
         log.info('开始获取群列表');
+/*
+        var hash = Codec.hashU(this.tokens.uin, this.tokens.ptwebqq);
+        console.log(hash)
+        return getGroupMask(this.client.getCookieString(),this.tokens.vfwebqq,hash);
+*/
         return this.client.post({
             url: URL.getGroup,
             headers: {
@@ -241,6 +248,7 @@ class QQ {
                 hash: Codec.hashU(this.tokens.uin, this.tokens.ptwebqq)
             }
         });
+
     }
 
     getDiscu() {
