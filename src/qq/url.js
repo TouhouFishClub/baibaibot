@@ -33,6 +33,6 @@ module.exports = {
     buddyQQID: (uin, vfwebqq) => `http://s.web2.qq.com/api/get_friend_uin2?tuid=${uin}&type=1&vfwebqq=${vfwebqq}&t=${Math.random()}`,
     getDiscu: (vfwebqq, psessionid) => `http://s.web2.qq.com/api/get_discus_list?clientid=53999199&psessionid=${psessionid}&vfwebqq=${vfwebqq}&t=${Math.random()}`,
     discuInfo: (discuss_id, psessionid, vfwebqq) => `http://d1.web2.qq.com/channel/get_discu_info?did=${discuss_id}&psessionid=${psessionid}&vfwebqq=${vfwebqq}&clientid=53999199&t=${Math.random()}`,
-    getGroup: 'http://s.web2.qq.com/api/get_group_name_list_mask2',
+    getGroup: 'https://s.web2.qq.com/api/get_group_name_list_mask2',
     groupInfo: (group_code, vfwebqq) => `http://s.web2.qq.com/api/get_group_info_ext2?gcode=${group_code}&vfwebqq=${vfwebqq}&t=${Math.random()}`
 };
