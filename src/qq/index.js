@@ -192,7 +192,9 @@ class QQ {
         });
         log.info('(5/5) 获取 psessionid 和 uin 成功');
         const cookie = await this.client.getCookieString();
+        console.log('开始保存cookie');
         fs.writeFile(cookiePath, cookie, 'utf-8', () => log.info(`保存 Cookie 到 ${cookiePath}`));
+        console.log('保存cookie完成')
     }
 
     getSelfInfo() {
