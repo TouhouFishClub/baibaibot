@@ -271,6 +271,8 @@ class QQ {
         this.discu = manyInfo[2].result.dnamelist;
         this.group = manyInfo[3].result.gnamelist;
         let promises = this.group.map(async e => {
+            console.log('get group info:');
+            console.log(e);
             const rawInfo = await this.getGroupInfo(e.code);
             return e.info = rawInfo.result;
         });
