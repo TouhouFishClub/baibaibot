@@ -220,7 +220,7 @@ function battle(data1,data2,db){
 function generateDamage(data1,data2,type,rate2){
   if(data1.status==1||data1.status==2){
     var damage = 0;
-    var str = data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
+    var str = data1._id+'吃向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }else{
     var critical = Math.random()*100<data1.luck;
@@ -256,7 +256,7 @@ function generateDamage(data1,data2,type,rate2){
       damage = 0;
     }
     damage = Math.floor(damage*rate2);
-    var str = data1._id+'砍向'+data2._id+'\n'+(critical?'会心一击!':'')+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
+    var str = data1._id+'吃向'+data2._id+'\n'+(critical?'会心一击!':'')+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }
 }
