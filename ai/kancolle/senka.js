@@ -70,7 +70,8 @@ function searchsenka(userName,content,Ncallback){
       Ncallback(ele)
     })
   }
-  if(new Date().getMonth()==1){
+  var day = new Date().getDate();
+  if(day<10||(day>10&&day<20)||(day>20&&da<25){
     callback('宇宙的爱');
     return;
   }
