@@ -3,6 +3,7 @@ const surl = 'http://localhost:23334/';
 
 
 function banuser(content,userName,callback) {
+  content=content.trim();
   console.log('ban1',content,userName);
   var time;
   if(content==""){
