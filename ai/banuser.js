@@ -48,10 +48,7 @@ function banUserbyQQ(qq,seconds){
 
 
 function banUserbyName(name,seconds){
-  if(true){
-    return;
-  }
-  console.log(name);
+  console.log('ban3',name,seconds);
   if(qmap.c){
     if(qmap[name]){
       console.log(qmap[name]);
