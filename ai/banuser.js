@@ -3,6 +3,7 @@ const surl = 'http://localhost:23334/';
 
 
 function banuser(content,userName,callback) {
+  console.log('ban1',content,userName);
   var time;
   if(content==""){
     time=Math.floor(Math.random()*3600);
