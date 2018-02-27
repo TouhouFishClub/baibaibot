@@ -13,7 +13,7 @@ function banuser(content,userName,callback) {
     }
   }
   var rd = Math.random();
-  if(rd<0.4){
+  if(rd<0.5){
     banUserbyName(userName,time);
     setTimeout(function(){
       banUserbyName(userName,0);
@@ -31,6 +31,7 @@ function banuser(content,userName,callback) {
 var qmap={};
 
 function banUserbyQQ(qq,seconds){
+  console.log("ban",qq,seconds);
   Axios.get(surl+'set_group_ban?group_id=205700800&user_id='+qq+'&duration='+seconds,{
     timeout: 6000,
     headers: {}
