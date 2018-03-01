@@ -69,6 +69,7 @@ module.exports = function(nickname, content, callback){
         } else {
           rouletteObj.callback(`lowb【${nickname}】没坐上赌桌还要凑个热闹`)
         }
+        break;
     }
   }
 
