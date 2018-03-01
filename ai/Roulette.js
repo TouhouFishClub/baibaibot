@@ -60,6 +60,7 @@ module.exports = function(nickname, content, callback){
       case '退出':
       case '退出':
       case 'quit':
+      case 'escape':
       case '逃跑':
       case '逃跑':
         if (rouletteObj.gamers[nickname]){

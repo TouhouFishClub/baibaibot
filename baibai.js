@@ -218,7 +218,13 @@ function handleMsg_D(msg,qq,type){
     rcontent === '开火' ||
     rcontent === 'fire' ||
     rcontent === '開火' ||
-    rcontent === '開槍'
+    rcontent === '開槍' ||
+    rcontent === '退出' ||
+    rcontent === '退出' ||
+    rcontent === 'quit' ||
+    rcontent === 'escape' ||
+    rcontent === '逃跑' ||
+    rcontent === '逃跑'
   ){
     roulette(name,rcontent,callback)
     return
