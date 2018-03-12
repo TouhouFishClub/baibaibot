@@ -54,14 +54,18 @@ function getCurrency(callback){
 }
 
 
-function pushToGroup(){
-  const {getQQQ,getGroupList} = require('../baibai');
-  var groups = getGroupList();
-  var qqq = getQQQ();
-  if(groups){
-    for(var i=0;i<groups.length;i++){
-      var group = groups[i];
-      handleGroupPush(group,qqq);
+function pushToGroup(type){
+  if(type==2){
+
+  }else{
+    const {getQQQ,getGroupList} = require('../baibai');
+    var groups = getGroupList();
+    var qqq = getQQQ();
+    if(groups){
+      for(var i=0;i<groups.length;i++){
+        var group = groups[i];
+        handleGroupPush(group,qqq,type);
+      }
     }
   }
 }
@@ -69,17 +73,45 @@ function pushToGroup(){
 
 
 function handleGroupPush(group,qqq){
-  var gn = group.name;
-  var gid = group.gid;
-  if(gn.indexOf('光与暗的')>=0){
-    console.log(gn,gid);
-    var callback = function(ret){
-      qqq.sendGroupMsg(gid,ret);
+  if(type==2){
+    var groupid = 221698514;
+    var callback = function(res,blank){
+      if(res.trim().length>0){
+        setTimeout(function(){
+          if(!blank){
+            res = ""+res
+          }
+          var options = {
+            host: '192.168.17.52',
+            port: 23334,
+            path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
+            method: 'GET',
+            headers: {
+
+            }
+          };
+          var req = http.request(options);
+          req.end();
+        },1000);
+      }
     }
     getPrice(callback);
     setTimeout(function(){
       getBitFlyer(callback);
     },500);
+  }else{
+    var gn = group.name;
+    var gid = group.gid;
+    if(gn.indexOf('光与暗的')>=0){
+      console.log(gn,gid);
+      var callback = function(ret){
+        qqq.sendGroupMsg(gid,ret);
+      }
+      getPrice(callback);
+      setTimeout(function(){
+        getBitFlyer(callback);
+      },500);
+    }
   }
 }
 
