@@ -8,7 +8,7 @@ function pushTask(){
   if(timer==0){
     timer = 1;
     setTimeout(function(){
-      pushToGroup();
+      pushToGroup(2);
       setTimeout(function () {
         timer = 0;
         pushTask();

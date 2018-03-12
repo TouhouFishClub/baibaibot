@@ -29,7 +29,10 @@ function stream(groups,callback) {
   zcallback = callback;
 }
 
-function pushTwitterMsg(group,twitterid,qqq,ret){
+function pushTwitterMsg(group,twitterid,qqq,ret,type){
+  if(type==2){
+
+  }
   var gn = group.name;
   var gid = group.gid;
   if(twitterid=='294025417'){
