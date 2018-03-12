@@ -9,7 +9,7 @@ const opn = require('opn')
 app.use(express.static('./static'));
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
-const {relogin} = require('./baibai');
+//const {relogin} = require('./baibai');
 const {handleMsg} = require('./baibai2');
 
 app.listen(10086,function(){
@@ -31,7 +31,7 @@ app.get('/login',function(req,res){
 
 app.post('/event',function(req,res){
   console.log(req.body);
-  //handleMsg(req.body,res);
+  handleMsg(req.body,res);
   res.send('ok');
 });
 
