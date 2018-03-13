@@ -13,6 +13,7 @@ let rouletteObj = {
 }
 let death={};
 let skip = {};
+let skiprate = {};
 const {banUserbyName} = require('./banuser');
 module.exports = function(nickname, content, callback){
   // console.log('=== in game ===')
@@ -20,6 +21,7 @@ module.exports = function(nickname, content, callback){
   if(content === '俄罗斯轮盘' || content === '俄羅斯輪盤'){
     if(!rouletteObj.gameStart){
       skip = {};
+      skiprate = {};
       rouletteObj.gameStart = true
       rouletteObj.gamers = []
       rouletteTimer = setTimeout(() => {checkRouletteGammers()}, 60000)
@@ -114,7 +116,7 @@ module.exports = function(nickname, content, callback){
     if(content === '跳过' || content == 'skip' || content === 'pass'){
       if(skip[nickname]){
         rouletteObj.callback(`【${rouletteObj.now}】还想在逃避，被吃瓜群众摁回了赌桌上。`)
-      }else if(Math.random()<0.15){
+      }else if(Math.random()>(skiprate[nickname]?skiprate[nickname]:0.5)){
         rouletteObj.callback(`【${rouletteObj.now}】想偷偷把枪传给下个人，不料被吃瓜群众怒瞪了回去，只好生无可恋的扣动扳机`)
       }else{
         skipped=1;
@@ -132,6 +134,11 @@ module.exports = function(nickname, content, callback){
         rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
         killGamer(2)
       } else {
+        if(skiprate[nickname]){
+          skiprate = 0.75;
+        }else{
+          skiprate = 1;
+        }
         switch (Math.ceil(3 * Math.random())){
           case 1:
             rouletteObj.callback(`【${rouletteObj.now}】生无可恋地把扣动扳机，然而什么都没有发生。`)
