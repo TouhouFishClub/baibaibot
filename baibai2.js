@@ -131,6 +131,9 @@ function handleMsg_D(msgObj,response){
     rcontent === 'quit' ||
     rcontent === 'escape' ||
     rcontent === '逃跑' ||
+    rcontent === '跳过' ||
+    rcontent === 'skip' ||
+    rcontent === 'pass' ||
     rcontent === '逃跑'
   ){
     roulette(name,rcontent,callback)
