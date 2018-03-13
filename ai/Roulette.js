@@ -137,7 +137,7 @@ module.exports = function(nickname, content, callback){
         if(skiprate[nickname]){
           skiprate[nickname] = 1;
         }else{
-          skiprate[nickname] = 0.75;
+          skiprate[nickname] = 0.85;
         }
         switch (Math.ceil(3 * Math.random())){
           case 1:
