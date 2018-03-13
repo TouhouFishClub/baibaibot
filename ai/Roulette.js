@@ -24,7 +24,7 @@ module.exports = function(nickname, content, callback){
       rouletteObj.gamers = []
       rouletteTimer = setTimeout(() => {checkRouletteGammers()}, 60000)
       rouletteObj.callback=callback
-      callback('生死有命，富贵在天！\n俄罗斯轮盘将在 60 秒后开始。\n参加：加入/参加/join\n退出：退出/quit/escape/逃跑\n开枪：开枪/开火/fire')
+      callback('生死有命，富贵在天！\n俄罗斯轮盘将在 60 秒后开始。\n参加：加入/参加/join\n退出：退出/quit/escape/逃跑\n开枪：开枪/开火/fire\n跳过：跳过/skip/pass')
     }else{
       callback('请稍后再试');
       return;
