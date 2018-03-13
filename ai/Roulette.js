@@ -123,7 +123,7 @@ module.exports = function(nickname, content, callback){
         skip[nickname]=1;
         rouletteObj.callback(`【${rouletteObj.now}】机智的把枪传递给下个人`);
         rouletteObj.gamersArr.push(rouletteObj.now)
-        rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
+        //rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
         clearTimeout(rouletteTimer)
         checkAliveGamer()
       }
