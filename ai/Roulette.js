@@ -123,7 +123,7 @@ module.exports = function(nickname, content, callback){
         checkAliveGamer()
       }
     }
-    if(skipped){
+    if(!skipped){
       clearTimeout(rouletteTimer)
       if(rouletteObj.magazineArr[rouletteObj.gameActionCount]){
         rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
