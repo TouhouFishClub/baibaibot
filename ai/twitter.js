@@ -35,9 +35,6 @@ function pushTwitterMsg(twitterid,ret,type){
     var callback = function(groupid,res){
       if(res.trim().length>0){
         setTimeout(function(){
-          if(!blank){
-            res = ""+res
-          }
           var options = {
             host: '192.168.17.52',
             port: 23334,
