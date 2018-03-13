@@ -16,6 +16,7 @@ function getKancollStaffTweet(content,UserName,callback){
     console.log('get tweets')
     if (!error) {
       var tw = tweets[skip];
+      console.log(tw);
       var ret = (tw.full_text?tw.full_text:tw.text)+"\n"+new Date(tw.created_at).toLocaleString();
       callback(ret);
     }else{
