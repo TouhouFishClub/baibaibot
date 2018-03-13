@@ -114,6 +114,8 @@ module.exports = function(nickname, content, callback){
     if(content === '跳过' || content == 'skip' || content === 'pass'){
       if(skip[nickname]){
         rouletteObj.callback(`【${rouletteObj.now}】还想在逃避，被吃瓜群众摁回了赌桌上。`)
+      }else if(Math.random()<0.15){
+        rouletteObj.callback(`【${rouletteObj.now}】想偷偷把枪传给下个人，不料被吃瓜群众怒瞪了回去，只好生无可恋的扣动扳机`)
       }else{
         skipped=1;
         skip[nickname]=1;
