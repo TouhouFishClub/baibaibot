@@ -46,6 +46,7 @@ updateItemDB();
 loadSuffix();
 pushTask();
 initWS();
+streaminit();
 
 function initWS(){
   var WebSocketClient = require('websocket').client;

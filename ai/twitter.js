@@ -16,7 +16,7 @@ function getKancollStaffTweet(content,UserName,callback){
     console.log('get tweets')
     if (!error) {
       var tw = tweets[skip];
-      var ret = tw.text+"\n"+new Date(tw.created_at).toLocaleString();
+      var ret = (tw.full_text?tw.full_text:tw.text)+"\n"+new Date(tw.created_at).toLocaleString();
       callback(ret);
     }else{
       console.log(error);
@@ -29,30 +29,66 @@ function stream(groups,callback) {
   zcallback = callback;
 }
 
-function pushTwitterMsg(group,twitterid,qqq,ret,type){
+function pushTwitterMsg(twitterid,ret,type){
   if(type==2){
+    var callback = function(groupid,res){
+      if(res.trim().length>0){
+        setTimeout(function(){
+          if(!blank){
+            res = ""+res
+          }
+          var options = {
+            host: '192.168.17.52',
+            port: 23334,
+            path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
+            method: 'GET',
+            headers: {
 
-  }
-  var gn = group.name;
-  var gid = group.gid;
-  if(twitterid=='294025417'){
-    if(gn.indexOf('沙丁鱼')>=0||gn.indexOf('ウル')>=0){
-      console.log(gn,gid);
-      qqq.sendGroupMsg(gid,ret);
+            }
+          };
+          var req = http.request(options);
+          req.end();
+        },1000);
+      }
+    }
+    if(twitterid=='294025417'){
+      callback(205700800,ret);
+      callback(616147379,ret);
+
+    }
+    if(twitterid=='3833285893'){
+      callback(205700800,ret);
+      callback(568281876,ret);
+    }
+    if(twitterid=='856385582401966080'){
+      callback(205700800,ret);
+    }
+  }else{
+    const {getQQQ,getGroupList} = require('../baibai');
+    var groups = getGroupList();
+    var qqq = getQQQ();
+    var gn = group.name;
+    var gid = group.gid;
+    if(twitterid=='294025417'){
+      if(gn.indexOf('沙丁鱼')>=0||gn.indexOf('ウル')>=0){
+        console.log(gn,gid);
+        qqq.sendGroupMsg(gid,ret);
+      }
+    }
+    if(twitterid=='3833285893'){
+      if(gn.indexOf('沙丁鱼')>=0||gn.indexOf('喵')>=0){
+        console.log(gn,gid);
+        qqq.sendGroupMsg(gid,ret);
+      }
+    }
+    if(twitterid=='856385582401966080'){
+      if(gn.indexOf('沙丁鱼')>=0){
+        console.log(gn,gid);
+        qqq.sendGroupMsg(gid,ret);
+      }
     }
   }
-  if(twitterid=='3833285893'){
-    if(gn.indexOf('沙丁鱼')>=0||gn.indexOf('喵')>=0){
-      console.log(gn,gid);
-      qqq.sendGroupMsg(gid,ret);
-    }
-  }
-  if(twitterid=='856385582401966080'){
-    if(gn.indexOf('沙丁鱼')>=0){
-      console.log(gn,gid);
-      qqq.sendGroupMsg(gid,ret);
-    }
-  }
+
 }
 
 
@@ -63,10 +99,6 @@ function startstream(){
       console.log('got event:');
       errcount=0;
       if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status&&!event.in_reply_to_user_id){
-        console.log(event);
-        const {getQQQ,getGroupList} = require('../baibai');
-        var groups = getGroupList();
-        var qqq = getQQQ();
         console.log(event);
         var text = event.text;
         if(event.extended_tweet){
@@ -80,9 +112,7 @@ function startstream(){
         var now = new Date();
         var twitterscrname=event.user.id;
         if(now.getTime()-ts.getTime()<60000){
-          for(var i=0;i<groups.length;i++){
-            pushTwitterMsg(groups[i],twitterscrname,qqq,ret);
-          }
+          pushTwitterMsg(twitterscrname,ret,2);
         }
       }
     });
