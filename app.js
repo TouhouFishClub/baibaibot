@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var expressWs = require('express-ws')(app);
 var util = require('util');
 var URL = require('url');
 var fs = require('fs');
@@ -34,6 +35,17 @@ app.post('/event',function(req,res){
   handleMsg(req.body,res);
   //res.send('ok');
 });
+
+app.ws('/event', function(ws, req) {
+  util.inspect(ws);
+  ws.on('message', function(msg) {
+
+  });
+  ws.on('close', function(msg) {
+
+  });
+});
+
 
 
 // const {baikeReply} = require('./ai/baidusearch');

@@ -25,6 +25,7 @@
     "log": "^1.4.0",
     "mongodb": "^2.2.30",
     "body-parser": "",
+    "websocket": "",
     "twitter": ""
   },
   "devDependencies": {
