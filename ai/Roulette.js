@@ -113,7 +113,7 @@ module.exports = function(nickname, content, callback){
     let skipped=0;
     if(content === '跳过' || content == 'skip' || content === 'pass'){
       if(skip[nickname]){
-        rouletteObj.callback(`【${rouletteObj.now}】还想在逃避，被吃惯群众摁回了赌桌上。`)
+        rouletteObj.callback(`【${rouletteObj.now}】还想在逃避，被吃瓜群众摁回了赌桌上。`)
       }else{
         skipped=1;
         skip[nickname]=1;
