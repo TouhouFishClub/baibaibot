@@ -101,8 +101,8 @@ function handleMsg(msgObj,res){
 function handleMsg_D(msgObj,response){
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
-  if(type=='discu'){
-    groupid = msg.discuId;
+  if(type!='group'){
+    return;
   }
   var from = msgObj.user_id;
   var content = msgObj.message;
