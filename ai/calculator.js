@@ -1,4 +1,12 @@
 cal = function(str){
+  var sa=str.split('^');
+  if(sa.length==2){
+    if(parseFloat(sa[0])==sa[0]&&parseFloat(sa[1])==sa[1]){
+      return Math.pow(parseFloat(sa[0]),parseFloat(sa[1]));
+    }else{
+      return undefined;
+    }
+  }
   str = str.toLowerCase().trim();
   if(str.length==3&&str[1]=="-"){
     return undefined;
