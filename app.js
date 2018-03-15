@@ -11,7 +11,7 @@ app.use(express.static('./static'));
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 //const {relogin} = require('./baibai');
-const {handleMsg} = require('./baibai2');
+const {handleMsg,reconnect} = require('./baibai2');
 
 app.listen(10086,function(){
   opn('http://127.0.0.1:10086/test2', {app: ['chrome']})
@@ -45,6 +45,11 @@ app.ws('/event', function(ws, req) {
 
   });
 });
+
+app.get('/reconnect',function(req,res){
+  reconnect();
+  res.send('ok');
+})
 
 
 

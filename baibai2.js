@@ -48,6 +48,7 @@ pushTask();
 initWS();
 streaminit();
 
+var wsonline = false;
 function initWS(){
   var WebSocketClient = require('websocket').client;
 
@@ -58,11 +59,13 @@ function initWS(){
   });
 
   client.on('connect', function(connection) {
+    wsonline = true;
     console.log('WebSocket Client Connected');
     connection.on('error', function(error) {
       console.log("Connection Error: " + error.toString());
     });
     connection.on('close', function() {
+      wsonline=false;
       console.log('echo-protocol Connection Closed');
     });
     connection.on('message', function(message) {
@@ -70,10 +73,14 @@ function initWS(){
         handleMsg(JSON.parse(message.utf8Data))
       }
     });
-
   });
-
   client.connect('ws://192.168.17.52:23335/event');
+}
+
+function reconnect(){
+  if(!wsonline){
+    initWS();
+  }
 }
 
 
@@ -345,7 +352,8 @@ const replyBySwitch = (content, userName, callback) => {
 
 
 module.exports={
-  handleMsg
+  handleMsg,
+  reconnect
 }
 
 
