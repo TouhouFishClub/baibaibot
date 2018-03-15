@@ -139,18 +139,7 @@ module.exports = function(nickname, content, callback){
         }else{
           skiprate[nickname] = 0.85;
         }
-        switch (Math.ceil(3 * Math.random())){
-          case 1:
-            rouletteObj.callback(`【${rouletteObj.now}】生无可恋地把扣动扳机，然而什么都没有发生。`)
-            break
-          case 2:
-            rouletteObj.callback(`【${rouletteObj.now}】毫无茫然地把扣动扳机，然而什么都没有发生。`)
-            break
-          case 3:
-            rouletteObj.callback(`【${rouletteObj.now}】毫不犹豫地把扣动扳机，然而什么都没有发生。`)
-            break
-
-        }
+        rouletteObj.callback(`【${rouletteObj.now}】${['毫不犹豫', '生无可恋', '毫无茫然'][~~(3 * Math.random())]}地把扣动扳机，然而什么都没有发生。`)
         rouletteObj.gamersArr.push(rouletteObj.now)
         rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
         checkAliveGamer()
