@@ -39,13 +39,26 @@ function getShipReply(content,userName,callback) {
   map = ca[0];
   map = map.split('-').join('');
   hard = ca[1];
-  if (hard == "乙") {
-    hard = 2;
-  } else if (hard == "丙") {
-    hard = 1;
-  } else {
-    hard = 3;
+  if(parseInt(map)>40){
+    if (hard == "乙") {
+      hard = 3;
+    } else if (hard == "丙") {
+      hard = 2;
+    } else if (hard == "甲") {
+      hard = 1;
+    } else {
+      hard = 4;
+    }
+  }else{
+    if (hard == "乙") {
+      hard = 2;
+    } else if (hard == "丙") {
+      hard = 1;
+    } else {
+      hard = 3;
+    }
   }
+
   rank = ca[2];
   if (rank == "S" || rank == "A" || rank == "B" || rank == "SA" || rank == "SAB") {
 
