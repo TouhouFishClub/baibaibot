@@ -13,12 +13,18 @@ let rouletteObj = {
 }
 let death={};
 let skip = {};
+let plus = false;
 let skiprate = {};
 const {banUserbyName} = require('./banuser');
 module.exports = function(nickname, content, callback){
   // console.log('=== in game ===')
   /* roulette system */
-  if(content === '俄罗斯轮盘' || content === '俄羅斯輪盤'){
+  if(content === '俄罗斯轮盘' || content === '俄羅斯輪盤'||content === '俄罗斯轮盘改' || content === '俄羅斯輪盤改'){
+    if(content === '俄罗斯轮盘' || content === '俄羅斯輪盤'){
+      plus = false;
+    }else{
+      plus = true;
+    }
     if(!rouletteObj.gameStart){
       skip = {};
       skiprate = {};
