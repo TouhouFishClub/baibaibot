@@ -133,6 +133,7 @@ function handleMsg_D(msgObj,response){
 
           }
         };
+        console.log(res);
         var req = http.request(options);
         req.end();
       },1000);
