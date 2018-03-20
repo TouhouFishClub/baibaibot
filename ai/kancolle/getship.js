@@ -144,6 +144,7 @@ function httpsget(host,path,depth,callback){
     },
     method: 'GET'
   };
+  console.log(options);
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
@@ -151,7 +152,7 @@ function httpsget(host,path,depth,callback){
       var location = res.headers.location;
       httpsget(host,location,depth+1,callback);
     }else if(code!=200){
-
+      console.log("http:"+code);
     }else{
       var resdata = '';
       res.on('data', function (chunk) {
