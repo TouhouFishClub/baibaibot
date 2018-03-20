@@ -45,9 +45,9 @@ function getShipReply(content,userName,callback) {
     } else if (hard == "丙") {
       hard = 2;
     } else if (hard == "甲") {
-      hard = 1;
-    } else {
       hard = 4;
+    } else {
+      hard = 1;
     }
   }else{
     if (hard == "乙") {
