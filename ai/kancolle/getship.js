@@ -44,10 +44,10 @@ function getShipReply(content,userName,callback) {
       hard = 3;
     } else if (hard == "丙") {
       hard = 2;
-    } else if (hard == "甲") {
-      hard = 4;
-    } else {
+    } else if (hard == "丁") {
       hard = 1;
+    } else {
+      hard = 4;
     }
   }else{
     if (hard == "乙") {
