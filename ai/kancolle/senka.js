@@ -134,20 +134,18 @@ function searchsenka2(server,userName,name,callback){
     http.request(options, function (res) {
       res.setEncoding('utf8');
       var resdata = '';
-      var ra=[];
       var cx=0;
       res.on('data', function (chunk) {
         cx++;
-        ra.push(chunk);
-        //resdata = resdata + chunk;
+        resdata = resdata + chunk;
       });
       res.on('end', function () {
         try {
-
           u = eval("("+resdata+")");
         }catch(e){
           console.log(e);
           resdata = fs.readFileSync('../rankCollector/senka.txt',"utf-8");
+          u = eval("("+resdata+")");
           console.log(333);
         }
         c[server]={};
