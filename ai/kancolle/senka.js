@@ -134,14 +134,24 @@ function searchsenka2(server,userName,name,callback){
     http.request(options, function (res) {
       res.setEncoding('utf8');
       var resdata = '';
+      var ra=[];
+      var cx=0;
       res.on('data', function (chunk) {
-        resdata = resdata + chunk;
+        cx++;
+        ra.push(chunk);
+        //resdata = resdata + chunk;
       });
       res.on('end', function () {
-        u = eval("("+resdata+")");
+        try {
+
+          u = eval("("+resdata+")");
+        }catch(e){
+          console.log(e);
+          resdata = fs.readFileSync('../rankCollector/senka.txt',"utf-8");
+          console.log(333);
+        }
         c[server]={};
         c[server].ts=u.ts;
-        console.log(222);
         forecast(server);
         searchSenkaByCache(server,userName,name,callback);
       });
