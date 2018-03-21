@@ -141,7 +141,7 @@ function searchsenka2(server,userName,name,callback){
       });
       res.on('end', function () {
         console.log(resdata);
-        resdata = eval("("+fs.readFileSync('../rankCollector/senka.txt',"utf-8")+")");
+        u = eval("("+fs.readFileSync('../rankCollector/senka.txt',"utf-8")+")");
         c[server]={};
         c[server].ts=u.ts;
         forecast(server);
