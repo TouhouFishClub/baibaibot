@@ -124,7 +124,7 @@ function searchsenka2(server,userName,name,callback){
     var options = {
       hostname: "192.168.17.52",
       port: 12450,
-      path: "/api/calrank?server="+server,
+      path: "/api/ca2?server="+server,
       headers: {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
       },
@@ -140,14 +140,8 @@ function searchsenka2(server,userName,name,callback){
         resdata = resdata + chunk;
       });
       res.on('end', function () {
-        try {
-          u = eval("("+resdata+")");
-        }catch(e){
-          console.log(e);
-          resdata = fs.readFileSync('../rankCollector/senka.txt',"utf-8");
-          u = eval("("+resdata+")");
-          console.log(333);
-        }
+        console.log(resdata);
+        resdata = fs.readFileSync('../rankCollector/senka.txt',"utf-8");
         c[server]={};
         c[server].ts=u.ts;
         forecast(server);
