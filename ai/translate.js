@@ -90,7 +90,9 @@ function googleTranslate(content,tolan,callback){
       console.log(data);
       var ret = '';
       try{
-        ret = data[0][0][0];
+        for(var i=0;i<data[0].length;i++){
+          ret=ret+data[0][i][0];
+        }
       }catch(e){
         ret = '出错了喵';
       }
