@@ -65,7 +65,7 @@ var HttpsProxyAgent = require('https-proxy-agent')
 var proxy = 'http://192.168.17.62:3128';
 var agent = new HttpsProxyAgent(proxy);
 var fs = require('fs');
-var gkey = fs.readFileSync('./gkey.txt','utf-8');
+//var gkey = fs.readFileSync('./gkey.txt','utf-8');
 zlib = require('zlib');
 
 function googleTranslate(content,tolan,callback){
