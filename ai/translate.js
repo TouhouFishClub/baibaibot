@@ -70,11 +70,14 @@ zlib = require('zlib');
 
 function googleTranslate(content,tolan,callback){
   var option = {
-    host: 'www.googleapis.com',
+    host: 'translate.googleapis.com',
     port: 443,
     method: 'GET',
     agent:agent,
-    path: '/language/translate/v2?key='+encodeURIComponent(gkey.trim())+'&q='+encodeURIComponent(content)+'&target='+tolan
+    headers:{
+      'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'
+    },
+    path: '/translate_a/single?client=gtx&sl=auto&tl='+tolan+'&dt=t&q='+encodeURIComponent(content)
   };
   var req = https.request(option, function(res) {
     res.setEncoding('utf8');
@@ -87,7 +90,7 @@ function googleTranslate(content,tolan,callback){
       console.log(data);
       var ret = '';
       try{
-        ret = data.data.translations[0].translatedText;
+        ret = data[0][0][0];
       }catch(e){
         ret = '出错了喵';
       }
