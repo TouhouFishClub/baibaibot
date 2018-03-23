@@ -38,6 +38,8 @@ const {replayReply} = require('./ai/replay');
 
 const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName} = require('./cq/cache');
 
+const {saveSt,searchMedal} = require('./ai/check/stat')
+
 const {lottoryReply,getlottory} = require('./ai/lottory');
 loadShip();
 loadItem();
@@ -116,6 +118,9 @@ function handleMsg_D(msgObj,response){
   var content = msgObj.message;
   var name = getUserNameInGroup(from,groupid);
   var nickname = getUserNickInGroupByCache(from,groupid);
+  if(name==null){
+    name = nickname;
+  }
   var groupName = getGroupName(groupid);
   var hassend = false
   var callback = function(res,blank){
@@ -183,6 +188,13 @@ function handleMsg_D(msgObj,response){
   var first = content.substring(0,1);
   if(first=="*"||first=='×'){
     lottoryReply(content.substring(1),name,callback);
+  }
+
+  if(rcontent.startsWith("甲鱼")||rcontent.startsWith("咸鱼")){
+    saveSt(name,from,rcontent,groupid,callback)
+  }
+  if(rcontent=="统计"){
+    searchMedal(content,groupid,callback);
   }
 
 
