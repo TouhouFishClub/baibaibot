@@ -163,12 +163,12 @@ module.exports = function(nickname, content, callback){
     saveDeath(rouletteObj.now,1,function(ret) {
       switch (type) {
         case 1:
-          banUserbyName(rouletteObj.now, 300);
+          banUser(rouletteObj.now);
           death[rouletteObj.now] = new Date(new Date().getTime() + 1000000).getTime();
           rouletteObj.callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。\n${ret}`)
           break
         case 2:
-          banUserbyName(rouletteObj.now, 300);
+          banUser(rouletteObj.now);
           death[rouletteObj.now] = new Date(new Date().getTime() + 1000000).getTime();
           switch (Math.ceil(3 * Math.random())) {
             case 1:
@@ -204,6 +204,14 @@ module.exports = function(nickname, content, callback){
   }
 }
 
+
+function banUser(userName){
+  var time=Math.floor(Math.random()*3600);
+  banUserbyName(userName,time);
+  setTimeout(function(){
+    banUserbyName(userName,0);
+  },time+1000);
+}
 
 function saveDeath(userName,IsDeath,callback){
   MongoClient.connect(mongourl, function(err, db) {
