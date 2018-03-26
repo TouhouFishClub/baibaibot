@@ -116,7 +116,7 @@ module.exports = function(nickname, content, callback){
 
   if(rouletteObj.gameStart && rouletteObj.gameAction &&
     (content === '开枪' || content === '开火' || content === 'fire' || content === '開火' || content === '開槍'
-    || content === '跳过' || content == 'skip' || content === 'pass'
+    || content === '跳过' || content === 'skip' || content === 'pass'
     || content === 'kill' || content === '作弊' || content === '作弊' || content === '犯規' || content === '犯规')
     && rouletteObj.now === nickname){
     clearTimeout(rouletteTimer)
