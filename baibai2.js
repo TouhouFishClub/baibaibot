@@ -180,7 +180,12 @@ function handleMsg_D(msgObj,response){
     rcontent === '跳过' ||
     rcontent === 'skip' ||
     rcontent === 'pass' ||
-    rcontent === '逃跑'
+    rcontent === '逃跑' ||
+    rcontent === 'kill' ||
+    rcontent === '作弊' ||
+    rcontent === '作弊' ||
+    rcontent === '犯規' ||
+    rcontent === '犯规'
   ){
     roulette(name,rcontent,callback)
     return

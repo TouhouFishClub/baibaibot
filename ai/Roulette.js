@@ -32,7 +32,7 @@ module.exports = function(nickname, content, callback){
       rouletteObj.gamers = []
       rouletteTimer = setTimeout(() => {checkRouletteGammers()}, 60000)
       rouletteObj.callback=callback
-      callback('生死有命，富贵在天！\n俄罗斯轮盘将在 60 秒后开始。\n参加：加入/参加/join\n退出：退出/quit/escape/逃跑\n开枪：开枪/开火/fire\n跳过：跳过/skip/pass')
+      callback('生死有命，富贵在天！\n俄罗斯轮盘将在 60 秒后开始。\n参加：加入/参加/join\n退出：退出/quit/escape/逃跑\n开枪：开枪/开火/fire\n跳过：跳过/skip/pass\n击杀下一人：kill/作弊/犯规')
     }else{
       callback('请稍后再试');
       return;
@@ -46,14 +46,14 @@ module.exports = function(nickname, content, callback){
       case '參加':
       case '参加':
         var can=true
-        if(death[nickname]) {
-          var now = new Date().getTime();
-          var then = death[nickname];
-          if (now < then) {
-            can = false;
-            rouletteObj.callback(`【${nickname}】已经死亡,无法坐上赌桌,复活时间：【${new Date(then).toLocaleString()}】`)
-          }
-        }
+        // if(death[nickname]) {
+        //   var now = new Date().getTime();
+        //   var then = death[nickname];
+        //   if (now < then) {
+        //     can = false;
+        //     rouletteObj.callback(`【${nickname}】已经死亡,无法坐上赌桌,复活时间：【${new Date(then).toLocaleString()}】`)
+        //   }
+        // }
         if(can){
           if (rouletteObj.gamers[nickname]) {
             rouletteObj.callback(`【${nickname}】已经坐上赌桌`)
@@ -116,45 +116,142 @@ module.exports = function(nickname, content, callback){
 
   if(rouletteObj.gameStart && rouletteObj.gameAction &&
     (content === '开枪' || content === '开火' || content === 'fire' || content === '開火' || content === '開槍'
-    || content === '跳过' || content == 'skip' || content === 'pass')
+    || content === '跳过' || content == 'skip' || content === 'pass'
+    || content === 'kill' || content === '作弊' || content === '作弊' || content === '犯規' || content === '犯规')
     && rouletteObj.now === nickname){
-    let skipped=0;
-    if(content === '跳过' || content == 'skip' || content === 'pass'){
-      if(skip[nickname]){
-        rouletteObj.callback(`【${rouletteObj.now}】还想在逃避，被吃瓜群众摁回了赌桌上。`)
-      }else if(Math.random()>(skiprate[nickname]?skiprate[nickname]:0.5)){
-        rouletteObj.callback(`【${rouletteObj.now}】想偷偷把枪传给下个人，不料被吃瓜群众怒瞪了回去，只好生无可恋的扣动扳机`)
-      }else{
-        skipped=1;
-        skip[nickname]=1;
-        rouletteObj.callback(`【${rouletteObj.now}】机智的把枪传递给下个人`);
-        rouletteObj.gamersArr.push(rouletteObj.now)
-        //rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
-        clearTimeout(rouletteTimer)
-        checkAliveGamer()
-      }
+    clearTimeout(rouletteTimer)
+    switch(content){
+      case '开枪' :
+      case '开火' :
+      case 'fire' :
+      case '開火' :
+      case '開槍' :
+        fireAction()
+        break
+      case '跳过' :
+      case 'skip' :
+      case 'pass' :
+        skipGamer()
+        break
+      case 'kill' :
+      case '作弊' :
+      case '作弊' :
+      case '犯規' :
+      case '犯规' :
+        killOtherGamer()
+        break
     }
-    if(!skipped){
-      clearTimeout(rouletteTimer)
+    // if(content === '跳过' || content == 'skip' || content === 'pass'){
+    // }
+    // if(content === 'kill' || content === '作弊' || content === '作弊' || content === '犯規' || content === '犯规'){
+    // }
+  }
+
+  killOtherGamer = () => {
+    if(Math.random() < 0.5) {
+      /* 准备动作成功 */
       if(rouletteObj.magazineArr[rouletteObj.gameActionCount]){
-        rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
-        killGamer(2)
+        /* 击杀下一个人成功 */
+        saveDeath(rouletteObj.next, 1, function(ret) {
+          banUser(rouletteObj.next);
+          rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，砰的一声，【${rouletteObj.next}】倒在了血泊中。\n${ret}`)
+          rouletteObj.gamersArr.shift()
+          rouletteObj.gamersArr.push(rouletteObj.now)
+        })
       } else {
-        if(skiprate[nickname]){
-          skiprate[nickname] = 1;
-        }else{
-          skiprate[nickname] = 0.85;
+        if(rouletteObj.gameActionCount < 5){
+          /* 未到最后，可以反杀 */
+          if(rouletteObj.magazineArr[rouletteObj.gameActionCount + 1]){
+            /* 反杀成功 */
+            saveDeath(rouletteObj.now, 1, function(ret) {
+              banUser(rouletteObj.now);
+              rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，可是并没发出子弹，【${rouletteObj.next}】抢过枪来对着【${rouletteObj.now}】就是一枪，砰的一声，【${rouletteObj.now}】吃到了应得的子弹。\n${ret}`)
+              let next = rouletteObj.gamersArr.shift()
+              rouletteObj.gamersArr.push(next)
+              rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
+            })
+          } else {
+            /* 反杀失败 */
+            rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，可是并没发出子弹，【${rouletteObj.next}】抢过枪来对着【${rouletteObj.now}】就是一枪，也没有发出子弹，两人大眼瞪小眼，只听吃瓜群众说，tm你们还玩不玩了。`)
+            let next = rouletteObj.gamersArr.shift()
+            rouletteObj.gamersArr.push(rouletteObj.now)
+            rouletteObj.gamersArr.push(next)
+            rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
+          }
+        } else {
+          /* 已到最后，反杀失败 */
+          rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，可是并没发出子弹，【${rouletteObj.next}】抢过枪来想要对着【${rouletteObj.now}】开抢，可是枪里已经没有子弹了。`)
+          rouletteObj.gamersArr.push(rouletteObj.now)
+          rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
         }
-        rouletteObj.callback(`【${rouletteObj.now}】${['毫不犹豫', '生无可恋', '毫无茫然'][~~(3 * Math.random())]}地把扣动扳机，然而什么都没有发生。`)
-        rouletteObj.gamersArr.push(rouletteObj.now)
-        rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
-        checkAliveGamer()
       }
+      rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
+      checkAliveGamer()
+    } else {
+      /* 准备动作失败 */
+      if(Math.random() < 0.5){
+        /* 下一个人掏出自己的枪 */
+        saveDeath(rouletteObj.now, 1, function(ret) {
+          banUser(rouletteObj.now);
+          rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，可是手速没【${rouletteObj.next}】快，【${rouletteObj.next}】掏出自己的枪崩了【${rouletteObj.now}】说：破坏规则的人就是这个下场！\n${ret}`)
+        })
+      } else {
+        /* 抢枪 */
+        if(rouletteObj.magazineArr[rouletteObj.gameActionCount]){
+          /* 反杀成功 */
+          saveDeath(rouletteObj.now, 1, function(ret) {
+            banUser(rouletteObj.now);
+            rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，但是被【${rouletteObj.next}】抢了过来，【${rouletteObj.next}】对着【${rouletteObj.now}】就是一枪，砰的一声，【${rouletteObj.now}】倒在了血泊中。\n${ret}`)
+            let next = rouletteObj.gamersArr.shift()
+            rouletteObj.gamersArr.push(next)
+          })
+        } else {
+          /* 反杀失败 */
+          rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，但是被【${rouletteObj.next}】抢了过来，【${rouletteObj.next}】对着【${rouletteObj.now}】就是一枪，但是没有发出子弹，只听吃瓜群众说，lowb运气真差都不能反杀。`)
+          rouletteObj.gamersArr.push(rouletteObj.now)
+        }
+      }
+      rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
+      checkAliveGamer()
+    }
+  }
+
+  skipGamer = () => {
+    if(skip[nickname]){
+      rouletteObj.callback(`【${rouletteObj.now}】还想在逃避，被吃瓜群众摁回了赌桌上。`)
+      fireAction()
+    }else if(Math.random()>(skiprate[nickname]?skiprate[nickname]:0.5)){
+      rouletteObj.callback(`【${rouletteObj.now}】想偷偷把枪传给下个人，不料被吃瓜群众怒瞪了回去，只好生无可恋的扣动扳机`)
+      fireAction()
+    }else{
+      skip[nickname]=1;
+      rouletteObj.callback(`【${rouletteObj.now}】机智的把枪传递给下个人`);
+      rouletteObj.gamersArr.push(rouletteObj.now)
+      //rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
+      checkAliveGamer()
+    }
+  }
+
+  fireAction = () => {
+    if(rouletteObj.magazineArr[rouletteObj.gameActionCount]){
+      rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
+      killGamer(2)
+    } else {
+      if(skiprate[nickname]){
+        skiprate[nickname] = 1;
+      }else{
+        skiprate[nickname] = 0.85;
+      }
+      rouletteObj.callback(`【${rouletteObj.now}】${['毫不犹豫', '生无可恋', '毫无茫然'][~~(3 * Math.random())]}地把扣动扳机，然而什么都没有发生。`)
+      rouletteObj.gamersArr.push(rouletteObj.now)
+      rouletteObj.gameActionCount = rouletteObj.gameActionCount + 1
+      checkAliveGamer()
     }
   }
 
   getNextGamer = () => {
     rouletteObj.now = rouletteObj.gamersArr.shift()
+    rouletteObj.next = rouletteObj.gamersArr[0]
     rouletteObj.callback(`下一个【${rouletteObj.now}】`)
     rouletteTimer = setTimeout(() => {killGamer(1)}, 15000)
   }
