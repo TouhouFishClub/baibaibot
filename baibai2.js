@@ -41,6 +41,8 @@ const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName} = require('./c
 const {saveSt,searchMedal} = require('./ai/check/stat')
 
 const {lottoryReply,getlottory} = require('./ai/lottory');
+const smuggler = require('./ai/mabinogi/smuggler')
+
 loadShip();
 loadItem();
 updateShipDB();
@@ -190,11 +192,15 @@ function handleMsg_D(msgObj,response){
     roulette(name,rcontent,callback)
     return
   }
+
+  if(content.trim() === '走私查询'){
+    smuggler(callback)
+  }
+
   var first = content.substring(0,1);
   if(first=="*"||first=='×'){
     lottoryReply(content.substring(1),name,callback);
   }
-
 
 
 
