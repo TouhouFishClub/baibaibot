@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-
+const {handleMsg,reconnect} = require('./baibai2');
 
 const callback = function(res){
   if(res.trim().length>0){
@@ -13,5 +13,5 @@ const callback = function(res){
   }
 }
 const mabi = require('./ai/mabinogi/smuggler')
-mabi()
+//mabi()
 
