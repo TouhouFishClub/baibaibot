@@ -195,6 +195,7 @@ function handleMsg_D(msgObj,response){
 
   if(content.trim() === '走私查询'){
     smuggler(callback)
+    return
   }
 
   var first = content.substring(0,1);

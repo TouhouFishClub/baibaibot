@@ -99,8 +99,33 @@ function getGroupName(gid){
 }
 
 
+function sendPrivateMsg(userid,msg){
+  var options = {
+    host: '192.168.17.52',
+    port: 23334,
+    path: '/send_private_msg?user_id='+userid+'&message='+encodeURIComponent(msg),
+    method: 'GET',
+    headers: {
+
+    }
+  };
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+    res.on('end', function () {
+
+    });
+  });
+  req.end();
+}
+
+
 module.exports={
   getUserNameInGroup,
   getUserNickInGroupByCache,
-  getGroupName
+  getGroupName,
+  sendPrivateMsg
 }
