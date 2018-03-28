@@ -22,7 +22,7 @@ module.exports = function (callback) {
           "ブラゴ平原北": "布拉格平原北",
           "ガイレフの丘ラインアルトの南東": "盖尔茨丘陵东南",
           "ガイレフの丘ラインアルトの南": "盖尔茨丘陵南",
-          "トゥガルドアイル伐採キャンプ東": "菲奥娜地下城边",
+          "トゥガルドアイル伐採キャンプ東": "杜加德伐木场东",
           "コリブ渓谷北": "考利芙峡谷北",
           "コリブ渓谷南": "考利芙峡谷南",
           "スリアブクィリンの岩石地帯東": "斯利比岩石地带东",
@@ -110,7 +110,8 @@ module.exports = function (callback) {
         if(now.getTime() > nowObj.startTime && now.getTime() < nowObj.endTime){
           isShow = true
         }
-        let callbackStr = `【走私查询】拜伦${isShow ? '出现中': '未出现'}\n`
+        let callbackStr = ''
+        callbackStr = `【走私查询】拜伦${isShow ? '出现中': '未出现'}\n`
         if(isShow){
           callbackStr += `消失时间：${formatTime(nowObj.endTime)}（${formatTimeOffset(nowObj.endTime - now.getTime())}后消失）\n`
         } else {
@@ -118,7 +119,7 @@ module.exports = function (callback) {
         }
         callbackStr += `【交易物品】：${nowObj.product}\n【交易地点】：${nowObj.area}\n`
         if(nextObj){
-          callbackStr += `\n下次出现时间：${formatTime(nextObj.startTime)} - ${formatTime(nextObj.endTime)}\n【交易物品】：${nextObj.product}\\n【交易地点】：${nextObj.area}`
+          callbackStr += `\n下次出现时间：${formatTime(nextObj.startTime)} - ${formatTime(nextObj.endTime)}\n【交易物品】：${nextObj.product}\n【交易地点】：${nextObj.area}`
         }
         callback(callbackStr)
       } catch (e) {

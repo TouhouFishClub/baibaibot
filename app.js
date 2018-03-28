@@ -13,5 +13,5 @@ const callback = function(res){
   }
 }
 const mabi = require('./ai/mabinogi/smuggler')
-//mabi()
+mabi()
 
