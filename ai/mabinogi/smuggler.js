@@ -111,15 +111,19 @@ module.exports = function (callback) {
           isShow = true
         }
         let callbackStr = ''
-        callbackStr = `【走私查询】拜伦${isShow ? '出现中': '未出现'}\n`
-        if(isShow){
-          callbackStr += `消失时间：${formatTime(nowObj.endTime)}（${formatTimeOffset(nowObj.endTime - now.getTime())}后消失）\n`
+        if(nowObj.endTime < now.getTime()){
+          callbackStr = '服务器维护中'
         } else {
-          callbackStr += `本次出现时间：${formatTime(nowObj.startTime)} - ${formatTime(nowObj.endTime)}（${formatTimeOffset(nowObj.startTime - now.getTime())}后出现）\n`
-        }
-        callbackStr += `【交易物品】：${nowObj.product}\n【交易地点】：${nowObj.area}\n`
-        if(nextObj){
-          callbackStr += `\n下次出现时间：${formatTime(nextObj.startTime)} - ${formatTime(nextObj.endTime)}\n【交易物品】：${nextObj.product}\n【交易地点】：${nextObj.area}`
+          callbackStr = `【走私查询】拜伦${isShow ? '出现中': '未出现'}\n`
+          if(isShow){
+            callbackStr += `消失时间：${formatTime(nowObj.endTime)}（${formatTimeOffset(nowObj.endTime - now.getTime())}后消失）\n`
+          } else {
+            callbackStr += `本次出现时间：${formatTime(nowObj.startTime)} - ${formatTime(nowObj.endTime)}（${formatTimeOffset(nowObj.startTime - now.getTime())}后出现）\n`
+          }
+          callbackStr += `【交易物品】：${nowObj.product}\n【交易地点】：${nowObj.area}\n`
+          if(nextObj){
+            callbackStr += `\n下次出现时间：${formatTime(nextObj.startTime)} - ${formatTime(nextObj.endTime)}\n【交易物品】：${nextObj.product}\n【交易地点】：${nextObj.area}`
+          }
         }
         callback(callbackStr)
       } catch (e) {
