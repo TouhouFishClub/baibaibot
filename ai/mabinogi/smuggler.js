@@ -112,18 +112,24 @@ module.exports = function (callback) {
         }
         let callbackStr = `【走私查询】拜伦${isShow ? '出现中': '未出现'}\n`
         if(isShow){
-          callbackStr += `消失时间：${formatTime(nowObj.endTime)}\n`
-          callbackStr += `消失时间：${formatTime(nowObj.endTime)}\n`
+          callbackStr += `消失时间：${formatTime(nowObj.endTime)}（${formatTimeOffset(nowObj.endTime - now.getTime())}后消失）\n`
         } else {
-          callbackStr += `下次出现时间：${formatTime(nowObj.startTime)} - ${formatTime(nowObj.endTime)}\n`
+          callbackStr += `本次出现时间：${formatTime(nowObj.startTime)} - ${formatTime(nowObj.endTime)}（${formatTimeOffset(nowObj.startTime - now.getTime())}后出现）\n`
         }
-        callbackStr += `【交易物品】：${nowObj.product}\n【交易地点】：${nowObj.area}`
+        callbackStr += `【交易物品】：${nowObj.product}\n【交易地点】：${nowObj.area}\n`
+        if(nextObj){
+          callbackStr += `\n下次出现时间：${formatTime(nextObj.startTime)} - ${formatTime(nextObj.endTime)}\n【交易物品】：${nextObj.product}\\n【交易地点】：${nextObj.area}`
+        }
         callback(callbackStr)
       } catch (e) {
         console.error(e);
       }
-    });
+    })
+    res.on('error', e => {
+      console.log(e.message)
+    })
   })
 }
 const formatTime = ts => `${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}:${addZero(new Date(ts).getSeconds())}`
-const addZero = n => n < 10 ? (0 + n) : n
+const addZero = n => n < 10 ? ('0' + n) : n
+const formatTimeOffset = ts => `${~~(ts / 1000 / 60)}分${addZero(~~(ts / 1000 % 60))}秒`
