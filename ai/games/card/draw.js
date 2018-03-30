@@ -3,8 +3,21 @@ var https = require('https');
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var fs = require('fs');
+var cache = {};
 
-function drawNameCard(username,qq,callback){
+
+function drawNameCard(username,qq,callback,groupid){
+  var now = new Date().getTime();
+  if(groupid.startsWith("61614")){
+    if(cache[qq]){
+      var then=cache[qq].ts;
+      if(now-then<60000*5){
+        callback('【'+username+'】抽卡太快了，休息一会吧，下次抽卡时间：'+new Date(then).toLocaleString());
+        return;
+      }
+    }
+    cache[qq]={ts:now,c:1};
+  }
   MongoClient.connect(mongourl, function(err, db) {
     var cl_card = db.collection('cl_card');
     cl_card.aggregate([{'$sample':{'size':1}}], function(err, data) {

@@ -202,7 +202,8 @@ function handleMsg_D(msgObj,response){
   }
 
   if(rcontent == '抽卡'){
-    drawNameCard(name,from,callback);
+    drawNameCard(name,from,callback,groupid);
+    return;
   }
 
   var first = content.substring(0,1);
