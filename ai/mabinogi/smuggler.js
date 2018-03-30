@@ -22,7 +22,8 @@ module.exports = function (callback) {
           "ブラゴ平原北": "布拉格平原北",
           "ガイレフの丘ラインアルトの南東": "盖尔茨丘陵东南",
           "ガイレフの丘ラインアルトの南": "盖尔茨丘陵南",
-          "トゥガルドアイル伐採キャンプ東": "菲奥娜地下城边",
+          "ガイレフの丘フィアードダンジョン": "盖尔茨丘陵 菲奥娜地下城",
+          "トゥガルドアイル伐採キャンプ東": "杜加德伐木场东",
           "コリブ渓谷北": "考利芙峡谷北",
           "コリブ渓谷南": "考利芙峡谷南",
           "スリアブクィリンの岩石地帯東": "斯利比岩石地带东",
@@ -68,7 +69,7 @@ module.exports = function (callback) {
           "ロッキングチェア": "摇椅(塔拉)",
           "子供用2段ベッド": "儿童双层床(塔拉)",
           "カブ産海苔": "卡普海苔(卡普港口)",
-          "カブ产カキ": "卡普海贝(卡普港口)",
+          "カブ産カキ": "卡普海贝(卡普港口)",
           "フカヒレ": "鲨鱼翅(卡普港口)",
           "ゼリークラゲ": "海蜇(卡普港口)",
           "鉄鞭": "铁鞭(贝尔法斯特)",
@@ -110,20 +111,31 @@ module.exports = function (callback) {
         if(now.getTime() > nowObj.startTime && now.getTime() < nowObj.endTime){
           isShow = true
         }
-        let callbackStr = `【走私查询】拜伦${isShow ? '出现中': '未出现'}\n`
-        if(isShow){
-          callbackStr += `消失时间：${formatTime(nowObj.endTime)}\n`
-          callbackStr += `消失时间：${formatTime(nowObj.endTime)}\n`
+        let callbackStr = ''
+        if(nowObj.endTime < now.getTime()){
+          callbackStr = '服务器维护中'
         } else {
-          callbackStr += `下次出现时间：${formatTime(nowObj.startTime)} - ${formatTime(nowObj.endTime)}\n`
+          callbackStr = `【走私查询】拜伦${isShow ? '出现中': '未出现'}\n`
+          if(isShow){
+            callbackStr += `消失时间：${formatTime(nowObj.endTime)}（${formatTimeOffset(nowObj.endTime - now.getTime())}后消失）\n`
+          } else {
+            callbackStr += `本次出现时间：${formatTime(nowObj.startTime)} - ${formatTime(nowObj.endTime)}（${formatTimeOffset(nowObj.startTime - now.getTime())}后出现）\n`
+          }
+          callbackStr += `【交易物品】：${nowObj.product}\n【交易地点】：${nowObj.area}\n`
+          if(nextObj){
+            callbackStr += `\n下次出现时间：${formatTime(nextObj.startTime)} - ${formatTime(nextObj.endTime)}\n【交易物品】：${nextObj.product}\n【交易地点】：${nextObj.area}`
+          }
         }
-        callbackStr += `【交易物品】：${nowObj.product}\n【交易地点】：${nowObj.area}`
         callback(callbackStr)
       } catch (e) {
         console.error(e);
       }
-    });
+    })
+    res.on('error', e => {
+      console.log(e.message)
+    })
   })
 }
 const formatTime = ts => `${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}:${addZero(new Date(ts).getSeconds())}`
-const addZero = n => n < 10 ? (0 + n) : n
+const addZero = n => n < 10 ? ('0' + n) : n
+const formatTimeOffset = ts => `${~~(ts / 1000 / 60)}分${addZero(~~(ts / 1000 % 60))}秒`
