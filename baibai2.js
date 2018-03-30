@@ -211,6 +211,7 @@ function handleMsg_D(msgObj,response){
 
 
 
+
   if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
 
     var c1 = content.substring(1);
