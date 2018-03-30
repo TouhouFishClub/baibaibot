@@ -8,12 +8,12 @@ var cache = {};
 
 function drawNameCard(username,qq,callback,groupid){
   var now = new Date().getTime();
-  console.log(groupid)
+  console.log("1111+"+groupid)
   if((groupid+"").startsWith("61614")){
     if(cache[qq]){
       var then=cache[qq].ts;
-      if(now-then<60000*5){
-        callback('【'+username+'】抽卡太快了，休息一会吧，下次抽卡时间：'+new Date(then).toLocaleString());
+      if(now-then<60000*6){
+        callback('【'+username+'】抽卡太快了，休息一会吧，下次抽卡时间：'+new Date(then+60000*6).toLocaleString());
         return;
       }
     }
