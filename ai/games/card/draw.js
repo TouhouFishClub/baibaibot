@@ -37,7 +37,7 @@ function getDetailByName(cl_card,name,href,callback){
     },
     path: '/'+encodeURIComponent(name)
   };
-  console.log(option)
+  //console.log(option)
   var req = https.request(option, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
@@ -50,6 +50,11 @@ function getDetailByName(cl_card,name,href,callback){
       var n1 = s.indexOf(l1);
       var s1 = resdata.substring(n1+l1.length);
       var n2 = s1.indexOf('</div>');
+      if(n1<0){
+        n1 = s.indexOf('<table border="1" align="right"');
+        s1 = s.substring(n1+20);
+        n2 = s1.indexOf('</table>');
+      }
       var tb = s1.substring(0,n2);
       var s = tb;
       var line=0;
