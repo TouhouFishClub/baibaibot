@@ -1,9 +1,12 @@
 const {sendPrivateMsg} = require('../../cq/cache')
 
 
-var gamers = [];
+var gamers = {};
 
 var cards = [];
+
+
+
 
 function init(){
   cards = [];
@@ -13,12 +16,24 @@ function init(){
   cards.sort(function(){return 0.5 - Math.random()})
 }
 
+function join(username,userid,callback){
+  gamers[username]={id:userid,name:username,c:[]};
+}
+
+
 var sr="♠♣♥♦".split('');
 var cr=["K","A","2","3","4","5","6","7","8","9","10","J","Q"];
 
 
-function draw(userid){
-  var d = cards.pop();
+function draw(userid,username){
+  if(gamers[username]){
+    var d = cards.pop();
+    gamers[username].c.push(d);
+  }else{
+
+  }
+
+
 }
 
 function getCardName(number){

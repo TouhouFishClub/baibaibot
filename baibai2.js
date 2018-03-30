@@ -42,6 +42,8 @@ const {saveSt,searchMedal} = require('./ai/check/stat')
 
 const {lottoryReply,getlottory} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
+const {drawNameCard} = require('./ai/games/card/draw');
+
 
 loadShip();
 loadItem();
@@ -196,6 +198,10 @@ function handleMsg_D(msgObj,response){
   if(content.trim() === '走私查询'){
     smuggler(callback)
     return
+  }
+
+  if(rcontent == '抽卡'){
+    drawNameCard(name,from,callback);
   }
 
   var first = content.substring(0,1);
