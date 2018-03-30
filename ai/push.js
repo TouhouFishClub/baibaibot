@@ -42,6 +42,9 @@ function getCurrency(callback){
         var usd_cny=data.rates.CNY;
         callback(usd_cny);
       });
+      res.on('error',function(){
+
+      })
     }else{
       callback(0);
     }
@@ -137,6 +140,9 @@ function getBitFlyer(callback,withproxy){
       res.on('end', function () {
         parseBitFlyerRes(resdata,callback);
       });
+      res.on('error',function(){
+
+      })
     }else{
       failed = failed + 1;
       if(failed>2){
@@ -193,6 +199,9 @@ function getHT(callback,withproxy){
       res.on('end', function () {
         parseHTRes(resdata,callback);
       });
+      res.on('error',function(){
+
+      })
     }else{
       failed = failed + 1;
       if(failed>2){
@@ -264,6 +273,9 @@ function getBifFinex(usd_cny,callback,withproxy){
       res.on('end', function () {
         parseBitFinexRes(resdata,usd_cny,callback);
       });
+      res.on('error',function(){
+
+      })
     }else{
       failed = failed + 1;
       if(failed>1){
