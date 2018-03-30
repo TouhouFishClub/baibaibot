@@ -85,6 +85,9 @@ function getDetailByName(cl_card,name,href,callback){
       //cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()}});
       callback({img:imgsrc,t:tdata});
     });
+    res.on('error',function(){
+      callback('爆炸啦喵');
+    })
   });
   req.setTimeout(10000,function(){
     req.end();
