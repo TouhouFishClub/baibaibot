@@ -8,7 +8,8 @@ var cache = {};
 
 function drawNameCard(username,qq,callback,groupid){
   var now = new Date().getTime();
-  if(groupid.startsWith("61614")){
+  console.log(groupid)
+  if((groupid+"").startsWith("61614")){
     if(cache[qq]){
       var then=cache[qq].ts;
       if(now-then<60000*5){
@@ -29,7 +30,9 @@ function drawNameCard(username,qq,callback,groupid){
         console.log(detailjson);
         var img = detailjson.img;
         var tdata = detailjson.t;
-        tdata=tdata.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
+        if(tdata){
+          tdata=tdata.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
+        }
         callback(ret+'[CQ:image,file='+img+']'+'\n'+tdata);
       }
       if(data.detail){
