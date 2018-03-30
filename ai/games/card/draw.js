@@ -86,6 +86,11 @@ function getDetailByName(cl_card,name,href,callback){
       callback({img:imgsrc,t:tdata});
     });
   });
+  req.setTimeout(10000,function(){
+    req.end();
+    var ret = {};
+    callback(ret);
+  });
   req.end();
 
 }
