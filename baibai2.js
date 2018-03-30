@@ -102,7 +102,7 @@ function reconnect(){
 
 function handleMsg(msgObj,res){
   try{
-    console.log(msgObj)
+    //console.log(msgObj)
     handleMsg_D(msgObj,res);
   }catch(e){
     console.log(e);
@@ -122,6 +122,7 @@ function handleMsg_D(msgObj,response){
   var content = msgObj.message;
   var name = getUserNameInGroup(from,groupid);
   var nickname = getUserNickInGroupByCache(from,groupid);
+  console.log(groupid+":"+name+":"+content)
   if(name==null){
     name = nickname;
   }
