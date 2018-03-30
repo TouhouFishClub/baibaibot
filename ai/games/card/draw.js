@@ -8,17 +8,21 @@ var cache = {};
 
 function drawNameCard(username,qq,callback,groupid){
   var now = new Date().getTime();
-  console.log("1111+"+groupid)
+  console.log("1111+"+groupid);
+  var cooldown;
   if((groupid+"").startsWith("61614")){
-    if(cache[qq]){
-      var then=cache[qq].ts;
-      if(now-then<60000*6){
-        callback('【'+username+'】抽卡太快了，休息一会吧，下次抽卡时间：'+new Date(then+60000*6).toLocaleString());
-        return;
-      }
-    }
-    cache[qq]={ts:now,c:1};
+    cooldown = 60000*6;
+  }else{
+    cooldown = 60000*4;
   }
+  if(cache[qq]){
+    var then=cache[qq].ts;
+    if(now-then<cooldown){
+      callback('【'+username+'】抽卡太快了，休息一会吧，下次抽卡时间：'+new Date(then+cooldown).toLocaleString());
+      return;
+    }
+  }
+  cache[qq]={ts:now,c:1};
   MongoClient.connect(mongourl, function(err, db) {
     var cl_card = db.collection('cl_card');
     cl_card.aggregate([{'$sample':{'size':1}}], function(err, data) {
