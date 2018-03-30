@@ -16,6 +16,7 @@ function drawNameCard(username,qq,callback){
         console.log(detailjson);
         var img = detailjson.img;
         var tdata = detailjson.t;
+        tdata=tdata.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
         callback(ret+'[CQ:image,file='+img+']'+'\n'+tdata);
       }
       if(data.detail){
