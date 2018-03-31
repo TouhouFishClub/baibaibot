@@ -19,7 +19,7 @@ function drawNameCard(username,qq,callback,groupid){
     var then=cache[qq].ts;
     var cc=cache[qq].c;
     if(now-then<cooldown){
-      if(cc>3){
+      if(cc>2){
           callback('【'+username+'】抽卡太快了，休息一会吧，下次抽卡时间：'+new Date(then+cooldown).toLocaleString());
           return;
       }else{
