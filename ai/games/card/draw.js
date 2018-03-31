@@ -10,16 +10,19 @@ function drawNameCard(username,qq,callback,groupid){
   var now = new Date().getTime();
   console.log("1111+"+groupid);
   var cooldown;
+  var maxtimes;
   if((groupid+"").startsWith("61614")){
     cooldown = 60000*15;
+    maxtimes=2;
   }else{
     cooldown = 60000*10;
+    maxtimes = 3;
   }
   if(cache[qq]){
     var then=cache[qq].ts;
     var cc=cache[qq].c;
     if(now-then<cooldown){
-      if(cc>2){
+      if(cc>=maxtimes){
           callback('【'+username+'】抽卡太快了，休息一会吧，下次抽卡时间：'+new Date(then+cooldown).toLocaleString());
           return;
       }else{
