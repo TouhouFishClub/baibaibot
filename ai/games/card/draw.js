@@ -4,7 +4,9 @@ var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var fs = require('fs');
 var cache = {};
-
+var gm = require('gm')
+var request = require("request");
+var imageMagick = gm.subClass({ imageMagick : true });
 
 function drawNameCard(username,qq,callback,groupid){
   var now = new Date().getTime();
@@ -54,6 +56,7 @@ function drawNameCard(username,qq,callback,groupid){
         if(tdata){
           tdata=tdata.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
         }
+        generateImageByWords(img,tdata);
         callback(ret+'[CQ:image,file='+img+']'+'\n'+tdata);
       }
       if(data.detail){
@@ -217,6 +220,35 @@ function getCard(qq,userName,callback){
       db.close();
     });
   });
+}
+
+function generateImageByWords(img,wd){
+  var wa = wd.split('\n');
+  var maxwd = 0;
+  for(var i=0;i<wa.length;i++){
+    if(maxwd<wa[i].length){
+      maxwd=wa[i].length;
+    }
+  }
+  var len = wa.length;
+  request(img).pipe(fs.createWriteStream("test" + "/" + "aaa.jpg"));
+  setTimeout(function(){
+    var img0 = new imageMagick("test/aaa.jpg");
+    var img1 = new imageMagick("static/blank.png");
+    console.log("len:"+maxwd+":"+len);
+    img1.resize(maxwd*19, len*19,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+      .autoOrient()
+      .fontSize(20)
+      .fill('blue')
+      .font('./static/dfgw.ttf')
+      .drawText(0,0,wd,'NorthWest')
+      .write('test/o1.jpg', function(err){
+        img0.append('test/o1.jpg',true).write('test/o2.jpg',function(err){
+          console.log(err);
+        })
+      });
+  },3000)
+
 }
 
 

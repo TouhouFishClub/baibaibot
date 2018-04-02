@@ -8,3 +8,4 @@ qq-bot.cookie
 static/*.png
 static
 package-lock.json
+test/
