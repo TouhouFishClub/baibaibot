@@ -46,6 +46,7 @@ function drawNameCard(username,qq,callback,groupid){
       var ud = data[0];
       var name = ud._id;
       var ret = '【'+username+'】'+'抽到了：'+name+'\n';
+      saveCard(qq,name);
       var cb=function(detailjson){
         console.log(detailjson);
         var img = detailjson.img;
@@ -118,7 +119,7 @@ function getDetailByName(cl_card,name,href,callback){
           line++;
         }
       }
-      //cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()}});
+      cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()}});
       callback({img:imgsrc,t:tdata});
     });
     res.on('error',function(){
@@ -160,8 +161,67 @@ function getinner(s){
   return ret;
 }
 
+function saveCard(qq,cardName){
+  var now = new Date().getTime();
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_ucard = db.collection('cl_ucard');
+    var query = {'_id':qq};
+    cl_ucard.findOne(query, function(err, data) {
+      if(data){
+        var cardObj = data.d;
+        var len = Object.keys(cardObj).length;
+        if(len<10){
+          data.d[cardName]=now;
+        }else{
+          var tmpObj = data.tmp;
+          var tmpArr = Object.keys(tmpObj);
+          var tmplen = tmpArr.length;
+          if(tmplen>10){
+            tmpArr.sort(function(a,b){return tmpObj[a]-tmpObj[b]});
+            delete(tmpObj[tmpArr[0]]);
+          }
+          data.tmp[cardName]=now;
+        }
+        cl_ucard.save(data);
+      }else{
+        var cd = {};
+        cd[cardName]=now;
+        cl_ucard.save({'_id':qq,d:cd,tmp:{}});
+      }
+      db.close();
+    });
+  });
+}
+
+function getCard(qq,userName,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_ucard = db.collection('cl_ucard');
+    var query = {'_id':qq};
+    cl_ucard.findOne(query, function(err, data) {
+      if(data){
+        var cardObj = data.d;
+        var ret = '【'+userName+'】的仓库：\n';
+        for(var p in cardObj){
+          ret = ret + p + ''+ ','+'';
+        }
+        ret = ret + '\n【'+userName+'】的手卡：\n';
+        var tmpObj = data.tmp;
+        for(var p in tmpObj){
+          ret = ret + p + ','+'';
+        }
+        //ret = ret + '查卡请输入【查卡-卡名】，废弃请输入【弃卡-卡名】，临时手牌加入请输入【锁卡-卡名】';
+        callback(ret);
+      }else{
+        callback('【'+userName+'】什么也没有');
+      }
+      db.close();
+    });
+  });
+}
+
 
 module.exports={
   drawNameCard,
-  getDetailByName
+  getDetailByName,
+  getCard
 }

@@ -42,7 +42,7 @@ const {saveSt,searchMedal} = require('./ai/check/stat')
 
 const {lottoryReply,getlottory} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
-const {drawNameCard} = require('./ai/games/card/draw');
+const {drawNameCard,getCard} = require('./ai/games/card/draw');
 
 
 loadShip();
@@ -203,6 +203,10 @@ function handleMsg_D(msgObj,response){
 
   if(rcontent.startsWith("抽卡")){
     drawNameCard(name,from,callback,groupid);
+    return;
+  }
+  if(rcontent.startsWith("查卡")){
+    getCard(from,name,callback);
     return;
   }
 

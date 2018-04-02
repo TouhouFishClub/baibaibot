@@ -311,11 +311,19 @@ module.exports = function(nickname, content, callback,qq,groupid){
 function banUser(userName){
   var qq = namecache[userName].qq;
   var group = namecache[userName].gid;
-  var time=Math.floor(Math.random()*3600);
-  banUserInGroup(qq,group,time);
-  setTimeout(function(){
-    banUserInGroup(qq,group,0);
-  },time+1000);
+  if((group+"").startsWith("61616")){
+    var time=Math.floor(Math.random()*900);
+    banUserInGroup(qq,group,time);
+    setTimeout(function(){
+      banUserInGroup(qq,group,0);
+    },Math.floor(time*1000*Math.random())+1000);
+  }else{
+    var time=Math.floor(Math.random()*3600);
+    banUserInGroup(qq,group,time);
+    setTimeout(function(){
+      banUserInGroup(qq,group,0);
+    },time+1000);
+  }
 }
 
 function saveDeath(userName,IsDeath,callback){
