@@ -15,6 +15,7 @@ let death={};
 let skip = {};
 let plus = false;
 let skiprate = {};
+let namecache = {};
 const {banUserInGroup} = require('../cq/cache');
 module.exports = function(nickname, content, callback,qq,groupid){
   // console.log('=== in game ===')
@@ -28,6 +29,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
     if(!rouletteObj.gameStart){
       skip = {};
       skiprate = {};
+      namecache = {};
       rouletteObj.gameStart = true
       rouletteObj.gamers = []
       rouletteTimer = setTimeout(() => {checkRouletteGammers()}, 60000)
@@ -51,13 +53,15 @@ module.exports = function(nickname, content, callback,qq,groupid){
            var then = death[nickname];
            if (now < then) {
              can = false;
-             rouletteObj.callback(`【${nickname}】已经死亡,无法坐上赌桌,复活时间：【${new Date(then).toLocaleString()}】`)
+             callback(`【${nickname}】已经死亡,无法坐上赌桌,复活时间：【${new Date(then).toLocaleString()}】`)
+             return;
            }
          }
         if(can){
           if (rouletteObj.gamers[nickname]) {
             rouletteObj.callback(`【${nickname}】已经坐上赌桌`)
           } else {
+            namecache[nickname] = {qq:qq,gid:groupid};
             rouletteObj.callback(`【${nickname}】坐上了赌桌`)
             rouletteObj.gamers[nickname] = 1
             if (Object.keys(rouletteObj.gamers).length === 6) {
@@ -153,7 +157,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
       if(rouletteObj.magazineArr[rouletteObj.gameActionCount]){
         /* 击杀下一个人成功 */
         saveDeath(rouletteObj.next, 1, function(ret) {
-          //banUser(rouletteObj.next);
+          banUser(rouletteObj.next);
           rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，砰的一声，【${rouletteObj.next}】倒在了血泊中。\n${ret}`)
           rouletteObj.gamersArr.shift()
           rouletteObj.gamersArr.push(rouletteObj.now)
@@ -164,7 +168,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
           if(rouletteObj.magazineArr[rouletteObj.gameActionCount + 1]){
             /* 反杀成功 */
             saveDeath(rouletteObj.now, 1, function(ret) {
-              banUser(rouletteObj.now,qq,groupid);
+              banUser(rouletteObj.now);
               rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，可是并没发出子弹，【${rouletteObj.next}】抢过枪来对着【${rouletteObj.now}】就是一枪，砰的一声，【${rouletteObj.now}】吃到了应得的子弹。\n${ret}`)
               let next = rouletteObj.gamersArr.shift()
               rouletteObj.gamersArr.push(next)
@@ -191,7 +195,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
       /* 准备动作失败 */
       if(Math.random() < 0.5){
         /* 下一个人掏出自己的枪 */
-        banUser(rouletteObj.now,qq,groupid);
+        banUser(rouletteObj.now);
         saveDeath(rouletteObj.now, 1, function(ret) {
 
           rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，可是手速没【${rouletteObj.next}】快，【${rouletteObj.next}】掏出自己的枪崩了【${rouletteObj.now}】说：破坏规则的人就是这个下场！\n${ret}`)
@@ -200,7 +204,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
         /* 抢枪 */
         if(rouletteObj.magazineArr[rouletteObj.gameActionCount]){
           /* 反杀成功 */
-          banUser(rouletteObj.now,qq,groupid);
+          banUser(rouletteObj.now);
           saveDeath(rouletteObj.now, 1, function(ret) {
 
             rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，但是被【${rouletteObj.next}】抢了过来，【${rouletteObj.next}】对着【${rouletteObj.now}】就是一枪，砰的一声，【${rouletteObj.now}】倒在了血泊中。\n${ret}`)
@@ -262,12 +266,12 @@ module.exports = function(nickname, content, callback,qq,groupid){
     saveDeath(rouletteObj.now,1,function(ret) {
       switch (type) {
         case 1:
-          banUser(rouletteObj.now,qq,groupid);
+          banUser(rouletteObj.now);
           death[rouletteObj.now] = new Date(new Date().getTime() + 1000000).getTime();
           rouletteObj.callback(`【${rouletteObj.now}】犹豫不决，吃瓜群众一枪崩了他的狗命。\n${ret}`)
           break
         case 2:
-          banUser(rouletteObj.now,qq,groupid);
+          banUser(rouletteObj.now);
           death[rouletteObj.now] = new Date(new Date().getTime() + 1000000).getTime();
           switch (Math.ceil(3 * Math.random())) {
             case 1:
@@ -304,8 +308,9 @@ module.exports = function(nickname, content, callback,qq,groupid){
 }
 
 
-function banUser(userName,qq,group){
-  console.log('ban',userName,qq,group);
+function banUser(userName){
+  var qq = namecache[userName].qq;
+  var group = namecache[userName].gid;
   var time=Math.floor(Math.random()*3600);
   banUserInGroup(qq,group,time);
   setTimeout(function(){
