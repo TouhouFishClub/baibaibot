@@ -303,6 +303,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
 
 
 function banUser(userName,qq,group){
+  console.log('ban',userName,qq,group);
   var time=Math.floor(Math.random()*3600);
   banUserInGroup(qq,group,time);
   setTimeout(function(){
