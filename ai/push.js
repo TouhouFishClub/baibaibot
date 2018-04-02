@@ -63,9 +63,6 @@ function pushToGroup(type){
     var callback = function(res,blank){
       if(res.trim().length>0){
         setTimeout(function(){
-          if(!blank){
-            res = ""+res
-          }
           var options = {
             host: '192.168.17.52',
             port: 23334,
@@ -153,23 +150,23 @@ function getBitFlyer(callback,withproxy){
     }
   });
   req.setTimeout(5000,function(){
-    req.end();
-    failed = failed + 1;
-    if(failed>1){
-      callback('bitflyer BOOM!');
-    }else{
-      getBitFlyer(callback,true);
-    }
+    callback('bitflyer BOOM!');
   });
   req.end();
 }
 
 function parseBitFlyerRes(resdata,callback){
-  var data = eval('('+resdata+')');
-  var btc_jpy = data.best_bid;
-  var now = new Date();
-  var ret = "比特币行情(Bitflyer)："+now.toLocaleString()+"\n";
-  ret = ret + "BTC:"+btc_jpy+"円";
+  var ret = '';
+  try{
+    var data = eval('('+resdata+')');
+    var btc_jpy = data.best_bid;
+    var now = new Date();
+    ret = "比特币行情(Bitflyer)："+now.toLocaleString()+"\n";
+    ret = ret + "BTC:"+btc_jpy+"円";
+  }catch(e){
+    console.log(e);
+    ret = '';
+  }
   callback(ret);
 }
 
@@ -212,33 +209,34 @@ function getHT(callback,withproxy){
     }
   });
   req.setTimeout(5000,function(){
-    req.end();
-    failed = failed + 1;
-    if(failed>1){
-      callback('huobi BOOM!');
-    }else{
-      getHT(callback,true);
-    }
+    callback('huobi BOOM!');
   });
   req.end();
 }
 
 function parseHTRes(resdata,callback){
-  var data = eval('('+resdata+')');
-  var ch=data.ch;
-  var symbol = ch.split(".")[1];
-  var price = data.tick.close;
-  var now = new Date();
-  var ret = "火币行情："+now.toLocaleString()+"\n";
-  ret = ret + symbol+":"+price.toFixed(8);
+  var ret = '';
+  try{
+    var data = eval('('+resdata+')');
+    var ch=data.ch;
+    var symbol = ch.split(".")[1];
+    var price = data.tick.close;
+    var now = new Date();
+    ret = "火币行情："+now.toLocaleString()+"\n";
+    ret = ret + symbol+":"+price.toFixed(8);
+  }catch(e){
+    console.log(e);
+    ret = '';
+  }
   callback(ret);
+
 }
 
 
 
 function getPrice(callback){
   getCurrency(function(usd_cny){
-    getBifFinex(usd_cny,callback);
+    //getBifFinex(usd_cny,callback);
     getHT(callback,false);
   })
 }

@@ -1,6 +1,7 @@
 var https=require('https');
 var http = require('http');
 var cache = {};
+var nickcache = {};
 function getUserNameInGroup(qq,gid){
   if(cache[gid]){
     return getUserNameInGroupByCache(cache[gid],qq);
@@ -53,11 +54,11 @@ function getUserNameInGroupByCache(data,qq){
   return 'card error:'+qq;
 }
 
-function getUserNickInGroupByCache(data,qq){
-  if(data){
-    if(data[qq]){
-      var card = data[qq].card;
-      var nick = data[qq].nickname;
+function getUserNickInGroupByCache(qq,groupid){
+  if(cache[groupid]){
+    if(cache[groupid][qq]){
+      var card = cache[groupid][qq].card;
+      var nick = cache[groupid][qq].nickname;
       return nick;
     }
   }
