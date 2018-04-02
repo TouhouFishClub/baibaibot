@@ -315,7 +315,7 @@ function banUser(userName){
   var group = namecache[userName].gid;
   console.log('ban:'+qq+":"+group);
   if((group+"").startsWith("61614")){
-    var time=Math.floor(Math.random()*900);
+    var time=Math.floor(Math.random()*300);
     banUserInGroup(qq,group,time);
     setTimeout(function(){
       banUserInGroup(qq,group,0);
