@@ -48,6 +48,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
       case '參加':
       case '参加':
         var can=true
+        /*
          if(death[nickname]) {
            var now = new Date().getTime();
            var then = death[nickname];
@@ -57,6 +58,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
              return;
            }
          }
+         */
         if(can){
           if (rouletteObj.gamers[nickname]) {
             rouletteObj.callback(`【${nickname}】已经坐上赌桌`)
