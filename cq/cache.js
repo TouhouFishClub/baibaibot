@@ -1,7 +1,7 @@
 var https=require('https');
 var http = require('http');
 var cache = {};
-var nickcache = {};
+var namecache = {};
 function getUserNameInGroup(qq,gid){
   if(cache[gid]){
     return getUserNameInGroupByCache(cache[gid],qq);
@@ -25,12 +25,15 @@ function getUserNameInGroup(qq,gid){
       res.on('end', function () {
         var data = eval('('+resdata+')');
         var arr = {};
+        var namearr = {};
         for(var i=0;i<data.data.length;i++){
           var user = data.data[i];
           var uid = user.user_id;
           arr[uid]=user;
+          namearr[user.card?user.card:user.nickname]=uid;
         }
         cache[gid] = arr;
+        namecache[gid]=namearr;
         getUserNameInGroupByCache(data,qq);
       });
     });
@@ -123,10 +126,42 @@ function sendPrivateMsg(userid,msg){
   req.end();
 }
 
+function banUserInGroup(qq,groupid,seconds){
+  var options = {
+    host: '192.168.17.52',
+    port: 23334,
+    path: 'set_group_ban?group_id='+groupid+'&user_id='+qq+'&duration='+seconds,
+    method: 'GET',
+    headers: {
+
+    }
+  };
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+    res.on('end', function () {
+
+    });
+    res.on('error', function () {
+
+    });
+  });
+  req.end();
+}
+
+function banUserByName(name,groupid,seconds){
+
+}
+
 
 module.exports={
   getUserNameInGroup,
   getUserNickInGroupByCache,
   getGroupName,
+  banUserInGroup,
+  banUserByName,
   sendPrivateMsg
 }

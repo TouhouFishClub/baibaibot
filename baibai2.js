@@ -192,7 +192,7 @@ function handleMsg_D(msgObj,response){
     rcontent === '犯規' ||
     rcontent === '犯规'
   ){
-    roulette(name,rcontent,callback)
+    roulette(name,rcontent,callback,from,groupid)
     return
   }
 
