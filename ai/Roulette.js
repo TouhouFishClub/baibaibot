@@ -311,6 +311,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
 function banUser(userName){
   var qq = namecache[userName].qq;
   var group = namecache[userName].gid;
+  console.log('ban:'+qq+":"+group);
   if((group+"").startsWith("61614")){
     var time=Math.floor(Math.random()*900);
     banUserInGroup(qq,group,time);
