@@ -130,12 +130,13 @@ function banUserInGroup(qq,groupid,seconds){
   var options = {
     host: '192.168.17.52',
     port: 23334,
-    path: 'set_group_ban?group_id='+groupid+'&user_id='+qq+'&duration='+seconds,
+    path: '/set_group_ban?group_id='+groupid+'&user_id='+qq+'&duration='+seconds,
     method: 'GET',
     headers: {
 
     }
   };
+  console.log(options);
   var req = http.request(options, function(res) {
     res.setEncoding('utf8');
     var resdata = '';

@@ -191,16 +191,18 @@ module.exports = function(nickname, content, callback,qq,groupid){
       /* 准备动作失败 */
       if(Math.random() < 0.5){
         /* 下一个人掏出自己的枪 */
+        banUser(rouletteObj.now,qq,groupid);
         saveDeath(rouletteObj.now, 1, function(ret) {
-          banUser(rouletteObj.now,qq,groupid);
+
           rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，可是手速没【${rouletteObj.next}】快，【${rouletteObj.next}】掏出自己的枪崩了【${rouletteObj.now}】说：破坏规则的人就是这个下场！\n${ret}`)
         })
       } else {
         /* 抢枪 */
         if(rouletteObj.magazineArr[rouletteObj.gameActionCount]){
           /* 反杀成功 */
+          banUser(rouletteObj.now,qq,groupid);
           saveDeath(rouletteObj.now, 1, function(ret) {
-            banUser(rouletteObj.now,qq,groupid);
+
             rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，但是被【${rouletteObj.next}】抢了过来，【${rouletteObj.next}】对着【${rouletteObj.now}】就是一枪，砰的一声，【${rouletteObj.now}】倒在了血泊中。\n${ret}`)
             let next = rouletteObj.gamersArr.shift()
             rouletteObj.gamersArr.push(next)
