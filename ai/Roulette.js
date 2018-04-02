@@ -46,14 +46,14 @@ module.exports = function(nickname, content, callback){
       case '參加':
       case '参加':
         var can=true
-        // if(death[nickname]) {
-        //   var now = new Date().getTime();
-        //   var then = death[nickname];
-        //   if (now < then) {
-        //     can = false;
-        //     rouletteObj.callback(`【${nickname}】已经死亡,无法坐上赌桌,复活时间：【${new Date(then).toLocaleString()}】`)
-        //   }
-        // }
+         if(death[nickname]) {
+           var now = new Date().getTime();
+           var then = death[nickname];
+           if (now < then) {
+             can = false;
+             rouletteObj.callback(`【${nickname}】已经死亡,无法坐上赌桌,复活时间：【${new Date(then).toLocaleString()}】`)
+           }
+         }
         if(can){
           if (rouletteObj.gamers[nickname]) {
             rouletteObj.callback(`【${nickname}】已经坐上赌桌`)
