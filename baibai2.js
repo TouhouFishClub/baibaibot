@@ -201,7 +201,7 @@ function handleMsg_D(msgObj,response){
     return
   }
 
-  if(rcontent == '抽卡'){
+  if(rcontent.startsWith("抽卡")){
     drawNameCard(name,from,callback,groupid);
     return;
   }

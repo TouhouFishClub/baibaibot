@@ -17,4 +17,5 @@ const {getNameList} = require('./ai/games/card/fetch');
 const {drawNameCard,getDetailByName} = require('./ai/games/card/draw');
 //getDetailByName(1,'Etihw','/Etihw',function(){});
 //mabi()
+getNameList();
 
