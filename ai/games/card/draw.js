@@ -222,33 +222,55 @@ function getCard(qq,userName,callback){
   });
 }
 
-function generateImageByWords(img,wd){
-  var wa = wd.split('\n');
-  var maxwd = 0;
-  for(var i=0;i<wa.length;i++){
-    if(maxwd<wa[i].length){
-      maxwd=wa[i].length;
+function generateImageByWords(img,wd,callback){
+  if(img&&wd){
+    var wa = wd.split('\n');
+    var maxwd = 0;
+    var uwd = 23;
+    var uw = "";
+    for(var i=0;i<wa.length;i++){
+      var lw = wa[i];
+      var ud = "";
+      while(lw.length>uwd){
+        ud = ud + lw.substring(0,uwd)+"\n";
+        lw = lw.substring(uwd);
+      }
+      if(lw.length>0){
+        uw = uw + ud +lw+"\n";
+      }else{
+        uw = uw + ud;
+      }
     }
+    var ua = uw.split('\n');
+    for(var i=0;i<ua.length;i++){
+      if(ua[i].length>maxwd){
+        maxwd = ua[i].length;
+      }
+    }
+    var len = ua.length;
+    var imgname = new Date().getTime()+"";
+    var folder = 'static/'
+    request(img).pipe(fs.createWriteStream(folder + imgname)).on('close',function(){
+      var img0 = new imageMagick(folder + imgname);
+      var img1 = new imageMagick("static/blank.png");
+      console.log("len:"+maxwd+":"+len);
+      img1.resize(maxwd*18, len*21,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+        .autoOrient()
+        .fontSize(20)
+        .fill('blue')
+        .font('./static/dfgw.ttf')
+        .drawText(0,0,uw,'NorthWest')
+        .write('test/o1.jpg', function(err){
+          img0.size(function(err,imgsize){
+            console.log(imgsize);
+            var imgname2 = new Date().getTime()+"";
+            img0.append('test/o1.jpg',true).write('../coolq-data/cq/data/image/send/card/'+imgname2+".jpg",function(err){
+              callback(imgname2);
+            })
+          });
+        });
+    });
   }
-  var len = wa.length;
-  request(img).pipe(fs.createWriteStream("test" + "/" + "aaa.jpg"));
-  setTimeout(function(){
-    var img0 = new imageMagick("test/aaa.jpg");
-    var img1 = new imageMagick("static/blank.png");
-    console.log("len:"+maxwd+":"+len);
-    img1.resize(maxwd*19, len*19,'!') //加('!')强行把图片缩放成对应尺寸150*150！
-      .autoOrient()
-      .fontSize(20)
-      .fill('blue')
-      .font('./static/dfgw.ttf')
-      .drawText(0,0,wd,'NorthWest')
-      .write('test/o1.jpg', function(err){
-        img0.append('test/o1.jpg',true).write('test/o2.jpg',function(err){
-          console.log(err);
-        })
-      });
-  },3000)
-
 }
 
 

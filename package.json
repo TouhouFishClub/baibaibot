@@ -27,6 +27,7 @@
     "images": "^3.0.1",
     "log": "^1.4.0",
     "mongodb": "^2.2.30",
+    "request-promise": "^4.2.2",
     "twitter": "",
     "websocket": ""
   },
