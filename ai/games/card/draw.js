@@ -59,7 +59,11 @@ function drawNameCard(username,qq,callback,groupid){
         var cb2 = function(imgname){
           callback(ret+'[CQ:image,file='+imgname+']');
         }
-        generateImageByWords(img,tdata,cb2);
+        if(img&&tdata){
+          generateImageByWords(img,tdata,cb2);
+        }else{
+          callback(ret);
+        }
       }
       if(data.detail){
         cb(data.detail);
@@ -272,6 +276,8 @@ function generateImageByWords(img,wd,callback){
           });
         });
     });
+  }else{
+
   }
 }
 
