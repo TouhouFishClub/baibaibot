@@ -267,7 +267,7 @@ function generateImageByWords(img,wd,callback){
             console.log(imgsize);
             var imgname2 = new Date().getTime()+"";
             img0.append('test/o1.jpg',true).write('../coolq-data/cq/data/image/send/card/'+imgname2+".jpg",function(err){
-              callback(imgname2);
+              callback("send/card/"+imgname2+".jpg");
             })
           });
         });
