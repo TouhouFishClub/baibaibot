@@ -41,6 +41,10 @@ function drawNameCard(username,qq,callback,groupid){
   }else{
     cache[qq]={ts:now,c:1};
   }
+  if(Math.random()<0.44){
+    draw2df(qq,username,callback);
+    return;
+  }
   MongoClient.connect(mongourl, function(err, db) {
     var cl_card = db.collection('cl_card');
     cl_card.aggregate([{'$sample':{'size':1}}], function(err, data) {
@@ -281,9 +285,57 @@ function generateImageByWords(img,wd,callback){
   }
 }
 
+function draw2df(qq,username,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_card_2df = db.collection('cl_card_2df');
+    cl_card_2df.aggregate([{'$sample':{'size':1}}], function(err, data) {
+      console.log(data);
+      var ud = data[0];
+      var name = ud._id;
+      var img = ud.img;
+      var n = name.indexOf(':');
+      var gamename = name.substring(0,n);
+      var cd = name.substring(n+1);
+      var n1 = cd.indexOf('cv');
+      if(n1>0){
+        cd = cd.substring(0,n1);
+      }
+      var ret = '【'+username+'】'+'抽到了：'+cd+'\n';
+      var da = ud.d;
+      var dr = "";
+      var dc = 0;
+      for(var i=0;i<da.length;i++){
+        if(i==0){
+          dr=da[i];
+          dc = da[i].split('\n').length;
+        }else{
+          var nc = da[i].split('\n').length;
+          if(dc+nc>22){
+            break;
+          }else{
+            dc=dc+nc;
+            dr=dr+"\n"+da[i];
+          }
+        }
+      }
+      saveCard(qq,name);
+      var cb = function(imgname){
+        callback(ret+'[CQ:image,file='+imgname+']');
+      }
+      if(img&&dr){
+        generateImageByWords(img,gamename+"\n"+dr,cb);
+      }else{
+        callback(ret);
+      }
+    });
+  });
+}
+
+
 
 module.exports={
   drawNameCard,
   getDetailByName,
-  getCard
+  getCard,
+  draw2df
 }

@@ -5,12 +5,12 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var fs = require('fs');
 
 
-function fetchGame(id,lastret,page){
+function fetchGame(id,lastret,page,gamename){
   if(!lastret){
     lastret=[];
   }
   if(!page){
-    page=0;
+    page=1;
   }
   var option = {
     host: 'www.2dfan.com',
@@ -33,7 +33,7 @@ function fetchGame(id,lastret,page){
         resdata = resdata + chunk;
       });
       res.on('end', function(){
-        //console.log(resdata);
+        resdata=resdata.toLowerCase();
         var h1 = 'navbar navbar-inner block-header no-border';
         var s0 = resdata;
         var n1 = s0.indexOf(h1);
@@ -49,13 +49,12 @@ function fetchGame(id,lastret,page){
               var n4 = s2.indexOf('<p>')
               var n5 = s2.indexOf('分享到');
               var desp = s2.substring(n4,n5);
-              //console.log(desp)
               var ret = []
               var s10 = desp;
               var n=s10.indexOf('<p');
 
               do{
-                var s11 = s10.substring(n);
+                var s11 = s10.substring(n+1);
                 var n11 = s11.indexOf('>');
                 var n12 = s11.indexOf('</p>');
 
@@ -81,19 +80,26 @@ function fetchGame(id,lastret,page){
                   n13 = s13.indexOf('<')
                 }
                 liner=liner+s13;
-                //console.log(liner);
                 ret.push(liner);
               }while(n>=0)
               var nret = lastret.concat(ret);
-              fetchGame(id,nret,page+1);
+              fetchGame(id,nret,page+1,gamename);
             }
           }
         }
       })
     }else if(res.statusCode==500){
-      console.log(lastret);
+      //console.log(gamename);
+      //console.log(lastret);
+      saveGame(gamename,lastret,id);
+      handleGameDesp(gamename,lastret,id);
+      setTimeout(function(){
+        fetchGame(id+1,[],1,"")
+      },1000);
     }else{
-
+      setTimeout(function(){
+        fetchGame(id+1,[],1,"")
+      },1000);
     }
 
   });
@@ -101,8 +107,85 @@ function fetchGame(id,lastret,page){
 }
 
 
+function handleGameDesp(gamename,desArr){
+  console.log(desArr);
+  for(var i=0;i<desArr.length;i++){
+    var des = desArr[i].trim();
+    if(i==desArr.length-1){
+      break;
+    }
+    var nextdes = desArr[i+1].trim();
+    if(des.indexOf('cv')>=-1){
+      if(nextdes.startsWith("http")){
+        var n = des.indexOf('cv');
+        var char;
+        if(n>0){
+          char = des.substring(0,n).trim();
+        }else{
+          char = des;
+        }
+        console.log(111111);
+        console.log(char);
+        console.log(char.length);
+        if(char.length>52){
+          continue;
+        }
+        var chara = [];
+        chara.push(des);
+        var charimg = nextdes;
+        for(var k=0;k<100;k++){
+          var kdes = desArr[i+2];
+          console.log(333333);
+          console.log(kdes);
+          if(!kdes){
+            break;
+          }
+          var kkdes = desArr[i+3];
+          if(!kkdes){
+            break;
+          }else if(kkdes.startsWith("http")){
+            break;
+          }
+          i++;
+          chara.push(kdes);
+        }
+
+        saveChar(gamename,char,charimg,chara);
+      }
+    }
+  }
+}
+
+function saveChar(gamename,char,charimg,chara){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_card_2df = db.collection('cl_card_2df');
+    var Obj =  {'_id':gamename+":"+char,img:charimg,d:chara,ts:new Date()};
+    cl_card_2df.save(Obj,function(){
+      db.close();
+    });
+  });
+}
+
+function saveGame(gamename,desa,id){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_game_2df = db.collection('cl_game_2df');
+    var Obj =  {'_id':gamename,id:id,d:desa,ts:new Date()};
+    cl_game_2df.save(Obj,function(){
+      db.close();
+    });
+  });
+}
+
 
 
 module.exports={
   fetchGame
 }
+
+
+
+
+
+
+
+
