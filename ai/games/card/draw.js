@@ -286,10 +286,10 @@ function generateImageByWords(img,wd,callback){
 }
 
 function draw2df(qq,username,callback){
+  console.log('will draw 2df');
   MongoClient.connect(mongourl, function(err, db) {
     var cl_card_2df = db.collection('cl_card_2df');
     cl_card_2df.aggregate([{'$sample':{'size':1}}], function(err, data) {
-      console.log(data);
       var ud = data[0];
       var name = ud._id;
       var img = ud.img;
