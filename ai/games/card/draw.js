@@ -41,7 +41,7 @@ function drawNameCard(username,qq,callback,groupid){
   }else{
     cache[qq]={ts:now,c:1};
   }
-  if(Math.random()<0.44){
+  if(Math.random()<0.5){
     draw2df(qq,username,callback);
     return;
   }
@@ -264,7 +264,7 @@ function generateImageByWords(img,wd,callback){
       var img0 = new imageMagick(folder + imgname);
       var img1 = new imageMagick("static/blank.png");
       console.log("len:"+maxwd+":"+len);
-      img1.resize(maxwd*18+9, len*21+9,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+      img1.resize(maxwd*19+9, len*21+9,'!') //加('!')强行把图片缩放成对应尺寸150*150！
         .autoOrient()
         .fontSize(20)
         .fill('blue')
