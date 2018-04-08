@@ -47,6 +47,10 @@ function httpget(host,path,callback){
 
     }
   });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
   req.end();
 }
 

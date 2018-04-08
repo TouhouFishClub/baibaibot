@@ -36,6 +36,10 @@ function tulingMsg(userid,content,callback,groupid){
       callback(ret);
     });
   });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
   req.write(JSON.stringify(body));
   req.end();
 }

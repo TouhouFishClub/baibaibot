@@ -41,6 +41,10 @@ function pairReply(content,UserName,callback){
         }
       });
     });
+    req.on('error', function(err) {
+      console.log('req err:');
+      console.log(err);
+    });
     req.write(JSON.stringify(obj));
     req.end();
   }

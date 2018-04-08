@@ -48,6 +48,10 @@ function translateMsg(content,tolan,callback){
           googleTranslate(content,'zh',callback);
         }
       });
+      req.on('error', function(err) {
+        console.log('req err:');
+        console.log(err);
+      });
       req.end();
     }else{
       googleTranslate(content,'zh',callback);
@@ -99,6 +103,10 @@ function googleTranslate(content,tolan,callback){
       callback(content+'\n          ↓\n'+ret);
     });
   })
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
   req.end();
 }
 

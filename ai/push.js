@@ -127,6 +127,10 @@ function getBitFlyer(callback,withproxy){
   req.setTimeout(5000,function(){
     callback('bitflyer BOOM!');
   });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
   req.end();
 }
 
@@ -182,6 +186,10 @@ function getHT(callback,withproxy){
         getHT(callback);
       }
     }
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
   });
   req.setTimeout(5000,function(){
     callback('huobi BOOM!');
@@ -257,6 +265,10 @@ function getBifFinex(usd_cny,callback,withproxy){
         getPrice(callback);
       }
     }
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
   });
   req.setTimeout(5000,function(){
     req.end();

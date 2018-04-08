@@ -142,6 +142,10 @@ function getDetailByName(cl_card,name,href,callback,db){
       callback('爆炸啦喵');
     })
   });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
   req.setTimeout(10000,function(){
     req.end();
     var ret = {};

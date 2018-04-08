@@ -184,6 +184,10 @@ function getWeatherByCityCode(city,cityCode,userId,callback){
       callback('爆炸啦喵');
     })
   });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
   req.setTimeout(10000,function(){
     req.end();
     failed = failed + 1;
@@ -236,6 +240,10 @@ function getAqiByCitycode(title,str,cityCode,userId,callback){
       console.log(error);
       callback('爆炸啦喵');
     });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
   });
   req.setTimeout(10000,function(){
     req.end();
