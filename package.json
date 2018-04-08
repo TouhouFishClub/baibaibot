@@ -1,6 +1,6 @@
 {
-  "name": "qqbot",
-  "version": "0.1.5",
+  "name": "baibaibot",
+  "version": "1.0.0",
   "description": "Web QQ client using es7 syntax",
   "engines": {
     "node": ">=7.6.0"
@@ -10,31 +10,22 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "qq",
-    "qqbot",
-    "webqq",
-    "smartqq"
+    "qqbot"
   ],
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.16.1",
+    "axios": "",
     "body-parser": "",
-    "cookie": "^0.3.1",
-    "express": "~4.14.0",
-    "express-ws": "",
+    "express": "",
     "gm": "^1.23.1",
-    "https-proxy-agent": "^2.0.0",
-    "log": "^1.4.0",
+    "https-proxy-agent": "",
     "mongodb": "^2.2.30",
-    "request-promise": "^4.2.2",
     "twitter": "",
     "websocket": ""
   },
   "devDependencies": {
-    "@types/cookie": "^0.3.0",
     "fs-extra": "^4.0.1",
     "lodash": "^4.17.4",
-    "opn": "^5.1.0",
     "path-extra": "^4.2.0"
   }
 }

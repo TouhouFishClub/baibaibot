@@ -23,7 +23,7 @@ function drawNameCard(username,qq,callback,groupid){
     }
   }else{
     cooldown = 60000*10;
-    maxtimes = 4;
+    maxtimes = 3;
   }
   if(cache[qq]){
     var then=cache[qq].ts;
