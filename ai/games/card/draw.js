@@ -71,14 +71,15 @@ function drawNameCard(username,qq,callback,groupid){
       }
       if(data.detail){
         cb(data.detail);
+        db.close();
       }else{
-        getDetailByName(cl_card,name,data.href,cb);
+        getDetailByName(cl_card,name,data.href,cb,db);
       }
     });
   });
 }
 
-function getDetailByName(cl_card,name,href,callback){
+function getDetailByName(cl_card,name,href,callback,db){
   var option = {
     host: 'zh.moegirl.org',
     port: 443,
@@ -132,7 +133,9 @@ function getDetailByName(cl_card,name,href,callback){
           line++;
         }
       }
-      cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()}});
+      cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()}},function(){
+        db.close();
+      });
       callback({img:imgsrc,t:tdata});
     });
     res.on('error',function(){
@@ -260,7 +263,13 @@ function generateImageByWords(img,wd,callback){
     var len = ua.length;
     var imgname = new Date().getTime()+"";
     var folder = 'static/'
-    request(img).pipe(fs.createWriteStream(folder + imgname)).on('close',function(){
+    var imgreq = request(img).pipe(fs.createWriteStream(folder + imgname));
+    imgreq.on('error',function(err){
+      console.log(err);
+      console.log(img);
+      callback("");
+    })
+    imgreq.on('close',function(){
       var img0 = new imageMagick(folder + imgname);
       var img1 = new imageMagick("static/blank.png");
       console.log("len:"+maxwd+":"+len);

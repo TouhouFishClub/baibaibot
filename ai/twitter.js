@@ -61,32 +61,7 @@ function pushTwitterMsg(twitterid,ret,type){
     if(twitterid=='856385582401966080'){
       callback(205700800,ret);
     }
-  }else{
-    const {getQQQ,getGroupList} = require('../baibai');
-    var groups = getGroupList();
-    var qqq = getQQQ();
-    var gn = group.name;
-    var gid = group.gid;
-    if(twitterid=='294025417'){
-      if(gn.indexOf('沙丁鱼')>=0||gn.indexOf('ウル')>=0){
-        console.log(gn,gid);
-        qqq.sendGroupMsg(gid,ret);
-      }
-    }
-    if(twitterid=='3833285893'){
-      if(gn.indexOf('沙丁鱼')>=0||gn.indexOf('喵')>=0){
-        console.log(gn,gid);
-        qqq.sendGroupMsg(gid,ret);
-      }
-    }
-    if(twitterid=='856385582401966080'){
-      if(gn.indexOf('沙丁鱼')>=0){
-        console.log(gn,gid);
-        qqq.sendGroupMsg(gid,ret);
-      }
-    }
   }
-
 }
 
 

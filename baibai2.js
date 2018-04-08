@@ -151,18 +151,6 @@ function handleMsg_D(msgObj,response){
   }
 
 
-  /*
-  if(content.substring(0,2)=='自杀'){
-    var minutes = content.substring(2);
-    if(minutes==""){
-      qqq.shutupGroupMember(groupid,from,Math.floor(Math.random()*600));
-    }else if(minutes>=1&&minutes<10){
-      qqq.shutupGroupMember(groupid,from,minutes*60);
-    }
-    return;
-  }
-  */
-
   var rcontent=content.trim();
   if(
     rcontent === '俄罗斯轮盘' ||

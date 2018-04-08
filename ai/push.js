@@ -81,35 +81,10 @@ function pushToGroup(type){
     setTimeout(function(){
       getBitFlyer(callback);
     },500);
-  }else{
-    const {getQQQ,getGroupList} = require('../baibai');
-    var groups = getGroupList();
-    var qqq = getQQQ();
-    if(groups){
-      for(var i=0;i<groups.length;i++){
-        var group = groups[i];
-        handleGroupPush(group,qqq);
-      }
-    }
   }
 }
 
 
-
-function handleGroupPush(group,qqq){
-  var gn = group.name;
-  var gid = group.gid;
-  if(gn.indexOf('光与暗的')>=0){
-    console.log(gn,gid);
-    var callback = function(ret){
-      qqq.sendGroupMsg(gid,ret);
-    }
-    getPrice(callback);
-    setTimeout(function(){
-      getBitFlyer(callback);
-    },500);
-  }
-}
 
 function getBitFlyer(callback,withproxy){
   console.log('will get bitflyer');
