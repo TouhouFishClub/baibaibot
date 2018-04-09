@@ -219,7 +219,7 @@ function parseHTRes(resdata,callback){
 
 function getPrice(callback){
   getCurrency(function(usd_cny){
-    //getBifFinex(usd_cny,callback);
+    getBifFinex(usd_cny,callback);
     getHT(callback,false);
   })
 }
