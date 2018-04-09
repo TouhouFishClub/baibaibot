@@ -21,7 +21,8 @@
     "https-proxy-agent": "",
     "mongodb": "^2.2.30",
     "twitter": "",
-    "websocket": ""
+    "websocket": "",
+    "xml2json": "^0.11.2"
   },
   "devDependencies": {
     "fs-extra": "^4.0.1",
