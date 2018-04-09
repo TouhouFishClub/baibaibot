@@ -153,6 +153,26 @@ function banUserInGroup(qq,groupid,seconds){
   req.end();
 }
 
+function banUserRandom(qq,groupid){
+  if(cache[groupid]){
+    var time = Math.random()*10000;
+    if(Math.random()<0.5){
+      banUserInGroup(qq,groupid,time);
+      setTimeout(function(){
+        banUserInGroup(qq,groupid,0);
+      },time+2345);
+    }else{
+      var keys = Object.keys(cache[groupid]);
+      var userqq = cache[groupid][keys[Math.floor(Math.random()*keys.length)];
+      banUserInGroup(userqq,groupid,time);
+      setTimeout(function(){
+        banUserInGroup(userqq,groupid,0);
+      },time+2345);
+    }
+  }
+}
+
+
 function banUserByName(name,groupid,seconds){
 
 }
@@ -164,5 +184,6 @@ module.exports={
   getGroupName,
   banUserInGroup,
   banUserByName,
+  banUserRandom,
   sendPrivateMsg
 }

@@ -36,7 +36,7 @@ const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,sea
 const {pushTask,pushToGroup} = require('./ai/push');
 const {replayReply} = require('./ai/replay');
 
-const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName} = require('./cq/cache');
+const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,banUserRandom} = require('./cq/cache');
 
 const {saveSt,searchMedal} = require('./ai/check/stat')
 
@@ -290,7 +290,7 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first==0){
     callback(money(content.substring(1)));
   }else if(first=='b'||first=='B'){
-    banuser(content.substring(1),userName,callback);
+    banUserRandom(from,groupid);
   }else if(first=='c'||first=='C'){
     xchange(userName,content.substring(1),callback);
   }else if(first=='d'||first=='D'){
