@@ -163,7 +163,7 @@ function banUserRandom(qq,groupid){
       },time+2345);
     }else{
       var keys = Object.keys(cache[groupid]);
-      var userqq = cache[groupid][keys[Math.floor(Math.random()*keys.length)];
+      var userqq = cache[groupid][keys[Math.floor(Math.random()*keys.length)]];
       banUserInGroup(userqq,groupid,time);
       setTimeout(function(){
         banUserInGroup(userqq,groupid,0);
