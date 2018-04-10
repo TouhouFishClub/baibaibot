@@ -71,7 +71,7 @@ function searchsenka(userName,content,Ncallback){
     })
   }
   var day = new Date().getDate();
-  if(day<10||(day>10&&day<20)||(day>20&&day<22)){
+  if(day<11||(day>10&&day<20)||(day>20&&day<22)){
     callback('宇宙的爱');
     return;
   }
