@@ -15,10 +15,10 @@ function drawNameCard(username,qq,callback,groupid){
   var maxtimes;
   if((groupid+"").startsWith("61614")){
     if(new Date().getHours()>7){
-        cooldown = 60000*15;
-        maxtimes=2;
+        cooldown = 60000*10;
+        maxtimes=1;
     }else{
-        cooldown = 60000*15;
+        cooldown = 60000*10;
         maxtimes=3;
     }
   }else{
