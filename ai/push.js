@@ -49,6 +49,10 @@ function getCurrency(callback){
       callback(0);
     }
   });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
   req.setTimeout(5000,function(){
     req.end();
     callback(0);

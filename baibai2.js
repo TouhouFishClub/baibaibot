@@ -25,7 +25,6 @@ const {fight,useMagicOrItem,regenTimer} = require('./ai/favour/battle');
 const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
 
 const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
-const {banuser} = require('./ai/banuser');
 const {pairReply}=require('./ai/pairAI');
 const {getKancollStaffTweet,stream,streaminit} = require('./ai/twitter');
 const {getShipReply}=require('./ai/kancolle/getship');
