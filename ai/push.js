@@ -101,9 +101,7 @@ function getBitFlyer(callback,withproxy){
     },
     method: 'GET'
   };
-  if(withproxy){
-    options.agent=agent;
-  }
+  options.agent=agent;
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
@@ -164,9 +162,7 @@ function getHT(callback,withproxy){
     },
     method: 'GET'
   };
-  if(withproxy){
-    options.agent=agent;
-  }
+  options.agent=agent;
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
@@ -243,9 +239,7 @@ function getBifFinex(usd_cny,callback,withproxy){
     },
     method: 'GET'
   };
-  if(withproxy){
-    options.agent=agent;
-  }
+  options.agent=agent;
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
