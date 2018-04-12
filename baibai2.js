@@ -43,6 +43,8 @@ const {lottoryReply,getlottory} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
 const {drawNameCard,getCard} = require('./ai/games/card/draw');
 
+const {googleImageSearch} = require('./ai/image/google');
+
 
 loadShip();
 loadItem();
@@ -196,8 +198,8 @@ function handleMsg_D(msgObj,response){
     drawNameCard(name,from,callback,groupid);
     return;
   }
-  if(rcontent.startsWith("查卡")){
-    getCard(from,name,callback);
+  if(rcontent.startsWith("搜图")){
+    googleImageSearch(content.substring(2),callback)
     return;
   }
 
