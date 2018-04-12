@@ -47,7 +47,10 @@ function drawNameCard(username,qq,callback,groupid){
   }
   MongoClient.connect(mongourl, function(err, db) {
     var cl_card = db.collection('cl_card');
-    cl_card.aggregate([{'$sample':{'size':1}}], function(err, data) {
+    var ag = [];
+    if(true){};
+    ag.push({'$sample':{'size':1}});
+    cl_card.aggregate(ag, function(err, data) {
       console.log(data);
       var ud = data[0];
       var name = ud._id;
@@ -302,7 +305,10 @@ function draw2df(qq,username,callback){
   console.log('will draw 2df');
   MongoClient.connect(mongourl, function(err, db) {
     var cl_card_2df = db.collection('cl_card_2df');
-    cl_card_2df.aggregate([{'$sample':{'size':1}}], function(err, data) {
+    var ag = [];
+    if(true){};
+    ag.push({'$sample':{'size':1}});
+    cl_card_2df.aggregate(ag, function(err, data) {
       var ud = data[0];
       var name = ud._id;
       var img = ud.img;
