@@ -49,6 +49,10 @@ function getCurrency(callback){
       callback(0);
     }
   });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
   req.setTimeout(5000,function(){
     req.end();
     callback(0);
@@ -97,9 +101,7 @@ function getBitFlyer(callback,withproxy){
     },
     method: 'GET'
   };
-  if(withproxy){
-    options.agent=agent;
-  }
+  options.agent=agent;
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
@@ -160,9 +162,7 @@ function getHT(callback,withproxy){
     },
     method: 'GET'
   };
-  if(withproxy){
-    options.agent=agent;
-  }
+  options.agent=agent;
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
@@ -239,9 +239,7 @@ function getBifFinex(usd_cny,callback,withproxy){
     },
     method: 'GET'
   };
-  if(withproxy){
-    options.agent=agent;
-  }
+  options.agent=agent;
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;

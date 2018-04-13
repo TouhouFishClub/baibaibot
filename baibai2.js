@@ -25,7 +25,6 @@ const {fight,useMagicOrItem,regenTimer} = require('./ai/favour/battle');
 const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
 
 const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
-const {banuser} = require('./ai/banuser');
 const {pairReply}=require('./ai/pairAI');
 const {getKancollStaffTweet,stream,streaminit} = require('./ai/twitter');
 const {getShipReply}=require('./ai/kancolle/getship');
@@ -45,6 +44,7 @@ const smuggler = require('./ai/mabinogi/smuggler')
 const {drawNameCard,getCard} = require('./ai/games/card/draw');
 
 const op = require('./ai/mabinogi/optionset')
+const {googleImageSearch} = require('./ai/image/google');
 
 
 loadShip();
@@ -205,8 +205,8 @@ function handleMsg_D(msgObj,response){
     drawNameCard(name,from,callback,groupid);
     return;
   }
-  if(rcontent.startsWith("查卡")){
-    getCard(from,name,callback);
+  if(rcontent.startsWith("搜图")){
+    googleImageSearch(content.substring(2),callback)
     return;
   }
 
