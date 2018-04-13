@@ -1,0 +1,169 @@
+const _ = require('lodash')
+const path = require('path')
+const formatOptionset = require(path.join(__dirname, '/tools/formatOptionset'))
+let optionSetObj = []
+
+module.exports = function(userId, context, callback) {
+  const _initSearch = () => {
+    const maxKeywords = 6, maxSearch = 10
+    let ctx = context.trim()
+    if(ctx){
+      let searchArr = ctx.replace(/，/g, ',').split(',')
+      if(searchArr.length > 0){
+        if(searchArr.length < maxKeywords){
+          if(searchArr.length === 1){
+            searchName(ctx)
+          } else {
+            searchKeywords(analysisKeywords(searchArr))
+          }
+        } else {
+          callback(`最多仅能使用${maxKeywords}个关键字`)
+        }
+      } else {
+        callback('请输入至少一个查询条件')
+      }
+    } else {
+      callback('释放查询，可使用 opts 或 释放查询 + 关键词搜索，多个关键词用逗号隔开')
+    }
+  }
+  const analysisKeywords = keywords => {
+    let keywordObj = {
+      debuff: [],
+      buff:[]
+    }
+    keywords.forEach(keyword => {
+      keyword = keyword.trim()
+      switch(keyword){
+        case '练习':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+          if(!keywordObj.Level){
+            if(keyword == '练习'){
+              keywordObj.Level = 0
+            } else {
+              keywordObj.Level = parseInt(`0x${keyword}`)
+            }
+          }
+          break
+        case '接头':
+        case '接尾':
+          if(!keywordObj.usage){
+            keywordObj.usage = keyword === '接头'? 0: 1
+          }
+          break
+        default:
+          if(keyword){
+            if(keyword.substr(0, 1) == '-'){
+              keywordObj.debuff.push(keyword.substring(1))
+            } else {
+              keywordObj.buff.push(keyword)
+            }
+          }
+      }
+    })
+    return keywordObj
+  }
+  const searchName = name => {
+    console.log('search name')
+    console.log(name)
+    let finalArr = []
+    optionSetObj.forEach(optionset => {
+      if(optionset.LocalName === name){
+        finalArr.push(optionset)
+      }
+    })
+    renderMsg(finalArr)
+  }
+  const searchKeywords = keywords => {
+    let finalArr = []
+    optionSetObj.forEach(optionset => {
+      if(!keywords.Level || (keywords.Level && keywords.Level == optionset.LevelQuery)){
+        if(!keywords.usage || (keywords.usage && keywords.usage == optionset.UsageQuery)){
+          let buffCheck = true
+          if(keywords.debuff.length){
+            keywords.debuff.forEach(debuff => {
+              let optCheck = false
+              optionset.Debuff.forEach(Debuff => {
+                if(new RegExp(debuff).test(Debuff)){
+                  optCheck = true
+                }
+              })
+              if(!optCheck){
+                buffCheck = false
+              }
+            })
+          }
+          if(keywords.buff.length){
+            keywords.buff.forEach(buff => {
+              let optCheck = false
+              optionset.Buff.forEach(Buff => {
+                if(new RegExp(buff).test(Buff)){
+                  optCheck = true
+                }
+              })
+              if(!optCheck){
+                buffCheck = false
+              }
+            })
+          }
+          if(buffCheck){
+            finalArr.push(optionset)
+          }
+        }
+      }
+    })
+    renderMsg(finalArr)
+  }
+  const renderMsg = finalArr => {
+    let str = ''
+    if(finalArr.length == 0){
+      str = '没有找到释放卷轴'
+    }
+    if(finalArr.length == 1){
+      str = `${finalArr[0].LocalName}(Rank ${finalArr[0].Level})\n[${finalArr[0].Usage}]\n${finalArr[0].Buff.join('\n')}\n${finalArr[0].Debuff.join('\n')}`
+    }
+    if(finalArr.length > 1){
+      str = '查询到复数释放卷，请选择：\n'
+      if(finalArr.length <= 5){
+        finalArr.forEach(os => {
+          str += `[${os.Usage}]${os.LocalName}(Rank ${os.Level})\n`
+        })
+      } else {
+        for(let i = 0; i < 5; i ++){
+          str += `[${finalArr[i].Usage}]${finalArr[i].LocalName}(Rank ${finalArr[i].Level})\n`
+        }
+        str += '超过搜索限制，请添加更多关键字'
+      }
+    }
+    callback(str)
+  }
+  if(!optionSetObj.length){
+    console.log('=== init optionset data ===')
+    formatOptionset(data => {
+      optionSetObj = data
+      console.log('=== completed optionset data ===')
+      _initSearch()
+    })
+  } else {
+    _initSearch()
+  }
+}

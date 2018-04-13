@@ -7,3 +7,5 @@ var users = [
 
 console.log(_.sortBy(users, 'count'))
 console.log(users)
+
+console.log(_.replace('121212', '1', '3'))

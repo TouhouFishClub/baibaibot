@@ -44,6 +44,8 @@ const {lottoryReply,getlottory} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
 const {drawNameCard,getCard} = require('./ai/games/card/draw');
 
+const op = require('./ai/mabinogi/optionset')
+
 
 loadShip();
 loadItem();
@@ -193,6 +195,12 @@ function handleMsg_D(msgObj,response){
     return
   }
 
+
+  let con =content.trim(), fi = con.substring(0,4)
+  if(fi === '释放查询' && fi === 'opts'){
+    op(name, con.substring(4).trim(), callback)
+  }
+
   if(rcontent.startsWith("抽卡")){
     drawNameCard(name,from,callback,groupid);
     return;
@@ -206,7 +214,6 @@ function handleMsg_D(msgObj,response){
   if(first=="*"||first=='×'){
     lottoryReply(content.substring(1),name,callback);
   }
-
 
 
 
