@@ -89,7 +89,7 @@ module.exports = function(userId, context, callback) {
   const searchId = id => {
     optionSetObj.forEach(optionset => {
       if(optionset.ID == id){
-        renderMsg(optionset)
+        renderMsg([optionset])
       }
     })
   }
