@@ -12,7 +12,11 @@ module.exports = function(userId, context, callback) {
       if(searchArr.length > 0){
         if(searchArr.length < maxKeywords){
           if(searchArr.length === 1){
-            searchName(ctx)
+            if(/^\d+$/.test(ctx)){
+              searchId(ctx)
+            } else {
+              searchName(ctx)
+            }
           } else {
             searchKeywords(analysisKeywords(searchArr))
           }
@@ -23,7 +27,7 @@ module.exports = function(userId, context, callback) {
         callback('请输入至少一个查询条件')
       }
     } else {
-      callback('释放查询，可使用 opts 或 释放查询 + 关键词搜索，多个关键词用逗号隔开')
+      callback('【释放查询】\n可使用 opts 或 释放查询 + 关键词搜索\n单关键字为按ID或按名称查询\n多个关键词用逗号隔开，支持接头结尾，释放卷等级，释放属性（负面属性前加-）\n如： opts 4，接头，智力，-修理费')
     }
   }
   const analysisKeywords = keywords => {
@@ -81,6 +85,13 @@ module.exports = function(userId, context, callback) {
       }
     })
     return keywordObj
+  }
+  const searchId = id => {
+    optionSetObj.forEach(optionset => {
+      if(optionset.ID == id){
+        renderMsg(optionset)
+      }
+    })
   }
   const searchName = name => {
     console.log('search name')
@@ -145,7 +156,7 @@ module.exports = function(userId, context, callback) {
       str = '查询到复数释放卷，请选择：\n'
       if(finalArr.length <= 5){
         finalArr.forEach(os => {
-          str += `[${os.Usage}]${os.LocalName}(Rank ${os.Level})\n`
+          str += `opts${os.ID} | [${os.Usage}]${os.LocalName}(Rank ${os.Level})\n`
         })
       } else {
         for(let i = 0; i < 5; i ++){
