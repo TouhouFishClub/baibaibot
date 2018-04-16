@@ -318,13 +318,16 @@ function getCoinMarket(callback,withproxy){
       res.on('end', function () {
         var data = eval(resdata);
         var ret = "数字货币行情(CoinMarket)："+now.toLocaleString()+"\n";
+        var n={"btc":1,"ltc":1,"eth":1,"etc":1,"xrp":1,"eos":1,"bch":1,"qtum":1,"dash":1,"neo":1}
         for(var i=0;i<data.length;i++){
           var pd = data[i];
           var symbol=pd.symbol;
-          var price_usd=parseFloat(pd.price_usd);
-          var price_cny=parseFloat(pd.price_cny);
-          //var rate = price_cny/price_usd;
-          ret = ret + symbol + ":$"+price_usd.toFixed(2)+"   \t￥"+price_cny.toFixed(2)+"\n";
+          if(n[symbol.toLowerCase()]){
+            var price_usd=parseFloat(pd.price_usd);
+            var price_cny=parseFloat(pd.price_cny);
+            //var rate = price_cny/price_usd;
+            ret = ret + symbol + ":$"+price_usd.toFixed(2)+"   \t￥"+price_cny.toFixed(2)+"\n";
+          }
         }
         callback(ret);
       });
