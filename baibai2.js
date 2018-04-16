@@ -197,8 +197,9 @@ function handleMsg_D(msgObj,response){
 
 
   let con =content.trim(), fi = con.substring(0,4)
-  if(fi === '释放查询' && fi === 'opts'){
-    op(name, con.substring(4).trim(), callback)
+  if(fi === '释放查询' || fi === 'opts'){
+    op(name, con.substring(4).trim(), callback);
+    return;
   }
 
   if(rcontent.startsWith("抽卡")){
