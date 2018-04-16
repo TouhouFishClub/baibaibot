@@ -292,6 +292,7 @@ function parseBitFinexRes(resdata,usd_cny,callback){
 }
 
 function getCoinMarket(callback,withproxy){
+  var now = new Date();
   console.log('will get conmarket:'+withproxy);
   var options = {
     hostname: "api.coinmarketcap.com",
