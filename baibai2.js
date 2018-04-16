@@ -122,6 +122,12 @@ function handleMsg_D(msgObj,response){
   }
   var from = msgObj.user_id;
   var content = msgObj.message;
+  if(content.indexOf('&amp;')>-1){
+    content=content.replace(/&amp;/g,'&');
+  }
+  if(content.indexOf('&#44;')>-1){
+    content=content.replace(/&#44;/g,',');
+  }
   var name = getUserNameInGroup(from,groupid);
   var nickname = getUserNickInGroupByCache(from,groupid);
   console.log(groupid+":"+name+":"+content)
