@@ -270,32 +270,39 @@ function generateImageByWords(img,wd,callback){
     var len = ua.length;
     var imgname = new Date().getTime()+"";
     var folder = 'static/'
-    var imgreq = request(img).pipe(fs.createWriteStream(folder + imgname));
-    imgreq.on('error',function(err){
-      console.log(err);
-      console.log(img);
-      callback("");
-    })
-    imgreq.on('close',function(){
-      var img0 = new imageMagick(folder + imgname);
-      var img1 = new imageMagick("static/blank.png");
-      console.log("len:"+maxwd+":"+len);
-      img1.resize(maxwd*19+29, len*21+29,'!') //加('!')强行把图片缩放成对应尺寸150*150！
-        .autoOrient()
-        .fontSize(20)
-        .fill('blue')
-        .font('./static/dfgw.ttf')
-        .drawText(0,0,uw,'NorthWest')
-        .write(folder+imgname+"_blank.jpg", function(err){
-          img0.size(function(err,imgsize){
-            console.log(imgsize);
-            var imgname2 = new Date().getTime()+"";
-            img0.append(folder+imgname+"_blank.jpg",true).write('../coolq-data/cq/data/image/send/card/'+imgname2+".jpg",function(err){
-              callback("send/card/"+imgname2+".jpg");
-            })
+    try{
+      var imgreq = request(img).pipe(fs.createWriteStream(folder + imgname));
+      imgreq.on('error',function(err){
+        console.log(err);
+        console.log(img);
+        callback("");
+      })
+      imgreq.on('close',function(){
+        var img0 = new imageMagick(folder + imgname);
+        var img1 = new imageMagick("static/blank.png");
+        console.log("len:"+maxwd+":"+len);
+        img1.resize(maxwd*19+29, len*21+29,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+          .autoOrient()
+          .fontSize(20)
+          .fill('blue')
+          .font('./static/dfgw.ttf')
+          .drawText(0,0,uw,'NorthWest')
+          .write(folder+imgname+"_blank.jpg", function(err){
+            img0.size(function(err,imgsize){
+              console.log(imgsize);
+              var imgname2 = new Date().getTime()+"";
+              img0.append(folder+imgname+"_blank.jpg",true).write('../coolq-data/cq/data/image/send/card/'+imgname2+".jpg",function(err){
+                callback("send/card/"+imgname2+".jpg");
+              })
+            });
           });
-        });
-    });
+      });
+    }catch(e){
+      console.log('pipe error');
+      console.log(e);
+      callback();
+    }
+
   }else{
 
   }

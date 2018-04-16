@@ -218,10 +218,7 @@ function parseHTRes(resdata,callback){
 
 
 function getPrice(callback){
-  getCurrency(function(usd_cny){
-    getBifFinex(usd_cny,callback);
-    getHT(callback,false);
-  })
+  getCoinMarket(callback,false);
 }
 
 var HttpsProxyAgent = require('https-proxy-agent')
@@ -292,6 +289,68 @@ function parseBitFinexRes(resdata,usd_cny,callback){
   }
   ret = ret + "1$="+usd_cny+"1￥";
   callback(ret.trim());
+}
+
+function getCoinMarket(callback,withproxy){
+  console.log('will get conmarket:'+withproxy);
+  var options = {
+    hostname: "api.coinmarketcap.com",
+    port: 443,
+    path: '/v1/ticker/?convert=CNY&limit=30',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+    },
+    method: 'GET'
+  };
+  if(withproxy){
+    options.agent=agent;
+  }
+  //options.agent=agent;
+  var req = https.request(options, function(res) {
+    res.setEncoding('utf8');
+    var code = res.statusCode;
+    if(code==200){
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        var data = eval(resdata);
+        var ret = "数字货币行情(CoinMarket)："+now.toLocaleString()+"\n";
+        for(var i=0;i<data.length;i++){
+          var pd = data[i];
+          var symbol=pd.symbol;
+          var price_usd=parseFloat(pd.price_usd);
+          var price_cny=parseFloat(pd.price_cny);
+          //var rate = price_cny/price_usd;
+          ret = ret + symbol + ":$"+price_usd.toFixed(2)+"   \t￥"+price_cny.toFixed(2)+"\n";
+        }
+        callback(ret);
+      });
+      res.on('error',function(){
+
+      })
+    }
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+    failed = failed + 1;
+    if(failed>2){
+      callback('CoinMarket BOOM!');
+    }else{
+      getCoinMarket(callback,true);
+    }
+  });
+  req.setTimeout(5000,function(){
+    failed = failed + 1;
+    if(failed>2){
+      callback('CoinMarket BOOM!');
+    }else{
+      getCoinMarket(callback,true);
+    }
+  });
+  req.end();
 }
 
 
