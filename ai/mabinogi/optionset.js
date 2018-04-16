@@ -67,7 +67,7 @@ module.exports = function(userId, context, callback) {
         case '接头':
         case '接尾':
           if(!keywordObj.usage){
-            keywordObj.usage = keyword === '接头'? 0: 1
+            keywordObj.usage = keyword === '接头'? 1: 2
           }
           break
         default:
@@ -97,7 +97,7 @@ module.exports = function(userId, context, callback) {
     let finalArr = []
     optionSetObj.forEach(optionset => {
       if(!keywords.Level || (keywords.Level && keywords.Level == optionset.LevelQuery)){
-        if(!keywords.usage || (keywords.usage && keywords.usage == optionset.UsageQuery)){
+        if(!keywords.usage || (keywords.usage && (keywords.usage - 1) == parseInt(optionset.UsageQuery))){
           let buffCheck = true
           if(keywords.debuff.length){
             keywords.debuff.forEach(debuff => {
