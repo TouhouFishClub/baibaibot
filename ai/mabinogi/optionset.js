@@ -169,7 +169,7 @@ module.exports = function(userId, context, callback) {
         })
       } else {
         for(let i = 0; i < 5; i ++){
-          str += `[${finalArr[i].Usage}]${finalArr[i].LocalName}(Rank ${finalArr[i].Level})\n`
+          str += `opts${finalArr[i].ID} | [${finalArr[i].Usage}]${finalArr[i].LocalName}(Rank ${finalArr[i].Level})\n`
         }
         str += '超过搜索限制，请添加更多关键字'
       }
