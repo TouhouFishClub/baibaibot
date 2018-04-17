@@ -27,29 +27,34 @@ module.exports = function(optsName, optsId, callback) {
       rawData += chunk
     });
     res.on('end', () => {
-      let wheres = [], index = rawData.indexOf('<td class="a0">'), str
+      let wheres = [], rw = [], index = rawData.indexOf('<td class="a0">'), str
       if(index > -1){
         str = rawData.substr(index)
         str = str.substring(15, str.indexOf('</td>'))
         wheres = str.split('<br />')
         wheres.pop()
-        wheres = wheres.map(list => {
-          let sp = list.split('→'), article = sp[0], where = sp[1]
-          if(article.indexOf('">') > -1){
-            article = article.substr(article.indexOf('">'))
-            article = article.substring(2, article.indexOf('</a>'))
-          }
-          if(where.indexOf('">') > -1){
-            where = where.substr(where.indexOf('">'))
-            where = where.substring(2, where.indexOf('</a>'))
-          }
-          return {
-            article: article,
-            where: where
+        wheres.forEach(list => {
+          let sp = list.split('→')
+          if(sp.length === 2){
+            let article = sp[0], where = sp[1]
+            article = article.toLowerCase()
+            where = where.toLowerCase()
+            if(article.indexOf('">') > -1){
+              article = article.substr(article.indexOf('">'))
+              article = article.substring(2, article.indexOf('</a>'))
+            }
+            if(where.indexOf('">') > -1){
+              where = where.substr(where.indexOf('">'))
+              where = where.substring(2, where.indexOf('</a>'))
+            }
+            rw.push({
+              article: article,
+              where: where
+            })
           }
         })
       }
-      callback(wheres)
+      callback(rw)
     });
   });
   req.on('error', (e) => {
