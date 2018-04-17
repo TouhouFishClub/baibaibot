@@ -1,6 +1,7 @@
 const _ = require('lodash')
 const path = require('path')
 const formatOptionset = require(path.join(__dirname, '/tools/formatOptionset'))
+const optionsetWhere = require(path.join(__dirname, '/tools/optionsetWhere'))
 let optionSetObj = []
 
 module.exports = function(userId, context, callback) {
@@ -27,7 +28,7 @@ module.exports = function(userId, context, callback) {
         callback('请输入至少一个查询条件')
       }
     } else {
-      callback('【释放查询】\n可使用 opts 或 释放查询 + 关键词搜索\n单关键字为按ID或按名称查询\n多个关键词用逗号隔开，支持接头结尾，释放卷等级，释放属性（负面属性前加-）\n如： opts 4，接头，智力，-修理费')
+      callback('【释放查询】\n可使用 opts 或 释放查询 + 关键词搜索\n单关键字为按ID或按名称查询\n多个关键词用逗号隔开，支持接头接尾，释放卷等级，释放属性（负面属性前加-）\n如： opts 4，接头，智力，-修理费')
     }
   }
   const analysisKeywords = keywords => {
@@ -98,7 +99,7 @@ module.exports = function(userId, context, callback) {
     console.log(name)
     let finalArr = []
     optionSetObj.forEach(optionset => {
-      if(optionset.LocalName === name){
+      if(new RegExp(name).test(optionset.LocalName)){
         finalArr.push(optionset)
       }
     })
@@ -148,9 +149,17 @@ module.exports = function(userId, context, callback) {
     let str = ''
     if(finalArr.length == 0){
       str = '没有找到释放卷轴'
+      callback(str)
     }
     if(finalArr.length == 1){
-      str = `${finalArr[0].LocalName}(Rank ${finalArr[0].Level})\n[${finalArr[0].Usage}]\n${finalArr[0].Buff.join('\n')}\n${finalArr[0].Debuff.join('\n')}`
+      optionsetWhere(finalArr[0].Name, finalArr[0].ID, wheres => {
+        str = `${finalArr[0].LocalName}(Rank ${finalArr[0].Level})\n[${finalArr[0].Usage}]\n${finalArr[0].Buff.length ? (finalArr[0].Buff.join('\n') + '\n') : ''}${finalArr[0].Debuff.join('\n')}`
+        if(wheres.length){
+          console.log(wheres)
+          str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
+        }
+        callback(str)
+      })
     }
     if(finalArr.length > 1){
       str = '查询到复数释放卷，请选择：\n'
@@ -164,8 +173,8 @@ module.exports = function(userId, context, callback) {
         }
         str += '超过搜索限制，请添加更多关键字'
       }
+      callback(str)
     }
-    callback(str)
   }
   if(!optionSetObj.length){
     console.log('=== init optionset data ===')
