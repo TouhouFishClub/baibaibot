@@ -70,9 +70,15 @@ module.exports = function(userId, context, callback) {
           }
           break
         case '接头':
-        case '接尾':
+        case '结头':
           if(!keywordObj.usage){
-            keywordObj.usage = keyword === '接头'? 1: 2
+            keywordObj.usage = 1
+          }
+          break
+        case '接尾':
+        case '结尾':
+          if(!keywordObj.usage){
+            keywordObj.usage = 2
           }
           break
         default:
