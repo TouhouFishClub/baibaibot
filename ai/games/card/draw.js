@@ -119,6 +119,8 @@ function getDetailByName(cl_card,name,href,callback,db){
         n2 = s1.indexOf('</table>');
       }
       var tb = s1.substring(0,n2);
+
+
       var s = tb;
       var line=0;
       var imgsrc;
@@ -127,8 +129,7 @@ function getDetailByName(cl_card,name,href,callback,db){
         var n3 = s.indexOf('<tr');
         var n4 = s.indexOf('</tr>');
         var row = s.substring(n3,n4);
-        console.log(n3,n4);
-        if(line==0){
+        if(line<2){
           var n5 = row.indexOf('https://img.moegirl.org');
           if(n5>0){
             var s51 = row.substring(n5);
@@ -144,6 +145,7 @@ function getDetailByName(cl_card,name,href,callback,db){
           line++;
         }
       }
+      console.log({img:imgsrc,t:tdata})
       cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()}},function(){
         db.close();
       });
