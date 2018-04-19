@@ -98,6 +98,10 @@ function getGroupName(gid){
         return gcache[gid].group_name;
       });
     });
+    req.on('error', function(err) {
+      console.log('req err:');
+      console.log(err);
+    });
     req.end();
   }
 }
@@ -122,6 +126,10 @@ function sendPrivateMsg(userid,msg){
     res.on('end', function () {
 
     });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
   });
   req.end();
 }
@@ -149,6 +157,10 @@ function banUserInGroup(qq,groupid,seconds){
     res.on('error', function () {
 
     });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
   });
   req.end();
 }
