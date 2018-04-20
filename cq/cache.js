@@ -2,6 +2,11 @@ var https=require('https');
 var http = require('http');
 var cache = {};
 var namecache = {};
+
+function getGroupMemInfo(gid){
+  return cache[gid];
+}
+
 function getUserNameInGroup(qq,gid){
   if(cache[gid]){
     return getUserNameInGroupByCache(cache[gid],qq);
@@ -197,5 +202,6 @@ module.exports={
   banUserInGroup,
   banUserByName,
   banUserRandom,
+  getGroupMemInfo,
   sendPrivateMsg
 }

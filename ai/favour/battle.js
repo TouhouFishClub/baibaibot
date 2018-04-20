@@ -3,13 +3,15 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 
 var tmpfight = {};
 var limitFight = {};
-function fight(fromuin,content,members,callback){
+
+const {getGroupMemInfo} = require('../../cq/cache');
+function fight(fromid,content,gid,callback){
   var from;
   var to;
 
   content=content.trim();
   if(content.substring(0,1)==1&&content.length==2){
-    var tmp = tmpfight[fromuin];
+    var tmp = tmpfight[fromid];
     var no = content.substring(1);
     if(tmp){
       var from=tmp.f;
@@ -23,16 +25,22 @@ function fight(fromuin,content,members,callback){
     return;
   }
   var tom={};
-  for(let i=0;i<members.length;i++){
-    if(fromuin==members[i].uin){
-      from = members[i].nick;
+  var memInfo = getGroupMemInfo(gid);
+  if(!memInfo){
+    callback(from+'不小心砍向了自己,造成'+Math.floor(Math.random()*1000-500)+'点伤害');
+    return;
+  }
+  for(var qq in memInfo){
+    var info = memInfo[qq];
+    if(fromid==info.user_id){
+      from = info.nickname;
     }
-    if(members[i].nick&&members[i].nick.indexOf(content)>=0){
-      tom[members[i].nick]=1;
+    if(info.nickname&&info.nickname.indexOf(content)>=0){
+      tom[info.nickname]=1;
       continue;
     }
-    if(members[i].card&&members[i].card.indexOf(content)>=0){
-      tom[members[i].nick]=1;
+    if(info.card&&info.card.indexOf(content)>=0){
+      tom[info.nickname]=1;
       continue;
     }
   }
@@ -54,10 +62,10 @@ function fight(fromuin,content,members,callback){
       callback(from+'砍向了'+'空气'+',造成'+Math.floor(Math.random()*1000-500)+'点伤害');
     }else{
       var ret = "请选择：\n";
-      tmpfight[fromuin]={f:from};
+      tmpfight[fromid]={f:from};
       for(var i=0;i<toa.length;i++){
         ret = ret + '`f1'+i+' | '+toa[i]+'\n';
-        tmpfight[fromuin][i]=toa[i]
+        tmpfight[fromid][i]=toa[i]
       }
       callback(ret.trim());
     }
@@ -261,21 +269,27 @@ function generateDamage(data1,data2,type,rate2){
   }
 }
 
-function getUserInfo(fromuin,content,members,callback){
+function getUserInfo(fromid,content,gid,callback){
   content=content.trim();
   var userName;
   var tom={};
   var from;
-  for(let i=0;i<members.length;i++){
-    if(fromuin==members[i].uin){
-      from = members[i].nick;
+  var memInfo = getGroupMemInfo(gid);
+  if(!memInfo){
+    callback(fromid+'不小心砍向了自己,造成'+Math.floor(Math.random()*1000-500)+'点伤害');
+    return;
+  }
+  for(var qq in memInfo){
+    var info = memInfo[qq];
+    if(fromid==info.user_id){
+      from = info.nickname;
     }
-    if(members[i].nick&&members[i].nick.indexOf(content)>=0){
-      tom[members[i].nick]=1;
+    if(info.nickname&&info.nickname.indexOf(content)>=0){
+      tom[info.nick]=1;
       continue;
     }
-    if(members[i].card&&members[i].card.indexOf(content)>=0){
-      tom[members[i].nick]=1;
+    if(info.card&&info.card.indexOf(content)>=0){
+      tom[info.nick]=1;
       continue;
     }
   }
@@ -290,9 +304,16 @@ function getUserInfo(fromuin,content,members,callback){
     callback(content + '是谁？');
     return;
   }
+  var memInfo = getGroupMemInfo(gid);
+  if(!memInfo){
+    callback(from+'不小心砍向了自己,造成'+Math.floor(Math.random()*1000-500)+'点伤害');
+    return;
+  }
+
   MongoClient.connect(mongourl, function(err, db) {
     var cl_user = db.collection('cl_user');
     var query = {'_id': userName};
+    console.log(query);
     cl_user.findOne(query, function (err, data) {
       if (data) {
         var statusstr;
@@ -323,7 +344,7 @@ function getUserInfo(fromuin,content,members,callback){
 
 
 var limitItem = {};
-function useMagicOrItem(fromuin,content,members,callback){
+function useMagicOrItem(fromuin,userName,content,members,callback){
   if(content==""){
     ret = "`f+要砍的人：攻击该玩家\n";
     ret = ret + " `g0:查询自己状态,`g0+名字:查询该人物状态\n";
@@ -340,13 +361,6 @@ function useMagicOrItem(fromuin,content,members,callback){
   }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1).trim(),members,callback);
   }else{
-    var userName;
-    for (let i = 0; i < members.length; i++) {
-      if (fromuin == members[i].uin) {
-        userName = members[i].nick;
-        break;
-      }
-    }
     MongoClient.connect(mongourl, function(err, db) {
       var cl_user = db.collection('cl_user');
       var query = {'_id': userName};

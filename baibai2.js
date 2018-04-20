@@ -326,14 +326,14 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first=='r'||first=='R'){
     callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='f'||first=='F'){
-      if(groupName.indexOf('沙丁鱼')>0||groupName.indexOf('百游戏')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
-        fight(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+      if((groupid+"").startsWith('20570')>0||(groupid+"").startsWith('67096')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
+        fight(from,content.substring(1),groupid,callback);
       }else{
         callback('为防止刷屏，当前关闭游戏功能');
       }
   }else if(first=='g'||first=='G'){
-      if(groupName.indexOf('沙丁鱼')>0||groupName.indexOf('百游戏')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
-        useMagicOrItem(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+      if((groupid+"").startsWith('20570')>0||(groupid+"").startsWith('67096')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
+        useMagicOrItem(from,userName,content.substring(1),groupid,callback);
       }else{
         callback('为防止刷屏，当前关闭游戏功能');
       }
