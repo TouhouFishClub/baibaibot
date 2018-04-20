@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "",
     "body-parser": "",
+    "canvas": "^1.6.10",
     "express": "",
     "gm": "^1.23.1",
     "https-proxy-agent": "",

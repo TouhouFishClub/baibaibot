@@ -101,10 +101,9 @@ module.exports = function(userId, context, callback) {
     })
   }
   const searchName = name => {
-    console.log('search name')
-    console.log(name)
     let finalArr = []
     optionSetObj.forEach(optionset => {
+      // console.log(optionset)
       if(new RegExp(name).test(optionset.LocalName)){
         finalArr.push(optionset)
       }
@@ -161,7 +160,6 @@ module.exports = function(userId, context, callback) {
       optionsetWhere(finalArr[0].Name, finalArr[0].ID, wheres => {
         str = `${finalArr[0].LocalName}(Rank ${finalArr[0].Level})\n[${finalArr[0].Usage}]\n${finalArr[0].Buff.length ? (finalArr[0].Buff.join('\n') + '\n') : ''}${finalArr[0].Debuff.join('\n')}`
         if(wheres.length){
-          console.log(wheres)
           str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
         }
         callback(str)
