@@ -281,12 +281,15 @@ function generateImageByWords(img,wd,callback){
     var imgname = new Date().getTime()+"";
     var folder = 'static/'
     try{
-      var imgreq = request(img).pipe(fs.createWriteStream(folder + imgname));
-      imgreq.on('error',function(err){
-        console.log(err);
-        console.log(img);
-        callback("");
-      })
+      request({
+        url: img,
+        method: "GET"
+      }, function(error, response, body){
+        if(error&&error.code){
+          console.log('pipe error catched!')
+          console.log(error);
+        }
+      }).pipe(fs.createWriteStream(folder + imgname));
       imgreq.on('close',function(){
         var img0 = new imageMagick(folder + imgname);
         var img1 = new imageMagick("static/blank.png");
