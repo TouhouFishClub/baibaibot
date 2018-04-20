@@ -281,7 +281,7 @@ function generateImageByWords(img,wd,callback){
     var imgname = new Date().getTime()+"";
     var folder = 'static/'
     try{
-      request({
+      var imgreq = request({
         url: img,
         method: "GET"
       }, function(error, response, body){
@@ -290,6 +290,11 @@ function generateImageByWords(img,wd,callback){
           console.log(error);
         }
       }).pipe(fs.createWriteStream(folder + imgname));
+      imgreq.on('error',function(err){
+        console.log(err);
+        console.log(img);
+        callback("");
+      })
       imgreq.on('close',function(){
         var img0 = new imageMagick(folder + imgname);
         var img1 = new imageMagick("static/blank.png");
