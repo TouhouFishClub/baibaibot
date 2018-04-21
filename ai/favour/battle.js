@@ -369,7 +369,7 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
 
         } else {
           var init = {
-            '_id': from, hp: 100, mp: 100, tp: 100, gold: 100, lv: 1, exp: 0,
+            '_id': userName, hp: 100, mp: 100, tp: 100, gold: 100, lv: 1, exp: 0,
             str: 9, int: 9, agi: 9, atk: 9, def: 9, mag: 9, luck: 9, status: 0,
             love: 0
           }
