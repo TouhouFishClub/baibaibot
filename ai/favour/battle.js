@@ -285,11 +285,11 @@ function getUserInfo(fromid,content,gid,callback){
       from = info.nickname;
     }
     if(info.nickname&&info.nickname.indexOf(content)>=0){
-      tom[info.nick]=1;
+      tom[info.nickname]=1;
       continue;
     }
     if(info.card&&info.card.indexOf(content)>=0){
-      tom[info.nick]=1;
+      tom[info.nickname]=1;
       continue;
     }
   }
