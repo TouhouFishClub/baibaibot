@@ -119,6 +119,7 @@ function handleMsg_D(msgObj,response){
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   if(type!='group'){
+    console.log(msgObj);
     return;
   }
   var from = msgObj.user_id;
