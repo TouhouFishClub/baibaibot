@@ -362,6 +362,7 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
     getUserInfo(fromuin,content.substring(1).trim(),members,callback);
   }else{
 	  var gid=members;
+	  var fromid = fromuin;
   var tom={};
   var from;
   var memInfo = getGroupMemInfo(gid);
