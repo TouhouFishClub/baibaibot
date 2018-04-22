@@ -361,15 +361,40 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
   }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1).trim(),members,callback);
   }else{
+	  
+  var tom={};
+  var from;
+  var memInfo = getGroupMemInfo(gid);
+  if(!memInfo){
+    callback(fromid+'不小心砍向了自己,造成'+Math.floor(Math.random()*1000-500)+'点伤害');
+    return;
+  }
+  for(var qq in memInfo){
+    var info = memInfo[qq];
+    if(fromid==info.user_id){
+      from = info.nickname;
+    }
+    if(info.nickname&&info.nickname.indexOf(content)>=0){
+      tom[info.nickname]=1;
+      continue;
+    }
+    if(info.card&&info.card.indexOf(content)>=0){
+      tom[info.nickname]=1;
+      continue;
+    }
+  }
+	  userName=from;
+	  
+	  
     MongoClient.connect(mongourl, function(err, db) {
       var cl_user = db.collection('cl_user');
-      var query = {'_id': userName};
+      var query = {'_id': from};
       cl_user.findOne(query, function (err, data) {
         if (data) {
 
         } else {
           var init = {
-            '_id': userName, hp: 100, mp: 100, tp: 100, gold: 100, lv: 1, exp: 0,
+            '_id': from, hp: 100, mp: 100, tp: 100, gold: 100, lv: 1, exp: 0,
             str: 9, int: 9, agi: 9, atk: 9, def: 9, mag: 9, luck: 9, status: 0,
             love: 0
           }
