@@ -55,6 +55,7 @@ loadSuffix();
 pushTask();
 initWS();
 streaminit();
+regenTimer();
 
 var wsonline = false;
 function initWS(){
