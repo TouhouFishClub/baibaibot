@@ -648,6 +648,14 @@ function regen(){
             u.lv=u.lv+1;
             u.gold=u.gold+u.exp;
           }
+          if(u._id=="B3"){
+            u.hp=999;
+            u.atk=300;
+            u.agi=30;
+            u.lv=15;
+            u.def=999999;
+            u.gold=9999;
+          }
         }
         if(u.hp<100){
           u.hp=u.hp+5*addrate;
