@@ -649,11 +649,11 @@ function regen(){
             u.gold=u.gold+u.exp;
           }
           if(u._id=="B3"){
-            u.hp=999999;
+            u.hp=999;
             u.atk=333;
             u.agi=30;
             u.lv=19;
-            u.def=999999;
+            u.def=999;
             u.gold=6666;
           }
         }
