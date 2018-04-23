@@ -136,7 +136,7 @@ function handleMsg_D(msgObj,response){
           var options = {
             host: '192.168.17.52',
             port: 23334,
-            path: 'send_private_msg?user_id='+msgObj+'&message='+encodeURIComponent(res),
+            path: '/send_private_msg?user_id='+msgObj+'&message='+encodeURIComponent(res),
             method: 'GET',
             headers: {
 
@@ -153,6 +153,7 @@ function handleMsg_D(msgObj,response){
       }
     }
     tulingMsg(userid,content,callback,userid);
+    return;
   }
   if(type!='group'){
     return;
