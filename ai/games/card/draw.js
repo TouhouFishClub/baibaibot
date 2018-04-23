@@ -81,7 +81,7 @@ function drawNameCard(username,qq,callback,groupid){
         }
       }
       if(data.detail){
-        cb(data.detail);
+        cb(ud.detail);
         db.close();
       }else{
         getDetailByName(cl_card,name,data.href,cb,db);
@@ -145,7 +145,6 @@ function getDetailByName(cl_card,name,href,callback,db){
           line++;
         }
       }
-      console.log({img:imgsrc,t:tdata})
       cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()}},function(){
         db.close();
       });
