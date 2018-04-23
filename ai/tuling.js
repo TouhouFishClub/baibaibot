@@ -31,7 +31,6 @@ function tulingMsg(userid,content,callback,groupid){
       'Content-Type':'application/json'
     }
   };
-  console.log(body);
   var req = http.request(options, function (res) {
     res.setEncoding('utf8');
     var resdata = '';
@@ -56,7 +55,6 @@ function handleTulingResponse(resdata){
   var data = eval("("+resdata+")");
   var code = data.intent.code;
   var ret = '';
-  console.log(data);
   for(var i=0;i<data.results.length;i++){
     var value=data.results[i].values;
     var type = data.results[i].resultType;

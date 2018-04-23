@@ -118,11 +118,13 @@ function handleMsg_D(msgObj,response){
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
-  if(content.indexOf('&amp;')>-1){
-    content=content.replace(/&amp;/g,'&');
-  }
-  if(content.indexOf('&#44;')>-1){
-    content=content.replace(/&#44;/g,',');
+  if(content){
+    if(content.indexOf('&amp;')>-1){
+      content=content.replace(/&amp;/g,'&');
+    }
+    if(content.indexOf('&#44;')>-1){
+      content=content.replace(/&#44;/g,',');
+    }
   }
   if(type=='private'){
     var userid = msgObj.user_id;
