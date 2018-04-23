@@ -142,7 +142,7 @@ function handleMsg_D(msgObj,response){
 
             }
           };
-          console.log("priv:"+userid+":"+res);
+          console.log("priv:"+userid+":"+content+":"+res);
           var req = http.request(options);
           req.on('error', function(err) {
             console.log('req err:');
