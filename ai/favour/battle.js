@@ -650,7 +650,7 @@ function regen(){
           }
           if(u._id=="B3"){
             u.hp=999999;
-            u.atk=999;
+            u.atk=333;
             u.agi=30;
             u.lv=19;
             u.def=999999;
