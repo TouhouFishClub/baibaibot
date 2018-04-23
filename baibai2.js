@@ -118,11 +118,6 @@ function handleMsg(msgObj,res){
 function handleMsg_D(msgObj,response){
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
-  if(type!='group'){
-    console.log(msgObj);
-    return;
-  }
-  var from = msgObj.user_id;
   var content = msgObj.message;
   if(content.indexOf('&amp;')>-1){
     content=content.replace(/&amp;/g,'&');
@@ -130,6 +125,40 @@ function handleMsg_D(msgObj,response){
   if(content.indexOf('&#44;')>-1){
     content=content.replace(/&#44;/g,',');
   }
+  if(type=='private'){
+    var userid = msgObj.user_id;
+    var callback = function(res,blank){
+      if(res.trim().length>0){
+        setTimeout(function(){
+          if(!blank){
+            res = ""+res
+          }
+          var options = {
+            host: '192.168.17.52',
+            port: 23334,
+            path: 'send_private_msg?user_id='+msgObj+'&message='+encodeURIComponent(res),
+            method: 'GET',
+            headers: {
+
+            }
+          };
+          console.log("priv:"+res);
+          var req = http.request(options);
+          req.on('error', function(err) {
+            console.log('req err:');
+            console.log(err);
+          });
+          req.end();
+        },1000);
+      }
+    }
+    tulingMsg(userid,content,callback,userid);
+  }
+  if(type!='group'){
+    return;
+  }
+  var from = msgObj.user_id;
+
   var name = getUserNameInGroup(from,groupid);
   var nickname = getUserNickInGroupByCache(from,groupid);
   console.log(groupid+":"+name+":"+content)
