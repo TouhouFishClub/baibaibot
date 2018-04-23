@@ -310,7 +310,7 @@ function handleMsg_D(msgObj,response){
     return;
   }
   if(content.indexOf('百百')>-1){
-    tulingMsg(from,content.trim(),callback,from);
+    tulingMsg(from,content.trim(),callback,groupid);
     return;
   }
   answer(content,name,groupName,callback);
