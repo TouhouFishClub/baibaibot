@@ -37,7 +37,6 @@ const {replayReply} = require('./ai/replay');
 
 const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,banUserRandom} = require('./cq/cache');
 
-const {saveSt,searchMedal} = require('./ai/check/stat')
 
 const {lottoryReply,getlottory} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
@@ -311,7 +310,7 @@ function handleMsg_D(msgObj,response){
     return;
   }
   if(content.indexOf('百百')>-1){
-    tulingMsg(name,content,callback);
+    tulingMsg(from,content.trim(),callback,from);
     return;
   }
   answer(content,name,groupName,callback);
