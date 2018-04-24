@@ -45,6 +45,9 @@ function pushTwitterMsg(twitterid,ret,type){
             }
           };
           var req = http.request(options);
+          req.on('error',function(){
+            console.log('req error tw');
+          })
           req.end();
         },1000);
       }
@@ -52,7 +55,6 @@ function pushTwitterMsg(twitterid,ret,type){
     if(twitterid=='294025417'){
       callback(205700800,ret);
       callback(616147379,ret);
-
     }
     if(twitterid=='3833285893'){
       callback(205700800,ret);
@@ -69,25 +71,32 @@ function startstream(){
   client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
     console.log('will start stream');
     stream.on('data', function(event) {
-      console.log('got event:');
-      errcount=0;
-      if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status&&!event.in_reply_to_user_id){
-        console.log(event);
-        var text = event.text;
-        if(event.extended_tweet){
-          if(event.extended_tweet.full_text){
-            text = event.extended_tweet.full_text;
+      try{
+        console.log('got event:');
+        errcount=0;
+        if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status&&!event.in_reply_to_user_id){
+          console.log(event);
+          var text = event.text;
+          if(event.extended_tweet){
+            if(event.extended_tweet.full_text){
+              text = event.extended_tweet.full_text;
+            }
+          }
+          var ts = new Date(event.created_at);
+          var tsstr = ts.toLocaleString();
+          var ret = text+"\n"+tsstr;
+          var now = new Date();
+          var twitterscrname=event.user.id;
+          if(now.getTime()-ts.getTime()<60000){
+            pushTwitterMsg(twitterscrname,ret,2);
           }
         }
-        var ts = new Date(event.created_at);
-        var tsstr = ts.toLocaleString();
-        var ret = text+"\n"+tsstr;
-        var now = new Date();
-        var twitterscrname=event.user.id;
-        if(now.getTime()-ts.getTime()<60000){
-          pushTwitterMsg(twitterscrname,ret,2);
-        }
+      }catch(e){
+        console.log('error event');
+        console.log(e);
+        console.log(event);
       }
+
     });
     stream.on('error', function(error) {
       console.log(error);
