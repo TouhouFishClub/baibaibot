@@ -48,19 +48,27 @@ function tulingMsg(userid,content,callback,groupid){
     console.log(err);
   });
   req.write(JSON.stringify(body));
+  console.log(body);
   req.end();
 }
 var dup=0;
 function handleTulingResponse(resdata){
-  var data = eval("("+resdata+")");
-  var code = data.intent.code;
-  var ret = '';
-  for(var i=0;i<data.results.length;i++){
-    var value=data.results[i].values;
-    var type = data.results[i].resultType;
-    ret = ret + value[type]+"\n";
+  try{
+    var data = eval("("+resdata+")");
+    var code = data.intent.code;
+    var ret = '';
+    for(var i=0;i<data.results.length;i++){
+      var value=data.results[i].values;
+      var type = data.results[i].resultType;
+      ret = ret + value[type]+"\n";
+    }
+    return ret.trim();
+  }catch(e){
+    console.log(e);
+    console.log(data);
+    return '';
   }
-  return ret.trim();
+
 }
 
 module.exports={
