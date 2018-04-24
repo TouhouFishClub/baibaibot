@@ -231,7 +231,9 @@ function generateDamage(data1,data2,type,rate2){
     var str = data1._id+'吃向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }else{
-    var critical = Math.random()*100<data1.luck;
+    var sum = data1.atk+data1.def+data1.luck+data1.agi;
+    var max = sum/3;
+    var critical = Math.random()*100<((data1.luck<max?data1.luck:(max+Math.sqrt(data1.luck)))-data2.lv);
     if(type==2){
       critical=false;
     }
@@ -244,11 +246,11 @@ function generateDamage(data1,data2,type,rate2){
     if(data2.status==2){
       def = def * 2;
     }
-    if(critical){
-      atk = atk + data2.def;
-    }
     if(data1.status==3){
       atk = atk * 2;
+    }
+    if(critical){
+      atk = atk + data2.def;
     }
     var rate = (80 + data1.lv+(data1.hp<200?data1.hp:200))/2;
     if(type==2){
@@ -649,7 +651,7 @@ function regen(){
             u.gold=u.gold+u.exp;
           }
           if(u._id=="B3"){
-            u.hp=999+Math.floor(u.exp/2);
+            u.hp=999+u.exp;
             u.atk=333;
             u.agi=18;
             u.lv=10;
