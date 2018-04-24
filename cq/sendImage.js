@@ -9,7 +9,8 @@ function sendGmImage(gmObj,words='',callback,order){
   var folder = ""+year+mon+dat;
   var head = '../coolq-data/cq/data/image/send/card/';
   if(fs.existsSync(head+folder)){
-    fs.mkdirSync(head+folder);
+    var mr=fs.mkdirSync(head+folder);
+    console.log(mr)
   }
   gmObj.write(head+folder+"/"+imgname2+".jpg",function(err){
     var imgname = 'send/card/'+folder+"/"+imgname2+".jpg";
