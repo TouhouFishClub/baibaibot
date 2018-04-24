@@ -251,6 +251,9 @@ function generateDamage(data1,data2,type,rate2){
     }
     if(critical){
       atk = atk + data2.def;
+      if(data1.status==3){
+        atk = atk + Math.floor(data2.def*Math.random())
+      }
     }
     var rate = (80 + data1.lv+(data1.hp<200?data1.hp:200))/2;
     if(type==2){
