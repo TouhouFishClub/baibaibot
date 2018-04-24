@@ -1,6 +1,7 @@
 const fs = require('fs'),
   path = require('path'),
-  Canvas = require('canvas')
+  Canvas = require('canvas'),
+  { sendImageMsgBuffer } = require('../../../cq/sendImage.js')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
 
@@ -13,8 +14,6 @@ const checkMaxWidth = (ctx, str, maxWidth) => {
     }
   }
   splitArr.push(str.substring(start))
-  console.log('---')
-  console.log(splitArr)
   return splitArr
 }
 const renderText = (ctx, textArr, topMargin, leftMargin, lineHeight) => {
@@ -54,10 +53,11 @@ const renderTextBox = (ctx, left, top, width, height, radius, title) => {
   ctx.fillText(title, left + radius + 9, top + 6)
 }
 
-module.exports = function(obj, where, __dir){
+module.exports = function(obj, wheres, __dir = 'mabi', callback){
   let canvasTmp = new Canvas(400, 2000)
     , ctxTmp = canvasTmp.getContext('2d');
   ctxTmp.font = '20px DFGirl';
+  /* 预处理属性 */
   let desc = obj.OptionDesc.split('\\n'), objArr = []
   const MAX_WIDTH = 350
   desc.forEach(str => {
@@ -73,15 +73,30 @@ module.exports = function(obj, where, __dir){
       objArr = objArr.concat(checkMaxWidth(ctxTmp, str, MAX_WIDTH).map(val => {return {text: val, buff: buff}}))
     }
   })
-  console.log(objArr)
   let buffHeight = objArr.length * 25
+  let cavasHeight = 77 + buffHeight + 70
+  let whereArr = []
+  let whereHeight
+  if(wheres.length){
+    wheres.forEach(where => {
+      let whereText = `${where.article} → ${where.where}`
+      if(ctxTmp.measureText(whereText).width < MAX_WIDTH) {
+        whereArr.push(whereText)
+      } else {
+        whereArr = whereArr.concat(checkMaxWidth(ctxTmp, whereText, MAX_WIDTH))
+      }
+    })
+    whereHeight = whereArr.length * 25
+    cavasHeight += whereHeight + 40
+  }
 
-  let canvas = new Canvas(400, 77 + buffHeight + 70)
+
+  let canvas = new Canvas(400, cavasHeight)
     , ctx = canvas.getContext('2d');
 
   ctx.font = '20px DFGirl';
   ctx.fillStyle = 'rgba(0,0,20,0.9)';
-  ctx.fillRect(0, 0, 400, 77 + buffHeight + 70)
+  ctx.fillRect(0, 0, 400, cavasHeight)
 
   ctx.fillStyle = 'rgba(255,255,255,1)';
   ctx.strokeStyle = 'rgba(0,0,0,0.5)';
@@ -101,9 +116,19 @@ module.exports = function(obj, where, __dir){
 
   renderBuffText(ctx, objArr, 117, 25, 25)
 
-  var imgData = canvas.toDataURL()
-  var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
-  var dataBuffer = new Buffer(base64Data, 'base64');
+  if(wheres.length){
+    renderTextBox(ctx, 12, 77 + buffHeight + 70, 376 , whereHeight + 20, 10, '卷轴出处')
+    ctx.fillStyle = 'rgba(255,255,255,1)';
+    renderText(ctx, whereArr, 77 + buffHeight + 80, 25, 25)
+  }
+
+  let imgData = canvas.toDataURL()
+  let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
+  let dataBuffer = new Buffer(base64Data, 'base64')
+  // sendImageMsgBuffer(dataBuffer, obj.ID, __dir, msg => {
+  //   callback(msg)
+  // })
+
   fs.writeFile(path.join(__dirname, '/test/image.png'), dataBuffer, function(err) {
     if(err){
       console.log(err)

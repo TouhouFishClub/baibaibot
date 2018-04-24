@@ -4,7 +4,7 @@ const formatOptionset = require(path.join(__dirname, '/tools/formatOptionset'))
 const optionsetWhere = require(path.join(__dirname, '/tools/optionsetWhere'))
 let optionSetObj = []
 
-module.exports = function(userId, context, callback) {
+module.exports = function(userId, context, type = 'normal', callback) {
   const _initSearch = () => {
     const maxKeywords = 6, maxSearch = 10
     let ctx = context.trim()
@@ -157,13 +157,18 @@ module.exports = function(userId, context, callback) {
       callback(str)
     }
     if(finalArr.length == 1){
-      optionsetWhere(finalArr[0].Name, finalArr[0].ID, wheres => {
-        str = `${finalArr[0].LocalName}(Rank ${finalArr[0].Level})\n[${finalArr[0].Usage}]\n${finalArr[0].Buff.length ? (finalArr[0].Buff.join('\n') + '\n') : ''}${finalArr[0].Debuff.join('\n')}`
-        if(wheres.length){
-          str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
-        }
-        callback(str)
-      })
+      if(type = 'image'){
+
+      } else {
+        optionsetWhere(finalArr[0].Name, finalArr[0].ID, wheres => {
+          str = `${finalArr[0].LocalName}(Rank ${finalArr[0].Level})\n[${finalArr[0].Usage}]\n${finalArr[0].Buff.length ? (finalArr[0].Buff.join('\n') + '\n') : ''}${finalArr[0].Debuff.join('\n')}`
+          if(wheres.length){
+            console.log(wheres)
+            str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
+          }
+          callback(str)
+        })
+      }
     }
     if(finalArr.length > 1){
       str = '查询到复数释放卷，请选择：\n'

@@ -1,6 +1,6 @@
 const os = require('./optionset')
 const app = require('express')()
-os('aaa', '持久', c => {console.log(c)})
+os('aaa', '持久', 'image', c => {console.log(c)})
 const https = require('https')
 const querystring =  require('querystring')
 
@@ -22,7 +22,12 @@ draw({ ID: '21527',
       '第4幕: 嫉妒的化身等级1段以上时，人偶生命值增加50',
       '第4幕: 嫉妒的化身等级3段以上时， 人偶最小伤害增加9～12',
       '可无视等级进行魔法释放' ],
-  Debuff: [ '平衡减少10', '修理费10倍', '魔法释放后的装备会变成专用道具' ] }, 'aaa')
+  Debuff: [ '平衡减少10', '修理费10倍', '魔法释放后的装备会变成专用道具' ] },
+  [ { article: '破損魂獵人長靴', where: '2015-3-12 ~ 2015-3-30 復活節轉蛋' },
+  { article: '破損魂修行者長靴', where: '2015-3-12 ~ 2015-3-30 復活節轉蛋' },
+  { article: '破損魂獵人長靴', where: '2015-07-16 ~ 2015-08-06 鬼月轉蛋' },
+  { article: '破損魂修行者長靴', where: '2015-07-16 ~ 2015-08-06 鬼月轉蛋' },
+  { article: '魔力賦予卷軸', where: '深淵貝卡高級地下城最後寶箱' } ])
 
 // ow("Fox Hunter's", '111', d => console.log(d))
 

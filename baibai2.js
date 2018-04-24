@@ -237,7 +237,12 @@ function handleMsg_D(msgObj,response){
 
   let con =content.trim(), fi = con.substring(0,4)
   if(fi === '释放查询' || fi === 'opts'){
-    op(name, con.substring(4).trim(), callback);
+    op(name, con.substring(4).trim(), 'normal', callback);
+    return;
+  }
+  let fie = con.substring(0,3)
+  if(fie == 'opt' && fi != 'opts'){
+    op(name, con.substring(3).trim(), 'image', callback);
     return;
   }
 
