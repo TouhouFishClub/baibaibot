@@ -15,7 +15,7 @@ function sendGmImage(gmObj,words='',callback,order){
     fs.mkdirSync(head+folder+"/card");
   }
   gmObj.write(head+folder+"/card/"+imgname2+".jpg",function(err){
-    var imgname = folder+"/card/"+imgname2+".jpg";
+    var imgname = "send/"+folder+"/card/"+imgname2+".jpg";
     var ret;
     if(order==1){//words behind
       ret = '[CQ:image,file='+imgname+']'+words;
