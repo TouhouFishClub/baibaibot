@@ -2,7 +2,16 @@ var fs = require('fs');
 
 function sendGmImage(gmObj,callback){
   var imgname2 = new Date().getTime()+"";
-  gmObj.write('../coolq-data/cq/data/image/send/card/'+imgname2+".jpg",function(err){
+  var now = new Date();
+  var year = now.getFullYear();
+  var mon = now.getMonth()<9?('0'+(now.getMonth()+1)):now.getMonth();
+  var dat = now.getDate()<10?('0'+now.getDate()):now.getDate();
+  var folder = ""+year+mon+dat;
+  var head = '../coolq-data/cq/data/image/send/card/';
+  if(fs.existsSync(head+folder)){
+    fs.mkdirSync(head+folder);
+  }
+  gmObj.write(head+folder+"/"+imgname2+".jpg",function(err){
     callback("send/card/"+imgname2+".jpg");
   });
 }
