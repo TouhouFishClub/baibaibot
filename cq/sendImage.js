@@ -1,4 +1,4 @@
-var fs = require(fs);
+var fs = require('fs');
 
 function sendGmImage(gmObj,callback){
   var imgname2 = new Date().getTime()+"";
