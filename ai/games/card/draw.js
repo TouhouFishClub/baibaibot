@@ -366,7 +366,9 @@ function draw2df(qq,username,callback){
         callback(ret+'[CQ:image,file='+imgname+']');
       }
       if(img&&dr){
-        generateImageByWords(img,gamename+"\n"+dr,cb);
+        var words = gamename+"\n"+dr;
+        words=words.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
+        generateImageByWords(img,words,cb);
       }else{
         callback(ret);
       }

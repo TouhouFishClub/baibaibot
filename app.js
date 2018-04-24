@@ -17,6 +17,7 @@ const {getNameList} = require('./ai/games/card/fetch');
 const {drawNameCard,getDetailByName,draw2df} = require('./ai/games/card/draw');
 const {fetchbangumi} = require('./ai/games/card/bangumi');
 const {searchByUrl} = require('./ai/image/google')
+const {regen} = require('./ai/favour/battle');
 //getDetailByName(1,'Etihw','/Etihw',function(){});
 //mabi()
 //getNameList();
