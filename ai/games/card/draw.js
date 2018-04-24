@@ -7,6 +7,7 @@ var cache = {};
 var gm = require('gm')
 var request = require("request");
 var imageMagick = gm.subClass({ imageMagick : true });
+var {sendGmImage} = require('../../../cq/sendImage');
 
 function drawNameCard(username,qq,callback,groupid){
   var now = new Date().getTime();
@@ -307,10 +308,7 @@ function generateImageByWords(img,wd,callback){
           .write(folder+imgname+"_blank.jpg", function(err){
             img0.size(function(err,imgsize){
               console.log(imgsize);
-              var imgname2 = new Date().getTime()+"";
-              img0.append(folder+imgname+"_blank.jpg",true).write('../coolq-data/cq/data/image/send/card/'+imgname2+".jpg",function(err){
-                callback("send/card/"+imgname2+".jpg");
-              })
+              sendGmImage(img0.append(folder+imgname+"_blank.jpg",true),callback);
             });
           });
       });

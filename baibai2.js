@@ -253,6 +253,7 @@ function handleMsg_D(msgObj,response){
   var first = content.substring(0,1);
   if(first=="*"||first=='×'){
     lottoryReply(content.substring(1),name,callback);
+    return;
   }
 
 
@@ -291,12 +292,6 @@ function handleMsg_D(msgObj,response){
     }
     return;
 
-  }
-  if(rcontent.startsWith("甲鱼")||rcontent.startsWith("咸鱼")){
-    saveSt(name,from,rcontent,groupid,callback)
-  }
-  if(rcontent=="统计"){
-    searchMedal(content,groupid,callback);
   }
   var ca = content.split('|');
   if(ca.length==2){
