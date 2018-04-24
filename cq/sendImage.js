@@ -8,6 +8,8 @@ function sendGmImage(gmObj,words='',callback,order){
   var dat = now.getDate()<10?('0'+now.getDate()):now.getDate();
   var folder = ""+year+mon+dat;
   var head = '../coolq-data/cq/data/image/send/card/';
+  console.log(11111111);
+  console.log(head+folder);
   if(fs.existsSync(head+folder)){
     var mr=fs.mkdirSync(head+folder);
     console.log(mr)
