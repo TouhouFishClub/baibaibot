@@ -72,11 +72,8 @@ function drawNameCard(username,qq,callback,groupid){
         if(tdata){
           tdata=tdata.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
         }
-        var cb2 = function(imgname){
-          callback(ret+'[CQ:image,file='+imgname+']');
-        }
         if(img&&tdata){
-          generateImageByWords(img,tdata,cb2);
+          generateImageByWords(img,tdata,callback);
         }else{
           callback(ret);
         }

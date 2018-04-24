@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-function sendGmImage(gmObj,callback){
+function sendGmImage(gmObj,words='',order,callback){
   var imgname2 = new Date().getTime()+"";
   var now = new Date();
   var year = now.getFullYear();
@@ -12,7 +12,14 @@ function sendGmImage(gmObj,callback){
     fs.mkdirSync(head+folder);
   }
   gmObj.write(head+folder+"/"+imgname2+".jpg",function(err){
-    callback("send/card/"+imgname2+".jpg");
+    var imgname = 'send/card/'+imgname2+".jpg";
+    var ret;
+    if(order==1){//words behind
+      ret = '[CQ:image,file='+imgname+']'+words;
+    }else{
+      ret = words+'[CQ:image,file='+imgname+']';
+    }
+    callback(ret);
   });
 }
 
