@@ -12,7 +12,7 @@ function sendGmImage(gmObj,words='',callback,order){
     fs.mkdirSync(head+folder);
   }
   gmObj.write(head+folder+"/"+imgname2+".jpg",function(err){
-    var imgname = 'send/card/'+imgname2+".jpg";
+    var imgname = 'send/card/'+folder+"/"+imgname2+".jpg";
     var ret;
     if(order==1){//words behind
       ret = '[CQ:image,file='+imgname+']'+words;
