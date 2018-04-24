@@ -1,4 +1,6 @@
-const fs = require('fs')
+const fs = require('fs'),
+  path = require('path'),
+  Canvas = require('canvas')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
 
@@ -53,8 +55,7 @@ const renderTextBox = (ctx, left, top, width, height, radius, title) => {
 }
 
 module.exports = function(obj, where, __dir){
-  let Canvas = require('canvas')
-    , canvasTmp = new Canvas(400, 2000)
+  let canvasTmp = new Canvas(400, 2000)
     , ctxTmp = canvasTmp.getContext('2d');
   ctxTmp.font = '20px DFGirl';
   let desc = obj.OptionDesc.split('\\n'), objArr = []
@@ -103,7 +104,7 @@ module.exports = function(obj, where, __dir){
   var imgData = canvas.toDataURL()
   var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
   var dataBuffer = new Buffer(base64Data, 'base64');
-  fs.writeFile("image.png", dataBuffer, function(err) {
+  fs.writeFile(path.join(__dirname, '/test/image.png'), dataBuffer, function(err) {
     if(err){
       console.log(err)
     }else{
