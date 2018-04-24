@@ -7,13 +7,15 @@ function sendGmImage(gmObj,words='',callback,order){
   var mon = now.getMonth()<9?('0'+(now.getMonth()+1)):now.getMonth();
   var dat = now.getDate()<10?('0'+now.getDate()):now.getDate();
   var folder = ""+year+mon+dat;
-  var head = '../coolq-data/cq/data/image/send/card/';
+  var head = '../coolq-data/cq/data/image/send/';
   if(!fs.existsSync(head+folder)){
-    var mr=fs.mkdirSync(head+folder);
-    console.log(mr)
+    fs.mkdirSync(head+folder);
   }
-  gmObj.write(head+folder+"/"+imgname2+".jpg",function(err){
-    var imgname = 'send/card/'+folder+"/"+imgname2+".jpg";
+  if(!fs.existsSync(head+folder+"/card")){
+    fs.mkdirSync(head+folder+"/card");
+  }
+  gmObj.write(head+folder+"/card/"+imgname2+".jpg",function(err){
+    var imgname = folder+"/card/"+imgname2+".jpg";
     var ret;
     if(order==1){//words behind
       ret = '[CQ:image,file='+imgname+']'+words;
