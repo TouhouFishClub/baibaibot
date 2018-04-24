@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-function sendGmImage(gmObj,words='',order,callback){
+function sendGmImage(gmObj,words='',callback,order){
   var imgname2 = new Date().getTime()+"";
   var now = new Date();
   var year = now.getFullYear();

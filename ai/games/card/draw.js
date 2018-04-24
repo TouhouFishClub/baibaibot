@@ -73,7 +73,7 @@ function drawNameCard(username,qq,callback,groupid){
           tdata=tdata.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
         }
         if(img&&tdata){
-          generateImageByWords(img,tdata,callback);
+          generateImageByWords(img,tdata,callback,ret);
         }else{
           callback(ret);
         }
@@ -249,7 +249,7 @@ function getCard(qq,userName,callback){
   });
 }
 
-function generateImageByWords(img,wd,callback){
+function generateImageByWords(img,wd,callback,words){
   if(img&&wd){
     var wa = wd.split('\n');
     var maxwd = 0;
@@ -305,7 +305,7 @@ function generateImageByWords(img,wd,callback){
           .write(folder+imgname+"_blank.jpg", function(err){
             img0.size(function(err,imgsize){
               console.log(imgsize);
-              sendGmImage(img0.append(folder+imgname+"_blank.jpg",true),callback);
+              sendGmImage(img0.append(folder+imgname+"_blank.jpg",true),words,callback);
             });
           });
       });
@@ -357,13 +357,10 @@ function draw2df(qq,username,callback){
         }
       }
       saveCard(qq,name);
-      var cb = function(imgname){
-        callback(ret+'[CQ:image,file='+imgname+']');
-      }
       if(img&&dr){
         var words = gamename+"\n"+dr;
         words=words.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
-        generateImageByWords(img,words,cb);
+        generateImageByWords(img,words,callback,ret);
       }else{
         callback(ret);
       }
