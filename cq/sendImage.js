@@ -1,4 +1,6 @@
-var fs = require('fs');
+const fs = require('fs')
+const path = require('path')
+const { IMAGE_DATA } = require(path.join(__dirname, '../baibaiConfigs.js'))
 
 function sendGmImage(gmObj,words='',callback,order){
   var imgname2 = new Date().getTime()+"";
@@ -26,11 +28,27 @@ function sendGmImage(gmObj,words='',callback,order){
   });
 }
 
-module.exports={
-  sendGmImage,
-  sendImageBuffer
+const sendImageMsgBuffer = (imgBuffer, imgName, dir, callback, msg = '', order = 'IF') => {
+  fs.writeFile(path.join(IMAGE_DATA, dir, `${imgName}.png`), imgBuffer, err => {
+    if(err){
+      console.log(err)
+    }else{
+      console.log(`保存${imgName}.png成功！`)
+      let imgMsg = `[CQ:image,file='${path.join(dir, `${imgName}.png`)}']`, mixMsg = ''
+      switch(order){
+        case 'IF':
+          mixMsg = `${imgMsg}${msg.length ? `\n${msg}` : ''}`
+          break
+        case 'MF':
+          mixMsg = `${msg.length ? `${msg}\n` : ''}${imgMsg}`
+          break
+      }
+      callback(mixMsg)
+    }
+  })
 }
 
-function sendImageBuffer(buf){
-
+module.exports = {
+  sendGmImage,
+  sendImageMsgBuffer
 }

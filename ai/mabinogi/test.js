@@ -6,6 +6,24 @@ const querystring =  require('querystring')
 
 const ow = require('./tools/optionsetWhere')
 
+const draw = require('./tools/optionsetImage')
+draw({ ID: '21527',
+  Name: 'The Wing of Doll',
+  LocalName: '玩偶的翅膀',
+  OptionDesc: '可以对操纵杆进行魔法释放\\n第6幕: 诱惑陷阱等级1段以上时，敏捷增加15\\n第6幕: 诱惑陷阱等级3段以上时，人偶最大伤害增加14～18\\n第4幕: 嫉妒的化身等级1段以上时，人偶生命值增加50\\n第4幕: 嫉妒的化身等级3段以上时， 人偶最小伤害增加9～12\\n[平衡减少10]\\n[修理费10倍]\\n可无视等级进行魔法释放\\n[魔法释放后的装备会变成专用道具]',
+  LevelQuery: 1,
+  Level: 1,
+  Usage: '接头',
+  UsageQuery: '0',
+  Buff:
+    [ '可以对操纵杆进行魔法释放',
+      '第6幕: 诱惑陷阱等级1段以上时，敏捷增加15',
+      '第6幕: 诱惑陷阱等级3段以上时，人偶最大伤害增加14～18',
+      '第4幕: 嫉妒的化身等级1段以上时，人偶生命值增加50',
+      '第4幕: 嫉妒的化身等级3段以上时， 人偶最小伤害增加9～12',
+      '可无视等级进行魔法释放' ],
+  Debuff: [ '平衡减少10', '修理费10倍', '魔法释放后的装备会变成专用道具' ] }, 'aaa')
+
 // ow("Fox Hunter's", '111', d => console.log(d))
 
 // const req = https.request({

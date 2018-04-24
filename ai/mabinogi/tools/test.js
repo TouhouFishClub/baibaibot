@@ -10,3 +10,7 @@ app.get('/', (req, res) => {
     res.send(d);
   })
 })
+const path = require('path')
+const opt = require(path.join(__dirname, '../../../baibaiConfigs.js'))
+
+console.log(opt)
