@@ -15,14 +15,21 @@ function tulingMsg(userid,content,callback,groupid){
   }
   limit[groupid]=new Date().getTime();
   var body={};
-  body.key=tulingApiKey;
-  body.info=content;
-  body.userid=groupid;
+  body.userInfo={};
+  body.userInfo.apiKey=tulingApiKey;
+  body.userInfo.userId=groupid;
+  body.reqType=0;
+  body.perception={};
+  body.perception.inputText={};
+  body.perception.inputText.text=content;
   var options = {
-    hostname: 'www.tuling123.com',
+    hostname: 'openapi.tuling123.com',
     port: 80,
-    path: '/openapi/api',
+    path: '/openapi/api/v2',
     method: 'POST',
+    headers:{
+      'Content-Type':'application/json'
+    }
   };
   var req = http.request(options, function (res) {
     res.setEncoding('utf8');
@@ -46,25 +53,14 @@ function tulingMsg(userid,content,callback,groupid){
 var dup=0;
 function handleTulingResponse(resdata){
   var data = eval("("+resdata+")");
-  var code = data.code;
+  var code = data.intent.code;
   var ret = '';
-  if(code == 100000){
-    ret = data.text;
-  }else if(code == 200000){
-    ret = data.text+""+data.url;
-  }else{
-    ret = '玩累了，明天再来喵～';
+  for(var i=0;i<data.results.length;i++){
+    var value=data.results[i].values;
+    var type = data.results[i].resultType;
+    ret = ret + value[type]+"\n";
   }
-  if(ret.indexOf('百百')>-1){
-    if(dup<3){
-      dup++;
-    }else{
-      ret = ret.replace(/百百/g,'百·百');
-    }
-  }else{
-    dup = 0 
-  }
-  return ret;
+  return ret.trim();
 }
 
 module.exports={

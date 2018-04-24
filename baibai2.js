@@ -37,7 +37,6 @@ const {replayReply} = require('./ai/replay');
 
 const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,banUserRandom} = require('./cq/cache');
 
-const {saveSt,searchMedal} = require('./ai/check/stat')
 
 const {lottoryReply,getlottory} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
@@ -55,6 +54,7 @@ loadSuffix();
 pushTask();
 initWS();
 streaminit();
+regenTimer();
 
 var wsonline = false;
 function initWS(){
@@ -117,17 +117,50 @@ function handleMsg(msgObj,res){
 function handleMsg_D(msgObj,response){
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
+  var content = msgObj.message;
+  if(content){
+    if(content.indexOf('&amp;')>-1){
+      content=content.replace(/&amp;/g,'&');
+    }
+    if(content.indexOf('&#44;')>-1){
+      content=content.replace(/&#44;/g,',');
+    }
+  }
+  if(type=='private'){
+    var userid = msgObj.user_id;
+    var callback = function(res,blank){
+      if(res.trim().length>0){
+        setTimeout(function(){
+          if(!blank){
+            res = ""+res
+          }
+          var options = {
+            host: '192.168.17.52',
+            port: 23334,
+            path: '/send_private_msg?user_id='+userid+'&message='+encodeURIComponent(res),
+            method: 'GET',
+            headers: {
+
+            }
+          };
+          console.log("priv:"+userid+":"+content+":"+res);
+          var req = http.request(options);
+          req.on('error', function(err) {
+            console.log('req err:');
+            console.log(err);
+          });
+          req.end();
+        },1000);
+      }
+    }
+    tulingMsg(userid,content,callback,userid);
+    return;
+  }
   if(type!='group'){
     return;
   }
   var from = msgObj.user_id;
-  var content = msgObj.message;
-  if(content.indexOf('&amp;')>-1){
-    content=content.replace(/&amp;/g,'&');
-  }
-  if(content.indexOf('&#44;')>-1){
-    content=content.replace(/&#44;/g,',');
-  }
+
   var name = getUserNameInGroup(from,groupid);
   var nickname = getUserNickInGroupByCache(from,groupid);
   console.log(groupid+":"+name+":"+content)
@@ -220,6 +253,7 @@ function handleMsg_D(msgObj,response){
   var first = content.substring(0,1);
   if(first=="*"||first=='×'){
     lottoryReply(content.substring(1),name,callback);
+    return;
   }
 
 
@@ -259,12 +293,6 @@ function handleMsg_D(msgObj,response){
     return;
 
   }
-  if(rcontent.startsWith("甲鱼")||rcontent.startsWith("咸鱼")){
-    saveSt(name,from,rcontent,groupid,callback)
-  }
-  if(rcontent=="统计"){
-    searchMedal(content,groupid,callback);
-  }
   var ca = content.split('|');
   if(ca.length==2){
     if(ca[0].length<50 && ca[0].split(' ').length < 2){
@@ -279,7 +307,7 @@ function handleMsg_D(msgObj,response){
     return;
   }
   if(content.indexOf('百百')>-1){
-    tulingMsg(name,content,callback);
+    tulingMsg(from,content.trim(),callback,groupid);
     return;
   }
   answer(content,name,groupName,callback);
@@ -326,14 +354,14 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first=='r'||first=='R'){
     callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='f'||first=='F'){
-      if(groupName.indexOf('沙丁鱼')>0||groupName.indexOf('百游戏')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
-        fight(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+      if((groupid+"").startsWith('20570')>0||(groupid+"").startsWith('67096')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
+        fight(from,content.substring(1),groupid,callback);
       }else{
         callback('为防止刷屏，当前关闭游戏功能');
       }
   }else if(first=='g'||first=='G'){
-      if(groupName.indexOf('沙丁鱼')>0||groupName.indexOf('百游戏')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
-        useMagicOrItem(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
+      if((groupid+"").startsWith('20570')>0||(groupid+"").startsWith('67096')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
+        useMagicOrItem(from,userName,content.substring(1),groupid,callback);
       }else{
         callback('为防止刷屏，当前关闭游戏功能');
       }

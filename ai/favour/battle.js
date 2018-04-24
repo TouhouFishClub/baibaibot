@@ -3,13 +3,15 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 
 var tmpfight = {};
 var limitFight = {};
-function fight(fromuin,content,members,callback){
+
+const {getGroupMemInfo} = require('../../cq/cache');
+function fight(fromid,content,gid,callback){
   var from;
   var to;
 
   content=content.trim();
   if(content.substring(0,1)==1&&content.length==2){
-    var tmp = tmpfight[fromuin];
+    var tmp = tmpfight[fromid];
     var no = content.substring(1);
     if(tmp){
       var from=tmp.f;
@@ -23,16 +25,22 @@ function fight(fromuin,content,members,callback){
     return;
   }
   var tom={};
-  for(let i=0;i<members.length;i++){
-    if(fromuin==members[i].uin){
-      from = members[i].nick;
+  var memInfo = getGroupMemInfo(gid);
+  if(!memInfo){
+    callback(from+'不小心砍向了自己,造成'+Math.floor(Math.random()*1000-500)+'点伤害');
+    return;
+  }
+  for(var qq in memInfo){
+    var info = memInfo[qq];
+    if(fromid==info.user_id){
+      from = info.nickname;
     }
-    if(members[i].nick&&members[i].nick.indexOf(content)>=0){
-      tom[members[i].nick]=1;
+    if(info.nickname&&info.nickname.indexOf(content)>=0){
+      tom[info.nickname]=1;
       continue;
     }
-    if(members[i].card&&members[i].card.indexOf(content)>=0){
-      tom[members[i].nick]=1;
+    if(info.card&&info.card.indexOf(content)>=0){
+      tom[info.nickname]=1;
       continue;
     }
   }
@@ -54,10 +62,10 @@ function fight(fromuin,content,members,callback){
       callback(from+'砍向了'+'空气'+',造成'+Math.floor(Math.random()*1000-500)+'点伤害');
     }else{
       var ret = "请选择：\n";
-      tmpfight[fromuin]={f:from};
+      tmpfight[fromid]={f:from};
       for(var i=0;i<toa.length;i++){
         ret = ret + '`f1'+i+' | '+toa[i]+'\n';
-        tmpfight[fromuin][i]=toa[i]
+        tmpfight[fromid][i]=toa[i]
       }
       callback(ret.trim());
     }
@@ -223,7 +231,9 @@ function generateDamage(data1,data2,type,rate2){
     var str = data1._id+'吃向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }else{
-    var critical = Math.random()*100<data1.luck;
+    var sum = data1.atk+data1.def+data1.luck+data1.agi;
+    var max = sum/3;
+    var critical = Math.random()*100<((data1.luck<max?data1.luck:(max+Math.sqrt(data1.luck)))-data2.lv);
     if(type==2){
       critical=false;
     }
@@ -236,11 +246,11 @@ function generateDamage(data1,data2,type,rate2){
     if(data2.status==2){
       def = def * 2;
     }
-    if(critical){
-      atk = atk + data2.def;
-    }
     if(data1.status==3){
       atk = atk * 2;
+    }
+    if(critical){
+      atk = atk + data2.def;
     }
     var rate = (80 + data1.lv+(data1.hp<200?data1.hp:200))/2;
     if(type==2){
@@ -261,21 +271,27 @@ function generateDamage(data1,data2,type,rate2){
   }
 }
 
-function getUserInfo(fromuin,content,members,callback){
+function getUserInfo(fromid,content,gid,callback){
   content=content.trim();
   var userName;
   var tom={};
   var from;
-  for(let i=0;i<members.length;i++){
-    if(fromuin==members[i].uin){
-      from = members[i].nick;
+  var memInfo = getGroupMemInfo(gid);
+  if(!memInfo){
+    callback(fromid+'不小心砍向了自己,造成'+Math.floor(Math.random()*1000-500)+'点伤害');
+    return;
+  }
+  for(var qq in memInfo){
+    var info = memInfo[qq];
+    if(fromid==info.user_id){
+      from = info.nickname;
     }
-    if(members[i].nick&&members[i].nick.indexOf(content)>=0){
-      tom[members[i].nick]=1;
+    if(info.nickname&&info.nickname.indexOf(content)>=0){
+      tom[info.nickname]=1;
       continue;
     }
-    if(members[i].card&&members[i].card.indexOf(content)>=0){
-      tom[members[i].nick]=1;
+    if(info.card&&info.card.indexOf(content)>=0){
+      tom[info.nickname]=1;
       continue;
     }
   }
@@ -290,9 +306,16 @@ function getUserInfo(fromuin,content,members,callback){
     callback(content + '是谁？');
     return;
   }
+  var memInfo = getGroupMemInfo(gid);
+  if(!memInfo){
+    callback(from+'不小心砍向了自己,造成'+Math.floor(Math.random()*1000-500)+'点伤害');
+    return;
+  }
+
   MongoClient.connect(mongourl, function(err, db) {
     var cl_user = db.collection('cl_user');
     var query = {'_id': userName};
+    console.log(query);
     cl_user.findOne(query, function (err, data) {
       if (data) {
         var statusstr;
@@ -323,7 +346,7 @@ function getUserInfo(fromuin,content,members,callback){
 
 
 var limitItem = {};
-function useMagicOrItem(fromuin,content,members,callback){
+function useMagicOrItem(fromuin,userName,content,members,callback){
   if(content==""){
     ret = "`f+要砍的人：攻击该玩家\n";
     ret = ret + " `g0:查询自己状态,`g0+名字:查询该人物状态\n";
@@ -340,16 +363,35 @@ function useMagicOrItem(fromuin,content,members,callback){
   }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1).trim(),members,callback);
   }else{
-    var userName;
-    for (let i = 0; i < members.length; i++) {
-      if (fromuin == members[i].uin) {
-        userName = members[i].nick;
-        break;
-      }
+	  var gid=members;
+	  var fromid = fromuin;
+  var tom={};
+  var from;
+  var memInfo = getGroupMemInfo(gid);
+  if(!memInfo){
+    callback(fromid+'不小心砍向了自己,造成'+Math.floor(Math.random()*1000-500)+'点伤害');
+    return;
+  }
+  for(var qq in memInfo){
+    var info = memInfo[qq];
+    if(fromid==info.user_id){
+      from = info.nickname;
     }
+    if(info.nickname&&info.nickname.indexOf(content)>=0){
+      tom[info.nickname]=1;
+      continue;
+    }
+    if(info.card&&info.card.indexOf(content)>=0){
+      tom[info.nickname]=1;
+      continue;
+    }
+  }
+	  userName=from;
+	  
+	  
     MongoClient.connect(mongourl, function(err, db) {
       var cl_user = db.collection('cl_user');
-      var query = {'_id': userName};
+      var query = {'_id': from};
       cl_user.findOne(query, function (err, data) {
         if (data) {
 
@@ -607,6 +649,14 @@ function regen(){
             u.agi=Math.floor(u.lv+u.exp/100);
             u.lv=u.lv+1;
             u.gold=u.gold+u.exp;
+          }
+          if(u._id=="B3"){
+            u.hp=999+u.exp;
+            u.atk=333;
+            u.agi=18;
+            u.lv=10;
+            u.def=999+Math.floor(u.exp/2);
+            u.gold=6666+u.exp;
           }
         }
         if(u.hp<100){

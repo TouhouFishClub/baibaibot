@@ -7,6 +7,7 @@ var cache = {};
 var gm = require('gm')
 var request = require("request");
 var imageMagick = gm.subClass({ imageMagick : true });
+var {sendGmImage} = require('../../../cq/sendImage');
 
 function drawNameCard(username,qq,callback,groupid){
   var now = new Date().getTime();
@@ -81,7 +82,7 @@ function drawNameCard(username,qq,callback,groupid){
         }
       }
       if(data.detail){
-        cb(data.detail);
+        cb(ud.detail);
         db.close();
       }else{
         getDetailByName(cl_card,name,data.href,cb,db);
@@ -145,7 +146,6 @@ function getDetailByName(cl_card,name,href,callback,db){
           line++;
         }
       }
-      console.log({img:imgsrc,t:tdata})
       cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()}},function(){
         db.close();
       });
@@ -308,10 +308,7 @@ function generateImageByWords(img,wd,callback){
           .write(folder+imgname+"_blank.jpg", function(err){
             img0.size(function(err,imgsize){
               console.log(imgsize);
-              var imgname2 = new Date().getTime()+"";
-              img0.append(folder+imgname+"_blank.jpg",true).write('../coolq-data/cq/data/image/send/card/'+imgname2+".jpg",function(err){
-                callback("send/card/"+imgname2+".jpg");
-              })
+              sendGmImage(img0.append(folder+imgname+"_blank.jpg",true),callback);
             });
           });
       });
@@ -367,7 +364,9 @@ function draw2df(qq,username,callback){
         callback(ret+'[CQ:image,file='+imgname+']');
       }
       if(img&&dr){
-        generateImageByWords(img,gamename+"\n"+dr,cb);
+        var words = gamename+"\n"+dr;
+        words=words.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
+        generateImageByWords(img,words,cb);
       }else{
         callback(ret);
       }
