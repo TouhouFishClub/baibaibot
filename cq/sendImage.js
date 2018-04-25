@@ -34,7 +34,7 @@ const sendImageMsgBuffer = (imgBuffer, imgName, dir, callback, msg = '', order =
       console.log(err)
     }else{
       console.log(`保存${imgName}.png成功！`)
-      let imgMsg = `[CQ:image,file='${path.join('send', dir, `${imgName}.png`)}']`, mixMsg = ''
+      let imgMsg = `[CQ:image,file=${path.join('send', dir, `${imgName}.png`)}]`, mixMsg = ''
       switch(order){
         case 'IF':
           mixMsg = `${imgMsg}${msg.length ? `\n${msg}` : ''}`
