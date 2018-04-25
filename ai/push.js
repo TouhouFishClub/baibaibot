@@ -292,7 +292,7 @@ function parseBitFinexRes(resdata,usd_cny,callback){
   callback(ret.trim());
 }
 
-function getCoinMarket(callback,withproxy){
+function getCoinMarket(callback,withproxy, isInterface = false){
   var now = new Date();
   console.log('will get conmarket:'+withproxy);
   var options = {
@@ -320,6 +320,9 @@ function getCoinMarket(callback,withproxy){
         var data = eval(resdata);
         var ret = "数字货币行情(CoinMarket)："+now.toLocaleString()+"\n";
         var n={"btc":1,"ltc":1,"eth":1,"etc":1,"xrp":1,"eos":1,"bch":1,"qtum":1,"dash":1,"neo":1,"ada":1}
+        if(isInterface){
+          ret = []
+        }
         for(var i=0;i<data.length;i++){
           var pd = data[i];
           var symbol=pd.symbol;
@@ -327,7 +330,15 @@ function getCoinMarket(callback,withproxy){
             var price_usd=parseFloat(pd.price_usd);
             var price_cny=parseFloat(pd.price_cny);
             //var rate = price_cny/price_usd;
-            ret = ret + symbol + ":$"+price_usd.toFixed(2)+"   \t￥"+price_cny.toFixed(2)+"\n";
+            if(isInterface){
+              ret.push({
+                type: symbol,
+                usd: price_usd.toFixed(2),
+                cny: price_cny.toFixed(2)
+              })
+            } else {
+              ret = ret + symbol + ":$"+price_usd.toFixed(2)+"   \t￥"+price_cny.toFixed(2)+"\n";
+            }
           }
         }
         callback(ret);
@@ -363,5 +374,6 @@ module.exports={
   pushToGroup,
   pushTask,
   getPrice,
-  getBitFlyer
+  getBitFlyer,
+  getCoinMarket
 }

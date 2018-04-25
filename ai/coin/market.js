@@ -1,7 +1,8 @@
 const fs = require('fs'),
   path = require('path'),
   Canvas = require('canvas'),
-  { sendImageMsgBuffer } = require('../../cq/sendImage.js')
+  { sendImageMsgBuffer } = require(path.join(__dirname, '../../cq/sendImage.js')),
+  { getCoinMarket } = require(path.join(__dirname, '../push.js'))
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
 
@@ -21,92 +22,63 @@ const renderText = (ctx, textArr, topMargin, leftMargin, lineHeight) => {
     ctx.fillText(text, leftMargin, topMargin + lineHeight * (index + 1))
   })
 }
-const renderBuffText = (ctx, textArr, topMargin, leftMargin, lineHeight) => {
-  textArr.forEach((text, index) => {
-    if(text.buff){
-      ctx.fillStyle = 'rgba(16,131,255,1)'
-    } else {
-      ctx.fillStyle = 'rgba(251,0,7,1)'
-    }
-    ctx.fillText(text.text, leftMargin, topMargin + lineHeight * (index + 1))
-  })
-}
-const renderTextBox = (ctx, left, top, width, height, radius, title) => {
-  ctx.beginPath()
-  ctx.strokeStyle = 'rgba(204,204,204,1)'
-  ctx.lineWidth = 1
-  ctx.moveTo(left + radius, top)
-  ctx.lineTo(left + width - radius, top)
-  ctx.arcTo(left + width, top, left + width, top + radius, radius)
-  ctx.lineTo(left + width, top + height - radius)
-  ctx.arcTo(left + width, top + height, left + width - radius, top + height, radius)
-  ctx.lineTo(left + radius, top + height)
-  ctx.arcTo(left, top + height, left, top + height - radius, radius)
-  ctx.lineTo(left, top + radius)
-  ctx.arcTo(left, top, left + radius, top, radius)
-
-  ctx.stroke()
-  let titleWidth = ctx.measureText(title).width
-  ctx.fillStyle = 'rgba(0,0,0,1)'
-  ctx.fillRect(left + radius + 5, top - 14, titleWidth + 8, 28)
-  ctx.fillStyle = 'rgba(238,78,7,1)'
-  ctx.fillText(title, left + radius + 9, top + 6)
-}
 
 const MAX_WIDTH=350;
 
-function drawImage(desc){
-  let canvasTmp = new Canvas(400, 2000)
-    , ctxTmp = canvasTmp.getContext('2d');
-  let fontFamily = 'DFGirl'
-  ctxTmp.font = `20px ${fontFamily}`;
-  let objArr = [];
-  desc.split('\n').forEach(str => {
-    // console.log(str)
-    if(ctxTmp.measureText(str).width < MAX_WIDTH) {
-      objArr.push(str)
-    } else {
-      objArr = objArr.concat(checkMaxWidth(ctxTmp, str, MAX_WIDTH).map(val => val))
-    }
-  })
-  let buffHeight = objArr.length * 25
-  let cavasHeight = 77 + buffHeight + 70
+module.exports = function(callback){
+  getCoinMarket(data => {
+    console.log(data)
+    let canvasTmp = new Canvas(400, 2000)
+      , ctxTmp = canvasTmp.getContext('2d');
+    let fontFamily = 'DFGirl'
+    ctxTmp.font = `20px ${fontFamily}`;
+    /* 预处理币种，美元，人民币 */
+    let typeMaxWidth = 0, usdMaxWidth = 0, cnyMaxWidth = 0
+    data.forEach(val => {
+      if(ctxTmp.measureText(val.type).width > typeMaxWidth){
+        typeMaxWidth = ctxTmp.measureText(val.type).width
+      }
+      if(ctxTmp.measureText(val.usd).width > usdMaxWidth){
+        usdMaxWidth = ctxTmp.measureText(`$ ${val.usd}`).width
+      }
+      if(ctxTmp.measureText(val.cny).width > cnyMaxWidth){
+        cnyMaxWidth = ctxTmp.measureText(`￥ ${val.cny}`).width
+      }
+    })
+    let canvasWidth = typeMaxWidth + usdMaxWidth + cnyMaxWidth + 80
+    console.log(canvasWidth)
+    let cavasHeight = data.length * 25 + 40
+
+    let canvas = new Canvas(canvasWidth, cavasHeight)
+      , ctx = canvas.getContext('2d')
+
+    ctx.font = `20px ${fontFamily}`
+    ctx.fillStyle = 'rgba(0,0,20,0.9)'
+    ctx.fillRect(0, 0, canvasWidth, cavasHeight)
+
+    ctx.fillStyle = 'rgba(255,255,255,1)'
+    ctx.strokeStyle = 'rgba(0,0,0,0.5)'
+
+    renderText(ctx, data.map(val => val.type), 20, 20, 25)
+    renderText(ctx, data.map(val => `$ ${val.usd}`), 20, 40 + typeMaxWidth, 25)
+    renderText(ctx, data.map(val => `￥ ${val.cny}`), 20, 60 + typeMaxWidth + usdMaxWidth, 25)
 
 
-  let canvas = new Canvas(400, cavasHeight)
-    , ctx = canvas.getContext('2d')
-
-  ctx.font = `20px ${fontFamily}`
-  ctx.fillStyle = 'rgba(0,0,20,0.9)'
-  ctx.fillRect(0, 0, 400, cavasHeight)
-
-  ctx.fillStyle = 'rgba(255,255,255,1)'
-  ctx.strokeStyle = 'rgba(0,0,0,0.5)'
-  let title = 'asdfsdaf'
-  ctx.fillText(title, (400 - ctx.measureText(title).width)/2, 30)
-
-  console.log(objArr);
-  renderText(ctx, objArr, 77, 25, 25)
-
-
-  let imgData = canvas.toDataURL()
-  let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
-  let dataBuffer = new Buffer(base64Data, 'base64')
+    let imgData = canvas.toDataURL()
+    let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
+    let dataBuffer = new Buffer(base64Data, 'base64')
 
 
 
 
-  fs.writeFile(path.join(__dirname, '../../test/image.png'), dataBuffer, function(err) {
-     if(err){
-       console.log(err)
-     }else{
-       console.log("保存成功！");
-     }
-  });
+    fs.writeFile(path.join(__dirname, '../../test/image.png'), dataBuffer, function(err) {
+      if(err){
+        console.log(err)
+      }else{
+        console.log("保存成功！");
+      }
+    });
+  }, false, true)
 
-}
 
-
-module.exports={
-  drawImage
 }
