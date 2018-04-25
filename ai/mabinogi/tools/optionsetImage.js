@@ -56,7 +56,7 @@ const renderTextBox = (ctx, left, top, width, height, radius, title) => {
 module.exports = function(obj, wheres, __dir = 'mabi', callback){
   let canvasTmp = new Canvas(400, 2000)
     , ctxTmp = canvasTmp.getContext('2d');
-  let fontFamily = 'MSYH'
+  let fontFamily = 'STXIHEI'
   ctxTmp.font = `20px ${fontFamily}`
   /* 预处理属性 */
   let desc = obj.OptionDesc.split('\\n'), objArr = []
