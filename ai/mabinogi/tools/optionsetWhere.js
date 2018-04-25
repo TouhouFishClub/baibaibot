@@ -48,8 +48,8 @@ module.exports = function(optsName, optsId, callback) {
               where = where.substring(2, where.indexOf('</a>'))
             }
             rw.push({
-              article: article,
-              where: where
+              article: article.replace(/[\r|\n]/g, ''),
+              where: where.replace(/[\r|\n]/g, '')
             })
           }
         })

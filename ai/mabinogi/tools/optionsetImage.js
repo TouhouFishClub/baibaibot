@@ -87,6 +87,7 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
         whereArr = whereArr.concat(checkMaxWidth(ctxTmp, whereText, MAX_WIDTH))
       }
     })
+    console.log(whereArr)
     whereHeight = whereArr.length * 25
     cavasHeight += whereHeight + 40
   }
