@@ -218,6 +218,7 @@ function parseHTRes(resdata,callback){
 
 
 function getPrice(callback){
+  failed=0;
   getCoinMarket(callback,false);
 }
 
