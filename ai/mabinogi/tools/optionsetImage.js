@@ -56,7 +56,8 @@ const renderTextBox = (ctx, left, top, width, height, radius, title) => {
 module.exports = function(obj, wheres, __dir = 'mabi', callback){
   let canvasTmp = new Canvas(400, 2000)
     , ctxTmp = canvasTmp.getContext('2d');
-  ctxTmp.font = '20px DFGirl';
+  let fontFamily = 'MSYH'
+  ctxTmp.font = `20px ${fontFamily}`
   /* 预处理属性 */
   let desc = obj.OptionDesc.split('\\n'), objArr = []
   const MAX_WIDTH = 350
@@ -92,22 +93,22 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
 
 
   let canvas = new Canvas(400, cavasHeight)
-    , ctx = canvas.getContext('2d');
+    , ctx = canvas.getContext('2d')
 
-  ctx.font = '20px DFGirl';
-  ctx.fillStyle = 'rgba(0,0,20,0.9)';
+  ctx.font = `20px ${fontFamily}`
+  ctx.fillStyle = 'rgba(0,0,20,0.9)'
   ctx.fillRect(0, 0, 400, cavasHeight)
 
-  ctx.fillStyle = 'rgba(255,255,255,1)';
-  ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillStyle = 'rgba(255,255,255,1)'
+  ctx.strokeStyle = 'rgba(0,0,0,0.5)'
   let title = '魔法释放卷轴'
   ctx.fillText(title, (400 - ctx.measureText(title).width)/2, 30)
 
   let titleDesc = 'Enchant Scroll'
-  ctx.font = '12px DFGirl';
-  ctx.fillText(titleDesc, (400 - ctx.measureText(titleDesc).width)/2, 43)
+  ctx.font = `12px ${fontFamily}`
+  ctx.fillText(titleDesc, (400 - ctx.measureText(titleDesc).width)/2, 45)
 
-  ctx.font = '20px DFGirl';
+  ctx.font = `20px ${fontFamily}`
 
   renderTextBox(ctx, 12, 77, 376, buffHeight + 50, 10, '道具属性')
 

@@ -159,7 +159,6 @@ module.exports = function(userId, context, type = 'normal', callback) {
     }
     if(finalArr.length == 1){
       if(type == 'image'){
-        console.log('drawImage')
         optionsetWhere(finalArr[0].Name, finalArr[0].ID, wheres => {
           optionsetImage(finalArr[0], wheres, 'mabi', str => {
             callback(str)
