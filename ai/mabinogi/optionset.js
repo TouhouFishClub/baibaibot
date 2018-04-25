@@ -157,7 +157,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
       callback(str)
     }
     if(finalArr.length == 1){
-      if(type = 'image'){
+      if(type == 'image'){
 
       } else {
         optionsetWhere(finalArr[0].Name, finalArr[0].ID, wheres => {
