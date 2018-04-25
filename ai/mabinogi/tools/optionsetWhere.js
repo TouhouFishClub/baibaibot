@@ -59,6 +59,7 @@ module.exports = function(optsName, optsId, callback) {
   });
   req.on('error', (e) => {
     console.error(`problem with request: ${e.message}`);
+    callback([])
   });
   req.write(postData);
   req.end();

@@ -125,15 +125,15 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
   let imgData = canvas.toDataURL()
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
-  // sendImageMsgBuffer(dataBuffer, obj.ID, __dir, msg => {
-  //   callback(msg)
-  // })
+  sendImageMsgBuffer(dataBuffer, obj.ID, __dir, msg => {
+    callback(msg)
+  })
 
-  fs.writeFile(path.join(__dirname, '/test/image.png'), dataBuffer, function(err) {
-    if(err){
-      console.log(err)
-    }else{
-      console.log("保存成功！");
-    }
-  });
+  // fs.writeFile(path.join(__dirname, '/test/image.png'), dataBuffer, function(err) {
+  //   if(err){
+  //     console.log(err)
+  //   }else{
+  //     console.log("保存成功！");
+  //   }
+  // });
 }
