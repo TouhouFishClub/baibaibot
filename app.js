@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http');
 const {handleMsg,reconnect} = require('./baibai2');
-
+app.listen('10086')
 const callback = function(res){
   if(res.trim().length>0){
     setTimeout(function(){
