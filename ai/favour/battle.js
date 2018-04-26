@@ -478,14 +478,23 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
             ret = ret +  "`g92:消耗200金币，一定概率防御力-1，一定概率防御力+1\n";
             ret = ret +  "`g93:消耗200金币，一定概率幸运-1，一定概率幸运+1\n";
             ret = ret +  "`g94:消耗200金币，一定概率速度-1，一定概率速度+1\n";
+            ret = ret +  "`g9x/AAA:消耗AAA金币，一定概率x-1，一定概率x+1\n";
             callback(ret);
           }else{
             console.log("next:"+next);
-            if(data.gold>200){
+            var un=next.indexOf('/')
+            var decrease=200;
+            var rate = 0.51;
+            if(un!=-1){
+              decrease = parseInt(next.substring(un+1));
+              next=next.substring(0,1);
+              rate = Math.log(decrease)/100+0.46;
+            }
+            if(decrease>0&&data.gold>200){
               var ret = "消耗了200金钱";
               data.gold=data.gold-200;
               if(next==1){
-                if(Math.random()<0.51){
+                if(Math.random()<rate){
                   data.atk=data.atk+1;
                   ret = ret + ",atk+1"
                 }else{
@@ -494,7 +503,7 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
                 }
               }
               if(next==2){
-                if(Math.random()<0.51){
+                if(Math.random()<rate){
                   data.def=data.def+1;
                   ret = ret + ",def+1"
                 }else{
@@ -503,7 +512,7 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
                 }
               }
               if(next==3){
-                if(Math.random()<0.51){
+                if(Math.random()<rate){
                   data.luck=data.luck+1;
                   ret = ret + ",luck+1"
                 }else{
@@ -512,7 +521,7 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
                 }
               }
               if(next==4){
-                if(Math.random()<0.51){
+                if(Math.random()<rate){
                   data.agi=data.agi+1;
                   ret = ret + ",agi+1"
                 }else{
@@ -656,10 +665,10 @@ function regen(){
           if(u._id=="B3"){
             u.hp=999+u.exp;
             u.atk=333;
-            u.agi=18;
-            u.lv=10;
-            u.def=999+Math.floor(u.exp/2);
-            u.gold=6666+u.exp;
+            u.agi=9+Math.floor(Math.log(u.exp));
+            u.lv=Math.floor(Math.log(u.exp));
+            u.def=Math.floor(u.exp/2);
+            u.gold=6666+Math.floor(u.exp/2);
           }
         }
         if(u.hp<100){
