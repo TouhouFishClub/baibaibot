@@ -3,7 +3,7 @@ var http = require('http');
 var timer = 0;
 var path = require('path');
 
-//const market = require(path.join(__dirname, '/coin/market.js'))
+const market = require(path.join(__dirname, '/coin/market.js'))
 function pushTask(){
   var left = 1800000 - new Date().getTime()%1800000;
   console.log('left:'+left);
@@ -87,7 +87,7 @@ function pushToGroup(type){
     if(now.getMinutes()>25&&now.getMinutes()<35){
       getPrice(callback);
     }else{
-      getPrice(callback);
+      market(callback);
     }
     setTimeout(function(){
       getBitFlyer(callback);
