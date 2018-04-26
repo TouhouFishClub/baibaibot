@@ -488,7 +488,7 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
             if(un!=-1){
               decrease = parseInt(next.substring(un+1));
               next=next.substring(0,1);
-              rate = Math.log(decrease)/32+0.345;
+              rate = Math.log(decrease)/16+0.18;
             }
             if(decrease>0&&data.gold>decrease){
               var ret = "消耗了"+decrease+"金钱";
