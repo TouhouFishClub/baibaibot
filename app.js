@@ -14,7 +14,7 @@ const callback = function(res){
   }
 }
 
-app.get('restart',function(reqq,ress){
+app.get('/restart',function(reqq,ress){
   var options = {
     hostname: "192.168.17.52",
     port: 23334,
