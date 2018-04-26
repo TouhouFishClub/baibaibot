@@ -334,7 +334,9 @@ function getCoinMarket(callback,withproxy, isInterface = false){
               ret.push({
                 type: symbol,
                 usd: price_usd.toFixed(2),
-                cny: price_cny.toFixed(2)
+                cny: price_cny.toFixed(2),
+                c1h: pd.percent_change_1h,
+                c1d: pd.percent_change_24h
               })
             } else {
               ret = ret + symbol + ":$"+price_usd.toFixed(2)+"   \t￥"+price_cny.toFixed(2)+"\n";
