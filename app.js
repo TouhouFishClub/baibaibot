@@ -14,7 +14,7 @@ const callback = function(res){
   }
 }
 
-app.get('restart',function(){
+app.get('restart',function(reqq,ress){
   var options = {
     hostname: "192.168.17.52",
     port: 23334,
@@ -43,6 +43,7 @@ app.get('restart',function(){
             },5000);
           },5000);
         },5000);
+        ress.send('ok');
       });
       res.on('error',function(){
 
