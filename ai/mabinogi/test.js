@@ -1,6 +1,6 @@
 const os = require('./optionset')
 const app = require('express')()
-os('aaa', '持久', 'image', c => {console.log(c)})
+os('aaa', '猎狮', 'image', c => {console.log(c)})
 const https = require('https')
 const querystring =  require('querystring')
 
