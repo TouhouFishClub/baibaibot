@@ -1,6 +1,7 @@
 var https=require('https');
 var http = require('http');
 var timer = 0;
+var path = require('path');
 
 const market = require(path.join(__dirname, '/coin/market.js'))
 function pushTask(){
