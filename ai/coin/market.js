@@ -100,7 +100,8 @@ module.exports = function(callback){
     renderText(ctx, data.map(val => val.type), 20, 20, 25)
     renderText(ctx, data.map(val => `$${val.usd}`), 20, 40 + typeMaxWidth, 25)
     renderText(ctx, data.map(val => `￥${val.cny}`), 20, 60 + typeMaxWidth + usdMaxWidth, 25)
-    renderText(ctx, data.map(val => ` ${val.c1h}%`), 20, 80 + typeMaxWidth + usdMaxWidth + cnyMaxWidth, 25,colorArr)
+    renderText(ctx, data.map(val => " "+(parseFloat(val.c1h)>0?"+":"")+`${val.c1h}%`),
+      20, 80 + typeMaxWidth + usdMaxWidth + cnyMaxWidth, 25,colorArr)
     //renderText(ctx, data.map(val => ` ${val.c1d}%`), 20, 100 + typeMaxWidth + usdMaxWidth + cnyMaxWidth + c1dMaxWidth, 25)
 
 
@@ -109,19 +110,21 @@ module.exports = function(callback){
     let dataBuffer = new Buffer(base64Data, 'base64')
 
 
-    sendImageMsgBuffer(dataBuffer, 'coin_'+new Date().getTime(), 'coin', msg => {
-      callback(msg)
-    })
+    if(true){
+      sendImageMsgBuffer(dataBuffer, 'coin_'+new Date().getTime(), 'coin', msg => {
+        callback(msg)
+      })
+    }else{
+      fs.writeFile(path.join(__dirname, '../../test/image.png'), dataBuffer, function(err) {
+        if(err){
+          console.log(err)
+        }else{
+          console.log("保存成功！");
+        }
+      });
+    }
 
-/*
-    fs.writeFile(path.join(__dirname, '../../test/image.png'), dataBuffer, function(err) {
-      if(err){
-        console.log(err)
-      }else{
-        console.log("保存成功！");
-      }
-    });
-    */
+
   }, false, true)
 
 
