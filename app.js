@@ -19,7 +19,7 @@ app.get('/restart',function(reqq,ress){
   var options = {
     hostname: "192.168.17.52",
     port: 23334,
-    path: '/set_restart_plugin',
+    path: '/set_restart',
     headers: {
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
