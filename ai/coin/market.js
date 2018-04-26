@@ -109,7 +109,7 @@ module.exports = function(callback){
     let dataBuffer = new Buffer(base64Data, 'base64')
 
 
-    sendImageMsgBuffer(dataBuffer, 'coin'+new Date().toLocaleString(), 'coin', msg => {
+    sendImageMsgBuffer(dataBuffer, 'coin_'+new Date().getTime(), 'coin', msg => {
       callback(msg)
     })
 
