@@ -54,7 +54,6 @@ const MAX_WIDTH=350;
 
 module.exports = function(callback){
   getCoinMarket(data => {
-    console.log(data)
     let canvasTmp = new Canvas(400, 2000)
       , ctxTmp = canvasTmp.getContext('2d');
     let fontFamily = 'STXIHEI'
