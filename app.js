@@ -15,10 +15,11 @@ const callback = function(res){
 }
 
 app.get('/restart',function(reqq,ress){
+  console.log(11111);
   var options = {
     hostname: "192.168.17.52",
     port: 23334,
-    path: '',
+    path: '/set_restart_plugin',
     headers: {
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
