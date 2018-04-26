@@ -490,9 +490,9 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
               next=next.substring(0,1);
               rate = Math.log(decrease)/32+0.345;
             }
-            if(decrease>0&&data.gold>200){
-              var ret = "消耗了200金钱";
-              data.gold=data.gold-200;
+            if(decrease>0&&data.gold>decrease){
+              var ret = "消耗了"+decrease+"金钱";
+              data.gold=data.gold-decrease;
               if(next==1){
                 if(Math.random()<rate){
                   data.atk=data.atk+1;
