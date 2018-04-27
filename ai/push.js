@@ -85,7 +85,7 @@ function pushToGroup(type){
     }
     var now = new Date();
     if(now.getMinutes()>25&&now.getMinutes()<35){
-      getPrice(callback);
+      market(callback);
     }else{
       market(callback);
     }

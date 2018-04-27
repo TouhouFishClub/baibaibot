@@ -1,6 +1,7 @@
 var https=require('https');
 var http = require('http');
 const tulingApiKey = "9cca8707060f4432800730b2ddfb029b";
+const {getVoice} = require('../ai/voice/xunfei')
 
 var limit = {};
 
@@ -40,6 +41,9 @@ function tulingMsg(userid,content,callback,groupid){
 
     res.on('end', function () {
       var ret = handleTulingResponse(resdata);
+      getVoice(ret,function(u){
+        console.log(u);
+      })
       callback(ret);
     });
   });
@@ -48,7 +52,6 @@ function tulingMsg(userid,content,callback,groupid){
     console.log(err);
   });
   req.write(JSON.stringify(body));
-  console.log(body);
   req.end();
 }
 var dup=0;

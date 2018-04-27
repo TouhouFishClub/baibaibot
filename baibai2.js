@@ -44,6 +44,7 @@ const {drawNameCard,getCard} = require('./ai/games/card/draw');
 
 const op = require('./ai/mabinogi/optionset')
 const {googleImageSearch} = require('./ai/image/google');
+const {getVoice} = require('./ai/voice/xunfei')
 
 
 loadShip();
