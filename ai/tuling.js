@@ -42,7 +42,7 @@ function tulingMsg(userid,content,callback,groupid){
     res.on('end', function () {
       var ret = handleTulingResponse(resdata);
       getVoice(ret,function(u){
-        console.log(u);
+        callback('[CQ:record,file=send/'+u+']');
       })
       callback(ret);
     });

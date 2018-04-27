@@ -64,7 +64,6 @@ function getVoice(text,callback){
 
   var req = request.post(optionreq).pipe(fs.createWriteStream(path.join(RECORD_DATA,filename)));
   req.on('close',function(){
-    console.log(123123);
     callback(filename);
   })
   req.on('error',function(err){
