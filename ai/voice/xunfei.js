@@ -60,19 +60,19 @@ function getVoice(text,callback){
 
   var filename = now.getTime()+".mp3";
 
-  var req = request.post(optionreq);
 
 
-  req.pipe(fs.createWriteStream(path.join(RECORD_DATA,filename)));
+  var req = request.post(optionreq).pipe(fs.createWriteStream(path.join(RECORD_DATA,filename)));
+  req.on('close',function(){
+    console.log(123123);
+    callback(filename);
+  })
   req.on('error',function(err){
     console.log(err);
     console.log(img);
     callback("");
   })
-  req.on('close',function(){
-    console.log(123123);
-    callback(filename);
-  })
+
   req.write(body);
   req.end();
 }
