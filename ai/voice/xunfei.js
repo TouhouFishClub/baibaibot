@@ -4,6 +4,10 @@ var fs=require('fs');
 var request = require("request");
 const {RECORD_DATA} = require('../../baibaiConfigs');
 var path = require('path');
+
+const WxVoice = require('wx-voice');
+var voice = new WxVoice();
+
 function getVoice(text,callback){
 
   var headjson = {
@@ -12,7 +16,7 @@ function getVoice(text,callback){
     "voice_name": "xiaoyan",
     "speed": "50",
     "volume": "50",
-    "pitch": "100",
+    "pitch": "50",
     "engine_type": "intp65",
     "text_type": "text"
   }
@@ -56,14 +60,18 @@ function getVoice(text,callback){
 
   var body = "text="+encodeURIComponent(text);
 
-  console.log(options);
+  console.log(optionreq);
 
   var filename = now.getTime()+".mp3";
 
 
 
-  var req = request.post(optionreq).pipe(fs.createWriteStream(path.join(RECORD_DATA,filename)));
+  var req = request.post(optionreq).pipe(fs.createWriteStream(filename));
   req.on('close',function(){
+    voice.encode(
+      filename, "oooooooo.silk", { format: "silk" },
+      (file) => console.log(file));
+
     callback(filename);
   })
   req.on('error',function(err){
