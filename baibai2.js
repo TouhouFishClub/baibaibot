@@ -128,6 +128,7 @@ function handleMsg_D(msgObj,response){
       content=content.replace(/&#44;/g,',');
     }
   }
+  console.log(msgObj);
   if(type=='private'){
     var userid = msgObj.user_id;
     if(userid=='357474405'||userid=='3004768431'){
