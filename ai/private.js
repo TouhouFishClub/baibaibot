@@ -13,6 +13,7 @@ function handlePrivateMsg(msgObj){
     callbackid=3004768431;
     last = userid;
   }
+  console.log("privrecv:"+userid+":"+content);
   var callback = function(res){
     if(res.trim().length>0){
       setTimeout(function(){
@@ -25,7 +26,7 @@ function handlePrivateMsg(msgObj){
 
           }
         };
-        console.log("priv:"+userid+":"+content+":"+res);
+        console.log("privsend:"+callbackid+":"+res);
         var req = http.request(options);
         req.on('error', function(err) {
           console.log('req err:');
