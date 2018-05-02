@@ -40,7 +40,7 @@ module.exports = function(callback){
 
   let eweca = (e_hour >= 17 || e_hour < 6)
 
-  for(let i = 0; i < 31; i++){
+  for(let i = 0; i < 5; i++){
 
     aaa = chDay(date, i - (e_hour < 6))
     min = Math.floor(aaa + mg_time) % 60
