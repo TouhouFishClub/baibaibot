@@ -32,6 +32,7 @@ function initToken(){
 }
 
 function baiduVoice(text,callback){
+  console.log("will voice:"+text);
   if(text.endsWith("。")){
     text=text.substring(0,text.length-2);
   }
