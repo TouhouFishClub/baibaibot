@@ -41,7 +41,7 @@ function baiduVoice(text,callback){
   }
   var now = new Date();
   var filename = 'static/'+now.getTime()+".mp3";
-  var req = request.post(optionreq).pipe(fs.createWriteStream("1.mp3"));
+  var req = request.post(optionreq).pipe(fs.createWriteStream(filename));
   req.on('close',function(){
     console.log('finish voice:'+filename)
     voice.encode(
