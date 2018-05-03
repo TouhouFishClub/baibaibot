@@ -41,7 +41,7 @@ function tulingMsg(userid,content,callback,groupid){
 
     res.on('end', function () {
       var ret = handleTulingResponse(resdata);
-      if(Math.random()<0.3){
+      if(Math.random()<0.5){
         baiduVoice(ret,callback);
       }else{
         callback(ret);
