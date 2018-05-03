@@ -144,7 +144,7 @@ function handleMsg_D(msgObj,response){
               var options = {
                 host: '192.168.17.52',
                 port: 23334,
-                path: '/send_group_msg?group_id='+gid+'&message='+encodeURIComponent(text),
+                path: '/send_group_msg?group_id='+gid+'&message='+encodeURIComponent(res),
                 method: 'GET',
                 headers: {
 
