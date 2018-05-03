@@ -360,7 +360,7 @@ function draw2df(qq,username,callback){
       var voice = undefined;
       var daa = dr.split('\n');
       for(var i=0;i<daa.length;i++){
-        var txt = daa[daa.length-i-1];
+        var txt = daa[daa.length-i-1].trim();
         if(txt.startsWith("「")&&txt.endsWith("」")){
           voice=txt.substring(1,txt.length-1);
           break;
