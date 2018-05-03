@@ -362,7 +362,7 @@ function draw2df(qq,username,callback){
       for(var i=0;i<daa.length;i++){
         var txt = daa[daa.length-i-1];
         if(txt.startsWith("「")&&txt.endsWith("」")){
-          voice=txt.substring(1,txt.length-2);
+          voice=txt.substring(1,txt.length-1);
           break;
         }
       }
