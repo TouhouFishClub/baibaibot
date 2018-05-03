@@ -33,15 +33,6 @@ function initToken(){
 
 function baiduVoice(text,callback){
 
-  if(text.endsWith("。")){
-    text=text.substring(0,text.length-1);
-  }
-  var rd = Math.random();
-  if(rd<0.2){
-    text=text+"喵";
-  }else if(rd<0.4){
-    text=text+"嘤";
-  }
   console.log("will voice:"+text);
   var path = '/text2audio?lan=zh&ctp=1&cuid=abcdxxx&tok='+access_token+'&vol=6&per=4&spd=5&pit=7&tex='+encodeURIComponent(text);
 
