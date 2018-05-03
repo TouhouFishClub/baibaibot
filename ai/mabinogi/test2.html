@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  window.onload = function(){
+
+    var adjust_value = -53; //驍坻錛宮镩丟壯??貳
+    var adjust_value2 = Math.floor(adjust_value * 1.5); //壯??燎峁坻(?氐?場)
+
+    var date = new Date();
+
+    date.setUTCHours(date.getUTCHours() + 8);
+
+    var second_source = Math.floor((date.getTime() % 2160000) / 1500) + adjust_value;
+    var ETHours   = Math.floor(second_source / 60);
+    var ETMinutes = Math.floor(second_source % 60);
+
+    console.log('ErinnTime： ' + dsp(ETHours) + ':' + dsp(ETMinutes))
+
+
+    var now = new Date();
+    console.log('WorldTime:' + dsp(now.getHours()) + ':' + dsp(now.getMinutes()))
+
+    var hour = now.getHours();
+    var min = now.getMinutes();
+    var week = now.getDay() + 1;
+    var aa;
+    var priceNo;
+    var buff;
+    var i;
+    var ptext;
+
+
+
+    var rua = '0010001000010010110111000000010100100010001';
+    var mg_count = 43; //鄶蟯
+    var mg_rag  = 10;   //奣彝
+    var mg_time = 17 * 1.5; //縫窗?濾
+    var e_hour = Math.floor(second_source / 60) % 24; //壯???濾
+    var e_min   = Math.floor(second_source % 60);
+
+
+    var eweca = (e_hour >= 17 || e_hour < 6); //謀蹺?濾
+
+    for(i=0; i<31; i++){
+
+      aaa = chDay(date, i - (e_hour < 6));
+      min = Math.floor(aaa + mg_time) % 60;
+      hour = Math.floor((aaa + mg_time) / 60) % 24;
+      mgNo = (Math.floor(aaa / 36) + mg_rag) % mg_count;
+
+      //鳧彅?濾櫻鈺
+      w_sec = Math.floor((aaa + mg_time + (eweca ? 13 * 1.5:0)) * 60);	//鍐狀?濾
+      n_sec = Math.floor((date.getTime()) / 1000) + adjust_value2;		//驅?濾
+
+      buff = `${dsp(hour)}:${dsp(min)}   ${rua.substr(mgNo,1) == 1 ? '上班' : '休息'}   ${(i==0 ? `${eweca ? '酒馆营业中，距离关店还有' : '酒馆准备中，距离开店还有'}${(parseInt((w_sec - n_sec) / 60)%60)}分${dsp((w_sec - n_sec)%60) + '秒'}`:'')}`
+
+      console.log(buff)
+    }
+
+    function chDay(date, next)
+    {
+      return (Math.floor(((date.getTime() + adjust_value2 * 1000) / (1000 * 60)) / 36) + next) * 36;
+    }
+    function dsp(value)
+    {
+      return (value < 10 ? '0' + value : value);
+    }
+  }
+
+</script>
+</body>
+</html>

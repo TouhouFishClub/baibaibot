@@ -47,6 +47,7 @@ const {googleImageSearch} = require('./ai/image/google');
 const {getVoice} = require('./ai/voice/xunfei')
 
 const {handlePrivateMsg} = require('./ai/private');
+const rua = require('./ai/mabinogi/ruawork')
 
 loadShip();
 loadItem();
@@ -246,6 +247,12 @@ function handleMsg_D(msgObj,response){
     op(name, con.substring(4).trim(), 'normal', callback);
     return;
   }
+
+  if(con === 'ruawork' || (con.indexOf('茹娅') + 1 && con.indexOf('上班') + 1)){
+    rua(callback)
+    return
+  }
+
   let fie = con.substring(0,3)
   if(fie == 'opt' && fi != 'opts'){
     op(name, con.substring(3).trim(), 'image', callback);
