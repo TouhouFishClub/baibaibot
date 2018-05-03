@@ -44,7 +44,6 @@ function baiduVoice(text,callback){
 
   var now = new Date();
   var filename = 'static/'+now.getTime()+".mp3";
-  var req = request.post(optionreq).pipe(fs.createWriteStream(filename));
   var req = request({
     url: 'https://tsn.baidu.com'+path,
     method: "GET"
