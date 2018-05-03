@@ -365,7 +365,6 @@ function draw2df(qq,username,callback){
           voice=txt.substring(1,txt.length-1);
           break;
         }
-
       }
       if(voice){
         baiduVoice(voice,callback);

@@ -41,6 +41,9 @@ function tulingMsg(userid,content,callback,groupid){
 
     res.on('end', function () {
       var ret = handleTulingResponse(resdata);
+      if(ret.indexOf('TFboys')>0){
+        ret = content;
+      }
       if(Math.random()<0.5){
         baiduVoice(ret,callback);
       }else{
