@@ -40,15 +40,21 @@ function baiduVoice(text,callback){
   }
 
   var path = '/text2audio?lan=zh&ctp=1&cuid=abcdxxx&tok='+access_token+'&vol=6&per=5&spd=5&pit=7&tex='+encodeURIComponent(text);
-  var optionreq = {
-    url: 'https://tsn.baidu.com'+path,
-    headers: {
 
-    }
-  }
   var now = new Date();
   var filename = 'static/'+now.getTime()+".mp3";
   var req = request.post(optionreq).pipe(fs.createWriteStream(filename));
+  var req = request({
+    url: 'https://tsn.baidu.com'+path,
+    method: "GET"
+  }, function(error, response, body){
+    if(error&&error.code){
+      console.log('bd voice pipe error catched!')
+      console.log(error);
+      callback(text);
+      return;
+    }
+  }).pipe(fs.createWriteStream(filename));
   req.on('close',function(){
     console.log('finish voice:'+filename)
     voice.encode(
