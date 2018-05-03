@@ -361,10 +361,11 @@ function draw2df(qq,username,callback){
       var daa = dr.split('\n');
       for(var i=0;i<daa.length;i++){
         var txt = daa[daa.length-i-1].trim();
-        if(txt.startsWith("「")&&txt.endsWith("」")){
+        if((txt.startsWith("「")||txt.startsWith("『"))&&(txt.endsWith("」")||txt.endsWith("』"))){
           voice=txt.substring(1,txt.length-1);
           break;
         }
+
       }
       if(voice){
         baiduVoice(voice,callback);
