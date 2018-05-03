@@ -32,14 +32,14 @@ function initToken(){
 }
 
 function baiduVoice(text,callback){
-  console.log("will voice:"+text);
+
   if(text.endsWith("。")){
     text=text.substring(0,text.length-2);
   }
   if(Math.random()<0.4){
     text=text+"喵";
   }
-
+  console.log("will voice:"+text);
   var path = '/text2audio?lan=zh&ctp=1&cuid=abcdxxx&tok='+access_token+'&vol=6&per=5&spd=5&pit=7&tex='+encodeURIComponent(text);
 
   var now = new Date();
