@@ -32,7 +32,7 @@ function initToken(){
 }
 
 function baiduVoice(text,callback){
-  var path = '/text2audio?lan=zh&ctp=1&cuid=abcdxxx&tok='+access_token+'&vol=6&per=5&spd=6&pit=8&tex='+encodeURIComponent(text);
+  var path = '/text2audio?lan=zh&ctp=1&cuid=abcdxxx&tok='+access_token+'&vol=6&per=5&spd=5&pit=7&tex='+encodeURIComponent(text+"喵");
   var optionreq = {
     url: 'https://tsn.baidu.com'+path,
     headers: {
