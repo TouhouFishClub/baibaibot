@@ -40,7 +40,7 @@ function baiduVoice(text,callback){
     text=text+"喵";
   }
   console.log("will voice:"+text);
-  var path = '/text2audio?lan=zh&ctp=1&cuid=abcdxxx&tok='+access_token+'&vol=6&per=5&spd=5&pit=7&tex='+encodeURIComponent(text);
+  var path = '/text2audio?lan=zh&ctp=1&cuid=abcdxxx&tok='+access_token+'&vol=6&per=4&spd=5&pit=7&tex='+encodeURIComponent(text);
 
   var now = new Date();
   var filename = 'static/'+now.getTime()+".mp3";
