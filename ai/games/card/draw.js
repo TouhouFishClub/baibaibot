@@ -8,6 +8,7 @@ var gm = require('gm')
 var request = require("request");
 var imageMagick = gm.subClass({ imageMagick : true });
 var {sendGmImage} = require('../../../cq/sendImage');
+const {baiduVoice} = require('../../voice/baiduvoice');
 
 function drawNameCard(username,qq,callback,groupid){
   var now = new Date().getTime();
@@ -355,6 +356,18 @@ function draw2df(qq,username,callback){
             dr=dr+"\n"+da[i];
           }
         }
+      }
+      var voice = undefined;
+      var daa = dr.split('\n');
+      for(var i=0;i<daa.length;i++){
+        var txt = daa[daa.length-i-1];
+        if(txt.startsWith("「")&&txt.endsWith("」")){
+          voice=txt.substring(1,txt.length-2);
+          break;
+        }
+      }
+      if(voice){
+        baiduVoice(voice,callback);
       }
       saveCard(qq,name);
       if(img&&dr){
