@@ -58,30 +58,44 @@ function getVoice(text,callback){
     }
   }
 
-  var body = "text="+encodeURIComponent(text);
+  var body = "text="+encodeURIComponent("芙兰笨蛋");
 
-  console.log(optionreq);
+  console.log(options);
 
-  var filename = now.getTime()+".mp3";
+  var filename = now.getTime()+"";
 
 
+  var req = http.request(options, function(res) {
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+    res.on('end', function () {
+      console.log(resdata);
+    });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
 
-  var req = request.post(optionreq).pipe(fs.createWriteStream(filename));
-  req.on('close',function(){
+
+  var req2 = request.post(optionreq).pipe(fs.createWriteStream(filename));
+  req2.on('close',function(){
     voice.encode(
       filename, "oooooooo.silk", { format: "silk" },
       (file) => console.log(file));
-
     callback(filename);
   })
-  req.on('error',function(err){
+  req2.on('error',function(err){
     console.log(err);
     console.log(img);
     callback("");
   })
 
-  req.write(body);
-  req.end();
+  req2.write(body);
+  req2.end();
 }
 
 
