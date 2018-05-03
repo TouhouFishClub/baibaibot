@@ -41,8 +41,11 @@ function tulingMsg(userid,content,callback,groupid){
 
     res.on('end', function () {
       var ret = handleTulingResponse(resdata);
-      baiduVoice(ret,callback);
-      callback(ret);
+      if(Math.random()<0.3){
+        baiduVoice(ret,callback);
+      }else{
+        callback(ret);
+      }
     });
   });
   req.on('error', function(err) {
