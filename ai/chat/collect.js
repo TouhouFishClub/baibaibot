@@ -11,6 +11,23 @@ function saveChat(gid,uid,name,content){
   });
 }
 
+function getChat(gid,ts,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_chat = db.collection('cl_chat');
+    var query = {gid:parseInt(gid)};
+    if(parseInt(ts)>0){
+      query._id={'$lt':new Date(parseInt(ts))};
+    }
+    console.log(query);
+    cl_chat.find(query).limit(200).toArray(function(err,arr){
+      callback(arr);
+    })
+  });
+}
+
+
+
 module.exports={
-  saveChat
+  saveChat,
+  getChat
 }
