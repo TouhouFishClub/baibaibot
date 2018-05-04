@@ -49,7 +49,7 @@ const {getVoice} = require('./ai/voice/xunfei')
 const {handlePrivateMsg} = require('./ai/private');
 const rua = require('./ai/mabinogi/ruawork')
 const {baiduVoice} = require('./ai/voice/baiduvoice')
-
+const {saveChat} = require('./ai/chat/collect');
 
 loadShip();
 loadItem();
@@ -202,7 +202,7 @@ function handleMsg_D(msgObj,response){
     name = nickname;
   }
   var groupName = getGroupName(groupid);
-  var hassend = false
+  saveChat(groupid,from,name,content);
   var callback = function(res,blank){
     if(res.trim().length>0){
       setTimeout(function(){
