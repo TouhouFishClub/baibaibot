@@ -1,7 +1,7 @@
 var https=require('https');
 var http = require('http');
 const tulingApiKey = "9cca8707060f4432800730b2ddfb029b";
-const {getVoice} = require('../ai/voice/xunfei')
+const {baiduVoice} = require('../ai/voice/baiduvoice')
 
 var limit = {};
 
@@ -41,7 +41,14 @@ function tulingMsg(userid,content,callback,groupid){
 
     res.on('end', function () {
       var ret = handleTulingResponse(resdata);
-      callback(ret);
+      if(ret.indexOf('TFboys')>0){
+        ret = content;
+      }
+      if(Math.random()<0.5){
+        baiduVoice(ret,callback);
+      }else{
+        callback(ret);
+      }
     });
   });
   req.on('error', function(err) {

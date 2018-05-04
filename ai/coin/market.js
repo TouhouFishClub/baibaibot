@@ -53,75 +53,78 @@ const MAX_WIDTH=350;
 
 module.exports = function(callback){
   getCoinMarket(data => {
-    let canvasTmp = new Canvas(400, 2000)
-      , ctxTmp = canvasTmp.getContext('2d');
-    let fontFamily = 'STXIHEI'
-    ctxTmp.font = `20px ${fontFamily}`;
-    /* 预处理币种，美元，人民币 */
-    let typeMaxWidth = 0, usdMaxWidth = 0, cnyMaxWidth = 0 ,c1hMaxWidth=0,c1dMaxWidth=0
-    data.forEach(val => {
-      if(ctxTmp.measureText(val.type).width > typeMaxWidth){
-        typeMaxWidth = ctxTmp.measureText(val.type).width
-      }
-      if(ctxTmp.measureText(val.usd).width > usdMaxWidth){
-        usdMaxWidth = ctxTmp.measureText(`$ ${val.usd}`).width
-      }
-      if(ctxTmp.measureText(val.cny).width > cnyMaxWidth){
-        cnyMaxWidth = ctxTmp.measureText(`￥ ${val.cny}`).width
-      }
-      if(ctxTmp.measureText(val.c1h).width > c1hMaxWidth){
-        c1hMaxWidth = ctxTmp.measureText(`￥ ${val.c1h}`).width
-      }
-      if(ctxTmp.measureText(val.c1d).width > c1dMaxWidth){
-        c1dMaxWidth = ctxTmp.measureText(`￥ ${val.c1d}`).width
-      }
-
-    })
-    let canvasWidth = typeMaxWidth + usdMaxWidth + cnyMaxWidth + c1hMaxWidth + 120
-    console.log(canvasWidth)
-    let cavasHeight = data.length * 25 + 80
-
-    let canvas = new Canvas(canvasWidth, cavasHeight)
-      , ctx = canvas.getContext('2d')
-
-    ctx.font = `20px ${fontFamily}`
-    ctx.fillStyle = 'rgba(0,0,20,0.9)'
-    ctx.fillRect(0, 0, canvasWidth, cavasHeight)
-
-    ctx.fillStyle = 'rgba(255,255,255,1)'
-    ctx.strokeStyle = 'rgba(0,0,0,0.5)'
-
-    var colorArr = data.map(val => parseFloat(val.c1h)>0?'red':'aqua');
-
-
-    renderTextBox(ctx, 15, 20, canvasWidth-30, cavasHeight-50, 10, new Date().toLocaleString()+"(CoinMarket)")
-    renderText(ctx, data.map(val => val.type), 20, 20, 25)
-    renderText(ctx, data.map(val => `$${val.usd}`), 20, 40 + typeMaxWidth, 25)
-    renderText(ctx, data.map(val => `￥${val.cny}`), 20, 60 + typeMaxWidth + usdMaxWidth, 25)
-    renderText(ctx, data.map(val => " "+(parseFloat(val.c1h)>0?"+":"")+`${val.c1h}%`),
-      20, 80 + typeMaxWidth + usdMaxWidth + cnyMaxWidth, 25,colorArr)
-    //renderText(ctx, data.map(val => ` ${val.c1d}%`), 20, 100 + typeMaxWidth + usdMaxWidth + cnyMaxWidth + c1dMaxWidth, 25)
-
-
-    let imgData = canvas.toDataURL()
-    let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
-    let dataBuffer = new Buffer(base64Data, 'base64')
-
-
-    if(true){
-      sendImageMsgBuffer(dataBuffer, 'coin_'+new Date().getTime(), 'coin', msg => {
-        callback(msg)
-      })
+    if(data.length==0){
+      callback('coinmarket BOOM!')
     }else{
-      fs.writeFile(path.join(__dirname, '../../test/image.png'), dataBuffer, function(err) {
-        if(err){
-          console.log(err)
-        }else{
-          console.log("保存成功！");
+      let canvasTmp = new Canvas(400, 2000)
+        , ctxTmp = canvasTmp.getContext('2d');
+      let fontFamily = 'STXIHEI'
+      ctxTmp.font = `20px ${fontFamily}`;
+      /* 预处理币种，美元，人民币 */
+      let typeMaxWidth = 0, usdMaxWidth = 0, cnyMaxWidth = 0 ,c1hMaxWidth=0,c1dMaxWidth=0
+      data.forEach(val => {
+        if(ctxTmp.measureText(val.type).width > typeMaxWidth){
+          typeMaxWidth = ctxTmp.measureText(val.type).width
         }
-      });
-    }
+        if(ctxTmp.measureText(val.usd).width > usdMaxWidth){
+          usdMaxWidth = ctxTmp.measureText(`$ ${val.usd}`).width
+        }
+        if(ctxTmp.measureText(val.cny).width > cnyMaxWidth){
+          cnyMaxWidth = ctxTmp.measureText(`￥ ${val.cny}`).width
+        }
+        if(ctxTmp.measureText(val.c1h).width > c1hMaxWidth){
+          c1hMaxWidth = ctxTmp.measureText(`￥ ${val.c1h}`).width
+        }
+        if(ctxTmp.measureText(val.c1d).width > c1dMaxWidth){
+          c1dMaxWidth = ctxTmp.measureText(`￥ ${val.c1d}`).width
+        }
 
+      })
+      let canvasWidth = typeMaxWidth + usdMaxWidth + cnyMaxWidth + c1hMaxWidth + 120
+      console.log(canvasWidth)
+      let cavasHeight = data.length * 25 + 80
+
+      let canvas = new Canvas(canvasWidth, cavasHeight)
+        , ctx = canvas.getContext('2d')
+
+      ctx.font = `20px ${fontFamily}`
+      ctx.fillStyle = 'rgba(0,0,20,0.9)'
+      ctx.fillRect(0, 0, canvasWidth, cavasHeight)
+
+      ctx.fillStyle = 'rgba(255,255,255,1)'
+      ctx.strokeStyle = 'rgba(0,0,0,0.5)'
+
+      var colorArr = data.map(val => parseFloat(val.c1h)>0?'red':'aqua');
+
+
+      renderTextBox(ctx, 15, 20, canvasWidth-30, cavasHeight-50, 10, new Date().toLocaleString()+"(CoinMarket)")
+      renderText(ctx, data.map(val => val.type), 20, 20, 25)
+      renderText(ctx, data.map(val => `$${val.usd}`), 20, 40 + typeMaxWidth, 25)
+      renderText(ctx, data.map(val => `￥${val.cny}`), 20, 60 + typeMaxWidth + usdMaxWidth, 25)
+      renderText(ctx, data.map(val => " "+(parseFloat(val.c1h)>0?"+":"")+`${val.c1h}%`),
+        20, 80 + typeMaxWidth + usdMaxWidth + cnyMaxWidth, 25,colorArr)
+      //renderText(ctx, data.map(val => ` ${val.c1d}%`), 20, 100 + typeMaxWidth + usdMaxWidth + cnyMaxWidth + c1dMaxWidth, 25)
+
+
+      let imgData = canvas.toDataURL()
+      let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
+      let dataBuffer = new Buffer(base64Data, 'base64')
+
+
+      if(true){
+        sendImageMsgBuffer(dataBuffer, 'coin_'+new Date().getTime(), 'coin', msg => {
+          callback(msg)
+        })
+      }else{
+        fs.writeFile(path.join(__dirname, '../../test/image.png'), dataBuffer, function(err) {
+          if(err){
+            console.log(err)
+          }else{
+            console.log("保存成功！");
+          }
+        });
+      }
+    }
 
   }, false, true)
 
@@ -209,9 +212,13 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     console.log(err);
     failed = failed + 1;
     if(failed>2){
-      callback('CoinMarket BOOM!');
+      if(isInterface){
+        callback([])
+      }else{
+        callback('CoinMarket BOOM!');
+      }
     }else{
-      getCoinMarket(callback,true);
+      getCoinMarket(callback,true,isInterface);
     }
   });
   req.setTimeout(5000,function(){
@@ -219,7 +226,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     if(failed>2){
       callback('CoinMarket BOOM!');
     }else{
-      getCoinMarket(callback,true);
+      getCoinMarket(callback,true,isInterface);
     }
   });
   req.end();

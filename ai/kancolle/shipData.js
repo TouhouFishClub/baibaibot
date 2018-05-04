@@ -265,7 +265,7 @@ function updateShipDB(){
     },
     method: 'GET'
   };
-  https.request(options, function (res) {
+  var req = https.request(options, function (res) {
     res.setEncoding('utf8');
     var resdata = '';
     res.on('data', function (chunk) {
@@ -274,7 +274,12 @@ function updateShipDB(){
     res.on('end', function () {
       saveDB(resdata,'ship');
     });
-  }).end();
+  })
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
 }
 
 function saveDB(resstr,type){
@@ -327,7 +332,7 @@ function updateItemDB(){
     },
     method: 'GET'
   };
-  https.request(options, function (res) {
+  var req=https.request(options, function (res) {
     res.setEncoding('utf8');
     var resdata = '';
     res.on('data', function (chunk) {
@@ -336,7 +341,12 @@ function updateItemDB(){
     res.on('end', function () {
       saveDB(resdata,'item');
     });
-  }).end();
+  })
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
 }
 
 function updateSuffixDB(){
@@ -349,7 +359,7 @@ function updateSuffixDB(){
     },
     method: 'GET'
   };
-  https.request(options, function (res) {
+  var req=https.request(options, function (res) {
     res.setEncoding('utf8');
     var resdata = '';
     res.on('data', function (chunk) {
@@ -358,7 +368,12 @@ function updateSuffixDB(){
     res.on('end', function () {
       saveDB(resdata,'suffix');
     });
-  }).end();
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
 }
 
 
