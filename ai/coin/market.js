@@ -53,7 +53,6 @@ const MAX_WIDTH=350;
 
 module.exports = function(callback){
   getCoinMarket(data => {
-    console.log(data);
     if(data.length==0){
       callback('coinmarket BOOM!')
     }else{
@@ -219,7 +218,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
         callback('CoinMarket BOOM!');
       }
     }else{
-      getCoinMarket(callback,true);
+      getCoinMarket(callback,true,isInterface);
     }
   });
   req.setTimeout(5000,function(){
@@ -227,7 +226,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     if(failed>2){
       callback('CoinMarket BOOM!');
     }else{
-      getCoinMarket(callback,true);
+      getCoinMarket(callback,true,isInterface);
     }
   });
   req.end();
