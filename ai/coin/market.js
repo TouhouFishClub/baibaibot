@@ -53,6 +53,7 @@ const MAX_WIDTH=350;
 
 module.exports = function(callback){
   getCoinMarket(data => {
+    console.log(data);
     if(data.length==0){
       callback('coinmarket BOOM!')
     }else{
