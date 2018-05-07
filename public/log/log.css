@@ -38,6 +38,18 @@
 	display: inline-block;
 	word-break: break-all;
 	border-radius: 10px;
+	position: relative;
+}
+.msg-text:after {
+	content: '';
+	height: 0;
+	width: 0;
+	border: 6px solid #f0f0f0;
+	border-bottom-color: transparent;
+	border-left-color: transparent;
+	position: absolute;
+	left: -12px;
+	top: 10px;
 }
 .mark {
 	height: 0;
