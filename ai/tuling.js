@@ -112,7 +112,7 @@ function saveLike(qq,add,callback){
       }else{
         var old = data.d;
         var newlike = old+add;
-        var newlv = Math.floor(Math.sqrt(newlike+10)-3);
+        var newlv = Math.floor(Math.sqrt(newlike+10)-2);
         data.d=newlike;
         data.ts=now;
         var cbret = 0;
