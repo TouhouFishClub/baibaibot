@@ -1,0 +1,46 @@
+.main-container{
+	margin-top: 20px;
+}
+.message-container {
+	height: 600px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	margin-top: 20px;
+	padding: 20px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+.message-item {
+	margin-bottom: 20px;
+	padding-left: 90px;
+	position: relative;
+	min-height: 70px;
+}
+.user-avator {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+}
+.user-avator image {
+	width: 70px;
+}
+.msg-time {
+	color: #afafaf;
+	font-size: 14px;
+}
+.msg-text {
+	margin-top: 10px;
+	padding: 10px;
+	background: #f0f0f0;
+	display: inline-block;
+	word-break: break-all;
+	border-radius: 10px;
+}
+.mark {
+	height: 0;
+	padding: 1px;
+	background: transparent;
+}

@@ -1,9 +1,18 @@
-var express = require('express');
-var app = express();
-var http = require('http');
-const {handleMsg,reconnect} = require('./baibai2');
+const express = require('express')
+const app = express();
+const http = require('http')
+const fs = require('fs')
+const path = require('path')
+// const {handleMsg,reconnect} = require('./baibai2');
 const {getChat} = require('./ai/chat/collect');
-app.listen('10086')
+app.listen('10086', () => {
+  console.log('server started')
+  console.log('http://localhost:10086')
+})
+
+/* set public path */
+app.use(express.static('public'))
+
 const callback = function(res){
   if(res.trim().length>0){
     setTimeout(function(){
@@ -26,5 +35,7 @@ app.get('/chathistory',function(req,res){
   getChat(gid,ts,callback);
 });
 
-
+app.get('/log', (req, res) => {
+  res.send(fs.readFileSync(path.join('log', 'index.html', 'utf-8')))
+})
 

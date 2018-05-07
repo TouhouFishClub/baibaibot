@@ -18,17 +18,17 @@
     "body-parser": "",
     "canvas": "^1.6.10",
     "express": "",
+    "fs-extra": "^4.0.1",
     "gm": "^1.23.1",
     "https-proxy-agent": "",
+    "lodash": "^4.17.4",
     "mongodb": "^2.2.30",
+    "path-extra": "^4.2.0",
     "twitter": "",
     "websocket": "",
+    "wx-voice": "^0.2.1",
     "xml2js": "^0.4.19",
     "xml2json": "^0.11.2"
   },
-  "devDependencies": {
-    "fs-extra": "^4.0.1",
-    "lodash": "^4.17.4",
-    "path-extra": "^4.2.0"
-  }
+  "devDependencies": {}
 }
