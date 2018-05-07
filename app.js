@@ -21,6 +21,7 @@ app.get('/chathistory',function(req,res){
   var ts = querydata.ts;
   var callback=function(r){
     var ret = {d:r}
+    res.set("Access-Control-Allow-Origin", "*");
     res.send(JSON.stringify(ret));
   }
   getChat(gid,ts,callback);
