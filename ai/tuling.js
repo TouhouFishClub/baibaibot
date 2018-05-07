@@ -52,14 +52,16 @@ function tulingMsg(userid,content,callback,groupid){
       nlp.sentiment(ret, function (data) {
         var dd = eval('('+data+')');
         console.log(dd);
-        var positive = dd[0][0];
-        var negative = dd[0][1];
-        var addrate = positive-negative;
-        saveLike(userid,addrate,function(likeret){
-          if(likeret>1){
-            callback('百百对您的好感度上升到了'+likeret+',输入【好感度】可查看好感度');
-          }
-        })
+        if(dd&&dd[0]&&dd[0][0]){
+          var positive = dd[0][0];
+          var negative = dd[0][1];
+          var addrate = positive-negative;
+          saveLike(userid,addrate,function(likeret){
+            if(likeret>1){
+              callback('百百对您的好感度上升到了'+likeret+',输入【好感度】可查看好感度');
+            }
+          })
+        }
       });
       if(Math.random()<0.5){
         baiduVoice(ret,callback);
