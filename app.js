@@ -3,7 +3,7 @@ const app = express();
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
-// const {handleMsg,reconnect} = require('./baibai2');
+const {handleMsg,reconnect} = require('./baibai2');
 const {getChat} = require('./ai/chat/collect');
 app.listen('10086', () => {
   console.log('server started')
