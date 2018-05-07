@@ -49,8 +49,9 @@ function tulingMsg(userid,content,callback,groupid){
         ret = content;
       }
       nlp.sentiment(ret, function (data) {
-        var positive = data[0];
-        var negative = data[1];
+        console.log(data);
+        var positive = data[0][0];
+        var negative = data[0][1];
         var addrate = positive-negative;
 
         if(groupid=='205700800'){
