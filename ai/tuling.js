@@ -2,7 +2,8 @@ var https=require('https');
 var http = require('http');
 const tulingApiKey = "9cca8707060f4432800730b2ddfb029b";
 const {baiduVoice} = require('../ai/voice/baiduvoice')
-
+var MongoClient = require('mongodb').MongoClient;
+var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var limit = {};
 
 var bosonnlp = require('bosonnlp');
