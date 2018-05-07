@@ -25,6 +25,7 @@
     "nodejieba": "^2.2.6",
     "twitter": "",
     "websocket": "",
+    "bosonnlp":"",
     "xml2js": "^0.4.19",
     "xml2json": "^0.11.2"
   },
