@@ -5,6 +5,10 @@ const {baiduVoice} = require('../ai/voice/baiduvoice')
 
 var limit = {};
 
+var bosonnlp = require('bosonnlp');
+var nlp = new bosonnlp.BosonNLP('A6Dvxzs0.25388.G_wPyy4DDLw-');
+
+
 
 function tulingMsg(userid,content,callback,groupid){
   var then=limit[groupid];
@@ -44,6 +48,15 @@ function tulingMsg(userid,content,callback,groupid){
       if(ret.indexOf('TFboys')>0){
         ret = content;
       }
+      nlp.sentiment(ret, function (data) {
+        var positive = data[0];
+        var negative = data[1];
+        var addrate = positive-negative;
+
+        if(groupid=='205700800'){
+          callback(userid+':百百好感度'+(addrate>0?"+":"")+addrate)
+        }
+      });
       if(Math.random()<0.5){
         baiduVoice(ret,callback);
       }else{
