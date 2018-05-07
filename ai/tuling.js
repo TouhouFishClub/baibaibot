@@ -57,7 +57,7 @@ function tulingMsg(userid,content,callback,groupid){
         var addrate = positive-negative;
         saveLike(userid,addrate,function(likeret){
           if(likeret>1){
-            callback('百百对您的好感度上升到了'+likeret+'点,输入【好感】可查看好感度');
+            callback('百百对您的好感度上升到了'+likeret+',输入【好感度】可查看好感度');
           }
         })
       });
