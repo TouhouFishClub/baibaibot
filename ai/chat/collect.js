@@ -19,7 +19,7 @@ function getChat(gid,ts,callback){
       query._id={'$lt':new Date(parseInt(ts))};
     }
     console.log(query);
-    cl_chat.find(query).limit(200).toArray(function(err,arr){
+    cl_chat.find(query).limit(20).toArray(function(err,arr){
       callback(arr);
     })
   });
