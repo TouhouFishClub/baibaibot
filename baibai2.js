@@ -11,7 +11,7 @@ const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
 const {weatherReply,getWeatherByCity} = require('./ai/weather');
-const {tulingMsg} = require('./ai/tuling');
+const {tulingMsg,getLike} = require('./ai/tuling');
 const {translateMsg}=require('./ai/translate');
 const {money} = require('./ai/money');
 const {getloc,route} = require('./ai/map');
@@ -283,6 +283,10 @@ function handleMsg_D(msgObj,response){
   let fie = con.substring(0,3)
   if(fie == 'opt' && fi != 'opts'){
     op(name, con.substring(3).trim(), 'image', callback);
+    return;
+  }
+  if(rcontent=='好感度'){
+    getLike(from,name,callback);
     return;
   }
 

@@ -54,10 +54,11 @@ function tulingMsg(userid,content,callback,groupid){
         var positive = dd[0][0];
         var negative = dd[0][1];
         var addrate = positive-negative;
-
-        if(groupid=='205700800'){
-          callback(userid+':百百好感度'+(addrate>0?"+":"")+addrate.toFixed(4))
-        }
+        saveLike(userid,addrate,function(likeret){
+          if(likeret==1){
+            callback('百百对您的好感度上升到了'+likeret+'点,输入【好感】可查看好感度');
+          }
+        })
       });
       if(Math.random()<0.5){
         baiduVoice(ret,callback);
@@ -93,6 +94,60 @@ function handleTulingResponse(resdata){
 
 }
 
+
+
+
+var mem={};
+
+function saveLike(qq,add,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_like = db.collection('cl_like');
+    var query = {'_id':qq};
+    var now = new Date();
+    cl_like.findOne(query, function(err, data) {
+      if(!data){
+        cl_like.save({'_id':qq,d:add,lv:1,ts:now})
+        callback(0);
+      }else{
+        var old = data.d;
+        var newlike = old+add;
+        var newlv = Math.floor(Math.sqrt(newlike+10)-3);
+        data.d=newlike;
+        data.ts=now;
+        var cbret = 0;
+        if(newlv-data.lv==1){
+          data.lv=newlv;
+          cbret = newlv;
+        }
+        cl_like.save(data);
+        callback(cbret);
+      }
+    });
+  });
+}
+
+function getLike(qq,name,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_like = db.collection('cl_like');
+    var query = {'_id':qq};
+    var now = new Date();
+    cl_like.findOne(query, function(err, data) {
+      if(!data){
+        callback('百百对【'+name+'】'+'的好感度为0');
+      }else{
+        callback('百百对【'+name+'】'+'的好感度为'+data.lv);
+      }
+    });
+  });
+}
+
+
+
+
+
+
+
 module.exports={
-  tulingMsg
+  tulingMsg,
+  getLike
 }
