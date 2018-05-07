@@ -54,7 +54,7 @@ function tulingMsg(userid,content,callback,groupid){
         var addrate = positive-negative;
 
         if(groupid=='205700800'){
-          callback(userid+':百百好感度'+(addrate>0?"+":"")+addrate)
+          callback(userid+':百百好感度'+(addrate>0?"+":"")+addrate.toFixed(4))
         }
       });
       if(Math.random()<0.5){
