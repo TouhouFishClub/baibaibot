@@ -34,9 +34,9 @@ class groupLog {
       msgItem.append(`<img class="user-avator" src="http://q1.qlogo.cn/g?b=qq&nk=${item.uid}&s=100">`)
       msgItem.append(`<div class="message-info"><span class="user-nick">${item.n}</span>&nbsp;&nbsp;&nbsp;<span class="msg-time">${this.formatTime(item.ts)}</span></div>`)
       if(item.d.indexOf('[CQ:') < 0){
-        msgItem.append(`<div class="msg-text">${item.d}</div>`)
+        msgItem.append(`<div class="msg-text">${item.d.replace(/\n/g, '<br>')}</div>`)
       } else {
-        msgItem.append(this.renderMediaMessage(item.d))
+        msgItem.append(this.renderMediaMessage(item.d.replace(/\n/g, '<br>')))
       }
       msgBlock.append(msgItem)
     })
