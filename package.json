@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "",
     "body-parser": "",
+    "bosonnlp": "",
     "canvas": "^1.6.10",
     "express": "",
     "fs-extra": "^4.0.1",
@@ -24,6 +25,7 @@
     "lodash": "^4.17.4",
     "mongodb": "^2.2.30",
     "path-extra": "^4.2.0",
+    "nodejieba": "^2.2.6",
     "twitter": "",
     "websocket": "",
     "wx-voice": "^0.2.1",

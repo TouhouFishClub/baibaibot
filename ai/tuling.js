@@ -2,8 +2,13 @@ var https=require('https');
 var http = require('http');
 const tulingApiKey = "9cca8707060f4432800730b2ddfb029b";
 const {baiduVoice} = require('../ai/voice/baiduvoice')
-
+var MongoClient = require('mongodb').MongoClient;
+var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var limit = {};
+
+var bosonnlp = require('bosonnlp');
+var nlp = new bosonnlp.BosonNLP('A6Dvxzs0.25388.G_wPyy4DDLw-');
+
 
 
 function tulingMsg(userid,content,callback,groupid){
@@ -44,6 +49,20 @@ function tulingMsg(userid,content,callback,groupid){
       if(ret.indexOf('TFboys')>0){
         ret = content;
       }
+      nlp.sentiment(ret, function (data) {
+        var dd = eval('('+data+')');
+        console.log(dd);
+        if(dd&&dd[0]&&dd[0][0]){
+          var positive = dd[0][0];
+          var negative = dd[0][1];
+          var addrate = positive-negative;
+          saveLike(userid,addrate,function(likeret){
+            if(likeret>1){
+              callback('百百对您的好感度上升到了'+likeret+',输入【好感度】可查看好感度');
+            }
+          })
+        }
+      });
       if(Math.random()<0.5){
         baiduVoice(ret,callback);
       }else{
@@ -78,6 +97,60 @@ function handleTulingResponse(resdata){
 
 }
 
+
+
+
+var mem={};
+
+function saveLike(qq,add,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_like = db.collection('cl_like');
+    var query = {'_id':qq};
+    var now = new Date();
+    cl_like.findOne(query, function(err, data) {
+      if(!data){
+        cl_like.save({'_id':qq,d:add,lv:1,ts:now})
+        callback(0);
+      }else{
+        var old = data.d;
+        var newlike = old+add;
+        var newlv = Math.floor(Math.sqrt(newlike+10)-2);
+        data.d=newlike;
+        data.ts=now;
+        var cbret = 0;
+        if(newlv-data.lv==1){
+          data.lv=newlv;
+          cbret = newlv;
+        }
+        cl_like.save(data);
+        callback(cbret);
+      }
+    });
+  });
+}
+
+function getLike(qq,name,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_like = db.collection('cl_like');
+    var query = {'_id':qq};
+    var now = new Date();
+    cl_like.findOne(query, function(err, data) {
+      if(!data){
+        callback('百百对【'+name+'】'+'的好感度为0');
+      }else{
+        callback('百百对【'+name+'】'+'的好感度为'+data.lv);
+      }
+    });
+  });
+}
+
+
+
+
+
+
+
 module.exports={
-  tulingMsg
+  tulingMsg,
+  getLike
 }
