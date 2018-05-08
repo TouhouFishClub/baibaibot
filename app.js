@@ -5,6 +5,9 @@ const fs = require('fs')
 const path = require('path')
 const {handleMsg,reconnect} = require('./baibai2');
 const {getChat} = require('./ai/chat/collect');
+var request = require("request");
+
+
 app.listen('10086', () => {
   console.log('server started')
   console.log('http://localhost:10086')
@@ -34,6 +37,20 @@ app.get('/chathistory',function(req,res){
     res.send(JSON.stringify(ret));
   }
   getChat(gid,ts,callback);
+});
+
+app.get('/image',function(req,res){
+  var querydata = req.query;
+  var url = querydata.url;
+  request({
+    url: url,
+    method: "GET"
+  }, function(error, response, body){
+    if(error&&error.code){
+      console.log('pipe error catched!')
+      console.log(error);
+    }
+  }).pipe(res);
 });
 
 app.get('/log', (req, res) => {
