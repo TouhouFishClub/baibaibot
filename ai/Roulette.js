@@ -126,6 +126,9 @@ module.exports = function(nickname, content, callback,qq,groupid){
     || content === 'kill' || content === '作弊' || content === '作弊' || content === '犯規' || content === '犯规')
     && rouletteObj.now === nickname){
     clearTimeout(rouletteTimer)
+    if(qq === '85105498' && qq === '799018865'){
+      killGamer(3)
+    }
     switch(content){
       case '开枪' :
       case '开火' :
@@ -286,6 +289,10 @@ module.exports = function(nickname, content, callback,qq,groupid){
               rouletteObj.callback(`砰的一声，【${rouletteObj.now}】倒在了血泊中。\n${ret}`)
               break
           }
+          break
+        case 3:
+          banUser(rouletteObj.now)
+          rouletteObj.callback(`【${rouletteObj.now}】不知道怎么回事突然死了。\n${ret}`)
           break
       }
       checkAliveGamer();
