@@ -6,12 +6,12 @@ class groupLog {
   }
   init(){
     this.container.empty()
-    this.lazyLoad = false
+    this.lazyLoad = true
     this.getGroupData(this.timestamp)
     /* 添加渐进加载 */
     this.container.scroll(() => {
       // console.log(`scroll:${this.container.scrollTop()}   mark:${this.mark.position().top}`)
-      if(this.container.scrollTop() < 3 && !this.lazyLoad){
+      if(this.container.scrollTop() == 0 && !this.lazyLoad){
         this.lazyLoad = true
         this.getGroupData(this.lastTimestamp)
       }
