@@ -21,8 +21,8 @@ class groupLog {
     console.log('=== get data ===')
     this.mark = $('<div class="mark"></div>')
     this.container.prepend(this.mark)
-    const HOST = ''
-    $.getJSON(`${HOST}/chathistory?gid=${this.groupId}&ts=${timestamp}`, data => {
+    this.HOST = ''
+    $.getJSON(`${this.HOST}/chathistory?gid=${this.groupId}&ts=${timestamp}`, data => {
       this.lastTimestamp = data.d[data.d.length - 1].ts
       this.renderMessage(data.d)
     })
@@ -57,7 +57,7 @@ class groupLog {
         console.log(CQtype)
         switch(CQtype.substring(0, CQtype.indexOf(','))){
           case 'image':
-            msgText.append(`<img src="${CQtype.substring(CQtype.indexOf('url=') + 4)}" class="msg-image">`)
+            msgText.append(`<img src="${this.HOST}/image?url=${CQtype.substring(CQtype.indexOf('url=') + 4)}" class="msg-image">`)
             break
         }
         msgText.append(`<span>${normalMsg}</span>`)

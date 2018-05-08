@@ -51,6 +51,9 @@
 	left: -12px;
 	top: 10px;
 }
+.msg-image {
+	max-width: 100%;
+}
 .mark {
 	height: 0;
 	padding: 1px;
