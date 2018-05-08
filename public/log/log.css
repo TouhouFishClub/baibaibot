@@ -6,13 +6,13 @@
 	border: 1px solid #ddd;
 	border-radius: 5px;
 	margin-top: 20px;
-	padding: 20px;
+	padding: 20px 10px;
 	overflow-x: hidden;
 	overflow-y: scroll;
 }
 .message-item {
 	margin-bottom: 20px;
-	padding-left: 90px;
+	padding-left: 55px;
 	position: relative;
 	min-height: 70px;
 }
@@ -20,16 +20,19 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 70px;
-	height: 70px;
+	width: 40px;
+	height: 40px;
 	border-radius: 50%;
 }
 .user-avator image {
-	width: 70px;
+	width: 40px;
+}
+.message-info {
+	font-size: 14px;
 }
 .msg-time {
 	color: #afafaf;
-	font-size: 14px;
+	font-size: 12px;
 }
 .msg-text {
 	margin-top: 10px;
