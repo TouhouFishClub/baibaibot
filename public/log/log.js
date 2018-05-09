@@ -54,7 +54,6 @@ class groupLog {
         let fi = ele.indexOf(']')
         let CQtype = ele.substring(0, fi)
         let normalMsg = ele.substring(fi + 1)
-        console.log(CQtype)
         switch(CQtype.substring(0, CQtype.indexOf(','))){
           case 'image':
             msgText.append(`<img src="${this.HOST}/image?url=${CQtype.substring(CQtype.indexOf('url=') + 4)}" class="msg-image">`)
@@ -65,8 +64,6 @@ class groupLog {
     })
     return msgText
   }
-
-
   formatTime(timestamp) {
     let time = new Date(timestamp)
     return `${time.getFullYear()}-${this.addZero(time.getMonth() + 1)}-${this.addZero(time.getDate())} ${this.addZero(time.getHours())}:${this.addZero(time.getMinutes())}:${this.addZero(time.getSeconds())}`
@@ -81,7 +78,6 @@ class groupLog {
 }
 
 $(document).ready(function(){
-  console.log('=== init Dom ===')
   let msgCont = $('.message-container'), form = $('.same-from'), groupId = $('#inputGroupId'), inputTimestamp = $('#inputTimestamp'),
     btn = $('.btn', form), logIns
   btn.on('click', () => {
