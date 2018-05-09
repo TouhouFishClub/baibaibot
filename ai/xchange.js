@@ -10,7 +10,7 @@ const path = require('path')
 const Axios = require('axios')
 const _  = require('lodash')
 const {getPrice,getBitFlyer} = require('./push');
-const market = require(path.join(__dirname, '/coin/market.js'))
+const {cm,combine} = require(path.join(__dirname, '/coin/market.js'))
 const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
 const TIME_OUT = 30000
 
@@ -31,7 +31,11 @@ module.exports = function(userId, content, callback){
       break
     case 'p':
     case 'P':
-      market(callback);
+      cm(callback);
+      break
+    case 'a':
+    case 'A':
+      combine(callback);
       break
     case '币种':
       let str = Object.keys(currencyCodeObj).join('、'), callbackArr = ['支持的币种']
