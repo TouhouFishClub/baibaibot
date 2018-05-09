@@ -60,10 +60,10 @@ var cm=function(callback){
 function combine(callback){
   getCoinMarket(function(data1){
     getHT(function(data2){
-      console.log(data1);
-      console.log(data2);
-      var data = data1.concat(data2);
-      drawImg(data,callback);
+      getOKB(function(data3){
+        var data = data1.concat(data2).concat(data3);
+        drawImg(data,callback);
+      })
     })
   },false,true)
 }
@@ -238,7 +238,67 @@ function getHT(callback){
 }
 
 
-
+function getOKB(callback){
+  console.log('will get okb');
+  var options = {
+    hostname: "www.okex.com",
+    port: 443,
+    path: '/api/v1/kline.do?symbol=okb_usdt&type=1hour&size=1',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+    },
+    method: 'GET'
+  };
+  options.agent=agent;
+  var req = https.request(options, function(res) {
+    res.setEncoding('utf8');
+    var code = res.statusCode;
+    if(code==200){
+      failed=0;
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        try{
+          var ret=[];
+          var data = eval('('+resdata+')');
+          var d0=data[0][0];
+          var open=d0[1];
+          var close=d0[4];
+          var sub = (close-open)/open;
+          ret.push({
+            type: "OKB",
+            usd: close.toFixed(2),
+            cny: (close*USDCNYRATE).toFixed(2),
+            c1h: (sub*100).toFixed(2),
+            c1d: (sub*100).toFixed(2)
+          })
+          callback(ret);
+        }catch(e){
+          console.log(e);
+          callback([]);
+        }
+      });
+    }else{
+      failed = failed + 1;
+      if(failed>2){
+        callback([]);
+      }else{
+        getOKB(callback);
+      }
+    }
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+    callback([]);
+  });
+  req.setTimeout(5000,function(){
+    callback([]);
+  });
+  req.end();
+}
 
 
 
