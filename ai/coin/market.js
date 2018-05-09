@@ -231,9 +231,6 @@ function getHT(callback){
     console.log(err);
     callback([]);
   });
-  req.setTimeout(5000,function(){
-    callback([]);
-  });
   req.end();
 }
 
@@ -293,9 +290,6 @@ function getOKB(callback){
   req.on('error', function(err) {
     console.log('req err:');
     console.log(err);
-    callback([]);
-  });
-  req.setTimeout(5000,function(){
     callback([]);
   });
   req.end();
