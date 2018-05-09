@@ -208,8 +208,8 @@ function getHT(callback){
             type: "HT",
             usd: close.toFixed(2),
             cny: (close*USDCNYRATE).toFixed(2),
-            c1h: sub*100,
-            c1d: sub*100
+            c1h: (sub*100).toFixed(2),
+            c1d: (sub*100).toFixed(2)
           })
           callback(ret);
         }catch(e){
