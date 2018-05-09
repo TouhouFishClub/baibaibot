@@ -138,7 +138,9 @@ function getLike(qq,name,callback){
       if(!data){
         callback('百百对【'+name+'】'+'的好感度为0');
       }else{
-        callback('百百对【'+name+'】'+'的好感度为'+data.lv);
+        var d=data.d;
+        var exp = Math.floor(data.d*10) + "/" + (data.lv+2)*(data.lv+2)-10;
+        callback('百百对【'+name+'】'+'的好感度为'+data.lv+'('+exp+')');
       }
     });
   });

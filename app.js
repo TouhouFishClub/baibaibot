@@ -57,3 +57,7 @@ app.get('/log', (req, res) => {
   res.send(fs.readFileSync(path.join('log', 'index.html', 'utf-8')))
 })
 
+app.get('/config',function(req,res){
+  res.send('{"host":"flanb.msharebox.com"}')
+});
+
