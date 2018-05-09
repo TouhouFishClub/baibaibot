@@ -126,9 +126,9 @@ module.exports = function(nickname, content, callback,qq,groupid){
     || content === 'kill' || content === '作弊' || content === '作弊' || content === '犯規' || content === '犯规')
     && rouletteObj.now === nickname){
     clearTimeout(rouletteTimer)
-    if(qq === 85105498 || qq === 799018865){
-      killGamer(3)
-    }
+    // if(qq === 85105498 || qq === 799018865){
+    //   killGamer(3)
+    // }
     switch(content){
       case '开枪' :
       case '开火' :
