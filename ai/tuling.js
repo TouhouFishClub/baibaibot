@@ -129,6 +129,8 @@ function saveLike(qq,add,callback){
   });
 }
 
+
+var mem={};
 function getLike(qq,name,callback){
   MongoClient.connect(mongourl, function(err, db) {
     var cl_like = db.collection('cl_like');
@@ -138,9 +140,18 @@ function getLike(qq,name,callback){
       if(!data){
         callback('百百对【'+name+'】'+'的好感度为0');
       }else{
-        var d=data.d;
-        var exp = Math.floor(data.d*10) + "/" + Math.floor(((data.lv+3)*(data.lv+3)-10)*10);
-        callback('百百对【'+name+'】'+'的好感度为'+data.lv+'('+exp+')');
+        var exp = '('+Math.floor(data.d*10) + "/" + Math.floor(((data.lv+3)*(data.lv+3)-10)*10)+')';
+        if(!mem[qq]){
+          mem[qq]=now.getTime();
+          callback('百百对【'+name+'】'+'的好感度为'+data.lv+exp);
+        }else{
+          if(now.getTime()-mem[qq]>3600000){
+            mem[qq]=now.getTime();
+            callback('百百对【'+name+'】'+'的好感度为'+data.lv+exp);
+          }else{
+            callback('百百对【'+name+'】'+'的好感度为'+data.lv);
+          }
+        }
       }
     });
   });
