@@ -263,13 +263,14 @@ function getOKB(callback){
         try{
           var ret=[];
           var data = eval('('+resdata+')');
+          console.log(data);
           var d0=data[0][0];
           var open=d0[1];
           var close=d0[4];
           var sub = (close-open)/open;
           ret.push({
             type: "OKB",
-            usd: close.toFixed(2),
+            usd: parseFloat(close).toFixed(2),
             cny: (close*USDCNYRATE).toFixed(2),
             c1h: (sub*100).toFixed(2),
             c1d: (sub*100).toFixed(2)
