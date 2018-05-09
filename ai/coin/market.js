@@ -60,6 +60,8 @@ var cm=function(callback){
 function combine(callback){
   getCoinMarket(function(data1){
     getHT(function(data2){
+      console.log(data1);
+      console.log(data2);
       var data = data1.concat(data2);
       drawImg(data,callback);
     })
@@ -196,6 +198,7 @@ function getHT(callback){
       });
       res.on('end', function () {
         try{
+          var ret=[];
           var data = eval('('+resdata+')');
           var d0=data.data[0];
           var open=d0.open;
@@ -210,6 +213,7 @@ function getHT(callback){
           })
           callback(ret);
         }catch(e){
+          console.log(e);
           callback([]);
         }
       });
