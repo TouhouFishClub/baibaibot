@@ -183,17 +183,18 @@ function mt(x){
     }
   }
   var r="";
+  console.log(arr)
   for(var i=0;i<arr.length;i++){
     var px = arr[arr.length-i-1];
     if(i==0){
       r=r+px;
     }else{
       if(px<10){
-        r=r+"000"+px;
-      }else if(px<100){
         r=r+"00"+px;
-      }else if(px<1000){
+      }else if(px<100){
         r=r+"0"+px;
+      }else if(px<1000){
+        r=r+""+px;
       }else{
         r=r+px;
       }
