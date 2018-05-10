@@ -17,7 +17,7 @@ let plus = false;
 let skiprate = {};
 let namecache = {};
 const {banUserInGroup} = require('../cq/cache');
-module.exports = function(nickname, content, callback,qq,groupid){
+module.exports = function(nickname, content, callback, qq, groupid){
   // console.log('=== in game ===')
   /* roulette system */
   if(content === '俄罗斯轮盘' || content === '俄羅斯輪盤'||content === '俄罗斯轮盘改' || content === '俄羅斯輪盤改'){
@@ -32,6 +32,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
       namecache = {};
       rouletteObj.gameStart = true
       rouletteObj.gamers = []
+      rouletteObj.nick2qq = {}
       rouletteTimer = setTimeout(() => {checkRouletteGammers()}, 60000)
       rouletteObj.callback=callback
       callback('生死有命，富贵在天！\n俄罗斯轮盘将在 60 秒后开始。\n参加：加入/参加/join\n退出：退出/quit/escape/逃跑\n开枪：开枪/开火/fire\n跳过：跳过/skip/pass\n击杀下一人：kill/作弊/犯规')
@@ -60,6 +61,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
          }
 
         if(can){
+          rouletteObj.nick2qq[nickname] = qq
           if (rouletteObj.gamers[nickname]) {
             rouletteObj.callback(`【${nickname}】已经坐上赌桌`)
           } else {
@@ -265,7 +267,7 @@ module.exports = function(nickname, content, callback,qq,groupid){
   getNextGamer = () => {
     rouletteObj.now = rouletteObj.gamersArr.shift()
     rouletteObj.next = rouletteObj.gamersArr[0]
-    rouletteObj.callback(`下一个【${rouletteObj.now}】`)
+    rouletteObj.callback(`下一个【[CQ:at,qq=${rouletteObj.nick2qq[rouletteObj.now]}]】`)
     rouletteTimer = setTimeout(() => {killGamer(1)}, 15000)
   }
 
