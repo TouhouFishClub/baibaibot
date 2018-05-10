@@ -124,6 +124,20 @@ cal = function(str){
     if(can&&willcal){
       try{
         var ret = eval(z);
+        var xstr = ret+"";
+        if(xstr.indexOf(".")>0&&xstr.length>10){
+          var u=ret.toFixed(15);
+          var usub = Math.abs(u-ret);
+          if(usub<Math.exp(-15)&&usub>0){
+            for(var i=1;i<15;i++){
+              var sub=Math.abs(ret.toFixed(i)-ret);
+              if(sub<Math.exp(-15)){
+                ret=ret.toFixed(i);
+                break;
+              }
+            }
+          }
+        }
         return ret;
       }catch(e){
         console.log(e);
