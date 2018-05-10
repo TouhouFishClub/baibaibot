@@ -161,7 +161,7 @@ cal = function(str){
 
 function mt(x){
   var arr=[1];
-  var n=200
+  var n=1000
   if(x>n){
     return "∞"
   }
