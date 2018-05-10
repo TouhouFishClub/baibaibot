@@ -183,7 +183,6 @@ function mt(x){
     }
   }
   var r="";
-  console.log(arr)
   for(var i=0;i<arr.length;i++){
     var px = arr[arr.length-i-1];
     if(i==0){
