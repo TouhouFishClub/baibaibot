@@ -7,6 +7,18 @@ cal = function(str){
       return undefined;
     }
   }
+  if(str.indexOf("!")>0||str.indexOf("！")>0){
+    var n=str.indexOf("!");
+    if(n<0){
+      n=str.indexOf("！");
+    }
+    var num = str.substring(0,n);
+    if(parseInt(num)==num){
+      return mt(num);
+    }else{
+      return undefined;
+    }
+  }
   str = str.toLowerCase().trim();
   if(str.length==3&&str[1]=="-"){
     return undefined;
@@ -144,6 +156,50 @@ cal = function(str){
       }
     }
   }
+}
+
+
+function mt(x){
+  var arr=[1];
+  var n=200
+  if(x>n){
+    return "∞"
+  }
+  for(var i=1;i<=x;i++){
+    for(var j=0;j<arr.length;j++){
+      arr[j]=arr[j]*i;
+    }
+    for(var j=0;j<arr.length;j++){
+      if(arr[j]>n){
+
+        var u = Math.floor(arr[j]/n);
+        arr[j]=arr[j]%n;
+        if(arr[j+1]){
+          arr[j+1]=arr[j+1]+u
+        }else{
+          arr[j+1]=u;
+        }
+      }
+    }
+  }
+  var r="";
+  for(var i=0;i<arr.length;i++){
+    var px = arr[arr.length-i-1];
+    if(i==0){
+      r=r+px;
+    }else{
+      if(px<10){
+        r=r+"000"+px;
+      }else if(px<100){
+        r=r+"00"+px;
+      }else if(px<1000){
+        r=r+"0"+px;
+      }else{
+        r=r+px;
+      }
+    }
+  }
+  return r;
 }
 
 
