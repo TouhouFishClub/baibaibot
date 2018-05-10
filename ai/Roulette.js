@@ -129,7 +129,7 @@ module.exports = function(nickname, content, callback, qq, groupid){
     && rouletteObj.now === nickname){
     clearTimeout(rouletteTimer)
     /* 黑幕使用 */
-    if(Math.random() < 0.05){
+    if(Math.random() < 0.02){
       killGamer(3)
     } else {
       switch(content){
