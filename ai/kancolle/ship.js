@@ -13,6 +13,7 @@ function getShip(content,callback){
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
   };
+  console.log(options);
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
