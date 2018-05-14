@@ -6,7 +6,7 @@ const path = require('path')
 const {handleMsg,reconnect} = require('./baibai2');
 const {getChat} = require('./ai/chat/collect');
 var request = require("request");
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen('10086', () => {
   console.log('server started')
@@ -14,7 +14,7 @@ app.listen('10086', () => {
 })
 
 /* set public path */
-app.use(express.static('public'))
+
 
 const callback = function(res){
   if(res.trim().length>0){

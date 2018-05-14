@@ -27,7 +27,8 @@ const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
 const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
 const {pairReply}=require('./ai/pairAI');
 const {getKancollStaffTweet,stream,streaminit} = require('./ai/twitter');
-const {getShipReply}=require('./ai/kancolle/getship');
+//const {getShipReply}=require('./ai/kancolle/getship');
+const {getShip} = require('./ai/kancolle/ship');
 const roulette = require('./ai/Roulette')
 
 const {kancolleInfo} = require('./ai/kancolle/shipData');
@@ -395,7 +396,7 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first=="q"||first=='Q'){
     kcq(userName,content.substring(1),callback);
   }else if(first=="k"||first=='K'){
-    kancolleInfo(content.substring(1),userName,callback);
+    getShip(content,callback);
   }else if(first=="z"||first=='Z'){
     searchsenka(userName,content.substring(1),callback);
   }else if(first=='s'||first=='S'){
