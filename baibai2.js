@@ -396,7 +396,7 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first=="q"||first=='Q'){
     kcq(userName,content.substring(1),callback);
   }else if(first=="k"||first=='K'){
-    getShip(content,callback);
+    getShip(content.substring(1),callback);
   }else if(first=="z"||first=='Z'){
     searchsenka(userName,content.substring(1),callback);
   }else if(first=='s'||first=='S'){
