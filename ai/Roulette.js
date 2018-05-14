@@ -129,7 +129,7 @@ module.exports = function(nickname, content, callback, qq, groupid){
     && rouletteObj.now === nickname){
     clearTimeout(rouletteTimer)
     /* 黑幕使用 */
-    if(Math.random() < 0.05){
+    if(Math.random() < 0.02){
       killGamer(3)
     } else {
       switch(content){
@@ -206,8 +206,8 @@ module.exports = function(nickname, content, callback, qq, groupid){
         /* 下一个人掏出自己的枪 */
         banUser(rouletteObj.now);
         saveDeath(rouletteObj.now, 1, function(ret) {
-
           rouletteObj.callback(`【${rouletteObj.now}】把枪瞄向了【${rouletteObj.next}】，可是手速没【${rouletteObj.next}】快，【${rouletteObj.next}】掏出自己的枪崩了【${rouletteObj.now}】说：破坏规则的人就是这个下场！\n${ret}`)
+          rouletteObj.gameActionCount = rouletteObj.gameActionCount - 1
         })
       } else {
         /* 抢枪 */
