@@ -7,7 +7,7 @@ function getShip(content,callback){
   var options = {
     host: 'zh.moegirl.org',
     port: 443,
-    path: '/%E8%88%B0%E9%98%9FCollection:%E5%90%B9%E9%9B%AA',
+    path: '/%E8%88%B0%E9%98%9FCollection:'+encodeURIComponent(content),
     method: 'GET',
     headers: {
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
