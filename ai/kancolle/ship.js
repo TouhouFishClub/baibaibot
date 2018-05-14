@@ -79,7 +79,7 @@ let getPic = async ( path,tag ,callback) => {
     //销毁实例
     await instance.exit();
 
-    callback('[CQ:image,file=send/'+now.getTime()+'.png]');
+    callback('[CQ:image,file=send/ship/'+now.getTime()+'.png]');
   }
 };
 
