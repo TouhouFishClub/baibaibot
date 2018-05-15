@@ -360,7 +360,7 @@ function handleMsg_D(msgObj,response){
     tulingMsg(from,content.trim(),callback,groupid);
     return;
   }
-  answer(content,name,groupName,callback);
+  answer(content,name,groupName,callback,groupid,from);
   if(nickname.indexOf('百百')==-1){
     replayReply(content,name,groupid,callback);
   }
@@ -476,7 +476,8 @@ const replyBySwitch = (content, userName, callback) => {
 
 module.exports={
   handleMsg,
-  reconnect
+  reconnect,
+  reply
 }
 
 
