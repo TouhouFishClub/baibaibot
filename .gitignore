@@ -9,3 +9,5 @@ static/*.png
 static
 package-lock.json
 test/
+public/fh
+public/bangumi
