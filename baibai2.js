@@ -440,12 +440,13 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
 
 
 
-
+const test1='123123'
 
 module.exports={
   handleMsg,
   reconnect,
-  reply
+  reply,
+  test1
 }
 
 
