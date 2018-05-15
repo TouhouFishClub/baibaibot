@@ -304,15 +304,6 @@ function handleMsg_D(msgObj,response){
     }
     return;
   }
-  if(rcontent=='天气'){
-    if(msg.user){
-      var city = msg.user.city;
-      if(city.length>0&&city.length<5){
-        getWeatherByCity(city,name,callback);
-      }
-    }
-    return;
-  }
 
   var n = content.indexOf('天气');
   if(n>1&&n<10&&rcontent.length==n+2){
