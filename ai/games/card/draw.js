@@ -465,7 +465,7 @@ let getPic = async ( path,username ,callback) => {
   const status = await page.open( url);
   if(status=='success'){
     const bb = await page.evaluate(function () {
-      return document.getElementById('div').getBoundingClientRect();
+      return document.getElementById('aaaa').getBoundingClientRect();
     });
     //page.clipRect = { top: 0, left: 0, width: 1024, height: 768 };
     await page.property('clipRect', {
