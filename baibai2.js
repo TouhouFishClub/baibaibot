@@ -429,40 +429,6 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }
 }
 
-const replyBySwitch = (content, userName, callback) => {
-  switch(content.substring(0, 1)){
-    case '`':
-    case '·':
-    case 'ˋ':
-    case "'":
-    case "‘":
-    case "，":
-      tulingMsg(userName,content.substring(1),callback);
-      break;
-    case 0:
-      callback(money(content.substring(1)));
-      break;
-    case 1:
-      baikeReply(content.substring(1),userName,callback);
-      break;
-    case 2:
-      translateMsg(content.substring(1),'ja',callback);
-      break;
-    case 3:
-      translateMsg(content.substring(1),'en',callback);
-      break;
-    case 4:
-      baiduSearch(userName,content,callback);
-      break;
-    case 8:
-      if(content.substring(1).split('-') == 2)
-        route(0,ca[0],ca[1],callback);
-      break;
-    default:
-      translateMsg(content,'zh-CHS',callback);
-  }
-}
-
 
 
 
