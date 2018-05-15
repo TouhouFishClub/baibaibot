@@ -4,9 +4,11 @@ var tls = require('tls');
 let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 
+var path = require('path');
+
 //const { QQ, MsgHandler } = require('./qqlib');
 
-const{saveTxt,answer} = require('./lib/mongo');
+const{saveTxt,answer} = require(path.join(__dirname, '/lib/mongo'))
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
