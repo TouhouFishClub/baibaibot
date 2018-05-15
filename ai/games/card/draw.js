@@ -460,12 +460,11 @@ let getPic = async ( path,username ,callback) => {
   //设置页面参数
   await page.property( 'viewportSize' , { width : 1800 , height : 1600 } );
 
-  const tagName = tag;
   //打开url，返回状态（url有转码，解决中文问题）
   const status = await page.open( url);
   if(status=='success'){
     const bb = await page.evaluate(function () {
-      return document.getElementById('aaaa').getBoundingClientRect();
+      return document.getElementsByTagName('div')[0].getBoundingClientRect();
     });
     //page.clipRect = { top: 0, left: 0, width: 1024, height: 768 };
     await page.property('clipRect', {
