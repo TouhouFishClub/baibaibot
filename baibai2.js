@@ -8,7 +8,7 @@ var path = require('path');
 
 //const { QQ, MsgHandler } = require('./qqlib');
 
-const{saveTxt,answer} = require(path.join(__dirname, '/lib/mongo'))
+const{saveTxt,answer} = require(path.join(__dirname, '/lib/mongo.js'))
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
