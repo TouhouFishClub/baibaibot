@@ -52,7 +52,7 @@ function drawNameCard(username,qq,callback,groupid){
   }else{
     cache[qq]={ts:now,c:1};
   }
-  if(Math.random()<0.5){
+  if(Math.random()<1.5){
     drawBangumi(qq,username,callback);
     return;
   }
