@@ -4,6 +4,10 @@ var timer = 0;
 var path = require('path');
 
 const {cm,combine} = require(path.join(__dirname, '/coin/market.js'))
+
+pushTask();
+
+
 function pushTask(){
   var left = 1800000 - new Date().getTime()%1800000;
   console.log('left:'+left);
