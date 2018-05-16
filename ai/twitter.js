@@ -132,3 +132,5 @@ module.exports={
   getKancollStaffTweet,
   stream
 }
+
+streaminit();

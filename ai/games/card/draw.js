@@ -7,6 +7,7 @@ var cache = {};
 var gm = require('gm')
 var request = require("request");
 var imageMagick = gm.subClass({ imageMagick : true });
+const phantom = require('phantom');
 var {sendGmImage} = require('../../../cq/sendImage');
 const {baiduVoice} = require('../../voice/baiduvoice');
 
@@ -50,6 +51,10 @@ function drawNameCard(username,qq,callback,groupid){
     }
   }else{
     cache[qq]={ts:now,c:1};
+  }
+  if(Math.random()<0.15){
+    drawBangumi(qq,username,callback);
+    return;
   }
   if(Math.random()<0.5){
     draw2df(qq,username,callback);
@@ -383,9 +388,126 @@ function draw2df(qq,username,callback){
 
 
 
+
+
+function drawBangumi(qq,username,callback){
+  var id = Math.floor(Math.random()*60000)
+  var option = {
+    host: 'bangumi.tv',
+    port: 80,
+    method: 'GET',
+    headers:{
+      'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'
+    },
+    path: '/character/'+id
+  };
+  console.log('\n\n=====================================')
+  console.log("will fetch from:"+id);
+  console.log(option);
+  console.log('=====================================\n\n')
+  var req = http.request(option, function(res) {
+    res.setEncoding('utf8');
+    var resdata = '';
+    if(res.statusCode==200){
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function(){
+        var n1 = resdata.indexOf('<div class="infobox">');
+        var s1 = resdata.substring(n1);
+        var n2 = s1.indexOf('<div id="crtPanelCollect"');
+        var h1 = s1.substring(0,n2);
+        var s2 = s1.substring(n2+5);
+        var n3 = s2.indexOf('<div class="detail"');
+        var s3 = s2.substring(n3);
+        var n4 = s3.indexOf('<div class="crtCommentList"');
+        var h2 = s3.substring(0,n4);
+
+        var hd = '<link rel="stylesheet" type="text/css" href="http://bangumi.tv/min/g=css?r305">';
+        h1='<div id="columnCrtA" class="column">'+h1+'</div>';
+        h2='<div id="columnCrtB" class="column">'+h2+'</div>';
+        var bd = '<div class="columns clearit" id="aaaa">'+h1+h2+'</div>';
+        var ret = '<html><head>'+hd+"</head>\n<body>"+bd+'\n</body></html>';
+        ret = ret.replace(/src="\/\//g,'src="http://');
+        fs.writeFileSync("1.html",ret,"utf-8");
+
+        var path = "bangumi/"+new Date().getTime()+".html";
+        fs.writeFileSync("public/"+path,ret,"utf-8");
+        getPic(path,username,callback)
+      });
+    }else if(res.statusCode==500){
+
+    }else{
+
+    }
+
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
+}
+
+let getPic = async ( path,username ,callback) => {
+  //url路径
+  let url        = 'http://localhost:10086/'+path;
+  console.log(url);
+  //创建一个实例
+  const instance = await phantom.create();
+  //创建一个页面
+  const page     = await instance.createPage();
+  //设置页面参数
+  await page.property( 'viewportSize' , { width : 1800 , height : 1600 } );
+
+  //打开url，返回状态（url有转码，解决中文问题）
+  const status = await page.open( url);
+  if(status=='success'){
+    const bb = await page.evaluate(function () {
+      return document.getElementsByTagName('div')[0].getBoundingClientRect();
+    });
+    //page.clipRect = { top: 0, left: 0, width: 1024, height: 768 };
+    await page.property('clipRect', {
+      top:    bb.top,
+      left:   bb.left,
+      width:  bb.width,
+      height: bb.height
+    })
+    // 按照实际页面的高度，设定渲染的宽高
+    //延时等待页面js执行完成（phantomjs只是等待页面上全部资源加载完毕，不包含页面js执行时间，所以需延时一段时间等待js）
+    await lateTime( 500 );
+    //输出页面到当前目录下
+    var now = new Date();
+    var filename = "../coolq-data/cq/data/image/send/bangumi/"+now.getTime()+".png";
+    //filename="1.png";
+    console.log(filename);
+    await page.render(filename);
+    //销毁实例
+    await instance.exit();
+    var ret = '【'+username+'】'+'抽到了：'+'\n';
+    callback(ret+'[CQ:image,file=send/bangumi/'+now.getTime()+'.png]');
+  }
+};
+
+let lateTime = ( time ) =>{
+  return new Promise( function(resolve,reject){
+    setTimeout(function(){
+      resolve();
+    }, time );
+  } );
+}
+
+
+
+
+
+
+
+
 module.exports={
   drawNameCard,
   getDetailByName,
   getCard,
-  draw2df
+  draw2df,
+  drawBangumi
 }

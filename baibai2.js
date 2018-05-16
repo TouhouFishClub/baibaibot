@@ -8,61 +8,41 @@ var path = require('path');
 
 //const { QQ, MsgHandler } = require('./qqlib');
 
-const{saveTxt,answer} = require(path.join(__dirname, '/lib/mongo'))
+const{saveTxt,answer} = require(path.join(__dirname, '/lib/mongo.js'))
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
-const {weatherReply,getWeatherByCity} = require('./ai/weather');
+const {getWeatherByCity} = require('./ai/weather');
 const {tulingMsg,getLike} = require('./ai/tuling');
 const {translateMsg}=require('./ai/translate');
 const {money} = require('./ai/money');
-const {getloc,route} = require('./ai/map');
+const {route} = require('./ai/map');
 const {searchSongByName} = require('./ai/song');
 const kce = require('./ai/kanColleEquip')
 const kcq = require('./ai/kanColleQuest')
-const {getMapData} = require('./ai/kancolle/kancollemap')
 const {searchsenka} = require('./ai/kancolle/senka');
-const {fight,useMagicOrItem,regenTimer} = require('./ai/favour/battle');
+const {fight,useMagicOrItem} = require('./ai/favour/battle');
+const {handleUserOperation} = require('./ai/chess/road');
 
-const {actionGroup,actionBuddy} = require('./ai/ouat/ouatMain');
-
-const {handleUserOperation,mazeRegenTimer} = require('./ai/chess/road');
 const {pairReply}=require('./ai/pairAI');
-const {getKancollStaffTweet,stream,streaminit} = require('./ai/twitter');
-//const {getShipReply}=require('./ai/kancolle/getship');
+const {getKancollStaffTweet} = require('./ai/twitter');
 const {getShip} = require('./ai/kancolle/ship');
 const roulette = require('./ai/Roulette')
 
-const {kancolleInfo} = require('./ai/kancolle/shipData');
-const {updateShipDB,updateItemDB,updateSuffixDB,loadShip,loadItem,loadSuffix,searchShipByName}=require('./ai/kancolle/shipData');
-const {pushTask,pushToGroup} = require('./ai/push');
+require('./ai/push');
+
 const {replayReply} = require('./ai/replay');
-
 const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,banUserRandom} = require('./cq/cache');
-
-
-const {lottoryReply,getlottory} = require('./ai/lottory');
+const {lottoryReply} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
-const {drawNameCard,getCard} = require('./ai/games/card/draw');
-
+const {drawNameCard} = require('./ai/games/card/draw');
 const op = require('./ai/mabinogi/optionset')
 const {googleImageSearch} = require('./ai/image/google');
-const {getVoice} = require('./ai/voice/xunfei')
-
-const {handlePrivateMsg} = require('./ai/private');
 const rua = require('./ai/mabinogi/ruawork')
 const {baiduVoice} = require('./ai/voice/baiduvoice')
 const {saveChat} = require('./ai/chat/collect');
 
-loadShip();
-loadItem();
-updateShipDB();
-updateItemDB();
-loadSuffix();
-pushTask();
 initWS();
-streaminit();
-regenTimer();
 
 var wsonline = false;
 function initWS(){
@@ -324,15 +304,6 @@ function handleMsg_D(msgObj,response){
     }
     return;
   }
-  if(rcontent=='天气'){
-    if(msg.user){
-      var city = msg.user.city;
-      if(city.length>0&&city.length<5){
-        getWeatherByCity(city,name,callback);
-      }
-    }
-    return;
-  }
 
   var n = content.indexOf('天气');
   if(n>1&&n<10&&rcontent.length==n+2){
@@ -440,12 +411,13 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
 
 
 
-
+const test1='123123'
 
 module.exports={
   handleMsg,
   reconnect,
-  reply
+  reply,
+  test1
 }
 
 

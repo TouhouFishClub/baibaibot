@@ -717,3 +717,5 @@ module.exports={
   fixUser,
   regen
 }
+
+regenTimer()
