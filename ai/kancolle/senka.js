@@ -31,7 +31,7 @@ function searchsenka(userName,content,Ncallback){
     })
   }
   var day = new Date().getDate();
-  if(day<17){
+  if(day<22){
     callback('宇宙的爱');
     return;
   }
