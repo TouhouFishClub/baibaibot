@@ -41,6 +41,7 @@ const {googleImageSearch} = require('./ai/image/google');
 const rua = require('./ai/mabinogi/ruawork')
 const {baiduVoice} = require('./ai/voice/baiduvoice')
 const {saveChat} = require('./ai/chat/collect');
+const {getFoodRate} = require('./ai/kancolle/food');
 
 initWS();
 
@@ -249,6 +250,11 @@ function handleMsg_D(msgObj,response){
   if(content.trim() === '走私查询'){
     smuggler(callback)
     return
+  }
+
+  if(rcontent=='食材'){
+    getFoodRate(callback);
+    return;
   }
 
 
