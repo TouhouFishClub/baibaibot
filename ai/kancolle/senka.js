@@ -11,47 +11,7 @@ var usermap = {};
 
 const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
-function userinit(){
-  var user = fs.readFileSync("static/61.txt","utf-8");
-  var ku = fs.readFileSync("static/p2.txt","utf-8");
-  var sa = user.split('\n');
 
-
-  var c = 1;
-  var qlist = [];
-  var qmap={};
-  for(var i=0;i<sa.length;i++){
-    var e = sa[i].trim();
-    if(e==c){
-      c++;
-      var name = sa[i+1];
-      var l1 = sa[i+2];
-      var l2 = sa[i+3];
-      i=i+2;
-      var la1 = l1.split("\t");
-      var la2 = l2.split("\t");
-      if(la1.length>2){
-        qlist.push([la1[0],name]);
-        qmap[la1[0]]=name;
-      }else{
-        qlist.push([la2[0],name]);
-        qmap[la2[0]]=name;
-      }
-    }
-  }
-
-  var ka = ku.split('\n');
-  for(var i=0;i<ka.length;i++){
-    var e = ka[i];
-    var ea = e.split("|");
-    if(ea.length==2){
-      var n = ea[1].indexOf("QQ:");
-      var qnum = ea[1].substring(n+3).trim();
-      usermap[qmap[qnum]]=ea[0].trim();
-    }
-  }
-  console.log(usermap);
-}
 
 
 function searchsenka(userName,content,Ncallback){
@@ -71,7 +31,7 @@ function searchsenka(userName,content,Ncallback){
     })
   }
   var day = new Date().getDate();
-  if(day<11||(day>10&&day<20)||(day>20&&day<22)){
+  if(day<17){
     callback('宇宙的爱');
     return;
   }
@@ -618,8 +578,7 @@ getRankDateNo = function(now){
 }
 
 module.exports={
-  searchsenka,
-  userinit
+  searchsenka
 }
 
 
