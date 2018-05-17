@@ -2,7 +2,15 @@ var fs = require('fs');
 var https = require('https');
 var phantom = require('phantom')
 
+var mem = 0
+
 function getFoodRate(callback){
+  var nowts = new Date().getTime();
+  if(nowts-mem<3600000){
+    getPic("/kancolle/food.html",'',callback)
+    return;
+  }
+  mem = nowts;
   var options = {
     host: 'db.kcwiki.org',
     port: 443,
