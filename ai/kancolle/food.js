@@ -52,7 +52,7 @@ function getFoodRate(callback){
       h=h+'<table><tr><td rowspan="2">'+tba[0]+'</td><td>'+tba[1]+'</td></tr>';
       h=h+'<tr><td>'+tba[2]+'</td></tr>';
       h=h+'</table>';
-      var html = '<html><head></head><body style="background-color: aqua"><div style="max-width: 900px" id="food">'+h+'</div></body></html>'
+      var html = '<html><head></head><body style="background-color: white"><div style="max-width: 900px" id="food">'+h+'</div></body></html>'
       fs.writeFileSync("public/kancolle/food.html",html);
       getPic("/kancolle/food.html",'',callback)
     });
