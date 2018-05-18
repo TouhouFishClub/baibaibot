@@ -36,8 +36,6 @@ function searchsenka(userName,content,callback,qq){
   var day = new Date().getDate();
   if(day<22){
     hidden = true;
-    callback('宇宙的爱');
-    return;
   }
 
   content=content.trim();
