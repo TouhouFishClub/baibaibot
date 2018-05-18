@@ -208,10 +208,10 @@ function forecast(server){
     furture20=Math.floor(furture20/1000)+"xxx";
     furture100=Math.floor(furture100/1000)+"xxx";
     furture500=Math.floor(furture500/1000)+"xxx";
-    h=h+'  5位'+bsenka5+'|'+qsenka5+'|'+'--'+'|'+furture5.toFixed(-1)+'\n';
-    h=h+' 20位'+bsenka20+'|'+qsenka20+'|'+'--'+'|'+furture20.toFixed(0)+'\n';
-    h=h+'100位'+bsenka100+'|'+qsenka100+'|'+'--'+'|'+furture100.toFixed(0)+'\n';
-    h=h+'500位'+bsenka500+'|'+qsenka500+'|'+'--'+'|'+furture500.toFixed(0)+'\n';
+    h=h+'  5位'+bsenka5+'|'+qsenka5+'|'+'--'+'|'+furture5+'\n';
+    h=h+' 20位'+bsenka20+'|'+qsenka20+'|'+'--'+'|'+furture20+'\n';
+    h=h+'100位'+bsenka100+'|'+qsenka100+'|'+'--'+'|'+furture100+'\n';
+    h=h+'500位'+bsenka500+'|'+qsenka500+'|'+'--'+'|'+furture500+'\n';
   }else{
     h=h+'  5位'+bsenka5+'|'+qsenka5+'|'+senka5+'|'+furture5.toFixed(0)+'\n';
     h=h+' 20位'+bsenka20+'|'+qsenka20+'|'+senka20+'|'+furture20.toFixed(0)+'\n';
