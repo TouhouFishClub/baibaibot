@@ -141,7 +141,7 @@ function searchSenkaByCache(server,userName,name,callback,qq){
     var detail;
     if(hidden){
       var qname = q2u[qq];
-      if(qname.indexOf(name)>=0){
+      if(qname&&qname.indexOf(name)>=0){
         detail = c[server].h1;
       }else{
         detail = c[server].h2;
