@@ -377,7 +377,7 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first=="k"||first=='K'){
     getShip(content.substring(1),callback);
   }else if(first=="z"||first=='Z'){
-    searchsenka(userName,content.substring(1),callback);
+    searchsenka(userName,content.substring(1),callback,from);
   }else if(first=='s'||first=='S'){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='r'||first=='R'){
