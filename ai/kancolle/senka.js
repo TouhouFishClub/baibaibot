@@ -20,7 +20,7 @@ load();
 function load(){
   MongoClient.connect(mongourl, function(err, db) {
     var cl_pic = db.collection('cl_pic');
-    cl_user.find().toArray(function(err, userArr) {
+    cl_pic.find().toArray(function(err, userArr) {
       for (var i = 0; i < userArr.length; i++) {
         var qq = userArr[i]._id;
         var name = userArr[i].n;
