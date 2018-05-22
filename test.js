@@ -1,2 +1,2 @@
-const {drawBangumi} = require('./ai/games/card/draw');
-drawBangumi()
+const {getFoodRate} = require('./ai/kancolle/food');
+getFoodRate()

@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var mongourl = 'mongodb://192.168.17.52:27050/db_senka';
+var mongourl = 'mongodb://192.168.17.52:27050/db_group';
 var Axios = require('axios');
 var fs = require('fs');
 var http = require('http');
@@ -11,69 +11,31 @@ var usermap = {};
 
 const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
-function userinit(){
-  var user = fs.readFileSync("static/61.txt","utf-8");
-  var ku = fs.readFileSync("static/p2.txt","utf-8");
-  var sa = user.split('\n');
+
+var hidden=false;
+var q2u = {};
 
 
-  var c = 1;
-  var qlist = [];
-  var qmap={};
-  for(var i=0;i<sa.length;i++){
-    var e = sa[i].trim();
-    if(e==c){
-      c++;
-      var name = sa[i+1];
-      var l1 = sa[i+2];
-      var l2 = sa[i+3];
-      i=i+2;
-      var la1 = l1.split("\t");
-      var la2 = l2.split("\t");
-      if(la1.length>2){
-        qlist.push([la1[0],name]);
-        qmap[la1[0]]=name;
-      }else{
-        qlist.push([la2[0],name]);
-        qmap[la2[0]]=name;
+load();
+function load(){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_pic = db.collection('cl_pic');
+    cl_pic.find().toArray(function(err, userArr) {
+      for (var i = 0; i < userArr.length; i++) {
+        var qq = userArr[i]._id;
+        var name = userArr[i].n;
+        q2u[qq]=name;
       }
-    }
-  }
-
-  var ka = ku.split('\n');
-  for(var i=0;i<ka.length;i++){
-    var e = ka[i];
-    var ea = e.split("|");
-    if(ea.length==2){
-      var n = ea[1].indexOf("QQ:");
-      var qnum = ea[1].substring(n+3).trim();
-      usermap[qmap[qnum]]=ea[0].trim();
-    }
-  }
-  console.log(usermap);
+    });
+  });
 }
 
 
-function searchsenka(userName,content,Ncallback){
-  var callback=function(response){
-    let strArr = response.split('\n'), callbackArr = []
-    callbackArr.push(strArr.reduce((pre, cur) => {
-        if(pre.length + cur.length < 250)
-    return `${pre}\n${cur}`
-    else {
-      callbackArr.push(pre)
-      return cur
-    }
-  }))
-    callbackArr.forEach(async (ele, idx) => {
-      await wait(idx * 500)
-      Ncallback(ele)
-    })
-  }
+
+function searchsenka(userName,content,callback,qq){
   var day = new Date().getDate();
-  if(day<11||(day>10&&day<20)||(day>20&&day<22)){
-    callback('宇宙的爱');
-    return;
+  if(day<22){
+    hidden = true;
   }
 
   content=content.trim();
@@ -90,19 +52,19 @@ function searchsenka(userName,content,Ncallback){
     if(ca.length==1){
       var serverId = parseInt(ca[0]);
       var name = "";
-      searchsenka2(serverId,userName,name,callback)
+      searchsenka2(serverId,userName,name,callback,qq)
     }else if(ca.length==2){
       var serverId = parseInt(ca[0]);
       var name = ca[1].trim();
-      searchsenka2(serverId,userName,name,callback)
+      searchsenka2(serverId,userName,name,callback,qq)
     }else{
       var serverId = parseInt(ca[0]);
-      searchsenka2(serverId,userName,"",callback)
+      searchsenka2(serverId,userName,"",callback,qq)
     }
   }
 }
 
-function searchsenka2(server,userName,name,callback){
+function searchsenka2(server,userName,name,callback,qq){
   var then = 0;
   if(c[server]){
     then=c[server].ts;
@@ -118,7 +80,7 @@ function searchsenka2(server,userName,name,callback){
     }
   }
   if(read==false){
-    searchSenkaByCache(server,userName,name,callback);
+    searchSenkaByCache(server,userName,name,callback,qq);
   }else{
     console.log('will get');
     var options = {
@@ -145,7 +107,7 @@ function searchsenka2(server,userName,name,callback){
         c[server]={};
         c[server].ts=u.ts;
         forecast(server);
-        searchSenkaByCache(server,userName,name,callback);
+        searchSenkaByCache(server,userName,name,callback,qq);
       });
     }).end();
 
@@ -169,14 +131,24 @@ function searchsenka2(server,userName,name,callback){
   }
 }
 
-function searchSenkaByCache(server,userName,name,callback){
+function searchSenkaByCache(server,userName,name,callback,qq){
   var ret = "";
   if(name==""){
     ret = c[server].f;
   }else if(name=="1"){
     ret = c[server].headstr;
   }else{
-    var detail = c[server].u;
+    var detail;
+    if(hidden){
+      var qname = q2u[qq];
+      if(qname&&qname.indexOf(name)>=0){
+        detail = c[server].h1;
+      }else{
+        detail = c[server].h2;
+      }
+    }else{
+      detail = c[server].u;
+    }
     var keys = Object.keys(detail);
     var ra = []
     for(var i=0;i<keys.length;i++){
@@ -231,10 +203,21 @@ function forecast(server){
   var furture500 = (senka500-frontmap[500]-1380)*rate+frontmap[500]+1380;
   var h='本月战果预测:\n';
   h=h+'排名|榜单|当前|当前(ex)|月底\n';
-  h=h+'  5位'+bsenka5+'|'+qsenka5+'|'+senka5+'|'+furture5.toFixed(0)+'\n';
-  h=h+' 20位'+bsenka20+'|'+qsenka20+'|'+senka20+'|'+furture20.toFixed(0)+'\n';
-  h=h+'100位'+bsenka100+'|'+qsenka100+'|'+senka100+'|'+furture100.toFixed(0)+'\n';
-  h=h+'500位'+bsenka500+'|'+qsenka500+'|'+senka500+'|'+furture500.toFixed(0)+'\n';
+  if(hidden){
+    furture5=Math.floor(furture5/1000)+"xxx";
+    furture20=Math.floor(furture20/1000)+"xxx";
+    furture100=Math.floor(furture100/1000)+"xxx";
+    furture500=Math.floor(furture500/1000)+"xxx";
+    h=h+'  5位'+bsenka5+'|'+qsenka5+'|'+'--'+'|'+furture5+'\n';
+    h=h+' 20位'+bsenka20+'|'+qsenka20+'|'+'--'+'|'+furture20+'\n';
+    h=h+'100位'+bsenka100+'|'+qsenka100+'|'+'--'+'|'+furture100+'\n';
+    h=h+'500位'+bsenka500+'|'+qsenka500+'|'+'--'+'|'+furture500+'\n';
+  }else{
+    h=h+'  5位'+bsenka5+'|'+qsenka5+'|'+senka5+'|'+furture5.toFixed(0)+'\n';
+    h=h+' 20位'+bsenka20+'|'+qsenka20+'|'+senka20+'|'+furture20.toFixed(0)+'\n';
+    h=h+'100位'+bsenka100+'|'+qsenka100+'|'+senka100+'|'+furture100.toFixed(0)+'\n';
+    h=h+'500位'+bsenka500+'|'+qsenka500+'|'+senka500+'|'+furture500.toFixed(0)+'\n';
+  }
   c[server].f=h;
 }
 
@@ -268,6 +251,7 @@ function generateTable(sorttype,server){
     var now = new Date();
     var month = now.getMonth();
     var headstr = '当前|当前(ex)|经验|EX\n';
+    var hiddenf = '当前\n';
     var headarr = [];
     for (var i = 0; i < data.d.length; i++) {
       var type = data.d[i].type;
@@ -324,10 +308,6 @@ function generateTable(sorttype,server){
               })
               let ruex = senka.max - senka.senka
               let hiddenex = 1380 - ex - ruex
-              if(senka.name=='アサギ'){
-                console.log(exlist);
-                console.log(hiddenex,senka.max,senka.senka,ex);
-              }
               if((hiddenex>345&&hiddenex<355)||hiddenex > 420){
                 zc = 1
               }
@@ -571,15 +551,37 @@ function generateTable(sorttype,server){
       var min = senka.min;
       if(!c[server].u){
         c[server].u={};
+        c[server].h1={};
+        c[server].h2={};
       }
-      var h = '';
-      h = h + '排名：'+(i + 1) + '位(' + senka.lno + '位)\n';
-      h = h + senka.name+'\n';
-      h = h + '当前战果：'+senka.senka + '\n';
-      h = h + '战果(ex)：'+(min==max?max:(min+'-'+max))+'\n';
-      h = h + '经验：'+subsenkastr + '\n';
-      h = h + 'ex:'+exstr+'\n';
-      c[server].u[senka.name]=h;
+
+        var h = '';
+        h = h + '排名：'+'---' + '位(' + senka.lno + '位)\n';
+        h = h + senka.name+'\n';
+        h = h + '当前战果：'+senka.senka + '\n';
+        h = h + '战果(ex)：'+(min==max?max:(min+'-'+max))+'\n';
+        h = h + '经验：'+subsenkastr + '\n';
+        h = h + 'ex:'+exstr+'\n';
+        c[server].h1[senka.name]=h;
+
+        h='';
+        h = h + '排名：'+'---' + '位(' + senka.lno + '位)\n';
+        h = h + senka.name+'\n';
+        h = h + '当前战果：'+senka.senka + '\n';
+        h = h + '战果(ex)：'+'---'+'\n';
+        h = h + '经验：'+'---' + '\n';
+        h = h + 'ex:'+'---'+'\n';
+        c[server].h2[senka.name]=h;
+
+        h='';
+        h = h + '排名：'+(i + 1) + '位(' + senka.lno + '位)\n';
+        h = h + senka.name+'\n';
+        h = h + '当前战果：'+senka.senka + '\n';
+        h = h + '战果(ex)：'+(min==max?max:(min+'-'+max))+'\n';
+        h = h + '经验：'+subsenkastr + '\n';
+        h = h + 'ex:'+exstr+'\n';
+        c[server].u[senka.name]=h;
+
       if(i<10){
         headarr[i] = (i+1)+ '位(' + senka.lno + '位)'+senka.name+'\n' +senka.senka+'|'+(min==max?max:(min+'-'+max))+'|'+subsenkastr+'|'+exstr+"\n";
       }
@@ -587,10 +589,16 @@ function generateTable(sorttype,server){
     for(var i=0;i<10;i++){
       headstr=headstr+headarr[i];
     }
-    c[server].headstr=headstr;
-    console.log(headstr);
+    if(hidden){
+      c[server].headstr='宇宙的爱';
+    }else{
+      c[server].headstr=headstr;
+    }
   }
 }
+
+
+
 
 
 getDateNo = function(now){
@@ -618,8 +626,7 @@ getRankDateNo = function(now){
 }
 
 module.exports={
-  searchsenka,
-  userinit
+  searchsenka
 }
 
 

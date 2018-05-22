@@ -41,6 +41,7 @@ const {googleImageSearch} = require('./ai/image/google');
 const rua = require('./ai/mabinogi/ruawork')
 const {baiduVoice} = require('./ai/voice/baiduvoice')
 const {saveChat} = require('./ai/chat/collect');
+const {getFoodRate} = require('./ai/kancolle/food');
 
 initWS();
 
@@ -251,6 +252,11 @@ function handleMsg_D(msgObj,response){
     return
   }
 
+  if(rcontent=='食材'){
+    getFoodRate(callback);
+    return;
+  }
+
 
   let con =content.trim(), fi = con.substring(0,4)
   if(fi === '释放查询' || fi === 'opts'){
@@ -319,7 +325,7 @@ function handleMsg_D(msgObj,response){
   var ca = content.split('|');
   if(ca.length==2){
     if(ca[0].length<50 && ca[0].split(' ').length < 2){
-      saveTxt(ca[0],ca[1],name,groupName,callback);
+      saveTxt(ca[0],ca[1],name,groupName,callback,from);
       return;
     }
   }
@@ -371,7 +377,7 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first=="k"||first=='K'){
     getShip(content.substring(1),callback);
   }else if(first=="z"||first=='Z'){
-    searchsenka(userName,content.substring(1),callback);
+    searchsenka(userName,content.substring(1),callback,from);
   }else if(first=='s'||first=='S'){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='r'||first=='R'){

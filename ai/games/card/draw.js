@@ -419,6 +419,9 @@ function drawBangumi(qq,username,callback){
         var h1 = s1.substring(0,n2);
         var s2 = s1.substring(n2+5);
         var n3 = s2.indexOf('<div class="detail"');
+        if(n3<0){
+          n3 = s2.indexOf('<h2 class="subtitle">出演');
+        }
         var s3 = s2.substring(n3);
         var n4 = s3.indexOf('<div class="crtCommentList"');
         var h2 = s3.substring(0,n4);
