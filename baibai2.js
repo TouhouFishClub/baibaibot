@@ -204,6 +204,7 @@ function handleMsg_D(msgObj,response){
         };
         console.log(res);
         var req = http.request(options);
+        saveChat(groupid,2375373419,'百百',res)
         req.on('error', function(err) {
           console.log('req err:');
           console.log(err);
