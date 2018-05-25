@@ -10,6 +10,20 @@ var imageMagick = gm.subClass({ imageMagick : true });
 const phantom = require('phantom');
 var {sendGmImage} = require('../../../cq/sendImage');
 const {baiduVoice} = require('../../voice/baiduvoice');
+const {banUserInGroup,getUserRoleInGroupByCache} = require('../../../cq/cache')
+
+
+var bmap = {};
+function bdraw(groupid,from,callback){
+  if(bmap[groupid]){
+
+  }else{
+    bmap[groupid]=new Date().getTime()+60000*10;
+    callback('抽卡')
+  }
+}
+
+
 
 function drawNameCard(username,qq,callback,groupid){
   var now = new Date().getTime();
@@ -52,6 +66,20 @@ function drawNameCard(username,qq,callback,groupid){
   }else{
     cache[qq]={ts:now,c:1};
   }
+  var botrole = getUserRoleInGroupByCache(2375373419,groupid)
+  if(botrole=='admin'||botrole=='owner'){
+    if(Math.random()<0.5){
+      callback('【'+username+'】抽到了【禁言卡】');
+      var time=Math.floor(Math.random()*300);
+      banUserInGroup(qq,groupid,time);
+      setTimeout(function(){
+        banUserInGroup(qq,groupid,0);
+      },Math.floor(time*1000*Math.random())+1000);
+      return;
+    }
+  }
+
+
   if(Math.random()<0.15){
     drawBangumi(qq,username,callback);
     return;

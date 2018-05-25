@@ -73,6 +73,16 @@ function getUserNickInGroupByCache(qq,groupid){
   return 'nick error:'+qq;
 }
 
+function getUserRoleInGroupByCache(qq,groupid){
+  if(cache[groupid]){
+    if(cache[groupid][qq]){
+      return cache[groupid][qq].role;
+    }
+  }
+  return undefined;
+}
+
+
 var gcache = {};
 function getGroupName(gid){
   if(gcache[gid]){
@@ -196,6 +206,7 @@ function banUserByName(name,groupid,seconds){
 
 
 module.exports={
+  getUserRoleInGroupByCache,
   getUserNameInGroup,
   getUserNickInGroupByCache,
   getGroupName,
