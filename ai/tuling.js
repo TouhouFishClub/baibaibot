@@ -19,6 +19,9 @@ function tulingMsg(userid,content,callback,groupid){
       return;
     }
   }
+  if(content.indexOf('禁言')>=0){
+    return;
+  }
   limit[groupid]=new Date().getTime();
   var body={};
   body.userInfo={};
