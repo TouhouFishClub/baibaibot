@@ -67,6 +67,7 @@ function drawNameCard(username,qq,callback,groupid){
     cache[qq]={ts:now,c:1};
   }
   var botrole = getUserRoleInGroupByCache(2375373419,groupid)
+  console.log('botrole:'+groupid+":"+role);
   if(botrole=='admin'||botrole=='owner'){
     if(Math.random()<0.5){
       callback('【'+username+'】抽到了【禁言卡】');
