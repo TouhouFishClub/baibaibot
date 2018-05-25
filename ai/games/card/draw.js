@@ -69,7 +69,7 @@ function drawNameCard(username,qq,callback,groupid){
   var botrole = getUserRoleInGroupByCache(2375373419,groupid)
   console.log('botrole:'+groupid+":"+botrole);
   if(botrole=='admin'||botrole=='owner'){
-    if(Math.random()<0.5){
+    if(Math.random()<1.5){
       callback('【'+username+'】抽到了【禁言卡】');
       var time=Math.floor(Math.random()*300);
       banUserInGroup(qq,groupid,time);
