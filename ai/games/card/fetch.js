@@ -33,7 +33,6 @@ function getNameList(startname){
       resdata = resdata + chunk;
     });
     res.on('end', function () {
-      console.log(resdata);
       var l1='<li><a href=';
       var s0=resdata;
       var n1 = s0.indexOf('下一页');
@@ -45,7 +44,7 @@ function getNameList(startname){
         fs.writeFileSync("1.txt",s);
         var n = s.indexOf(l1);
         var d = s.substring(0,n);
-        if(d.length<500&&d.endsWith('</a></li>\n')){
+        if(d.length<500&&d.trim().endsWith('</a></li>')||d.length<500&&d.trim().endsWith('<ul>')){
           var n1 = d.indexOf('"');
           var d1 = d.substring(n1+1);
           var n2 = d1.indexOf('"');
@@ -53,7 +52,7 @@ function getNameList(startname){
           var n3 = d.indexOf('>');
           var n4 = d.indexOf('<');
           var name = d.substring(n3+1,n4);
-          console.log(href,name);
+          console.log(name);
           saveIndex(href,name);
           nextstart = name;
         }

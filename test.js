@@ -1,2 +1,2 @@
-const {getFoodRate} = require('./ai/kancolle/food');
-getFoodRate()
+const {getNameList} = require('./ai/games/card/fetch');
+getNameList();

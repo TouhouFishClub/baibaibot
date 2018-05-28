@@ -81,11 +81,11 @@ function drawNameCard(username,qq,callback,groupid){
   }
 
 
-  if(Math.random()<0.15){
+  if(Math.random()<0.1){
     drawBangumi(qq,username,callback);
     return;
   }
-  if(Math.random()<0.5){
+  if(Math.random()<0.49){
     draw2df(qq,username,callback);
     return;
   }
