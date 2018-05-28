@@ -161,10 +161,10 @@ cal = function(str){
 
 function mt(x){
   var arr=[1];
-  var n=1000
-  if(x>n){
+  if(x>200){
     return "∞"
   }
+  var n=10000;
   for(var i=1;i<=x;i++){
     for(var j=0;j<arr.length;j++){
       arr[j]=arr[j]*i;
