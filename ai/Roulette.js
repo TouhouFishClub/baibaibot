@@ -18,6 +18,9 @@ let skiprate = {};
 let namecache = {};
 const {banUserInGroup} = require('../cq/cache');
 module.exports = function(nickname, content, callback, qq, groupid){
+  if(groupid==549823679){
+    return;
+  }
   // console.log('=== in game ===')
   /* roulette system */
   if(content === '俄罗斯轮盘' || content === '俄羅斯輪盤'||content === '俄罗斯轮盘改' || content === '俄羅斯輪盤改'){
