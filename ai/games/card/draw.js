@@ -26,6 +26,10 @@ function bdraw(groupid,from,callback){
 
 
 function drawNameCard(username,qq,callback,groupid){
+  if((groupid+"").startsWith("54982")){
+    callback('抽卡是不对的！');
+    return;
+  }
   var now = new Date().getTime();
   console.log("1111+"+groupid);
   var cooldown;
