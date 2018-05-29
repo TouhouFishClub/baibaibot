@@ -19,6 +19,7 @@ let namecache = {};
 const {banUserInGroup} = require('../cq/cache');
 module.exports = function(nickname, content, callback, qq, groupid){
   if(groupid==549823679){
+    callback('此群未开放俄罗斯轮盘')
     return;
   }
   // console.log('=== in game ===')
