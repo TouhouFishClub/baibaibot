@@ -73,6 +73,14 @@ module.exports = function(userId, content, callback){
   }
 }
 
+function fix(){
+
+
+
+}
+
+
+
 const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
 
@@ -147,6 +155,7 @@ const formatData = async (codeArr, money, callback) => {
           response = '币种代码错误'
         }
       } catch(err){
+        console.log('========yql failed goto fixer============')
         const fixerData = await getFixerData(codeArr[0])
         if(!fixerData.error){
           if(codeArr[0] === codeArr[1]){
@@ -226,16 +235,19 @@ const getYQLData = code =>
 
 const getFixerData = code =>
   new Promise((resolve, reject) => {
-    Axios.get('http://api.fixer.io/latest', {
-      params: {
-        base: code
-      },
+    Axios.get('http://data.fixer.io/api/latest&access_key=bfa9904b7c9dc8e4d73007918d9f515e', {
       timeout: TIME_OUT,
       headers: {
         'User-Agent': USER_AGENT
       }
+    }).then(function(response){
+      var data = response.data;
+      var baserate = data.rates[code];
+      for(var p in data.rates){
+        data.rates[p]=data.rates[p]/baserate;
+      }
+      resolve(response.data)
     })
-      .then(response => resolve(response.data))
       .catch(error => {
         console.log(error)
       })
