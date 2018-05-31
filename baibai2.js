@@ -185,6 +185,11 @@ function handleMsg_D(msgObj,response){
   if(name==null){
     name = nickname;
   }
+  if(name.startWith("nick error")||name.start("card error")){
+    name='[CQ:at,qq='+from+']';
+  }
+
+
   var groupName = getGroupName(groupid);
   saveChat(groupid,from,name,content);
   var callback = function(res,blank){

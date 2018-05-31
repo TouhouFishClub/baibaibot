@@ -30,9 +30,6 @@ function drawNameCard(username,qq,callback,groupid){
     callback('抽卡是不对的！');
     return;
   }
-  if(username.startsWith("card error")){
-    username='[CQ:at,qq='+qq+']';
-  }
   var now = new Date().getTime();
   console.log("1111+"+groupid);
   var cooldown;
