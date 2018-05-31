@@ -185,7 +185,7 @@ function handleMsg_D(msgObj,response){
   if(name==null){
     name = nickname;
   }
-  if(name.startsWith("nick error")||name.start("card error")){
+  if(name.startsWith("nick error")||name.startsWith("card error")){
     name='[CQ:at,qq='+from+']';
   }
 
