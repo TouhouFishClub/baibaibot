@@ -33,7 +33,7 @@ function load(){
 var timer = 0;
 loopsenka();
 function tm(){
-  var left = (-new Date().getTime()+25200000)%43200000+43200000
+  var left = (-new Date().getTime()+23400000)%43200000+43200000
   console.log('will start senka after '+ (left/60000).toFixed(0) + 'minutes')
   if(timer==0){
     timer = 1;
