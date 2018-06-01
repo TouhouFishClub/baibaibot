@@ -68,6 +68,7 @@ function collectSenka(serverId,callback){
     var cl_result_senka = db.collection('cl_result_senka');
     searchsenka2(serverId,'username','20170611',function(r){
       if(r){
+        console.log(r);
         cl_result_senka.save(r,function(){
           callback()
         })
