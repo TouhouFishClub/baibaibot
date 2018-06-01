@@ -270,8 +270,9 @@ function forecast(server){
     b20: [bsenka20,qsenka20,senka20,furture20.toFixed(0)],
     b100:[bsenka100,qsenka100,senka100,furture100.toFixed(0)],
     b500:[bsenka500,qsenka500,senka500,furture500.toFixed(0)],
-    _id:now,
-    server:server
+    _id:server+'_'+now.getTime(),
+    server:server,
+    ts:now
   };
   c[server].f=h;
 }
