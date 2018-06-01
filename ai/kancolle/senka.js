@@ -31,7 +31,9 @@ function load(){
 }
 
 var timer = 0;
-tm();
+collectSenka(8,function(){
+  console.log('end111111111');
+});
 function tm(){
   var left = (-new Date().getTime()+25200000)%43200000+43200000
   console.log('will start senka after '+ (left/60000).toFixed(0) + 'minutes')
@@ -64,7 +66,7 @@ function loopsenka(){
 function collectSenka(serverId,callback){
   MongoClient.connect(mongourl, function(err, db) {
     var cl_result_senka = db.collection('cl_result_senka');
-    searchsenka('name',serverId+'-20170611',function(r){
+    searchsenka2(serverId,'username','20170611',function(r){
       if(r){
         cl_result_senka.save(r,function(){
           callback()
