@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var mongourl = 'mongodb://192.168.17.52:27050/db_group';
+var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var Axios = require('axios');
 var fs = require('fs');
 var http = require('http');
