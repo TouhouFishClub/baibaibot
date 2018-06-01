@@ -30,6 +30,50 @@ function load(){
   });
 }
 
+var timer = 0;
+tm();
+function tm(){
+  var left = (-new Date().getTime()+25200000)%43200000+43200000
+  console.log('will start senka after '+ (left/60000).toFixed(0) + 'minutes')
+  if(timer==0){
+    timer = 1;
+    setTimeout(function(){
+      loopsenka();
+      setTimeout(function () {
+        timer = 0;
+        tm();
+      },10000);
+    },left)
+  }
+}
+
+function loopsenka(){
+  collectSenka(8,function(){
+    collectSenka(15,function(){
+      collectSenka(16,function(){
+        collectSenka(18,function(){
+          collectSenka(19,function(){
+            console.log('end');
+          })
+        })
+      })
+    })
+  })
+}
+
+function collectSenka(serverId,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    var cl_result_senka = db.collection('cl_result_senka');
+    searchsenka('name',serverId+'-20170611',function(r){
+      if(r){
+        cl_result_senka.save(r,function(){
+          callback()
+        })
+      }
+    },'123456');
+  });
+}
+
 
 
 function searchsenka(userName,content,callback,qq){
@@ -137,6 +181,9 @@ function searchSenkaByCache(server,userName,name,callback,qq){
     ret = c[server].f;
   }else if(name=="1"){
     ret = c[server].headstr;
+  }else if(name=="20170611"){
+    callback(c[server].ff);
+    return;
   }else{
     var detail;
     if(hidden){
@@ -218,6 +265,14 @@ function forecast(server){
     h=h+'100位'+bsenka100+'|'+qsenka100+'|'+senka100+'|'+furture100.toFixed(0)+'\n';
     h=h+'500位'+bsenka500+'|'+qsenka500+'|'+senka500+'|'+furture500.toFixed(0)+'\n';
   }
+  c[server].ff={
+    b5:  [bsenka5,qsenka5,senka5,furture5.toFixed(0)],
+    b20: [bsenka20,qsenka20,senka20,furture20.toFixed(0)],
+    b100:[bsenka100,qsenka100,senka100,furture100.toFixed(0)],
+    b500:[bsenka500,qsenka500,senka500,furture500.toFixed(0)],
+    _id:now,
+    server:server
+  };
   c[server].f=h;
 }
 
@@ -626,7 +681,7 @@ getRankDateNo = function(now){
 }
 
 module.exports={
-  searchsenka
+  searchsenka,
 }
 
 
