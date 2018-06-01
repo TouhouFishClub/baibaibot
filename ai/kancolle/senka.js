@@ -71,6 +71,8 @@ function collectSenka(serverId,callback){
         cl_result_senka.save(r,function(){
           callback()
         })
+      }else{
+        console.log('error22222222222222')
       }
     },'123456');
   });
@@ -178,6 +180,7 @@ function searchsenka2(server,userName,name,callback,qq){
 }
 
 function searchSenkaByCache(server,userName,name,callback,qq){
+  console.log('name:'+name)
   var ret = "";
   if(name==""){
     ret = c[server].f;
