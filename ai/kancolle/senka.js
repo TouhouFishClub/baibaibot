@@ -269,6 +269,7 @@ function forecast(server){
     h=h+'100位'+bsenka100+'|'+qsenka100+'|'+senka100+'|'+furture100.toFixed(0)+'\n';
     h=h+'500位'+bsenka500+'|'+qsenka500+'|'+senka500+'|'+furture500.toFixed(0)+'\n';
   }
+  console.log(furture5)
   c[server].ff={
     b5:  [bsenka5,qsenka5,senka5,furture5.toFixed(0)],
     b20: [bsenka20,qsenka20,senka20,furture20.toFixed(0)],
