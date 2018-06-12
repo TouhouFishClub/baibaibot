@@ -4,7 +4,7 @@ var request = require("request");
 const WxVoice = require('wx-voice');
 var voice = new WxVoice();
 
-var access_token="24.fd084f48038002b057b4b483e50d2ed0.2592000.1527919824.282335-11186658"
+var access_token="24.133250e8f6fba47476555138b5837acd.2592000.1531389167.282335-11186658"
 function initToken(){
   var options = {
     host: 'openapi.baidu.com',
