@@ -4,6 +4,7 @@ const xml2js = require('xml2js')
 module.exports = function(callback) {
   let optionsetInfo = fs.readFileSync(path.join(__dirname, 'optionset_R296'), 'utf-8')
   let optionsetXml = fs.readFileSync(path.join(__dirname, 'optionset_R296.xml'), 'utf-8')
+  // optionsetXml = optionsetXml.substring(optionsetXml.indexOf('<'))
   let parser = new xml2js.Parser()
   let transform = {}
   optionsetInfo.split('\n').forEach(val => {
@@ -11,6 +12,7 @@ module.exports = function(callback) {
     transform[`_LT[xml.optionset.${sp[0]}]`] = sp[1]
   })
   let effectiveOptionset = []
+  console.log(optionsetXml)
   parser.parseString(optionsetXml, (err, result) => {
     let options = result.OptionSet.OptionSetList[0].OptionSet.map(val => val.$)
     options.forEach(val => {
