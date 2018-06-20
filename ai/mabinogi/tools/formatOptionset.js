@@ -12,7 +12,6 @@ module.exports = function(callback) {
     transform[`_LT[xml.optionset.${sp[0]}]`] = sp[1]
   })
   let effectiveOptionset = []
-  console.log(optionsetXml)
   parser.parseString(optionsetXml, (err, result) => {
     let options = result.OptionSet.OptionSetList[0].OptionSet.map(val => val.$)
     options.forEach(val => {
