@@ -53,7 +53,9 @@ function loopsenka(){
       collectSenka(16,function(){
         collectSenka(18,function(){
           collectSenka(19,function(){
-            console.log('end');
+            collectSenka(14,function() {
+              console.log('end');
+            })
           })
         })
       })
