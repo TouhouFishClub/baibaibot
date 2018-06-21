@@ -81,7 +81,7 @@ function collectSenka(serverId,callback){
 
 function searchsenka(userName,content,callback,qq){
   var day = new Date().getDate();
-  if(day<22){
+  if(day<21){
     hidden = true;
   }
 
