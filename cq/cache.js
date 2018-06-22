@@ -31,15 +31,17 @@ function getUserNameInGroup(qq,gid){
         var data = eval('('+resdata+')');
         var arr = {};
         var namearr = {};
-        for(var i=0;i<data.data.length;i++){
-          var user = data.data[i];
-          var uid = user.user_id;
-          arr[uid]=user;
-          namearr[user.card?user.card:user.nickname]=uid;
+        if(data&&data.data){
+          for(var i=0;i<data.data.length;i++){
+            var user = data.data[i];
+            var uid = user.user_id;
+            arr[uid]=user;
+            namearr[user.card?user.card:user.nickname]=uid;
+          }
+          cache[gid] = arr;
+          namecache[gid]=namearr;
+          getUserNameInGroupByCache(data,qq);
         }
-        cache[gid] = arr;
-        namecache[gid]=namearr;
-        getUserNameInGroupByCache(data,qq);
       });
     });
     req.end();
