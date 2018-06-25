@@ -85,7 +85,7 @@ $(document).ready(function(){
       if(logIns && logIns.destroy){
         logIns.destroy()
       }
-      logIns = new groupLog(groupId.val(), inputTimestamp.val(), msgCont)
+      logIns = new groupLog(groupId.val(), new Date(inputTimestamp.val() + ' 00:00:00').getTime(), msgCont)
       logIns.init()
     }
   })
