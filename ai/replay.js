@@ -11,13 +11,13 @@ function replayReply(content,userName,groupuin,callback,qq){
       var um = lst.m;
       if(!um){
         var c = lst.c;
-        var list = lst.l;
+        var list = lst.lx;
         list.push(qq);
         if(c>0.9+Math.random()*3){
-          memory[groupuin]={l:content,c:c+1,m:true,l:list};
+          memory[groupuin]={l:content,c:c+1,m:true,lx:list};
           callback(content,true);
         }else{
-          memory[groupuin]={l:content,c:c+1,m:um,l:[qq]};
+          memory[groupuin]={l:content,c:c+1,m:um,lx:[qq]};
         }
         console.log(list);
         if(c>5){
@@ -28,10 +28,10 @@ function replayReply(content,userName,groupuin,callback,qq){
 
       }
     }else{
-      memory[groupuin]={l:content,c:1,m:false,l:qq};
+      memory[groupuin]={l:content,c:1,m:false,lx:[qq]};
     }
   }else{
-    memory[groupuin]={l:content,c:1,m:false,l:qq}
+    memory[groupuin]={l:content,c:1,m:false,lx:[qq]}
   }
 }
 
