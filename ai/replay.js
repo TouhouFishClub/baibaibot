@@ -15,7 +15,9 @@ function replayReply(content,userName,groupuin,callback,qq){
       if(!um){
         if(c>5){
           var banqq = list[Math.floor(list.length*Math.random())];
-          banUserInGroup(banqq,groupuin,60);
+          callback('发现大量复读姬出没！\n下面百百要选择一名复读姬塞上口球\n到底是哪位小朋友这么幸运呢？');
+          banUserInGroup(banqq,groupuin,120);
+          console.log(banqq,groupuin);
         }
         if(c>0.9+Math.random()*3){
           memory[groupuin]={l:content,c:c+1,m:true,lx:list};
