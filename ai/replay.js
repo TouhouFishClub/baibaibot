@@ -23,10 +23,11 @@ function replayReply(content,userName,groupuin,callback,qq){
         memory[groupuin]={l:content,c:c+1,m:um,lx:list};
       }
       console.log("c:"+c);
-      if(c>5){
+      if(list.length>4+Math.random()*2){
         var banqq = list[Math.floor(list.length*Math.random())];
         callback('发现大量复读姬出没！\n下面百百要选择一名复读姬塞上口球\n到底是哪位小朋友这么幸运呢？\n就决定是你了[CQ:at,qq='+banqq+']');
         banUserInGroup(banqq,groupuin,120);
+        memory[groupuin].lx=[banqq];
         console.log(banqq,groupuin);
       }
     }else{
