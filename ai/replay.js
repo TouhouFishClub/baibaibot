@@ -18,6 +18,8 @@ function replayReply(content,userName,groupuin,callback,qq){
         }else{
           memory[groupuin]={l:content,c:c+1,m:um,l:[qq]};
         }
+        console.log(lst);
+        console.log(list);
         if(c>5){
           var banqq = list[Math.floor(list.length*Math.random())];
           banUserInGroup(banqq,groupuin,60);
