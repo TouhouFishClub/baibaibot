@@ -258,10 +258,6 @@ function handleMsg_D(msgObj,response){
     return
   }
 
-  if(rcontent=='食材'){
-    getFoodRate(callback);
-    return;
-  }
 
 
   let con =content.trim(), fi = con.substring(0,4)
@@ -346,7 +342,7 @@ function handleMsg_D(msgObj,response){
   }
   answer(content,name,groupName,callback,groupid,from);
   if(nickname.indexOf('百百')==-1){
-    replayReply(content,name,groupid,callback);
+    replayReply(content,name,groupid,callback,from);
   }
 
 }
