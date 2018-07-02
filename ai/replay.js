@@ -11,8 +11,8 @@ function replayReply(content,userName,groupuin,callback,qq){
       var um = lst.m;
       var c = lst.c;
       var list = lst.lx;
+      list.push(qq);
       if(!um){
-        list.push(qq);
         if(c>5){
           var banqq = list[Math.floor(list.length*Math.random())];
           banUserInGroup(banqq,groupuin,60);
@@ -21,10 +21,10 @@ function replayReply(content,userName,groupuin,callback,qq){
           memory[groupuin]={l:content,c:c+1,m:true,lx:list};
           callback(content,true);
         }else{
-          memory[groupuin]={l:content,c:c+1,m:um,lx:[qq]};
+          memory[groupuin]={l:content,c:c+1,m:um,lx:list};
         }
       }else{
-        memory[groupuin]={l:content,c:c+1,m:um,lx:[qq]};
+        memory[groupuin]={l:content,c:c+1,m:um,lx:list};
       }
     }else{
       memory[groupuin]={l:content,c:1,m:false,lx:[qq]};
