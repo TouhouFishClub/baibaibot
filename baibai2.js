@@ -336,14 +336,9 @@ function handleMsg_D(msgObj,response){
     callback(content+"="+calret);
     return;
   }
-  if(content.indexOf('百百')>-1){
-    tulingMsg(from,content.trim(),callback,groupid);
-    return;
-  }
+  tulingMsg(from,content.trim(),callback,groupid);
   answer(content,name,groupName,callback,groupid,from);
-  if(nickname.indexOf('百百')==-1){
-    replayReply(content,name,groupid,callback,from);
-  }
+  replayReply(content,name,groupid,callback,from);
 
 }
 

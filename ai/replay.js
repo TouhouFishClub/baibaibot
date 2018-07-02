@@ -9,23 +9,22 @@ function replayReply(content,userName,groupuin,callback,qq){
     var lastcontent = lst.l;
     if(content==lastcontent){
       var um = lst.m;
+      var c = lst.c;
+      var list = lst.lx;
       if(!um){
-        var c = lst.c;
-        var list = lst.lx;
         list.push(qq);
+        if(c>5){
+          var banqq = list[Math.floor(list.length*Math.random())];
+          banUserInGroup(banqq,groupuin,60);
+        }
         if(c>0.9+Math.random()*3){
           memory[groupuin]={l:content,c:c+1,m:true,lx:list};
           callback(content,true);
         }else{
           memory[groupuin]={l:content,c:c+1,m:um,lx:[qq]};
         }
-        console.log(list);
-        if(c>5){
-          var banqq = list[Math.floor(list.length*Math.random())];
-          banUserInGroup(banqq,groupuin,60);
-        }
       }else{
-
+        memory[groupuin]={l:content,c:c+1,m:um,lx:[qq]};
       }
     }else{
       memory[groupuin]={l:content,c:1,m:false,lx:[qq]};
