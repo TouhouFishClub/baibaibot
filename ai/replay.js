@@ -5,6 +5,7 @@ function replayReply(content,userName,groupuin,callback,qq){
   content=content.trim();
   if(memory[groupuin]){
     var lst = memory[groupuin];
+    console.log(lst);
     var lastcontent = lst.l;
     if(content==lastcontent){
       var um = lst.m;
@@ -18,7 +19,6 @@ function replayReply(content,userName,groupuin,callback,qq){
         }else{
           memory[groupuin]={l:content,c:c+1,m:um,l:[qq]};
         }
-        console.log(lst);
         console.log(list);
         if(c>5){
           var banqq = list[Math.floor(list.length*Math.random())];
@@ -28,10 +28,10 @@ function replayReply(content,userName,groupuin,callback,qq){
 
       }
     }else{
-      memory[groupuin]={l:content,c:1,m:false};
+      memory[groupuin]={l:content,c:1,m:false,l:qq};
     }
   }else{
-    memory[groupuin]={l:content,c:1,m:false}
+    memory[groupuin]={l:content,c:1,m:false,l:qq}
   }
 }
 
