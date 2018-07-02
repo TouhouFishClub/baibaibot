@@ -336,7 +336,10 @@ function handleMsg_D(msgObj,response){
     callback(content+"="+calret);
     return;
   }
-  tulingMsg(from,content.trim(),callback,groupid);
+  if(content.indexOf('百百')>-1){
+    tulingMsg(from,content.trim(),callback,groupid);
+    return;
+  }
   answer(content,name,groupName,callback,groupid,from);
   replayReply(content,name,groupid,callback,from);
 
