@@ -33,7 +33,7 @@ function load(){
 var timer = 0;
 tm();
 function tm(){
-  var left = (-new Date().getTime()+23400000)%43200000+43200000
+  var left = (new Date().getTime()+23400000)%43200000+43200000
   console.log('will start senka after '+ (left/60000).toFixed(0) + 'minutes')
   if(timer==0){
     timer = 1;
@@ -44,6 +44,20 @@ function tm(){
         tm();
       },10000);
     },left)
+  }
+  var now = new Date();
+  if(now.getDate()==monthOfDay[now.getMonth()]){
+    var then = new Date();
+    then.setHours(21);
+    then.setMinutes(30);
+    then.setSeconds(0);
+    then.setMilliseconds(0);
+    var sub = then.getTime()-now.getTime();
+    if(sub>0){
+      setTimeout(function(){
+        loopsenka();
+      },sub)
+    }
   }
 }
 

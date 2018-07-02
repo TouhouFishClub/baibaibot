@@ -5,7 +5,6 @@ function replayReply(content,userName,groupuin,callback,qq){
   content=content.trim();
   if(memory[groupuin]){
     var lst = memory[groupuin];
-    console.log(lst);
     var lastcontent = lst.l;
     if(content==lastcontent){
       var um = lst.m;
@@ -28,7 +27,6 @@ function replayReply(content,userName,groupuin,callback,qq){
         callback('发现大量复读姬出没！\n下面百百要选择一名复读姬塞上口球\n到底是哪位小朋友这么幸运呢？\n就决定是你了[CQ:at,qq='+banqq+']');
         banUserInGroup(banqq,groupuin,120);
         memory[groupuin].lx=[banqq];
-        console.log(banqq,groupuin);
       }
     }else{
       memory[groupuin]={l:content,c:1,m:false,lx:[qq]};
