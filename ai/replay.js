@@ -30,7 +30,7 @@ function replayReply(content,userName,groupuin,callback,qq){
         memory[groupuin].lx=[banqq];
         setTimeout(function(){
           banUserInGroup(banqq,groupuin,0);
-        },Math.floor(Math.random()*time))
+        },Math.floor(Math.random()*time*1000))
       }
     }else{
       memory[groupuin]={l:content,c:1,m:false,lx:[qq]};
