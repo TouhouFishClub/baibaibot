@@ -189,11 +189,11 @@ function mt(x){
       r=r+px;
     }else{
       if(px<10){
-        r=r+"00"+px;
+        r=r+"000"+px;
       }else if(px<100){
-        r=r+"0"+px;
+        r=r+"00"+px;
       }else if(px<1000){
-        r=r+""+px;
+        r=r+"0"+px;
       }else{
         r=r+px;
       }
