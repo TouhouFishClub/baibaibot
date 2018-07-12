@@ -1,2 +1,2 @@
-const {getNameList} = require('./ai/games/card/fetch');
-getNameList();
+const {s1} = require('./ai/chat/statistic');
+s1();

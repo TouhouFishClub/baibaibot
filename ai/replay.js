@@ -1,4 +1,7 @@
 const {banUserInGroup} = require('../cq/cache');
+var MongoClient = require('mongodb').MongoClient;
+var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
+
 
 var memory={};
 function replayReply(content,userName,groupuin,callback,qq){
@@ -28,9 +31,12 @@ function replayReply(content,userName,groupuin,callback,qq){
         callback('发现大量复读姬出没！\n下面百百要选择一名复读姬塞上口球\n到底是哪位小朋友这么幸运呢？\n就决定是你了[CQ:at,qq='+banqq+']');
         banUserInGroup(banqq,groupuin,time);
         memory[groupuin].lx=[banqq];
+        var uban = Math.floor(Math.random()*time*1000);
+        var realbandur = time*1000-uban;
+        saveBan(qq,groupuin,realbandur,callback);
         setTimeout(function(){
           banUserInGroup(banqq,groupuin,0);
-        },Math.floor(Math.random()*time*1000))
+        },uban)
       }
     }else{
       memory[groupuin]={l:content,c:1,m:false,lx:[qq]};
@@ -39,6 +45,35 @@ function replayReply(content,userName,groupuin,callback,qq){
     memory[groupuin]={l:content,c:1,m:false,lx:[qq]}
   }
 }
+
+function saveBan(qq,gid,dur,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    var now = new Date();
+    var cl_replay_ban = db.collection('cl_replay_ban');
+    var d = {'_id':now,qq:qq,dur:dur,gid:gid};
+    cl_replay_ban.save(d,function(){
+      var query = {'_id':{'$gt':new Date(new Date().getTime()-86400000)},gid:gid,qq:qq};
+      cl_replay_ban.count(query,function(err,count){
+        if(count>2){
+          setTimeout(function(){
+            var time = 0;
+            for(var i=0;i<count;i++){
+              time = time + 200+Math.floor(Math.random()*200);
+            }
+            callback('[CQ:at,qq='+qq+']本日已被口球'+count+'次,将额外塞'+count+'个口球封住他的嘴');
+            banUserInGroup(qq,gid,time);
+            var uban = Math.floor(Math.random()*time*1000);
+            setTimeout(function(){
+              banUserInGroup(banqq,groupuin,0);
+            },uban)
+          },dur+1000);
+        }
+      });
+    });
+
+  })
+}
+
 
 module.exports={
   replayReply
