@@ -62,17 +62,28 @@ function saveBan(qq,gid,dur,callback){
               time = time + 200+Math.floor(Math.random()*200);
             }
             callback('[CQ:at,qq='+qq+']本日已被口球'+count+'次,将额外塞'+count+'个口球封住他的嘴');
-            banUserInGroup(qq,gid,time);
-            var uban = Math.floor(Math.random()*time*1000);
-            setTimeout(function(){
-              banUserInGroup(banqq,groupuin,0);
-            },uban)
+            cban(qq,gid,count,callback);
           },dur+1000);
         }
       });
     });
-
   })
+}
+
+function cban(banqq,gid,c,callback){
+  if(c<=0){
+    return;
+  }
+  var time = time + 200 + Math.floor(Math.random() * 200);
+  banUserInGroup(banqq, gid, time);
+  var uban = Math.floor(Math.random() * time * 1000);
+  setTimeout(function () {
+    banUserInGroup(banqq, gid, 0);
+    setTimeout(function(){
+      callback('剩余'+c+'个口球正在飞往'+'[CQ:at,qq='+qq+']的嘴中');
+      cban(banqq,gid,c-1,callback)
+    },1234);
+  }, uban)
 }
 
 
