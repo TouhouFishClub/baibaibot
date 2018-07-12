@@ -32,8 +32,8 @@ function replayReply(content,userName,groupuin,callback,qq){
         banUserInGroup(banqq,groupuin,time);
         memory[groupuin].lx=[banqq];
         var uban = Math.floor(Math.random()*time*1000);
-        var realbandur = time*1000-uban;
-        saveBan(qq,groupuin,realbandur,callback);
+        //var realbandur = time*1000-uban;
+        saveBan(qq,groupuin,uban,callback);
         setTimeout(function(){
           banUserInGroup(banqq,groupuin,0);
         },uban)
@@ -47,6 +47,7 @@ function replayReply(content,userName,groupuin,callback,qq){
 }
 
 function saveBan(qq,gid,dur,callback){
+  console.log('ban:'+qq+':in:'+gid+':dur:'+dur);
   MongoClient.connect(mongourl, function(err, db) {
     var now = new Date();
     var cl_replay_ban = db.collection('cl_replay_ban');
