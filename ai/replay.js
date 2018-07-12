@@ -83,6 +83,10 @@ function cban(banqq,gid,c,callback){
     var nextban = Math.floor(Math.random()*60000+10000);
     console.log('nextban:'+nextban)
     banUserInGroup(banqq, gid, 0);
+    if(Math.random()*c>2){
+      c = c - 1;
+      callback('[CQ:at,qq='+banqq+']竟然吞掉了一个口球,为他鼓掌！');
+    }
     setTimeout(function(){
       callback('剩余'+c+'个口球正在飞往'+'[CQ:at,qq='+banqq+']的嘴中');
       cban(banqq,gid,c-1,callback)
