@@ -11,6 +11,7 @@ const Axios = require('axios')
 const _  = require('lodash')
 const {getPrice,getBitFlyer} = require('./push');
 const {cm,combine} = require(path.join(__dirname, '/coin/market.js'))
+const {getStock} = require(path.join(__dirname, '/coin/stock.js'))
 const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
 const TIME_OUT = 30000
 
@@ -35,6 +36,10 @@ module.exports = function(userId, content, callback){
       break
     case 'a':
     case 'A':
+      combine(callback);
+      break
+    case 'x':
+    case 'X':
       combine(callback);
       break
     case '币种':

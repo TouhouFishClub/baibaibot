@@ -70,7 +70,9 @@ function combine(callback){
 
 module.exports={
   cm,
-  combine
+  combine,
+  renderText,
+  renderTextBox
 }
 
 

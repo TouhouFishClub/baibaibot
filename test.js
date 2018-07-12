@@ -1,2 +1,2 @@
-const {s1} = require('./ai/chat/statistic');
-s1();
+const {getStock} = require('./ai/coin/stock');
+getStock();
