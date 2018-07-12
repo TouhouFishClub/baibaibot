@@ -77,6 +77,7 @@ function cban(banqq,gid,c,callback){
   var time = time + 200 + Math.floor(Math.random() * 200);
   banUserInGroup(banqq, gid, time);
   var uban = Math.floor(Math.random() * time * 1000);
+  console.log(banqq+'next:'+uban);
   setTimeout(function () {
     banUserInGroup(banqq, gid, 0);
     setTimeout(function(){
