@@ -72,7 +72,7 @@ function saveBan(qq,gid,dur,callback){
 }
 
 function cban(banqq,gid,c,callback){
-  var time = 200 + Math.floor(Math.random() * 200);
+  var time = 100 + Math.floor(Math.random() * 200);
   banUserInGroup(banqq, gid, time);
   var uban = Math.floor(Math.random() * time * 1000);
   console.log(banqq+'next:'+uban+":"+c);
