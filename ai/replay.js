@@ -84,7 +84,7 @@ function cban(banqq,gid,c,callback){
     console.log('nextban:'+nextban)
     banUserInGroup(banqq, gid, 0);
     setTimeout(function(){
-      callback('剩余'+c+'个口球正在飞往'+'[CQ:at,qq='+qq+']的嘴中');
+      callback('剩余'+c+'个口球正在飞往'+'[CQ:at,qq='+banqq+']的嘴中');
       cban(banqq,gid,c-1,callback)
     },nextban);
   }, uban)
