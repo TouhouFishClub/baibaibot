@@ -40,7 +40,7 @@ module.exports = function(userId, content, callback){
       break
     case 'x':
     case 'X':
-      combine(callback);
+      getStock(callback)
       break
     case '币种':
       let str = Object.keys(currencyCodeObj).join('、'), callbackArr = ['支持的币种']

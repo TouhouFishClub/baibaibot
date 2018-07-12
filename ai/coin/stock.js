@@ -8,7 +8,7 @@ var iconv = require("iconv-lite");
 
 const {renderText,renderTextBox} = require('./market')
 
-function getStock(){
+function getStock(callback){
   var url = "http://hq.sinajs.cn/list=s_sh000001,s_sz399001,s_sz399300,int_hangseng,int_dji,int_nasdaq,int_sp500,int_nikkei";
   var options = {
     hostname: 'hq.sinajs.cn',
@@ -52,7 +52,7 @@ function getStock(){
           }
         }
         console.log(ret);
-        drawImg(ret);
+        drawImg(ret,callback);
       });
     }
   });
