@@ -26,8 +26,8 @@ function replayReply(content,userName,groupuin,callback,qq){
       }
       console.log("c:"+c);
       if(list.length>3+Math.random()*3){
-        var time = 200+Math.floor(Math.random()*200);
-        var banqq = list[Math.floor(list.length*Math.random()-1)+1];
+        var time = 100+Math.floor(Math.random()*200);
+        var banqq = list[Math.floor((list.length-1)*Math.random())+1];
         callback('发现大量复读姬出没！\n下面百百要选择一名复读姬塞上口球\n到底是哪位小朋友这么幸运呢？\n就决定是你了[CQ:at,qq='+banqq+']');
         banUserInGroup(banqq,groupuin,time);
         memory[groupuin].lx=[banqq];
@@ -72,7 +72,7 @@ function saveBan(qq,gid,dur,callback){
 }
 
 function cban(banqq,gid,c,callback){
-  var time = 100 + Math.floor(Math.random() * 200);
+  var time = 100 + Math.floor(Math.random() * (20000/(c*10+100)));
   banUserInGroup(banqq, gid, time);
   var uban = Math.floor(Math.random() * time * 1000);
   console.log(banqq+'next:'+uban+":"+c);
