@@ -63,7 +63,7 @@ function saveBan(qq,gid,dur,callback){
               time = time + 200+Math.floor(Math.random()*200);
             }
             callback('[CQ:at,qq='+qq+']本日已被口球'+count+'次,将额外塞'+count+'个口球封住他的嘴');
-            cban(qq,gid,count,callback);
+            cban(qq,gid,count-1,callback);
           },dur+1000);
         }
       });
