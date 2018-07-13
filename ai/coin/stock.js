@@ -43,6 +43,10 @@ function getStock(callback){
           var nowprice = ssa[1];
           var sub = ssa[2];
           var subrate = ssa[3];
+          var ns = subrate.indexOf('%');
+          if(ns>0){
+            subrate=subrate.substring(0,ns);
+          }
           if(name.length>1){
             ret.push({
               n: name,
