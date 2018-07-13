@@ -39,6 +39,9 @@ function getStock(callback){
           var ss = s1.substring(0,n1);
           console.log(ss);
           var ssa = ss.split(',');
+          if(ssa.length<2){
+            continue;
+          }
           var name = ssa[0];
           var nowprice = ssa[1];
           var sub = ssa[2];
