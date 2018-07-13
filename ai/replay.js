@@ -53,7 +53,12 @@ function saveBan(qq,gid,dur,callback){
     var cl_replay_ban = db.collection('cl_replay_ban');
     var d = {'_id':now,qq:qq,dur:dur,gid:gid};
     cl_replay_ban.save(d,function(){
-      var query = {'_id':{'$gt':new Date(new Date().getTime()-86400000)},gid:gid,qq:qq};
+      var then = new Date();
+      then.setHours(0);
+      then.setMinutes(0);
+      then.setSeconds(0);
+      then.setMilliseconds(1);
+      var query = {'_id':{'$gt':then},gid:gid,qq:qq};
       cl_replay_ban.count(query,function(err,count){
         if(count>2){
           console.log('next:'+dur);
@@ -83,7 +88,7 @@ function cban(banqq,gid,c,callback){
     var nextban = Math.floor(Math.random()*60000+10000);
     console.log('nextban:'+nextban)
     banUserInGroup(banqq, gid, 0);
-    if(Math.random()*c>2){
+    if(Math.random()*c>1.5){
       c = c - 1;
       callback('[CQ:at,qq='+banqq+']竟然吞掉了一个口球,为他鼓掌！');
     }
