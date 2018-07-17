@@ -33,7 +33,7 @@ function replayReply(content,userName,groupuin,callback,qq){
         memory[groupuin].lx=[banqq];
         var uban = Math.floor(Math.random()*time*1000);
         //var realbandur = time*1000-uban;
-        saveBan(qq,groupuin,uban,callback);
+        saveBan(banqq,groupuin,uban,callback);
         setTimeout(function(){
           banUserInGroup(banqq,groupuin,0);
         },uban)
