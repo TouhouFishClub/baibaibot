@@ -4,7 +4,7 @@ var appid = 1107054322;
 var appkey = 'Yw6WKnq3It2cnUqn';
 
 function descryptReply(content,callback){
-  if(content.indexOf('[CQ:image]')>=0){
+  if(content.indexOf('[CQ:image')>=0){
     var n1 = content.indexOf('https://gchat.qpic');
     var s1 = content.substring(n1);
     var n2 = s1.indexOf('?');
