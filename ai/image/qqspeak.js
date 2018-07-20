@@ -10,7 +10,7 @@ function descryptReply(content,callback){
     var n2 = s1.indexOf('?');
     var url = s1.substring(0,n2);
     getdescrpt(url,function(text){
-      callback('[CQ:image,url='+url+']\n'+text);
+      callback('[CQ:image,file='+url+']\n'+text);
     })
   }
 }
