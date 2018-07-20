@@ -43,6 +43,8 @@ const {baiduVoice} = require('./ai/voice/baiduvoice')
 const {saveChat} = require('./ai/chat/collect');
 const {getFoodRate} = require('./ai/kancolle/food');
 
+const {descryptReply} = require('./ai/image/qqspeak');
+
 initWS();
 
 var wsonline = false;
@@ -373,6 +375,8 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
     getShipReply(content.substring(1),userName,callback);
   }else if(first=="q"||first=='Q'){
     kcq(userName,content.substring(1),callback);
+  }else if(first=="i"||first=='I'){
+    descryptReply(content.substring(1),callback);
   }else if(first=="k"||first=='K'){
     getShip(content.substring(1),callback);
   }else if(first=="z"||first=='Z'){

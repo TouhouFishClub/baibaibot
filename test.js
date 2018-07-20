@@ -1,2 +1,2 @@
-const {getStock} = require('./ai/coin/stock');
-getStock();
+const {getdescrpt} = require('./ai/image/qqspeak');
+getdescrpt();
