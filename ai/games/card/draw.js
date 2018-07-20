@@ -10,6 +10,7 @@ var imageMagick = gm.subClass({ imageMagick : true });
 const phantom = require('phantom');
 var {sendGmImage} = require('../../../cq/sendImage');
 const {baiduVoice} = require('../../voice/baiduvoice');
+const {saveBan} = require ('../../replay')
 const {banUserInGroup,getUserRoleInGroupByCache} = require('../../../cq/cache')
 
 
@@ -26,10 +27,6 @@ function bdraw(groupid,from,callback){
 
 
 function drawNameCard(username,qq,callback,groupid){
-  if((groupid+"").startsWith("54982")){
-    callback('抽卡是不对的！');
-    return;
-  }
   var now = new Date().getTime();
   console.log("1111+"+groupid);
   var cooldown;
@@ -77,9 +74,11 @@ function drawNameCard(username,qq,callback,groupid){
       callback('【'+username+'】抽到了【禁言卡】');
       var time=Math.floor(Math.random()*300);
       banUserInGroup(qq,groupid,time);
+      var unban = Math.floor(time*1000*Math.random())+1000;
       setTimeout(function(){
         banUserInGroup(qq,groupid,0);
-      },Math.floor(time*1000*Math.random())+1000);
+        saveBan(qq,groupid,unban,callback)
+      },unban);
       return;
     }
   }

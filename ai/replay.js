@@ -101,5 +101,6 @@ function cban(banqq,gid,c,callback){
 
 
 module.exports={
-  replayReply
+  replayReply,
+  saveBan
 }
