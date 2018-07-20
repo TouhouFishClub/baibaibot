@@ -18,7 +18,6 @@ function descryptReply(content,callback){
 
 
 function getdescrpt(imgurl,callback){
-  imgurl = 'https://gchat.qpic.cn/gchatpic_new/357474405/568281876-2924256116-AABEA9FF00CF5CF216E48379CA47B03A/0?vuin=2375373419&term=2';
   var url = 'https://ai.qq.com/cgi-bin/appdemo_imgtotext'
   var options = {
     host: 'ai.qq.com',
