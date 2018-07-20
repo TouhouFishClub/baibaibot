@@ -116,7 +116,11 @@ function handleMsg_D(msgObj,response){
     if(content.indexOf('&#44;')>-1){
       content=content.replace(/&#44;/g,',');
     }
+    if(content.indexOf('[CQ:at,qq=2375373419]')>-1){
+      content=content.replace(/\[CQ:at,qq=2375373419\]/g,'百百');
+    }
   }
+
   if(type=='private'){
     var userid = msgObj.user_id;
     if(userid=='357474405'){
