@@ -102,14 +102,15 @@ function drawNameCard(username,qq,callback,groupid){
       var ud = data[0];
       var name = ud._id;
       var ret = '【'+username+'】'+'抽到了：'+name+'\n';
+      if(data.ff){
+        cl_card.updateOne({'_id':name},{'$unset':{ff:true}});
+      }
       saveCard(qq,name);
       var cb=function(detailjson){
         console.log(detailjson);
         var img = detailjson.img;
         var tdata = detailjson.t;
-        if(detailjson.ff){
-          cl_card.updateOne({'_id':name},{'$unset':{ff:true}});
-        }
+
         if(tdata){
           tdata=tdata.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
         }
