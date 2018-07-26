@@ -102,7 +102,7 @@ function drawNameCard(username,qq,callback,groupid){
       var ud = data[0];
       var name = ud._id;
       var ret = '【'+username+'】'+'抽到了：'+name+'\n';
-      if(data.ff){
+      if(ud.ff){
         cl_card.updateOne({'_id':name},{'$unset':{ff:true}});
       }
       saveCard(qq,name);
