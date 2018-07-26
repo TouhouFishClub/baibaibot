@@ -181,9 +181,12 @@ function getDetailByName(cl_card,name,href,callback,db){
           line++;
         }
       }
-      cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()}},function(){
-        db.close();
-      });
+      if(imgsrc&&tdata){
+        cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()},'unset':{ff:true}},function(){
+          db.close();
+        });
+      }
+
       callback({img:imgsrc,t:tdata});
     });
     res.on('error',function(){
