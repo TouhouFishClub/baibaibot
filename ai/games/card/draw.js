@@ -107,6 +107,9 @@ function drawNameCard(username,qq,callback,groupid){
         console.log(detailjson);
         var img = detailjson.img;
         var tdata = detailjson.t;
+        if(detailjson.ff){
+          cl_card.updateOne({'_id':name},{'$unset':{ff:true}});
+        }
         if(tdata){
           tdata=tdata.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
         }
@@ -182,7 +185,7 @@ function getDetailByName(cl_card,name,href,callback,db){
         }
       }
       if(imgsrc&&tdata){
-        cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()},'unset':{ff:true}},function(){
+        cl_card.updateOne({'_id':name},{'$set':{detail:{img:imgsrc,t:tdata},ts:new Date()}},function(){
           db.close();
         });
       }
