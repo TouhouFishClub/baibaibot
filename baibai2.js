@@ -44,6 +44,7 @@ const {saveChat} = require('./ai/chat/collect');
 const {getFoodRate} = require('./ai/kancolle/food');
 
 const {descryptReply} = require('./ai/image/qqspeak');
+const rp = require('./ai/rp');
 
 initWS();
 
@@ -274,6 +275,11 @@ function handleMsg_D(msgObj,response){
 
   if(con === 'ruawork' || (con.indexOf('茹娅') + 1 && con.indexOf('上班') + 1)){
     rua(callback)
+    return
+  }
+
+  if(con === 'jrrp' || con == '今日运势'){
+    rp(from, callback)
     return
   }
   let fie = con.substring(0,3)
