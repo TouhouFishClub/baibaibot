@@ -17,12 +17,13 @@ module.exports = function(qq, callback){
     rp = Math.abs(rp)
   }
   if(rp > 100){
-    if(rp > 120){
-      rp = 100 - (rp - 120)
+    if(rp > 105){
+      rp = 100 - (rp - 105)
     }
     else {
       rp = 100
     }
   }
+  // callback(rp)
   callback(`[CQ:at,qq=${qq}] 今天的运势指数是 ${rp}% ！\n${new Array(rp).fill('|').join('')}`)
 }
