@@ -1,10 +1,7 @@
-const rp = require('./ai/rp');
-let count = 10000
-let arr = new Array(101).fill(0)
-for(let i = 1; i < 100000; i++) {
-  count += ~~(Math.random() * 1000)
-  rp(count, d => {
-    arr[d] += 1
-  });
+const {G21Boss} = require('./ai/mabinogi/G21Boss');
+G21Boss(text => {
+  console.log(text)
+})
+const callback = text => {
+  console.log(text)
 }
-console.log(JSON.stringify(arr))
