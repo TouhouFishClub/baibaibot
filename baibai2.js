@@ -45,6 +45,7 @@ const {getFoodRate} = require('./ai/kancolle/food');
 
 const {descryptReply} = require('./ai/image/qqspeak');
 const rp = require('./ai/rp');
+const {G21Boss} = require('./ai/mabinogi/G21Boss');
 
 initWS();
 
@@ -280,6 +281,10 @@ function handleMsg_D(msgObj,response){
 
   if(con === 'jrrp' || con == '今日运势'){
     rp(from, callback)
+    return
+  }
+  if(con === 'boss'){
+    G21Boss(callback)
     return
   }
   let fie = con.substring(0,3)
