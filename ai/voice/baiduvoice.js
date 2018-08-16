@@ -57,6 +57,7 @@ function baiduVoice(text,callback){
     voice.encode(
       filename, "../coolq-data/cq/data/record/send/"+now.getTime()+".silk", { format: "silk" },
       function(file){
+        console.log(222);
         console.log(file);
         callback('[CQ:record,file=send/'+now.getTime()+'.silk]')
       })
