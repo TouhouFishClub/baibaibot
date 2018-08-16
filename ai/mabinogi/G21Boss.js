@@ -137,13 +137,13 @@ const G21Boss = (callback, showNextTime = false) => {
     // console.log(ele)
     let mText = checkBossShow(nowTime, ele, showNextTime)
     if(mText !== ''){
-      textArr.push(`${workList[ele].name}${mText}出现地点：${workList[ele].where}`)
+      textArr.push(`【${workList[ele].name}】${mText}出现地点：${workList[ele].where}`)
     }
   })
   if(textArr.length == 0){
     textArr.push('当前没有boss出现')
   }
-  callback(textArr.join('\n'))
+  callback(textArr.join('\n\n'))
 }
 const checkBossShow = (hour, monsterName, showNextTime = false) => {
   let now = new Date(),
