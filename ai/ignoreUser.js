@@ -28,7 +28,7 @@ module.exports = function(group, id, content, callback){
           groupLogs[group].lastSpeakMsg = ''
           groupLogs[group].count = 1
           if(showMsg){
-            callback(`[CQ:at,qq=${id}]您已被禁止交互${Math.pow(2, ignoreUsers[id].count - 1) * ignoreTimeBase}秒`)
+            callback(`[CQ:at,qq=${id}]百百决定不理你${Math.pow(2, ignoreUsers[id].count - 1) * ignoreTimeBase}秒`)
           }
         } else {
           groupLogs[group].count = groupLogs[group].count + 1
