@@ -283,8 +283,12 @@ function handleMsg_D(msgObj,response){
     rp(from, callback)
     return
   }
-  if(con.toLowerCase() === 'g21boss' || con.toLowerCase() === 'gboss' || con.toLowerCase() === 'allboss'){
+  if(con.toLowerCase() === 'g21boss' || con.toLowerCase() === 'gboss'){
     G21Boss(callback)
+    return
+  }
+  if(con.toLowerCase() === 'g21boss' || con.toLowerCase() === 'allboss'){
+    G21Boss(callback, true)
     return
   }
   let fie = con.substring(0,3)

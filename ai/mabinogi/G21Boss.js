@@ -128,14 +128,14 @@ const workList = {
   }
 }
 
-const G21Boss = (callback, isAuto = false) => {
+const G21Boss = (callback, showNextTime = false) => {
   let now = new Date(),
     nowTime = now.getHours(),
     text = '',
     textArr = []
   Object.keys(workList).forEach(ele => {
     // console.log(ele)
-    let mText = checkBossShow(nowTime, ele)
+    let mText = checkBossShow(nowTime, ele, showNextTime)
     if(mText !== ''){
       textArr.push(`${workList[ele].name}(${workList[ele].where})${mText}`)
     }
