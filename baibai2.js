@@ -111,6 +111,9 @@ function handleMsg_D(msgObj,response){
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
+  if(msgObj.user_id == 1003453076){
+    return false
+  }
   if(content){
     if(content.indexOf('&amp;')>-1){
       content=content.replace(/&amp;/g,'&');
