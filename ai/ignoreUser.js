@@ -46,7 +46,5 @@ module.exports = function(group, id, content, callback){
       }
     }
   }
-  if(ignoreUsers[id] && ignoreUsers[id].endTime > now){
-    return false
-  }
+  return !(ignoreUsers[id] && ignoreUsers[id].endTime > now)
 }
