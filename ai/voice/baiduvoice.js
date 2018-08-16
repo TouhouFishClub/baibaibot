@@ -38,7 +38,7 @@ function baiduVoice(text,callback){
 
   console.log("will voice:"+text);
   var path = '/text2audio?lan=zh&ctp=1&cuid=abcdxxx&tok='+access_token+'&vol=6&per=4&spd=5&pit=7&tex='+encodeURIComponent(text);
-
+  console.log("token:"+access_token)
   var now = new Date();
   var filename = 'static/'+now.getTime()+".mp3";
   var req = request({
