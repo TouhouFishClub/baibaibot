@@ -65,7 +65,7 @@ const workList = {
         },
       ]
     },
-    "name": "莫库尔卡皮",
+    "name": "莫库尔卡皮（树妖）",
     "where": "遗忘海滩"
   },
   "SylvanDragon": {
@@ -137,13 +137,13 @@ const G21Boss = (callback, showNextTime = false) => {
     // console.log(ele)
     let mText = checkBossShow(nowTime, ele, showNextTime)
     if(mText !== ''){
-      textArr.push(`${workList[ele].name}(${workList[ele].where})${mText}`)
+      textArr.push(`【${workList[ele].name}】${mText}出现地点：${workList[ele].where}`)
     }
   })
   if(textArr.length == 0){
     textArr.push('当前没有boss出现')
   }
-  callback(textArr.join('\n'))
+  callback(textArr.join('\n\n'))
 }
 const checkBossShow = (hour, monsterName, showNextTime = false) => {
   let now = new Date(),
@@ -157,7 +157,7 @@ const checkBossShow = (hour, monsterName, showNextTime = false) => {
       nextWork = index
     }
     if(hour >= time.start && hour < time.end){
-      text = `出现中, ${timeLiftByHour(worklist[index].end)} 后消失`
+      text = `出现了！！！\n${timeLiftByHour(worklist[index].end)} 后消失\n`
     }
   })
   if(text === '' && showNextTime) {
@@ -174,7 +174,7 @@ const checkBossShow = (hour, monsterName, showNextTime = false) => {
           break
       }
     }
-    text = `未出现, 下次出现还有 ${timeLiftByHour(worklist[nextWork].start, isNextDay)}`
+    text = `未出现\n下次出现还有 ${timeLiftByHour(worklist[nextWork].start, isNextDay)}\n`
   }
   return text
 }
@@ -200,7 +200,7 @@ const startTimeout = () => {
             let options = {
               host: '192.168.17.52',
               port: 23334,
-              path: `/send_group_msg?group_id=${groupId}&message=${encodeURIComponent(res)}`,
+              path: `/send_group_msg?group_id=${groupId}&message=${encodeURIComponent(`G21BOSS自动报时\n\n${res}`)}`,
               method: 'GET',
               headers: {}
             }
@@ -213,7 +213,7 @@ const startTimeout = () => {
           })
         }
       }
-    }, true)
+    })
     startTimeout()
   }, timeLeft)
 }
