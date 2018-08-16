@@ -287,7 +287,7 @@ function handleMsg_D(msgObj,response){
     G21Boss(callback)
     return
   }
-  if(con.toLowerCase() === 'g21boss' || con.toLowerCase() === 'allboss'){
+  if(con.toLowerCase() === 'allboss'){
     G21Boss(callback, true)
     return
   }
