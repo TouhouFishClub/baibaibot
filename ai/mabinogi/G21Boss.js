@@ -213,7 +213,7 @@ const startTimeout = () => {
           })
         }
       }
-    }, true)
+    })
     startTimeout()
   }, timeLeft)
 }
