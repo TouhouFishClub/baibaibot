@@ -3,7 +3,7 @@ var fs=require('fs');
 var request = require("request");
 const WxVoice = require('wx-voice');
 var voice = new WxVoice();
-voice.on("error", (err) => console.log(err));
+voice.on("error", (err) => console.log("111"+err));
 
 
 var access_token="24.605038ccaddb62db4b00b9ce793153ee.2592000.1534394660.282335-11186658"
