@@ -24,6 +24,7 @@
     "https-proxy-agent": "",
     "iconv": "^2.3.0",
     "lodash": "^4.17.4",
+    "md5": "^2.2.1",
     "mongodb": "^2.2.30",
     "nodejieba": "^2.2.6",
     "path-extra": "^4.2.0",

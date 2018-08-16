@@ -44,6 +44,8 @@ const {saveChat} = require('./ai/chat/collect');
 const {getFoodRate} = require('./ai/kancolle/food');
 
 const {descryptReply} = require('./ai/image/qqspeak');
+const rp = require('./ai/rp');
+const {G21Boss} = require('./ai/mabinogi/G21Boss');
 
 initWS();
 
@@ -274,6 +276,19 @@ function handleMsg_D(msgObj,response){
 
   if(con === 'ruawork' || (con.indexOf('茹娅') + 1 && con.indexOf('上班') + 1)){
     rua(callback)
+    return
+  }
+
+  if(con === 'jrrp' || con == '今日运势'){
+    rp(from, callback)
+    return
+  }
+  if(con.toLowerCase() === 'g21boss' || con.toLowerCase() === 'gboss'){
+    G21Boss(callback)
+    return
+  }
+  if(con.toLowerCase() === 'allboss'){
+    G21Boss(callback, true)
     return
   }
   let fie = con.substring(0,3)
