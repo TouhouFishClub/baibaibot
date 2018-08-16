@@ -200,7 +200,7 @@ const startTimeout = () => {
             let options = {
               host: '192.168.17.52',
               port: 23334,
-              path: `/send_group_msg?group_id=${groupId}&message=${encodeURIComponent(res)}`,
+              path: `/send_group_msg?group_id=${groupId}&message=${encodeURIComponent(`G21BOSS自动报时\n\n${res}`)}`,
               method: 'GET',
               headers: {}
             }

@@ -46,6 +46,7 @@ const {getFoodRate} = require('./ai/kancolle/food');
 const {descryptReply} = require('./ai/image/qqspeak');
 const rp = require('./ai/rp');
 const {G21Boss} = require('./ai/mabinogi/G21Boss');
+const checkIgnoreUser = require('./ai/ignoreUser')
 
 initWS();
 
