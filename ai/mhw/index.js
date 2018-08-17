@@ -38,8 +38,9 @@ var mem={};
 function searchMHW(content,userid,groupid,callback){
   var retlist = [];
   var first = content.substring(0,1);
-  if(first=='x'){
+  if(first=='w'){
     var m = mem[userid];
+    console.log(m);
     var num = parseInt(content.substring(1));
     var d = m[num];
     var ret = d.zh+'\n[CQ:image,file=send/mhw/'+d.en+']';
