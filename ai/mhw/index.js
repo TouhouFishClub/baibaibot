@@ -43,7 +43,7 @@ function searchMHW(content,userid,groupid,callback){
     console.log(m);
     var num = parseInt(content.substring(1));
     var d = m[num];
-    var ret = d.zh+'\n[CQ:image,file=send/mhw/'+d.en+']';
+    var ret = d.zh+'\n[CQ:image,file=send/mhw/monsters/'+d.en+']';
     callback(ret);
   }else{
     for(var i=0;i<list.length;i++){
