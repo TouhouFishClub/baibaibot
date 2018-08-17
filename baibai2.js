@@ -46,7 +46,9 @@ const {getFoodRate} = require('./ai/kancolle/food');
 const {descryptReply} = require('./ai/image/qqspeak');
 const rp = require('./ai/rp');
 const {G21Boss} = require('./ai/mabinogi/G21Boss');
-const checkIgnoreUser = require('./ai/ignoreUser')
+const checkIgnoreUser = require('./ai/ignoreUser');
+const {searchMHW} = require('./ai/mhw/index');
+
 
 initWS();
 
@@ -409,6 +411,8 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='r'||first=='R'){
     callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
+  }else if(first=='w'||first=='W'){
+    searchMHW(content.substring(1),from,groupid,callback);
   }else if(first=='f'||first=='F'){
       if((groupid+"").startsWith('20570')>0||(groupid+"").startsWith('67096')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
         fight(from,content.substring(1),groupid,callback);
