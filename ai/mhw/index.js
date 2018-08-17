@@ -53,7 +53,7 @@ function searchMHW(content,userid,groupid,callback){
     }
     var ret = ''
     if(retlist.length==1){
-      ret = retlist[0].cn+'\n[CQ:image,file=send/mhw/monsters/git pull'+retlist[0].en+']';
+      ret = retlist[0].cn+'\n[CQ:image,file=send/mhw/monsters/'+retlist[0].en+']';
     }else{
       ret = '请选择：\n';
       for(var i=0;i<retlist.length;i++){
