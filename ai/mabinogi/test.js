@@ -9,7 +9,7 @@ const ow = require('./tools/optionsetWhere')
 const rua = require('./ruawork')
 // rua(data => console.log(data))
 
-os('aa', '做家务', 'normal', d => {
+os('aa', '守护者', 'normal', d => {
   console.log(d)
 })
 

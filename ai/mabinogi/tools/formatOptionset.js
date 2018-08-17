@@ -2,9 +2,10 @@ const fs = require('fs')
 const path = require('path')
 const xml2js = require('xml2js')
 module.exports = function(callback) {
-  let optionsetInfo = fs.readFileSync(path.join(__dirname, 'optionset_R296'), 'utf-8')
-  let optionsetXml = fs.readFileSync(path.join(__dirname, 'optionset_R296.xml'), 'utf-8')
-  // optionsetXml = optionsetXml.substring(optionsetXml.indexOf('<'))
+  let optionsetInfo = fs.readFileSync(path.join(__dirname, 'optionset_R298'), 'utf-8')
+  let optionsetXml = fs.readFileSync(path.join(__dirname, 'optionset_R298.xml'), 'utf-8')
+  // console.log(optionsetXml)
+  optionsetXml = optionsetXml.substring(optionsetXml.indexOf('<'))
   let parser = new xml2js.Parser()
   let transform = {}
   optionsetInfo.split('\n').forEach(val => {
