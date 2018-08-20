@@ -39,12 +39,12 @@ module.exports = function(group, id, content, callback){
         groupLogs[group].count = 1
       }
     } else {
-      if(!(ignoreUsers[id] == undefined && ignoreUsers[id].endTime > now)){
+      if(!(ignoreUsers[id] == undefined || ignoreUsers[id].endTime > now)){
         groupLogs[group].lastSpeakUser = id
         groupLogs[group].lastSpeakMsg = content
         groupLogs[group].count = 1
       }
     }
   }
-  return !(ignoreUsers[id] == undefined && ignoreUsers[id].endTime > now)
+  return !(ignoreUsers[id] == undefined || ignoreUsers[id].endTime > now)
 }
