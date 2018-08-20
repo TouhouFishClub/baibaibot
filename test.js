@@ -1,7 +1,11 @@
-const {G21Boss} = require('./ai/mabinogi/G21Boss');
-G21Boss(text => {
-  console.log(text)
-}, true)
-const callback = text => {
-  console.log(text)
+const ignoreUser = require('./ai/ignoreUser')
+
+const callback = msg => {
+  console.log(msg)
 }
+
+ignoreUser(10000, 7998, 'aaa', callback)
+ignoreUser(10000, 7998, 'aaa', callback)
+ignoreUser(10000, 7998, 'aaa', callback)
+ignoreUser(10000, 7998, 'aaa', callback)
+ignoreUser(10000, 7998, 'aaa', callback)

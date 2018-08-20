@@ -5,7 +5,7 @@ const showMsg = true
 
 module.exports = function(group, id, content, callback){
   let now = new Date().getTime()
-  if(groupLogs[group]){
+  if(groupLogs[group] == undefined){
     groupLogs[group] = {
       "lastSpeakUser" : id,
       "lastSpeakMsg": content,
@@ -15,7 +15,7 @@ module.exports = function(group, id, content, callback){
     if(groupLogs[group].lastSpeakUser == id){
       if(groupLogs[group].lastSpeakMsg == content){
         if(groupLogs[group].count >= 3){
-          if(ignoreUsers[id]){
+          if(ignoreUsers[id] == undefined){
             ignoreUsers[id] = {
               "endTime": now + ignoreTimeBase * 1 * 1000,
               "count": 1
@@ -39,12 +39,12 @@ module.exports = function(group, id, content, callback){
         groupLogs[group].count = 1
       }
     } else {
-      if(!(ignoreUsers[id] && ignoreUsers[id].endTime > now)){
+      if(!(ignoreUsers[id] == undefined && ignoreUsers[id].endTime > now)){
         groupLogs[group].lastSpeakUser = id
         groupLogs[group].lastSpeakMsg = content
         groupLogs[group].count = 1
       }
     }
   }
-  return !(ignoreUsers[id] && ignoreUsers[id].endTime > now)
+  return !(ignoreUsers[id] == undefined && ignoreUsers[id].endTime > now)
 }
