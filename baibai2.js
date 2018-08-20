@@ -230,9 +230,9 @@ function handleMsg_D(msgObj,response){
     }
   }
 
-  if(!checkIgnoreUser(groupid, from, content, callback)){
-    return
-  }
+  // if(!checkIgnoreUser(groupid, from, content, callback)){
+  //   return
+  // }
 
 
   var rcontent=content.trim();
