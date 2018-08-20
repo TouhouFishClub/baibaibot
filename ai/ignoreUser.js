@@ -4,6 +4,7 @@ const ignoreTimeBase = 60
 const showMsg = true
 
 module.exports = function(group, id, content, callback){
+  // console.log(`${group}-${id}:${content}`)
   let now = new Date().getTime()
   if(groupLogs[group] == undefined){
     groupLogs[group] = {
@@ -46,5 +47,8 @@ module.exports = function(group, id, content, callback){
       }
     }
   }
-  return !(ignoreUsers[id] == undefined || ignoreUsers[id].endTime > now)
+  // console.log(`ignoreUser: ${JSON.stringify(ignoreUsers)}`)
+  // console.log(`groupLogs: ${JSON.stringify(groupLogs)}`)
+  // console.log(`return ${!(ignoreUsers[id] == undefined || ignoreUsers[id].endTime < now)}`)
+  return !(ignoreUsers[id] == undefined || ignoreUsers[id].endTime < now)
 }
