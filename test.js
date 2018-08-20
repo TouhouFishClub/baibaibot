@@ -17,25 +17,25 @@ setTimeout(() => {
   ignoreUser(10000, 7998, 'aaa', callback)
 },4000)
 setTimeout(() => {
-  ignoreUser(10000, 7998, 'aaa', callback)
+  ignoreUser(10000, 101, 'aaa', callback)
 },5000)
 setTimeout(() => {
-  ignoreUser(10000, 7998, 'aaa', callback)
+  ignoreUser(10000, 101, 'aaa', callback)
 },6000)
 setTimeout(() => {
   ignoreUser(10000, 7998, 'aaa', callback)
 },7000)
 setTimeout(() => {
-  ignoreUser(10000, 7998, 'aaa', callback)
+  ignoreUser(10000, 101, 'aaa', callback)
 },8000)
 setTimeout(() => {
-  ignoreUser(10000, 7998, 'aaa', callback)
+  ignoreUser(10000, 101, 'aaa', callback)
 },9000)
 setTimeout(() => {
-  ignoreUser(10000, 7998, 'aaa', callback)
+  ignoreUser(10000, 101, 'aaa', callback)
 },10000)
 setTimeout(() => {
-  ignoreUser(10000, 7998, 'aaa', callback)
+  ignoreUser(10000, 101, 'aaa', callback)
 },11000)
 setTimeout(() => {
   ignoreUser(10000, 7998, 'aaa', callback)
