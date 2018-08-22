@@ -23,7 +23,8 @@ module.exports = function(group, id, content, callback){
                 "count": 1
               }
             } else {
-              ignoreUsers[id].endTime = now + ignoreTimeBase * Math.pow(2, ignoreUsers[id].count)
+              // ignoreUsers[id].endTime = now + ignoreTimeBase * Math.pow(2, ignoreUsers[id].count)
+              ignoreUsers[id].endTime = now + ignoreTimeBase * Math.pow(2, 1)
               ignoreUsers[id].count = ignoreUsers[id].count + 1
             }
             groupLogs[group].lastSpeakUser = 10000
@@ -45,6 +46,8 @@ module.exports = function(group, id, content, callback){
         groupLogs[group].lastSpeakMsg = content
         groupLogs[group].count = 1
       }
+    } else {
+
     }
   }
   // console.log(`ignoreUser: ${JSON.stringify(ignoreUsers)}`)
