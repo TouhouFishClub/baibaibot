@@ -31,7 +31,8 @@ module.exports = function(group, id, content, callback){
             groupLogs[group].lastSpeakMsg = ''
             groupLogs[group].count = 1
             if(showMsg){
-              callback(`[CQ:at,qq=${id}]百百决定不理你${Math.pow(2, ignoreUsers[id].count - 1) * ignoreTimeBase}秒`)
+              callback(`[CQ:at,qq=${id}]百百不想理你，并且用${Math.pow(2, ignoreUsers[id].count - 1) * ignoreTimeBase}秒
+              的时间画了一个${["猫头鹰","鸽子","鹦鹉"][Math.floor(Math.random()*3)]}`)
             }
           } else {
             groupLogs[group].count = groupLogs[group].count + 1
