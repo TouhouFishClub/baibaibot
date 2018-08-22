@@ -63,12 +63,15 @@ function pushTwitterMsg(twitterid,ret,type){
     if(twitterid=='856385582401966080'){
       callback(205700800,ret);
     }
+    if(twitterid=='862944553858342912'){
+      callback(540356922,ret);
+    }
   }
 }
 
 
 function startstream(){
-  client.stream('statuses/filter', {follow: '294025417,3833285893'}, function(stream) {
+  client.stream('statuses/filter', {follow: '294025417,3833285893,862944553858342912'}, function(stream) {
     console.log('will start stream');
     stream.on('data', function(event) {
       try{
