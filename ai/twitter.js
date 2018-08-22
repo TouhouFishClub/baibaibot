@@ -64,7 +64,7 @@ function pushTwitterMsg(twitterid,ret,type){
       callback(205700800,ret);
     }
     if(twitterid=='862944553858342912'){
-      callback(540356922,ret);
+      callback(205700800,ret);
     }
   }
 }
