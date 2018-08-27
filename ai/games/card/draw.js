@@ -27,6 +27,9 @@ function bdraw(groupid,from,callback){
 
 
 function drawNameCard(username,qq,callback,groupid){
+  if(groupid == 537098885){
+    return
+  }
   var now = new Date().getTime();
   console.log("1111+"+groupid);
   var cooldown;
