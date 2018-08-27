@@ -16,7 +16,8 @@ module.exports = function(group, id, content, callback){
     if(ignoreUsers[id] == undefined || ignoreUsers[id].endTime < now) {
       if(groupLogs[group].lastSpeakUser == id){
         if(groupLogs[group].lastSpeakMsg == content){
-          if(groupLogs[group].count >= 3){
+          //TODO: 实验，暂定重复三次同样的话
+          if(groupLogs[group].count >= 2){
             if(ignoreUsers[id] == undefined){
               ignoreUsers[id] = {
                 "endTime": now + ignoreTimeBase * 1 * 1000,
