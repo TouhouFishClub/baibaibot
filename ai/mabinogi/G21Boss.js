@@ -188,7 +188,7 @@ const timeLiftByHour = (endHour, isNextDay = false) => {
   return `${(left / 3600) > 1 ? ~~(left / 3600) + ' 小时 ' : ''}${~~(left % 3600 / 60) + ' 分 '}${left % 60 + ' 秒'}`
 }
 
-const autoWhiteList = [315902131, 549823679, 138585036]
+const autoWhiteList = [315902131, 537098885, 138585036]
 
 const startTimeout = () => {
   let timeLeft = 3610000 - new Date().getTime() % 3600000
