@@ -309,6 +309,9 @@ function handleMsg_D(msgObj,response){
   }
 
   if(rcontent.startsWith("抽卡")){
+    if(groupid == 537098885){
+      return
+    }
     drawNameCard(name,from,callback,groupid);
     return;
   }
