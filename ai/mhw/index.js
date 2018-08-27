@@ -40,7 +40,7 @@ function searchMHW(content,userid,groupid,callback){
   var retlist = [];
   var first = content.substring(0,1);
   if(first=='w'){
-    var m = mem[userid];
+    var m = mem[groupid];
     console.log(m);
     var num = parseInt(content.substring(1));
     var d = m[num];
@@ -61,7 +61,7 @@ function searchMHW(content,userid,groupid,callback){
       for(var i=0;i<retlist.length;i++){
         ret = ret + '`ww'+i+':'+retlist[i].cn+'\n';
       }
-      mem[userid] = retlist;
+      mem[groupid] = retlist;
     }
     callback(ret);
   }
