@@ -1,6 +1,6 @@
 let groupLogs = {}
 let ignoreUsers = {}
-const ignoreTimeBase = 10
+const ignoreTimeBase = 120
 const showMsg = true
 
 module.exports = function(group, id, content, callback){
@@ -31,8 +31,7 @@ module.exports = function(group, id, content, callback){
             groupLogs[group].lastSpeakMsg = ''
             groupLogs[group].count = 1
             if(showMsg){
-              callback(`[CQ:at,qq=${id}]百百不想理你，并且用${Math.pow(2, ignoreUsers[id].count - 1) * ignoreTimeBase}秒
-              的时间画了一个${["猫头鹰","鸽子","鹦鹉"][Math.floor(Math.random()*3)]}`)
+              callback(`[CQ:at,qq=${id}] 百百不想理你，并用${Math.pow(2, ignoreUsers[id].count - 1) * ignoreTimeBase}秒画了一个${["猫头鹰","鸽子","鹦鹉"][Math.floor(Math.random()*3)]}`)
             }
           } else {
             groupLogs[group].count = groupLogs[group].count + 1
@@ -48,7 +47,7 @@ module.exports = function(group, id, content, callback){
         groupLogs[group].count = 1
       }
     } else {
-
+      // callback(`百百不理你到${new Date(ignoreUsers[id].endTime)}`)
     }
   }
   // console.log(`ignoreUser: ${JSON.stringify(ignoreUsers)}`)
