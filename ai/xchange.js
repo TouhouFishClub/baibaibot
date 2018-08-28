@@ -17,7 +17,8 @@ const TIME_OUT = 30000
 
 module.exports = function(userId, content, callback){
   let res = '', defaultCurrency = '人民币'
-  switch(content.trim()){
+  content = content.trim()
+  switch(content){
     case '':
       res = `输入格式为\`c[数字][币种/币种代码]，如10239.23日元，默认转换为${defaultCurrency}；\n可使用“-”来连接两种币种转换，如200日元-美元\n如果只输入币种，则显示汇率信息；\n输入“\`c币种”，可查看支持转换的币种；`
       callback(res)
