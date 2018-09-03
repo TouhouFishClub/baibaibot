@@ -11,7 +11,7 @@ var tail = '</body>  </html>';
 
 function replyKancolleRoute(content,userName,callback){
   if(content.length==3){
-    callback('[CQ:image,file=send/kancolle/route/'+content+']');
+    callback('[CQ:image,file=send/kancolle/route/'+content+'.png]');
   }
 }
 
