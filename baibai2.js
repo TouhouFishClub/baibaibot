@@ -48,7 +48,7 @@ const rp = require('./ai/rp');
 const {G21Boss} = require('./ai/mabinogi/G21Boss');
 const checkIgnoreUser = require('./ai/ignoreUser');
 const {searchMHW} = require('./ai/mhw/index');
-
+const {replyKancolleRoute} = require('./ai/kancolle/map_new');
 
 initWS();
 
@@ -322,6 +322,10 @@ function handleMsg_D(msgObj,response){
     lottoryReply(content.substring(1),name,callback);
     return;
   }
+  if(first=="%"){
+    replyKancolleRoute(content.substring(1),name,callback);
+  }
+
 
 
 
