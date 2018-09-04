@@ -22,7 +22,6 @@ function searchFF14Item(content,UserName,callback){
 
 
 
-  content = "15232"
   content=content.trim();
   var ci = parseInt(content);
   if(ci>0&&ci<100000){
