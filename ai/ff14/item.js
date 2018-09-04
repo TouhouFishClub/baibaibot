@@ -110,7 +110,7 @@ function searchFF14ItemByID(itemid,username,callback){
       var data = eval('('+resdata+')');
       var text = data.parse.text['*'];
       // text=text.replace(/<div class="mw-parser-output">/g,'<div style="float:left" class="mw-parser-output">');
-      text = '<div style="float:left">'+text+'<br></div>';
+      text = '<div style="float:left">'+text+'</div>';
       var itemhtml = ita[0]+text+ita[1];
       var path = 'ff14/item/'+itemid+'.html'
       fs.writeFileSync('public/'+path,itemhtml);
