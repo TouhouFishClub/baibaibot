@@ -21,7 +21,7 @@ var tail = '</div></div></div></body></html>';
 function searchFF14Item(content,UserName,callback){
 
 
-  // content = "10562";
+  content = "18845";
 
 
   content=content.trim();
@@ -112,7 +112,7 @@ function searchFF14ItemByID(itemid,username,callback){
       var data = eval('('+resdata+')');
       var text = data.parse.text['*'];
       // text=text.replace(/<div class="mw-parser-output">/g,'<div style="float:left" class="mw-parser-output">');
-      text = '<div style="float:left">'+text+'</div>';
+      text = '<div style="max-width:400px">'+text+'</div>';
       var itemhtml = ita[0]+text+ita[1];
       var path = 'ff14/item/'+itemid+'.html'
       fs.writeFileSync('public/'+path,itemhtml);
@@ -153,7 +153,7 @@ let getPic = async ( path,itemid ,callback) => {
     })
     // 按照实际页面的高度，设定渲染的宽高
     //延时等待页面js执行完成（phantomjs只是等待页面上全部资源加载完毕，不包含页面js执行时间，所以需延时一段时间等待js）
-    await lateTime( 500 );
+    await lateTime( 1000 );
     //输出页面到当前目录下
     var now = new Date();
     var filename = "../coolq-data/cq/data/image/send/ff14/"+itemid+".png";
