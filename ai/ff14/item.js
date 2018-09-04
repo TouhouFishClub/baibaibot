@@ -17,9 +17,11 @@ head = head + '<div class="table prop lazyloadimg">';
 
 var tail = '</div></div></div></body></html>';
 
+var itemListTemplate = fs.readFileSync('ff14/item_list_template.html','utf-8')
+var ila = itemListTemplate.split('~');
+
 
 function searchFF14Item(content,UserName,callback){
-
 
 
   content=content.trim();
@@ -39,9 +41,6 @@ function searchFF14Item(content,UserName,callback){
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
   };
-
-
-  console.log(options)
   var req = http.request(options, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
@@ -69,7 +68,47 @@ function searchFF14Item(content,UserName,callback){
       }else if(n2>0){
         callback('没有找到【'+content+'】的物品')
       }else{
-        console.log(text);
+        var hs = ''
+        var s1 = text;
+        var n = s1.indexOf('data-name="');
+        var us = '';
+        var c=0;
+        while(n>0){
+          c++;
+          if(c>15){
+            break;
+          }
+          hs = hs + s1.substring(0,n+5);
+          s1 = s1.substring(n+5);
+          var n4 = s1.indexOf('"');
+          var s4 = s1.substring(n4+1);
+          var n5 = s4.indexOf('"');
+          var itemid = s4.substring(0,n5)
+
+          console.log(1111111);
+          var n6 = s1.indexOf('</a></div><div class="item-category"');
+          var s6 = s1.substring(0,n6);
+          var n7 = s6.lastIndexOf('>');
+          var itemname = s6.substring(n7+1);
+          console.log(itemname)
+          us = us + 'ffiv'+itemid+':'+itemname+'\n';
+          // console.log(s1);
+          var n1 = s1.indexOf('<div class="item-icon')
+          console.log(n1);
+          var fs1 = s1.substring(0,n1);
+          var es1 = s1.substring(n1);
+          console.log(2222222);
+          s1 = fs1+es1;
+          n = s1.indexOf('data-name=');
+        }
+        // hs=hs+s1
+        // hs = '<div style="float:left">'+hs+'</div>';
+        // var uh = ila[0]+hs+ila[1];
+        // var rd = new Date().getTime();
+        // var path = 'ff14/item/'+rd+'.html'
+        // fs.writeFileSync('public/'+path,uh);
+        console.log(us);
+        callback(us)
       }
 
 
