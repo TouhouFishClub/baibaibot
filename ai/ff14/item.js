@@ -21,7 +21,7 @@ var tail = '</div></div></div></body></html>';
 function searchFF14Item(content,UserName,callback){
 
 
-  // content = "12543";
+  // content = "10562";
 
 
   content=content.trim();
@@ -142,7 +142,7 @@ let getPic = async ( path,itemid ,callback) => {
   const status = await page.open( url);
   if(status=='success'){
     const bb = await page.evaluate(function () {
-      return document.getElementsByClassName('mw-parser-output')[0].getBoundingClientRect();
+      return document.getElementsByTagName('div')[0].getBoundingClientRect();
     });
     //page.clipRect = { top: 0, left: 0, width: 1024, height: 768 };
     await page.property('clipRect', {
