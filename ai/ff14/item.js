@@ -21,9 +21,6 @@ var tail = '</div></div></div></body></html>';
 function searchFF14Item(content,UserName,callback){
 
 
-  content = "16347";
-
-
   content=content.trim();
   var ci = parseInt(content);
   if(ci>0&&ci<100000){
@@ -112,7 +109,7 @@ function searchFF14ItemByID(itemid,username,callback){
       var data = eval('('+resdata+')');
       var text = data.parse.text['*'];
       // text=text.replace(/<div class="mw-parser-output">/g,'<div style="float:left" class="mw-parser-output">');
-      text = '<div style="max-width:385px">'+text+'<br> </br></div>';
+      text = '<div style="max-width:385px">'+text+'<br></div>';
       var itemhtml = ita[0]+text+ita[1];
       var path = 'ff14/item/'+itemid+'.html'
       fs.writeFileSync('public/'+path,itemhtml);
