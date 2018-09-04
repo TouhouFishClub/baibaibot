@@ -49,6 +49,8 @@ const {G21Boss} = require('./ai/mabinogi/G21Boss');
 const checkIgnoreUser = require('./ai/ignoreUser');
 const {searchMHW} = require('./ai/mhw/index');
 const {replyKancolleRoute} = require('./ai/kancolle/map_new');
+const {searchFF14Item} = require('./ai/ff14/item');
+
 
 initWS();
 
@@ -280,6 +282,11 @@ function handleMsg_D(msgObj,response){
     op(name, con.substring(4).trim(), 'normal', callback);
     return;
   }
+  if(fi == 'ffiv'){
+    searchFF14Item(con.substring(4),name,callback);
+    return;
+  }
+
 
   if(con === 'ruawork' || (con.indexOf('茹娅') + 1 && con.indexOf('上班') + 1)){
     rua(callback)
