@@ -286,6 +286,11 @@ function handleMsg_D(msgObj,response){
     searchFF14Item(con.substring(4),name,callback);
     return;
   }
+  fi = con.substring(0,5)
+  if(fi == 'ffxiv'){
+    searchFF14Item(con.substring(5),name,callback);
+    return;
+  }
 
 
   if(con === 'ruawork' || (con.indexOf('茹娅') + 1 && con.indexOf('上班') + 1)){
