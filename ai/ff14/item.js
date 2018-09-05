@@ -136,9 +136,6 @@ function searchFF14ItemByID(itemid,username,callback){
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
   };
-
-
-  console.log(options)
   var req = http.request(options, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
@@ -148,13 +145,22 @@ function searchFF14ItemByID(itemid,username,callback){
     res.on('end', function () {
       var data = eval('('+resdata+')');
       var text = data.parse.text['*'];
-      // text=text.replace(/<div class="mw-parser-output">/g,'<div style="float:left" class="mw-parser-output">');
-      text = '<div style="float:left">'+text+'</div>';
-      var itemhtml = ita[0]+text+ita[1];
-      var path = 'ff14/item/'+itemid+'.html'
-      fs.writeFileSync('public/'+path,itemhtml);
-      getPic(path,itemid,callback)
-
+      var n1 = text.indexOf('tooltip-item--name-title');
+      var s1 = text.substring(n1);
+      var n2 = s1.indexOf('>');
+      var s2 = s1.substring(n2+1);
+      var n3 = s2.indexOf('<');
+      var itemname = s2.substring(0,n3);
+      console.log(itemname)
+      if(text.indexOf('商店：')>0){
+        getItemDetail(itemname,text,itemid,username,callback);
+      }else{
+        text = '<div style="float:left">'+text+'</div>';
+        var itemhtml = ita[0]+text+ita[1];
+        var path = 'ff14/item/'+itemid+'.html'
+        fs.writeFileSync('public/'+path,itemhtml);
+        getPic(path,itemid,callback)
+      }
     });
   });
   req.on('error', function(err) {
@@ -163,6 +169,57 @@ function searchFF14ItemByID(itemid,username,callback){
   });
   req.end();
 }
+
+function getItemDetail(itemname,text,itemid,userName,callback){
+  var options = {
+    host: 'ff14.huijiwiki.com',
+    port: 80,
+    path: '/wiki/%E7%89%A9%E5%93%81:'+encodeURIComponent(itemname),
+    method: 'GET',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+    },
+  };
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+    res.on('end', function () {
+      var n1 = resdata.indexOf('该物品在商店购买的价格为');
+      var s1 = resdata.substring(n1);
+      var n2 = s1.indexOf('<table');
+      var s2 = s1.substring(n2);
+      var s3 = s2;
+      var n3 = s3.indexOf('</tr>');
+      var c=0;
+      var hs = '';
+      while(n3>0){
+        c++;
+        if(c>6){
+          break;
+        }
+        hs = hs+s3.substring(0,n3+3);
+        s3 = s3.substring(n3+3);
+        n3 = s3.indexOf('</tr>');
+      }
+      hs=hs+'</table>';
+      hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+'</div></div>';
+      var itemhtml = ita[0]+'<div style="float:left">'+text+hs+'</div>'+ita[1];
+      var path = 'ff14/item/'+itemid+'.html'
+      fs.writeFileSync('public/'+path,itemhtml);
+      getPic(path,itemid,callback)
+    });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
+}
+
+
 
 let getPic = async ( path,itemid ,callback) => {
   //url路径
