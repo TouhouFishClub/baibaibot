@@ -127,6 +127,17 @@ var ita = itemTemplate.split('~');
 
 
 function searchFF14ItemByID(itemid,username,callback){
+  var filename = "../coolq-data/cq/data/image/send/ff14/"+itemid+".png";
+  var exist = fs.existsSync(filename);
+  if(exist){
+    var stat = fs.statSync(filename);
+    var ctime = stat.ctime;
+    var now = new Date().getTime();
+    if(now.getTime()-ctime.getTime()<86400000*3){
+      callback('[CQ:image,file=send/ff14/'+itemid+'.png]');
+      return;
+    }
+  }
   var options = {
     host: 'cdn.huijiwiki.com',
     port: 80,
