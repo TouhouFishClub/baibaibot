@@ -27,7 +27,7 @@ function searchFF14Item(content,UserName,callback){
   content=content.trim();
   if(content==""){
     var ret = "FF14物品查询器\n输入格式【ffiv+物品ID/名称】\n如【ffiv5471】或【ffiv植物成长剂2型】\n";
-    ret = ret + "支持模糊查询,如【ffiv物成长剂2】\n如需绝对查询请在末尾加感叹号如【ffiv棉布！】\n"
+    ret = ret + "支持模糊查询,如【ffiv物成长剂2】\n如需绝对查询请在末尾加感叹号如【ffiv棉布！】\n所有资料来自【ff14.huijiwiki.com】"
     callback(ret);
     return;
   }
