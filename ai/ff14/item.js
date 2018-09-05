@@ -132,7 +132,7 @@ function searchFF14ItemByID(itemid,username,callback){
   if(exist){
     var stat = fs.statSync(filename);
     var ctime = stat.ctime;
-    var now = new Date().getTime();
+    var now = new Date();
     if(now.getTime()-ctime.getTime()<86400000*3){
       callback('[CQ:image,file=send/ff14/'+itemid+'.png]');
       return;
