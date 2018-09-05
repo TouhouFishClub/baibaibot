@@ -25,11 +25,22 @@ function searchFF14Item(content,UserName,callback){
 
 
   content=content.trim();
+  if(content==""){
+    var ret = "FF14物品查询器\n输入格式【ffiv+物品ID/名称】\n如【ffiv5471】或【ffiv植物成长剂2型】\n";
+    ret = ret + "支持模糊查询,如【ffiv物成长剂2】\n如需绝对查询请在末尾加感叹号如【ffiv棉布！】\n"
+    callback(ret);
+  }
+
   var ci = parseInt(content);
   if(ci>0&&ci<100000){
     searchFF14ItemByID(content,UserName,callback);
     return;
   }
+  if(content.endsWith("!")||content.endsWith("！")){
+    getAbsuloteItemDetail(content.substring(0,content.length-1),UserName,callback);
+    return;
+  }
+
 
 
   var options = {
@@ -126,7 +137,7 @@ var itemTemplate = fs.readFileSync('ff14/item_template.html','utf-8')
 var ita = itemTemplate.split('~');
 
 
-function searchFF14ItemByID(itemid,username,callback){
+function searchFF14ItemByID(itemid,username,callback,detailresdata){
   var filename = "../coolq-data/cq/data/image/send/ff14/"+itemid+".png";
   var exist = fs.existsSync(filename);
   if(exist){
@@ -164,7 +175,7 @@ function searchFF14ItemByID(itemid,username,callback){
       var itemname = s2.substring(0,n3);
       console.log(itemname)
       if(text.indexOf('商店：')>0){
-        getItemDetail(itemname,text,itemid,username,callback);
+        getItemDetail(itemname,text,itemid,username,callback,detailresdata);
       }else{
         text = '<div style="float:left">'+text+'</div>';
         var itemhtml = ita[0]+text+ita[1];
@@ -181,7 +192,12 @@ function searchFF14ItemByID(itemid,username,callback){
   req.end();
 }
 
-function getItemDetail(itemname,text,itemid,userName,callback){
+function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
+  if(detailresdata){
+
+  }else{
+
+  }
   var options = {
     host: 'ff14.huijiwiki.com',
     port: 80,
@@ -221,6 +237,42 @@ function getItemDetail(itemname,text,itemid,userName,callback){
       var path = 'ff14/item/'+itemid+'.html'
       fs.writeFileSync('public/'+path,itemhtml);
       getPic(path,itemid,callback)
+    });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
+}
+
+function getAbsuloteItemDetail(itemname,userName,callback){
+  var options = {
+    host: 'ff14.huijiwiki.com',
+    port: 80,
+    path: '/wiki/%E7%89%A9%E5%93%81:'+encodeURIComponent(itemname),
+    method: 'GET',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+    },
+  };
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+    res.on('end', function () {
+      var str = 'xivdb.com/item/';
+      var n1 = resdata.indexOf('xivdb.com/item/');
+      if(n1>0){
+        var s1 = resdata.substring(n1+str.length);
+        var n2 = s1.indexOf('/');
+        var itemid = s1.substring(0,n2);
+        searchFF14ItemByID(itemid,userName,callback,resdata);
+      }else{
+        callback('没有找到【'+itemname+'】');
+      }
     });
   });
   req.on('error', function(err) {
