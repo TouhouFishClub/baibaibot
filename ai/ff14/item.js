@@ -119,7 +119,9 @@ function searchFF14Item(content,UserName,callback){
         // var rd = new Date().getTime();
         // var path = 'ff14/item/'+rd+'.html'
         // fs.writeFileSync('public/'+path,uh);
-        console.log(us);
+        if(c>12){
+          us = us + '帮助请输入【ffiv】';
+        }
         callback(us)
       }
 
