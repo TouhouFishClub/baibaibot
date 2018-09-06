@@ -259,7 +259,7 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
 
 
       hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+'</div></div>';
-      var itemhtml = ita[0]+'<div style="float:left">'+text+hs+'</div>'+ita[1];
+      var itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+'</div>'+ita[1];
       var path = 'ff14/item/'+itemid+'.html'
       fs.writeFileSync('public/'+path,itemhtml);
       getPic(path,itemid,callback)
@@ -325,7 +325,7 @@ let getPic = async ( path,itemid ,callback) => {
   const status = await page.open( url);
   if(status=='success'){
     const bb = await page.evaluate(function () {
-      return document.getElementsByTagName('div')[0].getBoundingClientRect();
+      return document.getElementsByClassName('ffiv-container')[0].getBoundingClientRect();
     });
     //page.clipRect = { top: 0, left: 0, width: 1024, height: 768 };
     await page.property('clipRect', {
