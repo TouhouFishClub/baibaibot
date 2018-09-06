@@ -180,7 +180,7 @@ function searchFF14ItemByID(itemid,username,callback,detailresdata){
       if(text.indexOf('商店：')>0||text.indexOf('采集：')>0){
         getItemDetail(itemname,text,itemid,username,callback,detailresdata);
       }else{
-        text = '<div style="float:left">'+text+'</div>';
+        text = '<div class="ffiv-container" style="float:left">'+text+'</div>';
         var itemhtml = ita[0]+text+ita[1];
         var path = 'ff14/item/'+itemid+'.html'
         fs.writeFileSync('public/'+path,itemhtml);
