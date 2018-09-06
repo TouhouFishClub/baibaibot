@@ -177,7 +177,7 @@ function searchFF14ItemByID(itemid,username,callback,detailresdata){
       var n3 = s2.indexOf('<');
       var itemname = s2.substring(0,n3);
       console.log(itemname)
-      if(text.indexOf('商店：')>0){
+      if(text.indexOf('商店：')>0||text.indexOf('采集：')>0){
         getItemDetail(itemname,text,itemid,username,callback,detailresdata);
       }else{
         text = '<div style="float:left">'+text+'</div>';
@@ -218,25 +218,47 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
     });
     res.on('end', function () {
       var n1 = resdata.indexOf('该物品在商店购买的价格为');
-      var s1 = resdata.substring(n1);
-      var n2 = s1.indexOf('<table');
-      var s2 = s1.substring(n2);
-      var n5 = s2.indexOf('/table>');
-      var s3 = s2.substring(0,n5);
-      var n3 = s3.indexOf('</tr>');
-      var c=0;
       var hs = '';
-      while(n3>0){
-        c++;
-        if(c>6){
-          break;
+      if(n1>0){
+        var s1 = resdata.substring(n1);
+        var n2 = s1.indexOf('<table');
+        var s2 = s1.substring(n2);
+        var n5 = s2.indexOf('/table>');
+        var s3 = s2.substring(0,n5);
+        var n3 = s3.indexOf('</tr>');
+        var c=0;
+        while(n3>0){
+          c++;
+          if(c>6){
+            break;
+          }
+          hs = hs+s3.substring(0,n3+3);
+          s3 = s3.substring(n3+3);
+          n3 = s3.indexOf('</tr>');
         }
-        hs = hs+s3.substring(0,n3+3);
-        s3 = s3.substring(n3+3);
-        n3 = s3.indexOf('</tr>');
+        hs=hs+'</table>';
       }
-      hs=hs+'</table>';
-      hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+'</div></div>';
+
+
+      var n7 = resdata.indexOf('本物品可以由');
+      var cs = '';
+      if(n7>0){
+        var s7 = resdata.substring(n7+1);
+        var n8 = s7.indexOf('<div>');
+        var n9 = s7.indexOf('<h2>');
+        cs = s7.substring(n8,n9);
+
+      }
+
+
+
+
+
+
+
+
+
+      hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+'</div></div>';
       var itemhtml = ita[0]+'<div style="float:left">'+text+hs+'</div>'+ita[1];
       var path = 'ff14/item/'+itemid+'.html'
       fs.writeFileSync('public/'+path,itemhtml);
