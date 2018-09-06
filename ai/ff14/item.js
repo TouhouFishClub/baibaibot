@@ -221,7 +221,8 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
       var s1 = resdata.substring(n1);
       var n2 = s1.indexOf('<table');
       var s2 = s1.substring(n2);
-      var s3 = s2;
+      var n5 = s2.indexOf('/table>');
+      var s3 = s2.substring(0,n5);
       var n3 = s3.indexOf('</tr>');
       var c=0;
       var hs = '';
