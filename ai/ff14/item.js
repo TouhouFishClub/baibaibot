@@ -4,6 +4,8 @@ var fs = require('fs');
 const phantom = require('phantom');
 
 
+var basetime = 1536309600000;  //Sat Sep 06 2018 08:00:00 GMT+0800
+
 
 var head = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 head = head + '<html xmlns="http://www.w3.org/1999/xhtml">';
@@ -274,6 +276,59 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
         cs = s13;
 
       }
+      var cc=0;
+      while (true){
+        cc++;
+        if(cc>4){
+          break;
+        }
+        var n01 = cs.indexOf('正在初始化');
+        console.log("n01:"+n01)
+        if(n01<0){
+          break;
+        }else{
+          var s01 = cs.substring(n01+1);
+          var n02 = s01.indexOf('艾')
+          var s02 = s01.substring(n02+1);
+          var n03 = s02.indexOf('<');
+          var ff14time = s02.substring(0,n03).trim();
+          var hour = parseInt(ff14time.split(':')[0]);
+          var minute = parseInt(ff14time.split(':')[1]);
+          var timeleft = getNearestLocaltimeByFF14time(hour,minute);
+          var future = timeleft.ts;
+          var hour = new Date(future).getHours();
+          var minute = new Date(future).getMinutes();
+          var second = new Date(future).getSeconds();
+          var futurelocaltime = ''+(hour<9?'0'+hour:hour)+":"+(minute<9?'0'+minute:minute)+":"+(second<9?'0'+second:second)
+
+          var leftms = timeleft.left;
+          if(leftms>65*60000){
+            leftms = leftms-65*60000;
+            var min = Math.floor(leftms/60000);
+            var sec = Math.floor(leftms/1000)-min*60;
+            var leftstr = '出现中 '+(min<9?'0'+min:min)+":"+(sec<9?'0'+sec:sec)
+            // var color = '77d1ff';
+            // leftstr = '<div style="background-color: green>'+leftstr+'</div>'
+
+          }else{
+            var min = Math.floor(leftms/60000);
+            var sec = Math.floor(leftms/1000)-min*60;
+            var leftstr = '等待中 '+(min<9?'0'+min:min)+":"+(sec<9?'0'+sec:sec)
+          }
+
+          var n04 = s01.indexOf('本&#160;??:??');
+          var s04 = s01.substring(n04);
+          var n05 = s04.indexOf('<');
+          var s05 = s04.substring(n05);
+
+
+          var ucs = '';
+          var n06 = s01.indexOf('<');
+          ucs = cs.substring(0,n01)+leftstr+s01.substring(n06,n04)+futurelocaltime+s05
+          cs = ucs
+        }
+      }
+
 
 
 
@@ -382,6 +437,18 @@ let lateTime = ( time ) =>{
   } );
 }
 
+
+function getNearestLocaltimeByFF14time(hour,minute){
+  var now = new Date().getTime();
+  var sub = now - basetime;
+  var afterday = sub % 4200000;
+
+  console.log(hour,minute,afterday)
+
+  var ff14time = Math.floor((hour*60+minute)/1440*70*60000);
+  var nextlocaltime = afterday>ff14time?(ff14time+4200000-afterday):(ff14time-afterday);
+  return {left:nextlocaltime,ts:now+nextlocaltime,h:false};
+}
 
 
 
