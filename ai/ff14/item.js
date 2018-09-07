@@ -88,9 +88,7 @@ function searchFF14Item(content,UserName,callback){
         var abitemid = 0;
         while(n>0){
           c++;
-          if(c>15){
-            break;
-          }
+
           hs = hs + s1.substring(0,n+5);
           s1 = s1.substring(n+5);
           var n4 = s1.indexOf('"');
@@ -107,7 +105,9 @@ function searchFF14Item(content,UserName,callback){
             abitemid = itemid;
             break;
           }
-          us = us + 'ffiv'+itemid+':'+itemname+'\n';
+          if(c<15){
+            us = us + 'ffiv'+itemid+':'+itemname+'\n';
+          }
           // console.log(s1);
           var n1 = s1.indexOf('<div class="item-icon')
           console.log(n1);
