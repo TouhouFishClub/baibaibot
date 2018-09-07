@@ -85,6 +85,7 @@ function searchFF14Item(content,UserName,callback){
         var n = s1.indexOf('data-name="');
         var us = '';
         var c=0;
+        var abitemid = 0;
         while(n>0){
           c++;
           if(c>15){
@@ -102,7 +103,10 @@ function searchFF14Item(content,UserName,callback){
           var s6 = s1.substring(0,n6);
           var n7 = s6.lastIndexOf('>');
           var itemname = s6.substring(n7+1);
-          console.log(itemname)
+          if(itemname==content){
+            abitemid = itemid;
+            break;
+          }
           us = us + 'ffiv'+itemid+':'+itemname+'\n';
           // console.log(s1);
           var n1 = s1.indexOf('<div class="item-icon')
@@ -120,9 +124,14 @@ function searchFF14Item(content,UserName,callback){
         // var path = 'ff14/item/'+rd+'.html'
         // fs.writeFileSync('public/'+path,uh);
         if(c>12){
-          us = us + '帮助请输入【ffiv】';
+          us = us + '精确查询请输出【ffiv'+content+'!】.帮助请输入【ffiv】,';
         }
-        callback(us)
+        if(abitemid>0){
+          searchFF14ItemByID(abitemid,UserName,callback)
+        }else{
+          callback(us)
+        }
+
       }
 
 
