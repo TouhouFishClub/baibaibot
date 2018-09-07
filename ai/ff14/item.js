@@ -95,25 +95,20 @@ function searchFF14Item(content,UserName,callback){
           var s4 = s1.substring(n4+1);
           var n5 = s4.indexOf('"');
           var itemid = s4.substring(0,n5)
-
-          console.log(1111111);
           var n6 = s1.indexOf('</a></div><div class="item-category"');
           var s6 = s1.substring(0,n6);
           var n7 = s6.lastIndexOf('>');
           var itemname = s6.substring(n7+1);
           if(itemname==content){
-            abitemid = itemid;
+            abitemid = parseInt(itemid);
             break;
           }
           if(c<15){
             us = us + 'ffiv'+itemid+':'+itemname+'\n';
           }
-          // console.log(s1);
           var n1 = s1.indexOf('<div class="item-icon')
-          console.log(n1);
           var fs1 = s1.substring(0,n1);
           var es1 = s1.substring(n1);
-          console.log(2222222);
           s1 = fs1+es1;
           n = s1.indexOf('data-name=');
         }
