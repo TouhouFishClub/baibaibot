@@ -41,9 +41,11 @@ function searchFF14Item(content,UserName,callback){
     getAbsuloteItemDetail(content.substring(0,content.length-1),UserName,callback);
     return;
   }
-
-
-
+  var showlist=false;
+  if(content.endsWith("#")){
+    showlist=true;
+    content=content.substring(0,content.length-1);
+  }
   var options = {
     host: 'cdn.huijiwiki.com',
     port: 80,
@@ -119,9 +121,9 @@ function searchFF14Item(content,UserName,callback){
         // var path = 'ff14/item/'+rd+'.html'
         // fs.writeFileSync('public/'+path,uh);
         if(c>12){
-          us = us + '精确查询请输出【ffiv'+content+'!】.帮助请输入【ffiv】,';
+          us = us + '精确查询请输如【ffiv'+content+'!】,帮助请输入【ffiv】,';
         }
-        if(abitemid>0){
+        if(showlist==false&&abitemid>0){
           searchFF14ItemByID(abitemid,UserName,callback)
         }else{
           callback(us)
