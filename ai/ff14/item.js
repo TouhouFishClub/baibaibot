@@ -251,7 +251,8 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
         var n8 = s7.indexOf('<div>');
         var n9 = s7.indexOf('<h2>');
         var s8 = s7.substring(n8,n9);
-
+        
+        
 
 
         var n10 = s8.indexOf('<table');
@@ -260,7 +261,13 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
         var s11 = s10.substring(0,n11);
         var n12 = s11.lastIndexOf('</tr>');
         var n13 = s10.indexOf('<tr');
-        var s13 = s8.substring(0,n10)+'<ta'+s10.substring(0,n13)+s10.substring(n12+5);
+        var s14 = s10.substring(n12+5);
+        var n14 = s14.indexOf('<div id="node');
+        if(n14>0){
+          s14 = s14.substring(0,n14);
+        }
+        
+        var s13 = s8.substring(0,n10)+'<ta'+s10.substring(0,n13)+s14;
         cs = s13;
 
       }
