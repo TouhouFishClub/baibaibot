@@ -27,15 +27,13 @@ function bdraw(groupid,from,callback){
 
 
 function drawNameCard(username,qq,callback,groupid){
-  if(groupid == 138585036){
-    return
-  }
   var now = new Date().getTime();
-  console.log("1111+"+groupid);
   var cooldown;
   var maxtimes;
-  if((groupid+"").startsWith("54035")){
-    callback('总之就是不能抽卡啦');
+  if((groupid+"").startsWith("54035")
+    ||(groupid+"").startsWith("63508")
+    ||(groupid+"").startsWith("13858")){
+    callback('在抽卡的话百百就要炸了你');
     return;
   }
   if((groupid+"").startsWith("67096")){
