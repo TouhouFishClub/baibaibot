@@ -15,7 +15,7 @@ module.exports = function(content, callback){
   }
   let randomArr = []
   for(let i = 0; i < (parseInt(sp[1]) || 1); i ++){
-    randomArr.push(~~(Math.random() * parseInt(sp[0])))
+    randomArr.push(Math.ceil(Math.random() * parseInt(sp[0])))
   }
   callback(`您掷出的点数为${randomArr.join(', ')}\n总计：${randomArr.reduce((p, c) => p + c)}点\n最大点数：${sp[0] * randomArr.length}(${((randomArr.reduce((p, c) => p + c)) / (sp[0] * randomArr.length) * 100).toFixed(2)}%)`)
 }
