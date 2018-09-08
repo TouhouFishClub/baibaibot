@@ -4,4 +4,4 @@ const callback = msg => {
   console.log(msg)
 }
 
-rd('100x4', callback)
+rd('100x4',899, callback)
