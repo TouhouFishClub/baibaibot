@@ -426,7 +426,10 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first=='s'||first=='S'){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='r'||first=='R'){
-    rd(content.substring(1), callback)
+    // rd(content.substring(1), callback)
+    callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
+  }else if(first=='d'||first=='D'){
+    rd(content, callback)
     // callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='w'||first=='W'){
     searchMHW(content.substring(1),from,groupid,callback);
