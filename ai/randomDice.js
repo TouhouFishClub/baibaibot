@@ -1,6 +1,6 @@
 const MAX_DICE_SURFACE = 10000
 const MAX_DICE_NUMBER = 20
-module.exports = function(content, callback){
+module.exports = function(content, qqid, callback){
   const errorRand = () => {
     callback('输入错误')
   }
@@ -17,5 +17,5 @@ module.exports = function(content, callback){
   for(let i = 0; i < (parseInt(sp[1]) || 1); i ++){
     randomArr.push(Math.ceil(Math.random() * parseInt(sp[0])))
   }
-  callback(`您掷出的点数为${randomArr.join(', ')}\n总计：${randomArr.reduce((p, c) => p + c)}点\n最大点数：${sp[0] * randomArr.length}(${((randomArr.reduce((p, c) => p + c)) / (sp[0] * randomArr.length) * 100).toFixed(2)}%)`)
+  callback(`【[CQ:at,qq=${qqid}]】掷出的点数为：\n${randomArr.join(', ')}\n总计：${randomArr.reduce((p, c) => p + c)}点\n最大点数：${sp[0] * randomArr.length}(${((randomArr.reduce((p, c) => p + c)) / (sp[0] * randomArr.length) * 100).toFixed(2)}%)`)
 }

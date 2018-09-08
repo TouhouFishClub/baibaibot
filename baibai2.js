@@ -429,7 +429,7 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
     // rd(content.substring(1), callback)
     callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='d'||first=='D'){
-    rd(content.substring(1), callback)
+    rd(content.substring(1), from, callback)
     // callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='w'||first=='W'){
     searchMHW(content.substring(1),from,groupid,callback);
