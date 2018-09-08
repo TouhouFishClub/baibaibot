@@ -407,9 +407,9 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
     banUserRandom(from,groupid);
   }else if(first=='c'||first=='C'){
     xchange(userName,content.substring(1),callback);
-  }else if(first=='d'||first=='D'){
+  }/*else if(first=='d'||first=='D'){
     pairReply(content.substring(1),userName,callback);
-  }else if(first=='t'||first=='T'){
+  }*/else if(first=='t'||first=='T'){
     getKancollStaffTweet(content.substring(1),userName,callback);
   }else if(first=="e"||first=='E'){
     kce(userName,content.substring(1),callback);
