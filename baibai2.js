@@ -50,7 +50,7 @@ const checkIgnoreUser = require('./ai/ignoreUser');
 const {searchMHW} = require('./ai/mhw/index');
 const {replyKancolleRoute} = require('./ai/kancolle/map_new');
 const {searchFF14Item} = require('./ai/ff14/item');
-
+const rd = require('./ai/randomDice')
 
 initWS();
 
@@ -426,7 +426,8 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first=='s'||first=='S'){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='r'||first=='R'){
-    callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
+    rd(content.substring(1), callback)
+    // callback(""+Math.floor(Math.random()*parseInt(content.substring(1))));
   }else if(first=='w'||first=='W'){
     searchMHW(content.substring(1),from,groupid,callback);
   }else if(first=='f'||first=='F'){
