@@ -277,6 +277,7 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
 
       }
       var cc=0;
+      var nocache = false;
       while (true){
         cc++;
         if(cc>4){
@@ -287,6 +288,7 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
         if(n01<0){
           break;
         }else{
+          nocache = true;
           var s01 = cs.substring(n01+1);
           var n02 = s01.indexOf('艾')
           var s02 = s01.substring(n02+1);
@@ -307,9 +309,6 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
             var min = Math.floor(leftms/60000);
             var sec = Math.floor(leftms/1000)-min*60;
             var leftstr = '出现中 '+(min<9?'0'+min:min)+":"+(sec<9?'0'+sec:sec)
-            // var color = '77d1ff';
-            // leftstr = '<div style="background-color: green>'+leftstr+'</div>'
-
           }else{
             var min = Math.floor(leftms/60000);
             var sec = Math.floor(leftms/1000)-min*60;
@@ -328,21 +327,11 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
           cs = ucs
         }
       }
-
-
-
-
-
-
-
-
-
-
       hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+'</div></div>';
       var itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+'</div>'+ita[1];
       var path = 'ff14/item/'+itemid+'.html'
       fs.writeFileSync('public/'+path,itemhtml);
-      getPic(path,itemid,callback)
+      getPic(path,nocache?"nocache/"+itemid:itemid,callback)
     });
   });
   req.on('error', function(err) {
