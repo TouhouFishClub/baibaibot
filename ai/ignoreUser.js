@@ -1,6 +1,6 @@
 let groupLogs = {}
 let ignoreUsers = {}
-const ignoreTimeBase = 120
+const ignoreTimeBase = 3600
 const showMsg = true
 
 module.exports = function(group, id, content, callback){
