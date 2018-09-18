@@ -8,7 +8,7 @@ var client = new AipOcrClient(APP_ID, API_KEY, SECRET_KEY);
 
 
 function baiduocr(url,callback) {
-  var url = "http://gchat.qpic.cn/gchatpic_new/357474405/568281876-2857650099-4BBADF732E3557929D632EF18B7CC221/0?vuin=2375373419&term=2";
+  // var url = "http://gchat.qpic.cn/gchatpic_new/357474405/568281876-2857650099-4BBADF732E3557929D632EF18B7CC221/0?vuin=2375373419&term=2";
   client.generalBasicUrl(url).then(function (result) {
     var wds = result.words_result;
     console.log(wds);
