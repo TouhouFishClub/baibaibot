@@ -32,7 +32,7 @@ function searchFF14Item(content,UserName,callback){
     return;
   }
   var n = content.indexOf('[CQ:image');
-  if(n>0){
+  if(n>=0){
     var s1 = content.substring(n+1);
     var n1 = s1.indexOf('https://');
     var s2 = s1.substring(n1+8);
@@ -48,6 +48,7 @@ function searchFF14Item(content,UserName,callback){
         searchFF14Item_d(wd.trim(),UserName,callback);
       }
     }
+    baiduocr(url,cb);
   }else{
     searchFF14Item_d(content,UserName,callback)
   }
