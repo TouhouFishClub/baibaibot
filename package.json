@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "",
+    "baidu-aip-sdk": "^2.3.3",
     "body-parser": "",
     "bosonnlp": "",
     "canvas": "^1.6.10",
@@ -31,9 +32,10 @@
     "phantom": "",
     "twitter": "",
     "websocket": "",
-    "wx-voice": "^0.2.1",
+    "wx-voice": "",
     "xml2js": "^0.4.19",
-    "xml2json": "^0.11.2"
+    "xml2json": "^0.11.2",
+    "baidu-aip-sdk":""
   },
   "devDependencies": {}
 }
