@@ -2,6 +2,7 @@ var https=require('https');
 var http = require('http');
 var fs = require('fs');
 const phantom = require('phantom');
+const {baiduocr} = require('../image/baiduocr');
 
 
 var basetime = 1536309600000;  //Sat Sep 06 2018 08:00:00 GMT+0800
@@ -22,10 +23,7 @@ var tail = '</div></div></div></body></html>';
 var itemListTemplate = fs.readFileSync('ff14/item_list_template.html','utf-8')
 var ila = itemListTemplate.split('~');
 
-
 function searchFF14Item(content,UserName,callback){
-
-
   content=content.trim();
   if(content==""){
     var ret = "FF14物品查询器\n输入格式【ffiv+物品ID/名称】\n如【ffiv5471】或【ffiv植物成长剂2型】\n";
@@ -33,7 +31,31 @@ function searchFF14Item(content,UserName,callback){
     callback(ret);
     return;
   }
+  var n = content.indexOf('[CQ:image');
+  if(n>0){
+    var s1 = content.substring(n+1);
+    var n1 = s1.indexOf('https://');
+    var s2 = s1.substring(n1+8);
+    var n2 = s2.indexOf('?');
+    var url = 'http://'+s2.substring(0,n2);
+    var cb = function(ret){
+      var rn = ret.split('\n');
+      if(rn.length==1){
+        var wd = rn[0];
+        searchFF14Item_d(wd.trim(),UserName,callback);
+      }else{
+        var wd = rn[0];
+        searchFF14Item_d(wd.trim(),UserName,callback);
+      }
+    }
+  }else{
+    searchFF14Item_d(content,UserName,callback)
+  }
 
+}
+
+
+function searchFF14Item_d(content,UserName,callback){
   var ci = parseInt(content);
   if(ci>0&&ci<100000){
     searchFF14ItemByID(content,UserName,callback);
