@@ -380,7 +380,6 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
         }else{
           itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+ch+'</div>'+ita[1];
         }
-
       }else{
         itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+'</div>'+ita[1];
       }
