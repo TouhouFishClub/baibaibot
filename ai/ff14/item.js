@@ -351,7 +351,7 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
           cs = ucs
         }
       }
-      console.log(11111);
+
 
       var nc1 = resdata.indexOf('制作材料');
       var ch = '';
@@ -364,15 +364,11 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
         ch = '<table class="wikitable item-craft-table filter-div--item">'+ch+'</table>';
       }
 
-
-
-
-
-
       hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+'</div></div>';
       var itemhtml = '';
       if(ch!=''){
-        if(hs!=''){
+        console.log('hs:'+hs)
+        if(hs.length<200){
           ch = '<div class="mw-parser-output"><div class="table-responsive">'+ch+'</div></div>';
           var uhs = '<table><tr><td>'+text+'</td><td rowspan="2">'+ch+'</td></tr>';
           uhs = uhs + '<tr><td>'+hs+'</td></tr>';
