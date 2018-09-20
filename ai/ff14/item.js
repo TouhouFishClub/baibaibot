@@ -370,11 +370,15 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
 
 
       hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+'</div></div>';
+      var itemhtml = '';
       if(ch!=''){
         ch = '<div class="mw-parser-output"><div class="table-responsive">'+ch+'</div></div>';
-        hs = '<table><tr><td>'+hs+'</td><td>'+ch+'</td></tr></table>';
+        var uhs = '<table><tr><td>'+text+'</td><td rowspan="2">'+ch+'</td></tr>';
+        uhs = uhs + '<tr><td>'+hs+'</td></tr>';
+        itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+uhs+'</div>'+ita[1];
+      }else{
+        itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+'</div>'+ita[1];
       }
-      var itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+'</div>'+ita[1];
       var path = 'ff14/item/'+itemid+'.html'
       fs.writeFileSync('public/'+path,itemhtml);
       getPic(path,nocache?"nocache/"+itemid:itemid,callback)
