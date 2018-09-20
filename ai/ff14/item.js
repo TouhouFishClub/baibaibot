@@ -372,10 +372,15 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
       hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+'</div></div>';
       var itemhtml = '';
       if(ch!=''){
-        ch = '<div class="mw-parser-output"><div class="table-responsive">'+ch+'</div></div>';
-        var uhs = '<table><tr><td>'+text+'</td><td rowspan="2">'+ch+'</td></tr>';
-        uhs = uhs + '<tr><td>'+hs+'</td></tr>';
-        itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+uhs+'</div>'+ita[1];
+        if(hs!=''){
+          ch = '<div class="mw-parser-output"><div class="table-responsive">'+ch+'</div></div>';
+          var uhs = '<table><tr><td>'+text+'</td><td rowspan="2">'+ch+'</td></tr>';
+          uhs = uhs + '<tr><td>'+hs+'</td></tr>';
+          itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+uhs+'</div>'+ita[1];
+        }else{
+          itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+ch+'</div>'+ita[1];
+        }
+
       }else{
         itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+'</div>'+ita[1];
       }
