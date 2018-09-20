@@ -363,8 +363,17 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
         ch = sc2.substring(0,nc3+5);
         ch = '<table class="wikitable item-craft-table filter-div--item">'+ch+'</table>';
       }
+      if(ch!=''){
+        if(hs.length>10){
+          hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+'</div></div>';
+        }else{
+          hs = '<div class="mw-parser-output"><div class="table-responsive">'+cs+ch+'</div></div>';
+        }
+      }else{
+        hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+ch+'</div></div>';
+      }
 
-      hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+ch+'</div></div>';
+
       var itemhtml = '';
       itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+'</div>'+ita[1];
       var path = 'ff14/item/'+itemid+'.html'
