@@ -368,8 +368,8 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
       var itemhtml = '';
       if(ch!=''){
         console.log('hs:'+hs)
+        ch = '<div class="mw-parser-output"><div class="table-responsive">'+ch+'</div></div>';
         if(hs.length>200){
-          ch = '<div class="mw-parser-output"><div class="table-responsive">'+ch+'</div></div>';
           var uhs = '<table><tr><td>'+text+'</td><td rowspan="2">'+ch+'</td></tr>';
           uhs = uhs + '<tr><td>'+hs+'</td></tr>';
           itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+uhs+'</div>'+ita[1];
