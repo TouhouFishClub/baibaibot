@@ -371,7 +371,7 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
 
       hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+'</div></div>';
       if(ch!=''){
-        hs = '<table><tr><td>'+hs+'</td><td>'+ch+'</td></tr></table>';
+        //hs = '<table><tr><td>'+hs+'</td><td>'+ch+'</td></tr></table>';
       }
       var itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+'</div>'+ita[1];
       var path = 'ff14/item/'+itemid+'.html'
