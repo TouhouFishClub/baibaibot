@@ -27,7 +27,8 @@ function searchFF14Item(content,UserName,callback){
   content=content.trim();
   if(content==""){
     var ret = "FF14物品查询器\n输入格式【ffiv+物品ID/名称】\n如【ffiv5471】或【ffiv植物成长剂2型】\n";
-    ret = ret + "支持模糊查询,如【ffiv物成长剂2】\n绝对查询请在末尾加感叹号如【ffiv棉布！】\n所有资料来自【ff14.huijiwiki.com】"
+    ret = ret + "支持模糊查询,如【ffiv物成长剂2】\n绝对查询请在末尾加感叹号如【ffiv棉布！】\n"
+    ret = ret + "支持图片文字识别,如【ffiv+图片】\n所有资料来自【ff14.huijiwiki.com】"
     callback(ret);
     return;
   }
@@ -209,7 +210,7 @@ function searchFF14ItemByID(itemid,username,callback,detailresdata){
       var n3 = s2.indexOf('<');
       var itemname = s2.substring(0,n3);
       console.log(itemname)
-      if(text.indexOf('商店：')>0||text.indexOf('采集：')>0){
+      if(text.indexOf('商店：')>0||text.indexOf('采集：')>0||text.indexOf('制造：')>0){
         getItemDetail(itemname,text,itemid,username,callback,detailresdata);
       }else{
         text = '<div class="ffiv-container" style="float:left">'+text+'</div>';
@@ -350,7 +351,25 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
           cs = ucs
         }
       }
-      hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+'</div></div>';
+      console.log(11111);
+
+      var nc1 = resdata.indexOf('制作材料');
+      var ch = '';
+      if(nc1>0){
+        var sc1 = resdata.substring(nc1+1);
+        var nc2 = sc1.indexOf('<tr>');
+        var sc2 = sc1.substring(nc2);
+        var nc3 = sc2.indexOf('</tr>');
+        ch = sc2.substring(0,nc3+5);
+        ch = '<table class="wikitable item-craft-table filter-div--item">'+ch+'</table>';
+      }
+
+
+
+
+
+
+      hs = '<div class="mw-parser-output"><div class="table-responsive">'+hs+cs+ch+'</div></div>';
       var itemhtml = ita[0]+'<div class="ffiv-container" style="float:left">'+text+hs+'</div>'+ita[1];
       var path = 'ff14/item/'+itemid+'.html'
       fs.writeFileSync('public/'+path,itemhtml);
