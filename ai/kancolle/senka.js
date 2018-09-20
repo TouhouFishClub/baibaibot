@@ -96,6 +96,11 @@ function collectSenka(serverId,callback){
 
 
 function searchsenka(userName,content,callback,qq){
+  if(true){
+    callback('弃坑了,z8关闭');
+    return;
+  }
+
   var day = new Date().getDate();
   if(day<21){
     hidden = true;
