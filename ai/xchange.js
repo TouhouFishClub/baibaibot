@@ -146,22 +146,23 @@ const formatData = async (codeArr, money, callback) => {
       }
     } else {
       let YQLcode = money ? `"${codeArr[0]}${codeArr[1]}"` : `"${codeArr[0]}${codeArr[1]}","${codeArr[1]}${codeArr[0]}"`
-      try {
-        let YQLdata = await getYQLData(YQLcode)
-        let rateObj = YQLdata.query.results.rate
-        if(money ? rateObj.Rate !== 'N/A' : rateObj[0].Rate !== 'N/A'){
-          if(money){
-            /* 输入币值，则进行转换 */
-            response = `${rateObj.Date} ${rateObj.Time}\n${money}${codeToCurrency(rateObj.Name.split('/')[0])} = ${(money*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}`
-          } else {
-            /* 未输入币值，则输出当前汇率 */
-            response = `${rateObj[0].Date} ${rateObj[0].Time}\n1${codeToCurrency(rateObj[0].Name.split('/')[0])} = ${(1*rateObj[0].Rate).toFixed(4)}${codeToCurrency(rateObj[0].Name.split('/')[1])}\n${rateObj[1].Date} ${rateObj[1].Time}\n1${codeToCurrency(rateObj[1].Name.split('/')[0])} = ${(1*rateObj[1].Rate).toFixed(4)}${codeToCurrency(rateObj[1].Name.split('/')[1])}`
-          }
-        } else {
-          response = '币种代码错误'
-        }
-      } catch(err){
-        console.log('========yql failed goto fixer============')
+      // try {
+      //   // throw new Error()
+      //   let YQLdata = await getYQLData(YQLcode)
+      //   let rateObj = YQLdata.query.results.rate
+      //   if(money ? rateObj.Rate !== 'N/A' : rateObj[0].Rate !== 'N/A'){
+      //     if(money){
+      //       /* 输入币值，则进行转换 */
+      //       response = `${rateObj.Date} ${rateObj.Time}\n${money}${codeToCurrency(rateObj.Name.split('/')[0])} = ${(money*rateObj.Rate).toFixed(4)}${codeToCurrency(rateObj.Name.split('/')[1])}`
+      //     } else {
+      //       /* 未输入币值，则输出当前汇率 */
+      //       response = `${rateObj[0].Date} ${rateObj[0].Time}\n1${codeToCurrency(rateObj[0].Name.split('/')[0])} = ${(1*rateObj[0].Rate).toFixed(4)}${codeToCurrency(rateObj[0].Name.split('/')[1])}\n${rateObj[1].Date} ${rateObj[1].Time}\n1${codeToCurrency(rateObj[1].Name.split('/')[0])} = ${(1*rateObj[1].Rate).toFixed(4)}${codeToCurrency(rateObj[1].Name.split('/')[1])}`
+      //     }
+      //   } else {
+      //     response = '币种代码错误'
+      //   }
+      // } catch(err){
+      //   console.log('========yql failed goto fixer============')
         const fixerData = await getFixerData(codeArr[0])
         if(!fixerData.error){
           if(codeArr[0] === codeArr[1]){
@@ -181,7 +182,7 @@ const formatData = async (codeArr, money, callback) => {
         } else {
           response = fixerData.error
         }
-      }
+      // }
     }
   } else {
     response = '币种错误'
