@@ -33,7 +33,7 @@ function runtarot(qq,text,callback){
   let md = md5(str)
   let rp = parseInt(md.substring(0, 15), 16).toString().split('').reduce((p, c) => p + parseInt(c), 0)
   var rpfix = rp % 42;
-  var name = tarotIndex(Math.floor(rpfix/2));
+  var name = tarotIndex[Math.floor(rpfix/2)];
   var desp = tarotIndex[name][rpfix%2];
   callback(text+'\n占卜\n'+name+" "+desp);
 
