@@ -32,7 +32,7 @@ function drawNameCard(username,qq,callback,groupid){
   var maxtimes;
   if((groupid+"").startsWith("54035")
     ||(groupid+"").startsWith("63508")
-    ||(groupid+"").startsWith("13858"))
+    ||(groupid+"").startsWith("13858")
     ||(groupid+"").startsWith("63508")){
     callback('在抽卡的话百百就要炸了你');
     return;
