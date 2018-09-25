@@ -50,6 +50,7 @@ const checkIgnoreUser = require('./ai/ignoreUser');
 const {searchMHW} = require('./ai/mhw/index');
 const {replyKancolleRoute} = require('./ai/kancolle/map_new');
 const {searchFF14Item} = require('./ai/ff14/item');
+const {searchQuest} = require('./ai/ff14/strategy');
 const rd = require('./ai/randomDice')
 
 initWS();
@@ -284,6 +285,10 @@ function handleMsg_D(msgObj,response){
   }
   if(fi == 'ffiv'){
     searchFF14Item(con.substring(4),name,callback);
+    return;
+  }
+  if(fi == 'ffiq'){
+    searchQuest(con.substring(4),name,callback);
     return;
   }
   fi = con.substring(0,5)

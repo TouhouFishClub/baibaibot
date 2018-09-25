@@ -36,7 +36,6 @@ function runtarot(qq,text,callback){
   var name = tarotIndex[Math.floor(rpfix/2)];
   var desp = tarot[name][rpfix%2];
   callback(text+'\n占卜\n'+name+" "+desp);
-
 }
 
 

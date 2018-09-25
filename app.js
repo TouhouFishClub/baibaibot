@@ -3,7 +3,7 @@ const app = express();
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
-const {handleMsg,reconnect} = require('./baibai2');
+//const {handleMsg,reconnect} = require('./baibai2');
 const {getChat} = require('./ai/chat/collect');
 var request = require("request");
 app.use(express.static(path.join(__dirname, 'public')));
@@ -52,6 +52,21 @@ app.get('/image',function(req,res){
     }
   }).pipe(res);
 });
+
+app.get('/ngaImgPipe/*',function(req,res){
+  var path = req.path;
+  var url = 'https://img.nga.178.com/'+path.substring(12);
+  console.log(url);
+  request({
+    url: url,
+    method: "GET"
+  }, function(error, response, body){
+    if(error&&error.code){
+      console.log('pipe error catched!')
+      console.log(error);
+    }
+  }).pipe(res);
+})
 
 app.get('/log', (req, res) => {
   res.send(fs.readFileSync(path.join('log', 'index.html', 'utf-8')))
