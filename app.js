@@ -68,6 +68,40 @@ app.get('/ngaImgPipe/*',function(req,res){
   }).pipe(res);
 })
 
+app.get('/Data/*',function(req,res){
+  var path = req.path;
+  console.log('path:'+path);
+  var url = 'http://ffxivtools.polaris.xin/Data/'+path.substring(6);
+  console.log(url);
+  request({
+    url: url,
+    method: "GET"
+  }, function(error, response, body){
+    if(error&&error.code){
+      console.log('pipe error catched!')
+      console.log(error);
+    }
+  }).pipe(res);
+})
+
+app.get('/Content/*',function(req,res){
+  var path = req.path;
+  console.log('path:'+path);
+
+  var url = 'http://ffxivtools.polaris.xin/Content/'+path.substring(9);
+  console.log(url);
+  request({
+    url: url,
+    method: "GET"
+  }, function(error, response, body){
+    if(error&&error.code){
+      console.log('pipe error catched!')
+      console.log(error);
+    }
+  }).pipe(res);
+})
+
+
 app.get('/log', (req, res) => {
   res.send(fs.readFileSync(path.join('log', 'index.html', 'utf-8')))
 })
