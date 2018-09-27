@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)http://ffxivtools.polaris.xin/zh-CN/EquipmentSimulator -->
+<html style="" class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="renderer" content="webkit">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equipment Simulator - FFxiv Tools Application</title>
+<link rel="shortcut icon" href="http://ffxivtools.polaris.xin/favicon.ico">
+<link href="./ffxiv_js/bs1.min.css" rel="stylesheet">
+<link href="./ffxiv_js/Site.css" rel="stylesheet" type="text/css">
+<link href="./ffxiv_js/eorzeadb_external.css" rel="stylesheet" type="text/css">
+<link href="./ffxiv_js/wBall.css" rel="stylesheet" type="text/css">
+<script src="./ffxiv_js/modernizr-2.6.2.js"></script>
+<script src="./ffxiv_js/jquery_1.10.2_jquery.min.js"></script>
+<script src="./ffxiv_js/store.everything.min.js"></script>
+<script src="./ffxiv_js/loader.js"></script>
+<script type="text/javascript" src="./ffxiv_js/version.js"></script>
+  <script type="text/javascript" src="./ffxiv_js/cn_ff14.js"></script>
+</head>
+<body class="" style="">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+<div class="container">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#Navbar">
+</button>
+<a class="navbar-brand" href="http://ffxivtools.polaris.xin/zh-CN">FFxiv工具集</a>
+</div>
+<div id="Navbar" class="navbar-collapse collapse">
+<ul class="nav navbar-nav">
+<li><a href="http://ffxivtools.polaris.xin/zh-CN/EquipmentSimulator">装备搭配模拟器</a></li>
+<li><a href="http://ffxivtools.polaris.xin/zh-CN/Weather">天气预测器</a></li>
+<li><a href="http://ffxivtools.polaris.xin/zh-CN/Support">支持我们</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="container body-content">
+<hr>
+<h3 style="color:red;">已更新装备数据至4.25版本。<button onclick="tcn();">中文</button></h3>
+<hr>
+<h3 style="color:white;">使用前请先阅读<a href="http://ffxivtools.polaris.xin/zh-CN/EquipmentSimulator#Hint">模拟器说明</a></h3>
+<hr>
+<form class="form-horizontal">
+<div class="form-group">
+<label for="SelectGuardian" class="col-xs-6 col-sm-6 col-md-1 control-label">守护神</label>
+<div class="col-xs-6 col-sm-6 col-md-2">
+<select id="SelectGuardian" class="form-control">
+<option value="Halone">哈罗妮</option>
+<option value="Menphina" selected="selected">梅茵菲娜</option>
+<option value="Thaliak">沙利亚克</option>
+<option value="Nymeia">妮美雅</option>
+<option value="Llymlaen">利姆莱茵</option>
+<option value="Oschon">奥修昂</option>
+<option value="Byregot">比尔格</option>
+<option value="Rhalgr">拉尔戈</option>
+<option value="Azeyma">阿泽玛</option>
+<option value="Naldthal">纳尔札尔</option>
+<option value="Nophica">诺菲卡</option>
+<option value="Althyk">阿尔基克</option>
+</select>
+</div>
+<label for="SelectTribe" class="col-xs-6 col-sm-6 col-md-2 control-label">种族&amp;部落</label>
+<div class="col-xs-6 col-sm-6 col-md-3">
+<select id="SelectTribe" class="form-control">
+<option value="Hyur_Midlanders">人类 - 中原之民</option>
+<option value="Hyur_Highlanders">人类 - 高地之民</option>
+<option value="Elezen_Wildwood">精灵族 - 森林之民</option>
+<option value="Elezen_Duskwight">精灵族 - 黑影之民</option>
+<option value="Lalafell_Plainsfolk">拉拉菲尔 - 平原之民</option>
+<option value="Lalafell_Dunesfolk">拉拉菲尔 - 沙漠之民</option>
+<option value="Miqote_SeekersoftheSun">猫魅族 - 逐日之民</option>
+<option value="Miqote_KeepersoftheMoon">猫魅族 - 护月之民</option>
+<option value="Roegadyn_SeaWolves">鲁加族 - 北洋之民</option>
+<option value="Roegadyn_Hellsguard">鲁家族 - 红焰之民</option>
+<option value="AuRa_Raen">敖龙族 - 晨曦之民</option>
+<option value="AuRa_Xaela">敖龙族 - 暮晖之民</option>
+</select>
+</div>
+<label for="SelectSecondLang" class="col-xs-6 col-sm-6 col-md-2 control-label">第二语言偏好</label>
+<div class="col-xs-6 col-sm-6 col-md-2">
+<select id="SelectSecondLang" class="form-control">
+<option value="en">英语</option>
+<option value="ja">日语</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label for="SelectPatch" class="col-xs-6 col-sm-6 col-md-1 control-label">版本</label>
+<div class="col-xs-6 col-sm-6 col-md-2">
+<select id="SelectPatch" class="form-control">
+<option value="42">4.15</option>
+<option value="43">4.2</option>
+<option value="44" selected="selected">4.25</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label for="SelectClassJob" class="col-xs-6 col-sm-6 col-md-1 control-label">职业&amp;特职</label>
+<div class="col-xs-6 col-sm-6 col-md-2">
+<select id="SelectClassJob" class="form-control">
+<optgroup label="特职：战斗精英">
+<option value="PLD">骑士</option>
+<option value="WAR">战士</option>
+<option value="DRK">暗黑骑士</option>
+<option value="DRG">龙骑士</option>
+<option value="MNK">武僧</option>
+<option value="NIN">忍者</option>
+<option value="SAM">武士</option>
+<option value="BRD" selected="selected">吟游诗人</option>
+<option value="MCH">机工师</option>
+</optgroup>
+<optgroup label="特职：魔法导师">
+<option value="BLM">黑魔法师</option>
+<option value="SMN">召唤师</option>
+<option value="RDM">赤魔法师</option>
+<option value="WHM">白魔法师</option>
+<option value="SCH">学者</option>
+<option value="AST">占星术士</option>
+</optgroup>
+<optgroup label="职业：战斗精英">
+<option value="GLA">剑术师</option>
+<option value="MRD">斧术师</option>
+<option value="LNC">枪术师</option>
+<option value="PGL">格斗家</option>
+<option value="ROG">双剑师</option>
+<option value="ARC">弓箭手</option>
+</optgroup>
+<optgroup label="职业：魔法导师">
+<option value="THM">咒术师</option>
+<option value="ACN">秘术师</option>
+<option value="CNJ">幻术师</option>
+</optgroup>
+<optgroup label="大地使者">
+<option value="MIN">采矿工</option>
+<option value="BTN">园艺师</option>
+<option value="FSH">捕鱼人</option>
+</optgroup>
+<optgroup label="能工巧匠">
+<option value="CRP">刻木匠</option>
+<option value="BSM">锻铁匠</option>
+<option value="ARM">铸甲师</option>
+<option value="GSM">雕金师</option>
+<option value="LTW">制革匠</option>
+<option value="WVR">裁衣匠</option>
+<option value="ALC">炼金术士</option>
+<option value="CUL">烹调师</option>
+</optgroup>
+</select>
+</div>
+<label for="InputLv" class="col-xs-6 col-sm-6 col-md-1 control-label">等级</label>
+<div class="col-xs-6 col-sm-6 col-md-2">
+<input id="InputLv" type="number" min="1" max="70" class="form-control">
+</div>
+<label for="InputILvMin" class="col-xs-6 col-sm-6 col-md-1 control-label">最低品级</label>
+<div class="col-xs-6 col-sm-6 col-md-2">
+<input id="InputILvMin" type="number" min="2" max="380" class="form-control">
+</div>
+<label for="InputILvMax" class="col-xs-6 col-sm-6 col-md-1 control-label">最高品级</label>
+<div class="col-xs-6 col-sm-6 col-md-2">
+<input id="InputILvMax" type="number" min="2" max="380" class="form-control">
+</div>
+</div>
+<div class="form-group">
+</div>
+</form>
+<hr>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-4 ">
+<div>
+<div class="panel">
+<div class="panel-heading">状态参数</div>
+<div class="panel-body">
+<ul class="nav nav-tabs">
+<li class="active">
+<a href="http://ffxivtools.polaris.xin/zh-CN/EquipmentSimulator#TabAttr" data-toggle="pill">
+战斗&amp;魔法
+</a>
+</li>
+<li>
+<a href="http://ffxivtools.polaris.xin/zh-CN/EquipmentSimulator#TabAttr2" data-toggle="pill">
+制作
+</a>
+</li>
+<li>
+<a href="http://ffxivtools.polaris.xin/zh-CN/EquipmentSimulator#TabAttr3" data-toggle="pill">
+采集
+</a>
+</li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane fade in active" id="TabAttr">
+<div>
+<div class="row">
+<div class="col-xs-6 col-md-6">
+<div class="panel">
+<div class="panel-heading">状态</div>
+<div class="panel-body">
+<table class="table-hover table-condensed">
+<tbody><tr>
+<td>力量</td>
+<td id="InfoSTR">264</td>
+</tr>
+<tr>
+<td>灵巧</td>
+<td id="InfoDEX">382</td>
+</tr>
+<tr>
+<td>耐力</td>
+<td id="InfoVIT">292</td>
+</tr>
+<tr>
+<td>智力</td>
+<td id="InfoINT">251</td>
+</tr>
+<tr>
+<td>精神</td>
+<td id="InfoMND">232</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>
+<div class="col-xs-6 col-md-6">
+<div class="panel ">
+<div class="panel-heading">属性</div>
+<div class="panel-body">
+<table class="table-hover table-condensed">
+<tbody><tr>
+<td>火</td>
+<td id="InfoFire">293</td>
+</tr>
+<tr>
+<td>冰</td>
+<td id="InfoIce">297</td>
+</tr>
+<tr>
+<td>风</td>
+<td id="InfoWind">296</td>
+</tr>
+<tr>
+<td>土</td>
+<td id="InfoEarth">295</td>
+</tr>
+<tr>
+<td>雷</td>
+<td id="InfoLightning">295</td>
+</tr>
+<tr>
+<td>水</td>
+<td id="InfoWater">295</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-6 col-md-6">
+<div class="panel ">
+<div class="panel-heading">攻击特性</div>
+<div class="panel-body">
+<table class="table-hover table-condensed">
+<tbody><tr>
+<td>暴击</td>
+<td id="InfoCriticalHit">364</td>
+</tr>
+<tr>
+<td>信念</td>
+<td id="InfoDetermination">292</td>
+</tr>
+<tr>
+<td>直击</td>
+<td id="InfoDirectHitRate">364</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>
+<div class="col-xs-6 col-md-6">
+<div class="panel ">
+<div class="panel-heading">防御特性</div>
+<div class="panel-body">
+<table class="table-hover table-condensed">
+<tbody><tr>
+<td>防御</td>
+<td id="InfoDefense">0</td>
+</tr>
+<tr>
+<td>魔法防御</td>
+<td id="InfoMagicDefense">0</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-6 col-md-12">
+<div class="panel ">
+<div class="panel-heading">体能特性</div>
+<div class="panel-body">
+<table class="table-hover table-condensed">
+<tbody><tr>
+<td>攻击力</td>
+<td id="InfoAttackPower">382</td>
+</tr>
+<tr>
+<td>技能速度</td>
+<td id="InfoSkillSpeed">364</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>
+<div class="col-xs-6 col-md-12">
+<div class="panel ">
+<div class="panel-heading">魔法特性</div>
+<div class="panel-body">
+<table class="table-hover table-condensed">
+<tbody><tr>
+<td>攻击魔法威力</td>
+<td id="InfoAttackMagicPotency">251</td>
+</tr>
+<tr>
+<td>治疗魔法威力</td>
+<td id="InfoHealingMagicPotency">232</td>
+</tr>
+<tr>
+<td>咏唱速度</td>
+<td id="InfoSpellSpeed">364</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-6 col-md-12">
+<div class="panel ">
+<div class="panel-heading">职能特性</div>
+<div class="panel-body">
+<table class="table-hover table-condensed">
+<tbody><tr>
+<td>坚韧</td>
+<td id="InfoTenacity">364</td>
+</tr>
+<tr>
+<td>信仰</td>
+<td id="InfoPIE">292</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tab-pane fade in" id="TabAttr2">
+<div>
+<div class="row">
+<div class="col-xs-6 col-md-12">
+<div class="panel ">
+<div class="panel-body">
+<table class="table-hover table-condensed">
+<tbody><tr>
+<td>作业精度</td>
+<td id="InfoCraftsmanship">0</td>
+</tr>
+<tr>
+<td>加工精度</td>
+<td id="InfoControl">0</td>
+</tr>
+<tr>
+<td>制作力</td>
+<td id="InfoCP">180</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tab-pane fade in" id="TabAttr3">
+<div>
+<div class="row">
+<div class="col-xs-6 col-md-12">
+<div class="panel ">
+<div class="panel-body">
+<table class="table-hover table-condensed">
+<tbody><tr>
+<td>获得力</td>
+<td id="InfoGathering">0</td>
+</tr>
+<tr>
+<td>鉴别力</td>
+<td id="InfoPerception">0</td>
+</tr>
+<tr>
+<td>采集力</td>
+<td id="InfoGP">400</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel-footer">感谢使用(づ￣3￣)づ╭❤～。</div>
+</div>
+</div>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-8">
+<div class="row">
+<form class="form-horizontal">
+<div class="form-group">
+<label for="ButtonSearchGear" class="col-xs-3 col-sm-3 col-md-2 control-label">搜索装备</label>
+<div class="btn btn-success col-xs-2 col-sm-2 col-md-1" id="ButtonSearchGear">Search</div>
+<label for="ButtonClear" class="col-xs-3 col-sm-3 col-md-3 control-label">重置所有装备槽位</label>
+<div class="btn btn-warning col-xs-2 col-sm-2 col-md-1" id="ButtonClear">Reset</div>
+<label for="ButtonTestLink" class="col-xs-3 col-sm-3 col-md-3 control-label">测试数据库网络连接</label>
+<div class="btn btn-info col-xs-2 col-sm-2 col-md-2" id="ButtonTestLink">Test Link</div>
+</div>
+</form>
+</div>
+<hr>
+<div class="row">
+<div class="col-xs-12 col-sm-6 col-md-6">
+<div class="list-group">
+<div>
+<h4><span class="label label-default" id="TitleMainHand">武器/工具</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgMainHand" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotMainHand" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownMainHand" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorMainHand" role="separator" class="divider"></li>
+<li id="AlterHeaderMainHand" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketMainHand1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketMainHand2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketMainHand3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketMainHand4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketMainHand5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketMainHand6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitleHead">头部</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgHead" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotHead" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownHead" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorHead" role="separator" class="divider"></li>
+<li id="AlterHeaderHead" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketHead1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketHead2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketHead3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketHead4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketHead5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketHead6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitleBody">身体</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgBody" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotBody" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownBody" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorBody" role="separator" class="divider"></li>
+<li id="AlterHeaderBody" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketBody1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketBody2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketBody3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketBody4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketBody5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketBody6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitlHands">手部</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgHands" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotHands" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownHands" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorHands" role="separator" class="divider"></li>
+<li id="AlterHeaderHands" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketHands1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketHands2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketHands3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketHands4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketHands5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketHands6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitleWaist">腰部</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgWaist" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotWaist" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownWaist" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorWaist" role="separator" class="divider"></li>
+<li id="AlterHeaderWaist" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketWaist1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketWaist2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketWaist3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketWaist4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketWaist5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketWaist6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitleLegs">腿部</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgLegs" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotLegs" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownLegs" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorLegs" role="separator" class="divider"></li>
+<li id="AlterHeaderLegs" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketLegs1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketLegs2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketLegs3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketLegs4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketLegs5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketLegs6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitleFeet">足部</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgFeet" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotFeet" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownFeet" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorFeet" role="separator" class="divider"></li>
+<li id="AlterHeaderFeet" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketFeet1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketFeet2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketFeet3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketFeet4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketFeet5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketFeet6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-6">
+<div class="list-group">
+<div>
+<h4><span class="label label-default" id="TitleSecondaryHand">副手</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgSecondaryHand" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotSecondaryHand" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownSecondaryHand" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorSecondaryHand" role="separator" class="divider"></li>
+<li id="AlterHeaderSecondaryHand" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketSecondaryHand1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketSecondaryHand2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketSecondaryHand3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketSecondaryHand4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketSecondaryHand5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketSecondaryHand6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitleNecklace">颈部</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgNecklace" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotNecklace" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownNecklace" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorNecklace" role="separator" class="divider"></li>
+<li id="AlterHeaderNecklace" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketNecklace1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketNecklace2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketNecklace3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketNecklace4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketNecklace5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketNecklace6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitleEarings">耳部</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgEarings" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotEarings" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownEarings" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorEarings" role="separator" class="divider"></li>
+<li id="AlterHeaderEarings" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketEarings1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketEarings2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketEarings3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketEarings4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketEarings5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketEarings6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitleBracelets">腕部</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgBracelets" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotBracelets" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownBracelets" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorBracelets" role="separator" class="divider"></li>
+<li id="AlterHeaderBracelets" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketBracelets1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketBracelets2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketBracelets3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketBracelets4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketBracelets5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketBracelets6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitleLeftRing">左手戒指</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgLeftRing" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotLeftRing" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownLeftRing" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorLeftRing" role="separator" class="divider"></li>
+<li id="AlterHeaderLeftRing" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketLeftRing1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketLeftRing2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketLeftRing3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketLeftRing4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketLeftRing5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketLeftRing6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default" id="TitleRightRing">右手戒指</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgRightRing" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotRightRing" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuArm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownRightRing" aria-labelledby="dropdownMenuArm">
+<li id="SeperatorRightRing" role="separator" class="divider"></li>
+<li id="AlterHeaderRightRing" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketRightRing1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketRightRing2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketRightRing3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketRightRing4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketRightRing5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketRightRing6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4><span class="label label-default">灵魂水晶</span></h4>
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-2">
+<img src="./ffxiv_js/equip_empty.png" class="img-rounded" id="ImgSoulCrystal" draggable="false" style="width:60px;height:60px;">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-10">
+<div class="btn-group">
+<button class="btn btn-default" id="SlotSoulCrystal" data-slotitemid="0" style="width:250px; text-align:left">...</button>
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuSoulCrystal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" id="DropdownSoulCrystal" aria-labelledby="dropdownMenuSoulCrystal">
+<li id="SeperatorSoulCrystal" role="separator" class="divider"></li>
+<li id="AlterHeaderSoulCrystal" class="dropdown-header">可选项...</li>
+</ul>
+</div>
+<div>
+<div class="socket" id="SocketSoulCrystal1" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketSoulCrystal2" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketSoulCrystal3" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketSoulCrystal4" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket" id="SocketSoulCrystal5" data-mattype="0" data-matno="0" style="background-position: 0px 0px; display:none; "></div>
+<div class="socket-fake" id="SocketSoulCrystal6" data-mattype="0" data-matno="0" style="background-position: 32px 32px; "></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr id="BeforeHint">
+<div id="Hint" style="color: white;">
+<br>
+<br>
+<hr>
+<h3>模拟器说明</h3>
+<h4>使用说明书</h4>
+<ol>
+<li>设置好你的角色出生信息，设置第二语言偏好，该偏好将在道具无中文译名时起作用。</li>
+<li>选定你的角色职业和等级，设置你想要搜索的装备品级区间。品级区间尽可能小一点，原因见下方详情说明。</li>
+<li>在搜索符合条件的装备前，建议先点击“测试数据库连接”按钮测试网络连接情况。如出现问题见下方详情说明。</li>
+<li>点击“搜索装备”按钮，将出现Loading动画界面，请耐心等待。Loading速度缓慢的原因见下方详情说明。</li>
+<li>从Loading动画中恢复后，点击各个装备栏的下拉按钮，选择装备。装备按照各职业属性权重计算后得到的性能(PFM)排序。</li>
+<li>可以镶嵌魔晶石的装备在选定后装备栏下方会出现魔晶石槽位，点击即可模拟魔晶石镶嵌。</li>
+<li>模拟器还在不断完善中，如有疑问请先浏览下方详情说明，再联系我进行反馈。</li>
+</ol>
+<h4>详情说明</h4>
+<ul>
+<li>由于本模拟器在您搜索可用装备时访问xivdb.com数据库获取装备信息，该数据库对于短时间访问频率有限制（一秒5条），因此可能需要您稍等几分钟。</li>
+<li>将装备品级区间设置得尽可能小可以有效减少等待时间。</li>
+<li>经初步测试，页面在Chrome、火狐、QQ浏览器下显示正常，360浏览器若显示异常请手动从兼容模式切换至极速模式……</li>
+<li>由于该数据库有些装备数据有缺失，可能会出现装备图标载入失败的情况，请见谅。后续会想办法更换数据来源或自行建立维护数据库。</li>
+<li>如若数据库连接异常,您可自行尝试是否能够打开页面 http://api.xivdb.com/item/7886 以确认能否从XivDB数据库获取装备数据。</li>
+<li>目前魔晶石镶嵌仅可以模拟镶嵌属性，并未提供属性上限限制。</li>
+</ul>
+</div>
+<hr>
+<div style="color: white;">
+<h3>更新笔记</h3>
+<h4>2017/09/25</h4>
+<ul>
+<li>添加了“版本”选项，可自由设置装备搜索版本上限。</li>
+<li>依照国服客户端更新了页面词汇。</li>
+<li>更新了吟游诗人/弓箭手、武僧/格斗家、机工士的属性权重。</li>
+</ul>
+<h4>2017/08/25</h4>
+<ul>
+<li>添加了第二语言偏好选单。</li>
+</ul>
+<h4>2017/08/24</h4>
+<ul>
+<li>添加了测试数据库连接的按钮。</li>
+</ul>
+</div>
+<div id="ModalInit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+<h4 class="modal-title">提示</h4>
+</div>
+<div class="modal-body" style="background-color:#505050;">
+<p>欢迎使用本工具！</p>
+<p>请先阅读页面中的模拟器使用说明！</p>
+<p>经初步测试，页面在Chrome、火狐、QQ浏览器下显示正常，360浏览器若显示异常请手动从兼容模式切换至极速模式……</p>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+</div>
+</div>
+</div>
+</div>
+<div id="ModalLoading" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+<div class="modal-dialog modal-sm" role="document">
+<div class="modal-content">
+<div class="modal-title"><h4>Loading...</h4> 这可能需要几分钟，请耐心等待。</div>
+<div class="modal-body">
+<div class="windows8" id="LoadingIcon">
+<div class="wBall" id="wBall_1">
+<div class="wInnerBall"></div>
+</div>
+<div class="wBall" id="wBall_2">
+<div class="wInnerBall"></div>
+</div>
+<div class="wBall" id="wBall_3">
+<div class="wInnerBall"></div>
+</div>
+<div class="wBall" id="wBall_4">
+<div class="wInnerBall"></div>
+</div>
+<div class="wBall" id="wBall_5">
+<div class="wInnerBall"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="ModalMateria" tabindex="-1" role="dialog" aria-labelledby="ModalMateriaLabel">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h4>选择一颗魔晶石</h4>
+</div>
+<div class="modal-body">
+<span>当前选择 : </span><span id="SpanMateria">null</span>
+<ul class="nav nav-tabs">
+<li class="active">
+<a href="http://ffxivtools.polaris.xin/zh-CN/EquipmentSimulator#TabMateria1" data-toggle="tab">
+战斗&amp;魔法
+</a>
+</li>
+<li>
+<a href="http://ffxivtools.polaris.xin/zh-CN/EquipmentSimulator#TabMateria2" data-toggle="tab">
+制作&amp;采集
+</a>
+</li>
+<li>
+<a href="http://ffxivtools.polaris.xin/zh-CN/EquipmentSimulator#TabMateria3" data-toggle="tab">
+元素
+</a>
+</li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane fade in active" id="TabMateria1">
+<table class="table table-condensed table-materia">
+<tbody><tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t1.png"></td>
+<td class="materia-text">神眼魔晶石 (直击)</td>
+<td id="Materia-1-1" class="materia-no">Ⅰ(+2)</td>
+<td id="Materia-1-2" class="materia-no">Ⅱ(+4)</td>
+<td id="Materia-1-3" class="materia-no">Ⅲ(+6)</td>
+<td id="Materia-1-4" class="materia-no">Ⅳ(+9)</td>
+<td id="Materia-1-5" class="materia-no">Ⅴ(+12)</td>
+<td id="Materia-1-6" class="materia-no">Ⅵ(+40)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t1.png"></td>
+<td class="materia-text">武略魔晶石（暴击）</td>
+<td id="Materia-2-1" class="materia-no">Ⅰ(+2)</td>
+<td id="Materia-2-2" class="materia-no">Ⅱ(+4)</td>
+<td id="Materia-2-3" class="materia-no">Ⅲ(+6)</td>
+<td id="Materia-2-4" class="materia-no">Ⅳ(+9)</td>
+<td id="Materia-2-5" class="materia-no">Ⅴ(+12)</td>
+<td id="Materia-2-6" class="materia-no">Ⅵ(+40)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t1.png"></td>
+<td class="materia-text">雄略魔晶石（信念）</td>
+<td id="Materia-3-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-3-2" class="materia-no">Ⅱ(+3)</td>
+<td id="Materia-3-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-3-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-3-5" class="materia-no">Ⅴ(+12)</td>
+<td id="Materia-3-6" class="materia-no">Ⅵ(+40)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t3.png"></td>
+<td class="materia-text">战技魔晶石（技能速度）</td>
+<td id="Materia-4-1" class="materia-no">Ⅰ(+2)</td>
+<td id="Materia-4-2" class="materia-no">Ⅱ(+4)</td>
+<td id="Materia-4-3" class="materia-no">Ⅲ(+6)</td>
+<td id="Materia-4-4" class="materia-no">Ⅳ(+9)</td>
+<td id="Materia-4-5" class="materia-no">Ⅴ(+12)</td>
+<td id="Materia-4-6" class="materia-no">Ⅵ(+40)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t3.png"></td>
+<td class="materia-text">咏唱魔晶石（咏唱速度）</td>
+<td id="Materia-5-1" class="materia-no">Ⅰ(+2)</td>
+<td id="Materia-5-2" class="materia-no">Ⅱ(+4)</td>
+<td id="Materia-5-3" class="materia-no">Ⅲ(+6)</td>
+<td id="Materia-5-4" class="materia-no">Ⅳ(+9)</td>
+<td id="Materia-5-5" class="materia-no">Ⅴ(+12)</td>
+<td id="Materia-5-6" class="materia-no">Ⅵ(+40)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t2.png"></td>
+<td class="materia-text">刚柔魔晶石 (坚韧)</td>
+<td id="Materia-6-1" class="materia-no">Ⅰ(+2)</td>
+<td id="Materia-6-2" class="materia-no">Ⅱ(+4)</td>
+<td id="Materia-6-3" class="materia-no">Ⅲ(+6)</td>
+<td id="Materia-6-4" class="materia-no">Ⅳ(+9)</td>
+<td id="Materia-6-5" class="materia-no">Ⅴ(+12)</td>
+<td id="Materia-6-6" class="materia-no">Ⅵ(+40)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t2.png"></td>
+<td class="materia-text">信力魔晶石（信仰）</td>
+<td id="Materia-7-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-7-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-7-3" class="materia-no">Ⅲ(+3)</td>
+<td id="Materia-7-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-7-5" class="materia-no">Ⅴ(+11)</td>
+<td id="Materia-7-6" class="materia-no">Ⅵ(+40)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t6.png"></td>
+<td class="materia-text">刚力魔晶石（力量）</td>
+<td id="Materia-8-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-8-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-8-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-8-4" class="materia-no">Ⅳ(+7)</td>
+<td id="Materia-8-5" class="materia-no">Ⅴ(+15)</td>
+<td id="Materia-8-6" class="materia-no">Ⅵ(+25)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t6.png"></td>
+<td class="materia-text">巧力魔晶石（灵巧）</td>
+<td id="Materia-9-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-9-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-9-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-9-4" class="materia-no">Ⅳ(+7)</td>
+<td id="Materia-9-5" class="materia-no">Ⅴ(+15)</td>
+<td id="Materia-9-6" class="materia-no">Ⅵ(+25)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t6.png"></td>
+<td class="materia-text">耐力魔晶石（耐力）</td>
+<td id="Materia-10-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-10-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-10-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-10-4" class="materia-no">Ⅳ(+7)</td>
+<td id="Materia-10-5" class="materia-no">Ⅴ(+15)</td>
+<td id="Materia-10-6" class="materia-no">Ⅵ(+25)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t6.png"></td>
+<td class="materia-text">智力魔晶石（智力）</td>
+<td id="Materia-11-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-11-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-11-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-11-4" class="materia-no">Ⅳ(+7)</td>
+<td id="Materia-11-5" class="materia-no">Ⅴ(+15)</td>
+<td id="Materia-11-6" class="materia-no">Ⅵ(+25)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t6.png"></td>
+<td class="materia-text">意力魔晶石（精神）</td>
+<td id="Materia-12-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-12-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-12-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-12-4" class="materia-no">Ⅳ(+7)</td>
+<td id="Materia-12-5" class="materia-no">Ⅴ(+15)</td>
+<td id="Materia-12-6" class="materia-no">Ⅵ(+25)</td>
+</tr>
+</tbody></table>
+</div>
+<div class="tab-pane fade in" id="TabMateria2">
+<table class="table table-condensed table-materia">
+<tbody><tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t4.png"></td>
+<td class="materia-text">达识魔晶石（获得力）</td>
+<td id="Materia-13-1" class="materia-no">Ⅰ(+3)</td>
+<td id="Materia-13-2" class="materia-no">Ⅱ(+4)</td>
+<td id="Materia-13-3" class="materia-no">Ⅲ(+5)</td>
+<td id="Materia-13-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-13-5" class="materia-no">Ⅴ(+10)</td>
+<td id="Materia-13-6" class="materia-no">Ⅵ(+15)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t4.png"></td>
+<td class="materia-text">博识魔晶石（鉴别力）</td>
+<td id="Materia-14-1" class="materia-no">Ⅰ(+3)</td>
+<td id="Materia-14-2" class="materia-no">Ⅱ(+4)</td>
+<td id="Materia-14-3" class="materia-no">Ⅲ(+5)</td>
+<td id="Materia-14-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-14-5" class="materia-no">Ⅴ(+10)</td>
+<td id="Materia-14-6" class="materia-no">Ⅵ(+15)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t4.png"></td>
+<td class="materia-text">器识魔晶石（采集力）</td>
+<td id="Materia-15-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-15-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-15-3" class="materia-no">Ⅲ(+3)</td>
+<td id="Materia-15-4" class="materia-no">Ⅳ(+4)</td>
+<td id="Materia-15-5" class="materia-no">Ⅴ(+6)</td>
+<td id="Materia-15-6" class="materia-no">Ⅵ(+8)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t5.png"></td>
+<td class="materia-text">名匠魔晶石（作业精度）</td>
+<td id="Materia-16-1" class="materia-no">Ⅰ(+3)</td>
+<td id="Materia-16-2" class="materia-no">Ⅱ(+4)</td>
+<td id="Materia-16-3" class="materia-no">Ⅲ(+5)</td>
+<td id="Materia-16-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-16-5" class="materia-no">Ⅴ(+11)</td>
+<td id="Materia-16-6" class="materia-no">Ⅵ(+16)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t5.png"></td>
+<td class="materia-text">巨匠魔晶石（加工精度）</td>
+<td id="Materia-17-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-17-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-17-3" class="materia-no">Ⅲ(+3)</td>
+<td id="Materia-17-4" class="materia-no">Ⅳ(+4)</td>
+<td id="Materia-17-5" class="materia-no">Ⅴ(+7)</td>
+<td id="Materia-17-6" class="materia-no">Ⅵ(+10)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t5.png"></td>
+<td class="materia-text">魔匠魔晶石（制作力）</td>
+<td id="Materia-18-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-18-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-18-3" class="materia-no">Ⅲ(+3)</td>
+<td id="Materia-18-4" class="materia-no">Ⅳ(+4)</td>
+<td id="Materia-18-5" class="materia-no">Ⅴ(+6)</td>
+<td id="Materia-18-6" class="materia-no">Ⅵ(+8)</td>
+</tr>
+</tbody></table>
+</div>
+<div class="tab-pane fade in" id="TabMateria3">
+<table class="table table-condensed table-materia">
+<tbody><tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t7.png"></td>
+<td class="materia-text">创火魔晶石（火）</td>
+<td id="Materia-19-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-19-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-19-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-19-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-19-5" class="materia-no">Ⅴ(+9)</td>
+<td id="Materia-19-6" class="materia-no">Ⅵ(+12)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t7.png"></td>
+<td class="materia-text">创冰魔晶石（冰）</td>
+<td id="Materia-20-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-20-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-20-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-20-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-20-5" class="materia-no">Ⅴ(+9)</td>
+<td id="Materia-20-6" class="materia-no">Ⅵ(+12)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t7.png"></td>
+<td class="materia-text">创风魔晶石（风）</td>
+<td id="Materia-21-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-21-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-21-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-21-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-21-5" class="materia-no">Ⅴ(+9)</td>
+<td id="Materia-21-6" class="materia-no">Ⅵ(+12)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t7.png"></td>
+<td class="materia-text">创土魔晶石（土）</td>
+<td id="Materia-22-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-22-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-22-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-22-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-22-5" class="materia-no">Ⅴ(+9)</td>
+<td id="Materia-22-6" class="materia-no">Ⅵ(+12)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t7.png"></td>
+<td class="materia-text">创雷魔晶石（雷）</td>
+<td id="Materia-23-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-23-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-23-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-23-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-23-5" class="materia-no">Ⅴ(+9)</td>
+<td id="Materia-23-6" class="materia-no">Ⅵ(+12)</td>
+</tr>
+<tr>
+<td><img class="materia_icon" src="./ffxiv_js/materia_t7.png"></td>
+<td class="materia-text">创水魔晶石（水）</td>
+<td id="Materia-24-1" class="materia-no">Ⅰ(+1)</td>
+<td id="Materia-24-2" class="materia-no">Ⅱ(+2)</td>
+<td id="Materia-24-3" class="materia-no">Ⅲ(+4)</td>
+<td id="Materia-24-4" class="materia-no">Ⅳ(+6)</td>
+<td id="Materia-24-5" class="materia-no">Ⅴ(+9)</td>
+<td id="Materia-24-6" class="materia-no">Ⅵ(+12)</td>
+</tr>
+</tbody></table>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<button type="button" class="btn btn-warning" id="ButtonMateriaClear">Clear</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src="./ffxiv_js/customUI.min.js"></script>
+<hr>
+<footer>
+<p>© 2018 - FFxiv Tools Application by 延夏 木有</p>
+</footer>
+</div>
+<script src="./ffxiv_js/bootstrap_3.0.0_js_bootstrap.min.js"></script>
+
+<div id="eorzeadb_tooltip" style="display: none; position: absolute; top: 0px; left: 0px;"></div></body></html>

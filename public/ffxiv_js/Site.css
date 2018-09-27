@@ -1,0 +1,138 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color: #404040;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+p{
+    color: white;
+}
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+.rarity_white
+{
+    color: white;
+}
+.rarity_green
+{
+    color: #33cc66;
+}.rarity_blue
+{
+    color: #0066ff;
+}.rarity_purple
+{
+    color: #9900ff;
+}.rarity_pink
+{
+    color: #ff66cc;
+}
+.btn-default
+{
+    color: white;
+    background-color: #404040;
+    padding-left: 16px;
+}
+.divider
+{   
+    border-top:1px solid #606060;
+}
+.dropdown-menu
+{
+    background-color: #505050;
+    min-width: 100%;
+    max-height: 300px;
+    overflow: scroll;
+}
+.dropdown-header
+{
+    color:white;
+}
+.dropdown-menu>li>a
+{
+    color: white;
+}
+hr
+{
+    border-top:1px solid #202020;
+    color: #202020;
+    background-color: #202020;
+}
+div.socket {
+	width: 32px;
+	height: 32px;
+	margin: 4px 2px 0 2px;
+	background-image: url("/Content/Images/materia.png");
+	background-size: 224px 64px;
+	display: inline-block;
+}
+div.socket-fake {
+	width: 32px;
+	height: 32px;
+	margin: 4px 2px 0 2px;
+	background-image: url("/Content/Images/materia.png");
+	background-size: 224px 64px;
+	display: inline-block;
+}
+div.socket:hover
+{
+    cursor: pointer;
+}
+.table-materia
+{
+    background-color: #606060;
+}
+.materia_icon
+{
+    height: 24px;
+    width: 24px;
+}
+.materia-text
+{
+    color: white;
+}
+.materia-no
+{
+    color: white;
+}
+.materia-no:hover
+{
+    text-decoration: underline;
+    cursor: pointer;
+}
+.form-group > label{
+    color: white;
+}
+.panel
+{
+    background-color: #000000;
+}
+.panel-heading
+{
+    color: white;
+    background-color: #303030;
+    border-color: #303030;
+}
+.panel-body
+{
+    color: white;
+    background-color: #505050;
+}
+.list-group-item {
+    background-color: #505050;
+}
+td.weather-active{
+    color: black;
+    background-color: #d9edf7;
+}
+.weather-past{
+    opacity: .40;
+}

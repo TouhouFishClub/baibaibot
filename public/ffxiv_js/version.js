@@ -1,0 +1,1 @@
+recieve_eorzeadb_version({"css":1526973734,"js":1526973672,"data":1537253448})
