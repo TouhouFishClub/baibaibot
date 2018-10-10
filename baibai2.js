@@ -53,6 +53,8 @@ const {searchFF14Item} = require('./ai/ff14/item');
 const {searchQuest} = require('./ai/ff14/strategy');
 const rd = require('./ai/randomDice')
 
+const {saveAlarm} = require('./ai/private/alerm');
+
 initWS();
 
 var wsonline = false;
@@ -131,37 +133,6 @@ function handleMsg_D(msgObj,response){
 
   if(type=='private'){
     var userid = msgObj.user_id;
-    if(userid=='357474405'){
-      var ca = content.split('|');
-      if(ca.length==2){
-        var gid = ca[0];
-        var text = ca[1];
-        var callback = function(res){
-          if(res.trim().length>0){
-            setTimeout(function(){
-              var options = {
-                host: '192.168.17.52',
-                port: 23334,
-                path: '/send_group_msg?group_id='+gid+'&message='+encodeURIComponent(res),
-                method: 'GET',
-                headers: {
-
-                }
-              };
-              console.log("priv:"+userid+":"+content+":"+res);
-              var req = http.request(options);
-              req.on('error', function(err) {
-                console.log('req err:');
-                console.log(err);
-              });
-              req.end();
-            },1000);
-          }
-        }
-        baiduVoice(text,callback);
-        return;
-      }
-    }
     var callback = function(res){
       if(res.trim().length>0){
         setTimeout(function(){
@@ -184,7 +155,13 @@ function handleMsg_D(msgObj,response){
         },1000);
       }
     }
-    tulingMsg(userid,content,callback,userid);
+
+    if(saveAlarm(content,userid,callback)){
+
+    }else{
+      tulingMsg(userid,content,callback,userid);
+    }
+
 
     return;
   }

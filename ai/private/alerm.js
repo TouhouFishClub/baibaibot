@@ -1,0 +1,95 @@
+var MongoClient = require('mongodb').MongoClient;
+var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
+var path = require('path');
+var request = require("request");
+var fs = require('fs');
+
+
+var udb;
+initDB();
+function initDB(){
+  MongoClient.connect(mongourl, function(err, db) {
+    udb=db;
+    alermTimer();
+  });
+}
+
+function saveAlarm(content,userid,callback){
+  content=content.toLowerCase().trim();
+  var future;
+  var p1 = content.indexOf("\n")
+  var p2 = content.indexOf("-");
+  var alarmcontent = "百百提醒\n";
+  if(p1>0){
+    alarmcontent = alarmcontent+content.substring(p1+1).trim();
+    content=content.substring(0,p1);
+  }else if(p2>0){
+    alarmcontent = alarmcontent+content.substring(p2+1).trim();
+    content=content.substring(0,p2);
+  }
+  var after = 0;
+  if(content.startsWith("h")){
+    var num = content.substring(1);
+    var hours = parseInt(num);
+    var n = hours.indexOf("m");
+    var minutes = 0;
+    if(n>=0){
+      var m = hours.substring(n+1);
+      minutes = parseInt(m);
+    }
+    after = hours*3600000+minutes*60000;
+    future = new Date(new Date().getTime()+after);
+  }else if(content.startsWith("m")){
+    var num = content.substring(1);
+    var minutes = parseInt(num);
+    after = minutes*60000;
+    future = new Date(new Date().getTime()+after);
+  }else{
+    return false;
+  }
+  var cl_alerm_user = udb.collection('cl_alerm_user');
+  cl_alerm_user.save({qq:userid,f:future,d:alarmcontent,ts:new Date()});
+  callback('百百将于'+new Date(future).toLocaleString()+'\n'+alarmcontent);
+  setTimeout(function(){
+    alermUser(userid,alarmcontent);
+  },after)
+  return true;
+}
+
+function alermTimer(){
+  var cl_alerm_user = udb.collection('cl_alerm_user');
+  cl_alerm_user.find({d:{'$gt':new Date()}}).toArray(function(err, result) {
+    for(var i=0;i<result.length;i++){
+      var alermData = result[i];
+      var timeleft = alermData.d.getTime()-new Date().getTime();
+      setTimeout(function(){
+        alermUser(alermData.qq,alermData.d)
+      },timeleft)
+    }
+  })
+}
+
+function alermUser(qq,content){
+  var options = {
+    host: '192.168.17.52',
+    port: 23334,
+    path: '/send_private_msg?user_id='+qq+'&message='+encodeURIComponent(content),
+    method: 'GET',
+    headers: {
+
+    }
+  };
+  console.log("alerm:"+qq+":"+content);
+  var req = http.request(options);
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
+}
+
+
+module.exports={
+  saveAlarm
+}
+
