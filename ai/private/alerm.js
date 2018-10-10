@@ -65,7 +65,7 @@ function alermTimer(){
     for(var i=0;i<result.length;i++){
       var alermData = result[i];
       console.log(alermData);
-      var timeleft = alermData.d.getTime()-new Date().getTime();
+      var timeleft = alermData.f.getTime()-new Date().getTime();
       setTimeout(function(){
         alermUser(alermData.qq,alermData.d)
       },timeleft)
