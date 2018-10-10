@@ -4,6 +4,9 @@ const ignoreTimeBase = 3600
 const showMsg = true
 
 module.exports = function(group, id, content, callback){
+  if(group == '670968817') {
+    return false
+  }
   // console.log(`${group}-${id}:${content}`)
   let now = new Date().getTime()
   if(groupLogs[group] == undefined){
