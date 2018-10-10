@@ -61,7 +61,7 @@ function saveAlarm(content,userid,callback){
 
 function alermTimer(){
   var cl_alerm_user = udb.collection('cl_alerm_user');
-  cl_alerm_user.find({d:{'$gt':new Date()}}).toArray(function(err, result) {
+  cl_alerm_user.find({f:{'$gt':new Date()}}).toArray(function(err, result) {
     for(var i=0;i<result.length;i++){
       var alermData = result[i];
       console.log(alermData);
