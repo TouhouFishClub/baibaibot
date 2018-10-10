@@ -37,7 +37,7 @@ function saveAlarm(content,userid,callback){
     var n2 = s1.indexOf("m");
     var minutes = 0;
     if(n2>=0){
-      var m = hours.substring(0,n2);
+      var m = s1.substring(0,n2);
       minutes = parseInt(m);
     }
     after = hours*3600000+minutes*60000;
