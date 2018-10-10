@@ -18,7 +18,7 @@ function saveAlarm(content,userid,callback){
   content=content.toLowerCase().trim();
   var future;
   var p1 = content.indexOf("\n")
-  var p2 = content.indexOf("-");
+  var p2 = content.indexOf(" ");
   var alarmcontent = "百百提醒\n";
   if(p1>0){
     alarmcontent = alarmcontent+content.substring(p1+1).trim();
@@ -28,19 +28,22 @@ function saveAlarm(content,userid,callback){
     content=content.substring(0,p2);
   }
   var after = 0;
-  if(content.startsWith("h")){
-    var num = content.substring(1);
+  var n1 = content.indexOf("h");
+  var n3 = content.indexOf("m");
+  if(n1>0){
+    var num = content.substring(0,n1);
     var hours = parseInt(num);
-    var n = hours.indexOf("m");
+    var s1 = content.substring(n1+1)
+    var n2 = s1.indexOf("m");
     var minutes = 0;
-    if(n>=0){
-      var m = hours.substring(n+1);
+    if(n2>=0){
+      var m = hours.substring(0,n2);
       minutes = parseInt(m);
     }
     after = hours*3600000+minutes*60000;
     future = new Date(new Date().getTime()+after);
-  }else if(content.startsWith("m")){
-    var num = content.substring(1);
+  }else if(n3>0){
+    var num = content.substring(0,n3);
     var minutes = parseInt(num);
     after = minutes*60000;
     future = new Date(new Date().getTime()+after);
@@ -61,6 +64,7 @@ function alermTimer(){
   cl_alerm_user.find({d:{'$gt':new Date()}}).toArray(function(err, result) {
     for(var i=0;i<result.length;i++){
       var alermData = result[i];
+      console.log(alermData);
       var timeleft = alermData.d.getTime()-new Date().getTime();
       setTimeout(function(){
         alermUser(alermData.qq,alermData.d)
