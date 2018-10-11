@@ -93,9 +93,6 @@ function pushToGroup(type){
     }else{
       combine(callback);
     }
-    setTimeout(function(){
-      getBitFlyer(callback);
-    },500);
   }
 }
 
