@@ -1,6 +1,7 @@
 const fs = require('fs-extra')
 const path = require('path-extra')
 const _ = require('lodash')
+const http = require('http')
 let userItemObj = {}
 
 module.exports = function (userId, content, callback) {
@@ -66,19 +67,46 @@ module.exports = function (userId, content, callback) {
 
 const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
-const Axios = require('axios')
+// const Axios = require('axios')
 let Data = fs.readJsonSync(path.join('assets', 'kanColleEquipData.json'));
 let checkItemType = Array.from(new Set(_.map(Data, 'type')))
-Axios.get('http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json', {
-  timeout: 6000
-}).then(function(response){
-  console.log('read data from wiki');
-  Data = response.data;
-  checkItemType = Array.from(new Set(_.map(Data, 'type')))
-}).catch(error => {
-  console.log('read data from file');
-  //console.log(error)
-});
+http.get({
+  host: 'kcwikizh.github.io',
+  port: 80,
+  path: '/kcdata/slotitem/poi_improve.json',
+  method: 'GET',
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+  },
+}, res => {
+  console.log('read start')
+  let chunk = ''
+  res.on('data', data => chunk += data)
+  res.on('end', () => {
+    console.log('read data from wiki');
+    Data = JSON.parse(chunk)
+    checkItemType = Array.from(new Set(_.map(Data, 'type')))
+    // console.log(Data)
+  })
+}).on('error', e => {
+  console.log(e)
+})
+
+// Axios.get('http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json', {
+//   timeout: 6000
+// }).then(function(response){
+//   console.log('read data from wiki');
+//   Data = response.data;
+//   checkItemType = Array.from(new Set(_.map(Data, 'type')))
+// }).catch(error => {
+//   console.log(error)
+//   if(error.code == 'ECONNREFUSED'){
+//     console.log('===error===')
+//   }
+//
+//   console.log('read data from file');
+//   //console.log(error)
+// });
 
 // DataPath = http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json
 

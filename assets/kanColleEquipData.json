@@ -1,5 +1,112 @@
 [
   {
+    "id": 1,
+    "type": "小口径主砲",
+    "icon": 1,
+    "name": "12cm単装砲",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 293,
+          "name": "12cm単装砲改二",
+          "icon": 1
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "睦月",
+              "如月",
+              "睦月改",
+              "如月改",
+              "睦月改二",
+              "如月改二"
+            ],
+            "secretaryIds": [
+              1,
+              2,
+              254,
+              255,
+              434,
+              435
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 10,
+          "ammo": 20,
+          "steel": 40,
+          "bauxite": 0,
+          "material": [
+            {
+              "development": [
+                2,
+                2
+              ],
+              "improvement": [
+                1,
+                2
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12cm単装砲",
+                "id": 1,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                2,
+                3
+              ],
+              "improvement": [
+                1,
+                2
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12cm単装砲",
+                "id": 1,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                2,
+                4
+              ],
+              "improvement": [
+                2,
+                6
+              ],
+              "item": {
+                "icon": 11,
+                "name": "22号対水上電探",
+                "id": 28,
+                "count": 1
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "id": 2,
     "type": "小口径主砲",
     "icon": 1,
@@ -105,9 +212,9 @@
       {
         "upgrade": {
           "level": 0,
-          "id": 0,
-          "name": "",
-          "icon": 0
+          "id": 266,
+          "name": "12.7cm連装砲C型改二",
+          "icon": 1
         },
         "req": [
           {
@@ -127,6 +234,23 @@
             "secretaryIds": [
               144,
               195
+            ]
+          },
+          {
+            "day": [
+              false,
+              true,
+              true,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "江風改二"
+            ],
+            "secretaryIds": [
+              469
             ]
           }
         ],
@@ -170,6 +294,272 @@
             },
             {
               "development": [
+                4,
+                8
+              ],
+              "improvement": [
+                4,
+                7
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲",
+                "id": 2,
+                "count": 3
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 266,
+    "type": "小口径主砲",
+    "icon": 1,
+    "name": "12.7cm連装砲C型改二",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 267,
+          "name": "12.7cm連装砲D型改二",
+          "icon": 1
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              false,
+              false,
+              false,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "雪風改"
+            ],
+            "secretaryIds": [
+              228
+            ]
+          },
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "満潮改二"
+            ],
+            "secretaryIds": [
+              489
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "荒潮改二",
+              "村雨改二"
+            ],
+            "secretaryIds": [
+              490,
+              498
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 10,
+          "ammo": 50,
+          "steel": 80,
+          "bauxite": 0,
+          "material": [
+            {
+              "development": [
+                2,
+                3
+              ],
+              "improvement": [
+                2,
+                3
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲",
+                "id": 2,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                3,
+                4
+              ],
+              "improvement": [
+                3,
+                4
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲B型改二",
+                "id": 63,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                6,
+                10
+              ],
+              "improvement": [
+                4,
+                8
+              ],
+              "item": {
+                "icon": 11,
+                "name": "22号対水上電探",
+                "id": 28,
+                "count": 1
+              },
+              "useitem": {
+                "icon": 75,
+                "name": "新型砲熕兵装資材",
+                "id": 75,
+                "count": 1
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 267,
+    "type": "小口径主砲",
+    "icon": 1,
+    "name": "12.7cm連装砲D型改二",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              false,
+              false,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "夕雲",
+              "夕雲改"
+            ],
+            "secretaryIds": [
+              133,
+              302
+            ]
+          },
+          {
+            "day": [
+              true,
+              false,
+              false,
+              false,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "夕雲改二"
+            ],
+            "secretaryIds": [
+              542
+            ]
+          },
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "長波改二"
+            ],
+            "secretaryIds": [
+              543
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 20,
+          "ammo": 70,
+          "steel": 90,
+          "bauxite": 20,
+          "material": [
+            {
+              "development": [
+                6,
+                7
+              ],
+              "improvement": [
+                5,
+                6
+              ],
+              "item": {
+                "icon": 16,
+                "name": "10cm連装高角砲",
+                "id": 3,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                7,
+                10
+              ],
+              "improvement": [
+                6,
+                9
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲C型改二",
+                "id": 266,
+                "count": 1
+              }
+            },
+            {
+              "development": [
                 0,
                 0
               ],
@@ -182,6 +572,421 @@
                 "name": "",
                 "id": 0,
                 "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 280,
+    "type": "小口径主砲",
+    "icon": 1,
+    "name": "QF 4.7inch砲 Mk.XII改",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "Jervis改",
+              "Jervis"
+            ],
+            "secretaryIds": [
+              394,
+              519
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 20,
+          "ammo": 60,
+          "steel": 80,
+          "bauxite": 20,
+          "material": [
+            {
+              "development": [
+                6,
+                7
+              ],
+              "improvement": [
+                4,
+                5
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲",
+                "id": 2,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                7,
+                8
+              ],
+              "improvement": [
+                6,
+                7
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲B型改二",
+                "id": 63,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 282,
+    "type": "小口径主砲",
+    "icon": 1,
+    "name": "130mm B-13連装砲",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "Ташкент改",
+              "Ташкент"
+            ],
+            "secretaryIds": [
+              395,
+              516
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 40,
+          "ammo": 90,
+          "steel": 190,
+          "bauxite": 50,
+          "material": [
+            {
+              "development": [
+                8,
+                9
+              ],
+              "improvement": [
+                5,
+                6
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲",
+                "id": 2,
+                "count": 3
+              }
+            },
+            {
+              "development": [
+                9,
+                13
+              ],
+              "improvement": [
+                7,
+                9
+              ],
+              "item": {
+                "icon": 2,
+                "name": "14cm単装砲",
+                "id": 4,
+                "count": 4
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 294,
+    "type": "小口径主砲",
+    "icon": 1,
+    "name": "12.7cm連装砲A型改二",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "吹雪改二"
+            ],
+            "secretaryIds": [
+              426
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 10,
+          "ammo": 40,
+          "steel": 70,
+          "bauxite": 0,
+          "material": [
+            {
+              "development": [
+                2,
+                3
+              ],
+              "improvement": [
+                2,
+                2
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲A型",
+                "id": 297,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                3,
+                4
+              ],
+              "improvement": [
+                3,
+                5
+              ],
+              "item": {
+                "icon": 16,
+                "name": "10cm連装高角砲",
+                "id": 3,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 297,
+    "type": "小口径主砲",
+    "icon": 1,
+    "name": "12.7cm連装砲A型",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 294,
+          "name": "12.7cm連装砲A型改二",
+          "icon": 1
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "白雪",
+              "白雪改"
+            ],
+            "secretaryIds": [
+              10,
+              202
+            ]
+          },
+          {
+            "day": [
+              true,
+              true,
+              false,
+              false,
+              false,
+              true,
+              true
+            ],
+            "secretary": [
+              "磯波改",
+              "浦波改",
+              "浦波"
+            ],
+            "secretaryIds": [
+              206,
+              368,
+              486
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 10,
+          "ammo": 30,
+          "steel": 50,
+          "bauxite": 0,
+          "material": [
+            {
+              "development": [
+                1,
+                2
+              ],
+              "improvement": [
+                1,
+                2
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            },
+            {
+              "development": [
+                1,
+                2
+              ],
+              "improvement": [
+                1,
+                2
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲A型",
+                "id": 297,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                4,
+                8
+              ],
+              "improvement": [
+                3,
+                6
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲",
+                "id": 2,
+                "count": 2
               },
               "useitem": {
                 "icon": 0,
@@ -317,10 +1122,12 @@
               true
             ],
             "secretary": [
-              "最上"
+              "最上",
+              "最上改"
             ],
             "secretaryIds": [
-              70
+              70,
+              73
             ]
           },
           {
@@ -334,10 +1141,12 @@
               true
             ],
             "secretary": [
-              "大淀"
+              "大淀",
+              "大淀改"
             ],
             "secretaryIds": [
-              183
+              183,
+              321
             ]
           }
         ],
@@ -395,10 +1204,10 @@
                 "count": 2
               },
               "useitem": {
-                "icon": 0,
-                "name": "",
-                "id": 0,
-                "count": 0
+                "icon": 75,
+                "name": "新型砲熕兵装資材",
+                "id": 75,
+                "count": 1
               }
             }
           ]
@@ -431,10 +1240,12 @@
               true
             ],
             "secretary": [
-              "青葉"
+              "青葉",
+              "青葉改"
             ],
             "secretaryIds": [
-              61
+              61,
+              264
             ]
           },
           {
@@ -448,10 +1259,14 @@
               true
             ],
             "secretary": [
-              "衣笠"
+              "衣笠",
+              "衣笠改二",
+              "衣笠改"
             ],
             "secretaryIds": [
-              123
+              123,
+              142,
+              295
             ]
           }
         ],
@@ -545,10 +1360,12 @@
               false
             ],
             "secretary": [
-              "三隈"
+              "三隈",
+              "三隈改"
             ],
             "secretaryIds": [
-              120
+              120,
+              121
             ]
           }
         ],
@@ -642,10 +1459,12 @@
               true
             ],
             "secretary": [
-              "阿賀野"
+              "阿賀野",
+              "阿賀野改"
             ],
             "secretaryIds": [
-              137
+              137,
+              305
             ]
           },
           {
@@ -659,10 +1478,12 @@
               true
             ],
             "secretary": [
-              "能代"
+              "能代",
+              "能代改"
             ],
             "secretaryIds": [
-              138
+              138,
+              306
             ]
           },
           {
@@ -676,10 +1497,12 @@
               false
             ],
             "secretary": [
-              "矢矧"
+              "矢矧",
+              "矢矧改"
             ],
             "secretaryIds": [
-              139
+              139,
+              307
             ]
           }
         ],
@@ -773,10 +1596,14 @@
               false
             ],
             "secretary": [
-              "妙高"
+              "妙高",
+              "妙高改",
+              "妙高改二"
             ],
             "secretaryIds": [
-              62
+              62,
+              265,
+              319
             ]
           }
         ],
@@ -870,10 +1697,12 @@
               false
             ],
             "secretary": [
-              "夕張"
+              "夕張",
+              "夕張改"
             ],
             "secretaryIds": [
-              115
+              115,
+              293
             ]
           }
         ],
@@ -967,10 +1796,12 @@
               true
             ],
             "secretary": [
-              "矢矧"
+              "矢矧",
+              "矢矧改"
             ],
             "secretaryIds": [
-              139
+              139,
+              307
             ]
           },
           {
@@ -984,10 +1815,12 @@
               true
             ],
             "secretary": [
-              "酒匂"
+              "酒匂",
+              "酒匂改"
             ],
             "secretaryIds": [
-              140
+              140,
+              314
             ]
           }
         ],
@@ -1275,10 +2108,14 @@
               true
             ],
             "secretary": [
-              "扶桑"
+              "扶桑",
+              "扶桑改",
+              "扶桑改二"
             ],
             "secretaryIds": [
-              26
+              26,
+              286,
+              411
             ]
           }
         ],
@@ -1372,10 +2209,14 @@
               true
             ],
             "secretary": [
-              "長門"
+              "長門",
+              "長門改",
+              "長門改二"
             ],
             "secretaryIds": [
-              80
+              80,
+              275,
+              541
             ]
           },
           {
@@ -1389,10 +2230,12 @@
               false
             ],
             "secretary": [
-              "陸奥"
+              "陸奥",
+              "陸奥改"
             ],
             "secretaryIds": [
-              81
+              81,
+              276
             ]
           }
         ],
@@ -1450,10 +2293,10 @@
                 "count": 2
               },
               "useitem": {
-                "icon": 0,
-                "name": "",
-                "id": 0,
-                "count": 0
+                "icon": 75,
+                "name": "新型砲熕兵装資材",
+                "id": 75,
+                "count": 2
               }
             }
           ]
@@ -1470,9 +2313,9 @@
       {
         "upgrade": {
           "level": 0,
-          "id": 0,
-          "name": "",
-          "icon": 0
+          "id": 276,
+          "name": "46cm三連装砲改",
+          "icon": 3
         },
         "req": [
           {
@@ -1525,6 +2368,25 @@
             "secretaryIds": [
               143
             ]
+          },
+          {
+            "day": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "武蔵改",
+              "武蔵改二"
+            ],
+            "secretaryIds": [
+              148,
+              546
+            ]
           }
         ],
         "consume": {
@@ -1567,24 +2429,24 @@
             },
             {
               "development": [
-                0,
-                0
+                18,
+                36
               ],
               "improvement": [
-                0,
-                0
+                12,
+                16
               ],
               "item": {
-                "icon": 0,
-                "name": "",
-                "id": 0,
-                "count": 0
+                "icon": 3,
+                "name": "46cm三連装砲",
+                "id": 9,
+                "count": 4
               },
               "useitem": {
-                "icon": 0,
-                "name": "",
-                "id": 0,
-                "count": 0
+                "icon": 75,
+                "name": "新型砲熕兵装資材",
+                "id": 75,
+                "count": 2
               }
             }
           ]
@@ -1617,10 +2479,16 @@
               true
             ],
             "secretary": [
-              "Bismarck"
+              "Bismarck",
+              "Bismarck改",
+              "Bismarck zwei",
+              "Bismarck drei"
             ],
             "secretaryIds": [
-              171
+              171,
+              172,
+              173,
+              178
             ]
           }
         ],
@@ -1959,10 +2827,12 @@
               false
             ],
             "secretary": [
-              "長門改"
+              "長門改",
+              "長門改二"
             ],
             "secretaryIds": [
-              275
+              275,
+              541
             ]
           },
           {
@@ -2037,10 +2907,10 @@
                 "count": 2
               },
               "useitem": {
-                "icon": 0,
-                "name": "",
-                "id": 0,
-                "count": 0
+                "icon": 75,
+                "name": "新型砲熕兵装資材",
+                "id": 75,
+                "count": 2
               }
             }
           ]
@@ -2073,10 +2943,16 @@
               false
             ],
             "secretary": [
-              "Bismarck"
+              "Bismarck",
+              "Bismarck改",
+              "Bismarck zwei",
+              "Bismarck drei"
             ],
             "secretaryIds": [
-              171
+              171,
+              172,
+              173,
+              178
             ]
           }
         ],
@@ -2170,10 +3046,12 @@
               false
             ],
             "secretary": [
-              "大和"
+              "大和",
+              "大和改"
             ],
             "secretaryIds": [
-              131
+              131,
+              136
             ]
           },
           {
@@ -2187,10 +3065,14 @@
               false
             ],
             "secretary": [
-              "武蔵"
+              "武蔵",
+              "武蔵改",
+              "武蔵改二"
             ],
             "secretaryIds": [
-              143
+              143,
+              148,
+              546
             ]
           }
         ],
@@ -2398,10 +3280,12 @@
               false
             ],
             "secretary": [
-              "Littorio"
+              "Littorio",
+              "Italia"
             ],
             "secretaryIds": [
-              441
+              441,
+              446
             ]
           },
           {
@@ -2415,10 +3299,12 @@
               true
             ],
             "secretary": [
-              "Roma"
+              "Roma",
+              "Roma改"
             ],
             "secretaryIds": [
-              442
+              442,
+              447
             ]
           }
         ],
@@ -2512,10 +3398,12 @@
               true
             ],
             "secretary": [
-              "Littorio"
+              "Littorio",
+              "Italia"
             ],
             "secretaryIds": [
-              441
+              441,
+              446
             ]
           },
           {
@@ -2529,10 +3417,12 @@
               false
             ],
             "secretary": [
-              "Roma"
+              "Roma",
+              "Roma改"
             ],
             "secretaryIds": [
-              442
+              442,
+              447
             ]
           }
         ],
@@ -2626,9 +3516,11 @@
               true
             ],
             "secretary": [
+              "Iowa改",
               "Iowa"
             ],
             "secretaryIds": [
+              360,
               440
             ]
           }
@@ -2723,9 +3615,11 @@
               true
             ],
             "secretary": [
+              "Iowa改",
               "Iowa"
             ],
             "secretaryIds": [
+              360,
               440
             ]
           }
@@ -2820,9 +3714,11 @@
               true
             ],
             "secretary": [
+              "Warspite改",
               "Warspite"
             ],
             "secretaryIds": [
+              364,
               439
             ]
           }
@@ -2917,9 +3813,11 @@
               false
             ],
             "secretary": [
+              "Warspite改",
               "Warspite"
             ],
             "secretaryIds": [
+              364,
               439
             ]
           }
@@ -2998,9 +3896,9 @@
       {
         "upgrade": {
           "level": 0,
-          "id": 0,
-          "name": "",
-          "icon": 0
+          "id": 290,
+          "name": "41cm三連装砲改二",
+          "icon": 3
         },
         "req": [
           {
@@ -3061,6 +3959,316 @@
             },
             {
               "development": [
+                30,
+                48
+              ],
+              "improvement": [
+                14,
+                20
+              ],
+              "item": {
+                "icon": 3,
+                "name": "試製41cm三連装砲",
+                "id": 105,
+                "count": 1
+              },
+              "useitem": {
+                "icon": 75,
+                "name": "新型砲熕兵装資材",
+                "id": 75,
+                "count": 3
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 276,
+    "type": "大口径主砲",
+    "icon": 3,
+    "name": "46cm三連装砲改",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              true,
+              true,
+              true,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "大和改"
+            ],
+            "secretaryIds": [
+              136
+            ]
+          },
+          {
+            "day": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              true,
+              true
+            ],
+            "secretary": [
+              "武蔵改",
+              "武蔵改二"
+            ],
+            "secretaryIds": [
+              148,
+              546
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 50,
+          "ammo": 490,
+          "steel": 860,
+          "bauxite": 80,
+          "material": [
+            {
+              "development": [
+                8,
+                9
+              ],
+              "improvement": [
+                5,
+                6
+              ],
+              "item": {
+                "icon": 15,
+                "name": "25mm三連装機銃",
+                "id": 40,
+                "count": 3
+              }
+            },
+            {
+              "development": [
+                9,
+                16
+              ],
+              "improvement": [
+                8,
+                9
+              ],
+              "item": {
+                "icon": 3,
+                "name": "46cm三連装砲",
+                "id": 9,
+                "count": 3
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 281,
+    "type": "大口径主砲",
+    "icon": 3,
+    "name": "51cm連装砲",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              true,
+              true
+            ],
+            "secretary": [
+              "武蔵改二"
+            ],
+            "secretaryIds": [
+              546
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 100,
+          "ammo": 700,
+          "steel": 950,
+          "bauxite": 200,
+          "material": [
+            {
+              "development": [
+                20,
+                25
+              ],
+              "improvement": [
+                7,
+                8
+              ],
+              "item": {
+                "icon": 3,
+                "name": "41cm連装砲",
+                "id": 8,
+                "count": 4
+              }
+            },
+            {
+              "development": [
+                25,
+                50
+              ],
+              "improvement": [
+                10,
+                13
+              ],
+              "item": {
+                "icon": 3,
+                "name": "46cm三連装砲",
+                "id": 9,
+                "count": 4
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 290,
+    "type": "大口径主砲",
+    "icon": 3,
+    "name": "41cm三連装砲改二",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "伊勢改二"
+            ],
+            "secretaryIds": [
+              553
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 45,
+          "ammo": 460,
+          "steel": 720,
+          "bauxite": 50,
+          "material": [
+            {
+              "development": [
+                8,
+                10
+              ],
+              "improvement": [
+                7,
+                7
+              ],
+              "item": {
+                "icon": 3,
+                "name": "41cm連装砲",
+                "id": 8,
+                "count": 3
+              }
+            },
+            {
+              "development": [
+                14,
+                41
+              ],
+              "improvement": [
+                10,
+                14
+              ],
+              "item": {
+                "icon": 3,
+                "name": "試製41cm三連装砲",
+                "id": 105,
+                "count": 1
+              }
+            },
+            {
+              "development": [
                 0,
                 0
               ],
@@ -3111,10 +4319,14 @@
               false
             ],
             "secretary": [
-              "山城"
+              "山城",
+              "山城改",
+              "山城改二"
             ],
             "secretaryIds": [
-              27
+              27,
+              287,
+              412
             ]
           },
           {
@@ -3128,10 +4340,14 @@
               true
             ],
             "secretary": [
-              "金剛"
+              "金剛",
+              "金剛改二",
+              "金剛改"
             ],
             "secretaryIds": [
-              78
+              78,
+              149,
+              209
             ]
           },
           {
@@ -3145,10 +4361,12 @@
               false
             ],
             "secretary": [
-              "阿賀野"
+              "阿賀野",
+              "阿賀野改"
             ],
             "secretaryIds": [
-              137
+              137,
+              305
             ]
           }
         ],
@@ -3243,10 +4461,12 @@
             ],
             "secretary": [
               "大和",
+              "大和改",
               "武蔵改"
             ],
             "secretaryIds": [
               131,
+              136,
               148
             ]
           },
@@ -3256,15 +4476,17 @@
               false,
               false,
               false,
-              true,
+              false,
               true,
               true
             ],
             "secretary": [
-              "武蔵"
+              "武蔵",
+              "武蔵改二"
             ],
             "secretaryIds": [
-              143
+              143,
+              546
             ]
           }
         ],
@@ -3322,10 +4544,10 @@
                 "count": 2
               },
               "useitem": {
-                "icon": 0,
-                "name": "",
-                "id": 0,
-                "count": 0
+                "icon": 75,
+                "name": "新型砲熕兵装資材",
+                "id": 75,
+                "count": 1
               }
             }
           ]
@@ -3358,10 +4580,12 @@
               true
             ],
             "secretary": [
-              "Littorio"
+              "Littorio",
+              "Italia"
             ],
             "secretaryIds": [
-              441
+              441,
+              446
             ]
           },
           {
@@ -3375,10 +4599,12 @@
               false
             ],
             "secretary": [
-              "Roma"
+              "Roma",
+              "Roma改"
             ],
             "secretaryIds": [
-              442
+              442,
+              447
             ]
           }
         ],
@@ -3586,15 +4812,17 @@
               false
             ],
             "secretary": [
+              "Richelieu改",
               "Richelieu"
             ],
             "secretaryIds": [
+              392,
               492
             ]
           }
         ],
         "consume": {
-          "fuel": 15,
+          "fuel": 10,
           "ammo": 150,
           "steel": 150,
           "bauxite": 50,
@@ -3702,10 +4930,14 @@
               false
             ],
             "secretary": [
-              "叢雲"
+              "叢雲",
+              "叢雲改",
+              "叢雲改二"
             ],
             "secretaryIds": [
-              33
+              33,
+              205,
+              420
             ]
           }
         ],
@@ -3897,11 +5129,19 @@
             ],
             "secretary": [
               "大井",
-              "北上"
+              "北上",
+              "大井改",
+              "北上改",
+              "大井改二",
+              "北上改二"
             ],
             "secretaryIds": [
               24,
-              25
+              25,
+              57,
+              58,
+              118,
+              119
             ]
           }
         ],
@@ -3995,10 +5235,12 @@
               false
             ],
             "secretary": [
-              "島風"
+              "島風",
+              "島風改"
             ],
             "secretaryIds": [
-              50
+              50,
+              229
             ]
           }
         ],
@@ -4165,6 +5407,120 @@
     ]
   },
   {
+    "id": 174,
+    "type": "魚雷",
+    "icon": 5,
+    "name": "53cm連装魚雷",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              false,
+              false,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "神風改"
+            ],
+            "secretaryIds": [
+              476
+            ]
+          },
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "龍田改二"
+            ],
+            "secretaryIds": [
+              478
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 40,
+          "ammo": 60,
+          "steel": 40,
+          "bauxite": 20,
+          "material": [
+            {
+              "development": [
+                1,
+                2
+              ],
+              "improvement": [
+                1,
+                1
+              ],
+              "item": {
+                "icon": 5,
+                "name": "61cm三連装魚雷",
+                "id": 13,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                2,
+                4
+              ],
+              "improvement": [
+                2,
+                3
+              ],
+              "item": {
+                "icon": 5,
+                "name": "61cm四連装(酸素)魚雷",
+                "id": 15,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "id": 179,
     "type": "魚雷",
     "icon": 5,
@@ -4189,10 +5545,12 @@
               true
             ],
             "secretary": [
-              "島風"
+              "島風",
+              "島風改"
             ],
             "secretaryIds": [
-              50
+              50,
+              229
             ]
           },
           {
@@ -4206,9 +5564,11 @@
               true
             ],
             "secretary": [
+              "初月改",
               "初月"
             ],
             "secretaryIds": [
+              357,
               423
             ]
           }
@@ -4279,6 +5639,350 @@
     ]
   },
   {
+    "id": 283,
+    "type": "魚雷",
+    "icon": 5,
+    "name": "533mm 三連装魚雷",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "Ташкент改",
+              "Ташкент"
+            ],
+            "secretaryIds": [
+              395,
+              516
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 60,
+          "ammo": 90,
+          "steel": 70,
+          "bauxite": 30,
+          "material": [
+            {
+              "development": [
+                3,
+                4
+              ],
+              "improvement": [
+                2,
+                3
+              ],
+              "item": {
+                "icon": 5,
+                "name": "61cm三連装魚雷",
+                "id": 13,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                6,
+                8
+              ],
+              "improvement": [
+                3,
+                4
+              ],
+              "item": {
+                "icon": 5,
+                "name": "61cm四連装(酸素)魚雷",
+                "id": 15,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 285,
+    "type": "魚雷",
+    "icon": 5,
+    "name": "61cm三連装(酸素)魚雷後期型",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              true,
+              true
+            ],
+            "secretary": [
+              "綾波改二"
+            ],
+            "secretaryIds": [
+              195
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              false,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "初霜改二"
+            ],
+            "secretaryIds": [
+              419
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 120,
+          "ammo": 180,
+          "steel": 90,
+          "bauxite": 60,
+          "material": [
+            {
+              "development": [
+                5,
+                6
+              ],
+              "improvement": [
+                3,
+                4
+              ],
+              "item": {
+                "icon": 5,
+                "name": "61cm三連装魚雷",
+                "id": 13,
+                "count": 3
+              }
+            },
+            {
+              "development": [
+                6,
+                9
+              ],
+              "improvement": [
+                5,
+                7
+              ],
+              "item": {
+                "icon": 5,
+                "name": "61cm三連装(酸素)魚雷",
+                "id": 125,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 286,
+    "type": "魚雷",
+    "icon": 5,
+    "name": "61cm四連装(酸素)魚雷後期型",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              true,
+              true,
+              true,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "時雨改二"
+            ],
+            "secretaryIds": [
+              145
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              false,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "長波改二"
+            ],
+            "secretaryIds": [
+              543
+            ]
+          },
+          {
+            "day": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              true,
+              true
+            ],
+            "secretary": [
+              "陽炎改二"
+            ],
+            "secretaryIds": [
+              566
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 160,
+          "ammo": 240,
+          "steel": 120,
+          "bauxite": 80,
+          "material": [
+            {
+              "development": [
+                7,
+                8
+              ],
+              "improvement": [
+                3,
+                4
+              ],
+              "item": {
+                "icon": 5,
+                "name": "61cm四連装魚雷",
+                "id": 14,
+                "count": 3
+              }
+            },
+            {
+              "development": [
+                8,
+                12
+              ],
+              "improvement": [
+                5,
+                7
+              ],
+              "item": {
+                "icon": 5,
+                "name": "61cm四連装(酸素)魚雷",
+                "id": 15,
+                "count": 3
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "id": 19,
     "type": "艦上戦闘機",
     "icon": 6,
@@ -4303,10 +6007,12 @@
               true
             ],
             "secretary": [
-              "鳳翔"
+              "鳳翔",
+              "鳳翔改"
             ],
             "secretaryIds": [
-              89
+              89,
+              285
             ]
           }
         ],
@@ -4400,10 +6106,12 @@
               true
             ],
             "secretary": [
-              "赤城"
+              "赤城",
+              "赤城改"
             ],
             "secretaryIds": [
-              83
+              83,
+              277
             ]
           },
           {
@@ -4417,10 +6125,12 @@
               false
             ],
             "secretary": [
-              "加賀"
+              "加賀",
+              "加賀改"
             ],
             "secretaryIds": [
-              84
+              84,
+              278
             ]
           }
         ],
@@ -4514,10 +6224,16 @@
               true
             ],
             "secretary": [
-              "翔鶴"
+              "翔鶴",
+              "翔鶴改",
+              "翔鶴改二",
+              "翔鶴改二甲"
             ],
             "secretaryIds": [
-              110
+              110,
+              288,
+              461,
+              466
             ]
           },
           {
@@ -4531,10 +6247,16 @@
               false
             ],
             "secretary": [
-              "瑞鶴"
+              "瑞鶴",
+              "瑞鶴改",
+              "瑞鶴改二",
+              "瑞鶴改二甲"
             ],
             "secretaryIds": [
-              111
+              111,
+              112,
+              462,
+              467
             ]
           }
         ],
@@ -4628,10 +6350,12 @@
               true
             ],
             "secretary": [
-              "赤城"
+              "赤城",
+              "赤城改"
             ],
             "secretaryIds": [
-              83
+              83,
+              277
             ]
           },
           {
@@ -4645,10 +6369,12 @@
               false
             ],
             "secretary": [
-              "加賀"
+              "加賀",
+              "加賀改"
             ],
             "secretaryIds": [
-              84
+              84,
+              278
             ]
           }
         ],
@@ -4742,10 +6468,12 @@
               true
             ],
             "secretary": [
-              "大鳳"
+              "大鳳",
+              "大鳳改"
             ],
             "secretaryIds": [
-              153
+              153,
+              156
             ]
           },
           {
@@ -4759,10 +6487,12 @@
               true
             ],
             "secretary": [
-              "雲龍"
+              "雲龍",
+              "雲龍改"
             ],
             "secretaryIds": [
-              404
+              404,
+              406
             ]
           }
         ],
@@ -4856,10 +6586,16 @@
               true
             ],
             "secretary": [
-              "翔鶴"
+              "翔鶴",
+              "翔鶴改",
+              "翔鶴改二",
+              "翔鶴改二甲"
             ],
             "secretaryIds": [
-              110
+              110,
+              288,
+              461,
+              466
             ]
           },
           {
@@ -4873,10 +6609,16 @@
               false
             ],
             "secretary": [
-              "瑞鶴"
+              "瑞鶴",
+              "瑞鶴改",
+              "瑞鶴改二",
+              "瑞鶴改二甲"
             ],
             "secretaryIds": [
-              111
+              111,
+              112,
+              462,
+              467
             ]
           }
         ],
@@ -4970,10 +6712,16 @@
               false
             ],
             "secretary": [
-              "瑞鶴"
+              "瑞鶴",
+              "瑞鶴改",
+              "瑞鶴改二",
+              "瑞鶴改二甲"
             ],
             "secretaryIds": [
-              111
+              111,
+              112,
+              462,
+              467
             ]
           }
         ],
@@ -5067,10 +6815,16 @@
               true
             ],
             "secretary": [
-              "瑞鶴"
+              "瑞鶴",
+              "瑞鶴改",
+              "瑞鶴改二",
+              "瑞鶴改二甲"
             ],
             "secretaryIds": [
-              111
+              111,
+              112,
+              462,
+              467
             ]
           }
         ],
@@ -5164,10 +6918,16 @@
               true
             ],
             "secretary": [
-              "瑞鶴"
+              "瑞鶴",
+              "瑞鶴改",
+              "瑞鶴改二",
+              "瑞鶴改二甲"
             ],
             "secretaryIds": [
-              111
+              111,
+              112,
+              462,
+              467
             ]
           }
         ],
@@ -5261,10 +7021,12 @@
               false
             ],
             "secretary": [
-              "赤城"
+              "赤城",
+              "赤城改"
             ],
             "secretaryIds": [
-              83
+              83,
+              277
             ]
           },
           {
@@ -5278,10 +7040,12 @@
               false
             ],
             "secretary": [
-              "加賀"
+              "加賀",
+              "加賀改"
             ],
             "secretaryIds": [
-              84
+              84,
+              278
             ]
           }
         ],
@@ -5375,10 +7139,12 @@
               false
             ],
             "secretary": [
-              "赤城"
+              "赤城",
+              "赤城改"
             ],
             "secretaryIds": [
-              83
+              83,
+              277
             ]
           },
           {
@@ -5392,10 +7158,12 @@
               false
             ],
             "secretary": [
-              "加賀"
+              "加賀",
+              "加賀改"
             ],
             "secretaryIds": [
-              84
+              84,
+              278
             ]
           }
         ],
@@ -5751,10 +7519,14 @@
               false
             ],
             "secretary": [
-              "Saratoga改"
+              "Saratoga改",
+              "Saratoga Mk.II",
+              "Saratoga Mk.II Mod.2"
             ],
             "secretaryIds": [
-              438
+              438,
+              545,
+              550
             ]
           }
         ],
@@ -5848,10 +7620,12 @@
               false
             ],
             "secretary": [
-              "Saratoga Mk.II"
+              "Saratoga Mk.II",
+              "Saratoga Mk.II Mod.2"
             ],
             "secretaryIds": [
-              545
+              545,
+              550
             ]
           }
         ],
@@ -5929,9 +7703,9 @@
       {
         "upgrade": {
           "level": 0,
-          "id": 219,
-          "name": "零式艦戦63型(爆戦)",
-          "icon": 7
+          "id": 0,
+          "name": "",
+          "icon": 0
         },
         "req": [
           {
@@ -5945,10 +7719,14 @@
               true
             ],
             "secretary": [
-              "隼鷹"
+              "隼鷹",
+              "隼鷹改",
+              "隼鷹改二"
             ],
             "secretaryIds": [
-              92
+              92,
+              284,
+              408
             ]
           },
           {
@@ -5963,10 +7741,104 @@
             ],
             "secretary": [
               "翔鶴",
-              "鈴谷航改二"
+              "翔鶴改",
+              "翔鶴改二",
+              "翔鶴改二甲"
             ],
             "secretaryIds": [
               110,
+              288,
+              461,
+              466
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 120,
+          "ammo": 120,
+          "steel": 0,
+          "bauxite": 280,
+          "material": [
+            {
+              "development": [
+                4,
+                6
+              ],
+              "improvement": [
+                3,
+                5
+              ],
+              "item": {
+                "icon": 6,
+                "name": "零式艦戦52型",
+                "id": 21,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                5,
+                9
+              ],
+              "improvement": [
+                4,
+                6
+              ],
+              "item": {
+                "icon": 7,
+                "name": "彗星",
+                "id": 24,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      },
+
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 219,
+          "name": "零式艦戦63型(爆戦)",
+          "icon": 7
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "鈴谷航改二"
+            ],
+            "secretaryIds": [
               508
             ]
           }
@@ -6061,10 +7933,16 @@
               false
             ],
             "secretary": [
-              "瑞鶴"
+              "瑞鶴",
+              "瑞鶴改",
+              "瑞鶴改二",
+              "瑞鶴改二甲"
             ],
             "secretaryIds": [
-              111
+              111,
+              112,
+              462,
+              467
             ]
           }
         ],
@@ -6206,7 +8084,7 @@
             },
             {
               "development": [
-                6,
+                4,
                 9
               ],
               "improvement": [
@@ -6411,6 +8289,25 @@
           },
           {
             "day": [
+              false,
+              true,
+              true,
+              true,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "瑞穂改",
+              "瑞穂"
+            ],
+            "secretaryIds": [
+              348,
+              451
+            ]
+          },
+          {
+            "day": [
               true,
               false,
               false,
@@ -6424,23 +8321,6 @@
             ],
             "secretaryIds": [
               450
-            ]
-          },
-          {
-            "day": [
-              false,
-              true,
-              true,
-              true,
-              false,
-              false,
-              false
-            ],
-            "secretary": [
-              "瑞穂"
-            ],
-            "secretaryIds": [
-              451
             ]
           }
         ],
@@ -6585,10 +8465,10 @@
             {
               "development": [
                 6,
-                5
+                9
               ],
               "improvement": [
-                9,
+                5,
                 7
               ],
               "item": {
@@ -6614,10 +8494,10 @@
                 "count": 2
               },
               "useitem": {
-                "icon": 0,
-                "name": "",
-                "id": 0,
-                "count": 0
+                "icon": 70,
+                "name": "熟練搭乗員",
+                "id": 70,
+                "count": 1
               }
             }
           ]
@@ -6659,6 +8539,25 @@
           {
             "day": [
               false,
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "武蔵改",
+              "武蔵改二"
+            ],
+            "secretaryIds": [
+              148,
+              546
+            ]
+          },
+          {
+            "day": [
+              false,
               true,
               true,
               true,
@@ -6667,9 +8566,11 @@
               false
             ],
             "secretary": [
+              "瑞穂改",
               "瑞穂"
             ],
             "secretaryIds": [
+              348,
               451
             ]
           }
@@ -6774,7 +8675,7 @@
           }
         ],
         "consume": {
-          "fuel": 180,
+          "fuel": 160,
           "ammo": 180,
           "steel": 0,
           "bauxite": 480,
@@ -7239,9 +9140,11 @@
               false
             ],
             "secretary": [
+              "秋月改",
               "秋月"
             ],
             "secretaryIds": [
+              330,
               421
             ]
           },
@@ -7256,9 +9159,11 @@
               false
             ],
             "secretary": [
+              "照月改",
               "照月"
             ],
             "secretaryIds": [
+              346,
               422
             ]
           }
@@ -7347,16 +9252,18 @@
               false,
               false,
               false,
-              true,
+              false,
               true,
               true,
               true
             ],
             "secretary": [
-              "島風"
+              "島風",
+              "島風改"
             ],
             "secretaryIds": [
-              50
+              50,
+              229
             ]
           },
           {
@@ -7404,10 +9311,29 @@
               true
             ],
             "secretary": [
-              "夕雲"
+              "夕雲",
+              "夕雲改"
             ],
             "secretaryIds": [
-              133
+              133,
+              302
+            ]
+          },
+          {
+            "day": [
+              false,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "夕雲改二"
+            ],
+            "secretaryIds": [
+              542
             ]
           }
         ],
@@ -7477,6 +9403,120 @@
     ]
   },
   {
+    "id": 29,
+    "type": "小型電探",
+    "icon": 11,
+    "name": "33号対水上電探",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              true,
+              true,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "夕張改"
+            ],
+            "secretaryIds": [
+              293
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "黒潮改二"
+            ],
+            "secretaryIds": [
+              568
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 10,
+          "ammo": 0,
+          "steel": 40,
+          "bauxite": 50,
+          "material": [
+            {
+              "development": [
+                7,
+                8
+              ],
+              "improvement": [
+                3,
+                4
+              ],
+              "item": {
+                "icon": 11,
+                "name": "22号対水上電探",
+                "id": 28,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                8,
+                12
+              ],
+              "improvement": [
+                4,
+                6
+              ],
+              "item": {
+                "icon": 11,
+                "name": "33号対水上電探",
+                "id": 29,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "id": 30,
     "type": "大型電探",
     "icon": 11,
@@ -7501,10 +9541,12 @@
               true
             ],
             "secretary": [
-              "伊勢"
+              "伊勢",
+              "伊勢改二"
             ],
             "secretaryIds": [
-              77
+              77,
+              553
             ]
           },
           {
@@ -7649,10 +9691,29 @@
               true
             ],
             "secretary": [
-              "伊勢"
+              "伊勢",
+              "伊勢改二"
             ],
             "secretaryIds": [
-              77
+              77,
+              553
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "伊勢改"
+            ],
+            "secretaryIds": [
+              82
             ]
           },
           {
@@ -7670,6 +9731,23 @@
             ],
             "secretaryIds": [
               87
+            ]
+          },
+          {
+            "day": [
+              false,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "日向改"
+            ],
+            "secretaryIds": [
+              88
             ]
           }
         ],
@@ -7894,10 +9972,12 @@
               false
             ],
             "secretary": [
-              "大和"
+              "大和",
+              "大和改"
             ],
             "secretaryIds": [
-              131
+              131,
+              136
             ]
           },
           {
@@ -7911,10 +9991,14 @@
               false
             ],
             "secretary": [
-              "武蔵"
+              "武蔵",
+              "武蔵改",
+              "武蔵改二"
             ],
             "secretaryIds": [
-              143
+              143,
+              148,
+              546
             ]
           }
         ],
@@ -8008,10 +10092,12 @@
               false
             ],
             "secretary": [
-              "雪風"
+              "雪風",
+              "雪風改"
             ],
             "secretaryIds": [
-              20
+              20,
+              228
             ]
           },
           {
@@ -8139,10 +10225,29 @@
               false
             ],
             "secretary": [
-              "伊勢"
+              "伊勢",
+              "伊勢改二"
             ],
             "secretaryIds": [
-              77
+              77,
+              553
+            ]
+          },
+          {
+            "day": [
+              false,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "伊勢改"
+            ],
+            "secretaryIds": [
+              82
             ]
           },
           {
@@ -8270,10 +10375,14 @@
               true
             ],
             "secretary": [
-              "霧島"
+              "霧島",
+              "霧島改二",
+              "霧島改"
             ],
             "secretaryIds": [
-              85
+              85,
+              152,
+              212
             ]
           },
           {
@@ -8287,10 +10396,14 @@
               true
             ],
             "secretary": [
-              "比叡"
+              "比叡",
+              "比叡改二",
+              "比叡改"
             ],
             "secretaryIds": [
-              86
+              86,
+              150,
+              210
             ]
           }
         ],
@@ -8384,10 +10497,14 @@
               true
             ],
             "secretary": [
-              "金剛"
+              "金剛",
+              "金剛改二",
+              "金剛改"
             ],
             "secretaryIds": [
-              78
+              78,
+              149,
+              209
             ]
           },
           {
@@ -8401,10 +10518,14 @@
               false
             ],
             "secretary": [
-              "榛名"
+              "榛名",
+              "榛名改二",
+              "榛名改"
             ],
             "secretaryIds": [
-              79
+              79,
+              151,
+              211
             ]
           }
         ],
@@ -8498,10 +10619,14 @@
               false
             ],
             "secretary": [
-              "皐月"
+              "皐月",
+              "皐月改",
+              "皐月改二"
             ],
             "secretaryIds": [
-              28
+              28,
+              256,
+              418
             ]
           },
           {
@@ -8515,27 +10640,14 @@
               false
             ],
             "secretary": [
-              "文月"
+              "文月",
+              "文月改",
+              "文月改二"
             ],
             "secretaryIds": [
-              29
-            ]
-          },
-          {
-            "day": [
-              false,
-              false,
-              false,
-              true,
-              false,
-              false,
-              false
-            ],
-            "secretary": [
-              "鬼怒"
-            ],
-            "secretaryIds": [
-              113
+              29,
+              257,
+              548
             ]
           },
           {
@@ -8553,6 +10665,23 @@
             ],
             "secretaryIds": [
               141
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "鬼怒改二"
+            ],
+            "secretaryIds": [
+              487
             ]
           }
         ],
@@ -8646,10 +10775,12 @@
               false
             ],
             "secretary": [
-              "摩耶"
+              "摩耶",
+              "摩耶改"
             ],
             "secretaryIds": [
-              68
+              68,
+              271
             ]
           }
         ],
@@ -8792,6 +10923,23 @@
             "secretaryIds": [
               487
             ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "村雨改二"
+            ],
+            "secretaryIds": [
+              498
+            ]
           }
         ],
         "consume": {
@@ -8884,10 +11032,14 @@
               true
             ],
             "secretary": [
-              "皐月"
+              "皐月",
+              "皐月改",
+              "皐月改二"
             ],
             "secretaryIds": [
-              28
+              28,
+              256,
+              418
             ]
           },
           {
@@ -8901,10 +11053,12 @@
               true
             ],
             "secretary": [
-              "文月"
+              "文月",
+              "文月改"
             ],
             "secretaryIds": [
-              29
+              29,
+              257
             ]
           },
           {
@@ -8918,10 +11072,10 @@
               false
             ],
             "secretary": [
-              "鬼怒"
+              "鬼怒改二"
             ],
             "secretaryIds": [
-              113
+              487
             ]
           }
         ],
@@ -8983,6 +11137,120 @@
                 "name": "",
                 "id": 0,
                 "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "type": "対空機銃",
+    "icon": 15,
+    "name": "12cm30連装噴進砲",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 274,
+          "name": "12cm30連装噴進砲改二",
+          "icon": 15
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              true,
+              true
+            ],
+            "secretary": [
+              "伊勢改"
+            ],
+            "secretaryIds": [
+              82
+            ]
+          },
+          {
+            "day": [
+              false,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "日向改"
+            ],
+            "secretaryIds": [
+              88
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 90,
+          "ammo": 270,
+          "steel": 50,
+          "bauxite": 180,
+          "material": [
+            {
+              "development": [
+                3,
+                6
+              ],
+              "improvement": [
+                2,
+                3
+              ],
+              "item": {
+                "icon": 15,
+                "name": "12cm30連装噴進砲",
+                "id": 51,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                5,
+                9
+              ],
+              "improvement": [
+                3,
+                5
+              ],
+              "item": {
+                "icon": 15,
+                "name": "12cm30連装噴進砲",
+                "id": 51,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                10,
+                30
+              ],
+              "improvement": [
+                7,
+                10
+              ],
+              "item": {
+                "icon": 15,
+                "name": "25mm三連装機銃",
+                "id": 40,
+                "count": 3
+              },
+              "useitem": {
+                "icon": 78,
+                "name": "戦闘詳報",
+                "id": 78,
+                "count": 1
               }
             }
           ]
@@ -9105,6 +11373,137 @@
     ]
   },
   {
+    "id": 274,
+    "type": "対空機銃",
+    "icon": 15,
+    "name": "12cm30連装噴進砲改二",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "伊勢改"
+            ],
+            "secretaryIds": [
+              82
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "日向改"
+            ],
+            "secretaryIds": [
+              88
+            ]
+          },
+          {
+            "day": [
+              true,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "伊勢改二"
+            ],
+            "secretaryIds": [
+              553
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 90,
+          "ammo": 300,
+          "steel": 90,
+          "bauxite": 150,
+          "material": [
+            {
+              "development": [
+                5,
+                7
+              ],
+              "improvement": [
+                4,
+                5
+              ],
+              "item": {
+                "icon": 15,
+                "name": "25mm三連装機銃",
+                "id": 40,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                7,
+                15
+              ],
+              "improvement": [
+                5,
+                7
+              ],
+              "item": {
+                "icon": 15,
+                "name": "12cm30連装噴進砲",
+                "id": 51,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "id": 10,
     "type": "副砲",
     "icon": 16,
@@ -9129,10 +11528,16 @@
               true
             ],
             "secretary": [
-              "鈴谷"
+              "鈴谷",
+              "鈴谷改",
+              "鈴谷改二",
+              "鈴谷航改二"
             ],
             "secretaryIds": [
-              124
+              124,
+              129,
+              503,
+              508
             ]
           },
           {
@@ -9146,10 +11551,16 @@
               true
             ],
             "secretary": [
-              "熊野"
+              "熊野",
+              "熊野改",
+              "熊野改二",
+              "熊野航改二"
             ],
             "secretaryIds": [
-              125
+              125,
+              130,
+              504,
+              509
             ]
           },
           {
@@ -9244,9 +11655,9 @@
       {
         "upgrade": {
           "level": 0,
-          "id": 220,
-          "name": "8cm高角砲改+増設機銃",
-          "icon": 16
+          "id": 0,
+          "name": "",
+          "icon": 0
         },
         "req": [
           {
@@ -9260,10 +11671,12 @@
               true
             ],
             "secretary": [
-              "阿賀野"
+              "阿賀野",
+              "阿賀野改"
             ],
             "secretaryIds": [
-              137
+              137,
+              305
             ]
           },
           {
@@ -9277,12 +11690,87 @@
               true
             ],
             "secretary": [
-              "能代"
+              "能代",
+              "能代改"
             ],
             "secretaryIds": [
-              138
+              138,
+              306
             ]
-          },
+          }
+        ],
+        "consume": {
+          "fuel": 10,
+          "ammo": 40,
+          "steel": 80,
+          "bauxite": 40,
+          "material": [
+            {
+              "development": [
+                4,
+                5
+              ],
+              "improvement": [
+                3,
+                3
+              ],
+              "item": {
+                "icon": 16,
+                "name": "10cm連装高角砲",
+                "id": 3,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                6,
+                8
+              ],
+              "improvement": [
+                4,
+                5
+              ],
+              "item": {
+                "icon": 16,
+                "name": "10cm連装高角砲",
+                "id": 3,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      },
+
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 220,
+          "name": "8cm高角砲改+増設機銃",
+          "icon": 16
+        },
+        "req": [
           {
             "day": [
               true,
@@ -9294,10 +11782,12 @@
               false
             ],
             "secretary": [
-              "矢矧"
+              "矢矧",
+              "矢矧改"
             ],
             "secretaryIds": [
-              139
+              139,
+              307
             ]
           },
           {
@@ -9311,10 +11801,12 @@
               false
             ],
             "secretary": [
-              "鈴谷改二"
+              "鈴谷改二",
+              "鈴谷航改二"
             ],
             "secretaryIds": [
-              503
+              503,
+              508
             ]
           },
           {
@@ -9328,10 +11820,12 @@
               false
             ],
             "secretary": [
-              "熊野改二"
+              "熊野改二",
+              "熊野航改二"
             ],
             "secretaryIds": [
-              504
+              504,
+              509
             ]
           }
         ],
@@ -9401,6 +11895,120 @@
     ]
   },
   {
+    "id": 91,
+    "type": "小口径主砲",
+    "icon": 16,
+    "name": "12.7cm連装高角砲(後期型)",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              false,
+              false,
+              false,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "那珂改二"
+            ],
+            "secretaryIds": [
+              160
+            ]
+          },
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "天龍改二"
+            ],
+            "secretaryIds": [
+              477
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 10,
+          "ammo": 50,
+          "steel": 80,
+          "bauxite": 30,
+          "material": [
+            {
+              "development": [
+                3,
+                3
+              ],
+              "improvement": [
+                2,
+                3
+              ],
+              "item": {
+                "icon": 16,
+                "name": "12.7cm連装高角砲",
+                "id": 10,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                4,
+                5
+              ],
+              "improvement": [
+                3,
+                4
+              ],
+              "item": {
+                "icon": 16,
+                "name": "12.7cm連装高角砲(後期型)",
+                "id": 91,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "id": 122,
     "type": "小口径主砲",
     "icon": 16,
@@ -9425,10 +12033,14 @@
               false
             ],
             "secretary": [
+              "秋月改",
+              "初月改",
               "秋月",
               "初月"
             ],
             "secretaryIds": [
+              330,
+              357,
               421,
               423
             ]
@@ -9444,9 +12056,11 @@
               true
             ],
             "secretary": [
+              "照月改",
               "照月"
             ],
             "secretaryIds": [
+              346,
               422
             ]
           }
@@ -9541,10 +12155,12 @@
               false
             ],
             "secretary": [
-              "Littorio"
+              "Littorio",
+              "Italia"
             ],
             "secretaryIds": [
-              441
+              441,
+              446
             ]
           },
           {
@@ -9558,10 +12174,12 @@
               true
             ],
             "secretary": [
-              "Roma"
+              "Roma",
+              "Roma改"
             ],
             "secretaryIds": [
-              442
+              442,
+              447
             ]
           }
         ],
@@ -9657,12 +12275,18 @@
             "secretary": [
               "矢矧",
               "酒匂",
-              "鈴谷改二"
+              "矢矧改",
+              "酒匂改",
+              "鈴谷改二",
+              "鈴谷航改二"
             ],
             "secretaryIds": [
               139,
               140,
-              503
+              307,
+              314,
+              503,
+              508
             ]
           },
           {
@@ -9676,10 +12300,12 @@
               false
             ],
             "secretary": [
-              "熊野改二"
+              "熊野改二",
+              "熊野航改二"
             ],
             "secretaryIds": [
-              504
+              504,
+              509
             ]
           }
         ],
@@ -9718,6 +12344,350 @@
                 "icon": 15,
                 "name": "25mm単装機銃",
                 "id": 49,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 229,
+    "type": "小口径主砲",
+    "icon": 16,
+    "name": "12.7cm単装高角砲(後期型)",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              true,
+              true,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "択捉改"
+            ],
+            "secretaryIds": [
+              383
+            ]
+          },
+          {
+            "day": [
+              true,
+              false,
+              false,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "由良改二"
+            ],
+            "secretaryIds": [
+              488
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "日振改"
+            ],
+            "secretaryIds": [
+              678
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 10,
+          "ammo": 50,
+          "steel": 40,
+          "bauxite": 20,
+          "material": [
+            {
+              "development": [
+                2,
+                3
+              ],
+              "improvement": [
+                2,
+                2
+              ],
+              "item": {
+                "icon": 1,
+                "name": "12.7cm連装砲",
+                "id": 2,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                3,
+                5
+              ],
+              "improvement": [
+                3,
+                4
+              ],
+              "item": {
+                "icon": 16,
+                "name": "12.7cm単装高角砲(後期型)",
+                "id": 229,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 275,
+    "type": "副砲",
+    "icon": 16,
+    "name": "10cm連装高角砲改+増設機銃",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              true,
+              false,
+              false,
+              false,
+              true,
+              true
+            ],
+            "secretary": [
+              "大淀改"
+            ],
+            "secretaryIds": [
+              321
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              false,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "武蔵改二"
+            ],
+            "secretaryIds": [
+              546
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 10,
+          "ammo": 90,
+          "steel": 170,
+          "bauxite": 80,
+          "material": [
+            {
+              "development": [
+                7,
+                8
+              ],
+              "improvement": [
+                4,
+                5
+              ],
+              "item": {
+                "icon": 16,
+                "name": "10cm連装高角砲",
+                "id": 3,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                10,
+                16
+              ],
+              "improvement": [
+                6,
+                8
+              ],
+              "item": {
+                "icon": 15,
+                "name": "25mm三連装機銃",
+                "id": 40,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 284,
+    "type": "小口径主砲",
+    "icon": 16,
+    "name": "5inch単装砲 Mk.30",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "Samuel B.Roberts",
+              "Samuel B.Roberts改"
+            ],
+            "secretaryIds": [
+              561,
+              681
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 30,
+          "ammo": 80,
+          "steel": 180,
+          "bauxite": 160,
+          "material": [
+            {
+              "development": [
+                10,
+                12
+              ],
+              "improvement": [
+                6,
+                7
+              ],
+              "item": {
+                "icon": 16,
+                "name": "10cm連装高角砲",
+                "id": 3,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                12,
+                18
+              ],
+              "improvement": [
+                8,
+                10
+              ],
+              "item": {
+                "icon": 16,
+                "name": "12.7cm連装高角砲(後期型)",
+                "id": 91,
                 "count": 2
               }
             },
@@ -9875,6 +12845,61 @@
             "secretaryIds": [
               141
             ]
+          },
+          {
+            "day": [
+              false,
+              true,
+              true,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "日振",
+              "日振改"
+            ],
+            "secretaryIds": [
+              551,
+              678
+            ]
+          },
+          {
+            "day": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              true,
+              true
+            ],
+            "secretary": [
+              "大東",
+              "大東改"
+            ],
+            "secretaryIds": [
+              552,
+              679
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "黒潮改二"
+            ],
+            "secretaryIds": [
+              568
+            ]
           }
         ],
         "consume": {
@@ -9943,6 +12968,143 @@
     ]
   },
   {
+    "id": 226,
+    "type": "爆雷",
+    "icon": 17,
+    "name": "九五式爆雷",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 227,
+          "name": "二式爆雷",
+          "icon": 17
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              true,
+              true,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "占守改",
+              "占守"
+            ],
+            "secretaryIds": [
+              376,
+              517
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "択捉改",
+              "択捉"
+            ],
+            "secretaryIds": [
+              383,
+              524
+            ]
+          },
+          {
+            "day": [
+              true,
+              false,
+              false,
+              false,
+              true,
+              true,
+              true
+            ],
+            "secretary": [
+              "神風",
+              "神風改"
+            ],
+            "secretaryIds": [
+              471,
+              476
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 10,
+          "ammo": 90,
+          "steel": 10,
+          "bauxite": 60,
+          "material": [
+            {
+              "development": [
+                3,
+                4
+              ],
+              "improvement": [
+                1,
+                1
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            },
+            {
+              "development": [
+                4,
+                5
+              ],
+              "improvement": [
+                2,
+                3
+              ],
+              "item": {
+                "icon": 17,
+                "name": "九五式爆雷",
+                "id": 226,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                5,
+                9
+              ],
+              "improvement": [
+                3,
+                6
+              ],
+              "item": {
+                "icon": 17,
+                "name": "九五式爆雷",
+                "id": 226,
+                "count": 2
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "id": 46,
     "type": "ソナー",
     "icon": 18,
@@ -9967,10 +13129,12 @@
               true
             ],
             "secretary": [
-              "夕張"
+              "夕張",
+              "夕張改"
             ],
             "secretaryIds": [
-              115
+              115,
+              293
             ]
           },
           {
@@ -10205,10 +13369,12 @@
               false
             ],
             "secretary": [
-              "夕張"
+              "夕張",
+              "夕張改"
             ],
             "secretaryIds": [
-              115
+              115,
+              293
             ]
           },
           {
@@ -10327,6 +13493,25 @@
           },
           {
             "day": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "秋月改",
+              "秋月"
+            ],
+            "secretaryIds": [
+              330,
+              421
+            ]
+          },
+          {
+            "day": [
               false,
               true,
               true,
@@ -10344,23 +13529,6 @@
           },
           {
             "day": [
-              true,
-              false,
-              false,
-              false,
-              false,
-              false,
-              false
-            ],
-            "secretary": [
-              "秋月"
-            ],
-            "secretaryIds": [
-              421
-            ]
-          },
-          {
-            "day": [
               false,
               false,
               false,
@@ -10370,9 +13538,11 @@
               false
             ],
             "secretary": [
+              "照月改",
               "照月"
             ],
             "secretaryIds": [
+              346,
               422
             ]
           }
@@ -10467,10 +13637,12 @@
               false
             ],
             "secretary": [
-              "島風"
+              "島風",
+              "島風改"
             ],
             "secretaryIds": [
-              50
+              50,
+              229
             ]
           },
           {
@@ -10484,10 +13656,12 @@
               true
             ],
             "secretary": [
-              "天津風"
+              "天津風",
+              "天津風改"
             ],
             "secretaryIds": [
-              181
+              181,
+              316
             ]
           }
         ],
@@ -10581,10 +13755,12 @@
               false
             ],
             "secretary": [
-              "島風"
+              "島風",
+              "島風改"
             ],
             "secretaryIds": [
-              50
+              50,
+              229
             ]
           },
           {
@@ -10687,18 +13863,20 @@
           {
             "day": [
               true,
-              true,
-              true,
+              false,
+              false,
               true,
               true,
               true,
               true
             ],
             "secretary": [
-              "あきつ丸"
+              "あきつ丸",
+              "あきつ丸改"
             ],
             "secretaryIds": [
-              161
+              161,
+              166
             ]
           },
           {
@@ -10810,6 +13988,23 @@
         "req": [
           {
             "day": [
+              false,
+              true,
+              true,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "龍田改二"
+            ],
+            "secretaryIds": [
+              478
+            ]
+          },
+          {
+            "day": [
               true,
               false,
               false,
@@ -10916,10 +14111,12 @@
               true
             ],
             "secretary": [
-              "あきつ丸"
+              "あきつ丸",
+              "あきつ丸改"
             ],
             "secretaryIds": [
-              161
+              161,
+              166
             ]
           },
           {
@@ -11047,10 +14244,12 @@
               false
             ],
             "secretary": [
-              "あきつ丸"
+              "あきつ丸",
+              "あきつ丸改"
             ],
             "secretaryIds": [
-              161
+              161,
+              166
             ]
           },
           {
@@ -11161,10 +14360,12 @@
               false
             ],
             "secretary": [
-              "酒匂"
+              "酒匂",
+              "酒匂改"
             ],
             "secretaryIds": [
-              140
+              140,
+              314
             ]
           },
           {
@@ -11293,11 +14494,17 @@
             ],
             "secretary": [
               "長門",
-              "武蔵"
+              "武蔵",
+              "武蔵改",
+              "長門改",
+              "長門改二"
             ],
             "secretaryIds": [
               80,
-              143
+              143,
+              148,
+              275,
+              541
             ]
           },
           {
@@ -11312,11 +14519,15 @@
             ],
             "secretary": [
               "陸奥",
-              "大和"
+              "大和",
+              "大和改",
+              "陸奥改"
             ],
             "secretaryIds": [
               81,
-              131
+              131,
+              136,
+              276
             ]
           }
         ],
@@ -11507,10 +14718,12 @@
               true
             ],
             "secretary": [
-              "大和"
+              "大和",
+              "大和改"
             ],
             "secretaryIds": [
-              131
+              131,
+              136
             ]
           },
           {
@@ -11524,10 +14737,14 @@
               false
             ],
             "secretary": [
-              "武蔵"
+              "武蔵",
+              "武蔵改",
+              "武蔵改二"
             ],
             "secretaryIds": [
-              143
+              143,
+              148,
+              546
             ]
           }
         ],
@@ -11535,7 +14752,7 @@
           "fuel": 180,
           "ammo": 0,
           "steel": 980,
-          "bauxite": 80,
+          "bauxite": 0,
           "material": [
             {
               "development": [
@@ -11622,11 +14839,17 @@
             ],
             "secretary": [
               "綾波",
-              "青葉"
+              "青葉",
+              "綾波改二",
+              "綾波改",
+              "青葉改"
             ],
             "secretaryIds": [
               13,
-              61
+              61,
+              195,
+              207,
+              264
             ]
           },
           {
@@ -11640,10 +14863,14 @@
               true
             ],
             "secretary": [
-              "暁"
+              "暁",
+              "暁改",
+              "暁改二"
             ],
             "secretaryIds": [
-              34
+              34,
+              234,
+              437
             ]
           },
           {
@@ -11657,10 +14884,14 @@
               true
             ],
             "secretary": [
-              "神通"
+              "神通",
+              "神通改二",
+              "神通改"
             ],
             "secretaryIds": [
-              55
+              55,
+              159,
+              223
             ]
           }
         ],
@@ -11754,10 +14985,14 @@
               false
             ],
             "secretary": [
-              "霧島"
+              "霧島",
+              "霧島改二",
+              "霧島改"
             ],
             "secretaryIds": [
-              85
+              85,
+              152,
+              212
             ]
           },
           {
@@ -11771,10 +15006,14 @@
               true
             ],
             "secretary": [
-              "比叡"
+              "比叡",
+              "比叡改二",
+              "比叡改"
             ],
             "secretaryIds": [
-              86
+              86,
+              150,
+              210
             ]
           }
         ],
@@ -11869,11 +15108,17 @@
             ],
             "secretary": [
               "摩耶",
-              "秋月"
+              "摩耶改",
+              "秋月改",
+              "秋月",
+              "摩耶改二"
             ],
             "secretaryIds": [
               68,
-              421
+              271,
+              330,
+              421,
+              428
             ]
           },
           {
@@ -11887,9 +15132,11 @@
               true
             ],
             "secretary": [
+              "照月改",
               "照月"
             ],
             "secretaryIds": [
+              346,
               422
             ]
           }
@@ -11984,10 +15231,14 @@
               true
             ],
             "secretary": [
+              "秋月改",
+              "照月改",
               "秋月",
               "照月"
             ],
             "secretaryIds": [
+              330,
+              346,
               421,
               422
             ]
@@ -12003,9 +15254,11 @@
               true
             ],
             "secretary": [
+              "初月改",
               "初月"
             ],
             "secretaryIds": [
+              357,
               423
             ]
           },
@@ -12207,10 +15460,14 @@
               true
             ],
             "secretary": [
-              "長波"
+              "長波",
+              "長波改",
+              "長波改二"
             ],
             "secretaryIds": [
-              135
+              135,
+              304,
+              543
             ]
           },
           {
@@ -12224,10 +15481,12 @@
               true
             ],
             "secretary": [
-              "阿賀野"
+              "阿賀野",
+              "阿賀野改"
             ],
             "secretaryIds": [
-              137
+              137,
+              305
             ]
           }
         ],
@@ -12321,10 +15580,12 @@
               true
             ],
             "secretary": [
-              "伊58"
+              "伊58",
+              "伊58改"
             ],
             "secretaryIds": [
-              127
+              127,
+              399
             ]
           },
           {
@@ -12338,10 +15599,12 @@
               true
             ],
             "secretary": [
-              "伊8"
+              "伊8",
+              "伊8改"
             ],
             "secretaryIds": [
-              128
+              128,
+              400
             ]
           },
           {
@@ -12355,10 +15618,12 @@
               false
             ],
             "secretary": [
-              "伊401"
+              "伊401",
+              "伊401改"
             ],
             "secretaryIds": [
-              155
+              155,
+              403
             ]
           }
         ],
@@ -12428,6 +15693,109 @@
     ]
   },
   {
+    "id": 201,
+    "type": "局地戦闘機",
+    "icon": 38,
+    "name": "紫電一一型",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 202,
+          "name": "紫電二一型 紫電改",
+          "icon": 38
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              true,
+              true,
+              true,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "赤城",
+              "加賀",
+              "赤城改",
+              "加賀改"
+            ],
+            "secretaryIds": [
+              83,
+              84,
+              277,
+              278
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 160,
+          "ammo": 180,
+          "steel": 0,
+          "bauxite": 360,
+          "material": [
+            {
+              "development": [
+                8,
+                9
+              ],
+              "improvement": [
+                4,
+                5
+              ],
+              "item": {
+                "icon": 6,
+                "name": "零式艦戦52型",
+                "id": 21,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                10,
+                12
+              ],
+              "improvement": [
+                6,
+                8
+              ],
+              "item": {
+                "icon": 10,
+                "name": "瑞雲",
+                "id": 26,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                12,
+                18
+              ],
+              "improvement": [
+                7,
+                12
+              ],
+              "item": {
+                "icon": 6,
+                "name": "紫電改二",
+                "id": 55,
+                "count": 2
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "id": 210,
     "type": "潜水艦装備",
     "icon": 42,
@@ -12452,10 +15820,10 @@
               false
             ],
             "secretary": [
-              "伊401"
+              "伊401改"
             ],
             "secretaryIds": [
-              155
+              403
             ]
           }
         ],
@@ -12646,9 +16014,11 @@
               true
             ],
             "secretary": [
+              "瑞穂改",
               "瑞穂"
             ],
             "secretaryIds": [
+              348,
               451
             ]
           }
@@ -12677,7 +16047,7 @@
             },
             {
               "development": [
-                4,
+                5,
                 6
               ],
               "improvement": [
@@ -12840,9 +16210,11 @@
               true
             ],
             "secretary": [
+              "瑞穂改",
               "瑞穂"
             ],
             "secretaryIds": [
+              348,
               451
             ]
           }
@@ -12937,9 +16309,11 @@
               false
             ],
             "secretary": [
+              "瑞穂改",
               "瑞穂"
             ],
             "secretaryIds": [
+              348,
               451
             ]
           },
@@ -12997,6 +16371,277 @@
                 "name": "紫電改二",
                 "id": 55,
                 "count": 1
+              }
+            },
+            {
+              "development": [
+                0,
+                0
+              ],
+              "improvement": [
+                0,
+                0
+              ],
+              "item": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              },
+              "useitem": {
+                "icon": 0,
+                "name": "",
+                "id": 0,
+                "count": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 221,
+    "type": "局地戦闘機",
+    "icon": 44,
+    "name": "一式戦 隼II型",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 222,
+          "name": "一式戦 隼III型甲",
+          "icon": 44
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              true,
+              true,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "あきつ丸",
+              "あきつ丸改",
+              "大鷹改",
+              "春日丸",
+              "大鷹",
+              "大鷹改二"
+            ],
+            "secretaryIds": [
+              161,
+              166,
+              380,
+              521,
+              526,
+              529
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              true,
+              true,
+              true,
+              false
+            ],
+            "secretary": [
+              "神威",
+              "神威改",
+              "神威改母"
+            ],
+            "secretaryIds": [
+              162,
+              499,
+              500
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 90,
+          "ammo": 120,
+          "steel": 10,
+          "bauxite": 270,
+          "material": [
+            {
+              "development": [
+                3,
+                4
+              ],
+              "improvement": [
+                2,
+                3
+              ],
+              "item": {
+                "icon": 6,
+                "name": "九六式艦戦",
+                "id": 19,
+                "count": 1
+              }
+            },
+            {
+              "development": [
+                5,
+                6
+              ],
+              "improvement": [
+                3,
+                5
+              ],
+              "item": {
+                "icon": 6,
+                "name": "零式艦戦21型",
+                "id": 20,
+                "count": 2
+              }
+            },
+            {
+              "development": [
+                10,
+                15
+              ],
+              "improvement": [
+                6,
+                9
+              ],
+              "item": {
+                "icon": 15,
+                "name": "12.7mm単装機銃",
+                "id": 38,
+                "count": 3
+              },
+              "useitem": {
+                "icon": 77,
+                "name": "新型航空兵装資材",
+                "id": 77,
+                "count": 1
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": 222,
+    "type": "局地戦闘機",
+    "icon": 44,
+    "name": "一式戦 隼III型甲",
+    "improvement": [
+      {
+        "upgrade": {
+          "level": 0,
+          "id": 0,
+          "name": "",
+          "icon": 0
+        },
+        "req": [
+          {
+            "day": [
+              false,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "secretary": [
+              "あきつ丸",
+              "あきつ丸改"
+            ],
+            "secretaryIds": [
+              161,
+              166
+            ]
+          },
+          {
+            "day": [
+              false,
+              false,
+              false,
+              false,
+              true,
+              true,
+              false
+            ],
+            "secretary": [
+              "神威",
+              "神威改",
+              "神威改母"
+            ],
+            "secretaryIds": [
+              162,
+              499,
+              500
+            ]
+          },
+          {
+            "day": [
+              false,
+              true,
+              true,
+              true,
+              true,
+              false,
+              false
+            ],
+            "secretary": [
+              "大鷹改",
+              "春日丸",
+              "大鷹",
+              "大鷹改二"
+            ],
+            "secretaryIds": [
+              380,
+              521,
+              526,
+              529
+            ]
+          }
+        ],
+        "consume": {
+          "fuel": 130,
+          "ammo": 200,
+          "steel": 20,
+          "bauxite": 330,
+          "material": [
+            {
+              "development": [
+                5,
+                6
+              ],
+              "improvement": [
+                4,
+                5
+              ],
+              "item": {
+                "icon": 6,
+                "name": "零式艦戦52型",
+                "id": 21,
+                "count": 3
+              }
+            },
+            {
+              "development": [
+                6,
+                9
+              ],
+              "improvement": [
+                6,
+                7
+              ],
+              "item": {
+                "icon": 6,
+                "name": "烈風",
+                "id": 22,
+                "count": 2
               }
             },
             {

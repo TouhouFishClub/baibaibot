@@ -1,7 +1,9 @@
-const rd = require('./ai/randomDice')
+const rd = require('./ai/kanColleEquip')
 
 const callback = msg => {
   console.log(msg)
 }
 
-rd('100x4',899, callback)
+setTimeout(() => {
+  rd(8, '隼', callback)
+}, 10000)
