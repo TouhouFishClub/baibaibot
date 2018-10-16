@@ -67,10 +67,30 @@ function alermTimer(){
       console.log(alermData);
       var timeleft = alermData.f.getTime()-new Date().getTime();
       setTimeout(function(){
+        alermUserShake(alermData.qq)
         alermUser(alermData.qq,alermData.d)
       },timeleft)
     }
   })
+}
+
+function alermUserShake(qq){
+  var options = {
+    host: '192.168.17.52',
+    port: 23334,
+    path: '/send_private_msg?user_id='+qq+'&message='+encodeURIComponent('[CQ:shake]'),
+    method: 'GET',
+    headers: {
+
+    }
+  };
+  console.log("alerm:"+qq+":"+content);
+  var req = http.request(options);
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
 }
 
 function alermUser(qq,content){
