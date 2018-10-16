@@ -67,7 +67,6 @@ function alermTimer(){
       console.log(alermData);
       var timeleft = alermData.f.getTime()-new Date().getTime();
       setTimeout(function(){
-        alermUserShake(alermData.qq)
         alermUser(alermData.qq,alermData.d)
       },timeleft)
     }
@@ -110,6 +109,7 @@ function alermUser(qq,content){
     console.log(err);
   });
   req.end();
+  alermUserShake(qq)
 }
 
 
