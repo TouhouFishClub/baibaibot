@@ -84,7 +84,7 @@ function alermUserShake(qq){
 
     }
   };
-  console.log("alerm:"+qq+":"+content);
+  console.log("alerms:"+qq+":");
   var req = http.request(options);
   req.on('error', function(err) {
     console.log('req err:');
