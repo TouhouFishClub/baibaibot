@@ -79,13 +79,17 @@ function fetchpixiv(){
       fs.writeFileSync(fn,JSON.stringify(ul));
     });
   })
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
   req.end();
 }
 
 let saveImage = function(url,delay){
   var now = new Date();
   var filename = "../coolq-data/cq/data/image/send/pixiv/"+now.getTime()+"";
-  var image = '[CQ:image,file=send/pixiv/'+now.getTime()+rd+']';
+  var image = '[CQ:image,file=send/pixiv/'+now.getTime()+']';
   setTimeout(function(){
     console.log(filename);
     var req = request({
