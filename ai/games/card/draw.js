@@ -96,7 +96,7 @@ function drawNameCard(username,qq,callback,groupid){
       return;
     }
   }
-  if(Math.random()<1){
+  if(Math.random()<0.23){
     var pr = drawPixiv();
     if(pr.length>20){
       callback(pr);
