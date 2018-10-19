@@ -88,8 +88,9 @@ function fetchpixiv(){
 
 let saveImage = function(url,delay){
   var now = new Date();
-  var filename = "../coolq-data/cq/data/image/send/pixiv/"+now.getTime()+"";
-  var image = '[CQ:image,file=send/pixiv/'+now.getTime()+']';
+  var rd = Math.floor(Math.random()*8888+1000);
+  var filename = "../coolq-data/cq/data/image/send/pixiv/"+now.getTime()+rd+"";
+  var image = '[CQ:image,file=send/pixiv/'+now.getTime()+rd+']';
   setTimeout(function(){
     console.log(filename);
     var req = request({
