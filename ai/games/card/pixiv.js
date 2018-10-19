@@ -24,7 +24,7 @@ function run(){
 run();
 
 
-function drawPixiv(){
+function drawPixiv(username){
   if(pixivDailyList.length==0){
     return "";
   }else{
@@ -62,21 +62,25 @@ function fetchpixiv(){
       resdata = resdata + chunk;
     });
     res.on('end', function () {
-      var data = eval('('+resdata+')');
-      var contents = data.contents;
-      var ul = [];
-      for(var i=0;i<contents.length;i++){
-        var title=contents[i].title;
-        var url = contents[i].url;
-        var userid = contents[i].user_id;
-        var illust_id = contents[i].illust_id;
-        var fobj = saveImage(url,i*1000);
-        var image = fobj.i;
-        var filename = fobj.f;
-        ul.push({title:title,url:url,uid:userid,id:illust_id,img:image,fn:filename});
+      try{
+        var data = eval('('+resdata+')');
+        var contents = data.contents;
+        var ul = [];
+        for(var i=0;i<contents.length;i++){
+          var title=contents[i].title;
+          var url = contents[i].url;
+          var userid = contents[i].user_id;
+          var illust_id = contents[i].illust_id;
+          var fobj = saveImage(url,i*1000);
+          var image = fobj.i;
+          var filename = fobj.f;
+          ul.push({title:title,url:url,uid:userid,id:illust_id,img:image,fn:filename});
+        }
+        var fn = "tmp/pixiv/"+new Date().toLocaleDateString().replace(/\//g,'-')+".txt";
+        fs.writeFileSync(fn,JSON.stringify(ul));
+      }catch(e){
+        console.log(e);
       }
-      var fn = "tmp/pixiv/"+new Date().toLocaleDateString().replace(/\//g,'-')+".txt";
-      fs.writeFileSync(fn,JSON.stringify(ul));
     });
   })
   req.on('error', function(err) {
