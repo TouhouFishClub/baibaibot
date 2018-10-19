@@ -12,7 +12,7 @@ var {sendGmImage} = require('../../../cq/sendImage');
 const {baiduVoice} = require('../../voice/baiduvoice');
 const {saveBan} = require ('../../replay')
 const {banUserInGroup,getUserRoleInGroupByCache} = require('../../../cq/cache')
-
+const {drawPixiv} = require('./pixiv')
 
 var bmap = {};
 function bdraw(groupid,from,callback){
@@ -96,7 +96,13 @@ function drawNameCard(username,qq,callback,groupid){
       return;
     }
   }
-
+  if(Math.random()<1){
+    var pr = drawPixiv();
+    if(pr.length>20){
+      callback(pr);
+      return;
+    }
+  }
 
   if(Math.random()<0.1){
     drawBangumi(qq,username,callback);
