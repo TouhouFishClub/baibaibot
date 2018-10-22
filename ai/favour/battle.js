@@ -664,11 +664,11 @@ function regen(){
           }
           if(u._id=="B3"){
             u.hp=999+u.exp;
-            u.atk=333;
+            u.atk=333+Math.floor(Math.pow(u.exp,0.32));
             u.agi=9+Math.floor(Math.log(u.exp));
             u.lv=Math.floor(Math.log(u.exp));
-            u.def=Math.floor(u.exp/2);
-            u.gold=6666+Math.floor(u.exp/2);
+            u.def=Math.floor(u.exp/2.22);
+            u.gold=6666+Math.floor(u.exp/2.22);
           }
         }
         if(u.hp<100){
