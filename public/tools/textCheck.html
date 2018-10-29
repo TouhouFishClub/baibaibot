@@ -51,6 +51,7 @@
   </div>
 
   <button onclick="checkError()" class="btn btn-lg btn-block btn-default">check</button>
+  <div id="show"></div>
 </div>
 
 <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
@@ -62,12 +63,55 @@
   })
   function checkError(){
     var content = $('#source')[0].value;
-    $.get('/textCheck?d='+encodeURIComponent(content),function(response,status){
-      if(status=='success'){
-        $('#target').html(content)
-        console.log(response)
+    var body = {};
+    body.d=content;
+    $.ajax({
+      url:'/textCheck',
+      type:'POST',
+      data:JSON.stringify(body),
+      contentType:"application/json; charset=utf-8",
+      dataType:"json",
+      success: function(ret){
+        var u = content;
+
+        var data = ret;
+        var cases = data.Cases;
+        if(cases){
+          cases.sort(function(a,b){
+            return parseInt(a.Pos)-parseInt(b.Pos);
+          })
+          var bef = '<span style="background-color:yellow">';
+          var bac = '</span>';
+          var len = bef.length+bac.length;
+          var h = '<table class="table table-bordered table-striped table-hover">';
+          h = h + '<thead><td>序号</td>';
+          h = h + '<td>原文</td>';
+          h = h + '<td>lv</td>';
+          h = h + '<td>建议</td>';
+          h = h + '</thead>'
+          for(var i=0;i<cases.length;i++){
+            h = h + '<tr>';
+            var pos = cases[i].Pos;
+            var error = cases[i].Error;
+            var lv = cases[i].ErrLevel;
+            var tips = cases[i].Tips;
+            var from = parseInt(pos) + i*len;
+            var a = u.substring(0,from);
+            var b = u.substring(from+error.length);
+            u = a + bef + error + bac + b;
+            h = h +'<td>'+(i+1)+'</td><td>'+error+'</td><td>'+lv+'</td><td>'+tips+'</td>';
+            h = h + '</tr>';
+          }
+          h = h + '<table>';
+          $('#target').html(u);
+          $('#show').html(h);
+        }else{
+          $('#target').html(u);
+          $('#show').html('没有检测到错误');
+        }
       }
-    });
+    })
+
   }
 
   function autosize(obj) {

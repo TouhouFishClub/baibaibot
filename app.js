@@ -3,8 +3,14 @@ const app = express();
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
-//const {handleMsg,reconnect} = require('./baibai2');
+const {handleMsg,reconnect} = require('./baibai2');
 const {getChat} = require('./ai/chat/collect');
+
+const {checkError} = require('./tools/textCheck');
+var bodyParser = require('body-parser');
+app.use(bodyParser.json())
+
+
 var request = require("request");
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -101,9 +107,31 @@ app.get('/Content/*',function(req,res){
   }).pipe(res);
 })
 
+app.get('/textCheck',function(req,res){
+  var querydata = req.query;
+  var content = querydata.d;
+  checkError(content,function(ret){
+    res.send(ret);
+  });
+})
+
+app.post('/textCheck',function(req,res){
+  var body=req.body;
+  var content = body.d;
+  checkError(content,function(ret){
+    res.send(ret);
+  });
+})
+
+
 
 app.get('/log', (req, res) => {
   res.send(fs.readFileSync(path.join('log', 'index.html', 'utf-8')))
+})
+
+app.get('/text', (req, res) => {
+  res.set('Content-Type','text/html');
+  res.send(fs.readFileSync(path.join('public', 'tools', 'textCheck.html')))
 })
 
 
