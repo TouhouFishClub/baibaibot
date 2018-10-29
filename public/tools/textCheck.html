@@ -6,43 +6,78 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" rel="stylesheet">
   <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdn.bootcss.com/clipboard.js/1.7.1/clipboard.js"></script>
+  <style>
+    .content-box {
+      margin-top: 20px;
+      margin-right: -5px;
+      margin-left: -5px;
+    }
+    .content-box > div {
+      padding-left: 5px !important;
+      padding-right: 5px !important;
+    }
+    .content-box .col-sm-6{
+      margin-bottom: 10px;
+    }
+    .content-box #source{
+      width: 100%;
+      resize: none;
+      min-height: 300px;
+    }
+    .content-box .output-box{
+      min-height: 100%;
+    }
+    .content-box .output-box #target{
+      background: rgba(0, 0, 0, .2);
+      padding: 7px 12px;
+      border-radius: 3px;
+      word-break: break-all;
+      overflow-y: scroll;
+    }
+  </style>
 
 </head>
 <body>
-  <div>
-    <table><tr><td>
-    <textarea id="source" rows="10" cols="80" style="" oninput="autosize(this)"></textarea>
-    </td>
-    <td style="background-color: rgba(0,0,0,.2)">
-    <div id="target">aasd<span style="background-color: yellow">dsfdsfdsf</span>fdsfa</div>
-    </td></tr></table>
-    <div>
-    <button onclick="checkError()">check</button>
+<div class="container">
+  <div class="row content-box">
+    <div class="col-sm-6">
+      <textarea class="form-control" id="source" oninput="autosize(this)"></textarea>
     </div>
-
+    <div class="col-sm-6 output-box">
+      <div id="target">
+        aasd<span style="background-color: yellow">dsfdsfdsf</span>fdsfa
+      </div>
+    </div>
   </div>
 
-  <script type="text/javascript">
-    function checkError(){
-      var content = $('#source')[0].value;
-      $.get('/textCheck?d='+encodeURIComponent(content),function(response,status){
-        if(status=='success'){
-          $('#target').html(content)
-          console.log(response)
-        }
-      });
-    }
+  <button onclick="checkError()" class="btn btn-lg btn-block btn-default">check</button>
+</div>
 
-    function autosize(obj) {
-      var el = obj;
-      setTimeout(function() {
-        el.style.cssText = 'height:auto; padding:0';
-        el.style.cssText = 'height:' + (el.scrollHeight + 10) + 'px';
-      }, 0);
-    }
-  </script>
+<script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/clipboard.js/1.7.1/clipboard.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#target').css('height', $('#source').height() + 14)
+  })
+  function checkError(){
+    var content = $('#source')[0].value;
+    $.get('/textCheck?d='+encodeURIComponent(content),function(response,status){
+      if(status=='success'){
+        $('#target').html(content)
+        console.log(response)
+      }
+    });
+  }
+
+  function autosize(obj) {
+    var el = obj;
+    setTimeout(function() {
+      el.style.cssText = 'height:auto; padding:0';
+      el.style.cssText = 'height:' + (el.scrollHeight + 40) + 'px';
+      $('#target').css('height', $(el).height() + 14)
+    }, 0);
+  }
+</script>
 </body>
 </html>
