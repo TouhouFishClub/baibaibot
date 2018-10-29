@@ -89,17 +89,42 @@
           h = h + '<td>建议</td>';
           h = h + '</thead>'
           for(var i=0;i<cases.length;i++){
-            h = h + '<tr>';
             var pos = cases[i].Pos;
             var error = cases[i].Error;
             var lv = cases[i].ErrLevel;
             var tips = cases[i].Tips;
-            var from = parseInt(pos) + i*len;
-            var a = u.substring(0,from);
-            var b = u.substring(from+error.length);
-            u = a + bef + error + bac + b;
+            h = h + '<tr>';
             h = h +'<td>'+(i+1)+'</td><td>'+error+'</td><td>'+lv+'</td><td>'+tips+'</td>';
             h = h + '</tr>';
+          }
+          var notail = false;
+          var tmp = "";
+          var sub = 0;
+          var skip = 0;
+          for(var i=0;i<cases.length;i++){
+            var pos = cases[i].Pos;
+            var error = cases[i].Error;
+            var lv = cases[i].ErrLevel;
+            var tips = cases[i].Tips;
+            var from = parseInt(pos) + i*len - skip;
+            var a = u.substring(0,from);
+            var b = u.substring(from+error.length);
+            var next = cases[i+1];
+            console.log('sub:'+sub+","+notail);
+            console.log(error.substring(sub));
+            if(notail){
+              u = a + bef + error.substring(sub) + bac + b;
+              skip = skip + sub
+            }else{
+              u = a + bef + error + bac + b;
+            }
+            if(next&&next.Pos<pos+error.length){
+              sub = pos+error.length-next.Pos;
+              notail = true;
+            }else{
+              notail = false;
+            }
+
           }
           h = h + '<table>';
           $('#target').html(u.replace(/\n/g,'<br>'));
