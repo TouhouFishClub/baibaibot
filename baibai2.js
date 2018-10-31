@@ -286,7 +286,7 @@ function handleMsg_D(msgObj,response){
     return
   }
 
-  if(con.indexOf('座运势') && con.length == 5){
+  if(con.indexOf('座运势') + 1 && con.length == 5){
     zodiac(con, callback)
     return
   }
