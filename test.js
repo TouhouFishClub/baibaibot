@@ -1,9 +1,7 @@
-const rd = require('./ai/kanColleEquip')
+const rd = require('./ai/zodiac')
 
 const callback = msg => {
   console.log(msg)
 }
 
-setTimeout(() => {
-  rd(8, '隼', callback)
-}, 10000)
+rd('天平座运势', callback)

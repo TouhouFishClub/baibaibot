@@ -52,6 +52,7 @@ const {replyKancolleRoute} = require('./ai/kancolle/map_new');
 const {searchFF14Item} = require('./ai/ff14/item');
 const {searchQuest} = require('./ai/ff14/strategy');
 const rd = require('./ai/randomDice')
+const zodiac = require('./ai/zodiac')
 
 const {saveAlarm} = require('./ai/private/alerm');
 
@@ -284,6 +285,12 @@ function handleMsg_D(msgObj,response){
     rp(from, callback)
     return
   }
+
+  if(con.indexOf('座运势') && con.length == 5){
+    zodiac(con, callback)
+    return
+  }
+
   if(con.toLowerCase() === 'g21boss' || con.toLowerCase() === 'gboss'){
     G21Boss(callback)
     return

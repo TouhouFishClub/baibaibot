@@ -1,0 +1,98 @@
+const https = require('https')
+
+module.exports = function(content, callback) {
+  let zo = changeCode(content.substr(0, 2))
+  if(zo) {
+    https.get({
+      host: 'www.d1xz.net',
+      port: 443,
+      path: `/yunshi/today/${zo}/`,
+      method: 'GET'
+    }, (res) => {
+      let chunk = ''
+      res.on('data', data => chunk += data)
+      res.on('end', () => {
+        callback(renderText(formatData(chunk)))
+      })
+    }).on('error', (e) => {
+      console.error(e);
+    })
+  } else {
+    callback('没有找到这个星座哦')
+  }
+}
+
+function changeCode(str) {
+  switch(str) {
+    case '白羊':
+      return 'Aries'
+    case '金牛':
+      return 'Taurus'
+    case '双子':
+      return 'Gemini'
+    case '巨蟹':
+      return 'Cancer'
+    case '狮子':
+      return 'Leo'
+    case '处女':
+      return 'Virgo'
+    case '天秤':
+      return 'Libra'
+    case '天蝎':
+      return 'Scorpio'
+    case '射手':
+      return 'Sagittarius'
+    case '摩羯':
+      return 'Capricorn'
+    case '水瓶':
+      return 'Aquarius'
+    case '双鱼':
+      return 'Pisces'
+    default:
+      return false
+  }
+}
+
+function renderText(obj){
+  return `${obj.title}\n${obj.time}\n${obj.desc}\n感情（${obj.prop.feeling}） 财运（${obj.prop.luck}） 健康（${obj.prop.health}） 工作（${obj.prop.work}） 综合（${obj.prop.all}）\n${obj.other.map(val => `${val.info} : ${val.desc}`).join('\n')}`
+}
+
+function formatData(data) {
+  let obj = {
+    title: clipText(data, '<p class="title fb">', '</p>'),
+    time: clipText(data, '<p class="time">', '</p>'),
+    desc: clipText(data, '<div class="txt"><p>', '</p>'),
+    prop: {
+      feeling: clipText(data, '<b>感情</b>', '</strong>', -3),
+      luck: clipText(data, '<b>财运</b>', '</strong>', -3),
+      health: clipText(data, '<b>健康</b>', '</strong>', -3),
+      work: clipText(data, '<b>工作</b>', '</strong>', -3),
+      all: clipText(data, '<b>综合</b>', '</strong>', -3)
+    },
+    other: []
+  }
+  clipText(data, '<ul class="quan_yuan">', '</ul>').split('<li>').forEach(val => {
+    if(val.indexOf('<div class="words_b">') + 1){
+      obj.other.push({
+        info: clipText(val, '<div class="words_b">', '</div>'),
+        desc: clipText(val, '<div class="words_t">', '</div>')
+      })
+    }
+  })
+  return obj
+}
+
+function clipText(str, startTag, endTag, otherSetting) {
+  let si = str.indexOf(startTag),
+    ei = str.indexOf(endTag, si + startTag.length)
+  return otherSetting ?
+    (
+      otherSetting > 0 ?
+        str.substring(si + startTag.length + otherSetting, ei)
+        :
+        str.substring(ei + otherSetting, ei)
+    )
+    :
+    str.substring(si + startTag.length, ei)
+}
+
