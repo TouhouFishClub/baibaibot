@@ -12,7 +12,7 @@ function initDB(){
 
 function zodiac(content, callback) {
   let zo = changeCode(content.substr(0, 2))
-  zrun(zo);
+  zrun(zo,callback);
 }
 
 function zrun(zo,callback){

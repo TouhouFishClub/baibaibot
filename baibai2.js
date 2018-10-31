@@ -291,7 +291,7 @@ function handleMsg_D(msgObj,response){
     return
   }
   if(con.startsWith("我的星座是")){
-    saveMyZodiac(con.substring(5));
+    saveMyZodiac(con.substring(5),from,name,callback);
   }
 
   if(con.toLowerCase() === 'g21boss' || con.toLowerCase() === 'gboss'){
