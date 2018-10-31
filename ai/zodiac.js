@@ -47,6 +47,10 @@ function horoscope(qq,callback){
 }
 
 function saveMyZodiac(content,qq,userName,callback){
+  var n = content.indexOf('座');
+  if(n>0){
+    content=content.substring(0,n);
+  }
   Code = changeCode(content)
   if(Code!=false){
     var cl_zodiac = udb.collection('cl_zodiac');
