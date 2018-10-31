@@ -1,4 +1,6 @@
 const md5 = require("md5")
+const {horoscope} = require("./zodiac");
+
 module.exports = function(qq, callback){
   let str = `${qq}${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
   let md = md5(str)
@@ -36,6 +38,7 @@ function runtarot(qq,text,callback){
   var name = tarotIndex[Math.floor(rpfix/2)];
   var desp = tarot[name][rpfix%2];
   callback(text+'\n占卜\n'+name+" "+desp);
+  horoscope(qq,callback);
 }
 
 
@@ -66,6 +69,8 @@ const tarot = { '愚者':
   '审判': [ '正位：复活、回复、更新。生日、出生。觉醒。重新获得、恢复。', '逆位：怀疑、不相信。悔恨、懊悔、遗憾。生病。' ],
   '世界': [ '正位：报答、奖赏、结果。完美。成功。继承、遗传、传统。时间、一段时光。', '逆位：延期、拖延。迷惑、欺骗。失败。' ] }
 const tarotIndex = Object.keys(tarot);
+
+
 
 
 

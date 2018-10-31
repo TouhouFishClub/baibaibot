@@ -1,7 +1,21 @@
 const https = require('https')
+var MongoClient = require('mongodb').MongoClient;
+var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
+var path = require('path');
+var udb;
+initDB();
+function initDB(){
+  MongoClient.connect(mongourl, function(err, db) {
+    udb=db;
+  });
+}
 
-module.exports = function(content, callback) {
+function zodiac(content, callback) {
   let zo = changeCode(content.substr(0, 2))
+  zrun(zo);
+}
+
+function zrun(zo,callback){
   if(zo) {
     https.get({
       host: 'www.d1xz.net',
@@ -20,6 +34,38 @@ module.exports = function(content, callback) {
   } else {
     callback('没有找到这个星座哦')
   }
+}
+
+function horoscope(qq,callback){
+  getMyZodiac(qq,function(astro){
+    if(astro==0){
+      callback('您还没有设定星座哦');
+    }else{
+      zrun(astro,callback);
+    }
+  });
+}
+
+function saveMyZodiac(content,qq,userName,callback){
+  Code = changeCode(content)
+  if(Code!=false){
+    var cl_zodiac = udb.collection('cl_zodiac');
+    cl_zodiac.save({'_id':qq,d:Code});
+    callback('【'+userName+'】的星座是【'+content+'】,百百记住了哦');
+  }else{
+    callback('【'+userName+'】的星座是【'+content+'】,百百不知道那是什么星座哇');
+  }
+}
+
+function getMyZodiac(qq,callback){
+  var cl_zodiac = udb.collection('cl_zodiac');
+  cl_zodiac.findOne({'_id':qq}, function(err, data) {
+    if (data) {
+      callback(data.d);
+    } else {
+      callback(0);
+    }
+  });
 }
 
 function changeCode(str) {
@@ -96,3 +142,9 @@ function clipText(str, startTag, endTag, otherSetting) {
     str.substring(si + startTag.length, ei)
 }
 
+
+module.exports={
+  saveMyZodiac,
+  horoscope,
+  zodiac
+}
