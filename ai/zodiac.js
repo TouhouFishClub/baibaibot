@@ -39,7 +39,7 @@ function zrun(zo,callback){
 function horoscope(qq,callback){
   getMyZodiac(qq,function(astro){
     if(astro==0){
-      callback('您还没有设定星座哦');
+      callback('您还没有设定星座哦,输入【我的星座是xx座】设定自己的星座');
     }else{
       zrun(astro,callback);
     }
