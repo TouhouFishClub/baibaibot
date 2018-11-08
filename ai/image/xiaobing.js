@@ -18,14 +18,16 @@ function getPoemByImgurl(imgurl,callback){
     host: '192.168.17.52',
     port: 10088,
     path: '/py?type=poem&url='+encodeURIComponent(imgurl),
-    method: 'get',
+    method: 'GET',
     headers: {
+      'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
 
     }
   };
-
+  console.log(options)
   var req = http.request(options, function(res) {
     res.setEncoding('utf8');
+    console.log(res.statusCode)
     var resdata = '';
     res.on('data', function (chunk) {
       resdata = resdata + chunk;
