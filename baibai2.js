@@ -55,7 +55,7 @@ const rd = require('./ai/randomDice')
 const {zodiac,saveMyZodiac} = require('./ai/zodiac')
 
 const {saveAlarm} = require('./ai/private/alerm');
-
+const {poemReply} = require('./ai/image/xiaobing')
 initWS();
 
 var wsonline = false;
@@ -292,6 +292,12 @@ function handleMsg_D(msgObj,response){
   }
   if(con.startsWith("我的星座是")){
     saveMyZodiac(con.substring(5),from,name,callback);
+    return;
+  }
+
+  if(con.startsWith('作诗')||con.startsWith('写诗')){
+    poemReply(con.substring(2),name,callback);
+    return;
   }
 
   if(con.toLowerCase() === 'g21boss' || con.toLowerCase() === 'gboss'){

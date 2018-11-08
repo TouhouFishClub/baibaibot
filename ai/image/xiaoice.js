@@ -1,53 +1,178 @@
 var FormData = require('form-data');
 var https = require('https');
 var fs = require('fs');
-function poemReply(){
-  var form = new FormData();
+var http = require('http');
 
-  var boundary = 62134128000000 + new Date().getTime();
-
-  console.log(options)
-  form.append("image",fs.createReadStream("avatar.jpg"))
-  form.append("userid","GDVYSCE0OUslNCpJeLFVTstIbU0es91IJDE-NFs1K01PAB");
-  form.append("text","");
-  form.append("guid",generateUID());
-  var fm = form._streams[3];
-  var fma = fm.split("\n");
-  var bd = fma[0].trim();
-
+function getTid(callback){
   var options = {
-    host: 'poem.msxiaobing.com',
-    port: 443,
-    path: '/api/upload',
+    host: 'kan.msxiaobing.com',
+    port: 80,
+    path: '/V3/Portal?task=yanzhi',
+    method: 'GET',
+    headers: {
+      'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+    }
+  };
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+    res.on('end', function () {
+      var headers = res.headers;
+      var cookie = headers['set-cookie'];
+      var n = resdata.indexOf('xb_log_info');
+      var s1 = resdata.substring(n+1);
+      var inputstr = '<input type="text" name="tid" value="';
+      var n1 = s1.indexOf(inputstr);
+      var s2 = s1.substring(n1+inputstr.length);
+      var n2 = s2.indexOf('"');
+      var tid = s2.substring(0,n2);
+      callback(tid,cookie);
+    });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
+}
+
+
+
+
+function getBase64Image(url,callback){
+  https.get(url,function(res){
+    var chunks = []; //用于保存网络请求不断加载传输的缓冲数据
+    var size = 0;　　 //保存缓冲数据的总长度
+    res.on('data',function(chunk){
+      chunks.push(chunk);　 //在进行网络请求时，会不断接收到数据(数据不是一次性获取到的)，
+      size += chunk.length;　　//累加缓冲数据的长度
+    });
+    res.on('end',function(err){
+      var data = Buffer.concat(chunks, size);　　//Buffer.concat将chunks数组中的缓冲数据拼接起来，返回一个新的Buffer对象赋值给data
+      var base64Img = data.toString('base64');　　//将Buffer对象转换为字符串并以base64编码格式显示
+      uploadBase64Image(base64Img,callback);
+    });
+  });
+}
+
+function uploadBase64Image(str,callback){
+  var options = {
+    host: 'kan.msxiaobing.com',
+    port: 80,
+    path: '/Api/Image/UploadBase64',
     method: 'POST',
     headers: {
-      "Referer": "https://poem.msxiaobing.com/",
-      "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36",
-      "Content-Type": "multipart/form-data; boundary="+bd
+      'Host':'kan.msxiaobing.com',
+      'Origin':'http://kan.msxiaobing.com',
+      'Referer':'http://kan.msxiaobing.com/V3/Portal?task=yanzhi',
+      'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
     }
   };
 
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+    res.on('end', function () {
+      var data = eval('('+resdata+')');
+      var host = data.Host.trim();
+      var url = data.Url.trim();
+      console.log(host,url);
+      callback(host+url);
+    });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.write(str.trim());
+  req.end();
+}
 
-  console.log(options)
-  var request = https.request(options
-    ,function(res) {
-      var str = '';
-      res.on('data', function (buffer) {
-          str += buffer;
-      });
-      res.on('end', () => {
-        console.log('11111111')
-        console.log(str);
+
+function poemReply(imgurl,callback){
+  getTid(function(tid,cookie){
+    console.log(cookie);
+
+    let map = {};
+    let ra = cookie;
+    if (ra) {
+      ra.forEach((rc) => {
+        rc && rc.split(';').forEach((cookie) => {
+          let parts = cookie.split('=');
+          map[parts.shift().trim()] = parts.join('=');
+        });
       });
     }
-  );
-  form.pipe(request);
+    console.log(map);
+
+
+
+
+    let ar = [];
+    for(var p in map){
+      ar.push(`${p}=${map[p]}`);
+    }
+    var cookieStr = ar.join(';')
+    var options = {
+      host: 'kan.msxiaobing.com',
+      port: 443,
+      path: '/Api/ImageAnalyze/Process?service=poem&tid='+tid,
+      method: 'POST',
+      headers: {
+        'Host':'kan.msxiaobing.com',
+        'Origin':'http://kan.msxiaobing.com',
+        'Content-Type':'application/json',
+        'Cookies':cookieStr,
+        'Referer':'http://kan.msxiaobing.com/V3/Portal?task=poem',
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+      }
+    };
+    getBase64Image(imgurl,function(msurl){
+      var CreateTime = Math.floor(new Date().getTime()/1000);
+      data = {
+        'MsgId':CreateTime+'039',
+        'CreateTime':CreateTime,
+        'Content[imageUrl]':msurl
+      }
+      console.log(options);
+      var req = https.request(options, function(res) {
+        res.setEncoding('utf8');
+        var resdata = '';
+        res.on('data', function (chunk) {
+          resdata = resdata + chunk;
+        });
+        res.on('end', function () {
+          var data = eval('('+resdata+')');
+          var text = data.content.text;
+          callback(text);
+        });
+      });
+      req.on('error', function(err) {
+        console.log('req err:');
+        console.log(err);
+      });
+      req.write(JSON.stringify(data));
+      req.end();
+    });
+  })
+
+
+
 
 
 }
 
 module.exports={
-  poemReply
+  poemReply,
+  getTid,
+  uploadBase64Image,
+  getBase64Image
 }
 
 function generateUID(){
