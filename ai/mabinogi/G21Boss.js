@@ -188,37 +188,37 @@ const timeLiftByHour = (endHour, isNextDay = false) => {
   return `${(left / 3600) > 1 ? ~~(left / 3600) + ' 小时 ' : ''}${~~(left % 3600 / 60) + ' 分 '}${left % 60 + ' 秒'}`
 }
 
-const autoWhiteList = [315902131, 537098885, 138585036]
+// const autoWhiteList = []
 
-const startTimeout = () => {
-  let timeLeft = 3610000 - new Date().getTime() % 3600000
-  setTimeout(() => {
-    G21Boss(res => {
-      if(res.trim().length > 0){
-        if(autoWhiteList.length && new Date().getHours() >= 10) {
-          autoWhiteList.forEach(groupId => {
-            let options = {
-              host: '192.168.17.52',
-              port: 23334,
-              path: `/send_group_msg?group_id=${groupId}&message=${encodeURIComponent(`G21BOSS自动报时\n\n${res}`)}`,
-              method: 'GET',
-              headers: {}
-            }
-            let req = http.request(options);
-            req.on('error', function(err) {
-              console.log('req err:');
-              console.log(err);
-            });
-            req.end();
-          })
-        }
-      }
-    })
-    startTimeout()
-  }, timeLeft)
-}
-
-startTimeout()
+// const startTimeout = () => {
+//   let timeLeft = 3610000 - new Date().getTime() % 3600000
+//   setTimeout(() => {
+//     G21Boss(res => {
+//       if(res.trim().length > 0){
+//         if(autoWhiteList.length && new Date().getHours() >= 10) {
+//           autoWhiteList.forEach(groupId => {
+//             let options = {
+//               host: '192.168.17.52',
+//               port: 23334,
+//               path: `/send_group_msg?group_id=${groupId}&message=${encodeURIComponent(`G21BOSS自动报时\n\n${res}`)}`,
+//               method: 'GET',
+//               headers: {}
+//             }
+//             let req = http.request(options);
+//             req.on('error', function(err) {
+//               console.log('req err:');
+//               console.log(err);
+//             });
+//             req.end();
+//           })
+//         }
+//       }
+//     })
+//     startTimeout()
+//   }, timeLeft)
+// }
+//
+// startTimeout()
 
 module.exports = {
   G21Boss
