@@ -55,7 +55,10 @@ const rd = require('./ai/randomDice')
 const {zodiac,saveMyZodiac} = require('./ai/zodiac')
 
 const {saveAlarm} = require('./ai/private/alerm');
-const {poemReply} = require('./ai/image/xiaobing')
+const {poemReply} = require('./ai/image/xiaobing');
+
+const {simplized,traditionalized,qqlized} = require('./lib/chs_cht');
+
 initWS();
 
 var wsonline = false;
@@ -130,6 +133,7 @@ function handleMsg_D(msgObj,response){
     if(content.indexOf('[CQ:at,qq=2375373419]')>-1){
       content=content.replace(/\[CQ:at,qq=2375373419\]/g,'百百');
     }
+    content = simplized(content);
   }
 
   if(type=='private'){
