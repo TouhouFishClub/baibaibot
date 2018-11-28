@@ -13,6 +13,8 @@ const {baiduVoice} = require('../../voice/baiduvoice');
 const {saveBan} = require ('../../replay')
 const {banUserInGroup,getUserRoleInGroupByCache} = require('../../../cq/cache')
 const {drawPixiv} = require('./pixiv')
+const {fetchYande} = require('./yande');
+
 
 var bmap = {};
 function bdraw(groupid,from,callback){
@@ -26,61 +28,64 @@ function bdraw(groupid,from,callback){
 
 
 
-function drawNameCard(username,qq,callback,groupid){
+function drawNameCard(username,qq,callback,groupid) {
   var now = new Date().getTime();
   var cooldown;
   var maxtimes;
-  if((groupid+"").startsWith("54035")
-    ||(groupid+"").startsWith("63508")
-    ||(groupid+"").startsWith("13858")
-    ||(groupid+"").startsWith("63508")){
+  if ((groupid + "").startsWith("54035")
+    || (groupid + "").startsWith("63508")
+    || (groupid + "").startsWith("13858")
+    || (groupid + "").startsWith("63508")) {
     callback('在抽卡的话百百就要炸了你');
     return;
   }
-  if((groupid+"").startsWith("67096")){
-    if(new Date().getHours()>7){
-        cooldown = 60000*10;
-        maxtimes=11;
-    }else{
-        cooldown = 60000*10;
-        maxtimes=11;
+  if ((groupid + "").startsWith("67096")) {
+    if (new Date().getHours() > 7) {
+      cooldown = 60000 * 10;
+      maxtimes = 11;
+    } else {
+      cooldown = 60000 * 10;
+      maxtimes = 11;
     }
-  }else if((groupid+"").startsWith("61614")||(groupid+"").startsWith("2057")){
-    if(new Date().getHours()>7){
-        cooldown = 60000*10;
-        maxtimes=1;
-    }else{
-        cooldown = 60000*10;
-        maxtimes=3;
+  } else if ((groupid + "").startsWith("61614") || (groupid + "").startsWith("2057")) {
+    if (new Date().getHours() > 7) {
+      cooldown = 60000 * 10;
+      maxtimes = 1;
+    } else {
+      cooldown = 60000 * 10;
+      maxtimes = 3;
     }
-  }else if((groupid+"").startsWith("14559")||(groupid+"").startsWith("14559")){
-    if(new Date().getHours()>7){
-      cooldown = 60000*10;
-      maxtimes=3;
-    }else{
-      cooldown = 60000*10;
-      maxtimes=11;
+  } else if ((groupid + "").startsWith("14559") || (groupid + "").startsWith("14559")) {
+    if (new Date().getHours() > 7) {
+      cooldown = 60000 * 10;
+      maxtimes = 3;
+    } else {
+      cooldown = 60000 * 10;
+      maxtimes = 11;
     }
-  }else{
-    cooldown = 60000*10;
+  } else {
+    cooldown = 60000 * 10;
     maxtimes = 1;
   }
-  if(cache[qq]){
-    var then=cache[qq].ts;
-    var cc=cache[qq].c;
-    if(now-then<cooldown){
-      if(cc>=maxtimes){
-          callback('【'+username+'】抽卡太快了，休息一会吧，下次抽卡时间：'+new Date(then+cooldown).toLocaleString());
-          return;
-      }else{
-        cache[qq]={ts:now,c:cc+1};
+  if (cache[qq]) {
+    var then = cache[qq].ts;
+    var cc = cache[qq].c;
+    if (now - then < cooldown) {
+      if (cc >= maxtimes) {
+        callback('【' + username + '】抽卡太快了，休息一会吧，下次抽卡时间：' + new Date(then + cooldown).toLocaleString());
+        return;
+      } else {
+        cache[qq] = {ts: now, c: cc + 1};
       }
-    }else{
-      cache[qq]={ts:now,c:1};
+    } else {
+      cache[qq] = {ts: now, c: 1};
     }
-  }else{
-    cache[qq]={ts:now,c:1};
+  } else {
+    cache[qq] = {ts: now, c: 1};
   }
+  drawNameCard_1(username,qq,callback,groupid)
+}
+function drawNameCard_1(username,qq,callback,groupid){
   var botrole = getUserRoleInGroupByCache(2375373419,groupid)
   console.log('botrole:'+groupid+":"+botrole);
   if(botrole=='admin'||botrole=='owner'){
@@ -102,6 +107,17 @@ function drawNameCard(username,qq,callback,groupid){
       callback(pr);
       return;
     }
+  }
+  if(Math.random()<0.3){
+    var rd = Math.floor(Math.random()*432100)+12345;
+    fetchYande(rd,function(r){
+      if(r==0){
+        drawNameCard_1(username,qq,callback,groupid)
+      }else{
+        callback('【'+username+'】抽到了:\n'+r);
+      }
+    })
+    return;
   }
 
   if(Math.random()<0.1){
