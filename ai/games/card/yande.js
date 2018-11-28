@@ -128,10 +128,10 @@ function runydb(){
     },1000)
   })
   if(new Date().getHours()<24){
-    yx(1);
-    yx(2);
-    yx(3);
-    yx(4);
+    // yx(1);
+    // yx(2);
+    // yx(3);
+    // yx(4);
   }
 }
 
