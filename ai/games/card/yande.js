@@ -24,6 +24,23 @@ function fetchYande(id,callback){
     callback('[CQ:image,file=send/ydb/'+id+'.png]\nYandeID:'+id);
     return;
   }
+
+  filename = 'public/ydb/'+id;
+  if(fs.existsSync(filename)){
+    var imgurl = 'http://192.168.17.52:10086/ydb/'+id;
+    checknsfw(imgurl,function(ret){
+      if(ret!=0){
+        var desfilename = "../coolq-data/cq/data/image/send/ydb/"+id+"";
+        fs.rename(filename,desfilename,function(){
+          callback('[CQ:image,file=send/ydb/'+id+']');
+        })
+      }else{
+        callback(0);
+      }
+    })
+    return;
+  }
+
   var option = {
     host: 'yande.re',
     port: 443,
@@ -54,8 +71,20 @@ function fetchYande(id,callback){
           var s4 = s1.substring(n4+5);
           var n5 = s4.indexOf('"');
           var src = s4.substring(0,n5);
-          var filename = 'public/ydb/'+id;
-          if(fs.existsSync(filename)){
+          var list = alt.split(' ');
+          var reqs = request({
+            url: src,
+            method: "GET",
+            headers:{
+              'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+            }
+          }, function(error, response, body){
+            if(error&&error.code){
+              console.log('pipe error catched!')
+              console.log(error);
+            }
+          }).pipe(fs.createWriteStream(filename));
+          reqs.on('close',function(){
             var imgurl = 'http://192.168.17.52:10086/ydb/'+id;
             checknsfw(imgurl,function(ret){
               if(ret!=0){
@@ -67,34 +96,7 @@ function fetchYande(id,callback){
                 callback(0);
               }
             })
-          }else{
-            var list = alt.split(' ');
-            var reqs = request({
-              url: src,
-              method: "GET",
-              headers:{
-                'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
-              }
-            }, function(error, response, body){
-              if(error&&error.code){
-                console.log('pipe error catched!')
-                console.log(error);
-              }
-            }).pipe(fs.createWriteStream(filename));
-            reqs.on('close',function(){
-              var imgurl = 'http://192.168.17.52:10086/ydb/'+id;
-              checknsfw(imgurl,function(ret){
-                if(ret!=0){
-                  var desfilename = "../coolq-data/cq/data/image/send/ydb/"+id+"";
-                  fs.rename(filename,desfilename,function(){
-                    callback('[CQ:image,file=send/ydb/'+id+']');
-                  })
-                }else{
-                  callback(0);
-                }
-              })
-            });
-          }
+          });
 
         }
       })
@@ -113,13 +115,12 @@ function fetchYande(id,callback){
 function runydb(){
   var filename = "ydb.txt";
   var start = 12345;
-  if(fs.exists(filename)){
+  if(fs.existsSync(filename)){
     start = parseInt(fs.readFileSync(filename,"utf-8"))
   }else{
     fs.writeFileSync(filename,start);
   }
   fetchYande(start,function(r){
-    console.log("start:"+start+":"+r);
     fs.writeFileSync(filename,""+(start+1));
     setTimeout(function(){
       runydb();
