@@ -27,7 +27,7 @@ function checknsfw(imgurl,callback){
         resdata = resdata + chunk;
       });
       res.on('end', function(){
-        console.log('id:'+resdata);
+        console.log("nsfw:"+id+':'+resdata);
         callback(resdata)
       });
     }else{
