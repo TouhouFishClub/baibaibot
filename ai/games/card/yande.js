@@ -97,7 +97,8 @@ function fetchYande(id,callback){
               }
             })
           });
-
+        }else{
+          callback(0);
         }
       })
     }else{
