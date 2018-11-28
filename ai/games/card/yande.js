@@ -127,6 +127,25 @@ function runydb(){
       runydb();
     },1000)
   })
+  if(new Date().getHours()<24){
+    yx(1);
+    yx(2);
+    yx(3);
+    yx(4);
+  }
+}
+
+function yx(n){
+  var filename = "ydb"+n+".txt";
+  var start = n*100000;
+  if(fs.existsSync(filename)){
+    start = parseInt(fs.readFileSync(filename,"utf-8"))
+  }else{
+    fs.writeFileSync(filename,start);
+  }
+  fetchYande(start,function(r){
+    fs.writeFileSync(filename,""+(start+1));
+  })
 }
 
 runydb();
