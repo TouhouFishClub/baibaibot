@@ -101,14 +101,8 @@ function drawNameCard_1(username,qq,callback,groupid){
       return;
     }
   }
-  if(Math.random()<0.13){
-    var pr = drawPixiv(username);
-    if(pr.length>20){
-      callback(pr);
-      return;
-    }
-  }
-  if(Math.random()<0.3){
+
+  if(Math.random()<1){
     var rd = Math.floor(Math.random()*432100)+12345;
     fetchYande(rd,function(r){
       if(r==0){
@@ -119,6 +113,15 @@ function drawNameCard_1(username,qq,callback,groupid){
     })
     return;
   }
+
+  if(Math.random()<0.13){
+    var pr = drawPixiv(username);
+    if(pr.length>20){
+      callback(pr);
+      return;
+    }
+  }
+
 
   if(Math.random()<0.1){
     drawBangumi(qq,username,callback);
