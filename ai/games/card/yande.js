@@ -119,7 +119,7 @@ function runydb(){
     fs.writeFileSync(filename,start);
   }
   fetchYande(start,function(r){
-    fs.writeFileSync(filename,start+1);
+    fs.writeFileSync(filename,""+(start+1));
     setTimeout(function(){
       runydb();
     },1000)
