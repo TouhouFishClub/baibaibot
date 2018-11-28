@@ -102,10 +102,11 @@ function drawNameCard_1(username,qq,callback,groupid){
     }
   }
 
-  if(Math.random()<0.2){
+  if(Math.random()<0.18){
     var rd = Math.floor(Math.random()*432100)+12345;
     fetchYande(rd,function(r){
       if(r==0){
+        callback('【'+username+'】抽到了:【***】,重抽'+r);
         drawNameCard_1(username,qq,callback,groupid)
       }else{
         callback('【'+username+'】抽到了:\n'+r);
@@ -113,7 +114,6 @@ function drawNameCard_1(username,qq,callback,groupid){
     })
     return;
   }
-
   if(Math.random()<0.13){
     var pr = drawPixiv(username);
     if(pr.length>20){
