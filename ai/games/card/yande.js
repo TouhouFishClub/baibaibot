@@ -114,11 +114,12 @@ function runydb(){
   var filename = "ydb.txt";
   var start = 12345;
   if(fs.exists(filename)){
-    start = parseInt(fs.readFileSync(filename))
+    start = parseInt(fs.readFileSync(filename,"utf-8"))
   }else{
     fs.writeFileSync(filename,start);
   }
   fetchYande(start,function(r){
+    console.log("start:"+start+":"+r);
     fs.writeFileSync(filename,""+(start+1));
     setTimeout(function(){
       runydb();
