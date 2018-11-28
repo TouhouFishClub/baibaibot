@@ -27,11 +27,11 @@ function checknsfw(imgurl,callback){
         resdata = resdata + chunk;
       });
       res.on('end', function(){
-        console.log("nsfw:"+id+':'+resdata);
+        console.log("nsfw:"+imgurl+':'+resdata);
         callback(resdata)
       });
     }else{
-      console.log('id:error:'+id)
+      console.log('id:error:'+imgurl)
       callback(0)
     }
   });
