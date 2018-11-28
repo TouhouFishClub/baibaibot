@@ -18,11 +18,10 @@ function initDB(){
 }
 
 function fetchYande(id,callback){
-
   var filename = "../coolq-data/cq/data/image/send/ydb/"+id+".png";
   var exist = fs.existsSync(filename);
   if(exist){
-    callback('[CQ:image,file=send/ydb/'+id+'.png]');
+    callback('[CQ:image,file=send/ydb/'+id+'.png]\nYandeID:'+id);
     return;
   }
   var option = {
@@ -34,10 +33,7 @@ function fetchYande(id,callback){
     },
     path: '/post/show/'+id
   };
-  console.log('\n\n=====================================')
-  console.log("will fetch from:"+id+":");
-  console.log(option);
-  console.log('=====================================\n\n')
+  console.log("will fetch ydb:"+id+":");
   var req = https.request(option, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
@@ -54,12 +50,10 @@ function fetchYande(id,callback){
           var s2 = s1.substring(n2+5);
           var n3 = s2.indexOf('"');
           var alt = s2.substring(0,n3);
-          console.log(alt);
           var n4 = s1.indexOf('src="');
           var s4 = s1.substring(n4+5);
           var n5 = s4.indexOf('"');
           var src = s4.substring(0,n5);
-          console.log(src);
           var filename = 'public/ydb/'+id;
           if(fs.existsSync(filename)){
             var imgurl = 'http://192.168.17.52:10086/ydb/'+id;
@@ -114,6 +108,25 @@ function fetchYande(id,callback){
   req.end();
 }
 
+
+
+function runydb(){
+  var filename = "ydb.txt";
+  var start = 12345;
+  if(fs.exists(filename)){
+    start = parseInt(fs.readFileSync(filename))
+  }else{
+    fs.writeFileSync(filename,start);
+  }
+  fetchYande(start,function(r){
+    fs.writeFileSync(filename,start+1);
+    setTimeout(function(){
+      runydb();
+    },1000)
+  })
+}
+
+runydb();
 
 module.exports={
   fetchYande
