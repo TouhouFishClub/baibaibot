@@ -135,3 +135,25 @@ app.get('/text', (req, res) => {
 })
 
 
+app.get('/xxx',function(req,res){
+  var r= [
+    {
+      "id": 1,
+      "name": "LV",
+      "createTime": 1543828108386
+    },
+    {
+      "id": 2,
+      "name": "CC",
+      "createTime": 1543828108387
+    },
+    {
+      "id": 3,
+      "name": "BB",
+      "createTime": 1543828108388
+    }
+  ]
+  res.send(JSON.stringify(r));
+})
+
+
