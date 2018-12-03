@@ -153,6 +153,7 @@ app.get('/xxx',function(req,res){
       "createTime": 1543828108388
     }
   ]
+  res.set("Access-Control-Allow-Origin", "*");
   res.send(JSON.stringify(r));
 })
 
