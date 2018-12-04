@@ -157,4 +157,8 @@ app.get('/xxx',function(req,res){
   res.send(JSON.stringify(r));
 })
 
+app.get('/x1',function(req,res){
+  var r = "var x = 1"
+  res.send(r);
+})
 
