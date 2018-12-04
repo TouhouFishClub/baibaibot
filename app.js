@@ -159,6 +159,7 @@ app.get('/xxx',function(req,res){
 
 app.get('/x1',function(req,res){
   var r = "var x = 1"
+  res.set('Content-Type','text/javascript')
   res.send(r);
 })
 
