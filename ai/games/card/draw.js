@@ -105,8 +105,9 @@ function drawNameCard_1(username,qq,callback,groupid){
   if(Math.random()<0.18){
     var rd = Math.floor(Math.random()*432100)+12345;
     fetchYande(rd,function(r){
-      if(r==0){
-        callback('【'+username+'】抽到了:【***】,重抽'+r);
+      var ri = parseInt(r);
+      if(ri>12345){
+        callback('【'+username+'】抽到了:【 https://yande.re/post/show/'+ri+'  】,重抽');
         drawNameCard_1(username,qq,callback,groupid)
       }else{
         callback('【'+username+'】抽到了:\n'+r);

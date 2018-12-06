@@ -35,7 +35,7 @@ function fetchYande(id,callback){
           callback('[CQ:image,file=send/ydb/'+id+']');
         })
       }else{
-        callback(0);
+        callback(id);
       }
     })
     return;
