@@ -42,7 +42,7 @@ app.get('/chathistory',function(req,res){
     res.set("Access-Control-Allow-Origin", "*");
     res.send(JSON.stringify(ret));
   }
-  if(gid&&ts){
+  if(gid){
     getChat(gid,ts,callback);
   }else{
     res.send('[]');
