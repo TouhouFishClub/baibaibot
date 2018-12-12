@@ -42,7 +42,12 @@ app.get('/chathistory',function(req,res){
     res.set("Access-Control-Allow-Origin", "*");
     res.send(JSON.stringify(ret));
   }
-  getChat(gid,ts,callback);
+  if(gid&&ts){
+    getChat(gid,ts,callback);
+  }else{
+    res.send('[]');
+  }
+
 });
 
 app.get('/image',function(req,res){
