@@ -126,7 +126,7 @@ function fflogsReply(content,userName,callback){
     }
   }
   var rt = parseInt(rate);
-  if(rt>=&&rt<100){
+  if(rt>=0&&rt<100){
 
   }else{
     rt = 75;
