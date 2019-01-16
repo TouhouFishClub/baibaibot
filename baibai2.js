@@ -59,6 +59,9 @@ const {poemReply} = require('./ai/image/xiaobing');
 
 const {simplized,traditionalized,qqlized} = require('./lib/chs_cht');
 
+
+const {fflogsReply} = require('./ai/ff14/fflogs');
+
 initWS();
 
 var wsonline = false;
@@ -276,6 +279,11 @@ function handleMsg_D(msgObj,response){
   fi = con.substring(0,5)
   if(fi == 'ffxiv'){
     searchFF14Item(con.substring(5),name,callback);
+    return;
+  }
+
+  if(fi == 'fflog'){
+    fflogsReply(con.substring(5),name,callback);
     return;
   }
 
