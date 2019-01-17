@@ -252,6 +252,16 @@ var api_key = "c776341dc7547e20623eb12350bd5e74";
 
 function fflogsReply(content,userName,callback){
   content = content.toLowerCase();
+  if(content==""){
+    var ret = "fflog查询 输入格式：\n";
+    ret = ret + "fflog + BOSS名/ID + 职业名 + 百分比\n";
+    ret = ret + "如 【fflog o5s 黑魔 75】\n";
+    ret = ret + "中文BOSS名仅支持极神和零式\n";
+    ret = ret + "百分比可省略,默认为75\n";
+    ret = ret + "职业名可省略,表示查询团队DPS\n";
+    callback(ret);
+    return;
+  }
   var ca = content.split(' ');
   var boss = ca[0].trim();
   var job = ca[1];
