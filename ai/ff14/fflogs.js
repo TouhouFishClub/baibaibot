@@ -251,6 +251,7 @@ var bosses = [
 var api_key = "c776341dc7547e20623eb12350bd5e74";
 
 function fflogsReply(content,userName,callback){
+  content = content.toLowerCase();
   var ca = content.split(' ');
   var boss = ca[0].trim();
   var job = ca[1];
