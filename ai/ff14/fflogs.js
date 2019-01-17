@@ -237,7 +237,7 @@ function fflogsReply(content,userName,callback){
   if(rate){
     rate = rate.trim();
   }
-  if(rate.endsWith("%")){
+  if(rate&&rate.endsWith("%")){
     rate = rate.substring(0,rate.length-1);
   }
   var url;
