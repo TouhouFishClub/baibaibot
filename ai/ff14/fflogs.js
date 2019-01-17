@@ -245,7 +245,7 @@ function fflogsReply(content,userName,callback){
   var ba = [];
   for(var i=0;i<bosses.length;i++){
     if(bosses[i].cn.indexOf(boss)>=0||bosses[i].name.indexOf(boss)>=0){
-      ba.push(boss[i]);
+      ba.push(bosses[i]);
     }
   }
   if(ba.length==1){
