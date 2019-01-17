@@ -96,10 +96,131 @@ var jobs = [
     cn:"武士",
     en:"Samurai"
   },
-
-
 ]
 
+
+var bosses = [
+  {
+    "id": 1036,
+    "name": "Susano",
+    "cn": "豪神"
+  },
+  {
+    "id": 1037,
+    "name": "Lakshmi",
+    "cn": "美神"
+  },
+  {
+    "id": 1038,
+    "name": "Shinryu",
+    "cn": "神龙"
+  },
+  {
+    "id": 1040,
+    "name": "Byakko",
+    "cn": "白虎"
+  },
+  {
+    "id": 1041,
+    "name": "Tsukuyomi",
+    "cn": "月读"
+  },
+  {
+    "id": 1043,
+    "name": "Suzaku",
+    "cn": "朱雀"
+  },
+  {
+    "id": 1044,
+    "name": "Seiryu",
+    "cn": "青龙"
+  },
+  {
+    "id": 42,
+    "name": "Alte Roite",
+    "cn": "o1s"
+  },
+  {
+    "id": 43,
+    "name": "Catastrophe",
+    "cn": "o2s"
+  },
+  {
+    "id": 44,
+    "name": "Halicarnassus",
+    "cn": "o3s"
+  },
+  {
+    "id": 45,
+    "name": "Exdeath",
+    "cn": "o4s门神"
+  },
+  {
+    "id": 46,
+    "name": "Neo Exdeath",
+    "cn": "o4s本体"
+  },
+  {
+    "id": 1039,
+    "name": "Bahamut Prime",
+    "cn": "绝巴哈"
+  },
+  {
+    "id": 51,
+    "name": "Phantom Train",
+    "cn": "o5s"
+  },
+  {
+    "id": 52,
+    "name": "Demon Chadarnook",
+    "cn": "o6s"
+  },
+  {
+    "id": 53,
+    "name": "Guardian",
+    "cn": "o7s"
+  },
+  {
+    "id": 54,
+    "name": "Kefka",
+    "cn": "o8s门神"
+  },
+  {
+    "id": 55,
+    "name": "God Kefka",
+    "cn": "o8s本体"
+  },
+  {
+    "id": 1042,
+    "name": "The Ultima Weapon",
+    "cn": "绝神兵"
+  },
+  {
+    "id": 60,
+    "name": "Chaos",
+    "cn": "o9s"
+  },
+  {
+    "id": 61,
+    "name": "Midgardsormr",
+    "cn": "o10s"
+  },
+  {
+    "id": 62,
+    "name": "Omega",
+    "cn": "o11s"
+  },
+  {
+    "id": 63,
+    "name": "Omega-M and Omega-F",
+    "cn": "o12s门神"
+  },
+  {
+    "id": 64,
+    "name": "The Final Omega",
+    "cn": "o12s本体"
+  }
+]
 
 
 
@@ -107,11 +228,33 @@ var api_key = "c776341dc7547e20623eb12350bd5e74";
 
 function fflogsReply(content,userName,callback){
   var ca = content.split(' ');
-  var boss = ca[0];
-  var job = ca[1];
-  var rate = ca[2];
+  var boss = ca[0].trim();
+  var job = ca[1].trim();
+  var rate = ca[2].trim();
+  if(rate.endsWith("%")){
+    rate = rate.substring(0,rate.length-1);
+  }
   var url;
   var bossid = boss;
+  var ba = [];
+  for(var i=0;i<bosses.length;i++){
+    if(boss[i].cn.indexOf(boss)>=0||boss[i].name.indexOf(boss)>=0){
+      ba.push(boss[i]);
+    }
+  }
+  if(ba.length==1){
+    bossid = ba[0].id;
+  }else if(ba.length==0){
+    callback('no match');
+  }else{
+    var ret = "请选择：\n";
+    for(var i=0;i<ba.length;i++){
+      ret = ret + "fflog "+ba[i].cn+" "+(job?job:"")+" "+(rate?rate:"")+"\n";
+    }
+    callback(ret);
+    return;
+  }
+
   if(job==undefined){
     url = "https://www.fflogs.com/zone/statistics/15/#boss="+bossid+"&dataset=0&metric=fightdps"
   }else{
