@@ -110,8 +110,10 @@ function fflogsReply(content,userName,callback){
   var boss = ca[0];
   var job = ca[1];
   var rate = ca[2];
+  var url;
+  var bossid = boss;
   if(job==undefined){
-    job = "Any";
+    url = "https://www.fflogs.com/zone/statistics/15/#boss="+bossid+"&dataset=0&metric=fightdps"
   }else{
     var a = [];
     for(var i=0;i<jobs.length;i++){
@@ -131,9 +133,10 @@ function fflogsReply(content,userName,callback){
   }else{
     rt = 75;
   }
-  var bossid = boss;
   if(bossid>0){
-    var url = "https://www.fflogs.com/zone/statistics/15/#class="+job+"&boss="+bossid+"&dataset="+rt
+    if(job){
+      url = "https://www.fflogs.com/zone/statistics/15/#class="+job+"&boss="+bossid+"&dataset="+rt
+    }
     getPic(url,callback)
   }
 }
