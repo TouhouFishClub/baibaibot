@@ -283,7 +283,7 @@ function handleMsg_D(msgObj,response){
   }
 
   if(fi == 'fflog'){
-    fflogsReply(con.substring(5),name,callback);
+    fflogsReply(con.substring(5).trim(),name,callback);
     return;
   }
 
