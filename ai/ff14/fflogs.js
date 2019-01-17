@@ -266,6 +266,7 @@ function fflogsReply(content,userName,callback){
   }
   var url;
   var bossid = boss;
+  var zid;
   var ba = [];
   for(var i=0;i<bosses.length;i++){
     if(bosses[i].cn.indexOf(boss)>=0||bosses[i].name.indexOf(boss)>=0){
@@ -274,6 +275,7 @@ function fflogsReply(content,userName,callback){
   }
   if(ba.length==1){
     bossid = ba[0].id;
+    zid = ba[0].zid
   }else if(ba.length==0){
     callback('no match');
   }else{
@@ -286,7 +288,7 @@ function fflogsReply(content,userName,callback){
   }
 
   if(job==undefined){
-    url = "https://www.fflogs.com/zone/statistics/15/#boss="+bossid+"&dataset=0&metric=fightdps"
+    url = "https://www.fflogs.com/zone/statistics/"+zid+"/#boss="+bossid+"&dataset=0&metric=fightdps"
   }else{
     var a = [];
     for(var i=0;i<jobs.length;i++){
@@ -308,7 +310,7 @@ function fflogsReply(content,userName,callback){
   }
   if(bossid>0){
     if(job){
-      url = "https://www.fflogs.com/zone/statistics/15/#class=Global&spec="+job+"&boss="+bossid+"&dataset="+rt
+      url = "https://www.fflogs.com/zone/statistics/"+zid+"/#class=Global&spec="+job+"&boss="+bossid+"&dataset="+rt
     }
     getPic(url,callback)
   }
