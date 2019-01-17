@@ -244,7 +244,7 @@ function fflogsReply(content,userName,callback){
   var bossid = boss;
   var ba = [];
   for(var i=0;i<bosses.length;i++){
-    if(boss[i].cn.indexOf(boss)>=0||boss[i].name.indexOf(boss)>=0){
+    if(bosses[i].cn.indexOf(boss)>=0||bosses[i].name.indexOf(boss)>=0){
       ba.push(boss[i]);
     }
   }
