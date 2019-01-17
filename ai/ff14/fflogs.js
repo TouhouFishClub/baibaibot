@@ -229,8 +229,14 @@ var api_key = "c776341dc7547e20623eb12350bd5e74";
 function fflogsReply(content,userName,callback){
   var ca = content.split(' ');
   var boss = ca[0].trim();
-  var job = ca[1].trim();
-  var rate = ca[2].trim();
+  var job = ca[1];
+  if(job){
+    job = job.trim();
+  }
+  var rate = ca[2];
+  if(rate){
+    rate = rate.trim();
+  }
   if(rate.endsWith("%")){
     rate = rate.substring(0,rate.length-1);
   }
