@@ -253,6 +253,7 @@ var api_key = "c776341dc7547e20623eb12350bd5e74";
 function fflogsReply(content,userName,callback){
   content = content.toLowerCase();
   if(content==""){
+    return;
     var ret = "fflog查询 输入格式：\n";
     ret = ret + "fflog + BOSS名/ID + 职业名 + 百分比\n";
     ret = ret + "如 【fflog o5s 黑魔 75】\n";
