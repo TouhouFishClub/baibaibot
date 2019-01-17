@@ -101,121 +101,145 @@ var jobs = [
 
 var bosses = [
   {
+    "zid":15,
     "id": 1036,
     "name": "Susano",
     "cn": "豪神"
   },
   {
+    "zid":15,
     "id": 1037,
     "name": "Lakshmi",
     "cn": "美神"
   },
   {
+    "zid":15,
     "id": 1038,
     "name": "Shinryu",
     "cn": "神龙"
   },
   {
+    "zid":15,
     "id": 1040,
     "name": "Byakko",
     "cn": "白虎"
   },
   {
+    "zid":15,
     "id": 1041,
     "name": "Tsukuyomi",
     "cn": "月读"
   },
   {
+    "zid":15,
     "id": 1043,
     "name": "Suzaku",
     "cn": "朱雀"
   },
   {
+    "zid":15,
     "id": 1044,
     "name": "Seiryu",
     "cn": "青龙"
   },
   {
+    "zid":17,
     "id": 42,
     "name": "Alte Roite",
     "cn": "o1s"
   },
   {
+    "zid":17,
     "id": 43,
     "name": "Catastrophe",
     "cn": "o2s"
   },
   {
+    "zid":17,
     "id": 44,
     "name": "Halicarnassus",
     "cn": "o3s"
   },
   {
+    "zid":17,
     "id": 45,
     "name": "Exdeath",
     "cn": "o4s门神"
   },
   {
+    "zid":17,
     "id": 46,
     "name": "Neo Exdeath",
     "cn": "o4s本体"
   },
   {
+    "zid":19,
     "id": 1039,
     "name": "Bahamut Prime",
     "cn": "绝巴哈"
   },
   {
+    "zid":21,
     "id": 51,
     "name": "Phantom Train",
     "cn": "o5s"
   },
   {
+    "zid":21,
     "id": 52,
     "name": "Demon Chadarnook",
     "cn": "o6s"
   },
   {
+    "zid":21,
     "id": 53,
     "name": "Guardian",
     "cn": "o7s"
   },
   {
+    "zid":21,
     "id": 54,
     "name": "Kefka",
     "cn": "o8s门神"
   },
   {
+    "zid":21,
     "id": 55,
     "name": "God Kefka",
     "cn": "o8s本体"
   },
   {
+    "zid":23,
     "id": 1042,
     "name": "The Ultima Weapon",
     "cn": "绝神兵"
   },
   {
+    "zid":25,
     "id": 60,
     "name": "Chaos",
     "cn": "o9s"
   },
   {
+    "zid":25,
     "id": 61,
     "name": "Midgardsormr",
     "cn": "o10s"
   },
   {
+    "zid":25,
     "id": 62,
     "name": "Omega",
     "cn": "o11s"
   },
   {
+    "zid":25,
     "id": 63,
     "name": "Omega-M and Omega-F",
     "cn": "o12s门神"
   },
   {
+    "zid":25,
     "id": 64,
     "name": "The Final Omega",
     "cn": "o12s本体"
