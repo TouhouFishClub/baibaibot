@@ -135,7 +135,7 @@ function fflogsReply(content,userName,callback){
   }
   if(bossid>0){
     if(job){
-      url = "https://www.fflogs.com/zone/statistics/15/#class="+job+"&boss="+bossid+"&dataset="+rt
+      url = "https://www.fflogs.com/zone/statistics/15/#class=Global&spec="+job+"&boss="+bossid+"&dataset="+rt
     }
     getPic(url,callback)
   }
