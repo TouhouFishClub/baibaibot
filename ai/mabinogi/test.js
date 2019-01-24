@@ -9,7 +9,7 @@ const ow = require('./tools/optionsetWhere')
 const rua = require('./ruawork')
 // rua(data => console.log(data))
 
-os('aa', '珍贵的', 'normal', d => {
+os('aa', '铁瓮城', 'normal', d => {
   console.log(d)
 })
 
