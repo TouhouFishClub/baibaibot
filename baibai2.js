@@ -30,6 +30,7 @@ const {getShip} = require('./ai/kancolle/ship');
 const roulette = require('./ai/Roulette')
 
 require('./ai/push');
+require('./ai/ff14/activity');
 
 const {replayReply} = require('./ai/replay');
 const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,banUserRandom} = require('./cq/cache');
