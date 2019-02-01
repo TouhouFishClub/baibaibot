@@ -66,7 +66,7 @@ function tulingMsg(userid,content,callback,groupid){
           })
         }
       });
-      if(Math.random()<0.5){
+      if(Math.random()<0.0){
         baiduVoice(ret,callback);
       }else{
         callback(ret);
