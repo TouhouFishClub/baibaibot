@@ -2,6 +2,8 @@ function runFF14activity(){
   springActivity();
 }
 
+
+var timer = 0;
 function springActivity(){
   var now = new Date();
   if(now.getFullYear()==2019&&now.getMonth()==1&&now.getDate()<=11){
@@ -9,6 +11,7 @@ function springActivity(){
     if(left<0){
       left = left + 86400000;
     }
+    left = 30000;
     console.log('will start ff14 spring activity '+ (left/60000).toFixed(0) + 'minutes')
     if(timer==0){
       timer = 1;
