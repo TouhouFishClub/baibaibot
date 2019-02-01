@@ -1,3 +1,5 @@
+var http = require('http');
+
 function runFF14activity(){
   springActivity();
 }
