@@ -13,7 +13,6 @@ function springActivity(){
     if(left<0){
       left = left + 86400000;
     }
-    left = 30000;
     console.log('will start ff14 spring activity '+ (left/60000).toFixed(0) + 'minutes')
     if(timer==0){
       timer = 1;
@@ -30,7 +29,7 @@ function springActivity(){
 
 function alarmBox(){
   var res = "领新春箱子啦,各位光战们可别忘了哦\nhttp://act.ff.sdo.com/20190129NewYear/index.html#page2\n";
-  var groupid = 568281876
+  var groupid = 635084427
   var options = {
     host: '192.168.17.52',
     port: 23334,
