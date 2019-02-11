@@ -250,7 +250,11 @@ var bosses = [
 
 var api_key = "c776341dc7547e20623eb12350bd5e74";
 
-function fflogsReply(content,userName,callback){
+function fflogsReply(content,userName,callback,cn){
+  var host = "www.fflogs.com";
+  if(cn==1){
+    host = "cn.fflogs.com";
+  }
   content = content.toLowerCase();
   if(content==""){
     return;
@@ -300,7 +304,7 @@ function fflogsReply(content,userName,callback){
   }
 
   if(job==undefined){
-    url = "https://www.fflogs.com/zone/statistics/"+zid+"/#boss="+bossid+"&dataset=0&metric=fightdps"
+    job = "Any";
   }else{
     var a = [];
     for(var i=0;i<jobs.length;i++){
@@ -322,7 +326,7 @@ function fflogsReply(content,userName,callback){
   }
   if(bossid>0){
     if(job){
-      url = "https://www.fflogs.com/zone/statistics/"+zid+"/#class=Global&spec="+job+"&boss="+bossid+"&dataset="+rt
+      url = "https://"+host+"/zone/statistics/"+zid+"/#class=Global&spec="+job+"&boss="+bossid+"&dataset="+rt
     }
     getPic(url,callback)
   }
