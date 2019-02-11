@@ -284,7 +284,11 @@ function handleMsg_D(msgObj,response){
   }
 
   if(fi == 'fflog'){
-    fflogsReply(con.substring(5).trim(),name,callback);
+    fflogsReply(con.substring(5).trim(),name,callback,0);
+    return;
+  }
+  if(fi == 'cnlog'){
+    fflogsReply(con.substring(5).trim(),name,callback,1);
     return;
   }
 
