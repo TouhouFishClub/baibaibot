@@ -53,7 +53,7 @@ function pushTwitterMsg(twitterid,ret,type){
       }
     }
     if(twitterid=='294025417'){
-      callback(205700800,ret);
+      callback(964358164,ret);
       callback(616147379,ret);
     }
     if(twitterid=='3833285893'){
