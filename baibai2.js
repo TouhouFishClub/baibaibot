@@ -63,6 +63,8 @@ const {simplized,traditionalized,qqlized} = require('./lib/chs_cht');
 
 const {fflogsReply} = require('./ai/ff14/fflogs');
 
+const gf = require('./ai/girlsfrontline/index')
+
 initWS();
 
 var wsonline = false;
@@ -406,7 +408,9 @@ function handleMsg_D(msgObj,response){
 
 function reply(content,userName,callback,groupid,from,groupName,nickname){
   var first = content.substring(0,1);
-  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
+  if(content.substring(0, 2) == 'gf'){
+    gf(content.substring(2), callback)
+  } else if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
     tulingMsg(userName,content.substring(1),callback,groupid);
   }else if(first==2){
     translateMsg(content.substring(1),'ja',callback);
