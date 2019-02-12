@@ -84,8 +84,12 @@ const getFigure = (time, callback) => {
 
 const searchFigure = time => {
   let sp = time.split('-')
-  if(figureTime[parseInt(sp[0])][parseInt(sp[1])]){
-    return figureTime[parseInt(sp[0])][parseInt(sp[1])].join('\n')
+  if(figureTime[parseInt(sp[0])]){
+    if(figureTime[parseInt(sp[0])][parseInt(sp[1])]){
+      return figureTime[parseInt(sp[0])][parseInt(sp[1])].join('\n')
+    }  else {
+      return '找不到建造的人形'
+    }
   } else {
     return '找不到建造的人形'
   }
