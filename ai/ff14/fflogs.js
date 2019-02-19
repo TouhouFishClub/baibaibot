@@ -251,6 +251,7 @@ var bosses = [
 var api_key = "c776341dc7547e20623eb12350bd5e74";
 
 function fflogsReply(content,userName,callback,cn){
+  content = content.toLowerCase();
   var host = "www.fflogs.com";
   if(cn==1){
     host = "cn.fflogs.com";
@@ -297,7 +298,7 @@ function fflogsReply(content,userName,callback,cn){
   }else{
     var ret = "请选择：\n";
     for(var i=0;i<ba.length;i++){
-      ret = ret + "fflog "+ba[i].cn+" "+(job?job:"")+" "+(rate?rate:"")+"\n";
+      ret = ret + "cnlog "+ba[i].cn+" "+(job?job:"")+" "+(rate?rate:"")+"\n";
     }
     callback(ret);
     return;
@@ -315,7 +316,16 @@ function fflogsReply(content,userName,callback,cn){
     if(a.length==1){
       job = a[0];
     }else{
-      job = "Any";
+      var same=false;
+      for(var i=0;i<a.length;i++){
+        if(a[i].cn==job){
+          job=a[i].en;
+          same=true;
+        }
+      }
+      if(same==false){
+        job = "Any";
+      }
     }
   }
   var rt = parseInt(rate);
