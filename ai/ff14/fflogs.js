@@ -309,6 +309,10 @@ function fflogsReply(content,userName,callback,cn){
   }else{
     var a = [];
     for(var i=0;i<jobs.length;i++){
+      if(jobs[i].cn==job||jobs[i].en==job){
+        a=[jobs[i].en];
+        break;
+      }
       if(jobs[i].en.indexOf(job)>=0||jobs[i].cn.indexOf(job)>=0){
         a.push(jobs[i].en);
       }
@@ -316,13 +320,6 @@ function fflogsReply(content,userName,callback,cn){
     if(a.length==1){
       job = a[0];
     }else{
-      var same=false;
-      for(var i=0;i<a.length;i++){
-        if(a[i].cn==job){
-          job=a[i].en;
-          same=true;
-        }
-      }
       if(same==false){
         job = "Any";
       }
