@@ -53,6 +53,7 @@ function tulingMsg(userid,content,callback,groupid){
         ret = content;
       }
       nlp.sentiment(ret, function (data) {
+        try{
         var dd = eval('('+data+')');
         console.log(dd);
         if(dd&&dd[0]&&dd[0][0]){
@@ -64,6 +65,9 @@ function tulingMsg(userid,content,callback,groupid){
               callback('百百对您的好感度上升到了'+likeret+',输入【好感度】可查看好感度');
             }
           })
+        }
+        }catch(e){
+        
         }
       });
       if(Math.random()<0.0){
