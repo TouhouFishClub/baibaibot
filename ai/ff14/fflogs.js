@@ -336,12 +336,14 @@ function fflogsReply(content,userName,callback,cn){
     if(job){
       url = "https://"+host+"/zone/statistics/"+zid+"/#class=Global&spec="+job+"&boss="+bossid+"&dataset="+rt
     }
-    getPic(url,callback)
     if(team==true){
+      var url2 = "https://cn.fflogs.com/zone/statistics/"+zid+"/#metric=fightdps&boss="+bossid+"&dataset=0"
+      getPic(url2,callback)
       setTimeout(function(){
-        var url2 = "https://cn.fflogs.com/zone/statistics/"+zid+"/#metric=fightdps&boss="+bossid+"&dataset=0"
-        getPic(url2,callback)
-      },2000)
+        getPic(url,callback)
+      },5000)
+    }else{
+      getPic(url,callback)
     }
 
   }
