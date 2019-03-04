@@ -242,7 +242,7 @@ function generateDamage(data1,data2,type,rate2){
       criticalrate = 2.5;
     }
     var atk = data1.atk*(criticalrate)*(Math.random()+0.5);
-    if(data2._id=="B4"){
+    if(data2._id=="B4"||data2._id=="B5"){
       atk=atk*atk;
     }
     var def = data2.def*(Math.random()*0.5+0.5);
@@ -666,20 +666,28 @@ function regen(){
             u.gold=u.gold+u.exp;
           }
           if(u._id=="B3"){
-            u.hp=999+u.exp;
+            u.hp=u.exp*3;
             u.atk=333+Math.floor(Math.pow(u.exp,0.32));
             u.agi=9+Math.floor(Math.log(u.exp));
             u.lv=Math.floor(Math.log(u.exp));
             u.def=Math.floor(u.exp/2.22);
-            u.gold=6666+Math.floor(u.exp/2.22);
+            u.gold=6666+Math.floor(u.exp/2.62);
           }
           if(u._id=="B4"){
             u.hp=999+u.exp;
-            u.atk=333+Math.floor(Math.pow(u.exp,0.32));
+            u.atk=273+Math.floor(Math.pow(u.exp,0.32));
             u.agi=1;
             u.lv=1;
             u.def=0;
             u.gold=6666+Math.floor(u.exp/2.22);
+          }
+          if(u._id=="B5"){
+            u.hp=u.exp*2;
+            u.atk=223+Math.floor(Math.pow(u.exp,0.32));
+            u.agi=1;
+            u.lv=1;
+            u.def=Math.floor(u.exp/2.22);;
+            u.gold=6666+Math.floor(u.exp/2.02);
           }
         }
         if(u.hp<100){
