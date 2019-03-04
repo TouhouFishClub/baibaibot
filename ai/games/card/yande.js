@@ -148,7 +148,7 @@ function yx(n){
   })
 }
 
-runydb();
+//runydb();
 
 module.exports={
   fetchYande
