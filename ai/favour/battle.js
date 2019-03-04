@@ -671,23 +671,23 @@ function regen(){
             u.agi=9+Math.floor(Math.log(u.exp));
             u.lv=Math.floor(Math.log(u.exp));
             u.def=Math.floor(u.exp/2.22);
-            u.gold=6666+Math.floor(u.exp/2.62);
+            u.gold=3333+Math.floor(u.exp/2.62);
           }
           if(u._id=="B4"){
             u.hp=999+u.exp;
-            u.atk=273+Math.floor(Math.pow(u.exp,0.32));
+            u.atk=363+Math.floor(Math.pow(u.exp,0.32));
             u.agi=1;
             u.lv=1;
             u.def=0;
-            u.gold=6666+Math.floor(u.exp/2.22);
+            u.gold=4444+Math.floor(u.exp/2.22);
           }
           if(u._id=="B5"){
             u.hp=u.exp*2;
-            u.atk=223+Math.floor(Math.pow(u.exp,0.32));
+            u.atk=273+Math.floor(Math.pow(u.exp,0.32));
             u.agi=1;
             u.lv=1;
             u.def=Math.floor(u.exp/2.22);;
-            u.gold=6666+Math.floor(u.exp/2.02);
+            u.gold=5555+Math.floor(u.exp/2.02);
           }
         }
         if(u.hp<100){
