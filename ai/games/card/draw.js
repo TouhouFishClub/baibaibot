@@ -35,8 +35,8 @@ function drawNameCard(username,qq,callback,groupid) {
   if ((groupid + "").startsWith("54035")
     || (groupid + "").startsWith("63508")
     || (groupid + "").startsWith("13858")
-    || (groupid + "").startsWith("63508")) {
-    callback('在抽卡的话百百就要炸了你');
+    || (groupid + "").startsWith("69738")) {
+    //callback('在抽卡的话百百就要炸了你');
     return;
   }
   if ((groupid + "").startsWith("67096")) {

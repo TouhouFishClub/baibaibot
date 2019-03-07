@@ -5,7 +5,8 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 
 var memory={};
 function replayReply(content,userName,groupuin,callback,qq){
-  if((groupuin+"").startsWith("63508")){
+  if((groupuin+"").startsWith("63508")||
+    (groupuin+"").startsWith("69738")){
     return;
   }
   content=content.trim();
