@@ -64,6 +64,8 @@ const {simplized,traditionalized,qqlized} = require('./lib/chs_cht');
 const {fflogsReply} = require('./ai/ff14/fflogs');
 
 const gf = require('./ai/girlsfrontline/index')
+const {handleGun} = require('./ai/games/survival/main');
+
 
 initWS();
 
@@ -226,7 +228,45 @@ function handleMsg_D(msgObj,response){
   }
 
 
-  var rcontent=content.trim();
+
+
+  content=content.trim();
+  var rcontent = content;
+  rcontent=rcontent.replace(/上/g,"u").replace(/下/g,"d").replace(/左/g,"l").replace(/右/g,"r");
+  rcontent=rcontent.replace(/开火/g,"开枪").replace(/fire/g,"开枪");
+  rcontent=rcontent.replace(/move/g,"移动");
+  var survivalnew = false;
+  if(rcontent=="俄罗斯轮盘"){
+    survivalnew=true;
+  }else if(rcontent.indexOf("开枪")>-1){
+    if(rcontent.startsWith("开枪")&&rcontent.length==3){
+      survivalnew=true;
+    }else if(rcontent.startsWith("向")&&rcontent.endsWith("开枪")&&rcontent.length==4){
+      survivalnew=true;
+    }else if(rcontent=="开枪"){
+      survivalnew=true;
+    }
+  }else if(rcontent.indexOf("移动")>-1){
+    if(rcontent.startsWith("移动")&&rcontent.length==3){
+      survivalnew=true;
+    }else if(rcontent.startsWith("向")&&rcontent.endsWith("移动")&&rcontent.length==4){
+      survivalnew=true;
+    }else if(rcontent=="移动"){
+      survivalnew=true;
+    }
+  }else if(rcontent=="u移"||rcontent=="d移"||rcontent=="l移"||rcontent=="r移"){
+    survivalnew=true;
+  }else if(rcontent=="u射"||rcontent=="d射"||rcontent=="l射"||rcontent=="r射"){
+    survivalnew=true;
+  }else if(rcontent=="加入"||rcontent=="参加"||rcontent=="join"){
+    survivalnew=true;
+  }
+  if(survivalnew==true){
+    handleGun(rcontent,from,name,groupid,callback);
+    return;
+  }
+
+
   if(
     rcontent === '俄罗斯轮盘' ||
     rcontent === '俄羅斯輪盤' ||
