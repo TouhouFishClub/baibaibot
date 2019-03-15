@@ -240,13 +240,21 @@ function handleMsg_D(msgObj,response){
       survivalnew=true;
     }else if(content.startsWith("向")&&content.endsWith("开枪")&&content.length==4){
       survivalnew=true;
+    }else if(content=="开枪"){
+      survivalnew=true;
     }
   }else if(content.indexOf("移动")>-1){
     if(content.startsWith("移动")&&content.length==3){
       survivalnew=true;
     }else if(content.startsWith("向")&&content.endsWith("移动")&&content.length==4){
       survivalnew=true;
+    }else if(content=="移动"){
+      survivalnew=true;
     }
+  }else if(content=="左移"||content=="右移"||content=="上移"||content=="下移"){
+    survivalnew=true;
+  }else if(content=="左射"||content=="右射"||content=="上射"||content=="下射"){
+    survivalnew=true;
   }else if(content=="加入"||content=="参加"||content=="join"){
     survivalnew=true;
   }
