@@ -227,15 +227,15 @@ function go(content,qq,callback) {
         var cndir=""
         var rate = winrate[qq];
         if(rate==undefined){
-          rate = 0.5;
+          rate = 0.4;
         }
         if(direction=="x"||Math.random()>rate){
           ret = ret + "【"+user.name+"】晕头转向了\n";
           direction=["u","l","d","r"][Math.floor(Math.random()*4)];
-          winrate[qq]=0.8;
+          winrate[qq]=0.7;
         }else{
           direction = direction;
-          winrate[qq]=0.5;
+          winrate[qq]=0.4;
         }
         if(direction=="u"){
           goalx=startx;
