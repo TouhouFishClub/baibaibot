@@ -341,7 +341,7 @@ function go(content,qq,callback) {
             if(Math.random()>1/(i+2)){
               break;
             }else{
-              ret = ret + "子弹竟然穿越了【"+target.name+"】的尸体继续前进\n"
+              ret = ret + "子弹竟然穿透了【"+target.name+"】的尸体继续前进\n"
             }
           }
         }else{
