@@ -235,7 +235,7 @@ function go(content,qq,callback) {
           winrate[qq]=0.7;
         }else{
           direction = direction;
-          winrate[qq]=0.4;
+          winrate[qq]=0.2;
         }
         if(direction=="u"){
           goalx=startx;
