@@ -10,6 +10,7 @@ var players = {};
 var order = [];
 var map = [];
 var gun = [];
+var gunstr="";
 
 const maplen = 4;
 
@@ -28,6 +29,7 @@ function handleGun(content,qq,username,groupid,callback){
     map=[];
     gun=[];
     order=[];
+    gunstr="";
     running=true;
     callback(ret);
     setTimeout(function(){
@@ -39,6 +41,8 @@ function handleGun(content,qq,username,groupid,callback){
     }else if(content.startsWith("向")&&content.endsWith("开枪")&&content.length==4){
       var direct = content.substring(1,2);
       go("开枪"+direct,qq,callback);
+    }else if(content=="开枪"){
+      go("开枪"+"x",qq,callback);
     }
   }else if(content.indexOf("移动")>-1){
     if(content.startsWith("移动")&&content.length==3){
@@ -46,6 +50,8 @@ function handleGun(content,qq,username,groupid,callback){
     }else if(content.startsWith("向")&&content.endsWith("移动")&&content.length==4){
       var direct = content.substring(1,2);
       go("移动"+direct,qq,callback);
+    }else if(content=="移动"){
+      go("移动"+"x",qq,callback);
     }
   }else if(content=="加入"||content=="参加"||content=="join"){
     addplayer(qq,username,groupid,callback);
@@ -60,7 +66,7 @@ function addplayer(qq,username,groupid,callback){
     var code = Object.keys(players).length;
     var obj = {qq:qq,name:username,code:code,ts:now};
     players[qq]=obj;
-    callback("【"+username+"】进入了战场");
+    callback("【"+username+"】进入了赌场");
   }
 }
 
@@ -93,8 +99,10 @@ function init(callback) {
       gun.push(1);
       guncount++;
       max--;
+      gunstr=gunstr+"1";
     }else{
       gun.push(0);
+      gunstr=gunstr+"0";
     }
   }
   if(keys.length<2){
@@ -178,6 +186,8 @@ function start(){
   go("开枪u",444,callback);
 }
 
+
+var winrate = {};
 function go(content,qq,callback) {
   if(running==false){
     return;
@@ -208,6 +218,18 @@ function go(content,qq,callback) {
         var goalx;
         var goaly;
         var cndir=""
+        var rate = winrate[qq];
+        if(rate==undefined){
+          rate = 0.5;
+        }
+        if(direction=="x"||Math.random()>rate){
+          ret = ret + "【"+user.name+"】晕头转向了\n";
+          direction=["u","l","d","r"][Math.floor(Math.random()*4)];
+          winrate[qq]=0.8;
+        }else{
+          direction = direction;
+          winrate[qq]=0.5;
+        }
         if(direction=="u"){
           goalx=startx;
           goaly=0;
