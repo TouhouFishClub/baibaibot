@@ -117,30 +117,92 @@ function init(callback) {
   }else{
     order.sort(function(a,b){return Math.random()-0.5});
     gonext(order,"游戏开始,枪内子弹【"+guncount+"/"+maplen*maplen+"】\n",callback);
-    generateImage(callback);
   }
 }
 function gonext(left,text,callback){
-  var next = order.shift();
-  order.push(next);
-  var will=false;
-  for(var i=0;i<left.length;i++){
-    if(next.qq==left[i].qq){
-      will=true;
+  if(Math.random()<1/(order.length+1){
+    var rd = Math.floor(Math.random()*12);
+    if(rd<4){
+      text = text + "吃瓜群众突然向第"+(rd+1)+"象限扔了一颗手榴弹\n";
+      if(rd==0){
+        fromw=2;
+        tow=3;
+        fromh=0;
+        toh=1;
+      }else if(rd==1){
+        fromw=0;
+        tow=1;
+        fromh=0;
+        toh=1;
+      }else if(rd==1){
+        fromw=0;
+        tow=1;
+        fromh=2;
+        toh=3;
+      }else if(rd==1){
+        fromw=2;
+        tow=3;
+        fromh=2;
+        toh=3;
+      }
+      for(var i=fromh;i<=toh;i++){
+        for(var j=fromw;j<=tow;j++){
+          var u = map[i][j];
+          if(u!=0){
+            map[i][j]=0;
+            text = text + "【"+u.name+"】被炸死了\n"
+          }
+        }
+      }
+    }else if(rd>=4&&rd<8){
+      text = text + "吃瓜群众突然开枪向第"+(rd-3)+"排扫射\n";
+      for(var i=0;i<maplen;i++){
+        var u = map[rd-4][i];
+        if(u!=0){
+          map[rd-4][i]=0;
+          text = text + "【"+u.name+"】被炸死了\n"
+        }
+      }
+    }else if(rd>=8&&rd<12){
+      text = text + "吃瓜群众突然开枪向第"+(rd-7)+"列扫射\n";
+      for(var i=0;i<maplen;i++){
+        var u = map[i][rd-8];
+        if(u!=0){
+          map[i][rd-8]=0;
+          text = text + "【"+u.name+"】被炸死了\n"
+        }
+      }
     }
   }
-  if(will){
-    callback(text+"下一个【"+next.name+"】");
-    timeoutmap={};
-    var rd = new Date().getTime();
-    timeoutmap[next.qq+rd]=1;
-    nowrunning=next.qq;
-    setTimeout(function(){
-      usertimeout(next,callback,rd);
-    },20000)
+  var check = checkwin(callback,text);
+  if(check==true){
+    running=false;
   }else{
-    gonext(left,text,callback)
+    var next = order.shift();
+    order.push(next);
+    var will=false;
+    for(var i=0;i<left.length;i++){
+      if(next.qq==left[i].qq){
+        will=true;
+      }
+    }
+    if(will){
+      callback(text+"下一个【"+next.name+"】");
+      timeoutmap={};
+      var rd = new Date().getTime();
+      timeoutmap[next.qq+rd]=1;
+      nowrunning=next.qq;
+      generateImage(callback);
+      setTimeout(function(){
+        usertimeout(next,callback,rd);
+      },20000)
+    }else{
+      gonext(left,text,callback)
+    }
   }
+
+
+
 }
 
 
@@ -154,7 +216,7 @@ function usertimeout(user,callback,rd){
         if(map[i][j]!=0){
           if(map[i][j].qq==user.qq){
             var text = "【"+user.name+"】犹豫不决，吃瓜群众一枪爆了他的狗头\n";
-            generateImage(callback);
+
             map[i][j]=0;
             var check = checkwin(callback,text);
             if(check==true){
@@ -341,8 +403,6 @@ function go(content,qq,callback) {
       }
     }
   }
-
-  generateImage(callback);
   var check=checkwin(callback,ret);
   if(check==true){
     running=false;
@@ -379,6 +439,7 @@ function checkwin(callback,text){
     uret= left;
   }
   if(uret==true){
+    generateImage(callback);
     callback(text+ret);
   }
   return(uret);
