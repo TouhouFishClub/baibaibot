@@ -348,7 +348,7 @@ function go(content,qq,callback) {
           ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，墙上出现了个❤型裂痕\n"
         }
       } else {
-        ret = ret + "【"+user.name+"】" + "扣动了扳机，然而什么事也没有发生\n"
+        ret = ret + "【"+user.name+"】" + "扣动了扳机，然而弹夹里并没有装填上子弹\n"
       }
     }else if(content.startsWith("移动")){
       var direction = content.substring(2);
