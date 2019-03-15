@@ -291,6 +291,20 @@ function go(content,qq,callback) {
     }else if(content.startsWith("移动")){
       var direction = content.substring(2);
       var targetpos = [-1,-1];
+
+      var rate = winrate[qq];
+      if(rate==undefined){
+        rate = 0.4;
+      }
+      if(direction=="x"||Math.random()>rate){
+        ret = ret + "【"+user.name+"】晕头转向了\n";
+        direction=["u","l","d","r"][Math.floor(Math.random()*4)];
+        winrate[qq]=0.7;
+      }else{
+        direction = direction;
+        winrate[qq]=0.2;
+      }
+
       if(direction=="u"){
         targetpos = [pos[0]-1,pos[1]];
         cndir="上";
