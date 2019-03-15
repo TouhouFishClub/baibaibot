@@ -228,6 +228,21 @@ function handleMsg_D(msgObj,response){
     return
   }
 
+  if(
+    rcontent === '炸弹人' ||
+    rcontent === '炸彈人' ||
+    rcontent === '参加' ||
+    rcontent === '參加' ||
+    rcontent === '放置' ||
+    rcontent === '移动' ||
+    rcontent === '移動' ||
+    rcontent === '待机' ||
+    rcontent === '待機'
+  ){
+    bomberman(content, from, name, groupid, callback)
+    return
+  }
+
 
 
 
@@ -300,21 +315,6 @@ function handleMsg_D(msgObj,response){
     return
   }
 
-  
-  if(
-    rcontent === '炸弹人' ||
-    rcontent === '炸彈人' ||
-    rcontent === '参加' ||
-    rcontent === '參加' ||
-    rcontent === '放置' ||
-    rcontent === '移动' ||
-    rcontent === '移動' ||
-    rcontent === '待机' ||
-    rcontent === '待機'
-  ){
-    bomberman(content, from, name, groupid, callback)
-    return
-  }
 
   if(content.trim() === '走私查询'){
     smuggler(callback)
