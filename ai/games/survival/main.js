@@ -21,7 +21,7 @@ function handleGun(content,qq,username,groupid,callback){
   content=content.replace(/move/g,"移动");
   console.log("xxx:"+running)
   if(content=="俄罗斯轮盘"&&running==false){
-    ret = "俄罗斯轮盘改将于1分钟后开启\n";
+    ret = "俄罗斯魔法轮盘将于1分钟后开启\n";
     ret = ret + "加入：加入/参加/join\n";
     ret = ret + "开枪：【开枪/开火/fire】+ 【上/下/左/右】\n";
     ret = ret + "移动：【移动/move】+ 【上/下/左/右】";
