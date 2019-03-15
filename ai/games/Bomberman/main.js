@@ -372,6 +372,7 @@ module.exports = function(content, qq, nickname, groupid, callback){
       }
       break
     case '参加':
+    case '參加':
       if(BmAdminObj[groupid] && !BmAdminObj[groupid].gameStart){
         userJoin()
       }
@@ -394,6 +395,7 @@ module.exports = function(content, qq, nickname, groupid, callback){
       }
       break
     case '移动':
+    case '移動':
       if(BmAdminObj[groupid] && BmAdminObj[groupid].gameStart && BmAdminObj[groupid].gameAction && BmAdminObj[groupid].gamers[qq] && BmAdminObj[groupid].gamers[qq].hp > 0){
         if(BmAdminObj[groupid].gamers[qq].nextAction != 2){
           if(BmAdminObj[groupid].gamers[qq].change >= 0) {
@@ -411,6 +413,7 @@ module.exports = function(content, qq, nickname, groupid, callback){
       }
       break
     case '待机':
+    case '待機':
       if(BmAdminObj[groupid] && BmAdminObj[groupid].gameStart && BmAdminObj[groupid].gameAction && BmAdminObj[groupid].gamers[qq] && BmAdminObj[groupid].gamers[qq].hp > 0){
         if(BmAdminObj[groupid].gamers[qq].nextAction != 3){
           if(BmAdminObj[groupid].gamers[qq].change >= 0) {

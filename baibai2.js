@@ -65,6 +65,7 @@ const {fflogsReply} = require('./ai/ff14/fflogs');
 
 const gf = require('./ai/girlsfrontline/index')
 const {handleGun} = require('./ai/games/survival/main');
+const bomberman = require('./ai/games/Bomberman/main');
 
 
 initWS();
@@ -296,6 +297,22 @@ function handleMsg_D(msgObj,response){
     rcontent === '犯规'
   ){
     roulette(name,rcontent,callback,from,groupid)
+    return
+  }
+
+  
+  if(
+    rcontent === '炸弹人' ||
+    rcontent === '炸彈人' ||
+    rcontent === '参加' ||
+    rcontent === '參加' ||
+    rcontent === '放置' ||
+    rcontent === '移动' ||
+    rcontent === '移動' ||
+    rcontent === '待机' ||
+    rcontent === '待機'
+  ){
+    bomberman(content, from, name, groupid, callback)
     return
   }
 
