@@ -228,25 +228,28 @@ function handleMsg_D(msgObj,response){
     return
   }
 
-  if(
-    rcontent === '炸弹人' ||
-    rcontent === '炸彈人' ||
-    rcontent === '参加' ||
-    rcontent === '參加' ||
-    rcontent === '放置' ||
-    rcontent === '移动' ||
-    rcontent === '移動' ||
-    rcontent === '待机' ||
-    rcontent === '待機'
-  ){
-    bomberman(content, from, name, groupid, callback)
-    return
-  }
 
 
 
 
   content=content.trim();
+
+  if(
+    content === '炸弹人' ||
+    content === '炸彈人' ||
+    content === '参加' ||
+    content === '參加' ||
+    content === '放置' ||
+    content === '移动' ||
+    content === '移動' ||
+    content === '待机' ||
+    content === '待機'
+  ){
+    bomberman(content, from, name, groupid, callback)
+    return
+  }
+
+  
   var rcontent = content;
   rcontent=rcontent.replace(/上/g,"u").replace(/下/g,"d").replace(/左/g,"l").replace(/右/g,"r");
   rcontent=rcontent.replace(/开火/g,"开枪").replace(/fire/g,"开枪");
