@@ -18,7 +18,7 @@ function handleGun(content,qq,username,groupid,callback){
   content=content.replace('/上/g',"u").replace('/下/g',"d").replace('/左/g',"l").replace('/右/g',"r");
   content=content.replace('/开火/g',"开枪").replace('/fire/g',"开枪");
   content=content.replace('/move/g',"移动");
-
+  console.log("xxx:"+running)
   if(content=="俄罗斯轮盘"&&running==false){
     ret = "俄罗斯轮盘改将于1分钟后开启\n";
     ret = ret + "加入：加入/参加/join\n";
@@ -47,7 +47,7 @@ function handleGun(content,qq,username,groupid,callback){
       go("移动"+direct,qq,callback);
     }
   }else if(content=="加入"||content=="参加"||content=="join"){
-    addplayer(qq,name,groupid,callback);
+    addplayer(qq,username,groupid,callback);
   }
 }
 
