@@ -11,7 +11,7 @@ let BmAdminObj = {}
 module.exports = function(content, qq, nickname, groupid, callback){
 
   init = () => {
-    callback('爆炸人将在 60 秒后开始。\n加入：参加游戏\n游戏中指令：\n放置：放置炸弹并随机斜方向移动一格\n待机：什么都不做\n移动：随机向周围8个方向移动一格\n每回合可更改' + MAX_CHANGE_ACTION + '次指令')
+    callback('爆炸人将在 ' + WAIT_GAME_START/1000 + ' 秒后开始。\n加入：参加游戏\n游戏中指令：\n放置：放置炸弹并随机斜方向移动一格\n待机：什么都不做\n移动：随机向周围8个方向移动一格\n每回合可更改' + MAX_CHANGE_ACTION + '次指令')
     BmAdminObj[groupid] = {
       gameStart: false,
       gameAction: false,
