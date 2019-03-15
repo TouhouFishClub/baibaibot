@@ -120,7 +120,7 @@ function init(callback) {
   }
 }
 function gonext(left,text,callback){
-  if(Math.random()<1/(order.length+1){
+  if(Math.random()<1/(order.length+1)){
     var rd = Math.floor(Math.random()*12);
     if(rd<4){
       text = text + "吃瓜群众突然向第"+(rd+1)+"象限扔了一颗手榴弹\n";
