@@ -131,7 +131,7 @@ function gonext(left,text,callback){
     nowrunning=next.qq;
     setTimeout(function(){
       usertimeout(next,callback,rd);
-    },15000)
+    },20000)
   }else{
     gonext(left,text,callback)
   }
