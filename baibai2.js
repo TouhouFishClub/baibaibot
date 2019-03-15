@@ -235,13 +235,13 @@ function handleMsg_D(msgObj,response){
   var survivalnew = false;
   if(content=="俄罗斯轮盘"){
     survivalnew=true;
-  }else if(content.indexOf("开枪")>=-1){
+  }else if(content.indexOf("开枪")>-1){
     if(content.startsWith("开枪")&&content.length==3){
       survivalnew=true;
     }else if(content.startsWith("向")&&content.endsWith("开枪")&&content.length==4){
       survivalnew=true;
     }
-  }else if(content.indexOf("移动")>=-1){
+  }else if(content.indexOf("移动")>-1){
     if(content.startsWith("移动")&&content.length==3){
       survivalnew=true;
     }else if(content.startsWith("向")&&content.endsWith("移动")&&content.length==4){
@@ -250,7 +250,6 @@ function handleMsg_D(msgObj,response){
   }else if(content=="加入"||content=="参加"||content=="join"){
     survivalnew=true;
   }
-  console.log("sn:"+survivalnew);
   if(survivalnew==true){
     handleGun(content,from,name,groupid,callback);
     return;
