@@ -231,39 +231,42 @@ function handleMsg_D(msgObj,response){
 
 
   content=content.trim();
-
+  var rcontent = content;
+  rcontent=rcontent.replace(/上/g,"u").replace(/下/g,"d").replace(/左/g,"l").replace(/右/g,"r");
+  rcontent=rcontent.replace(/开火/g,"开枪").replace(/fire/g,"开枪");
+  rcontent=rcontent.replace(/move/g,"移动");
   var survivalnew = false;
-  if(content=="俄罗斯轮盘"){
+  if(rcontent=="俄罗斯轮盘"){
     survivalnew=true;
-  }else if(content.indexOf("开枪")>-1){
-    if(content.startsWith("开枪")&&content.length==3){
+  }else if(rcontent.indexOf("开枪")>-1){
+    if(rcontent.startsWith("开枪")&&rcontent.length==3){
       survivalnew=true;
-    }else if(content.startsWith("向")&&content.endsWith("开枪")&&content.length==4){
+    }else if(rcontent.startsWith("向")&&rcontent.endsWith("开枪")&&rcontent.length==4){
       survivalnew=true;
-    }else if(content=="开枪"){
+    }else if(rcontent=="开枪"){
       survivalnew=true;
     }
-  }else if(content.indexOf("移动")>-1){
-    if(content.startsWith("移动")&&content.length==3){
+  }else if(rcontent.indexOf("移动")>-1){
+    if(rcontent.startsWith("移动")&&rcontent.length==3){
       survivalnew=true;
-    }else if(content.startsWith("向")&&content.endsWith("移动")&&content.length==4){
+    }else if(rcontent.startsWith("向")&&rcontent.endsWith("移动")&&rcontent.length==4){
       survivalnew=true;
-    }else if(content=="移动"){
+    }else if(rcontent=="移动"){
       survivalnew=true;
     }
-  }else if(content=="左移"||content=="右移"||content=="上移"||content=="下移"){
+  }else if(rcontent=="u移"||rcontent=="d移"||rcontent=="l移"||rcontent=="r移"){
     survivalnew=true;
-  }else if(content=="左射"||content=="右射"||content=="上射"||content=="下射"){
+  }else if(rcontent=="u射"||rcontent=="d射"||rcontent=="l射"||rcontent=="r射"){
     survivalnew=true;
-  }else if(content=="加入"||content=="参加"||content=="join"){
+  }else if(rcontent=="加入"||rcontent=="参加"||rcontent=="join"){
     survivalnew=true;
   }
   if(survivalnew==true){
-    handleGun(content,from,name,groupid,callback);
+    handleGun(rcontent,from,name,groupid,callback);
     return;
   }
 
-  var rcontent = content;
+
   if(
     rcontent === '俄罗斯轮盘' ||
     rcontent === '俄羅斯輪盤' ||
