@@ -126,10 +126,11 @@ function gonext(left,text,callback){
   if(will){
     callback(text+"下一个【"+next.name+"】");
     timeoutmap={};
-    timeoutmap[next.qq]=1;
+    var rd = new Date().getTime();
+    timeoutmap[next.qq+rd]=1;
     nowrunning=next.qq;
     setTimeout(function(){
-      usertimeout(next,callback);
+      usertimeout(next,callback,rd);
     },15000)
   }else{
     gonext(left,text,callback)
@@ -140,8 +141,8 @@ function gonext(left,text,callback){
 var timeoutmap = {};
 var nowrunning;
 
-function usertimeout(user,callback){
-  if(timeoutmap[user.qq]){
+function usertimeout(user,callback,rd){
+  if(timeoutmap[user.qq+rd]){
     for(var i=0;i<maplen;i++){
       for(var j=0;j<maplen;j++){
         if(map[i][j]!=0){
@@ -195,7 +196,7 @@ function go(content,qq,callback) {
   if(nowrunning!=qq){
     return
   }
-  delete(timeoutmap[qq]);
+  timeoutmap={};
   var ret="";
   var pos = [-1, -1];
   var user;
