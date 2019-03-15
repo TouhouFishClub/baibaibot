@@ -15,9 +15,9 @@ const maplen = 4;
 
 function handleGun(content,qq,username,groupid,callback){
   content=content.toLowerCase().trim();
-  content=content.replace('/上/g',"u").replace('/下/g',"d").replace('/左/g',"l").replace('/右/g',"r");
-  content=content.replace('/开火/g',"开枪").replace('/fire/g',"开枪");
-  content=content.replace('/move/g',"移动");
+  content=content.replace(/上/g,"u").replace(/下/g,"d").replace(/左/g,"l").replace(/右/g,"r");
+  content=content.replace(/开火/g,"开枪").replace(/fire/g,"开枪");
+  content=content.replace(/move/g,"移动");
   console.log("xxx:"+running)
   if(content=="俄罗斯轮盘"&&running==false){
     ret = "俄罗斯轮盘改将于1分钟后开启\n";
