@@ -250,6 +250,7 @@ function handleMsg_D(msgObj,response){
   }else if(content=="加入"||content=="参加"||content=="join"){
     survivalnew=true;
   }
+  console.log("sn:"+survivalnew);
   if(survivalnew==true){
     handleGun(content,from,name,groupid,callback);
     return;
