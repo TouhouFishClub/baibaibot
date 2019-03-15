@@ -29,6 +29,7 @@ function handleGun(content,qq,username,groupid,callback){
     gun=[];
     order=[];
     running=true;
+    callback(ret);
     setTimeout(function(){
       init(callback);
     },60000);
