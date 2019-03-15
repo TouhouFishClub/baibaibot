@@ -98,10 +98,10 @@ function init(callback) {
       }
     }
   }
-  var max = maplen*2;
+  var max = maplen*maplen*2/3;
   var guncount=0;
   for(var i=0;i<maplen*maplen;i++){
-    if(Math.random()<max/12){
+    if(Math.random()<max/(maplen*maplen)){
       gun.push(1);
       guncount++;
       max--;
