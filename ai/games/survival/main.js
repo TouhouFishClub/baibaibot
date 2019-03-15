@@ -53,6 +53,12 @@ function handleGun(content,qq,username,groupid,callback){
     }else if(content=="移动"){
       go("移动"+"x",qq,callback);
     }
+  }else if(content=="l移"||content=="r移"||content=="u移"||content=="d移"){
+    var direct = content.substring(0,1);
+    go("移动"+direct,qq,callback);
+  }else if(content=="l射"||content=="r射"||content=="u射"||content=="d射"){
+    var direct = content.substring(0,1);
+    go("开枪"+direct,qq,callback);
   }else if(content=="加入"||content=="参加"||content=="join"){
     addplayer(qq,username,groupid,callback);
   }
