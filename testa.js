@@ -1,4 +1,4 @@
-const bm = require('./ai/Bomberman')
+const bm = require('./ai/games/Bomberman/main')
 
 callback = msg => {
   console.log(msg)
@@ -8,6 +8,13 @@ bm('炸弹人', '001', '001', '19', callback)
 bm('参加', '001', '001', '19', callback)
 bm('参加', '002', '002', '19', callback)
 bm('参加', '003', '003', '19', callback)
+console.log('18加入战场-')
+bm('炸弹人', '001', '001', '18', callback)
+bm('参加', '001', '001', '18', callback)
+bm('参加', '002', '002', '18', callback)
+bm('参加', '003', '003', '18', callback)
+bm('参加', '004', '004', '18', callback)
+
 bm('参加', '004', '004', '19', callback)
 setTimeout(() => {
   // bm('放置', '001', '001', '19', callback)

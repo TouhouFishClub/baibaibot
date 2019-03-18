@@ -5,6 +5,7 @@ const MIN_USER = 2
 const WAIT_GAME_START = 60000
 const WAIT_USER_ACTION = 20000
 const NEXT_LEG_ACTION = 3000
+const STEP_WAIT = 1000
 const POWER = [100, 100, 80, 60, 40, 20, 20, 20, 0, 0, 0, 0, 0]
 const WAIT_RECOVERED = 20
 const WAIT_LIMIT = 3
@@ -15,7 +16,7 @@ let BmAdminObj = {}
 
 module.exports = function(content, qq, nickname, groupid, callback){
 
-  init = () => {
+  init = groupid => {
     callback(
       '爆炸人将在 ' + WAIT_GAME_START/1000 + ' 秒后开始。\n' +
       '参加：参加游戏\n' +
@@ -35,14 +36,15 @@ module.exports = function(content, qq, nickname, groupid, callback){
     }
     BmAdminObj[groupid].timer = setTimeout(() => {
       if(Object.keys(BmAdminObj[groupid].gamers).length < MIN_USER){
-        destory('参加人数不足, ')
+        destory(groupid, '参加人数不足, ')
       } else {
-        gameStart()
+        gameStart(groupid)
       }
     }, WAIT_GAME_START)
   }
 
-  gameStart = () => {
+  gameStart = groupid => {
+    console.log(groupid)
     Object.keys(BmAdminObj[groupid].gamers).forEach((gamer, index) => {
       BmAdminObj[groupid].gamers[gamer] = (Object.assign({index: index + 1}, BmAdminObj[groupid].gamers[gamer]))
     })
@@ -75,21 +77,21 @@ module.exports = function(content, qq, nickname, groupid, callback){
     })
     callback(`游戏开始`)
     setTimeout(() => {
-      nextLeg()
-    }, 1000)
+      nextLeg(groupid)
+    }, STEP_WAIT)
   }
 
-  nextLeg = () => {
+  nextLeg = groupid => {
     BmAdminObj[groupid].gameAction = true
     BmAdminObj[groupid].leg ++
     BmAdminObj[groupid].bombs = []
-    callback(`第${BmAdminObj[groupid].leg}回合, 请在${WAIT_USER_ACTION/1000}秒内决定行动\n当前地图\n${renderMap()}\n${renderGamer()}`)
+    callback(`第${BmAdminObj[groupid].leg}回合, 请在${WAIT_USER_ACTION/1000}秒内决定行动\n当前地图\n${renderMap(groupid)}\n${renderGamer(groupid)}`)
     setTimeout(() => {
-      totalLeg()
+      totalLeg(groupid)
     }, WAIT_USER_ACTION)
   }
 
-  totalLeg = () => {
+  totalLeg = groupid => {
     BmAdminObj[groupid].gameAction = false
     // 决定行动顺序
     BmAdminObj[groupid].gamerActionList.sort(() => Math.random() - 0.5)
@@ -131,7 +133,7 @@ module.exports = function(content, qq, nickname, groupid, callback){
               moveSet.delete(1)
               moveSet.delete(3)
             }
-            [x, y] = checkPoint(BmAdminObj[groupid].gamers[gamer].pos.x, BmAdminObj[groupid].gamers[gamer].pos.y, moveSet)
+            [x, y] = checkPoint(groupid, BmAdminObj[groupid].gamers[gamer].pos.x, BmAdminObj[groupid].gamers[gamer].pos.y, moveSet)
             BmAdminObj[groupid].gamers[gamer].pos.x = x
             BmAdminObj[groupid].gamers[gamer].pos.y = y
             BmAdminObj[groupid].gamers[gamer].bomb --
@@ -160,7 +162,7 @@ module.exports = function(content, qq, nickname, groupid, callback){
               moveSet.delete(2)
               moveSet.delete(3)
             }
-            [x, y] = checkPoint(BmAdminObj[groupid].gamers[gamer].pos.x, BmAdminObj[groupid].gamers[gamer].pos.y, moveSet)
+            [x, y] = checkPoint(groupid, BmAdminObj[groupid].gamers[gamer].pos.x, BmAdminObj[groupid].gamers[gamer].pos.y, moveSet)
             BmAdminObj[groupid].gamers[gamer].pos.x = x
             BmAdminObj[groupid].gamers[gamer].pos.y = y
             BmAdminObj[groupid].gamers[gamer].hp =
@@ -180,11 +182,12 @@ module.exports = function(content, qq, nickname, groupid, callback){
         }
       }
     })
-    callback(`${actionMsg.join('\n')}\n当前地图\n${renderMap()}`)
-    bombAction()
+    // callback(`======${groupid} action=====`)
+    callback(`${actionMsg.join('\n')}\n当前地图\n${renderMap(groupid)}`)
+    bombAction(groupid)
   }
 
-  bombAction = () => {
+  bombAction = groupid => {
     let map = new Array(MAP_MAX_HEIGHT).fill(0).map(() => new Array(MAP_MAX_WIDTH).fill(0))
     BmAdminObj[groupid].bombs.forEach(bomb => {
       map[bomb.y][bomb.x] = map[bomb.y][bomb.x] + POWER[0]
@@ -219,11 +222,11 @@ module.exports = function(content, qq, nickname, groupid, callback){
     })
     setTimeout(() => {
       callback(msg.length ? msg.join('\n'): '没有发生任何事')
-      checkUser()
-    }, 1000)
+      checkUser(groupid)
+    }, STEP_WAIT)
   }
 
-  checkUser = () => {
+  checkUser = groupid => {
     let userCount = 0, aliveGamer = []
     BmAdminObj[groupid].gamerActionList.forEach(gamer => {
       BmAdminObj[groupid].gamers[gamer].nextAction = 0
@@ -234,14 +237,14 @@ module.exports = function(content, qq, nickname, groupid, callback){
     })
     setTimeout(() => {
       if(userCount <= 1){
-        gameOver(aliveGamer)
+        gameOver(groupid, aliveGamer)
       } else {
-        nextLeg()
+        nextLeg(groupid)
       }
     }, NEXT_LEG_ACTION)
   }
 
-  checkPoint = (...point) => {
+  checkPoint = (groupid, ...point) => {
     switch(point.length){
       case 0:
         let ty = ~~(Math.random() * MAP_MAX_HEIGHT), tx = ~~(Math.random() * MAP_MAX_WIDTH), tf = true
@@ -253,7 +256,7 @@ module.exports = function(content, qq, nickname, groupid, callback){
         if(tf){
           return [tx, ty]
         } else {
-          return checkPoint()
+          return checkPoint(groupid)
         }
       case 3:
         if(Array.from(point[2]).length == 0){
@@ -272,12 +275,12 @@ module.exports = function(content, qq, nickname, groupid, callback){
         } else {
           let tmpSet = new Set(point[2])
           tmpSet.delete(getRdmMove)
-          return checkPoint(point[0], point[1], tmpSet)
+          return checkPoint(groupid, point[0], point[1], tmpSet)
         }
     }
   }
 
-  renderMap = () => {
+  renderMap = (groupid) => {
     let map = new Array(MAP_MAX_HEIGHT).fill(0).map(() => new Array(MAP_MAX_WIDTH).fill(0))
     Object.values(BmAdminObj[groupid].gamers).forEach(gamer => {
       if(gamer.hp > 0){
@@ -287,10 +290,10 @@ module.exports = function(content, qq, nickname, groupid, callback){
     BmAdminObj[groupid].bombs.forEach(bomb => {
       map[bomb.y][bomb.x] = 'X'
     })
-    return map.map(x => x.join(' ')).join('\n')
+    return `${map.map(x => x.join(' ')).join('\n')}`
   }
 
-  renderGamer = () => {
+  renderGamer = groupid => {
     let gamerMsg = []
     Object.values(BmAdminObj[groupid].gamers).forEach(gamer => {
       gamerMsg.push(`玩家${gamer.index}: ${atMsg(gamer.gamer)}(${gamer.hp > 0 ? gamer.hp : '死亡'})`)
@@ -298,9 +301,9 @@ module.exports = function(content, qq, nickname, groupid, callback){
     return gamerMsg.join('\n')
   }
 
-  userJoin = () => {
+  userJoin = groupid => {
     if(!BmAdminObj[groupid].gamers[qq]) {
-      let [x, y] = checkPoint()
+      let [x, y] = checkPoint(groupid)
       BmAdminObj[groupid].gamers[qq] = {
         pos: {
           x: x,
@@ -323,7 +326,7 @@ module.exports = function(content, qq, nickname, groupid, callback){
     }
     if(Object.keys(BmAdminObj[groupid].gamers).length == MAX_USER){
       clearTimeout(BmAdminObj[groupid].timer)
-      gameStart()
+      gameStart(groupid)
     }
   }
 
@@ -353,11 +356,11 @@ module.exports = function(content, qq, nickname, groupid, callback){
     return `[CQ:at,qq=${qqNum}]`
   }
 
-  gameOver = aliveGamer => {
-    destory(aliveGamer.length ? `${aliveGamer.map(gamer => atMsg(gamer)).join('、')}活了下来\n` : '没有人活下来\n')
+  gameOver = (groupid, aliveGamer) => {
+    destory(groupid, aliveGamer.length ? `${aliveGamer.map(gamer => atMsg(gamer)).join('、')}活了下来\n` : '没有人活下来\n')
   }
 
-  destory = otherMsg => {
+  destory = (groupid, otherMsg = '') => {
     callback(`${otherMsg}游戏结束`)
     delete(BmAdminObj[groupid])
   }
@@ -368,13 +371,13 @@ module.exports = function(content, qq, nickname, groupid, callback){
       if(BmAdminObj[groupid]){
         callback('正在游戏中')
       } else {
-        init()
+        init(groupid)
       }
       break
     case '参加':
     case '參加':
       if(BmAdminObj[groupid] && !BmAdminObj[groupid].gameStart){
-        userJoin()
+        userJoin(groupid)
       }
       break
     case '放置':
