@@ -249,7 +249,7 @@ function handleMsg_D(msgObj,response){
     return
   }
 
-  
+
   var rcontent = content;
   rcontent=rcontent.replace(/上/g,"u").replace(/下/g,"d").replace(/左/g,"l").replace(/右/g,"r");
   rcontent=rcontent.replace(/开火/g,"开枪").replace(/fire/g,"开枪");

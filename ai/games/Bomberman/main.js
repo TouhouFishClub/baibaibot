@@ -417,7 +417,7 @@ module.exports = function(content, qq, nickname, groupid, callback){
       if(BmAdminObj[groupid] && BmAdminObj[groupid].gameStart && BmAdminObj[groupid].gameAction && BmAdminObj[groupid].gamers[qq] && BmAdminObj[groupid].gamers[qq].hp > 0){
         if(BmAdminObj[groupid].gamers[qq].nextAction != 3){
           if(BmAdminObj[groupid].gamers[qq].change >= 0) {
-            if(BmAdminObj[groupid].gamers[qq].moveCount > 0) {
+            if(BmAdminObj[groupid].gamers[qq].waitCount > 0) {
               BmAdminObj[groupid].gamers[qq].change --
               BmAdminObj[groupid].gamers[qq].nextAction = 3
               callback(`玩家${BmAdminObj[groupid].gamers[qq].index}${atMsg(qq)}选择了待机`)
