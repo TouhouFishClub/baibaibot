@@ -176,7 +176,7 @@ function gonext(left,text,callback){
     var next = order.shift();
     order.push(next);
     var will=false;
-    for(var i=0;i<left.length;i++){
+    for(var i=0;i<check.length;i++){
       if(next.qq==left[i].qq){
         will=true;
       }
