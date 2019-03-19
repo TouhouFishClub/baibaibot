@@ -1,9 +1,9 @@
-const MAP_MAX_WIDTH = 5 // 最大13
-const MAP_MAX_HEIGHT = 5
+const MAP_MAX_WIDTH = 4 // 最大13
+const MAP_MAX_HEIGHT = 4
 const MAX_USER = 4
 const MIN_USER = 2
 const WAIT_GAME_START = 60000
-const WAIT_USER_ACTION = 20000
+const WAIT_USER_ACTION = 30000
 const NEXT_LEG_ACTION = 3000
 const STEP_WAIT = 1000
 const POWER = [100, 100, 80, 60, 40, 20, 20, 20, 0, 0, 0, 0, 0]
