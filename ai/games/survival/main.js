@@ -3,15 +3,12 @@ var request = require("request");
 var imageMagick = gm.subClass({ imageMagick : true });
 var {sendGmImage} = require('../../../cq/sendImage');
 
-
-
 var running = false;
 var players = {};
 var order = [];
 var map = [];
 var gun = [];
 var gunstr="";
-
 const maplen = 4;
 
 function handleGun(content,qq,username,groupid,callback){
@@ -63,8 +60,6 @@ function handleGun(content,qq,username,groupid,callback){
     addplayer(qq,username,groupid,callback);
   }
 }
-
-
 
 function addplayer(qq,username,groupid,callback){
   if(running==true){
@@ -200,9 +195,6 @@ function gonext(left,text,callback){
       gonext(left,text,callback)
     }
   }
-
-
-
 }
 
 
@@ -230,29 +222,6 @@ function usertimeout(user,callback,rd){
       }
     }
   }
-}
-
-
-
-
-function start(){
-  addplayer(111,"aaa",123);
-  addplayer(222,"bbb",123);
-  addplayer(333,"ccc",123);
-  addplayer(444,"ddd",123);
-  running = true;
-
-  var callback = function(r){console.log("xxx:"+r)};
-  init(callback);
-  go("移动d",111,callback);
-  go("移动r",222,callback);
-  go("移动d",333,callback);
-  go("移动u",444,callback);
-
-  go("开枪l",111,callback);
-  go("开枪r",222,callback);
-  go("开枪d",333,callback);
-  go("开枪u",444,callback);
 }
 
 
@@ -345,7 +314,13 @@ function go(content,qq,callback) {
             }
           }
         }else{
-          ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，墙上出现了个❤型裂痕\n"
+          if(Math.random()<0.3){
+            ret = ret + "子弹打到了墙上，竟然反射了回去\n";
+            ret = ret + "【"+user.name+"】被反射回去的子弹击毙了\n";
+            map[pos[0]][pos[1]]=0;
+          }else{
+            ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，墙上出现了个❤型裂痕\n"
+          }
         }
       } else {
         ret = ret + "【"+user.name+"】" + "扣动了扳机，然而弹夹里并没有装填上子弹\n"
@@ -356,12 +331,12 @@ function go(content,qq,callback) {
 
       var rate = winrate[qq];
       if(rate==undefined){
-        rate = 0.4;
+        rate = 0.33;
       }
       if(direction=="x"||Math.random()>rate){
         ret = ret + "【"+user.name+"】晕头转向了\n";
         direction=["u","l","d","r"][Math.floor(Math.random()*4)];
-        winrate[qq]=0.7;
+        winrate[qq]=0.5;
       }else{
         direction = direction;
         winrate[qq]=0.2;
@@ -444,7 +419,6 @@ function checkwin(callback,text){
   }
   return(uret);
 }
-
 
 function generateImage(callback){
   var img1 = new imageMagick("static/block.png");
