@@ -65,6 +65,7 @@ const {fflogsReply} = require('./ai/ff14/fflogs');
 
 const gf = require('./ai/girlsfrontline/index')
 const {handleGun} = require('./ai/games/survival/main');
+const bomberman = require('./ai/games/Bomberman/main');
 
 
 initWS();
@@ -223,14 +224,56 @@ function handleMsg_D(msgObj,response){
     }
   }
 
-  if(checkIgnoreUser(groupid, from, content, callback)){
-    return
+  var sendMsg = function(res,blank){
+    if(res.trim().length>0){
+      setTimeout(function(){
+        var options = {
+          host: '192.168.17.52',
+          port: 23334,
+          path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
+          method: 'GET',
+          headers: {
+
+          }
+        };
+        console.log(res);
+        var req = http.request(options);
+        saveChat(groupid,2375373419,'百百',res)
+        req.on('error', function(err) {
+          console.log('req err:');
+          console.log(err);
+        });
+        req.end();
+      },1000);
+    }
   }
+
+  // if(checkIgnoreUser(groupid, from, content, callback)){
+  //   return
+  // }
+
 
 
 
 
   content=content.trim();
+
+  if(
+    content === '炸弹人' ||
+    content === '炸彈人' ||
+    content === '参加' ||
+    content === '參加' ||
+    content === '放置' ||
+    content === '移动' ||
+    content === '移動' ||
+    content === '待机' ||
+    content === '待機'
+  ){
+    bomberman(content, from, name, groupid, callback)
+    return
+  }
+
+
   var rcontent = content;
   rcontent=rcontent.replace(/上/g,"u").replace(/下/g,"d").replace(/左/g,"l").replace(/右/g,"r");
   rcontent=rcontent.replace(/开火/g,"开枪").replace(/fire/g,"开枪");
@@ -298,6 +341,7 @@ function handleMsg_D(msgObj,response){
     roulette(name,rcontent,callback,from,groupid)
     return
   }
+
 
   if(content.trim() === '走私查询'){
     smuggler(callback)
