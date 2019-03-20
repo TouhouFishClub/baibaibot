@@ -129,12 +129,12 @@ function gonext(left,text,callback){
         tow=1;
         fromh=0;
         toh=1;
-      }else if(rd==1){
+      }else if(rd==2){
         fromw=0;
         tow=1;
         fromh=2;
         toh=3;
-      }else if(rd==1){
+      }else if(rd==3){
         fromw=2;
         tow=3;
         fromh=2;
