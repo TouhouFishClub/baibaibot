@@ -140,6 +140,19 @@ app.get('/text', (req, res) => {
 })
 
 
+app.get('/get_group_list',function(req,res){
+  var url = 'http://192.168.17.52:23334/get_group_list';
+  request({
+    url: url,
+    method: "GET"
+  }, function(error, response, body){
+    if(error&&error.code){
+      console.log('pipe error catched!')
+      console.log(error);
+    }
+  }).pipe(res);
+})
+
 app.get('/xxx',function(req,res){
   var r= [
     {
