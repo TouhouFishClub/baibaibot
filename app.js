@@ -141,6 +141,7 @@ app.get('/text', (req, res) => {
 
 
 app.get('/get_group_list',function(req,res){
+  res.set("Access-Control-Allow-Origin", "*");
   var url = 'http://192.168.17.52:23334/get_group_list';
   request({
     url: url,
