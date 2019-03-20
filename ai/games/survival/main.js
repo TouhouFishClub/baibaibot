@@ -4,6 +4,7 @@ var imageMagick = gm.subClass({ imageMagick : true });
 var {sendGmImage} = require('../../../cq/sendImage');
 
 var running = false;
+var runninggroup = 0;
 var players = {};
 var order = [];
 var map = [];
@@ -19,7 +20,7 @@ function handleGun(content,qq,username,groupid,callback){
   console.log("xxx:"+running)
   if(content=="俄罗斯轮盘"&&running==false){
     ret = "俄罗斯魔法轮盘将于1分钟后开启\n";
-    ret = ret + "加入：加入/参加/join\n";
+    ret = ret + "加入：加入/join\n";
     ret = ret + "开枪：【开枪/开火/fire】+ 【上/下/左/右】\n";
     ret = ret + "移动：【移动/move】+ 【上/下/左/右】";
     players={};
@@ -28,41 +29,48 @@ function handleGun(content,qq,username,groupid,callback){
     order=[];
     gunstr="";
     running=true;
+    runninggroup=groupid;
     callback(ret);
     setTimeout(function(){
       init(callback);
     },60000);
-  }else if(content.indexOf("开枪")>-1){
-    if(content.startsWith("开枪")&&content.length==3){
-      go(content,qq,callback);
-    }else if(content.startsWith("向")&&content.endsWith("开枪")&&content.length==4){
-      var direct = content.substring(1,2);
-      go("开枪"+direct,qq,callback);
-    }else if(content=="开枪"){
-      go("开枪"+"x",qq,callback);
-    }
-  }else if(content.indexOf("移动")>-1){
-    if(content.startsWith("移动")&&content.length==3){
-      go(content,qq,callback);
-    }else if(content.startsWith("向")&&content.endsWith("移动")&&content.length==4){
-      var direct = content.substring(1,2);
+  }else if(runninggroup==groupid){
+    if(content.indexOf("开枪")>-1){
+      if(content.startsWith("开枪")&&content.length==3){
+        go(content,qq,callback);
+      }else if(content.startsWith("向")&&content.endsWith("开枪")&&content.length==4){
+        var direct = content.substring(1,2);
+        go("开枪"+direct,qq,callback);
+      }else if(content=="开枪"){
+        go("开枪"+"x",qq,callback);
+      }
+    }else if(content.indexOf("移动")>-1){
+      if(content.startsWith("移动")&&content.length==3){
+        go(content,qq,callback);
+      }else if(content.startsWith("向")&&content.endsWith("移动")&&content.length==4){
+        var direct = content.substring(1,2);
+        go("移动"+direct,qq,callback);
+      }else if(content=="移动"){
+        go("移动"+"x",qq,callback);
+      }
+    }else if(content=="l移"||content=="r移"||content=="u移"||content=="d移"){
+      var direct = content.substring(0,1);
       go("移动"+direct,qq,callback);
-    }else if(content=="移动"){
-      go("移动"+"x",qq,callback);
+    }else if(content=="l射"||content=="r射"||content=="u射"||content=="d射"){
+      var direct = content.substring(0,1);
+      go("开枪"+direct,qq,callback);
+    }else if(content=="加入"||content=="参加"||content=="join"){
+      addplayer(qq,username,groupid,callback);
     }
-  }else if(content=="l移"||content=="r移"||content=="u移"||content=="d移"){
-    var direct = content.substring(0,1);
-    go("移动"+direct,qq,callback);
-  }else if(content=="l射"||content=="r射"||content=="u射"||content=="d射"){
-    var direct = content.substring(0,1);
-    go("开枪"+direct,qq,callback);
-  }else if(content=="加入"||content=="参加"||content=="join"){
-    addplayer(qq,username,groupid,callback);
+  }else{
+
   }
+
+
 }
 
 function addplayer(qq,username,groupid,callback){
-  if(running==true){
+  if(running==true&&players[qq]==undefined){
     var now = new Date();
     var code = Object.keys(players).length;
     var obj = {qq:qq,name:username,code:code,ts:now};
@@ -80,7 +88,7 @@ function init(callback) {
     }
   }
   var keys = Object.keys(players);
-  for(var i=0;i<keys.length;i++){
+  for(var i=0;i<Math.min(keys.length,14);i++){
     var insert = 0;
     order.push(players[keys[i]]);
     while(insert==0){
@@ -319,7 +327,7 @@ function go(content,qq,callback) {
             }
           }
         }else{
-          if(Math.random()<0.3){
+          if(Math.random()<0.4){
             ret = ret + "子弹打到了墙上，竟然反射了回去\n";
             ret = ret + "【"+user.name+"】被反射回去的子弹击毙了\n";
             map[pos[0]][pos[1]]=0;
