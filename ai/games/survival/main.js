@@ -169,6 +169,10 @@ function gonext(left,text,callback){
       }
     }
   }
+  next2(text,callback);
+}
+
+function next2(text,callback){
   var check = checkwin(callback,text);
   if(check==true){
     running=false;
@@ -177,7 +181,7 @@ function gonext(left,text,callback){
     order.push(next);
     var will=false;
     for(var i=0;i<check.length;i++){
-      if(next.qq==left[i].qq){
+      if(next.qq==check[i].qq){
         will=true;
       }
     }
@@ -192,10 +196,11 @@ function gonext(left,text,callback){
         usertimeout(next,callback,rd);
       },20000)
     }else{
-      gonext(left,text,callback)
+      next2(text,callback)
     }
   }
 }
+
 
 
 var timeoutmap = {};
