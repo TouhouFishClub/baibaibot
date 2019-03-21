@@ -119,11 +119,11 @@ function init(callback) {
     running=false;
   }else{
     order.sort(function(a,b){return Math.random()-0.5});
-    gonext(order,"游戏开始,枪内子弹【"+guncount+"/"+maplen*maplen+"】\n",callback);
+    next2("游戏开始,枪内子弹【"+guncount+"/"+maplen*maplen+"】\n",callback);
   }
 }
 function gonext(left,text,callback){
-  if(Math.random()<1/(order.length+1)){
+  if(Math.random()<1/(order.length+6)){
     var rd = Math.floor(Math.random()*12);
     if(rd<4){
       text = text + "吃瓜群众突然向第"+(rd+1)+"象限扔了一颗手榴弹\n";
@@ -317,7 +317,7 @@ function go(content,qq,callback) {
         if(targetlist.length>0){
           for(var i=0;i<targetlist.length;i++){
             var target = targetlist[i];
-            ret = ret + user.name + "一枪暴毙了" + target.name + "\n";
+            ret = ret + user.name + "一枪暴毙了【" + target.name + "】\n";
             var pos = [target.pos[0],target.pos[1]];
             map[pos[0]][pos[1]]=0;
             if(Math.random()>1/(i+2)){
