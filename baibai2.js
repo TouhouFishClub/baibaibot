@@ -66,6 +66,7 @@ const {fflogsReply} = require('./ai/ff14/fflogs');
 const gf = require('./ai/girlsfrontline/index')
 const {handleGun} = require('./ai/games/survival/main');
 const bomberman = require('./ai/games/Bomberman/main');
+const {handleFF14weatherReply} = require('./ai/ff14/ff14weather');
 
 
 initWS();
@@ -458,6 +459,14 @@ function handleMsg_D(msgObj,response){
   }
 
   var n = content.indexOf('天气');
+  if(n==2){
+    var place = content.substring(0,2);
+    if((place.indexOf("风")>=0)||(place.indexOf("冰")>=0)||(place.indexOf("火")>=0)||(place.indexOf("水")>=0)){
+      handleFF14weatherReply(content,callback);
+      return;
+    }
+  }
+
   if(n>1&&n<10&&rcontent.length==n+2){
     var city = content.substring(0,n).trim();
     try{
