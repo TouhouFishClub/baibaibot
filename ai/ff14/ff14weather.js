@@ -20,8 +20,14 @@ function handleFF14weatherReply(content,callback){
       var arr = generateWeatherReport(placeid);
       arr.reverse();
       var ret = "";
+      var now = new Date().getTime();
       for(var i=0;i<arr.length;i++){
-        ret = ret + "【"+arr[i].tsstr + " : "+ arr[i].weather + "】";
+        var ts = arr[i].ts;
+        var tsstr = arr[i].tsstr;
+        if(now>ts&&now<arr[i+1].ts){
+          tsstr = "现在";
+        }
+        ret = ret + "【"+tsstr + " : "+ arr[i].weather + "】";
       }
       callback(ret);
     }
