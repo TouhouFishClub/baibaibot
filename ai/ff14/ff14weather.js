@@ -90,7 +90,7 @@ function generateWeatherReport(place){
   var lt = getlt(new Date().getTime()+9000000);
   var llt = lt;
   var retarr = [];
-  for(var i=0;i<15;i++){
+  for(var i=0;i<12;i++){
     var thenlt = getlt((llt - 1)*1000);
     llt = thenlt;
     var timestr = new Date(thenlt*1000).toLocaleTimeString()
