@@ -36,7 +36,7 @@ weatherData = {
   9: {'de': 'Gewittrig',
     'en': 'Thunder',
     'fr': 'Orages',
-    'zh': '暴雷',
+    'zh': '打雷',
     'ja': '雷'},
   10: {'de': 'Gewitter',
     'en': 'Thunderstorms',
