@@ -231,6 +231,7 @@ function usertimeout(user,callback,rd){
             var text = "【"+user.name+"】犹豫不决，吃瓜群众一枪爆了他的狗头\n";
 
             map[i][j]=0;
+            userDeath(user.qq,runninggroup);
             var check = checkwin(callback,text);
             if(check==true){
               running=false;
@@ -467,7 +468,7 @@ function generateImage(callback){
 }
 
 function userDeath(qq,groupid){
-
+  banUser(qq,groupid);
 }
 
 
