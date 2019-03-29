@@ -2,6 +2,7 @@ var gm = require('gm')
 var request = require("request");
 var imageMagick = gm.subClass({ imageMagick : true });
 var {sendGmImage} = require('../../../cq/sendImage');
+const {banUserInGroup} = require('../../../cq/cache');
 
 var running = false;
 var runninggroup = 0;
@@ -155,6 +156,7 @@ function gonext(left,text,callback){
           var u = map[i][j];
           if(u!=0){
             map[i][j]=0;
+            userDeath(u.qq,runninggroup);
             text = text + "【"+u.name+"】被炸死了\n"
           }
         }
@@ -165,6 +167,7 @@ function gonext(left,text,callback){
         var u = map[rd-4][i];
         if(u!=0){
           map[rd-4][i]=0;
+          userDeath(u.qq,runninggroup);
           text = text + "【"+u.name+"】被炸死了\n"
         }
       }
@@ -174,6 +177,7 @@ function gonext(left,text,callback){
         var u = map[i][rd-8];
         if(u!=0){
           map[i][rd-8]=0;
+          userDeath(u.qq,runninggroup);
           text = text + "【"+u.name+"】被炸死了\n"
         }
       }
@@ -324,6 +328,7 @@ function go(content,qq,callback) {
             ret = ret + user.name + "一枪暴毙了【" + target.name + "】\n";
             var pos = [target.pos[0],target.pos[1]];
             map[pos[0]][pos[1]]=0;
+            userDeath(target.qq,runninggroup);
             if(Math.random()>1/(i+2)){
               break;
             }else{
@@ -335,6 +340,7 @@ function go(content,qq,callback) {
             ret = ret + "子弹打到了墙上，竟然反射了回去\n";
             ret = ret + "【"+user.name+"】被反射回去的子弹击毙了\n";
             map[pos[0]][pos[1]]=0;
+            userDeath(user.qq,runninggroup);
           }else{
             ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，墙上出现了个❤型裂痕\n"
           }
@@ -383,15 +389,18 @@ function go(content,qq,callback) {
           if(Math.random()<0.5){
             ret = ret + "【"+user.name+"】一拳锤死了【"+posuser.name+"】\n";
             map[targetpos[0]][targetpos[1]]=user;
+            userDeath(posuser.qq,runninggroup);
           }else{
             ret = ret + "【"+posuser.name+"】一拳锤死了【"+user.name+"】\n";
             map[targetpos[0]][targetpos[1]]=posuser;
+            userDeath(user.qq,runninggroup);
           }
         }
 
       }else{
         ret = ret + "【"+user.name+"】向"+cndir+"迈了一步,然而一头撞到了墙上倒下了\n";
         map[pos[0]][pos[1]]=0;
+        userDeath(user.qq,runninggroup);
       }
     }
   }
@@ -456,6 +465,20 @@ function generateImage(callback){
   }
   sendGmImage(img1,"",callback);
 }
+
+function userDeath(qq,groupid){
+
+}
+
+
+function banUser(qq,group){
+  var time=Math.floor(Math.random()*250);
+  banUserInGroup(qq,group,time);
+  setTimeout(function(){
+    banUserInGroup(qq,group,0);
+  },Math.floor(time*500*Math.random())+1000);
+}
+
 
 
 module.exports={
