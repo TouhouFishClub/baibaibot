@@ -16,7 +16,7 @@ function handleFF14weatherReply(content,callback){
     }else if(place.indexOf("水")>=0){
       placeid=100;
     }
-    var after = content.substring(4);
+    var after = content.substring(4).trim();
     var num = 0;
     if(after==""){
       num = 0;
@@ -25,7 +25,7 @@ function handleFF14weatherReply(content,callback){
     }else if(after.startsWith("-")){
       num = 0-parseInt(after.substring(1));
     }else{
-      num = 0;
+      num = after;
     }
 
     if(placeid>0){
@@ -112,10 +112,17 @@ const placeRate =  {
 
 
 function generateWeatherReport(place,num){
+  var pweather = "";
+  if(isNaN(num)){
+    pweather = num;
+    num = 30;
+  }
   var lt = getlt(new Date().getTime()+9000000+16800000*num);
   var llt = lt;
   var retarr = [];
-  for(var i=0;i<12;i++){
+  var count=0;
+  while((pweather!=""&&count<380)||(pweather==""&&retarr.length<12)){
+    count++;
     var thenlt = getlt((llt - 1)*1000);
     llt = thenlt;
     var timestr = new Date(thenlt*1000).toLocaleTimeString()
@@ -129,8 +136,13 @@ function generateWeatherReport(place,num){
       }
     }
     var weatherObj = weatherData[weatherNum];
-    var weather = weatherObj.zh?weatherObj.zh:weatherObj.ja
-    retarr.push({ts:thenlt*1000,tsstr:timestr,weather:weather});
+    var weather = weatherObj.zh?weatherObj.zh:weatherObj.ja;
+    if(pweather==""||pweather==weather){
+      retarr.push({ts:thenlt*1000,tsstr:timestr,weather:weather});
+    }
+  }
+  if(retarr.length>12){
+    retarr = retarr.slice(retarr.length-12);
   }
   return retarr;
 }
