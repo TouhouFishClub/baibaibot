@@ -37,7 +37,7 @@ function handleFF14weatherReply(content,callback){
         var ts = arr[i].ts;
         var then = new Date(ts);
         var tsstr = arr[i].tsstr;
-        if(now.getTime()>ts&&arr[i+1]&&now.getTime()<arr[i+1].ts){
+        if(now.getTime()>ts&&arr[i+1]&&now.getTime()<arr[i+1].ts&&!isNaN(num)){
           tsstr = "现在";
         }
         var sub = Math.floor((now.getTime() + 3600000*8)/86400000)-Math.floor((then.getTime() + 3600000*8)/86400000)
