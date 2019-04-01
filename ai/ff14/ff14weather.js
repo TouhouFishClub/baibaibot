@@ -32,12 +32,19 @@ function handleFF14weatherReply(content,callback){
       var arr = generateWeatherReport(placeid,num);
       arr.reverse();
       var ret = "";
-      var now = new Date().getTime();
+      var now = new Date();
       for(var i=0;i<arr.length;i++){
         var ts = arr[i].ts;
+        var then = new Date(ts);
         var tsstr = arr[i].tsstr;
-        if(now>ts&&now<arr[i+1].ts){
+        if(now.getTime()>ts&&arr[i+1]&&now.getTime()<arr[i+1].ts){
           tsstr = "现在";
+        }
+        var sub = Math.floor((now.getTime() + 3600000*8)/86400000)-Math.floor((then.getTime() + 3600000*8)/86400000)
+        if(sub<0){
+          tsstr = (-sub) + "天后" + tsstr;
+        }else if(sub>0){
+          tsstr = sub + "天前" + tsstr;
         }
         ret = ret + "【"+tsstr + " : "+ arr[i].weather + "】";
       }
