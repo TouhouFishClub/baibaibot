@@ -16,8 +16,20 @@ function handleFF14weatherReply(content,callback){
     }else if(place.indexOf("水")>=0){
       placeid=100;
     }
+    var after = content.substring(4);
+    var num = 0;
+    if(after==""){
+      num = 0;
+    }else if(after.startsWith("+")){
+      num = parseInt(after.substring(1));
+    }else if(after.startsWith("-")){
+      num = 0-parseInt(after.substring(1));
+    }else{
+      num = 0;
+    }
+
     if(placeid>0){
-      var arr = generateWeatherReport(placeid);
+      var arr = generateWeatherReport(placeid,num);
       arr.reverse();
       var ret = "";
       var now = new Date().getTime();
@@ -92,8 +104,8 @@ const placeRate =  {
 }
 
 
-function generateWeatherReport(place){
-  var lt = getlt(new Date().getTime()+9000000);
+function generateWeatherReport(place,num){
+  var lt = getlt(new Date().getTime()+9000000+16800000*num);
   var llt = lt;
   var retarr = [];
   for(var i=0;i<12;i++){
