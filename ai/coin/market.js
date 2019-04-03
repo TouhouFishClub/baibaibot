@@ -120,7 +120,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
         failed = 0;
         var data = eval(resdata);
         var ret = "数字货币行情(CoinMarket)："+now.toLocaleString()+"\n";
-        var n={"btc":1,"ltc":1,"eth":1,"etc":1,"xrp":1,"eos":1,"bch":1,"qtum":1,"dash":1,"neo":1,"ada":1}
+        var n={"btc":1,"ltc":1,"eth":1,"etc":1,"xrp":1,"eos":1,"bch":1,"qtum":1,"dash":1,"neo":1,"ada":1,"bsv":1}
         if(isInterface){
           ret = []
         }
