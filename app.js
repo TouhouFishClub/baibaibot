@@ -53,15 +53,22 @@ app.get('/chathistory',function(req,res){
 app.get('/image',function(req,res){
   var querydata = req.query;
   var url = querydata.url;
-  request({
-    url: url,
-    method: "GET"
-  }, function(error, response, body){
-    if(error&&error.code){
-      console.log('pipe error catched!')
-      console.log(error);
-    }
-  }).pipe(res);
+  var imgpath = querydata.d;
+  if(path){
+    var head = '../coolq-data/cq/data/image';
+    var realpath = path.join(__dirname,head,imgpath);
+    res.sendFile(realpath);
+  }else{
+    request({
+      url: url,
+      method: "GET"
+    }, function(error, response, body){
+      if(error&&error.code){
+        console.log('pipe error catched!')
+        console.log(error);
+      }
+    }).pipe(res);
+  }
 });
 
 app.get('/ngaImgPipe/*',function(req,res){
