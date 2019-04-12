@@ -184,8 +184,9 @@ function banUserInGroup(qq,groupid,seconds){
 
 function banUserRandom(qq,groupid){
   if(cache[groupid]){
+    var botrole = getUserRoleInGroupByCache(2375373419,groupid)
     var time = Math.random()*10000;
-    if(Math.random()<0.5){
+    if(Math.random()<0.5&&botrole=="member"){
       banUserInGroup(qq,groupid,time);
       setTimeout(function(){
         banUserInGroup(qq,groupid,0);
