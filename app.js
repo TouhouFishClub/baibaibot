@@ -54,7 +54,7 @@ app.get('/image',function(req,res){
   var querydata = req.query;
   var url = querydata.url;
   var imgpath = querydata.d;
-  if(path){
+  if(imgpath){
     var head = '../coolq-data/cq/data/image';
     var realpath = path.join(__dirname,head,imgpath);
     res.sendFile(realpath);
