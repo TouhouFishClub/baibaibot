@@ -37,13 +37,14 @@ app.get('/chathistory',function(req,res){
   var querydata = req.query;
   var gid = querydata.gid;
   var ts = querydata.ts;
+  var order = querydata.w;
   var callback=function(r){
     var ret = {d:r}
     res.set("Access-Control-Allow-Origin", "*");
     res.send(JSON.stringify(ret));
   }
   if(gid){
-    getChat(gid,ts,callback);
+    getChat(gid,ts,callback,order);
   }else{
     res.send('[]');
   }

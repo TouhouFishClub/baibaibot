@@ -14,15 +14,23 @@ function saveChat(gid,uid,name,content){
   });
 }
 
-function getChat(gid,ts,callback){
+function getChat(gid,ts,callback,order){
   MongoClient.connect(mongourl, function(err, db) {
     var cl_chat = db.collection('cl_chat');
     var query = {gid:parseInt(gid)};
     if(parseInt(ts)>0){
-      query._id={'$lt':new Date(parseInt(ts))};
+      if(order){
+        query._id={'$gt':new Date(parseInt(ts))};
+      }else{
+        query._id={'$lt':new Date(parseInt(ts))};
+      }
     }
     console.log(query);
-    cl_chat.find(query).limit(50).toArray(function(err,arr){
+    var wr = cl_chat.find(query).limit(50);
+    if(order){
+      wr.sort({ts:1})
+    }
+    wr.toArray(function(err,arr){
       callback(arr);
     })
   });
