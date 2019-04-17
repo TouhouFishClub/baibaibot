@@ -60,7 +60,7 @@ app.get('/image',function(req,res){
     var head = '../coolq-data/cq/data/image';
     var realpath = path.join(__dirname,head,imgpath);
     res.sendFile(realpath);
-  }else(bface){
+  }else if(bface){
     var head = '../coolq-data/cq/data/bface';
     var facepath = path.join(__dirname,head,bface);
     res.sendFile(realpath);
