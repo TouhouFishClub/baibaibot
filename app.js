@@ -154,8 +154,20 @@ app.get('/text', (req, res) => {
 
 
 app.get('/get_group_list',function(req,res){
+  groupm(req,res,'get_group_list')
+});
+
+app.get('/get_group_member_list',function(req,res){
+  groupm(req,res,'get_group_member_list')
+});
+
+app.get('/get_group_member_info',function(req,res){
+  groupm(req,res,'get_group_member_info')
+});
+
+function groupm(req,res,path){
   res.set("Access-Control-Allow-Origin", "*");
-  var url = 'http://192.168.17.52:23334/get_group_list';
+  var url = 'http://192.168.17.52:23334/'+path;
   request({
     url: url,
     method: "GET"
@@ -165,7 +177,8 @@ app.get('/get_group_list',function(req,res){
       console.log(error);
     }
   }).pipe(res);
-})
+}
+
 
 app.get('/xxx',function(req,res){
   var r= [
