@@ -34,15 +34,32 @@ function replayReply(content,userName,groupuin,callback,qq){
       if((botrole=='admin'||botrole=='owner')&&list.length>3+Math.random()*3){
         var time = 100+Math.floor(Math.random()*200);
         var banqq = list[Math.floor((list.length-1)*Math.random())+1];
-        callback('发现大量复读姬出没！\n下面百百要选择一名复读姬塞上口球\n到底是哪位小朋友这么幸运呢？\n就决定是你了[CQ:at,qq='+banqq+']');
-        banUserInGroup(banqq,groupuin,time);
-        memory[groupuin].lx=[banqq];
-        var uban = Math.floor(Math.random()*time*1000);
-        //var realbandur = time*1000-uban;
-        saveBan(banqq,groupuin,uban,callback);
-        setTimeout(function(){
-          banUserInGroup(banqq,groupuin,0);
-        },uban)
+        if(Math.random()<1){
+          var delay = Math.floor(Math.random()*1000*120)+1000;
+          var txt = '发现大量复读姬出没！\n下面百百要选择一名复读姬塞上口球\n到底是哪位小朋友这么幸运呢？\n就决定是你了[CQ:at,qq='+banqq+']\n';
+          txt = txt + '口球将于'+Math.floor(delay/1000)+'秒后飞入[CQ:at,qq='+banqq+']的嘴里';
+          callback(txt);
+          setTimeout(function(){
+            banUserInGroup(banqq,groupuin,time);
+            memory[groupuin].lx=[banqq];
+            var uban = Math.floor(Math.random()*time*1000);
+            //var realbandur = time*1000-uban;
+            saveBan(banqq,groupuin,uban,callback);
+            setTimeout(function(){
+              banUserInGroup(banqq,groupuin,0);
+            },uban)
+          },delay);
+        }else{
+          callback('发现大量复读姬出没！\n下面百百要选择一名复读姬黑了他\n到底是哪位小朋友这么幸运呢？\n就决定是你了[CQ:at,qq='+banqq+']');
+          banUserInGroup(banqq,groupuin,time);
+          memory[groupuin].lx=[banqq];
+          var uban = Math.floor(Math.random()*time*1000);
+          //var realbandur = time*1000-uban;
+          saveBan(banqq,groupuin,uban,callback);
+          setTimeout(function(){
+            banUserInGroup(banqq,groupuin,0);
+          },uban)
+        }
       }
     }else{
       memory[groupuin]={l:content,c:1,m:false,lx:[qq]};
