@@ -3,14 +3,13 @@ const app = express();
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
-const {handleMsg,reconnect} = require('./baibai2');
+//const {handleMsg,reconnect} = require('./baibai2');
 const {getChat,saveChat} = require('./ai/chat/collect');
 const {checkError} = require('./tools/textCheck');
-const basicAuth = require('basic-auth')
+const basicAuth = require('basic-auth');
+
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
-
-
 var request = require("request");
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -147,39 +146,49 @@ app.get('/log', (req, res) => {
   res.send(fs.readFileSync(path.join('log', 'index.html', 'utf-8')))
 })
 
+
+
+
 app.get('/send_group_msg',(reqp, resp) => {
-  app.use(express.basicAuth("aaa","111"));
-  console.log(reqp);
-  var querydata = reqp.query;
-  var res=querydata.d;
-  var groupid = parseInt(querydata.gid);
-  resp.set("Access-Control-Allow-Origin", "*");
-  if(res.trim().length>0){
-    var options = {
-      host: '192.168.17.52',
-      port: 23334,
-      path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
-      method: 'GET',
-      headers: {
+  var user = basicAuth(reqp);
+  if (!user || !user.name || !user.pass) {
+    resp.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    resp.send(401);
+  }else if(user.name != 'aaa' || user.pass != '111'){
+    resp.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    resp.send(401);
+  }else{
+    var querydata = reqp.query;
+    var res=querydata.d;
+    var groupid = parseInt(querydata.gid);
+    resp.set("Access-Control-Allow-Origin", "*");
+    if(res.trim().length>0){
+      var options = {
+        host: '192.168.17.52',
+        port: 23334,
+        path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
+        method: 'GET',
+        headers: {
 
-      }
-    };
-    console.log(res);
-    saveChat(groupid,2375373419,'百百',res);
-    var req = http.request(options,function(res2){
-      res2.on('data', function (chunk) {
+        }
+      };
+      console.log(res);
+      saveChat(groupid,2375373419,'百百',res);
+      var req = http.request(options,function(res2){
+        res2.on('data', function (chunk) {
 
+        });
+        res2.on('end',function(){
+          resp.send('{"result":"ok"}')
+        })
       });
-      res2.on('end',function(){
-        resp.send('{"result":"ok"}')
-      })
-    });
-    req.on('error', function(err) {
-      console.log('req err:');
-      console.log(err);
-      resp.send('{"result":"error"}')
-    });
-    req.end();
+      req.on('error', function(err) {
+        console.log('req err:');
+        console.log(err);
+        resp.send('{"result":"error"}')
+      });
+      req.end();
+    }
   }
 })
 
