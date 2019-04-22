@@ -150,6 +150,7 @@ app.get('/send_group_msg',(reqp, resp) => {
   var querydata = reqp.query;
   var res=querydata.d;
   var groupid = querydata.gid;
+  resp.set("Access-Control-Allow-Origin", "*");
   if(res.trim().length>0){
     setTimeout(function(){
       var options = {
