@@ -6,6 +6,7 @@ const path = require('path')
 const {handleMsg,reconnect} = require('./baibai2');
 const {getChat,saveChat} = require('./ai/chat/collect');
 const {checkError} = require('./tools/textCheck');
+const basicAuth = require('basic-auth')
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
 
