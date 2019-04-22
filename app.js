@@ -147,6 +147,8 @@ app.get('/log', (req, res) => {
 })
 
 app.get('/send_group_msg',(reqp, resp) => {
+  app.use(express.basicAuth("aaa","111"));
+  console.log(reqp);
   var querydata = reqp.query;
   var res=querydata.d;
   var groupid = parseInt(querydata.gid);
