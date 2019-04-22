@@ -162,12 +162,15 @@ app.get('/send_group_msg',(reqp, resp) => {
       }
     };
     console.log(res);
+    saveChat(groupid,2375373419,'百百',res);
     var req = http.request(options,function(res2){
+      res2.on('data', function (chunk) {
+
+      });
       res2.on('end',function(){
         resp.send('{"result":"ok"}')
       })
     });
-    saveChat(groupid,2375373419,'百百',res);
     req.on('error', function(err) {
       console.log('req err:');
       console.log(err);
