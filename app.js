@@ -152,27 +152,27 @@ app.get('/send_group_msg',(reqp, resp) => {
   var groupid = parseInt(querydata.gid);
   resp.set("Access-Control-Allow-Origin", "*");
   if(res.trim().length>0){
-    setTimeout(function(){
-      var options = {
-        host: '192.168.17.52',
-        port: 23334,
-        path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
-        method: 'GET',
-        headers: {
+    var options = {
+      host: '192.168.17.52',
+      port: 23334,
+      path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
+      method: 'GET',
+      headers: {
 
-        }
-      };
-      console.log(res);
-      var req = http.request(options);
-      saveChat(groupid,2375373419,'百百',res)
-      req.on('error', function(err) {
-        console.log('req err:');
-        console.log(err);
-      });
-      req.end();
-    },1000);
+      }
+    };
+    console.log(res);
+    var req = http.request(options);
+    saveChat(groupid,2375373419,'百百',res);
+    req.on('end', function(){
+      resp.send('{"result":"ok"}')
+    })
+    req.on('error', function(err) {
+      console.log('req err:');
+      console.log(err);
+    });
+    req.end();
   }
-  resp.send('{"result":"ok"}')
 })
 
 
