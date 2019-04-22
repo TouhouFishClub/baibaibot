@@ -4,8 +4,7 @@ const http = require('http')
 const fs = require('fs')
 const path = require('path')
 const {handleMsg,reconnect} = require('./baibai2');
-const {getChat} = require('./ai/chat/collect');
-
+const {getChat,saveChat} = require('./ai/chat/collect');
 const {checkError} = require('./tools/textCheck');
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
