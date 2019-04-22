@@ -148,7 +148,7 @@ app.get('/log', (req, res) => {
 })
 
 app.get('/send_group_msg',(reqp, resp) => {
-  var querydata = req.query;
+  var querydata = reqp.query;
   var res=querydata.d;
   var groupid = querydata.gid;
   if(res.trim().length>0){
