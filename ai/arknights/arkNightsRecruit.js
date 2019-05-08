@@ -83,7 +83,11 @@ module.exports = function(content, callback) {
     akc_init = true
     // console.log(akc_data)
   }
-  let sp = content.trim().split(' ').map(s => simMap(s))
+  let sp = content.trim().split(' ').map(s => simMap(s)), ignoreLevel = 2
+  if(/\d/.test(sp[0])){
+    ignoreLevel = sp[0]
+    sp = sp.slice(1)
+  }
   if(sp.length > 5){
     callback('请输入不大于5个tag')
   } else {
@@ -96,7 +100,7 @@ module.exports = function(content, callback) {
           level ++
         }
       })
-      if(st.length){
+      if(st.length && st.length >= ignoreLevel){
         if(akc.rare == 6){
           if(hasTarget(tg, '高级资深干员')){
             akc_tmp.push({
