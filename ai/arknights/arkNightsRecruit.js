@@ -30,6 +30,41 @@ const canRecruit = [
 const onlyRecruit = ['Lancet-2', 'Castle-3', '夜刀', '黑角', '巡林者', '杜林', '12F', '安德切尔', '艾丝黛尔', '因陀罗', '火神']
 const tags = ["近卫干员", "狙击干员", "重装干员", "医疗干员", "辅助干员", "术师干员", "特种干员", "先锋干员", "近战位", "远程位", "高级资深干员", "男性干员", "女性干员", "资深干员", "治疗", "支援", "新手", "费用回复", "输出", "生存", "防护", "群攻", "减速", "削弱", "快速复活", "位移", "召唤", "控场", "爆发"]
 
+const simMap = tag => {
+  switch(tag){
+    case "近卫":
+      return "近卫干员"
+    case "狙击":
+      return "狙击干员"
+    case "重装":
+      return "重装干员"
+    case "医疗":
+      return "医疗干员"
+    case "辅助":
+      return "辅助干员"
+    case "术师":
+      return "术师干员"
+    case "特种":
+      return "特种干员"
+    case "先锋":
+      return "先锋干员"
+    case "男性":
+      return "男性干员"
+    case "女性":
+      return "女性干员"
+    case "高级资深":
+      return "高级资深干员"
+    case "资深":
+      return "资深干员"
+    case "近战":
+      return "近战位"
+    case "远程":
+      return "远程位"
+    default:
+      return tag
+  }
+}
+
 let akc_init = false
 let akc_data = []
 
@@ -48,7 +83,7 @@ module.exports = function(content, callback) {
     akc_init = true
     // console.log(akc_data)
   }
-  let sp = content.trim().split(' ')
+  let sp = content.trim().split(' ').map(s => simMap(s))
   if(sp.length > 5){
     callback('请输入不大于5个tag')
   } else {
