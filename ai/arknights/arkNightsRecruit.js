@@ -115,7 +115,7 @@ module.exports = function(content, callback) {
         }
       }
     })
-    callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${c.name} ${new Array(c.rare).fill('★').join('')}\n${c.tags.join(' ')}\n`).join('\n'))
+    callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${c.name} ${new Array(c.rare).fill('★').join('')}\n${c.tags.join(' ')}`).join('\n'))
   }
 
 }
