@@ -68,6 +68,8 @@ const {handleGun} = require('./ai/games/survival/main');
 const bomberman = require('./ai/games/Bomberman/main');
 const {handleFF14weatherReply} = require('./ai/ff14/ff14weather');
 
+const anr = require('./ai/arknights/arkNightsRecruit')
+
 
 initWS();
 
@@ -413,6 +415,10 @@ function handleMsg_D(msgObj,response){
     return
   }
   let fie = con.substring(0,3)
+  if(fie == 'akc'){
+    anr(substring(3), callback)
+  }
+
   if(fie == 'opt' && fi != 'opts'){
     op(name, con.substring(3).trim(), 'image', callback);
     return;
