@@ -122,10 +122,7 @@ module.exports = function(content, callback) {
 
 const hasTarget = (arr, target) => arr.findIndex(e => e == target) > -1
 const checkTags = arr => arr.filter(t => hasTarget(tags, t))
-const markTags = (arr, tars) => {
-  let na = arr.concat([])
-  return na.map(t => hasTarget(tars, t) ? `【${t}】`: t)
-}
+const markTags = (arr, tars) => arr.concat([]).map(t => hasTarget(tars, t) ? `【${t}】`: t)
 
 
 
