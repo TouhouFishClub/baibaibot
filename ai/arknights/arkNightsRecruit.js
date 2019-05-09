@@ -118,7 +118,6 @@ module.exports = function(content, callback) {
       callback('请输入不大于5个tag')
     } else {
       let akc_tmp = []
-      console.log(tg)
       akc_data.forEach(akc => {
         if(akc.canRecruit){
           let st = [], level = 0
@@ -155,7 +154,7 @@ module.exports = function(content, callback) {
         if(akc_tmp.length > 10){
           callback('搜索到大量干员，请输入其他tag')
         } else {
-          callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').join('').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.name}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员')
+          callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.name}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员')
         }
       } else {
         let ak_group = {}, outStr = '查询到以下组合\n'
