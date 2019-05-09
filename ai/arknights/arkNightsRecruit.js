@@ -165,6 +165,7 @@ module.exports = function(content, callback) {
         let ak_group = {}, outStr = '查询到以下组合'
         akc_tmp.forEach(ak => {
           if(!ak_group[ak.tagGroup]){
+            let spl, spa
             switch (ak.tagGroup.split(' + ').length) {
               case 2:
                 ak_group[ak.tagGroup] = {
@@ -183,7 +184,74 @@ module.exports = function(content, callback) {
                   rare_4_count: 0,
                   rare_3_count: 0,
                 }
-                let spl = ak.tagGroup.split(' + '), spa = [[spl[0], spl[1]].sort().join(' + '),[spl[0], spl[2]].sort().join(' + '),[spl[1], spl[2]].sort().join(' + ')]
+                spl = ak.tagGroup.split(' + ')
+                spa = [
+                  [spl[0], spl[1]].sort().join(' + '),
+                  [spl[0], spl[2]].sort().join(' + '),
+                  [spl[1], spl[2]].sort().join(' + ')
+                ]
+                spa.forEach(tg => {
+                  if(!ak_group[tg]){
+                    ak_group[tg] = {
+                      characters: [],
+                      rare_6_count: 0,
+                      rare_5_count: 0,
+                      rare_4_count: 0,
+                      rare_3_count: 0,
+                    }
+                  }
+                })
+                break
+              case 4:
+                spl = ak.tagGroup.split(' + ')
+                spa = [
+                  [spl[0], spl[1]].sort().join(' + '),
+                  [spl[0], spl[2]].sort().join(' + '),
+                  [spl[0], spl[3]].sort().join(' + '),
+                  [spl[1], spl[2]].sort().join(' + '),
+                  [spl[1], spl[3]].sort().join(' + '),
+                  [spl[2], spl[3]].sort().join(' + '),
+                  [spl[0], spl[1], spl[2]].sort().join(' + '),
+                  [spl[0], spl[1], spl[3]].sort().join(' + '),
+                  [spl[0], spl[2], spl[3]].sort().join(' + '),
+                  [spl[1], spl[2], spl[3]].sort().join(' + ')
+                ]
+                spa.forEach(tg => {
+                  if(!ak_group[tg]){
+                    ak_group[tg] = {
+                      characters: [],
+                      rare_6_count: 0,
+                      rare_5_count: 0,
+                      rare_4_count: 0,
+                      rare_3_count: 0,
+                    }
+                  }
+                })
+                break
+              case 5:
+                spl = ak.tagGroup.split(' + ')
+                spa = [
+                  [spl[0], spl[1]].sort().join(' + '),
+                  [spl[0], spl[2]].sort().join(' + '),
+                  [spl[0], spl[3]].sort().join(' + '),
+                  [spl[0], spl[4]].sort().join(' + '),
+                  [spl[1], spl[2]].sort().join(' + '),
+                  [spl[1], spl[3]].sort().join(' + '),
+                  [spl[1], spl[4]].sort().join(' + '),
+                  [spl[2], spl[3]].sort().join(' + '),
+                  [spl[2], spl[4]].sort().join(' + '),
+                  [spl[3], spl[4]].sort().join(' + '),
+                  [spl[0], spl[1], spl[2]].sort().join(' + '),
+                  [spl[0], spl[1], spl[3]].sort().join(' + '),
+                  [spl[0], spl[1], spl[4]].sort().join(' + '),
+                  [spl[0], spl[2], spl[3]].sort().join(' + '),
+                  [spl[0], spl[2], spl[4]].sort().join(' + '),
+                  [spl[0], spl[3], spl[4]].sort().join(' + '),
+                  [spl[1], spl[2], spl[3]].sort().join(' + '),
+                  [spl[1], spl[2], spl[4]].sort().join(' + '),
+                  [spl[1], spl[3], spl[4]].sort().join(' + '),
+                  [spl[2], spl[3], spl[4]].sort().join(' + ')
+                ]
                 spa.forEach(tg => {
                   if(!ak_group[tg]){
                     ak_group[tg] = {
