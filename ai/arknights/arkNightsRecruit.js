@@ -88,45 +88,130 @@ module.exports = function(content, callback) {
     ignoreLevel = sp[0]
     sp = sp.slice(1)
   }
-  if(sp.length > 5){
-    callback('请输入不大于5个tag')
+  if(ignoreLevel > sp.length){
+    ignoreLevel = sp.lengths
+  }
+  if(sp[0].toLowerCase() == ''){
+    let ac = sp[1], flag = true
+    for(var i = 0; i < akc_data.length; i++){
+      let akc = akc_data[i]
+      if(akc.name == sp[1]){
+        flag = false
+        callback(`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}\n${akc.tag.join(' ')}`)
+      }
+    }
+    if(flag){
+      callback('没有查询到此干员')
+    }
   } else {
-    let tg = checkTags(sp), akc_tmp = []
-    akc_data.forEach(akc => {
-      let st = [], level = 0
-      tg.forEach(t => {
-        if(hasTarget(akc.tag, t)){
-          st.push(t)
-          level ++
-        }
-      })
-      if(st.length && st.length >= ignoreLevel){
-        if(akc.rare == 6){
-          if(hasTarget(tg, '高级资深干员')){
+    if(sp.length > 5){
+      callback('请输入不大于5个tag')
+    } else {
+      let tg = checkTags(sp), akc_tmp = []
+      akc_data.forEach(akc => {
+        let st = [], level = 0
+        tg.forEach(t => {
+          if(hasTarget(akc.tag, t)){
+            st.push(t)
+            level ++
+          }
+        })
+        if(st.length && st.length >= ignoreLevel){
+          if(akc.rare == 6){
+            if(hasTarget(tg, '高级资深干员')){
+              akc_tmp.push({
+                name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
+                level: level,
+                tags: markTags(akc.tag, st),
+                tagGroup: st.sort().join('-'),
+                rare: akc.rare
+              })
+            }
+          } else {
             akc_tmp.push({
-              name: akc.name,
+              name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
               level: level,
-              tags: markTags(akc.tag, st)
+              tags: markTags(akc.tag, st),
+              tagGroup: st.sort().join(' + '),
+              rare: akc.rare
             })
           }
-        } else {
-          akc_tmp.push({
-            rare: akc.rare,
-            name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
-            level: level,
-            tags: markTags(akc.tag, st)
-          })
         }
+      })
+      if(ignoreLevel < 2){
+        if(akc_tmp.length > 10){
+          callback('搜索到大量干员，请输入其他tag')
+        } else {
+          callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').join('').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.name}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员')
+        }
+      } else {
+        let ak_group = {}, outStr = '查询到以下组合\n'
+        akc_tmp.forEach(ak => {
+          if(ak_group[ak.tagGroup]){
+            ak_group[ak.tagGroup].push(ak)
+          } else {
+            ak_group[ak.tagGroup] = [ak]
+          }
+        })
+        Object.keys(ak_group).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
+          outStr += `【${key}】\n`
+          ak_group[key].sort((a, b) => b.rare -  a.rare)
+          if(ak_group[key].length > 10){
+            let rare_3_count = 0, rare_4_count = 0
+            outStr += '查询到复数干员，仅显示5星以上干员'
+            ak_group[key].forEach(ak => {
+              switch(ak.rare){
+                case 5:
+                case 6:
+                  outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+                  break
+                case 4:
+                  rare_4_count ++
+                  break
+                case 3:
+                  rare_3_count ++
+                  break
+              }
+            })
+            if(rare_4_count){
+              outStr += `4星干员数量： ${rare_4_count}\n`
+            }
+            if(rare_3_count){
+              outStr += `3星干员数量： ${rare_3_count}\n`
+            }
+          } else {
+            ak_group[key].forEach(ak => {
+              outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+            })
+          }
+        })
+        callback(outStr)
       }
-    })
-    callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${c.name} ${new Array(c.rare).fill('★').join('')}\n${c.tags.join(' ')}`).join('\n'))
+    }
   }
-
 }
 
 const hasTarget = (arr, target) => arr.findIndex(e => e == target) > -1
 const checkTags = arr => arr.filter(t => hasTarget(tags, t))
 const markTags = (arr, tars) => arr.concat([]).map(t => hasTarget(tars, t) ? `【${t}】`: t)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
