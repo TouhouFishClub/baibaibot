@@ -132,15 +132,17 @@ module.exports = function(content, callback) {
               if(hasTarget(tg, '高级资深干员')){
                 akc_tmp.push({
                   name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
+                  onlyRecruit: hasTarget(onlyRecruit, akc.name),
                   level: level,
                   tags: markTags(akc.tag, st),
-                  tagGroup: st.sort().join('-'),
+                  tagGroup: st.sort().join(' + '),
                   rare: akc.rare
                 })
               }
             } else {
               akc_tmp.push({
                 name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
+                onlyRecruit: hasTarget(onlyRecruit, akc.name),
                 level: level,
                 tags: markTags(akc.tag, st),
                 tagGroup: st.sort().join(' + '),
@@ -150,6 +152,9 @@ module.exports = function(content, callback) {
           }
         }
       })
+
+      // console.log(akc_tmp)
+
       if(ignoreLevel < 2){
         if(akc_tmp.length > 10){
           callback('搜索到大量干员，请输入其他tag')
@@ -157,42 +162,107 @@ module.exports = function(content, callback) {
           callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.name}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员')
         }
       } else {
-        let ak_group = {}, outStr = '查询到以下组合\n'
+        let ak_group = {}, outStr = '查询到以下组合'
         akc_tmp.forEach(ak => {
-          if(ak_group[ak.tagGroup]){
-            ak_group[ak.tagGroup].push(ak)
-          } else {
-            ak_group[ak.tagGroup] = [ak]
+          if(!ak_group[ak.tagGroup]){
+            switch (ak.tagGroup.split(' + ').length) {
+              case 2:
+                ak_group[ak.tagGroup] = {
+                  characters: [],
+                  rare_6_count: 0,
+                  rare_5_count: 0,
+                  rare_4_count: 0,
+                  rare_3_count: 0,
+                }
+                break
+              case 3:
+                ak_group[ak.tagGroup] = {
+                  characters: [],
+                  rare_6_count: 0,
+                  rare_5_count: 0,
+                  rare_4_count: 0,
+                  rare_3_count: 0,
+                }
+                let spl = ak.tagGroup.split(' + '), spa = [[spl[0], spl[1]].sort().join(' + '),[spl[0], spl[2]].sort().join(' + '),[spl[1], spl[2]].sort().join(' + ')]
+                spa.forEach(tg => {
+                  if(!ak_group[tg]){
+                    ak_group[tg] = {
+                      characters: [],
+                      rare_6_count: 0,
+                      rare_5_count: 0,
+                      rare_4_count: 0,
+                      rare_3_count: 0,
+                    }
+                  }
+                })
+                break
+            }
           }
         })
+
+        let all_character_count = 0
+        Object.keys(ak_group).forEach(tg => {
+          akc_tmp.forEach(ak => {
+            if(pertainTags(tg.split(' + '), ak.tagGroup.split(' + '))){
+              ak_group[tg].characters.push(ak)
+              ak_group[tg][`rare_${ak.rare}_count`]++
+              all_character_count ++
+            }
+          })
+        })
+        // console.log(ak_group)
+        let excellentTagGroup = {}
+        Object.keys(ak_group).forEach(tg => {
+          if(ak_group[tg].rare_3_count == 0){
+            excellentTagGroup[tg] = Object.assign({}, ak_group[tg])
+            delete ak_group[tg]
+          }
+        })
+        // console.log('-=-=-=-=-=-=-=-=-')
+        // console.log(excellentTagGroup)
+        // console.log(ak_group)
+
+        outStr += all_character_count > 20 ? '，仅显示5星以上及公开限定干员\n' : '\n'
+
+
+        Object.keys(excellentTagGroup).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
+          outStr += `【${key}】<<< 仅出现4星以上干员\n`
+          excellentTagGroup[key].characters.sort((a, b) => b.rare -  a.rare)
+          excellentTagGroup[key].characters.forEach(ak => {
+            outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+          })
+        })
+
         Object.keys(ak_group).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
           outStr += `【${key}】\n`
-          ak_group[key].sort((a, b) => b.rare -  a.rare)
-          if(ak_group[key].length > 10){
-            let rare_3_count = 0, rare_4_count = 0
-            outStr += '查询到复数干员，仅显示5星以上干员'
-            ak_group[key].forEach(ak => {
+          ak_group[key].characters.sort((a, b) => b.rare -  a.rare)
+          if(all_character_count > 20){
+            ak_group[key].characters.forEach(ak => {
               switch(ak.rare){
                 case 6:
                 case 5:
                   outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
                   break
                 case 4:
-                  rare_4_count ++
+                  if(ak.onlyRecruit){
+                    outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+                  }
                   break
                 case 3:
-                  rare_3_count ++
+                  if(ak.onlyRecruit){
+                    outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+                  }
                   break
               }
             })
-            if(rare_4_count){
-              outStr += `4星干员数量： ${rare_4_count}\n`
+            if(ak_group[key].rare_4_count){
+              outStr += `4星干员数量： ${ak_group[key].rare_4_count}\n`
             }
-            if(rare_3_count){
-              outStr += `3星干员数量： ${rare_3_count}\n`
+            if(ak_group[key].rare_3_count){
+              outStr += `3星干员数量： ${ak_group[key].rare_3_count}\n`
             }
           } else {
-            ak_group[key].forEach(ak => {
+            ak_group[key].characters.forEach(ak => {
               outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
             })
           }
@@ -206,3 +276,4 @@ module.exports = function(content, callback) {
 const hasTarget = (arr, target) => arr.findIndex(e => e == target) > -1
 const checkTags = arr => arr.filter(t => hasTarget(tags, t))
 const markTags = (arr, tars) => arr.concat([]).map(t => hasTarget(tars, t) ? `【${t}】`: t)
+const pertainTags = (tar, tag) => Array.from(new Set(tar.concat(tag))).length <= tag.length
