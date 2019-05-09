@@ -60,6 +60,10 @@ const simMap = tag => {
       return "近战位"
     case "远程":
       return "远程位"
+    case "回复":
+      return "费用回复"
+    case "复活":
+      return "快速复活"
     default:
       return tag
   }
