@@ -72,11 +72,12 @@ let akc_data = []
 module.exports = function(content, callback) {
   if(!akc_init){
     Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'character_table.json'))).forEach(ch => {
-      if(ch.rarity >= 2 && !hasTarget(ignore, ch.name) && hasTarget(canRecruit, ch.name)){
+      if(ch.rarity >= 2 && !hasTarget(ignore, ch.name)){
         akc_data.push({
           name: ch.name,
           tag: ([type[ch.profession], ch.position, hasTarget(male, ch.name) ? '男性干员' : '女性干员']).concat(ch.rarity == 4 ? ['资深干员']: ch.rarity == 5 ? ['高级资深干员'] : []).concat(ch.tagList || []),
-          rare: ch.rarity + 1
+          rare: ch.rarity + 1,
+          canRecruit: hasTarget(canRecruit, ch.name)
         })
       }
     })
@@ -97,7 +98,7 @@ module.exports = function(content, callback) {
       let akc = akc_data[i]
       if(akc.name == sp[1]){
         flag = false
-        callback(`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}\n${akc.tag.join(' ')}`)
+        callback(`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}\n${akc.tag.join(' ')}${akc.canRecruit ? '' : '\n此干员不可以被公开招募'}`)
       }
     }
     if(flag){
@@ -109,32 +110,34 @@ module.exports = function(content, callback) {
     } else {
       let tg = checkTags(sp), akc_tmp = []
       akc_data.forEach(akc => {
-        let st = [], level = 0
-        tg.forEach(t => {
-          if(hasTarget(akc.tag, t)){
-            st.push(t)
-            level ++
-          }
-        })
-        if(st.length && st.length >= ignoreLevel){
-          if(akc.rare == 6){
-            if(hasTarget(tg, '高级资深干员')){
+        if(akc.canRecruit){
+          let st = [], level = 0
+          tg.forEach(t => {
+            if(hasTarget(akc.tag, t)){
+              st.push(t)
+              level ++
+            }
+          })
+          if(st.length && st.length >= ignoreLevel){
+            if(akc.rare == 6){
+              if(hasTarget(tg, '高级资深干员')){
+                akc_tmp.push({
+                  name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
+                  level: level,
+                  tags: markTags(akc.tag, st),
+                  tagGroup: st.sort().join('-'),
+                  rare: akc.rare
+                })
+              }
+            } else {
               akc_tmp.push({
                 name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
                 level: level,
                 tags: markTags(akc.tag, st),
-                tagGroup: st.sort().join('-'),
+                tagGroup: st.sort().join(' + '),
                 rare: akc.rare
               })
             }
-          } else {
-            akc_tmp.push({
-              name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
-              level: level,
-              tags: markTags(akc.tag, st),
-              tagGroup: st.sort().join(' + '),
-              rare: akc.rare
-            })
           }
         }
       })
