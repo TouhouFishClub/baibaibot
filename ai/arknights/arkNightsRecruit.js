@@ -87,7 +87,7 @@ module.exports = function(content, callback) {
   let sp = content.trim().split(' ').map(s => simMap(s)), ignoreLevel = 2
   if(/\d/.test(sp[0])){
     ignoreLevel = sp[0]
-    sp = sp.slice(1)
+    sp = checkTags(sp.slice(1))
   }
   if(ignoreLevel > sp.length){
     ignoreLevel = sp.lengths
@@ -105,10 +105,16 @@ module.exports = function(content, callback) {
       callback('没有查询到此干员')
     }
   } else {
-    if(sp.length > 5){
+    let tg = checkTags(sp)
+    if(tg.length == 0){
+      callback('请输入至少1个有效tag')
+    } else if(tg.length == 1 && tg[0] == ''){
+      callback('请输入至少1个有效tag')
+    } else if(tg.length > 5){
       callback('请输入不大于5个tag')
     } else {
-      let tg = checkTags(sp), akc_tmp = []
+      let akc_tmp = []
+      console.log(tg)
       akc_data.forEach(akc => {
         if(akc.canRecruit){
           let st = [], level = 0
