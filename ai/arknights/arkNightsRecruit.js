@@ -94,7 +94,7 @@ module.exports = function(content, callback) {
     sp = checkTags(sp.slice(1))
   }
   if(ignoreLevel > sp.length){
-    ignoreLevel = sp.lengths
+    ignoreLevel = sp.length
   }
   if(sp[0].toLowerCase() == 's'){
     let ac = sp[1], flag = true
@@ -155,6 +155,7 @@ module.exports = function(content, callback) {
 
       // console.log(akc_tmp)
 
+      console.log(ignoreLevel)
       if(ignoreLevel < 2){
         if(akc_tmp.length > 10){
           callback('搜索到大量干员，请输入其他tag')
