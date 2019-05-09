@@ -91,7 +91,7 @@ module.exports = function(content, callback) {
   if(ignoreLevel > sp.length){
     ignoreLevel = sp.lengths
   }
-  if(sp[0].toLowerCase() == ''){
+  if(sp[0].toLowerCase() == 's'){
     let ac = sp[1], flag = true
     for(var i = 0; i < akc_data.length; i++){
       let akc = akc_data[i]
@@ -161,8 +161,8 @@ module.exports = function(content, callback) {
             outStr += '查询到复数干员，仅显示5星以上干员'
             ak_group[key].forEach(ak => {
               switch(ak.rare){
-                case 5:
                 case 6:
+                case 5:
                   outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
                   break
                 case 4:
