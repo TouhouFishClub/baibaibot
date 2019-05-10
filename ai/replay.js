@@ -30,7 +30,10 @@ function replayReply(content,userName,groupuin,callback,qq){
       }
       console.log("c:"+c);
 
-      var botrole = getUserRoleInGroupByCache(2375373419,groupuin)
+      var botrole = getUserRoleInGroupByCache(2375373419,groupuin);
+      if(groupuin==205700800||groupuin==616147379||groupuin==964358164){
+        botrole = 'admin';
+      }
       if((botrole=='admin'||botrole=='owner')&&list.length>3+Math.random()*3){
         var time = 100+Math.floor(Math.random()*200);
         var banqq = list[Math.floor((list.length-1)*Math.random())+1];
