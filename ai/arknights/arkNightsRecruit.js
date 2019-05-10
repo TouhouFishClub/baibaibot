@@ -43,6 +43,8 @@ const simMap = tag => {
     case "辅助":
       return "辅助干员"
     case "术师":
+    case "术士":
+    case "术士干员":
       return "术师干员"
     case "特种":
       return "特种干员"
@@ -52,6 +54,8 @@ const simMap = tag => {
       return "男性干员"
     case "女性":
       return "女性干员"
+    case "高级":
+    case "高资":
     case "高级资深":
       return "高级资深干员"
     case "资深":
@@ -71,6 +75,8 @@ const simMap = tag => {
 
 let akc_init = false
 let akc_data = []
+let akg_init = false
+let akg_data
 
 
 module.exports = function(content, callback) {
@@ -88,7 +94,75 @@ module.exports = function(content, callback) {
     akc_init = true
     // console.log(akc_data)
   }
-  let sp = content.trim().split(' ').map(s => simMap(s)), ignoreLevel = 2
+  if(!akg_init){
+    akg_data = fs.readJsonSync(path.join(__dirname, 'data', 'gamedata_const.json'))
+    akg_init = true
+  }
+  let { maxLevel, characterExpMap, characterUpgradeCostMap, evolveGoldCost } = akg_data
+  let sp = content.trim().replace(/ +/g, ' ').split(' ').map(s => simMap(s)), ignoreLevel = 2
+  // if(sp[0].toLowerCase() == 'e'){
+  //   sp = sp.slice(1)
+  //   if(/[123456]/.test(sp[0]) && /^([012]-)?\d{1,2}$/.test(sp[1]) && /^([012]-)?\d{1,2}$/.test(sp[2])){
+  //     let nowEvolve, nowLevel, tarEvolve, tarLevel, rare = sp[0]
+  //     if(sp[1].split('-').length == 2){
+  //       nowEvolve = parseInt(sp[1].split('-')[0])
+  //       nowLevel = parseInt(sp[1].split('-')[1])
+  //     } else {
+  //       nowEvolve = 0
+  //       nowLevel = parseInt(sp[1].split('-')[0])
+  //     }
+  //     if(sp[2].split('-').length == 2){
+  //       tarEvolve = parseInt(sp[2].split('-')[0])
+  //       tarLevel = parseInt(sp[2].split('-')[1])
+  //     } else {
+  //       tarEvolve = 0
+  //       tarLevel = parseInt(sp[2].split('-')[0])
+  //     }
+  //     if(tarEvolve * 100 + parseInt(tarLevel) > nowEvolve * 100 + parseInt(nowLevel)){
+  //       if(maxLevel[rare - 1][nowEvolve] && maxLevel[rare - 1][tarEvolve]){
+  //         if(nowLevel > maxLevel[rare - 1][nowEvolve]){
+  //           nowLevel = maxLevel[rare][nowEvolve]
+  //         }
+  //         if(tarLevel > maxLevel[rare - 1][tarEvolve]) {
+  //           tarLevel = maxLevel[rare - 1][tarEvolve]
+  //         }
+  //
+  //         function calc(rare, evolve, level, isExp){
+  //           let
+  //           for(var i = 0; i <= evolve; i++){
+  //             if(i == evolve){
+  //
+  //             } else {
+  //
+  //             }
+  //           }
+  //         }
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //       } else {
+  //         callback('输入错误')
+  //       }
+  //     } else {
+  //       callback('目标必须小于当前')
+  //     }
+  //   } else {
+  //     callback('请输入正确的信息')
+  //   }
+  //   return
+  // }
+
   if(/\d/.test(sp[0])){
     ignoreLevel = sp[0]
     sp = checkTags(sp.slice(1))
@@ -155,7 +229,7 @@ module.exports = function(content, callback) {
 
       console.log(akc_tmp)
 
-      console.log(ignoreLevel)
+      // console.log(ignoreLevel)
       if(ignoreLevel < 2){
         if(akc_tmp.length > 10){
           callback('搜索到大量干员，请输入其他tag')
