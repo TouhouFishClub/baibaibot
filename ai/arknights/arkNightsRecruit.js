@@ -153,7 +153,7 @@ module.exports = function(content, callback) {
         }
       })
 
-      // console.log(akc_tmp)
+      console.log(akc_tmp)
 
       console.log(ignoreLevel)
       if(ignoreLevel < 2){
@@ -163,6 +163,10 @@ module.exports = function(content, callback) {
           callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.name}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员')
         }
       } else {
+        if(akc_tmp.length == 0){
+          callback('没有查询到相关干员')
+          return
+        }
         let ak_group = {}, outStr = '查询到以下组合'
         akc_tmp.forEach(ak => {
           if(!ak_group[ak.tagGroup]){
