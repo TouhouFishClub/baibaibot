@@ -415,8 +415,8 @@ function handleMsg_D(msgObj,response){
     return
   }
   let fie = con.substring(0,3)
-  if(fie == 'akc'){
-    anr(substring(3), callback)
+  if(fie.toLowerCase() == 'ark'){
+    anr( con.substring(3), callback)
   }
 
   if(fie == 'opt' && fi != 'opts'){
