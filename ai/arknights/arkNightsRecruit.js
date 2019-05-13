@@ -142,7 +142,7 @@ module.exports = function(content, callback) {
             ceCount = Math.ceil(cGold / 7500),
             lsAp = lsCount * 30,
             ceAp = ceCount * 30
-          callback(`体力总计\n${lsAp + ceAp} = ${lsAp} + ${ceAp}\n经验\n${cExp} = ${exp} - ${nowExp}\nLS体力(场数)\n${lsAp} = 30 * ${lsCount}\n金币\n${cGold} = ${gold + upgrade} - ${lsCount * 360 + parseInt(nowGold)}\nCE体力(场数)\n${ceAp} = 30 * ${ceCount}\n升级金币\n${gold}\n精英化金币\n${upgrade}`)
+          callback(`【体力总计】\n${lsAp + ceAp} = ${lsAp} + ${ceAp}\n【经验】\n${cExp} = ${exp} - ${nowExp}\n【LS体力(场数)】\n${lsAp} = 30 * ${lsCount}\n【金币】\n${cGold} = ${gold + upgrade} - ${lsCount * 360 + parseInt(nowGold)}\n【CE体力(场数)】\n${ceAp} = 30 * ${ceCount}\n【升级金币】\n${gold}\n【精英化金币】\n${upgrade}`)
         } else {
           callback('输入错误')
         }
