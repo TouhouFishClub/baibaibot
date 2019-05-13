@@ -4,6 +4,7 @@ var timer = 0;
 var path = require('path');
 
 const {cm,combine} = require(path.join(__dirname, '/coin/market.js'))
+const {getStock} = require(path.join(__dirname, '/coin/stock.js'))
 
 pushTask();
 
@@ -90,10 +91,14 @@ function pushToGroup(type){
     var now = new Date();
     if(now.getMinutes()>25&&now.getMinutes()<35){
       combine(callback);
+
+      if(now.getDay()>=1&&now.getDay()<=5&&now.getHours()==15){
+        getStock(callback);
+      }
+
     }else{
       combine(callback);
     }
-  }
 }
 
 
