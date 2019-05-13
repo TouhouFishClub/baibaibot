@@ -4,6 +4,7 @@ var timer = 0;
 var path = require('path');
 
 const {cm,combine} = require(path.join(__dirname, '/coin/market.js'))
+const {getStock} = require(path.join(__dirname, '/coin/stock.js'))
 
 pushTask();
 
@@ -67,30 +68,33 @@ function getCurrency(callback){
 }
 
 
-function pushToGroup(type){
-  if(type==2){
+function pushToGroup(type) {
+  if (type == 2) {
     var groupid = 221698514;
-    var callback = function(res,blank){
-      if(res.trim().length>0){
-        setTimeout(function(){
+    var callback = function (res, blank) {
+      if (res.trim().length > 0) {
+        setTimeout(function () {
           var options = {
             host: '192.168.17.52',
             port: 23334,
-            path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
+            path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(res),
             method: 'GET',
-            headers: {
-
-            }
+            headers: {}
           };
           var req = http.request(options);
           req.end();
-        },1000);
+        }, 1000);
       }
     }
     var now = new Date();
-    if(now.getMinutes()>25&&now.getMinutes()<35){
+    if (now.getMinutes() > 25 && now.getMinutes() < 35) {
       combine(callback);
-    }else{
+
+      if (now.getDay() >= 1 && now.getDay() <= 5 && now.getHours() == 15) {
+        getStock(callback);
+      }
+
+    } else {
       combine(callback);
     }
   }
