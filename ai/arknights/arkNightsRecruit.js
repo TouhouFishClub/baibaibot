@@ -65,6 +65,7 @@ const simMap = tag => {
     case "远程":
       return "远程位"
     case "回复":
+    case "恢复":
       return "费用回复"
     case "复活":
       return "快速复活"
@@ -100,68 +101,59 @@ module.exports = function(content, callback) {
   }
   let { maxLevel, characterExpMap, characterUpgradeCostMap, evolveGoldCost } = akg_data
   let sp = content.trim().replace(/ +/g, ' ').split(' ').map(s => simMap(s)), ignoreLevel = 2
-  // if(sp[0].toLowerCase() == 'e'){
-  //   sp = sp.slice(1)
-  //   if(/[123456]/.test(sp[0]) && /^([012]-)?\d{1,2}$/.test(sp[1]) && /^([012]-)?\d{1,2}$/.test(sp[2])){
-  //     let nowEvolve, nowLevel, tarEvolve, tarLevel, rare = sp[0]
-  //     if(sp[1].split('-').length == 2){
-  //       nowEvolve = parseInt(sp[1].split('-')[0])
-  //       nowLevel = parseInt(sp[1].split('-')[1])
-  //     } else {
-  //       nowEvolve = 0
-  //       nowLevel = parseInt(sp[1].split('-')[0])
-  //     }
-  //     if(sp[2].split('-').length == 2){
-  //       tarEvolve = parseInt(sp[2].split('-')[0])
-  //       tarLevel = parseInt(sp[2].split('-')[1])
-  //     } else {
-  //       tarEvolve = 0
-  //       tarLevel = parseInt(sp[2].split('-')[0])
-  //     }
-  //     if(tarEvolve * 100 + parseInt(tarLevel) > nowEvolve * 100 + parseInt(nowLevel)){
-  //       if(maxLevel[rare - 1][nowEvolve] && maxLevel[rare - 1][tarEvolve]){
-  //         if(nowLevel > maxLevel[rare - 1][nowEvolve]){
-  //           nowLevel = maxLevel[rare][nowEvolve]
-  //         }
-  //         if(tarLevel > maxLevel[rare - 1][tarEvolve]) {
-  //           tarLevel = maxLevel[rare - 1][tarEvolve]
-  //         }
-  //
-  //         function calc(rare, evolve, level, isExp){
-  //           let
-  //           for(var i = 0; i <= evolve; i++){
-  //             if(i == evolve){
-  //
-  //             } else {
-  //
-  //             }
-  //           }
-  //         }
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //       } else {
-  //         callback('输入错误')
-  //       }
-  //     } else {
-  //       callback('目标必须小于当前')
-  //     }
-  //   } else {
-  //     callback('请输入正确的信息')
-  //   }
-  //   return
-  // }
+  if(sp[0].toLowerCase() == 'e'){
+    sp = sp.slice(1)
+    if(/[123456]/.test(sp[0]) && /^([012]-)?\d{1,2}$/.test(sp[1]) && /^([012]-)?\d{1,2}$/.test(sp[2])){
+      let nowEvolve, nowLevel, tarEvolve, tarLevel, rare = sp[0] - 1, nowGold = 0, nowExp = 0
+      if(sp[1].split('-').length == 2){
+        nowEvolve = parseInt(sp[1].split('-')[0])
+        nowLevel = parseInt(sp[1].split('-')[1]) - 1
+      } else {
+        nowEvolve = 0
+        nowLevel = parseInt(sp[1].split('-')[0]) - 1
+      }
+      if(sp[2].split('-').length == 2){
+        tarEvolve = parseInt(sp[2].split('-')[0])
+        tarLevel = parseInt(sp[2].split('-')[1]) - 1
+      } else {
+        tarEvolve = 0
+        tarLevel = parseInt(sp[2].split('-')[0]) - 1
+      }
+      if(sp[3] && /^\d+$/.test(sp[3])){
+        nowGold = sp[3]
+      }
+      if(sp[4] && /^\d+,\d+,\d+,\d+$/.test(sp[4])){
+        nowExp = sp[4].split(',').reduce((p, c, i) => p +[200, 400, 1000, 2000][i] * c, 0)
+      }
+      if(tarEvolve * 100 + parseInt(tarLevel) > nowEvolve * 100 + parseInt(nowLevel)){
+        if(maxLevel[rare][nowEvolve] && maxLevel[rare][tarEvolve]){
+          if(nowLevel > maxLevel[rare][nowEvolve]){
+            nowLevel = maxLevel[rare][nowEvolve] - 1
+          }
+          if(tarLevel > maxLevel[rare][tarEvolve]) {
+            tarLevel = maxLevel[rare][tarEvolve] - 1
+          }
+          let exp = calc(characterExpMap, maxLevel[rare], tarEvolve, tarLevel) - calc(characterExpMap, maxLevel[rare], nowEvolve, nowLevel),
+            gold = calc(characterUpgradeCostMap, maxLevel[rare], tarEvolve, tarLevel) - calc(characterUpgradeCostMap, maxLevel[rare], nowEvolve, nowLevel),
+            upgrade = evolveGoldCost[rare].slice(nowEvolve, tarEvolve).reduce((p, e) => p + e),
+            cExp = exp - nowExp < 0 ? 0 : exp - nowExp,
+            lsCount = Math.ceil(cExp / 7400),
+            cGold = gold + upgrade - lsCount * 360 - nowGold < 0 ? 0 : gold + upgrade - lsCount * 360 - nowGold,
+            ceCount = Math.ceil(cGold / 7500),
+            lsAp = lsCount * 30,
+            ceAp = ceCount * 30
+          callback(`体力总计\n${lsAp + ceAp} = ${lsAp} + ${ceAp}\n经验\n${cExp} = ${exp} - ${nowExp}\nLS体力(场数)\n${lsAp} = 30 * ${lsCount}\n金币\n${cGold} = ${gold + upgrade} - ${lsCount * 360 + parseInt(nowGold)}\nCE体力(场数)\n${ceAp} = 30 * ${ceCount}\n升级金币\n${gold}\n精英化金币\n${upgrade}`)
+        } else {
+          callback('输入错误')
+        }
+      } else {
+        callback('目标等级必须小于当前等级')
+      }
+    } else {
+      callback('请输入正确的信息')
+    }
+    return
+  }
 
   if(/\d/.test(sp[0])){
     ignoreLevel = sp[0]
@@ -424,3 +416,6 @@ const hasTarget = (arr, target) => arr.findIndex(e => e == target) > -1
 const checkTags = arr => arr.filter(t => hasTarget(tags, t))
 const markTags = (arr, tars) => arr.concat([]).map(t => hasTarget(tars, t) ? `【${t}】`: t)
 const pertainTags = (tar, tag) => Array.from(new Set(tar.concat(tag))).length <= tag.length
+const calc = (dataMap, rareMaxLevelMap, targetEvolve, targetLevel) =>
+  rareMaxLevelMap.slice(0, targetEvolve + 1).reduce((sum, current, index) =>
+    sum + dataMap[index].slice(0, index == targetEvolve ? targetLevel  : current - 1).reduce((p, c) => p + c, 0), 0)
