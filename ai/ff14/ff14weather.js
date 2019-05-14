@@ -38,13 +38,16 @@ function handleFF14weatherReply(content,callback){
         var then = new Date(ts);
         var tsstr = arr[i].tsstr;
         if(now.getTime()>ts&&arr[i+1]&&now.getTime()<arr[i+1].ts&&!isNaN(num)){
-          tsstr = "\n现在";
+          tsstr = "现在";
         }
         var sub = Math.floor((now.getTime() + 3600000*8)/86400000)-Math.floor((then.getTime() + 3600000*8)/86400000)
         if(sub<0){
           tsstr = (-sub) + "天后" + tsstr;
         }else if(sub>0){
           tsstr = sub + "天前" + tsstr;
+        }
+        if(tsstr=="现在"){
+          ret = ret + "\n";
         }
         ret = ret + "【"+tsstr + " : "+ arr[i].weather + "】";
       }
