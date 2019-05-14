@@ -1,6 +1,8 @@
 const fs = require('fs-extra')
 const path = require('path-extra')
 const _ = require('lodash')
+const { baiduocr } = require('../image/baiduocr');
+
 const male = [
   'Castle-3',
   '黑角',
@@ -81,8 +83,24 @@ let akc_other_data = []
 let akg_init = false
 let akg_data
 
+module.exports = function(content, callback){
+  let n = content.indexOf('[CQ:image,')
+  if(n > -1){
+    content.substr(n).split(',').forEach(p => {
+      let sp = p.split('=')
+      if(sp[0] == 'url'){
+        console.log(sp[1])
+        baiduocr(sp[1], d => {
+          arkNight(d.split('\n').join(' '), callback)
+        })
+      }
+    })
+  } else {
+    arkNight(content, callback)
+  }
+}
 
-module.exports = function(content, callback) {
+function arkNight(content, callback) {
   if(!akc_init){
     Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'character_table.json'))).forEach(ch => {
       if(!hasTarget(ignore, ch.name)){
