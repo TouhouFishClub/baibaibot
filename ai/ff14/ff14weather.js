@@ -46,6 +46,9 @@ function handleFF14weatherReply(content,callback){
         }else if(sub>0){
           tsstr = sub + "天前" + tsstr;
         }
+        if(tsstr=="现在"){
+          ret = ret + "\n";
+        }
         ret = ret + "【"+tsstr + " : "+ arr[i].weather + "】";
       }
       callback(ret);
@@ -125,7 +128,7 @@ function generateWeatherReport(place,num){
     count++;
     var thenlt = getlt((llt - 1)*1000);
     llt = thenlt;
-    var timestr = new Date(thenlt*1000).toLocaleTimeString()
+    var timestr = new Date(thenlt*1000).toLocaleTimeString("zh-CN",{hour12:false})
     var rateArr = placeRate[place];
     var weatherRate = calrate(thenlt);
     var weatherNum = -1;
