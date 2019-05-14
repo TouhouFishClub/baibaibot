@@ -1,3 +1,3 @@
 const ak = require('./arkNightsRecruit')
 const c = m => {console.log(m)}
-ak('s 火', c)
+ak('重装 男性 控场 爆发 防护', c)

@@ -29,6 +29,7 @@ const canRecruit = [
 ]
 const onlyRecruit = ['Lancet-2', 'Castle-3', '夜刀', '黑角', '巡林者', '杜林', '12F', '安德切尔', '艾丝黛尔', '因陀罗', '火神']
 const tags = ["近卫干员", "狙击干员", "重装干员", "医疗干员", "辅助干员", "术师干员", "特种干员", "先锋干员", "近战位", "远程位", "高级资深干员", "男性干员", "女性干员", "资深干员", "治疗", "支援", "新手", "费用回复", "输出", "生存", "防护", "群攻", "减速", "削弱", "快速复活", "位移", "召唤", "控场", "爆发"]
+const excellentTags = ["位移", "召唤", "控场", "爆发", "快速复活", "削弱", "支援", "特种干员"]
 
 const simMap = tag => {
   switch(tag){
@@ -229,12 +230,12 @@ module.exports = function(content, callback) {
         }
       })
 
-      console.log(akc_tmp)
+      // console.log(akc_tmp)
 
       // console.log(ignoreLevel)
       if(ignoreLevel < 2){
         if(akc_tmp.length > 10){
-          callback('搜索到大量干员，请输入其他tag')
+          callback(`搜索到${akc_tmp.length}位干员，请尝试输入其他tag`)
         } else {
           callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.name}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员')
         }
@@ -348,7 +349,34 @@ module.exports = function(content, callback) {
             }
           }
         })
+        // console.log(akc_data)
 
+        sp.forEach(tag => {
+          if(hasTarget(excellentTags, tag)){
+            let cs = []
+            akc_data.forEach(akc => {
+              if(akc.canRecruit && hasTarget(akc.tag, tag)){
+                cs.push({
+                  name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
+                  onlyRecruit: hasTarget(onlyRecruit, akc.name),
+                  level: 1,
+                  tags: markTags(akc.tag, [tag]),
+                  tagGroup: tag,
+                  rare: akc.rare
+                })
+              }
+            })
+            ak_group[tag] = {
+              characters: cs,
+              rare_6_count: 0,
+              rare_5_count: 0,
+              rare_4_count: 0,
+              rare_3_count: 0,
+            }
+          }
+        })
+
+        // console.log(ak_group)
         let all_character_count = 0
         Object.keys(ak_group).forEach(tg => {
           akc_tmp.forEach(ak => {
@@ -359,7 +387,6 @@ module.exports = function(content, callback) {
             }
           })
         })
-        // console.log(ak_group)
         let excellentTagGroup = {}
         Object.keys(ak_group).forEach(tg => {
           if(ak_group[tg].rare_3_count == 0){
@@ -367,6 +394,9 @@ module.exports = function(content, callback) {
             delete ak_group[tg]
           }
         })
+        // console.log(excellentTagGroup)
+
+
         // console.log('-=-=-=-=-=-=-=-=-')
         // console.log(excellentTagGroup)
         // console.log(ak_group)
