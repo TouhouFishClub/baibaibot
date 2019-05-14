@@ -369,31 +369,6 @@ function arkNight(content, callback) {
         })
         // console.log(akc_data)
 
-        sp.forEach(tag => {
-          if(hasTarget(excellentTags, tag)){
-            let cs = []
-            akc_data.forEach(akc => {
-              if(akc.canRecruit && hasTarget(akc.tag, tag)){
-                cs.push({
-                  name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
-                  onlyRecruit: hasTarget(onlyRecruit, akc.name),
-                  level: 1,
-                  tags: markTags(akc.tag, [tag]),
-                  tagGroup: tag,
-                  rare: akc.rare
-                })
-              }
-            })
-            ak_group[tag] = {
-              characters: cs,
-              rare_6_count: 0,
-              rare_5_count: 0,
-              rare_4_count: 0,
-              rare_3_count: 0,
-            }
-          }
-        })
-
         // console.log(ak_group)
         let all_character_count = 0
         Object.keys(ak_group).forEach(tg => {
@@ -410,6 +385,32 @@ function arkNight(content, callback) {
           if(ak_group[tg].rare_3_count == 0){
             excellentTagGroup[tg] = Object.assign({}, ak_group[tg])
             delete ak_group[tg]
+          }
+        })
+
+
+        sp.forEach(tag => {
+          if(hasTarget(excellentTags, tag)){
+            let cs = []
+            akc_data.forEach(akc => {
+              if(akc.canRecruit && hasTarget(akc.tag, tag)){
+                cs.push({
+                  name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
+                  onlyRecruit: hasTarget(onlyRecruit, akc.name),
+                  level: 1,
+                  tags: markTags(akc.tag, [tag]),
+                  tagGroup: tag,
+                  rare: akc.rare
+                })
+              }
+            })
+            excellentTagGroup[tag] = {
+              characters: cs,
+              rare_6_count: 0,
+              rare_5_count: 0,
+              rare_4_count: 0,
+              rare_3_count: 0,
+            }
           }
         })
         // console.log(excellentTagGroup)
