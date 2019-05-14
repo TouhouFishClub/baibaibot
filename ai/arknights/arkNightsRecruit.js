@@ -91,7 +91,7 @@ module.exports = function(content, callback){
       if(sp[0] == 'url'){
         console.log(sp[1])
         baiduocr(sp[1], d => {
-          arkNight(d.split('\n').join(' '), callback)
+          arkNight(checkTags(d.split('\n')).join(' '), callback)
         })
       }
     })
@@ -195,7 +195,7 @@ function arkNight(content, callback) {
     let ac = sp[1], flag = true, all_data = akc_data.concat(akc_other_data)
     for(var i = 0; i < all_data.length; i++){
       let akc = all_data[i]
-      if(new RegExp(sp[1], 'i').test(akc.name)){
+      if(sp[1]!= '' && new RegExp(sp[1], 'i').test(akc.name)){
         flag = false
         callback(`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}\n${akc.tag.join(' ')}${akc.canRecruit ? '' : '\n此干员不可以被公开招募'}`)
       }
