@@ -259,7 +259,7 @@ function arkNight(content, callback) {
         }
       } else {
         if(akc_tmp.length == 0){
-          callback('没有查询到相关干员')
+          callback(`【${tg.join(', ')}】\n没有查询到相关干员`)
           return
         }
         let ak_group = {}, outStr = `【${tg.join(', ')}】\n查询到以下组合`
