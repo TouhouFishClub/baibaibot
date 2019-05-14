@@ -76,6 +76,7 @@ const simMap = tag => {
 
 let akc_init = false
 let akc_data = []
+let akc_other_data = []
 let akg_init = false
 let akg_data
 
@@ -83,13 +84,22 @@ let akg_data
 module.exports = function(content, callback) {
   if(!akc_init){
     Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'character_table.json'))).forEach(ch => {
-      if(ch.rarity >= 2 && !hasTarget(ignore, ch.name)){
-        akc_data.push({
-          name: ch.name,
-          tag: ([type[ch.profession], ch.position, hasTarget(male, ch.name) ? '男性干员' : '女性干员']).concat(ch.rarity == 4 ? ['资深干员']: ch.rarity == 5 ? ['高级资深干员'] : []).concat(ch.tagList || []),
-          rare: ch.rarity + 1,
-          canRecruit: hasTarget(canRecruit, ch.name)
-        })
+      if(!hasTarget(ignore, ch.name)){
+        if(ch.rarity >= 2){
+          akc_data.push({
+            name: ch.name,
+            tag: ([type[ch.profession], ch.position, hasTarget(male, ch.name) ? '男性干员' : '女性干员']).concat(ch.rarity == 4 ? ['资深干员']: ch.rarity == 5 ? ['高级资深干员'] : []).concat(ch.tagList || []),
+            rare: ch.rarity + 1,
+            canRecruit: hasTarget(canRecruit, ch.name)
+          })
+        } else {
+          akc_other_data.push({
+            name: ch.name,
+            tag: ([type[ch.profession], ch.position, hasTarget(male, ch.name) ? '男性干员' : '女性干员']).concat(ch.rarity == 4 ? ['资深干员']: ch.rarity == 5 ? ['高级资深干员'] : []).concat(ch.tagList || []),
+            rare: ch.rarity + 1,
+            canRecruit: hasTarget(canRecruit, ch.name)
+          })
+        }
       }
     })
     akc_init = true
@@ -163,10 +173,10 @@ module.exports = function(content, callback) {
     ignoreLevel = sp.length
   }
   if(sp[0].toLowerCase() == 's'){
-    let ac = sp[1], flag = true
-    for(var i = 0; i < akc_data.length; i++){
-      let akc = akc_data[i]
-      if(akc.name == sp[1]){
+    let ac = sp[1], flag = true, all_data = akc_data.concat(akc_other_data)
+    for(var i = 0; i < all_data.length; i++){
+      let akc = all_data[i]
+      if(new RegExp(sp[1], 'i').test(akc.name)){
         flag = false
         callback(`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}\n${akc.tag.join(' ')}${akc.canRecruit ? '' : '\n此干员不可以被公开招募'}`)
       }
