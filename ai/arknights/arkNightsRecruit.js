@@ -262,7 +262,7 @@ function arkNight(content, callback) {
           callback('没有查询到相关干员')
           return
         }
-        let ak_group = {}, outStr = '查询到以下组合'
+        let ak_group = {}, outStr = `【${tg.join(', ')}】\n查询到以下组合`
         akc_tmp.forEach(ak => {
           if(!ak_group[ak.tagGroup]){
             let spl, spa
