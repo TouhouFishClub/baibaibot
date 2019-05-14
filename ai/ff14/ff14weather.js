@@ -38,7 +38,7 @@ function handleFF14weatherReply(content,callback){
         var then = new Date(ts);
         var tsstr = arr[i].tsstr;
         if(now.getTime()>ts&&arr[i+1]&&now.getTime()<arr[i+1].ts&&!isNaN(num)){
-          tsstr = "现在";
+          tsstr = "\n现在";
         }
         var sub = Math.floor((now.getTime() + 3600000*8)/86400000)-Math.floor((then.getTime() + 3600000*8)/86400000)
         if(sub<0){
@@ -125,7 +125,7 @@ function generateWeatherReport(place,num){
     count++;
     var thenlt = getlt((llt - 1)*1000);
     llt = thenlt;
-    var timestr = new Date(thenlt*1000).toLocaleTimeString()
+    var timestr = new Date(thenlt*1000).toLocaleTimeString("zh-CN",{hour12:false})
     var rateArr = placeRate[place];
     var weatherRate = calrate(thenlt);
     var weatherNum = -1;
