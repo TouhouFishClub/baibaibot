@@ -393,7 +393,7 @@ function arkNight(content, callback) {
           if(hasTarget(excellentTags, tag)){
             let cs = []
             akc_data.forEach(akc => {
-              if(akc.canRecruit && hasTarget(akc.tag, tag)){
+              if(akc.canRecruit && hasTarget(akc.tag, tag) && akc.rare < 6){
                 cs.push({
                   name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
                   onlyRecruit: hasTarget(onlyRecruit, akc.name),
