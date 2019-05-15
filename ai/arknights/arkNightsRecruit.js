@@ -89,7 +89,7 @@ module.exports = function(content, callback){
     content.substr(n).split(',').forEach(p => {
       let sp = p.split('=')
       if(sp[0] == 'url'){
-        console.log(sp[1])
+        // console.log(sp[1])
         baiduocr(sp[1], d => {
           arkNight(checkTags(d.split('\n')).join(' '), callback)
         })
@@ -269,20 +269,20 @@ function arkNight(content, callback) {
             switch (ak.tagGroup.split(' + ').length) {
               case 2:
                 ak_group[ak.tagGroup] = {
-                  characters: [],
-                  rare_6_count: 0,
-                  rare_5_count: 0,
-                  rare_4_count: 0,
-                  rare_3_count: 0,
+                  // characters: [],
+                  '6': [],
+                  '5': [],
+                  '4': [],
+                  '3': [],
                 }
                 break
               case 3:
                 ak_group[ak.tagGroup] = {
-                  characters: [],
-                  rare_6_count: 0,
-                  rare_5_count: 0,
-                  rare_4_count: 0,
-                  rare_3_count: 0,
+                  // characters: [],
+                  '6': [],
+                  '5': [],
+                  '4': [],
+                  '3': [],
                 }
                 spl = ak.tagGroup.split(' + ')
                 spa = [
@@ -293,11 +293,11 @@ function arkNight(content, callback) {
                 spa.forEach(tg => {
                   if(!ak_group[tg]){
                     ak_group[tg] = {
-                      characters: [],
-                      rare_6_count: 0,
-                      rare_5_count: 0,
-                      rare_4_count: 0,
-                      rare_3_count: 0,
+                      // characters: [],
+                      '6': [],
+                      '5': [],
+                      '4': [],
+                      '3': [],
                     }
                   }
                 })
@@ -319,11 +319,11 @@ function arkNight(content, callback) {
                 spa.forEach(tg => {
                   if(!ak_group[tg]){
                     ak_group[tg] = {
-                      characters: [],
-                      rare_6_count: 0,
-                      rare_5_count: 0,
-                      rare_4_count: 0,
-                      rare_3_count: 0,
+                      // characters: [],
+                      '6': [],
+                      '5': [],
+                      '4': [],
+                      '3': [],
                     }
                   }
                 })
@@ -355,11 +355,11 @@ function arkNight(content, callback) {
                 spa.forEach(tg => {
                   if(!ak_group[tg]){
                     ak_group[tg] = {
-                      characters: [],
-                      rare_6_count: 0,
-                      rare_5_count: 0,
-                      rare_4_count: 0,
-                      rare_3_count: 0,
+                      // characters: [],
+                      '6': [],
+                      '5': [],
+                      '4': [],
+                      '3': [],
                     }
                   }
                 })
@@ -374,15 +374,16 @@ function arkNight(content, callback) {
         Object.keys(ak_group).forEach(tg => {
           akc_tmp.forEach(ak => {
             if(pertainTags(tg.split(' + '), ak.tagGroup.split(' + '))){
-              ak_group[tg].characters.push(ak)
-              ak_group[tg][`rare_${ak.rare}_count`]++
+              // ak_group[tg].characters.push(ak)
+              // console.log(ak_group[tg])
+              ak_group[tg][`${ak.rare}`].push(ak)
               all_character_count ++
             }
           })
         })
         let excellentTagGroup = {}
         Object.keys(ak_group).forEach(tg => {
-          if(ak_group[tg].rare_3_count == 0){
+          if(ak_group[tg]['3'] == 0){
             excellentTagGroup[tg] = Object.assign({}, ak_group[tg])
             delete ak_group[tg]
           }
@@ -391,10 +392,15 @@ function arkNight(content, callback) {
 
         sp.forEach(tag => {
           if(hasTarget(excellentTags, tag)){
-            let cs = []
+            let cs = {
+              '6': [],
+              '5': [],
+              '4': [],
+              '3': [],
+            }
             akc_data.forEach(akc => {
               if(akc.canRecruit && hasTarget(akc.tag, tag) && akc.rare < 6){
-                cs.push({
+                cs[`${akc.rare}`].push({
                   name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
                   onlyRecruit: hasTarget(onlyRecruit, akc.name),
                   level: 1,
@@ -404,13 +410,7 @@ function arkNight(content, callback) {
                 })
               }
             })
-            excellentTagGroup[tag] = {
-              characters: cs,
-              rare_6_count: 0,
-              rare_5_count: 0,
-              rare_4_count: 0,
-              rare_3_count: 0,
-            }
+            excellentTagGroup[tag] = cs
           }
         })
         // console.log(excellentTagGroup)
@@ -425,45 +425,60 @@ function arkNight(content, callback) {
 
         Object.keys(excellentTagGroup).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
           outStr += `【${key}】<<< 仅出现4星以上干员\n`
-          excellentTagGroup[key].characters.sort((a, b) => b.rare -  a.rare)
-          excellentTagGroup[key].characters.forEach(ak => {
-            outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+          Object.keys(excellentTagGroup[key]).sort((a, b) => b - a).forEach(akg => {
+            // console.log(excellentTagGroup[key][akg].length)
+            if(excellentTagGroup[key][akg].length > 0){
+              outStr += `${new Array(parseInt(akg)).fill('★').concat(new Array(6 - parseInt(akg)).fill('　')).join('')}  `
+              outStr += `${excellentTagGroup[key][akg].map(x => x.name).join(' ')}\n`
+            }
           })
+          // excellentTagGroup[key].characters.sort((a, b) => b.rare -  a.rare)
+          // excellentTagGroup[key].characters.forEach(ak => {
+          //   outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+          // })
         })
 
         Object.keys(ak_group).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
           outStr += `【${key}】\n`
-          ak_group[key].characters.sort((a, b) => b.rare -  a.rare)
-          if(all_character_count > 20){
-            ak_group[key].characters.forEach(ak => {
-              switch(ak.rare){
-                case 6:
-                case 5:
-                  outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
-                  break
-                case 4:
-                  if(ak.onlyRecruit){
-                    outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
-                  }
-                  break
-                case 3:
-                  if(ak.onlyRecruit){
-                    outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
-                  }
-                  break
-              }
-            })
-            if(ak_group[key].rare_4_count){
-              outStr += `4星干员数量： ${ak_group[key].rare_4_count}\n`
+          // ak_group[key].characters.sort((a, b) => b.rare -  a.rare)
+
+
+          Object.keys(ak_group[key]).sort((a, b) => b - a).forEach(akg => {
+            if(ak_group[key][akg].length > 0){
+              outStr += `${new Array(parseInt(akg)).fill('★').concat(new Array(6 - parseInt(akg)).fill('　')).join('')}  `
+              outStr += `${ak_group[key][akg].map(x => x.name).join(' ')}\n`
             }
-            if(ak_group[key].rare_3_count){
-              outStr += `3星干员数量： ${ak_group[key].rare_3_count}\n`
-            }
-          } else {
-            ak_group[key].characters.forEach(ak => {
-              outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
-            })
-          }
+          })
+          // if(all_character_count > 20){
+          //   ak_group[key].characters.forEach(ak => {
+          //     switch(ak.rare){
+          //       case 6:
+          //       case 5:
+          //         outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+          //         break
+          //       case 4:
+          //         if(ak.onlyRecruit){
+          //           outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+          //         }
+          //         break
+          //       case 3:
+          //         if(ak.onlyRecruit){
+          //           outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+          //         }
+          //         break
+          //     }
+          //   })
+          //   if(ak_group[key].'4'){
+          //     outStr += `4星干员数量： ${ak_group[key].'4'}\n`
+          //   }
+          //   if(ak_group[key].'3'){
+          //     outStr += `3星干员数量： ${ak_group[key].'3'}\n`
+          //   }
+          // } else {
+          //   ak_group[key].characters.forEach(ak => {
+          //     outStr += `${new Array(ak.rare).fill('★').concat(new Array(6 - ak.rare).fill('　')).join('')} ${ak.name}\n`
+          //   })
+          // }
         })
         callback(outStr)
       }
