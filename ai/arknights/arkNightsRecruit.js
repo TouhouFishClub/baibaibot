@@ -195,7 +195,8 @@ function arkNight(content, callback) {
     let ac = sp[1], flag = true, all_data = akc_data.concat(akc_other_data)
     for(var i = 0; i < all_data.length; i++){
       let akc = all_data[i]
-      if(sp[1]!= '' && new RegExp(sp[1], 'i').test(akc.name)){
+      // console.log(sp[1])
+      if(sp[1] && sp[1].trim() != '' && new RegExp(sp[1], 'i').test(akc.name)){
         flag = false
         callback(`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}\n${akc.tag.join(' ')}${akc.canRecruit ? '' : '\n此干员不可以被公开招募'}`)
       }
