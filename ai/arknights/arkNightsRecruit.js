@@ -91,7 +91,8 @@ module.exports = function(qq, content, callback){
       if(sp[0] == 'url'){
         // console.log(sp[1])
         baiduocr(sp[1], d => {
-          arkNight(checkTags(qq, d.split('\n')).join(' '), callback)
+          console.log('----')
+          arkNight(qq, checkTags(d.split('\n')).join(' '), callback)
         })
       }
     })
