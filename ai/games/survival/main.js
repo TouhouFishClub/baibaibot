@@ -78,6 +78,8 @@ function addplayer(qq,username,groupid,callback){
       var obj = {qq:qq,name:username,code:code,ts:now};
       players[qq]=obj;
       callback("【"+username+"】进入了赌场");
+    }else{
+      callback("【"+username+"】进入赌场失败，被扔到了吃瓜群众席位")
     }
   }
 }
