@@ -1,4 +1,5 @@
 const { formatCharacter } = require('./arkNightsCharacterDataFormat')
+const aks = require('./arkNightsSkill')
 
 module.exports = function(qq, content, callback){
   let { akc_data, akc_other_data } = formatCharacter()
@@ -6,13 +7,14 @@ module.exports = function(qq, content, callback){
   let sp = content.trim().replace(/ +/g, ' ').split(' '), flag = true, all_data = akc_data.concat(akc_other_data)
   let chTmp = []
   for(var i = 0; i < all_data.length; i++){
-    let akc = all_data[i]
+    let akc = all_data[i], skillLevel = parseInt(sp[1]) || 1
     // console.log(sp[1])
     if(sp[0] && sp[0].trim() != '' && new RegExp(sp[0], 'i').test(akc.name)){
       flag = false
       chTmp.push({
         name: akc.name,
-        desc:`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${akc.onlyRecruit ? '（公开限定）' : ''}\n${akc.tag.join(' ')}${akc.canRecruit ? '' : '\n此干员不可以被公开招募'}`
+        desc:`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${akc.onlyRecruit ? '（公开限定）' : ''}\n${akc.tag.join(' ')}${akc.canRecruit ? '' : '\n此干员不可以被公开招募'}`,
+        // skills: akc.skills.map(skill => aks(skill, skillLevel - 1))
       })
     }
   }
