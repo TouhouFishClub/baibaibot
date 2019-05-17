@@ -69,6 +69,8 @@ const bomberman = require('./ai/games/Bomberman/main');
 const {handleFF14weatherReply} = require('./ai/ff14/ff14weather');
 
 const anr = require('./ai/arknights/arkNightsRecruit')
+const ans = require('./ai/arknights/arkNightsCharacter')
+const anc = require('./ai/arknights/arkNightsCalc')
 
 
 initWS();
@@ -414,9 +416,20 @@ function handleMsg_D(msgObj,response){
     G21Boss(callback, true)
     return
   }
-  let fie = con.substring(0,3)
+  let fie = con.substring(0, 3)
   if(fie.toLowerCase() == 'ark'){
-    anr(from, con.substring(3), callback)
+    switch(con.substring(3, 4)){
+      case 's':
+      case 'S':
+        ans(from, con.substring(4), callback)
+        break;
+      case 'e':
+      case 'E':
+        anc(from, con.substring(4), callback)
+        break;
+      default:
+        anr(from, con.substring(3), callback)
+    }
   }
 
   if(fie == 'opt' && fi != 'opts'){
