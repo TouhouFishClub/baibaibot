@@ -178,7 +178,7 @@ function handleMsg_D(msgObj,response) {
       var groupName = 'private_group_name';
       var name = 'n';
       var nickname = 'n'
-      handle_msg_D2(content,from,name,groupid,callback,groupName,nickname)
+      handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'private')
     }
     return;
 
@@ -225,10 +225,10 @@ function handleMsg_D(msgObj,response) {
       }, 1000);
     }
   }
-  handle_msg_D2(content,from,name,groupid,callback,groupName,nickname)
+  handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group')
 }
 
-function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname){
+function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType){
 
 
 
@@ -475,7 +475,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname){
   }
   answer(content,name,groupName,callback,groupid,from);
   replayReply(content,name,groupid,callback,from);
-
+  if(msgType=='private'){
+    tulingMsg(from,content.trim(),callback,groupid);
+    return;
+  }
 }
 
 function reply(content,userName,callback,groupid,from,groupName,nickname){
