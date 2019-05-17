@@ -131,131 +131,104 @@ function handleMsg(msgObj,res){
 
 
 
-function handleMsg_D(msgObj,response){
+function handleMsg_D(msgObj,response) {
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
-  if(content){
-    if(content.indexOf('&amp;')>-1){
-      content=content.replace(/&amp;/g,'&');
+  if (content) {
+    if (content.indexOf('&amp;') > -1) {
+      content = content.replace(/&amp;/g, '&');
     }
-    if(content.indexOf('&#44;')>-1){
-      content=content.replace(/&#44;/g,',');
+    if (content.indexOf('&#44;') > -1) {
+      content = content.replace(/&#44;/g, ',');
     }
-    if(content.indexOf('[CQ:at,qq=2375373419]')>-1){
-      content=content.replace(/\[CQ:at,qq=2375373419\]/g,'百百');
+    if (content.indexOf('[CQ:at,qq=2375373419]') > -1) {
+      content = content.replace(/\[CQ:at,qq=2375373419\]/g, '百百');
     }
     content = simplized(content);
   }
-
-  if(type=='private'){
+  var callback
+  if (type == 'private') {
     var userid = msgObj.user_id;
-    var callback = function(res){
-      if(res.trim().length>0){
-        setTimeout(function(){
+    callback = function (res) {
+      if (res.trim().length > 0) {
+        setTimeout(function () {
           var options = {
             host: '192.168.17.52',
             port: 23334,
-            path: '/send_private_msg?user_id='+userid+'&message='+encodeURIComponent(res),
+            path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(res),
             method: 'GET',
-            headers: {
-
-            }
+            headers: {}
           };
-          console.log("priv:"+userid+":"+content+":"+res);
+          console.log("priv:" + userid + ":" + content + ":" + res);
           var req = http.request(options);
-          req.on('error', function(err) {
+          req.on('error', function (err) {
             console.log('req err:');
             console.log(err);
           });
           req.end();
-        },1000);
+        }, 1000);
       }
     }
 
-    if(saveAlarm(content,userid,callback)){
-
-    }else{
-      tulingMsg(userid,content,callback,userid);
+    if (saveAlarm(content, userid, callback)) {
+    } else {
+      var from = userid;
+      var groupid = 999999999;
+      var groupName = 'private_group_name';
+      var name = 'n';
+      var nickname = 'n'
+      handle_msg_D2(content,from,name,groupid,callback,groupName,nickname)
     }
-
-
     return;
+
+
   }
-  if(type!='group'){
+  if (type != 'group') {
     return;
   }
   var from = msgObj.user_id;
 
-  var name = getUserNameInGroup(from,groupid);
-  var nickname = getUserNickInGroupByCache(from,groupid);
-  console.log(groupid+":"+name+":"+content)
-  if(name==null){
+  var name = getUserNameInGroup(from, groupid);
+  var nickname = getUserNickInGroupByCache(from, groupid);
+  console.log(groupid + ":" + name + ":" + content)
+  if (name == null) {
     name = nickname;
   }
-  if(name.startsWith("nick error")||name.startsWith("card error")){
-    name='[CQ:at,qq='+from+']';
+  if (name.startsWith("nick error") || name.startsWith("card error")) {
+    name = '[CQ:at,qq=' + from + ']';
   }
 
-
   var groupName = getGroupName(groupid);
-  saveChat(groupid,from,name,content);
-  var callback = function(res,blank){
-    if(res.trim().length>0){
-      setTimeout(function(){
-        if(!blank){
-          res = ""+res
+  saveChat(groupid, from, name, content);
+  callback = function (res, blank) {
+    if (res.trim().length > 0) {
+      setTimeout(function () {
+        if (!blank) {
+          res = "" + res
         }
         var options = {
           host: '192.168.17.52',
           port: 23334,
-          path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
+          path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(res),
           method: 'GET',
-          headers: {
-
-          }
+          headers: {}
         };
         console.log(res);
         var req = http.request(options);
-        saveChat(groupid,2375373419,'百百',res)
-        req.on('error', function(err) {
+        saveChat(groupid, 2375373419, '百百', res)
+        req.on('error', function (err) {
           console.log('req err:');
           console.log(err);
         });
         req.end();
-      },1000);
+      }, 1000);
     }
   }
+  handle_msg_D2(content,from,name,groupid,callback,groupName,nickname)
+}
 
-  var sendMsg = function(res,blank){
-    if(res.trim().length>0){
-      setTimeout(function(){
-        var options = {
-          host: '192.168.17.52',
-          port: 23334,
-          path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
-          method: 'GET',
-          headers: {
-
-          }
-        };
-        console.log(res);
-        var req = http.request(options);
-        saveChat(groupid,2375373419,'百百',res)
-        req.on('error', function(err) {
-          console.log('req err:');
-          console.log(err);
-        });
-        req.end();
-      },1000);
-    }
-  }
-
-  // if(checkIgnoreUser(groupid, from, content, callback)){
-  //   return
-  // }
-
-
+function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname){
 
 
 
