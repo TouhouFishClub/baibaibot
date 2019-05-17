@@ -260,10 +260,6 @@ function arkNight(qq, content, callback) {
           callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.name}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员')
         }
       } else {
-        if(akc_tmp.length == 0){
-          callback(`【${tg.join(', ')}】\n没有查询到相关干员`)
-          return
-        }
         let ak_group = {}, outStr = `【${tg.join(', ')}】\n查询到以下组合`
         akc_tmp.forEach(ak => {
           if(!ak_group[ak.tagGroup]){
@@ -418,11 +414,15 @@ function arkNight(qq, content, callback) {
         // console.log(excellentTagGroup)
 
 
+        if(Object.keys(excellentTagGroup).concat(Object.keys(ak_group)).length == 0){
+          callback(`【${tg.join(', ')}】\n没有查询到相关干员`)
+          return
+        }
         // console.log('-=-=-=-=-=-=-=-=-')
         // console.log(excellentTagGroup)
         // console.log(ak_group)
 
-        outStr += all_character_count > 20 ? '，仅显示5星以上及公开限定干员\n' : '\n'
+        outStr += '\n'
 
 
         Object.keys(excellentTagGroup).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
