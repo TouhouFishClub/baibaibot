@@ -14,7 +14,7 @@ module.exports = function(key, level) {
         level.blackboard.forEach(bb => {
           blackboardMap[bb.key] = bb.value
         })
-        out  = out
+        out = out
           .replace(new RegExp('<@ba.vup>', 'g'), '')
           .replace(new RegExp('<@ba.vdown>', 'g'), '')
           .replace(new RegExp('<@ba.rem>', 'g'), '')
@@ -48,16 +48,24 @@ module.exports = function(key, level) {
 
           // console.log('====')
           // console.log(out)
-          return out
+          return {
+            desc: out,
+            initSp: level.spData.initSp,
+            spCost: level.spData.spCost,
+            duration: level.duration,
+            name: level.name,
+          }
         } else {
-          return []
+          return {}
         }
       })
     })
+    ark_skill_init = true
   }
-  if(ark_skill[key].levels.length < level){
-    return `${ark_skill[key].name}(${level + 1})\n${ark_skill[key].levels[0]}`
+
+  if(ark_skill[key].levels.length < level + 1){
+    return `${ark_skill[key].levels[0].name}(1 级)\n${ark_skill[key].levels[0].desc}\n【初始技力】：${ark_skill[key].levels[0].initSp}\n【释放需要】：${ark_skill[key].levels[0].spCost}\n【持续时间】：${ark_skill[key].levels[0].duration}秒`
   } else {
-    return `${ark_skill[key].name}(${level + 1})\n${ark_skill[key].levels[level]}`
+    return `${ark_skill[key].levels[0].name}(${parseInt(level) + 1} 级)\n${ark_skill[key].levels[level].desc}\n【初始技力】：${ark_skill[key].levels[level].initSp}\n【释放需要】：${ark_skill[key].levels[level].spCost}\n【持续时间】：${ark_skill[key].levels[level].duration}秒`
   }
 }

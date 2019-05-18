@@ -13,8 +13,8 @@ module.exports = function(qq, content, callback){
       flag = false
       chTmp.push({
         name: akc.name,
-        desc:`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${akc.onlyRecruit ? '（公开限定）' : ''}\n${akc.tag.join(' ')}${akc.canRecruit ? '' : '\n此干员不可以被公开招募'}`,
-        // skills: akc.skills.map(skill => aks(skill, skillLevel - 1))
+        desc:`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${akc.onlyRecruit ? '（公开限定）' : ''}${akc.canRecruit ? '' : '（此干员不可以被公开招募）'}\n${akc.tag.join(' ')}`,
+        skills: akc.skills.map(skill => aks(skill, skillLevel - 1))
       })
     }
   }
@@ -24,7 +24,7 @@ module.exports = function(qq, content, callback){
     if(chTmp.length > 2){
       callback(`查询到复数干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}`)
     } else {
-      callback(`${chTmp.map(x => x.desc).join('\n\n')}`)
+      callback(`${chTmp.map(x => `${x.desc}\n\n${x.skills.join('\n\n')}`).join('\n\n')}`)
     }
   }
 
