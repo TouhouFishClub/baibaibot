@@ -7,11 +7,12 @@ let ark_skill_init = false
 module.exports = function(key, level) {
   if(!ark_skill_init){
     ark_skill = fs.readJsonSync(path.join(__dirname, 'data', 'skill_table.json'))
+    // console.log(ark_skill[])
     Object.keys(ark_skill).forEach(sk => {
       // console.log(ark_skill[sk].levels)
-      ark_skill[sk].levels = ark_skill[sk].levels.map(level => {
-        let out = level.description, blackboardMap = {}
-        level.blackboard.forEach(bb => {
+      ark_skill[sk].levels = ark_skill[sk].levels.map(lev => {
+        let out = lev.description, blackboardMap = {}
+        lev.blackboard.forEach(bb => {
           blackboardMap[bb.key] = bb.value
         })
         out = out
@@ -48,15 +49,13 @@ module.exports = function(key, level) {
 
           // console.log('====')
           // console.log(out)
-          return {
-            desc: out,
-            initSp: level.spData.initSp,
-            spCost: level.spData.spCost,
-            duration: level.duration,
-            name: level.name,
-          }
-        } else {
-          return {}
+        }
+        return {
+          desc: out,
+          initSp: lev.spData.initSp,
+          spCost: lev.spData.spCost,
+          duration: lev.duration,
+          name: lev.name,
         }
       })
     })
@@ -64,8 +63,8 @@ module.exports = function(key, level) {
   }
 
   if(ark_skill[key].levels.length < level + 1){
-    return `${ark_skill[key].levels[0].name}(1 级)\n${ark_skill[key].levels[0].desc}\n【初始技力】：${ark_skill[key].levels[0].initSp}\n【释放需要】：${ark_skill[key].levels[0].spCost}\n【持续时间】：${ark_skill[key].levels[0].duration}秒`
+    return `${ark_skill[key].levels[0].name}(1 级)\n${ark_skill[key].levels[0].desc}\n【初始】：${ark_skill[key].levels[0].initSp} 【释放】：${ark_skill[key].levels[0].spCost} 【持续】：${ark_skill[key].levels[0].duration}秒`
   } else {
-    return `${ark_skill[key].levels[0].name}(${parseInt(level) + 1} 级)\n${ark_skill[key].levels[level].desc}\n【初始技力】：${ark_skill[key].levels[level].initSp}\n【释放需要】：${ark_skill[key].levels[level].spCost}\n【持续时间】：${ark_skill[key].levels[level].duration}秒`
+    return `${ark_skill[key].levels[0].name}(${parseInt(level) + 1} 级)\n${ark_skill[key].levels[level].desc}\n【初始】：${ark_skill[key].levels[level].initSp} 【释放】：${ark_skill[key].levels[level].spCost} 【持续】：${ark_skill[key].levels[level].duration}秒`
   }
 }

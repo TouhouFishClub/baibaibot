@@ -7,9 +7,9 @@ const c = m => {
   console.log('===== output =====')
   console.log(m)
 }
-// console.log(akk('skcom_charge_cost[3]', '3'))
+// console.log(akk('skchr_plosis_2', '3'))
 // akc('123456', 'c 6 1 2-99   ', c)
-aks('123456', '芬 adfa', c)
+aks('123456', '白面鸮 adfa', c)
 // aks('123456', '蓝毒 8', c)
 // aks('123456', '蓝毒 9', c)
 // aks('123456', '蓝毒 10', c)

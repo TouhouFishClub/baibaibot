@@ -16,12 +16,14 @@ module.exports = function(qq, content, callback){
         desc:`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${akc.onlyRecruit ? '（公开限定）' : ''}${akc.canRecruit ? '' : '（此干员不可以被公开招募）'}\n${akc.tag.join(' ')}`,
         skills: akc.skills.map(skill => aks(skill, skillLevel - 1))
       })
+
+      // console.log(akc.skills)
     }
   }
   if(flag){
     callback('没有查询到此干员')
   } else {
-    if(chTmp.length > 2){
+    if(chTmp.length > 1){
       callback(`查询到复数干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}`)
     } else {
       callback(`${chTmp.map(x => `${x.desc}\n\n${x.skills.join('\n\n')}`).join('\n\n')}`)
