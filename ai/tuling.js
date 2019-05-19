@@ -95,6 +95,9 @@ function handleTulingResponse(resdata){
       var type = data.results[i].resultType;
       ret = ret + value[type]+"\n";
     }
+    if(ret.indexOf('请求次数超限制')>0){
+      return '哇'
+    }
     return ret.trim();
   }catch(e){
     console.log(e);
