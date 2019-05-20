@@ -139,8 +139,8 @@ app.get('/chat', (req, res) => {
   if(check){
     res.redirect("/baibai-group-logs/dist/index.html")
   }else{
-    resp.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-    resp.send(401);
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    res.send(401);
   }
 
 })
