@@ -247,9 +247,10 @@ function getQAIresponse(userid,content,callback,groupid){
               })
             }
           }catch(e){
-
+            callback('啊呜，百百好像反应不过来了哇哇哇哇哇！');
           }
         });
+        callback(ret)
       }else{
 
       }
