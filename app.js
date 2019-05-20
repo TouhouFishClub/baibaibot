@@ -133,7 +133,7 @@ app.post('/textCheck',function(req,res){
 
 
 
-app.get('/log', (req, res) => {
+app.get('/chat', (req, res) => {
   var user = basicAuth(reqp);
   var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
   if(check){
