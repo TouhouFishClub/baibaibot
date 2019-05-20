@@ -134,7 +134,7 @@ app.post('/textCheck',function(req,res){
 
 
 app.get('/chat', (req, res) => {
-  var user = basicAuth(reqp);
+  var user = basicAuth(req);
   var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
   if(check){
     res.redirect("/baibai-group-logs/dist/index.html")
