@@ -155,12 +155,12 @@ function getLike(qq,name,callback){
           mem[qq]=now.getTime();
           callback('百百对【'+name+'】'+'的好感度为'+data.lv+exp);
         }else{
-          if(now.getTime()-mem[qq]>3600000){
-            mem[qq]=now.getTime();
-            callback('百百对【'+name+'】'+'的好感度为'+data.lv+exp);
-          }else{
-            callback('百百对【'+name+'】'+'的好感度为'+data.lv);
-          }
+          // if(now.getTime()-mem[qq]>3600000){
+          //   mem[qq]=now.getTime();
+          //   callback('百百对【'+name+'】'+'的好感度为'+data.lv+exp);
+          // }else{
+             callback('百百对【'+name+'】'+'的好感度为'+data.lv+"级.\n让百百开心会使百百对你的好感度提升哦,让我难过的话百百会变得讨厌你的");
+          // }
         }
       }
     });
