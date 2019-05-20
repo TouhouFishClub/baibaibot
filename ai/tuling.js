@@ -154,7 +154,7 @@ function getLike(qq,name,callback){
         var exp = '('+Math.floor(data.d*10) + "/" + Math.floor(((data.lv+3)*(data.lv+3)-10)*10)+')';
         if(!mem[qq]){
           mem[qq]=now.getTime();
-          callback('百百对【'+name+'】'+'的好感度为'+data.lv+exp);
+          callback('百百对【'+name+'】'+'的好感度为'+data.lv);
         }else{
           // if(now.getTime()-mem[qq]>3600000){
           //   mem[qq]=now.getTime();
