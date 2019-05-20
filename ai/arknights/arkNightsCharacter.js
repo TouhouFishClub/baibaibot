@@ -26,7 +26,7 @@ module.exports = function(qq, content, callback){
     if(chTmp.length > 1){
       callback(`查询到复数干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}`)
     } else {
-      callback(`${chTmp.map(x => `${x.desc}\n\n${x.skills.join('\n\n')}`).join('\n\n')}`)
+      callback(`${chTmp.map(x => `${x.desc}\n${x.skills.join('\n')}`).join('\n\n')}`)
     }
   }
 

@@ -59,12 +59,11 @@ module.exports = function(key, level) {
         }
       })
     })
-    ark_skill_init = true
   }
 
   if(ark_skill[key].levels.length < level + 1){
-    return `${ark_skill[key].levels[0].name}(1 级)\n${ark_skill[key].levels[0].desc}\n【初始】：${ark_skill[key].levels[0].initSp} 【释放】：${ark_skill[key].levels[0].spCost} 【持续】：${ark_skill[key].levels[0].duration}秒`
+    return `【${ark_skill[key].levels[0].name}| 1 级】\n${ark_skill[key].levels[0].desc}\n〖初始〗：${ark_skill[key].levels[0].initSp} 〖释放〗：${ark_skill[key].levels[0].spCost} 〖持续〗：${ark_skill[key].levels[0].duration}秒`
   } else {
-    return `${ark_skill[key].levels[0].name}(${parseInt(level) + 1} 级)\n${ark_skill[key].levels[level].desc}\n【初始】：${ark_skill[key].levels[level].initSp} 【释放】：${ark_skill[key].levels[level].spCost} 【持续】：${ark_skill[key].levels[level].duration}秒`
+    return `【${ark_skill[key].levels[0].name} | ${parseInt(level) + 1} 级】\n${ark_skill[key].levels[level].desc}\n〖初始〗：${ark_skill[key].levels[level].initSp} 〖释放〗：${ark_skill[key].levels[level].spCost} 〖持续〗：${ark_skill[key].levels[level].duration}秒`
   }
 }
