@@ -273,7 +273,7 @@ function signParam(data){
   keys.sort();
   for(var i=0;i<keys.length;i++){
     rstr = rstr + keys[i] + "=" + encodeURIComponent(data[keys[i]]) + "&";
-    str = str + keys[i] + "=" + encodeURIComponent(data[keys[i]]) + "&";
+    str = str + keys[i] + "=" + encodeURIComponent(data[keys[i]]).replace(/%20/g,'+') + "&";
   }
 
   str = str + "app_key="+appkey;

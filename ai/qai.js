@@ -4,7 +4,7 @@ var appid = 1107054322;
 var appkey = 'Yw6WKnq3It2cnUqn';
 
 function getQAIresponse(content,callback){
-  content = '你是谁'
+  content = '你好 百百'
   var now = new Date();
   var tss = Math.floor(now.getTime()/1000) ;
   var nonce = 987654154;
@@ -51,7 +51,7 @@ function signParam(data){
   keys.sort();
   for(var i=0;i<keys.length;i++){
     rstr = rstr + keys[i] + "=" + encodeURIComponent(data[keys[i]]) + "&";
-    str = str + keys[i] + "=" + encodeURIComponent(data[keys[i]]) + "&";
+    str = str + keys[i] + "=" + encodeURIComponent(data[keys[i]]).replace(/%20/g,'+') + "&";
   }
 
   str = str + "app_key="+appkey;
