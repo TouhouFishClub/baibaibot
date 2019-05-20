@@ -151,18 +151,19 @@ function getLike(qq,name,callback){
       if(!data){
         callback('百百对【'+name+'】'+'的好感度为0');
       }else{
-        var exp = '('+Math.floor(data.d*10) + "/" + Math.floor(((data.lv+3)*(data.lv+3)-10)*10)+')';
-        if(!mem[qq]){
-          mem[qq]=now.getTime();
-          callback('百百对【'+name+'】'+'的好感度为'+data.lv);
-        }else{
-          // if(now.getTime()-mem[qq]>3600000){
-          //   mem[qq]=now.getTime();
-          //   callback('百百对【'+name+'】'+'的好感度为'+data.lv+exp);
-          // }else{
-             callback('百百对【'+name+'】'+'的好感度为'+data.lv+"级.\n让百百开心会使百百对你的好感度提升哦,让我难过的话百百会变得讨厌你的");
-          // }
-        }
+        callback('百百对【'+name+'】'+'的好感度为'+data.lv+"级.\n让百百开心会使百百对你的好感度提升哦,让我难过的话百百会变得讨厌你的");
+        // var exp = '('+Math.floor(data.d*10) + "/" + Math.floor(((data.lv+3)*(data.lv+3)-10)*10)+')';
+        // if(!mem[qq]){
+        //   mem[qq]=now.getTime();
+        //   callback('百百对【'+name+'】'+'的好感度为'+data.lv);
+        // }else{
+        //   // if(now.getTime()-mem[qq]>3600000){
+        //   //   mem[qq]=now.getTime();
+        //   //   callback('百百对【'+name+'】'+'的好感度为'+data.lv+exp);
+        //   // }else{
+        //
+        //   // }
+        // }
       }
     });
   });
