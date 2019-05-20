@@ -3,7 +3,7 @@ const app = express();
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
-const {handleMsg,reconnect} = require('./baibai2');
+//const {handleMsg,reconnect} = require('./baibai2');
 const {getChat,saveChat} = require('./ai/chat/collect');
 const {checkError} = require('./tools/textCheck');
 const basicAuth = require('basic-auth');
@@ -21,16 +21,7 @@ app.listen('10086', () => {
 /* set public path */
 
 
-const callback = function(res){
-  if(res.trim().length>0){
-    setTimeout(function(){
 
-      console.log(res)
-      console.log('\n=========\n')
-
-    },1000);
-  }
-}
 
 app.get('/chathistory',function(req,res){
   var querydata = req.query;
@@ -143,7 +134,15 @@ app.post('/textCheck',function(req,res){
 
 
 app.get('/log', (req, res) => {
-  res.send(fs.readFileSync(path.join('log', 'index.html', 'utf-8')))
+  var user = basicAuth(reqp);
+  var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
+  if(check){
+    res.redirect("/baibai-group-logs/dist/index.html")
+  }else{
+    resp.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    resp.send(401);
+  }
+
 })
 
 
