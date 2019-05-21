@@ -483,13 +483,13 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   if(content.indexOf('百百')>-1){
-    getQAIresponse(from,content.trim(),callback,groupid);
+    tulingMsg(from,content.trim(),callback,groupid);
     return;
   }
   answer(content,name,groupName,callback,groupid,from);
   replayReply(content,name,groupid,callback,from);
   if(msgType=='private'){
-    getQAIresponse(from,content.trim(),callback,groupid);
+    tulingMsg(from,content.trim(),callback,groupid);
     return;
   }
 }
@@ -499,7 +499,7 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   if(content.substring(0, 2) == 'gf'){
     gf(content.substring(2), callback)
   } else if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
-    getQAIresponse(userName,content.substring(1),callback,groupid);
+    tulingMsg(userName,content.substring(1),callback,groupid);
   }else if(first==2){
     translateMsg(content.substring(1),'ja',callback);
   }else if(first==3){
