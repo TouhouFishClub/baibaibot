@@ -4,6 +4,8 @@ const tulingApiKey = "9cca8707060f4432800730b2ddfb029b";
 const tulingApiKey2 = "77cb8ddbbd4c48eb8eba9009ae769169";
 const tulingApiKey3 = "8509c38c2cec4f9aa107ee56341a4179";
 const tulingApiKey4 = "3d4fef8b895249468047a05196666cf7";
+const tulingApiKey5 = "1e2460c2c13143b5becda32deab42742";
+
 const {baiduVoice} = require('../ai/voice/baiduvoice')
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
@@ -22,7 +24,8 @@ var tulingkeyarr=[
   tulingApiKey,
   tulingApiKey2,
   tulingApiKey3,
-  tulingApiKey4
+  tulingApiKey4,
+  tulingApiKey5
 ]
 
 function tulingMsg(userid,content,callback,groupid){
