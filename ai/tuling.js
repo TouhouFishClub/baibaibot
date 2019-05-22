@@ -1,6 +1,9 @@
 var https=require('https');
 var http = require('http');
 const tulingApiKey = "9cca8707060f4432800730b2ddfb029b";
+const tulingApiKey2 = "77cb8ddbbd4c48eb8eba9009ae769169";
+const tulingApiKey3 = "9cca8707060f4432800730b2ddfb029b";
+const tulingApiKey4 = "9cca8707060f4432800730b2ddfb029b";
 const {baiduVoice} = require('../ai/voice/baiduvoice')
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
@@ -14,7 +17,11 @@ var appkey = 'Yw6WKnq3It2cnUqn';
 var bosonnlp = require('bosonnlp');
 var nlp = new bosonnlp.BosonNLP('A6Dvxzs0.25388.G_wPyy4DDLw-');
 
-
+var tulingkeyindex=0;
+var tulingkeyarr=[
+  tulingApiKey,
+  tulingApiKey2
+]
 
 function tulingMsg(userid,content,callback,groupid){
   var then=limit[groupid];
@@ -30,7 +37,7 @@ function tulingMsg(userid,content,callback,groupid){
   limit[groupid]=new Date().getTime();
   var body={};
   body.userInfo={};
-  body.userInfo.apiKey=tulingApiKey;
+  body.userInfo.apiKey=tulingkeyarr[tulingkeyindex];
   body.userInfo.userId=groupid;
   body.reqType=0;
   body.perception={};
@@ -97,6 +104,10 @@ function handleTulingResponse(resdata){
       ret = ret + value[type]+"\n";
     }
     if(ret.indexOf('请求次数超限制')>=0){
+      tulingkeyindex=tulingkeyindex+1;
+      if(tulingkeyindex>=tulingkeyarr.length){
+        tulingkeyindex=0;
+      }
       return '哇'
     }
     return ret.trim();
