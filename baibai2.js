@@ -120,7 +120,7 @@ function addSendQueue(groupid,msg){
 
 
 function doSend(){
-  console.log('will send');
+  console.log('will send:'+queue.length);
   if(queue.length>0) {
     var msgData = queue.shift();
     var groupid = msgData.gid;
@@ -141,7 +141,7 @@ function doSend(){
       res.on('end', function () {
         setTimeout(function(){
           doSend();
-        },Math.floor(Math.random()*3000));
+        },Math.floor(Math.random()*3000+500));
       });
     });
     saveChat(groupid, 2375373419, '百百', msgd);
@@ -150,13 +150,13 @@ function doSend(){
       console.log(err);
       setTimeout(function(){
         doSend();
-      },Math.floor(Math.random()*3000));
+      },Math.floor(Math.random()*3000+500));
     });
     req.end();
   }else{
     setTimeout(function(){
       doSend();
-    },Math.floor(Math.random()*3000));
+    },Math.floor(Math.random()*3000+500));
   }
 }
 
