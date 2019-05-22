@@ -123,18 +123,18 @@ function doSend(){
   if(queue.length>0) {
     var msgData = queue.shift();
     var groupid = msgData.gid;
-    var res = msgData.msg;
+    var msgd = msgData.msg;
     var options = {
       host: '192.168.17.52',
       port: 23334,
-      path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(res),
+      path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(msgd),
       method: 'GET',
       headers: {}
     };
-    console.log("send:"+res);
+    console.log("send:"+msgd);
     var req = http.request(options);
-    saveChat(groupid, 2375373419, '百百', res);
-    res.on('end', function () {
+    saveChat(groupid, 2375373419, '百百', msgd);
+    req.on('end', function () {
       setTimeout(function(){
         doSend();
       },Math.floor(Math.random()*3000));
