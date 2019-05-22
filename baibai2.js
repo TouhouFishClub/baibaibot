@@ -111,6 +111,50 @@ function reconnect(){
 }
 
 
+var queue = []
+function addSendQueue(groupid,msg){
+  console.log('add queue:'+msg);
+  queue.push({gid:groupid,msg:msg});
+}
+
+
+
+function doSend(){
+  if(queue.length>0) {
+    var msgData = queue.shift();
+    var groupid = msgData.gid;
+    var res = msgData.msg;
+    var options = {
+      host: '192.168.17.52',
+      port: 23334,
+      path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(res),
+      method: 'GET',
+      headers: {}
+    };
+    console.log("send:"+res);
+    var req = http.request(options);
+    saveChat(groupid, 2375373419, '百百', res);
+    res.on('end', function () {
+      setTimeout(function(){
+        doSend();
+      },Math.floor(Math.random()*3000));
+    })
+    req.on('error', function (err) {
+      console.log('req err:');
+      console.log(err);
+      setTimeout(function(){
+        doSend();
+      },Math.floor(Math.random()*3000));
+    });
+    req.end();
+  }else{
+    setTimeout(function(){
+      doSend();
+    },Math.floor(Math.random()*3000));
+  }
+}
+
+doSend();
 
 
 
@@ -172,7 +216,6 @@ function handleMsg_D(msgObj,response) {
         }, 1000);
       }
     }
-
     if (saveAlarm(content, userid, callback)) {
     } else {
       var from = userid;
@@ -183,8 +226,6 @@ function handleMsg_D(msgObj,response) {
       handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'private')
     }
     return;
-
-
   }
   if (type != 'group') {
     return;
@@ -206,24 +247,7 @@ function handleMsg_D(msgObj,response) {
   callback = function (res, blank) {
     if (res.trim().length > 0) {
       setTimeout(function () {
-        if (!blank) {
-          res = "" + res
-        }
-        var options = {
-          host: '192.168.17.52',
-          port: 23334,
-          path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(res),
-          method: 'GET',
-          headers: {}
-        };
-        console.log(res);
-        var req = http.request(options);
-        saveChat(groupid, 2375373419, '百百', res)
-        req.on('error', function (err) {
-          console.log('req err:');
-          console.log(err);
-        });
-        req.end();
+        addSendQueue(groupid,res);
       }, 1000);
     }
   }
