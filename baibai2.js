@@ -133,13 +133,18 @@ function doSend(){
       headers: {}
     };
     console.log("send:"+msgd);
-    var req = http.request(options);
+    var req = http.request(options,function(res){
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        setTimeout(function(){
+          doSend();
+        },Math.floor(Math.random()*3000));
+      });
+    });
     saveChat(groupid, 2375373419, '百百', msgd);
-    req.on('end', function () {
-      setTimeout(function(){
-        doSend();
-      },Math.floor(Math.random()*3000));
-    })
     req.on('error', function (err) {
       console.log('req err:');
       console.log(err);
