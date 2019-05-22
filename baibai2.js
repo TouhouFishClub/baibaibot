@@ -253,9 +253,7 @@ function handleMsg_D(msgObj,response) {
   saveChat(groupid, from, name, content);
   callback = function (res, blank) {
     if (res.trim().length > 0) {
-      setTimeout(function () {
-        addSendQueue(groupid,res);
-      }, 1000);
+      addSendQueue(groupid,res);
     }
   }
   handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group')
