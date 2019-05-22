@@ -113,7 +113,6 @@ function reconnect(){
 
 var queue = []
 function addSendQueue(groupid,msg){
-  console.log('add queue:'+msg);
   queue.push({gid:groupid,msg:msg});
 }
 
