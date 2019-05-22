@@ -119,8 +119,8 @@ function addSendQueue(groupid,msg){
 
 
 
-function doSend(){
-  console.log('will send:'+queue.length);
+function doSend(thread){
+  console.log('will send:'+queue.length+":"+thread);
   if(queue.length>0) {
     var msgData = queue.shift();
     var groupid = msgData.gid;
@@ -140,7 +140,7 @@ function doSend(){
       });
       res.on('end', function () {
         setTimeout(function(){
-          doSend();
+          doSend(thread);
         },Math.floor(Math.random()*3000+500));
       });
     });
@@ -149,18 +149,19 @@ function doSend(){
       console.log('req err:');
       console.log(err);
       setTimeout(function(){
-        doSend();
+        doSend(thread);
       },Math.floor(Math.random()*3000+500));
     });
     req.end();
   }else{
     setTimeout(function(){
-      doSend();
+      doSend(thread);
     },Math.floor(Math.random()*3000+500));
   }
 }
 
-doSend();
+doSend(1);
+doSend(2);
 
 
 
