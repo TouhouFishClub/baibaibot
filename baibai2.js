@@ -141,7 +141,7 @@ function doSend(thread){
       res.on('end', function () {
         setTimeout(function(){
           doSend(thread);
-        },Math.floor(Math.random()*3000+500));
+        },Math.floor(Math.random()*3500+500));
       });
     });
     saveChat(groupid, 2375373419, '百百', msgd);
@@ -150,13 +150,13 @@ function doSend(thread){
       console.log(err);
       setTimeout(function(){
         doSend(thread);
-      },Math.floor(Math.random()*3000+500));
+      },Math.floor(Math.random()*3500+500));
     });
     req.end();
   }else{
     setTimeout(function(){
       doSend(thread);
-    },Math.floor(Math.random()*3000+500));
+    },Math.floor(Math.random()*3500+500));
   }
 }
 
