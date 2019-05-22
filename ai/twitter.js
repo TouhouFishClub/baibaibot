@@ -76,7 +76,6 @@ function startstream(){
     console.log('will start stream');
     stream.on('data', function(event) {
       try{
-        console.log('got event:');
         errcount=0;
         if(!event.in_reply_to_status_id&&!event.retweeted_status&&!event.quoted_status&&!event.in_reply_to_user_id){
           console.log(event);
