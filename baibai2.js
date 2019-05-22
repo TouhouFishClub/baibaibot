@@ -120,6 +120,7 @@ function addSendQueue(groupid,msg){
 
 
 function doSend(){
+  console.log('will send');
   if(queue.length>0) {
     var msgData = queue.shift();
     var groupid = msgData.gid;
