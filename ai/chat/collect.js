@@ -9,30 +9,39 @@ function saveChat(gid,uid,name,content){
   var now = new Date();
   var data = {'_id':now,gid:gid,uid:uid,n:name,d:content,ts:now.getTime()};
   MongoClient.connect(mongourl, function(err, db) {
-    var cl_chat = db.collection('cl_chat');
-    cl_chat.save(data);
+    if(err){
+      console.log('mongo error:!!!!!!!!!');
+    }else{
+      var cl_chat = db.collection('cl_chat');
+      cl_chat.save(data);
+    }
+
   });
 }
 
 function getChat(gid,ts,callback,order){
   MongoClient.connect(mongourl, function(err, db) {
-    var cl_chat = db.collection('cl_chat');
-    var query = {gid:parseInt(gid)};
-    if(parseInt(ts)>0){
-      if(order){
-        query._id={'$gt':new Date(parseInt(ts))};
-      }else{
-        query._id={'$lt':new Date(parseInt(ts))};
+    if(err){
+      console.log('mongo error:!!!!!!!!!');
+    }else {
+      var cl_chat = db.collection('cl_chat');
+      var query = {gid: parseInt(gid)};
+      if (parseInt(ts) > 0) {
+        if (order) {
+          query._id = {'$gt': new Date(parseInt(ts))};
+        } else {
+          query._id = {'$lt': new Date(parseInt(ts))};
+        }
       }
+      console.log(query);
+      var wr = cl_chat.find(query).limit(50);
+      if (order) {
+        wr.sort({ts: 1})
+      }
+      wr.toArray(function (err, arr) {
+        callback(arr);
+      })
     }
-    console.log(query);
-    var wr = cl_chat.find(query).limit(50);
-    if(order){
-      wr.sort({ts:1})
-    }
-    wr.toArray(function(err,arr){
-      callback(arr);
-    })
   });
 }
 
