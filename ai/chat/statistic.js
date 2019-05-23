@@ -8,19 +8,24 @@ function s1(){
   var gid = 616147379;
   var qq = 357474405;
   MongoClient.connect(mongourl, function(err, db) {
-    var cl_chat = db.collection('cl_chat');
-    var query = {gid:parseInt(gid)};
-    var then = new Date();
-    then.setHours(0);
-    then.setMinutes(0);
-    then.setSeconds(1);
-    query._id={'$gt':then};
-    console.log(query);
-    cl_chat.find(query).toArray(function(err,arr){
-      mem[gid]=arr;
-      console.log(arr.length);
-      s2(gid,qq);
-    })
+    if(err){
+      console.log('mongo errorf:!!!!!!!!!');
+      console.log(err);
+    }else {
+      var cl_chat = db.collection('cl_chat');
+      var query = {gid: parseInt(gid)};
+      var then = new Date();
+      then.setHours(0);
+      then.setMinutes(0);
+      then.setSeconds(1);
+      query._id = {'$gt': then};
+      console.log(query);
+      cl_chat.find(query).toArray(function (err, arr) {
+        mem[gid] = arr;
+        console.log(arr.length);
+        s2(gid, qq);
+      })
+    }
   });
 }
 

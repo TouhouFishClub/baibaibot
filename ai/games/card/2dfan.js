@@ -168,11 +168,16 @@ function saveChar(gamename,char,charimg,chara){
 
 function saveGame(gamename,desa,id){
   MongoClient.connect(mongourl, function(err, db) {
-    var cl_game_2df = db.collection('cl_game_2df');
-    var Obj =  {'_id':gamename,id:id,d:desa,ts:new Date()};
-    cl_game_2df.save(Obj,function(){
-      db.close();
-    });
+    if(err){
+      console.log('mongo error2:!!!!!!!!!');
+      console.log(err);
+    }else {
+      var cl_game_2df = db.collection('cl_game_2df');
+      var Obj = {'_id': gamename, id: id, d: desa, ts: new Date()};
+      cl_game_2df.save(Obj, function () {
+        db.close();
+      });
+    }
   });
 }
 

@@ -86,16 +86,21 @@ function saveBan(qq,gid,dur,callback){
       then.setMilliseconds(1);
       var query = {'_id':{'$gt':then},gid:gid,qq:qq};
       cl_replay_ban.count(query,function(err,count){
-        if(count>2){
-          console.log('next:'+dur);
-          setTimeout(function(){
-            var time = 0;
-            for(var i=0;i<count;i++){
-              time = time + 200+Math.floor(Math.random()*200);
-            }
-            callback('[CQ:at,qq='+qq+']本日已被口球'+count+'次,将额外塞'+count+'个口球封住他的嘴');
-            cban(qq,gid,count-1,callback);
-          },dur+1000);
+        if(err){
+          console.log('mongo errora:!!!!!!!!!');
+          console.log(err);
+        }else {
+          if (count > 2) {
+            console.log('next:' + dur);
+            setTimeout(function () {
+              var time = 0;
+              for (var i = 0; i < count; i++) {
+                time = time + 200 + Math.floor(Math.random() * 200);
+              }
+              callback('[CQ:at,qq=' + qq + ']本日已被口球' + count + '次,将额外塞' + count + '个口球封住他的嘴');
+              cban(qq, gid, count - 1, callback);
+            }, dur + 1000);
+          }
         }
       });
     });

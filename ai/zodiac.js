@@ -64,10 +64,15 @@ function saveMyZodiac(content,qq,userName,callback){
 function getMyZodiac(qq,callback){
   var cl_zodiac = udb.collection('cl_zodiac');
   cl_zodiac.findOne({'_id':qq}, function(err, data) {
-    if (data) {
-      callback(data.d);
-    } else {
-      callback(0);
+    if(err){
+      console.log('mongo errord:!!!!!!!!!');
+      console.log(err);
+    }else {
+      if (data) {
+        callback(data.d);
+      } else {
+        callback(0);
+      }
     }
   });
 }

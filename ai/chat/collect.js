@@ -22,7 +22,8 @@ function saveChat(gid,uid,name,content){
 function getChat(gid,ts,callback,order){
   MongoClient.connect(mongourl, function(err, db) {
     if(err){
-      console.log('mongo error:!!!!!!!!!');
+      console.log('mongo errore:!!!!!!!!!');
+      console.log(err)
     }else {
       var cl_chat = db.collection('cl_chat');
       var query = {gid: parseInt(gid)};

@@ -349,14 +349,19 @@ function saveDeath(userName,IsDeath,callback){
     var query = {'_id':userName};
     var cl_roulette_game = db.collection('cl_roulette_game');
     cl_roulette_game.findOne(query, function(err, data) {
-      if(data){
-        data.d=data.d+1;
-        data.death=data.death+IsDeath;
-      }else{
-        data = {'_id':userName,d:1,death:IsDeath}
+      if(err){
+        console.log('mongo errorb:!!!!!!!!!');
+        console.log(err);
+      }else {
+        if (data) {
+          data.d = data.d + 1;
+          data.death = data.death + IsDeath;
+        } else {
+          data = {'_id': userName, d: 1, death: IsDeath}
+        }
+        cl_roulette_game.save(data);
+        callback(data.death + "/" + data.d);
       }
-      cl_roulette_game.save(data);
-      callback(data.death+"/"+data.d);
     });
   });
 }

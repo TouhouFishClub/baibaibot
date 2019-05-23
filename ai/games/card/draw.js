@@ -140,33 +140,38 @@ function drawNameCard_1(username,qq,callback,groupid){
     if(true){};
     ag.push({'$sample':{'size':1}});
     cl_card.aggregate(ag, function(err, data) {
-      console.log(data);
-      var ud = data[0];
-      var name = ud._id;
-      var ret = '【'+username+'】'+'抽到了：'+name+'\n';
-      if(ud.ff){
-        cl_card.updateOne({'_id':name},{'$unset':{ff:true}});
-      }
-      saveCard(qq,name);
-      var cb=function(detailjson){
-        console.log(detailjson);
-        var img = detailjson.img;
-        var tdata = detailjson.t;
+      if(err){
+        console.log('mongo errorh:!!!!!!!!!');
+        console.log(err);
+      }else {
+        console.log(data);
+        var ud = data[0];
+        var name = ud._id;
+        var ret = '【' + username + '】' + '抽到了：' + name + '\n';
+        if (ud.ff) {
+          cl_card.updateOne({'_id': name}, {'$unset': {ff: true}});
+        }
+        saveCard(qq, name);
+        var cb = function (detailjson) {
+          console.log(detailjson);
+          var img = detailjson.img;
+          var tdata = detailjson.t;
 
-        if(tdata){
-          tdata=tdata.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
+          if (tdata) {
+            tdata = tdata.replace(/&nbsp;/g, '').replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&#160;/g, '<');
+          }
+          if (img && tdata) {
+            generateImageByWords(img, tdata, callback, ret);
+          } else {
+            callback(ret);
+          }
         }
-        if(img&&tdata){
-          generateImageByWords(img,tdata,callback,ret);
-        }else{
-          callback(ret);
+        if (data.detail) {
+          cb(ud.detail);
+          db.close();
+        } else {
+          getDetailByName(cl_card, name, data.href, cb, db);
         }
-      }
-      if(data.detail){
-        cb(ud.detail);
-        db.close();
-      }else{
-        getDetailByName(cl_card,name,data.href,cb,db);
       }
     });
   });
@@ -281,58 +286,80 @@ function getinner(s){
 function saveCard(qq,cardName){
   var now = new Date().getTime();
   MongoClient.connect(mongourl, function(err, db) {
-    var cl_ucard = db.collection('cl_ucard');
-    var query = {'_id':qq};
-    cl_ucard.findOne(query, function(err, data) {
-      if(data){
-        var cardObj = data.d;
-        var len = Object.keys(cardObj).length;
-        if(len<10){
-          data.d[cardName]=now;
-        }else{
-          var tmpObj = data.tmp;
-          var tmpArr = Object.keys(tmpObj);
-          var tmplen = tmpArr.length;
-          if(tmplen>10){
-            tmpArr.sort(function(a,b){return tmpObj[a]-tmpObj[b]});
-            delete(tmpObj[tmpArr[0]]);
+    if(err){
+      console.log('mongo errorj:!!!!!!!!!');
+      console.log(err);
+    }else {
+      var cl_ucard = db.collection('cl_ucard');
+      var query = {'_id': qq};
+      cl_ucard.findOne(query, function (err, data) {
+        if (err) {
+          console.log('mongo errori:!!!!!!!!!');
+          console.log(err);
+        } else {
+          if (data) {
+            var cardObj = data.d;
+            var len = Object.keys(cardObj).length;
+            if (len < 10) {
+              data.d[cardName] = now;
+            } else {
+              var tmpObj = data.tmp;
+              var tmpArr = Object.keys(tmpObj);
+              var tmplen = tmpArr.length;
+              if (tmplen > 10) {
+                tmpArr.sort(function (a, b) {
+                  return tmpObj[a] - tmpObj[b]
+                });
+                delete(tmpObj[tmpArr[0]]);
+              }
+              data.tmp[cardName] = now;
+            }
+            cl_ucard.save(data);
+          } else {
+            var cd = {};
+            cd[cardName] = now;
+            cl_ucard.save({'_id': qq, d: cd, tmp: {}});
           }
-          data.tmp[cardName]=now;
         }
-        cl_ucard.save(data);
-      }else{
-        var cd = {};
-        cd[cardName]=now;
-        cl_ucard.save({'_id':qq,d:cd,tmp:{}});
-      }
-      db.close();
-    });
+        db.close();
+      });
+    }
   });
 }
 
 function getCard(qq,userName,callback){
   MongoClient.connect(mongourl, function(err, db) {
-    var cl_ucard = db.collection('cl_ucard');
-    var query = {'_id':qq};
-    cl_ucard.findOne(query, function(err, data) {
-      if(data){
-        var cardObj = data.d;
-        var ret = '【'+userName+'】的仓库：\n';
-        for(var p in cardObj){
-          ret = ret + p + ''+ ','+'';
+    if(err){
+      console.log('mongo errorl:!!!!!!!!!');
+      console.log(err);
+    }else {
+      var cl_ucard = db.collection('cl_ucard');
+      var query = {'_id': qq};
+      cl_ucard.findOne(query, function (err, data) {
+        if (err) {
+          console.log('mongo errork:!!!!!!!!!');
+          console.log(err);
+        } else {
+          if (data) {
+            var cardObj = data.d;
+            var ret = '【' + userName + '】的仓库：\n';
+            for (var p in cardObj) {
+              ret = ret + p + '' + ',' + '';
+            }
+            ret = ret + '\n【' + userName + '】的手卡：\n';
+            var tmpObj = data.tmp;
+            for (var p in tmpObj) {
+              ret = ret + p + ',' + '';
+            }
+            //ret = ret + '查卡请输入【查卡-卡名】，废弃请输入【弃卡-卡名】，临时手牌加入请输入【锁卡-卡名】';
+            callback(ret);
+          } else {
+            callback('【' + userName + '】什么也没有');
+          }
+          db.close();
         }
-        ret = ret + '\n【'+userName+'】的手卡：\n';
-        var tmpObj = data.tmp;
-        for(var p in tmpObj){
-          ret = ret + p + ','+'';
-        }
-        //ret = ret + '查卡请输入【查卡-卡名】，废弃请输入【弃卡-卡名】，临时手牌加入请输入【锁卡-卡名】';
-        callback(ret);
-      }else{
-        callback('【'+userName+'】什么也没有');
-      }
-      db.close();
-    });
+      });
+    }
   });
 }
 
@@ -410,60 +437,72 @@ function generateImageByWords(img,wd,callback,words){
 function draw2df(qq,username,callback){
   console.log('will draw 2df');
   MongoClient.connect(mongourl, function(err, db) {
-    var cl_card_2df = db.collection('cl_card_2df');
-    var ag = [];
-    if(true){};
-    ag.push({'$sample':{'size':1}});
-    cl_card_2df.aggregate(ag, function(err, data) {
-      var ud = data[0];
-      var name = ud._id;
-      var img = ud.img;
-      var n = name.indexOf(':');
-      var gamename = name.substring(0,n);
-      var cd = name.substring(n+1);
-      var n1 = cd.indexOf('cv');
-      if(n1>0){
-        cd = cd.substring(0,n1);
+    if(err){
+      console.log('mongo errorm:!!!!!!!!!');
+      console.log(err);
+    }else {
+      var cl_card_2df = db.collection('cl_card_2df');
+      var ag = [];
+      if (true) {
       }
-      var ret = '【'+username+'】'+'抽到了：'+cd+'\n';
-      var da = ud.d;
-      var dr = "";
-      var dc = 0;
-      for(var i=0;i<da.length;i++){
-        if(i==0){
-          dr=da[i];
-          dc = da[i].split('\n').length;
-        }else{
-          var nc = da[i].split('\n').length;
-          if(dc+nc>22){
-            break;
-          }else{
-            dc=dc+nc;
-            dr=dr+"\n"+da[i];
+      ;
+      ag.push({'$sample': {'size': 1}});
+      cl_card_2df.aggregate(ag, function (err, data) {
+        if(err){
+          console.log('mongo errorn:!!!!!!!!!');
+          console.log(err);
+        }else {
+          var ud = data[0];
+          var name = ud._id;
+          var img = ud.img;
+          var n = name.indexOf(':');
+          var gamename = name.substring(0, n);
+          var cd = name.substring(n + 1);
+          var n1 = cd.indexOf('cv');
+          if (n1 > 0) {
+            cd = cd.substring(0, n1);
+          }
+          var ret = '【' + username + '】' + '抽到了：' + cd + '\n';
+          var da = ud.d;
+          var dr = "";
+          var dc = 0;
+          for (var i = 0; i < da.length; i++) {
+            if (i == 0) {
+              dr = da[i];
+              dc = da[i].split('\n').length;
+            } else {
+              var nc = da[i].split('\n').length;
+              if (dc + nc > 22) {
+                break;
+              } else {
+                dc = dc + nc;
+                dr = dr + "\n" + da[i];
+              }
+            }
+          }
+          var voice = undefined;
+          var daa = dr.split('\n');
+          for (var i = 0; i < daa.length; i++) {
+            var txt = daa[daa.length - i - 1].trim();
+            if ((txt.startsWith("「") || txt.startsWith("『")) && (txt.endsWith("」") || txt.endsWith("』"))) {
+              voice = txt.substring(1, txt.length - 1);
+              break;
+            }
+          }
+          if (voice) {
+            baiduVoice(voice, callback);
+          }
+          saveCard(qq, name);
+          if (img && dr) {
+            var words = gamename + "\n" + dr;
+            words = words.replace(/&nbsp;/g, '').replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&#160;/g, '<');
+            generateImageByWords(img, words, callback, ret);
+          } else {
+            callback(ret);
           }
         }
-      }
-      var voice = undefined;
-      var daa = dr.split('\n');
-      for(var i=0;i<daa.length;i++){
-        var txt = daa[daa.length-i-1].trim();
-        if((txt.startsWith("「")||txt.startsWith("『"))&&(txt.endsWith("」")||txt.endsWith("』"))){
-          voice=txt.substring(1,txt.length-1);
-          break;
-        }
-      }
-      if(voice){
-        baiduVoice(voice,callback);
-      }
-      saveCard(qq,name);
-      if(img&&dr){
-        var words = gamename+"\n"+dr;
-        words=words.replace(/&nbsp;/g,'').replace(/&quot;/g,'"').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&#160;/g,'<');
-        generateImageByWords(img,words,callback,ret);
-      }else{
-        callback(ret);
-      }
-    });
+      });
+    }
   });
 }
 

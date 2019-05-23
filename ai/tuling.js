@@ -135,22 +135,27 @@ function saveLike(qq,add,callback){
     var query = {'_id':qq};
     var now = new Date();
     cl_like.findOne(query, function(err, data) {
-      if(!data){
-        cl_like.save({'_id':qq,d:add,lv:1,ts:now})
-        callback(0);
-      }else{
-        var old = data.d;
-        var newlike = old+add;
-        var newlv = Math.floor(Math.sqrt(newlike+10)-2);
-        data.d=newlike;
-        data.ts=now;
-        var cbret = 0;
-        if(newlv-data.lv==1){
-          data.lv=newlv;
-          cbret = newlv;
+      if(err){
+        console.log('mongo errorc:!!!!!!!!!');
+        console.log(err);
+      }else {
+        if (!data) {
+          cl_like.save({'_id': qq, d: add, lv: 1, ts: now})
+          callback(0);
+        } else {
+          var old = data.d;
+          var newlike = old + add;
+          var newlv = Math.floor(Math.sqrt(newlike + 10) - 2);
+          data.d = newlike;
+          data.ts = now;
+          var cbret = 0;
+          if (newlv - data.lv == 1) {
+            data.lv = newlv;
+            cbret = newlv;
+          }
+          cl_like.save(data);
+          callback(cbret);
         }
-        cl_like.save(data);
-        callback(cbret);
       }
     });
   });
