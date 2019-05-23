@@ -113,7 +113,46 @@ function reconnect(){
 
 var queue = []
 function addSendQueue(groupid,msg){
-  queue.push({gid:groupid,msg:msg});
+  var gidstr = groupid+"";
+  var vip = 0;
+  if(gidstr.startsWith("20570")){
+    vip = 3;
+  }else if(gidstr.startsWith("69738")){
+    vip = 2;
+  }else if(gidstr.startsWith("22169")){
+    vip = 2;
+  }else if(gidstr.startsWith("63508")){
+    vip = 2;
+  }else if(gidstr.startsWith("78078")){
+    vip = 1;
+  }else if(gidstr.startsWith("56828")){
+    vip = 1;
+  }else if(gidstr.startsWith("96435")){
+    vip = 1;
+  }else if(gidstr.startsWith("20570")){
+    vip = 1;
+  }else if(gidstr.startsWith("20570")){
+    vip = 1;
+  }else if(gidstr.startsWith("20570")){
+    vip = 1;
+  }else if(gidstr.startsWith("20570")){
+    vip = 1;
+  }else if(gidstr.startsWith("20570")){
+    vip = 1;
+  }else if(gidstr.startsWith("20570")){
+    vip = 1;
+  }else if(gidstr.startsWith("20570")){
+    vip = 1;
+  }
+  setTimeout(function(){
+    if(vip>0){
+      queue.unshift({gid:groupid,msg:msg});
+    }else{
+      queue.push({gid:groupid,msg:msg});
+    }
+  },666)
+
+
 }
 
 
@@ -160,7 +199,6 @@ function doSend(thread){
 }
 
 doSend(1);
-doSend(2);
 
 
 
@@ -224,6 +262,8 @@ function handleMsg_D(msgObj,response) {
     }
     if (saveAlarm(content, userid, callback)) {
     } else {
+      //TODO
+      return;
       var from = userid;
       var groupid = 999999999;
       var groupName = 'private_group_name';
