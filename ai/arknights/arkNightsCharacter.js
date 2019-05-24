@@ -32,6 +32,7 @@ module.exports = function(qq, content, callback){
     } else {
       str = `${chTmp.map(x => `${x.desc}\n${x.skills.join('\n')}`).join('\n\n')}`
     }
+    // console.log(str)
     drawTxtImage('',str,callback);
   }
 }

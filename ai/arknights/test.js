@@ -8,9 +8,9 @@ const c = m => {
   console.log(m)
 }
 // console.log(akk('skchr_plosis_2', '3'))
-akc('123456', '5 1-1 1-80   ', c)
+// akc('123456', '5 1-1 1-80   ', c)
 // aks('123456', '白面鸮 adfa', c)
-// aks('123456', '蓝毒 8', c)
+aks('123456', '艾雅法拉 8', c)
 // aks('123456', '蓝毒 9', c)
 // aks('123456', '蓝毒 10', c)
 ak(123,'[CQ:image,file=AC3933741FBC22E8A2875F536EEC94F5.jpg,url=https://gchat.qpic.cn/gchatpic_new/357474405/2195700800-2744645707-AC3933741FBC22E8A2875F536EEC94F5/0?vuin=2375373419&term=2]', c)

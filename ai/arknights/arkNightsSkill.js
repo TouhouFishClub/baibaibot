@@ -20,10 +20,11 @@ module.exports = function(key, level) {
           .replace(new RegExp('<@ba.vdown>', 'g'), '')
           .replace(new RegExp('<@ba.rem>', 'g'), '')
           .replace(new RegExp('</>', 'g'), '')
+          .replace(new RegExp('\\\\n', 'g'), '\n')
         // console.log('====')
         // console.log(out)
-        if(out.match(/\-?\{[a-z0-9A-Z:_\-\.%@]+\}/g)){
-          out.match(/\-?\{[a-z0-9A-Z:_\-\.%@]+\}/g).forEach(re => {
+        if(out.match(/\-?\{[a-z0-9A-Z:_\-\.\[\]%@]+\}/g)){
+          out.match(/\-?\{[a-z0-9A-Z:_\-\.\[\]%@]+\}/g).forEach(re => {
             // console.log('<<<<')
             // console.log(re)
             let res = re, p = false
