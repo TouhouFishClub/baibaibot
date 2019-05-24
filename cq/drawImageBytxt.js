@@ -8,7 +8,7 @@ var {sendGmImage} = require('./sendImage');
 function drawTxtImage(words,txt,callback){
   var wa = txt.split('\n');
   var maxwd = 0;
-  var uwd = 23;
+  var uwd = 29;
   var uw = "";
   for(var i=0;i<wa.length;i++){
     var lw = wa[i];

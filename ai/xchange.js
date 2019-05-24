@@ -25,7 +25,7 @@ module.exports = function(userId, content, callback){
       break
     case 'b':
     case 'B':
-      getPrice(callback);
+      combine(callback);
       break
     case 'l':
     case 'L':

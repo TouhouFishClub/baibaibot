@@ -136,7 +136,8 @@ function arkNight(qq, content, callback) {
       if(akc_tmp.length > 10){
         callback(`搜索到${akc_tmp.length}位干员，请尝试输入其他tag`)
       } else {
-        callback(akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.name}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员')
+        var str = akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.name}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员'
+        drawTxtImage('',str,callback)
       }
     } else {
       let ak_group = {}, outStr = `【${tg.join(', ')}】\n查询到以下组合`
