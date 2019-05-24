@@ -46,7 +46,7 @@ module.exports = function(qq, content, callback) {
         }
         let exp = calc(characterExpMap, maxLevel[rare], tarEvolve, tarLevel) - calc(characterExpMap, maxLevel[rare], nowEvolve, nowLevel),
           gold = calc(characterUpgradeCostMap, maxLevel[rare], tarEvolve, tarLevel) - calc(characterUpgradeCostMap, maxLevel[rare], nowEvolve, nowLevel),
-          upgrade = evolveGoldCost[rare].slice(nowEvolve, tarEvolve).reduce((p, e) => p + e),
+          upgrade = evolveGoldCost[rare].slice(nowEvolve, tarEvolve).reduce((p, e) => p + e, 0),
           cExp = exp - nowExp < 0 ? 0 : exp - nowExp,
           lsCount = Math.ceil(cExp / 7400),
           cGold = gold + upgrade - lsCount * 360 - nowGold < 0 ? 0 : gold + upgrade - lsCount * 360 - nowGold,

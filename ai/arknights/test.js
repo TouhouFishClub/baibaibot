@@ -8,7 +8,7 @@ const c = m => {
   console.log(m)
 }
 // console.log(akk('skchr_plosis_2', '3'))
-// akc('123456', 'c 6 1 2-99   ', c)
+akc('123456', '5 1-1 1-80   ', c)
 // aks('123456', '白面鸮 adfa', c)
 // aks('123456', '蓝毒 8', c)
 // aks('123456', '蓝毒 9', c)
