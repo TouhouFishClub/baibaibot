@@ -1,5 +1,7 @@
 const { formatCharacter } = require('./arkNightsCharacterDataFormat')
 const aks = require('./arkNightsSkill')
+const {drawTxtImage} = require('../../cq/drawImageBytxt')
+
 
 module.exports = function(qq, content, callback){
   let { akc_data, akc_other_data } = formatCharacter()
@@ -23,11 +25,13 @@ module.exports = function(qq, content, callback){
   if(flag){
     callback('没有查询到此干员')
   } else {
+    var words;
+    var str;
     if(chTmp.length > 1){
-      callback(`查询到复数干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}`)
+      str = `查询到复数干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}`
     } else {
-      callback(`${chTmp.map(x => `${x.desc}\n${x.skills.join('\n')}`).join('\n\n')}`)
+      str = `${chTmp.map(x => `${x.desc}\n${x.skills.join('\n')}`).join('\n\n')}`
     }
+    drawTxtImage('',str,callback);
   }
-
 }

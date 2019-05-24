@@ -3,6 +3,7 @@ const path = require('path-extra')
 const _ = require('lodash')
 const { baiduocr } = require('../image/baiduocr');
 const { formatCharacter, hasTarget, checkTags, markTags, pertainTags, onlyRecruit } = require('./arkNightsCharacterDataFormat')
+const {drawTxtImage} = require('../../cq/drawImageBytxt')
 
 
 const excellentTags = ["位移", "召唤", "控场", "爆发", "快速复活", "削弱", "支援", "特种干员"]
@@ -323,7 +324,8 @@ function arkNight(qq, content, callback) {
       //     }
       //   })
       // })
-      callback(`[CQ:at,qq=${qq}]\n${outStr}`)
+      drawTxtImage(`[CQ:at,qq=${qq}]\n`,outStr,callback);
+      //callback(`[CQ:at,qq=${qq}]\n${outStr}`)
     }
   }
 }
