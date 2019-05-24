@@ -10,10 +10,11 @@ function saveChat(gid,uid,name,content){
   var data = {'_id':now,gid:gid,uid:uid,n:name,d:content,ts:now.getTime()};
   MongoClient.connect(mongourl, function(err, db) {
     if(err){
-      console.log('mongo error:!!!!!!!!!');
+      console.log('mongo erro4r:!!!!!!!!!');
     }else{
       var cl_chat = db.collection('cl_chat');
       cl_chat.save(data);
+      db.close();
     }
 
   });
@@ -22,7 +23,7 @@ function saveChat(gid,uid,name,content){
 function getChat(gid,ts,callback,order){
   MongoClient.connect(mongourl, function(err, db) {
     if(err){
-      console.log('mongo errore:!!!!!!!!!');
+      console.log('mongo erro5re:!!!!!!!!!');
       console.log(err)
     }else {
       var cl_chat = db.collection('cl_chat');
@@ -42,7 +43,9 @@ function getChat(gid,ts,callback,order){
       wr.toArray(function (err, arr) {
         callback(arr);
       })
+      db.close();
     }
+
   });
 }
 
