@@ -312,18 +312,18 @@ function arkNight(qq, content, callback) {
         })
       })
 
-      // Object.keys(ak_group).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
-      //   outStr += `【${key}】\n`
-      //   // ak_group[key].characters.sort((a, b) => b.rare -  a.rare)
-      //
-      //
-      //   Object.keys(ak_group[key]).sort((a, b) => b - a).forEach(akg => {
-      //     if(ak_group[key][akg].length > 0){
-      //       outStr += `${new Array(parseInt(akg)).fill('★').concat(new Array(6 - parseInt(akg)).fill('　')).join('')}`
-      //       outStr += `${ak_group[key][akg].map(x => x.name).join(' / ')}\n`
-      //     }
-      //   })
-      // })
+      Object.keys(ak_group).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
+        outStr += `【${key}】\n`
+        // ak_group[key].characters.sort((a, b) => b.rare -  a.rare)
+
+
+        Object.keys(ak_group[key]).sort((a, b) => b - a).forEach(akg => {
+          if(ak_group[key][akg].length > 0){
+            outStr += `${new Array(parseInt(akg)).fill('★').concat(new Array(6 - parseInt(akg)).fill('　')).join('')}`
+            outStr += `${ak_group[key][akg].map(x => x.name).join(' / ')}\n`
+          }
+        })
+      })
       drawTxtImage(`[CQ:at,qq=${qq}]\n`,outStr,callback);
       //callback(`[CQ:at,qq=${qq}]\n${outStr}`)
     }
