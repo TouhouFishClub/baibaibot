@@ -112,6 +112,7 @@ function reconnect(){
 
 
 var queue = []
+var xqueue = []
 function addSendQueue(groupid,msg){
   var gidstr = groupid+"";
   var vip = 0;
@@ -129,7 +130,7 @@ function addSendQueue(groupid,msg){
     vip = 1;
   }else if(gidstr.startsWith("96435")){
     vip = 1;
-  }else if(gidstr.startsWith("20570")){
+  }else if(gidstr.startsWith("14559")){
     vip = 1;
   }else if(gidstr.startsWith("20570")){
     vip = 1;
@@ -146,9 +147,9 @@ function addSendQueue(groupid,msg){
   }
   setTimeout(function(){
     if(vip>0){
-      queue.unshift({gid:groupid,msg:msg});
-    }else{
       queue.push({gid:groupid,msg:msg});
+    }else{
+      xqueue.push({gid:groupid,msg:msg});
     }
   },666)
 
