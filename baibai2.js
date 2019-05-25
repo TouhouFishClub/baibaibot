@@ -134,9 +134,9 @@ function addSendQueue(groupid,msg){
     vip = 1;
   }else if(gidstr.startsWith("77670")){
     vip = 1;
-  }else if(gidstr.startsWith("20570")){
+  }else if(gidstr.startsWith("54982")){
     vip = 1;
-  }else if(gidstr.startsWith("20570")){
+  }else if(gidstr.startsWith("57758")){
     vip = 1;
   }else if(gidstr.startsWith("20570")){
     vip = 1;
