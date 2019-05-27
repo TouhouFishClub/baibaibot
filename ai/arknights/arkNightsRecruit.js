@@ -13,6 +13,7 @@ const simMap = tag => {
     case "近卫":
       return "近卫干员"
     case "狙击":
+    case "组击干员":
       return "狙击干员"
     case "重装":
       return "重装干员"
