@@ -13,6 +13,7 @@ const simMap = tag => {
     case "近卫":
       return "近卫干员"
     case "狙击":
+    case "组击干员":
       return "狙击干员"
     case "重装":
       return "重装干员"
@@ -65,7 +66,7 @@ module.exports = function(qq, content, callback){
         // console.log(sp[1])
         baiduocr(sp[1], d => {
           console.log('----')
-          arkNight(qq, checkTags(d.split('\n')).join(' '), callback)
+          arkNight(qq, checkTags(d.split('\n').map(t => simMap(t))).join(' '), callback)
         })
       }
     })
