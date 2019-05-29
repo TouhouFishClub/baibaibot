@@ -68,7 +68,7 @@ function getGroupMemberNum(gid){
   if(cache[gid]){
     return Object.keys(cache[gid]).length;
   }else{
-    return 999999;
+    return 0;
   }
 }
 

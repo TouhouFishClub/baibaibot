@@ -158,7 +158,7 @@ function addSendQueue(groupid,msg){
     vip = 1;
   }else if(gidstr.startsWith("20549")){
     vip = 1;
-  }else if(gidstr.startsWith("41936")){
+  }else if(gidstr.startsWith("xxxxx")){
     vip = 1;
   }else if(gidstr.startsWith("xxxxx")){
     vip = 1;
