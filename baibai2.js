@@ -33,7 +33,7 @@ require('./ai/push');
 require('./ai/ff14/activity');
 
 const {replayReply} = require('./ai/replay');
-const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,banUserRandom} = require('./cq/cache');
+const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,getGroupMemberNum,banUserRandom} = require('./cq/cache');
 const {lottoryReply} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
 const {drawNameCard} = require('./ai/games/card/draw');
@@ -150,14 +150,18 @@ function addSendQueue(groupid,msg){
     vip = 1;
   }else if(gidstr.startsWith("98265")){
     vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
+  }else if(gidstr.startsWith("10273")){
+    vip = 1;
+  }else if(gidstr.startsWith("20549")){
+    vip = 1;
+  }else if(gidstr.startsWith("41936")){
     vip = 1;
   }else if(gidstr.startsWith("xxxxx")){
     vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
-    vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
-    vip = 1;
+  }else{
+    if(getGroupMemberNum(groupid)<10){
+      vip=1;
+    }
   }
   setTimeout(function(){
     if(vip>0){
