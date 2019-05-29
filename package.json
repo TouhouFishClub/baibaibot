@@ -15,11 +15,13 @@
   "license": "MIT",
   "dependencies": {
     "axios": "",
-    "baidu-aip-sdk": "^2.3.3",
+    "baidu-aip-sdk": "",
+    "basic-auth": "^2.0.1",
     "body-parser": "",
     "bosonnlp": "",
-    "canvas": "^1.6.10",
+    "canvas": "",
     "express": "",
+    "express-ws": "^4.0.0",
     "fs-extra": "^4.0.1",
     "gm": "^1.23.1",
     "https-proxy-agent": "",
@@ -34,8 +36,7 @@
     "websocket": "",
     "wx-voice": "",
     "xml2js": "^0.4.19",
-    "xml2json": "^0.11.2",
-    "baidu-aip-sdk":""
+    "xml2json": "^0.11.2"
   },
   "devDependencies": {}
 }

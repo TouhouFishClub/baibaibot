@@ -64,6 +64,14 @@ function getUserNameInGroupByCache(data,qq){
   return 'card error:'+qq;
 }
 
+function getGroupMemberNum(gid){
+  if(cache[gid]){
+    return Object.keys(cache[gid]).length;
+  }else{
+    return 0;
+  }
+}
+
 function getUserNickInGroupByCache(qq,groupid){
   if(cache[groupid]){
     if(cache[groupid][qq]){
@@ -213,6 +221,7 @@ module.exports={
   getUserNameInGroup,
   getUserNickInGroupByCache,
   getGroupName,
+  getGroupMemberNum,
   banUserInGroup,
   banUserByName,
   banUserRandom,
