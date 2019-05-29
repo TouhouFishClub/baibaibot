@@ -7,7 +7,10 @@ const renderImage = () => {
     , ctx = canvas.getContext('2d');
   let fontFamily = 'STXIHEI'
   ctx.font = `20px ${fontFamily}`
-
+  ctx.fillStyle = 'rgba(255,255,255,1)'
+  ctx.fillRect(30, 30, 100, 100)
+  ctx.fillStyle = 'rgba(0,0,0,1)'
+  ctx.fillText('傻傻baka', 0, 20, 100)
 
   let imgData = canvas.toDataURL()
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")

@@ -1,6 +1,6 @@
 const fs = require('fs'),
   path = require('path'),
-  Canvas = require('canvas'),
+  { createCanvas, Canvas } = require('canvas'),
   { sendImageMsgBuffer } = require('../../../cq/sendImage.js')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
@@ -54,7 +54,7 @@ const renderTextBox = (ctx, left, top, width, height, radius, title) => {
 }
 
 module.exports = function(obj, wheres, __dir = 'mabi', callback){
-  let canvasTmp = new Canvas(400, 2000)
+  let canvasTmp = createCanvas(400, 2000)
     , ctxTmp = canvasTmp.getContext('2d');
   let fontFamily = 'STXIHEI'
   ctxTmp.font = `20px ${fontFamily}`
@@ -93,7 +93,7 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
   }
 
 
-  let canvas = new Canvas(400, cavasHeight)
+  let canvas = createCanvas(400, cavasHeight)
     , ctx = canvas.getContext('2d')
 
   ctx.font = `20px ${fontFamily}`
