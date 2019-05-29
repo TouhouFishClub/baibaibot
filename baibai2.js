@@ -142,7 +142,21 @@ function addSendQueue(groupid,msg){
     vip = 1;
   }else if(gidstr.startsWith("29096")){
     vip = 1;
-  }else if(gidstr.startsWith("20570")){
+  }else if(gidstr.startsWith("59589")){
+    vip = 1;
+  }else if(gidstr.startsWith("11208")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("98265")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
     vip = 1;
   }
   setTimeout(function(){
@@ -212,19 +226,13 @@ doSend(1);
 
 function handleMsg(msgObj,res){
   try{
-    //console.log(msgObj)
-    handleMsg_D(msgObj,res);
+    handleMsg_D0(msgObj,res);
   }catch(e){
     console.log(e);
   }
 }
 
-
-
-
-function handleMsg_D(msgObj,response) {
-  var type = msgObj.message_type;
-  var groupid = msgObj.group_id;
+function handleMsg_D0(msgObj,res){
   var content = msgObj.message;
   if (content) {
     if (content.indexOf('&amp;') > -1) {
@@ -236,8 +244,21 @@ function handleMsg_D(msgObj,response) {
     if (content.indexOf('[CQ:at,qq=2375373419]') > -1) {
       content = content.replace(/\[CQ:at,qq=2375373419\]/g, '百百');
     }
+    if (content.indexOf('[CQ:at,qq=3291864216]') > -1) {
+      content = content.replace(/\[CQ:at,qq=3291864216\]/g, '百百');
+    }
     content = simplized(content);
+    msgObj.message=content;
   }
+  handleMsg_D(msgObj,res);
+}
+
+
+
+function handleMsg_D(msgObj,response) {
+  var type = msgObj.message_type;
+  var groupid = msgObj.group_id;
+  var content = msgObj.message;
   var callback
   if (type == 'private') {
     var userid = msgObj.user_id;
@@ -264,7 +285,6 @@ function handleMsg_D(msgObj,response) {
     if (saveAlarm(content, userid, callback)) {
     } else {
       //TODO
-      return;
       var from = userid;
       var groupid = 999999999;
       var groupName = 'private_group_name';
