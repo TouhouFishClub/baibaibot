@@ -1,7 +1,7 @@
 const fs = require('fs'),
   path = require('path'),
-  Canvas = require('canvas'),
   { sendImageMsgBuffer } = require(path.join(__dirname, '../../cq/sendImage.js'))
+const { createCanvas, Canvas } = require('canvas')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
 
@@ -306,7 +306,7 @@ function drawImg(data,callback){
   if(data.length==0){
     callback('coinmarket BOOM!')
   }else{
-    let canvasTmp = new Canvas(400, 2000)
+    let canvasTmp = createCanvas(400, 2000)
       , ctxTmp = canvasTmp.getContext('2d');
     let fontFamily = 'STXIHEI'
     ctxTmp.font = `20px ${fontFamily}`;
@@ -334,7 +334,7 @@ function drawImg(data,callback){
     console.log(canvasWidth)
     let cavasHeight = data.length * 25 + 80
 
-    let canvas = new Canvas(canvasWidth, cavasHeight)
+    let canvas = createCanvas(canvasWidth, cavasHeight)
       , ctx = canvas.getContext('2d')
 
     ctx.font = `20px ${fontFamily}`
