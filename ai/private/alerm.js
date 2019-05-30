@@ -30,7 +30,7 @@ function saveAlarm(content,userid,callback){
   var after = 0;
   var n1 = content.indexOf("h");
   var n3 = content.indexOf("m");
-  if(n1>0){
+  if(n1>0&&n1<5){
     var num = content.substring(0,n1);
     var hours = parseInt(num);
     var s1 = content.substring(n1+1)
@@ -42,7 +42,7 @@ function saveAlarm(content,userid,callback){
     }
     after = hours*3600000+minutes*60000;
     future = new Date(new Date().getTime()+after);
-  }else if(n3>0){
+  }else if(n3>0&&n3<8){
     var num = content.substring(0,n3);
     var minutes = parseInt(num);
     after = minutes*60000;
