@@ -160,6 +160,26 @@ function addSendQueue(groupid,msg){
     vip = 1;
   }else if(gidstr.startsWith("xxxxx")){
     vip = 1;
+  }else if(gidstr.startsWith("18173")){
+    vip = 1;
+  }else if(gidstr.startsWith("39233")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
+  }else if(gidstr.startsWith("xxxxx")){
+    vip = 1;
   }else if(gidstr.startsWith("xxxxx")){
     vip = 1;
   }else{
@@ -678,6 +698,7 @@ module.exports={
   handleMsg,
   reconnect,
   reply,
+  handle_msg_D2,
   test1
 }
 
