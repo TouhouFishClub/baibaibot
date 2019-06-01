@@ -1,18 +1,8 @@
 const fs = require('fs-extra')
 const path = require('path-extra')
+const anch = require('./arkNightsHandbookInfo')
+const anrl = require('./arkNightsRecruitLimit')
 
-const male = [
-  'Castle-3',
-  '黑角',
-  '巡林者',
-  '12F',
-  '安德切尔',
-  '史都华德',
-  '安赛尔',
-  '角峰',
-  '讯使',
-  '银灰',
-]
 const type = {
   "WARRIOR": "近卫干员",
   "SNIPER": "狙击干员",
@@ -24,9 +14,7 @@ const type = {
   "PIONEER": "先锋干员",
 }
 const ignore = ['医疗探机', '触手', '幻影', '机械水獭']
-const canRecruit = [
-  'Lancet-2', 'Castle-3', '夜刀', '黑角', '巡林者', '杜林', '12F', '安德切尔', "芬", "香草", "翎羽", "玫兰莎", "米格鲁", "克洛丝", "炎熔", "芙蓉", "安赛尔", "史都华德", "梓兰", "艾丝黛尔", "夜烟", "远山", "杰西卡", "流星", "白雪", "清道夫", "红豆", "杜宾", "缠丸", "霜叶", "慕斯", "砾", "暗索", "末药", "调香师", "角峰", "蛇屠箱", "古米", "地灵", "阿消", "因陀罗", "火神", "白面鸮", "凛冬", "德克萨斯", "幽灵鲨", "蓝毒", "白金", "陨星", "梅尔", "赫默", "华法琳", "临光", "红", "雷蛇", "可颂", "普罗旺斯", "守林人", "崖心", "初雪", "真理", "狮蝎", "食铁兽", "能天使", "推进之王", "伊芙利特", "闪灵", "夜莺", "星熊", "塞雷娅", "银灰"
-]
+const canRecruit = anrl()
 const onlyRecruit = ['Lancet-2', 'Castle-3', '夜刀', '黑角', '巡林者', '杜林', '12F', '安德切尔', '艾丝黛尔', '因陀罗', '火神']
 const tags = ["近卫干员", "狙击干员", "重装干员", "医疗干员", "辅助干员", "术师干员", "特种干员", "先锋干员", "近战位", "远程位", "高级资深干员", "男性干员", "女性干员", "资深干员", "治疗", "支援", "新手", "费用回复", "输出", "生存", "防护", "群攻", "减速", "削弱", "快速复活", "位移", "召唤", "控场", "爆发"]
 
@@ -37,10 +25,14 @@ let akc_other_data = []
 const formatCharacter = () => {
   if(!akc_init){
     Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'character_table.json'))).forEach(ch => {
-      if(!hasTarget(ignore, ch.name)){
+      if(!hasTarget(ignore, ch.name) && ch.potentialItemId){
+        let storyText = anch(ch.potentialItemId.substr(2)).storyTextAudio[0].stories[0].storyText
+        let sex = storyText.substr(storyText.indexOf('性别】') + 3, 1)
         let data = {
           name: ch.name,
-          tag: ([type[ch.profession], ch.position, hasTarget(male, ch.name) ? '男性干员' : '女性干员']).concat(ch.rarity == 4 ? ['资深干员']: ch.rarity == 5 ? ['高级资深干员'] : []).concat(ch.tagList || []),
+          pid: ch.potentialItemId,
+          sex: sex,
+          tag: ([type[ch.profession], ch.position, sex == '男' ? '男性干员' : '女性干员']).concat(ch.rarity == 4 ? ['资深干员']: ch.rarity == 5 ? ['高级资深干员'] : []).concat(ch.tagList || []),
           rare: ch.rarity + 1,
           canRecruit: hasTarget(canRecruit, ch.name),
           onlyRecruit: hasTarget(onlyRecruit, ch.name),
