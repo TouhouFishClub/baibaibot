@@ -101,7 +101,7 @@ function initWS(){
       }
     });
   });
-  client.connect('ws://192.168.17.52:23335/event');
+  //client.connect('ws://192.168.17.52:23335/event');
 }
 
 function reconnect(){
@@ -166,7 +166,7 @@ function addSendQueue(groupid,msg){
     vip = 1;
   }else if(gidstr.startsWith("xxxxx")){
     vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
+  }else if(gidstr.startsWith("39255")){
     vip = 1;
   }else if(gidstr.startsWith("xxxxx")){
     vip = 1;
