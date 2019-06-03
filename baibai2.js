@@ -101,7 +101,7 @@ function initWS(){
       }
     });
   });
-  //client.connect('ws://192.168.17.52:23335/event');
+  client.connect('ws://192.168.17.52:23335/event');
 }
 
 function reconnect(){
