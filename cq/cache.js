@@ -120,7 +120,11 @@ function getGroupName(gid){
           var groupid = group.group_id;
           gcache[groupid]=group;
         }
-        return gcache[gid].group_name;
+        if(gcache[gid]){
+          return gcache[gid].group_name;
+        }else{
+          return 'gname_'+gid;
+        }
       });
     });
     req.on('error', function(err) {
