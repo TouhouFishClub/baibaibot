@@ -18,8 +18,7 @@ module.exports = function(qq, content, callback){
         desc:`${new Array(akc.rare).fill('★').concat(new Array(6 - akc.rare).fill('　')).join('')} ${akc.name}${akc.onlyRecruit ? '（公开限定）' : ''}${akc.canRecruit ? '' : '（此干员不可以被公开招募）'}\n${akc.tag.join(' ')}`,
         skills: akc.skills.map(skill => aks(skill, skillLevel - 1))
       })
-
-      // console.log(akc.skills)
+      // console.log(akc)
     }
   }
   if(flag){
