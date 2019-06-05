@@ -27,7 +27,7 @@ module.exports = function(qq, content, callback){
     var words;
     var str;
     if(chTmp.length > 1){
-      str = `查询到复数干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}`
+      str = `查询到${chTmp.length}位干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}\n若精确查找干员，请使用正则表达式搜索：如arks ^红$`
     } else {
       str = `${chTmp.map(x => `${x.desc}\n${x.skills.join('\n')}`).join('\n\n')}`
     }
