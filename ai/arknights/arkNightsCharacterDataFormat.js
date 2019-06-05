@@ -25,7 +25,7 @@ let akc_other_data = []
 const formatCharacter = () => {
   if(!akc_init){
     Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'character_table.json'))).forEach(ch => {
-      if(!hasTarget(ignore, ch.name) && ch.potentialItemId){
+      if(!hasTarget(ignore, ch.name) && (ch.potentialItemId || ch.name == '暴行')){
         let storyText = anch(ch.potentialItemId.substr(2)).storyTextAudio[0].stories[0].storyText
         let sex = storyText.substr(storyText.indexOf('性别】') + 3, 1)
         let data = {
