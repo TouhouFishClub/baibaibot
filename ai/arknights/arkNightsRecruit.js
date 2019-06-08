@@ -77,8 +77,12 @@ module.exports = function(qq, content, callback){
 
 function arkNight(qq, content, callback) {
   let sp = content.trim().replace(/ +/g, ' ').split(' ').map(s => simMap(s)), ignoreLevel = 2
+
+  // console.log(Date.now())
   let { akc_data, akc_other_data } = formatCharacter()
 
+  // console.log('===============')
+  // console.log(Date.now())
   if(/\d/.test(sp[0])){
     ignoreLevel = sp[0]
     sp = checkTags(sp.slice(1))
@@ -108,7 +112,8 @@ function arkNight(qq, content, callback) {
           if(akc.rare == 6){
             if(hasTarget(tg, '高级资深干员')){
               akc_tmp.push({
-                name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
+                name: akc.name,
+                showName: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
                 onlyRecruit: hasTarget(onlyRecruit, akc.name),
                 level: level,
                 tags: markTags(akc.tag, st),
@@ -118,7 +123,8 @@ function arkNight(qq, content, callback) {
             }
           } else {
             akc_tmp.push({
-              name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
+              name: akc.name,
+              showName: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
               onlyRecruit: hasTarget(onlyRecruit, akc.name),
               level: level,
               tags: markTags(akc.tag, st),
@@ -134,13 +140,16 @@ function arkNight(qq, content, callback) {
 
     // console.log(ignoreLevel)
     if(ignoreLevel < 2){
+      /* single tag */
       if(akc_tmp.length > 10){
         callback(`搜索到${akc_tmp.length}位干员，请尝试输入其他tag`)
       } else {
-        var str = akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.name}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员'
+        var str = akc_tmp.sort((a, b) => b.level - a.level).map(c => `${new Array(c.rare).fill('★').concat(new Array(6 - c.rare).fill('　')).join('')} ${c.showName}\n${c.tags.join(' ')}`).join('\n') || '没有查询到相关干员'
+        // console.log(str)
         drawTxtImage('',str,callback)
       }
     } else {
+      /* multiple tags */
       let ak_group = {}, outStr = `【${tg.join(', ')}】\n查询到以下组合`
       akc_tmp.forEach(ak => {
         if(!ak_group[ak.tagGroup]){
@@ -249,7 +258,7 @@ function arkNight(qq, content, callback) {
       // console.log(akc_data)
 
       // console.log(ak_group)
-      let all_character_count = 0
+      let all_character_count = 0, all_character = []
       Object.keys(ak_group).forEach(tg => {
         akc_tmp.forEach(ak => {
           if(pertainTags(tg.split(' + '), ak.tagGroup.split(' + '))){
@@ -257,9 +266,11 @@ function arkNight(qq, content, callback) {
             // console.log(ak_group[tg])
             ak_group[tg][`${ak.rare}`].push(ak)
             all_character_count ++
+            all_character.push(ak.name)
           }
         })
       })
+
       let excellentTagGroup = {}
       Object.keys(ak_group).forEach(tg => {
         if(ak_group[tg]['3'] == 0){
@@ -280,19 +291,24 @@ function arkNight(qq, content, callback) {
           akc_data.forEach(akc => {
             if(akc.canRecruit && hasTarget(akc.tag, tag) && akc.rare < 6){
               cs[`${akc.rare}`].push({
-                name: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
+                name: akc.name,
+                showName: `${akc.name}${hasTarget(onlyRecruit, akc.name) ? '（公开限定）' : ''}`,
                 onlyRecruit: hasTarget(onlyRecruit, akc.name),
                 level: 1,
                 tags: markTags(akc.tag, [tag]),
                 tagGroup: tag,
                 rare: akc.rare
               })
+              all_character_count ++
+              all_character.push(akc.name)
             }
           })
           excellentTagGroup[tag] = cs
         }
       })
       // console.log(excellentTagGroup)
+      // console.log(all_character_count)
+      // console.log([...new Set(all_character)].length)
 
 
       if(Object.keys(excellentTagGroup).concat(Object.keys(ak_group)).length == 0){
@@ -309,7 +325,7 @@ function arkNight(qq, content, callback) {
           // console.log(excellentTagGroup[key][akg].length)
           if(excellentTagGroup[key][akg].length > 0){
             outStr += `${new Array(parseInt(akg)).fill('★').concat(new Array(6 - parseInt(akg)).fill('　')).join('')}`
-            outStr += `${excellentTagGroup[key][akg].map(x => x.name).join(' / ')}\n`
+            outStr += `${excellentTagGroup[key][akg].map(x => x.showName).join(' / ')}\n`
           }
         })
       })
@@ -322,10 +338,12 @@ function arkNight(qq, content, callback) {
         Object.keys(ak_group[key]).sort((a, b) => b - a).forEach(akg => {
           if(ak_group[key][akg].length > 0){
             outStr += `${new Array(parseInt(akg)).fill('★').concat(new Array(6 - parseInt(akg)).fill('　')).join('')}`
-            outStr += `${ak_group[key][akg].map(x => x.name).join(' / ')}\n`
+            outStr += `${ak_group[key][akg].map(x => x.showName).join(' / ')}\n`
           }
         })
       })
+      // console.log(Date.now())
+      // console.log(outStr)
       drawTxtImage(`[CQ:at,qq=${qq}]\n`,outStr,callback);
       //callback(`[CQ:at,qq=${qq}]\n${outStr}`)
     }
