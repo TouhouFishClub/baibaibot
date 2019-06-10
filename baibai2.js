@@ -125,27 +125,27 @@ function addSendQueue(groupid,msg){
   }else if(gidstr.startsWith("63508")){
     vip = 2;
   }else if(gidstr.startsWith("78078")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("56828")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("96435")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("14559")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("77670")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("54982")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("57758")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("74633")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("29096")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("59589")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("11208")){
-    vip = 1;
+    vip = 2;
   }else if(gidstr.startsWith("4193673")){
     vip = 1;
   }else if(gidstr.startsWith("6707501")){
@@ -191,7 +191,12 @@ function addSendQueue(groupid,msg){
   }
   setTimeout(function(){
     if(vip>0){
-      queue.push({gid:groupid,msg:msg});
+      if(vip>1){
+        queue.push({gid:groupid,msg:msg});
+      }else{
+        queue.shift({gid:groupid,msg:msg})
+      }
+
     }else{
       xqueue.push({gid:groupid,msg:msg});
     }
@@ -243,7 +248,52 @@ function doSend(thread){
   }
 }
 
+
+
+function doSend1(thread){
+  console.log('will send1:'+xqueue.length+":"+thread);
+  if(xqueue.length>0) {
+    var msgData = xqueue.shift();
+    var groupid = msgData.gid;
+    var msgd = msgData.msg;
+    var options = {
+      host: '192.168.17.52',
+      port: 23334,
+      path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(msgd),
+      method: 'GET',
+      headers: {}
+    };
+    console.log("send:"+msgd);
+    var req = http.request(options,function(res){
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        setTimeout(function(){
+          doSend1(thread);
+        },Math.floor(Math.random()*3500+2500));
+      });
+    });
+    saveChat(groupid, 2375373419, '百百', msgd);
+    req.on('error', function (err) {
+      console.log('req err:');
+      console.log(err);
+      setTimeout(function(){
+        doSend1(thread);
+      },Math.floor(Math.random()*3500+2500));
+    });
+    req.end();
+  }else{
+    setTimeout(function(){
+      doSend1(thread);
+    },Math.floor(Math.random()*3500+2500));
+  }
+}
+
+
 doSend(1);
+doSend1(2);
 
 
 
