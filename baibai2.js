@@ -192,9 +192,9 @@ function addSendQueue(groupid,msg){
   setTimeout(function(){
     if(vip>0){
       if(vip>1){
-        queue.push({gid:groupid,msg:msg});
+        queue.unshift({gid:groupid,msg:msg});
       }else{
-        queue.shift({gid:groupid,msg:msg})
+        queue.push({gid:groupid,msg:msg})
       }
 
     }else{
