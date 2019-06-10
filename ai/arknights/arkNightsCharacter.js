@@ -6,8 +6,8 @@ const {drawTxtImage} = require('../../cq/drawImageBytxt')
 module.exports = function(qq, content, callback){
   let { akc_data, akc_other_data } = formatCharacter()
 
-  console.log('====')
-  console.log(Date.now())
+  // console.log('====')
+  // console.log(Date.now())
   let sp = content.trim().replace(/ +/g, ' ').split(' '), flag = true, all_data = akc_data.concat(akc_other_data)
   let chTmp = [], skillLevel = parseInt(sp[1]) || 1
   for(var i = 0; i < all_data.length; i++){
@@ -23,7 +23,7 @@ module.exports = function(qq, content, callback){
       // console.log(akc)
     }
   }
-  console.log(Date.now())
+  // console.log(Date.now())
   if(flag){
     callback('没有查询到此干员')
   } else {
@@ -34,7 +34,7 @@ module.exports = function(qq, content, callback){
     } else {
       str = `${chTmp.map(x => `${x.desc}\n${x.skills.map(skill => aks(skill, skillLevel - 1)).join('\n')}`).join('\n\n')}`
     }
-    console.log(str)
+    // console.log(str)
     drawTxtImage('',str,callback);
   }
 }
