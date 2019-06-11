@@ -102,7 +102,7 @@ function drawNameCard_1(username,qq,callback,groupid){
     }
   }
 
-  if(Math.random()<0.08){
+  if(Math.random()<0.02){
     var rd = Math.floor(Math.random()*432100)+12345;
     fetchYande(rd,function(r){
       var ri = parseInt(r);
