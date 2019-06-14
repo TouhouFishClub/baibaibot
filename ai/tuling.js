@@ -109,6 +109,7 @@ function handleTulingResponse(resdata){
       ret = ret + value[type]+"\n";
     }
     if(ret.indexOf('请求次数超限制')>=0){
+      console.log(data);
       tulingkeyindex=tulingkeyindex+1;
       if(tulingkeyindex>=tulingkeyarr.length){
         tulingkeyindex=0;
