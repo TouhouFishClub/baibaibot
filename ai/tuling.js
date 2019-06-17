@@ -28,7 +28,7 @@ var tulingkeyarr=[
   tulingApiKey5
 ]
 
-function tulingMsg(userid,content,callback,groupid){
+function tulingMsg3(userid,content,callback,groupid){
   var then=limit[groupid];
   if(then){
     if(new Date().getTime()-then<3000){
@@ -124,8 +124,86 @@ function handleTulingResponse(resdata){
     console.log(data);
     return '';
   }
+}
+
+
+
+
+
+
+function tulingMsg(userid,content,callback,groupid){
+  var options = {
+    hostname: 'open.turingapi.com',
+    port: 80,
+    path: '/v1/openapi',
+    method: 'POST',
+    headers:{
+      'Content-Type':'application/json;charset=UTF-8',
+      'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
+    }
+  };
+  var body = {"user_info":{"open_id":"89fed502-1d49-4332-b1fc-8e72c8542bad"},"robot_id":"206427"};
+  body.input_text=content;
+  var req = http.request(options, function (res) {
+    res.setEncoding('utf8');
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+
+    res.on('end', function () {
+      var ret = '';
+      var data = eval('('+resdata+')');
+      var code = data.code;
+      if(code==200){
+        var result = data.result;
+        if(result){
+          var datas = result.datas;
+          if(datas){
+            for(var i=0;i<datas.length;i++){
+              ret = ret + datas[i].value+"\n";
+            }
+          }
+        }
+      }
+      ret = ret.trim();
+      if(ret!='哇'){
+        nlp.sentiment(ret, function (data) {
+          try{
+            var dd = eval('('+data+')');
+            console.log(dd);
+            if(dd&&dd[0]&&dd[0][0]){
+              var positive = dd[0][0];
+              var negative = dd[0][1];
+              var addrate = positive-negative;
+              saveLike(userid,addrate,function(likeret){
+                if(likeret>1){
+                  callback('百百对您的好感度上升到了'+likeret+',输入【好感度】可查看好感度');
+                }
+              })
+            }
+          }catch(e){
+
+          }
+        });
+      }
+      callback(ret);
+    });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.write(JSON.stringify(body));
+  req.end();
 
 }
+
+
+
+
+
+
 
 
 
