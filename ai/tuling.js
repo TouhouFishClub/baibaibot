@@ -1,5 +1,6 @@
 var https=require('https');
 var http = require('http');
+var crypto = require('crypto');
 const tulingApiKey = "9cca8707060f4432800730b2ddfb029b";
 const tulingApiKey2 = "77cb8ddbbd4c48eb8eba9009ae769169";
 const tulingApiKey3 = "8509c38c2cec4f9aa107ee56341a4179";
@@ -142,15 +143,26 @@ function tulingMsg(userid,content,callback,groupid){
       'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
     }
   };
-  var body = {"user_info":{"open_id":"89fed502-1d49-4332-b1fc-8e72c8542bad"},"robot_id":"206427"};
+  var md5=crypto.createHash("md5");
+  md5.update(groupid+"");
+  var md5str=md5.digest('hex').toLowerCase();
+  var openid = "";
+  for(var i=0;i<md5str.length;i++){
+    if(i==8||i==12||i==16||i==20){
+      openid=openid+"-";
+    }
+    openid=openid+md5str[i];
+  }
+
+  var body = {"user_info":{"open_id":openid},"robot_id":"206427"};
   body.input_text=content;
+  console.log(body);
   var req = http.request(options, function (res) {
     res.setEncoding('utf8');
     var resdata = '';
     res.on('data', function (chunk) {
       resdata = resdata + chunk;
     });
-
     res.on('end', function () {
       var ret = '';
       var data = eval('('+resdata+')');
