@@ -572,6 +572,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       default:
         anr(from, con.substring(3), callback)
     }
+    return
   }
 
   if(fie == 'opt' && fi != 'opts'){
