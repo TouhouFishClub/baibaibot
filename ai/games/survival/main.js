@@ -482,7 +482,7 @@ function generateImage(callback,utext){
 var death={};
 function userDeath(qq,groupid){
   banUser(qq,groupid);
-  death[groupid+"_"+qq]=new Date().getTime()+60000*6
+  death[groupid+"_"+qq]=new Date().getTime()+60000*3
 }
 
 
