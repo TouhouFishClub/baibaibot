@@ -75,6 +75,14 @@ function addplayer(qq,username,groupid,callback){
     var now = new Date();
     var code = Object.keys(players).length;
     if(code<13){
+      if(death[groupid+"_"+qq]){
+        if(death[groupid+"_"+qq]>new Date().getTime()){
+          callback("【"+username+"】已经死亡，无法加入游戏\n复活时间："+new Date(death[groupid+"_"+qq]));
+          return;
+        }
+      }
+
+
       var obj = {qq:qq,name:username,code:code,ts:now};
       players[qq]=obj;
       callback("【"+username+"】加入了游戏");
@@ -470,9 +478,14 @@ function generateImage(callback,utext){
   sendGmImage(img1,utext,callback,1);
 }
 
+
+var death={};
 function userDeath(qq,groupid){
   banUser(qq,groupid);
+  death[groupid+"_"+qq]=new Date().getTime()+60000*6
 }
+
+
 
 
 function banUser(qq,group){
