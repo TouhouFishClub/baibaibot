@@ -20,9 +20,9 @@ function sendGmImage(gmObj,words='',callback,order){
     var imgname = "send/"+folder+"/card/"+imgname2+".jpg";
     var ret;
     if(order==1){//words behind
-      ret = '[CQ:image,file='+imgname+']'+words;
+      ret = '[CQ:image,file='+imgname+']\n'+words;
     }else{
-      ret = words+'[CQ:image,file='+imgname+']';
+      ret = words+'\n[CQ:image,file='+imgname+']';
     }
     callback(ret);
   });
