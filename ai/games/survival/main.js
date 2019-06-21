@@ -77,9 +77,9 @@ function addplayer(qq,username,groupid,callback){
     if(code<13){
       var obj = {qq:qq,name:username,code:code,ts:now};
       players[qq]=obj;
-      callback("【"+username+"】进入了赌场");
+      callback("【"+username+"】加入了游戏");
     }else{
-      callback("【"+username+"】进入赌场失败，被扔到了吃瓜群众席位")
+      callback("【"+username+"】加入游戏失败，被扔到了吃瓜群众席位")
     }
   }
 }
@@ -206,12 +206,12 @@ function next2(text,callback){
       }
     }
     if(will){
-      callback(text+"下一个【"+next.name+"】");
+      var utext = text+"下一个【"+next.name+"】";
       timeoutmap={};
       var rd = new Date().getTime();
       timeoutmap[next.qq+rd]=1;
       nowrunning=next.qq;
-      generateImage(callback);
+      generateImage(callback,utext);
       setTimeout(function(){
         usertimeout(next,callback,rd);
       },20000)
@@ -445,13 +445,12 @@ function checkwin(callback,text){
     uret= left;
   }
   if(uret==true){
-    generateImage(callback);
-    callback(text+ret);
+    generateImage(callback,text+ret);
   }
   return(uret);
 }
 
-function generateImage(callback){
+function generateImage(callback,utext){
   var img1 = new imageMagick("static/block.png");
   img1.autoOrient()
     .fontSize(25)
@@ -468,7 +467,7 @@ function generateImage(callback){
       }
     }
   }
-  sendGmImage(img1,"",callback);
+  sendGmImage(img1,utext,callback,1);
 }
 
 function userDeath(qq,groupid){
