@@ -1,16 +1,22 @@
 const fs = require('fs'),
   path = require('path'),
-  Canvas = require('canvas')
+  {createCanvas, loadImage} = require('canvas')
 
-const renderImage = () => {
-  let canvas = new Canvas(400, 400)
+const renderImage = async () => {
+  let canvas = createCanvas(400, 400)
     , ctx = canvas.getContext('2d');
   let fontFamily = 'STXIHEI'
   ctx.font = `20px ${fontFamily}`
   ctx.fillStyle = 'rgba(255,255,255,1)'
   ctx.fillRect(30, 30, 100, 100)
   ctx.fillStyle = 'rgba(0,0,0,1)'
-  ctx.fillText('傻傻baka', 0, 20, 100)
+  ctx.fillText('测试文字', 0, 20, 100)
+
+  await loadImage('./test/timg.jpg').then((image) => {
+    console.log(image)
+    ctx.drawImage(image, 50, 0, 70, 70)
+  })
+
 
   let imgData = canvas.toDataURL()
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
