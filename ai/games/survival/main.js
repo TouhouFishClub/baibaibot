@@ -282,7 +282,7 @@ function go(content,qq,callback) {
   }
   if (pos[0] > -1) {
     if (content.startsWith("开枪")) {
-      var direction = content.substring(2);
+      var direction = content.substring(2).trim();
       var ele = gun.shift();
       if (ele == 1) {
         var starty = pos[0];
@@ -362,7 +362,7 @@ function go(content,qq,callback) {
         ret = ret + "【"+user.name+"】" + "扣动了扳机，然而弹夹里并没有装填上子弹\n"
       }
     }else if(content.startsWith("移动")){
-      var direction = content.substring(2);
+      var direction = content.substring(2).trim();
       var targetpos = [-1,-1];
 
       var rate = winrate[qq];
