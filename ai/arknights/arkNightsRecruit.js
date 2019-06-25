@@ -5,6 +5,8 @@ const { baiduocr } = require('../image/baiduocr');
 const { formatCharacter, hasTarget, checkTags, markTags, pertainTags, onlyRecruit } = require('./arkNightsCharacterDataFormat')
 const {drawTxtImage} = require('../../cq/drawImageBytxt')
 
+const { renderImage } = require('./recruitImage')
+
 
 const excellentTags = ["位移", "召唤", "控场", "爆发", "快速复活", "削弱", "支援", "特种干员"]
 
@@ -118,7 +120,8 @@ function arkNight(qq, content, callback) {
                 level: level,
                 tags: markTags(akc.tag, st),
                 tagGroup: st.sort().join(' + '),
-                rare: akc.rare
+                rare: akc.rare,
+                appellation: akc.appellation,
               })
             }
           } else {
@@ -129,7 +132,8 @@ function arkNight(qq, content, callback) {
               level: level,
               tags: markTags(akc.tag, st),
               tagGroup: st.sort().join(' + '),
-              rare: akc.rare
+              rare: akc.rare,
+              appellation: akc.appellation,
             })
           }
         }
@@ -297,7 +301,8 @@ function arkNight(qq, content, callback) {
                 level: 1,
                 tags: markTags(akc.tag, [tag]),
                 tagGroup: tag,
-                rare: akc.rare
+                rare: akc.rare,
+                appellation: akc.appellation,
               })
               all_character_count ++
               all_character.push(akc.name)
@@ -320,6 +325,9 @@ function arkNight(qq, content, callback) {
 
 
       if(Object.keys(excellentTagGroup).length){
+
+        renderImage(excellentTagGroup)
+
         Object.keys(excellentTagGroup).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
           outStr += `【${key}】<<< 仅出现4星以上干员\n`
           Object.keys(excellentTagGroup[key]).sort((a, b) => b - a).forEach(akg => {
@@ -331,6 +339,9 @@ function arkNight(qq, content, callback) {
           })
         })
       } else {
+
+        renderImage(ak_group)
+
         Object.keys(ak_group).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
           outStr += `【${key}】\n`
           // ak_group[key].characters.sort((a, b) => b.rare -  a.rare)
@@ -346,6 +357,8 @@ function arkNight(qq, content, callback) {
       }
       // console.log(Date.now())
       console.log(outStr)
+
+
       drawTxtImage(`[CQ:at,qq=${qq}]\n`,outStr,callback);
       //callback(`[CQ:at,qq=${qq}]\n${outStr}`)
     }
