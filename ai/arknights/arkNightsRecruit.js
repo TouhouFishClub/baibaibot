@@ -326,40 +326,45 @@ function arkNight(qq, content, callback) {
 
       if(Object.keys(excellentTagGroup).length){
 
-        renderImage(excellentTagGroup)
+        renderImage(tg.join('+'), excellentTagGroup, data => {
+          callback(`[CQ:at,qq=${qq}]\n${outStr}\n${data}`)
+        }, true)
 
-        Object.keys(excellentTagGroup).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
-          outStr += `【${key}】<<< 仅出现4星以上干员\n`
-          Object.keys(excellentTagGroup[key]).sort((a, b) => b - a).forEach(akg => {
-            // console.log(excellentTagGroup[key][akg].length)
-            if(excellentTagGroup[key][akg].length > 0){
-              outStr += `${new Array(parseInt(akg)).fill('★').concat(new Array(6 - parseInt(akg)).fill('　')).join('')}`
-              outStr += `${excellentTagGroup[key][akg].map(x => x.showName).join(' / ')}\n`
-            }
-          })
-        })
+        // Object.keys(excellentTagGroup).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
+        //   outStr += `【${key}】<<< 仅出现4星以上干员\n`
+        //   Object.keys(excellentTagGroup[key]).sort((a, b) => b - a).forEach(akg => {
+        //     // console.log(excellentTagGroup[key][akg].length)
+        //     if(excellentTagGroup[key][akg].length > 0){
+        //       outStr += `${new Array(parseInt(akg)).fill('★').concat(new Array(6 - parseInt(akg)).fill('　')).join('')}`
+        //       outStr += `${excellentTagGroup[key][akg].map(x => x.showName).join(' / ')}\n`
+        //     }
+        //   })
+        // })
       } else {
 
-        renderImage(ak_group)
-
-        Object.keys(ak_group).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
-          outStr += `【${key}】\n`
-          // ak_group[key].characters.sort((a, b) => b.rare -  a.rare)
-
-
-          Object.keys(ak_group[key]).sort((a, b) => b - a).forEach(akg => {
-            if(ak_group[key][akg].length > 0){
-              outStr += `${new Array(parseInt(akg)).fill('★').concat(new Array(6 - parseInt(akg)).fill('　')).join('')}`
-              outStr += `${ak_group[key][akg].map(x => x.showName).join(' / ')}\n`
-            }
-          })
+        renderImage(tg.join('+'), ak_group, data => {
+          callback(`[CQ:at,qq=${qq}]\n${outStr}\n${data}`)
         })
+
+        // Object.keys(ak_group).sort((a, b) => b.split(' + ').length - a.split(' + ').length).forEach(key => {
+        //   outStr += `【${key}】\n`
+        //   // ak_group[key].characters.sort((a, b) => b.rare -  a.rare)
+        //
+        //
+        //   Object.keys(ak_group[key]).sort((a, b) => b - a).forEach(akg => {
+        //     if(ak_group[key][akg].length > 0){
+        //       outStr += `${new Array(parseInt(akg)).fill('★').concat(new Array(6 - parseInt(akg)).fill('　')).join('')}`
+        //       outStr += `${ak_group[key][akg].map(x => x.showName).join(' / ')}\n`
+        //     }
+        //   })
+        // })
       }
       // console.log(Date.now())
-      console.log(outStr)
+      // console.log(outStr)
 
 
-      drawTxtImage(`[CQ:at,qq=${qq}]\n`,outStr,callback);
+      // drawTxtImage(`[CQ:at,qq=${qq}]\n`,outStr,callback);
+
       //callback(`[CQ:at,qq=${qq}]\n${outStr}`)
     }
   }
