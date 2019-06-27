@@ -29,8 +29,10 @@ module.exports = function(key, level) {
             // console.log(re)
             let res = re, p = false
             if(res.indexOf(':') > -1){
+              if(res.indexOf('0%') > -1){
+                p = true
+              }
               res = res.substr(0, res.indexOf(':')) + '}'
-              p = true
             }
             res = res.toLowerCase()
             res = res.replace('-{', '{')
