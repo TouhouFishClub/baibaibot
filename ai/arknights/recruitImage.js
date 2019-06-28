@@ -64,7 +64,7 @@ const renderImage = async (tags, data, callback, isExcellent = false) => {
 
 
   // console.log(tags)
-  sendImageMsgBuffer(dataBuffer, tags.split('+').join('_'), 'arknights', msg => {
+  sendImageMsgBuffer(dataBuffer, tags.split('+').sort().join('_'), 'arknights', msg => {
     callback(msg)
   })
 
