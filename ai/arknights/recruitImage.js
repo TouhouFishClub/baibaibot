@@ -202,7 +202,7 @@ const drawImageSync = async (ctx, url, ...args) => {
     ctx.drawImage(img, ...args)
   } catch (e) {
     console.log('==== load image error ====')
-    // console.log(e)
+    console.log(e)
   }
 }
 
