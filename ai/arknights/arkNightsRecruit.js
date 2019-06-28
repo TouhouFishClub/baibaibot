@@ -321,7 +321,7 @@ function arkNight(qq, content, callback) {
         return
       }
 
-      outStr += '\n'
+      // outStr += '\n'
 
 
       if(Object.keys(excellentTagGroup).length){
