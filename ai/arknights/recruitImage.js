@@ -111,7 +111,7 @@ const renderCharacter = async (ctx, offsetTop, offsetLeft, character) => {
   // console.log(character)
   await drawImageSync(
     ctx,
-    `./chara/${character.appellation}.png`,
+    path.join(__dirname, `chara/${character.appellation}.png`),
     0,
     (180 - CHARACTER_CARD_HEIGHT * 1.8) / 2 + 20,
     180,
