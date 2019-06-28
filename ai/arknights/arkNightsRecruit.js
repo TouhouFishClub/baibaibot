@@ -122,6 +122,8 @@ function arkNight(qq, content, callback) {
                 tagGroup: st.sort().join(' + '),
                 rare: akc.rare,
                 appellation: akc.appellation,
+                displayLogo: akc.displayLogo,
+                profession: akc.profession,
               })
             }
           } else {
@@ -134,6 +136,8 @@ function arkNight(qq, content, callback) {
               tagGroup: st.sort().join(' + '),
               rare: akc.rare,
               appellation: akc.appellation,
+              displayLogo: akc.displayLogo,
+              profession: akc.profession,
             })
           }
         }
@@ -303,6 +307,8 @@ function arkNight(qq, content, callback) {
                 tagGroup: tag,
                 rare: akc.rare,
                 appellation: akc.appellation,
+                displayLogo: akc.displayLogo,
+                profession: akc.profession,
               })
               all_character_count ++
               all_character.push(akc.name)

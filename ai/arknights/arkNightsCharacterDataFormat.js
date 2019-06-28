@@ -42,6 +42,8 @@ const formatCharacter = () => {
           onlyRecruit: hasTarget(onlyRecruit, ch.name),
           skills: ch.skills.map(x => x.skillId),
           appellation: ch.appellation,
+          displayLogo: ch.displayLogo,
+          profession: ch.profession,
         }
         if(ch.rarity >= 2){
           akc_data.push(data)

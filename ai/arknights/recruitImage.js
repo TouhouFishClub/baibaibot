@@ -29,7 +29,7 @@ const renderImage = async (tags, data, callback, isExcellent = false) => {
 
   let canvas = createCanvas(canvasWidth, canvasHeight)
     , ctx = canvas.getContext('2d');
-  ctx.fillStyle = 'rgba(255,255,255,.5)'
+  ctx.fillStyle = 'rgba(255,255,255,.8)'
   ctx.fillRect(0, 0, canvasWidth, canvasHeight)
   ctx.font = `14px ${fontFamily}`
 
@@ -102,8 +102,8 @@ const renderCharacter = async (ctx, offsetTop, offsetLeft, character) => {
   ctx.fillStyle = 'rgba(255,255,255,1)'
   ctx.beginPath()
   ctx.moveTo(offsetLeft, offsetTop)
-  ctx.lineTo(offsetLeft + 100 + 2 * typeWidth, offsetTop)
-  ctx.lineTo(offsetLeft + 100, offsetTop + CHARACTER_CARD_HEIGHT)
+  ctx.lineTo(offsetLeft + 100 + 2 * typeWidth - 3, offsetTop)
+  ctx.lineTo(offsetLeft + 100 - 3, offsetTop + CHARACTER_CARD_HEIGHT)
   ctx.lineTo(offsetLeft, offsetTop + CHARACTER_CARD_HEIGHT)
   ctx.lineTo(offsetLeft, offsetTop)
   ctx.fill()
@@ -114,13 +114,30 @@ const renderCharacter = async (ctx, offsetTop, offsetLeft, character) => {
     ctx,
     path.join(__dirname, `chara/${character.appellation}.png`),
     0,
-    (180 - CHARACTER_CARD_HEIGHT * 1.8) / 2 + 20,
+    (180 - CHARACTER_CARD_HEIGHT * 1.8) / 2 + 10,
     180,
     CHARACTER_CARD_HEIGHT * 1.8,
     offsetLeft,
     offsetTop,
     100,
     CHARACTER_CARD_HEIGHT)
+
+  ctx.globalAlpha = 0.2
+  await drawImageSync(
+    ctx,
+    path.join(__dirname, `logo/${character.displayLogo}.png`),
+    0,
+    30,
+    240,
+    180,
+    offsetLeft + CHARACTER_CARD_WIDTH - CHARACTER_CARD_HEIGHT / 180 * 240 - 10,
+    offsetTop,
+    CHARACTER_CARD_HEIGHT / 180 * 240,
+    CHARACTER_CARD_HEIGHT
+  )
+  ctx.globalAlpha = 1
+
+
   let lengthDepth = 5
   for(let i = 1; i <= lengthDepth; i++){
     ctx.beginPath()
@@ -169,6 +186,36 @@ const renderCharacter = async (ctx, offsetTop, offsetLeft, character) => {
     offsetLeft + CHARACTER_CARD_WIDTH - ctx.measureText(character.appellation).width - 10,
     offsetTop + engFontSize + (20 - engFontSize) / 2 + 3
   )
+
+  ctx.fillStyle = '#333'
+  ctx.fillRect(offsetLeft, offsetTop, 20, 20)
+
+  await drawImageSync(
+    ctx,
+    path.join(__dirname, `profession/${character.profession}.png`),
+    offsetLeft,
+    offsetTop,
+    20,
+    20,
+  )
+
+  ctx.shadowColor = '#000'
+  ctx.shadowBlur = 3
+  ctx.shadowOffsetX = 1
+  ctx.shadowOffsetY = 1
+  ctx.font = `14px ${fontFamily}`
+  ctx.fillStyle = '#ffdf02'
+  for(let i = 0; i < character.rare; i++){
+    ctx.fillText(
+      '★',
+      offsetLeft + 23 + i * 10,
+      offsetTop + 14,
+    )
+  }
+  ctx.shadowOffsetX = 0
+  ctx.shadowOffsetY = 0
+  ctx.shadowBlur = 0
+
 }
 
 const renderTags = (ctx, offsetTop, tags) => {
