@@ -63,7 +63,8 @@ const renderImage = async (tags, data, callback, isExcellent = false) => {
   let dataBuffer = new Buffer(base64Data, 'base64')
 
 
-  sendImageMsgBuffer(dataBuffer, tags, 'arknights', msg => {
+  console.log(tags)
+  sendImageMsgBuffer(dataBuffer, tags.split('+').join('_'), 'arknights', msg => {
     callback(msg)
   })
 
