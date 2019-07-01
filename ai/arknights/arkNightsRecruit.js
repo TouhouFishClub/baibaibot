@@ -60,6 +60,30 @@ const simMap = tag => {
 // let akc_other_data = []
 
 module.exports = function(qq, content, callback){
+  if(content == '高级资深处男'){
+    renderImage(content, {
+      '高级资深处男': {
+        '6': [{
+          name: 'ywwuyi',
+          showName: `ywwuyi（公开限定）`,
+          onlyRecruit: true,
+          level: 1,
+          tags: '',
+          tagGroup: ['gaoji', 'chunan'],
+          rare: 6,
+          appellation: '1551',
+          displayLogo: 'logo_rhodes',
+          profession: 'CASTER',
+        }],
+        '5': [],
+        '4': [],
+        '3': [],
+      }
+    }, data => {
+      callback(`[CQ:at,qq=${qq}]\n${`【${content}】\n查询到以下组合`}\n${data}`)
+    })
+    return
+  }
   let n = content.indexOf('[CQ:image,')
   if(n > -1){
     content.substr(n).split(',').forEach(p => {
