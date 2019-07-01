@@ -60,8 +60,9 @@ const simMap = tag => {
 // let akc_other_data = []
 
 module.exports = function(qq, content, callback){
-  if(content == '高级资深处男'){
-    renderImage(content, {
+  let con = content.trim()
+  if(con == '高级资深处男'){
+    renderImage(con, {
       '高级资深处男': {
         '6': [{
           name: 'ywwuyi',
@@ -80,7 +81,7 @@ module.exports = function(qq, content, callback){
         '3': [],
       }
     }, data => {
-      callback(`[CQ:at,qq=${qq}]\n${`【${content}】\n查询到以下组合`}\n${data}`)
+      callback(`[CQ:at,qq=${qq}]\n${`【${con}】\n查询到以下组合`}\n${data}`)
     })
     return
   }
