@@ -377,7 +377,7 @@ function go(content,qq,callback) {
                 wstr = wstr + (pos[1]+1) + "排";
                 downgua[pos[1]+4]=1;
               }
-              ret = ret + wstr + "的吃瓜群众倒下了";
+              ret = ret + wstr + "的吃瓜群众倒下了\n";
 
             }else{
               ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，墙上出现了个❤型裂痕\n"
