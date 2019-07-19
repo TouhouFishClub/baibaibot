@@ -140,11 +140,55 @@ function init(callback) {
   }
 }
 var turn=5;
+
+var hasbomb = 0;
+var bombpos = [-1,-1];
+
 function gonext(left,text,callback){
+  if(hasbomb>0){
+    hasbomb--;
+    if(hasbomb==0){
+      var bomby = bombpos[0];
+      var bombx = bombpos[1];
+      var list = [[bomby-1,bombx],[bomby+1,bombx],[bomby,bombx-1],[bomby,bombx+1]];
+      for(var i=0;i<list.length;i++){
+        var uy = list[i][0];
+        var ux = list[i][i];
+        if(uy>0&&uy<maplen&&ux>0&&ux<maplen){
+          var u = map[uy][ux];
+          if(u!=0){
+            map[uy][ux]=0;
+            userDeath(u.qq,runninggroup);
+            text = text + "【"+u.name+"】被定时炸弹炸死了\n"
+          }
+        }
+      }
+    }
+  }
+
+
   if(Math.random()<1/(order.length+turn)){
     turn=5;
-    var rd = Math.floor(Math.random()*12);
-    if(rd<4){
+    var nummax = (hasbomb==0?24:12);
+    var rd = Math.floor(Math.random()*nummax);
+    if(rd>=12){
+      text = text + "吃瓜群众突然扔了一颗定时炸弹\n";
+      var aftertime = Math.floor(Math.random()*(order.length+5))+1;
+      hashbomb = aftertime;
+
+      var insert = 0;
+      while(insert==0){
+        var rd = Math.floor(Math.random()*maplen*maplen);
+        var hd = Math.floor(rd/maplen);
+        var wd = rd%maplen;
+        if(map[hd][wd]==0){
+          bombpos = [hd,wd];
+          insert = 1;
+        }
+      }
+
+
+    }else if(rd<4){
       text = text + "吃瓜群众突然向第"+(rd+1)+"象限扔了一颗手榴弹\n";
       if(rd==0){
         fromw=2;
@@ -367,7 +411,7 @@ function go(content,qq,callback) {
             map[pos[0]][pos[1]]=0;
             userDeath(user.qq,runninggroup);
           }else{
-            if(Math.random()<0.5){
+            if(Math.random()<0.8){
               ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，竟然把墙穿透了\n";
               var wstr = "第";
               if(direction=="u"||direction=="d"){
@@ -378,6 +422,9 @@ function go(content,qq,callback) {
                 downgua[pos[0]+4]=1;
               }
               ret = ret + wstr + "的吃瓜群众倒下了\n";
+              if(Math.random()<1){
+                //ret = ret + "【"+user.name+"】获得了战利品【炸弹】\n"
+              }
 
             }else{
               ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，墙上出现了个❤型裂痕\n"
@@ -501,6 +548,10 @@ function generateImage(callback,utext){
         img1.drawText(j*140+25,i*140+55,shortname,'NorthWest')
       }
     }
+  }
+  if(hasbomb>0){
+    img1.fontSize(30).fill('red')
+    img1.drawText(bombpos[0]*140+25,bombpos[1]*140+55,"💣"+hasbomb,'NorthWest')
   }
   sendGmImage(img1,utext,callback,1);
 }
