@@ -371,11 +371,11 @@ function go(content,qq,callback) {
               ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，竟然把墙穿透了\n";
               var wstr = "第";
               if(direction=="u"||direction=="d"){
-                wstr = wstr + (pos[0]+1) + "列";
-                downgua[pos[0]+8]=1;
+                wstr = wstr + (pos[1]+1) + "列";
+                downgua[pos[1]+8]=1;
               }else{
-                wstr = wstr + (pos[1]+1) + "排";
-                downgua[pos[1]+4]=1;
+                wstr = wstr + (pos[0]+1) + "排";
+                downgua[pos[0]+4]=1;
               }
               ret = ret + wstr + "的吃瓜群众倒下了\n";
 
