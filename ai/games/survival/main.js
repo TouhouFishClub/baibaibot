@@ -136,6 +136,8 @@ function init(callback) {
   }else{
     order.sort(function(a,b){return Math.random()-0.5});
     downgua={};
+    hasbomb=0;
+    bombpos=[-1,-1];
     next2("游戏开始,枪内子弹【"+guncount+"/"+maplen*maplen+"】\n",callback);
   }
 }
@@ -169,7 +171,7 @@ function gonext(left,text,callback){
 
   if(Math.random()<1/(order.length+turn)){
     turn=5;
-    var nummax = (hasbomb==0?24:12);
+    var nummax = (hasbomb==0?12:12);
     var rd = Math.floor(Math.random()*nummax);
     if(rd>=12){
       text = text + "吃瓜群众突然扔了一颗定时炸弹\n";
