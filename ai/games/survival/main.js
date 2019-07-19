@@ -92,6 +92,9 @@ function addplayer(qq,username,groupid,callback){
   }
 }
 
+
+var downgua = {};
+
 function init(callback) {
   map = [];
   for (var i = 0; i < maplen; i++) {
@@ -132,6 +135,7 @@ function init(callback) {
     running=false;
   }else{
     order.sort(function(a,b){return Math.random()-0.5});
+    downgua={};
     next2("游戏开始,枪内子弹【"+guncount+"/"+maplen*maplen+"】\n",callback);
   }
 }
@@ -174,23 +178,31 @@ function gonext(left,text,callback){
         }
       }
     }else if(rd>=4&&rd<8){
-      text = text + "吃瓜群众突然开枪向第"+(rd-3)+"排扫射\n";
-      for(var i=0;i<maplen;i++){
-        var u = map[rd-4][i];
-        if(u!=0){
-          map[rd-4][i]=0;
-          userDeath(u.qq,runninggroup);
-          text = text + "【"+u.name+"】被炸死了\n"
+      if(downgua[rd]){
+        text = text + "吃瓜群众想开枪向第"+(rd-3)+"排扫射\n但是第"+(rd-3)+"排的射手倒下了\n";
+      }else{
+        text = text + "吃瓜群众突然开枪向第"+(rd-3)+"排扫射\n";
+        for(var i=0;i<maplen;i++){
+          var u = map[rd-4][i];
+          if(u!=0){
+            map[rd-4][i]=0;
+            userDeath(u.qq,runninggroup);
+            text = text + "【"+u.name+"】被炸死了\n"
+          }
         }
       }
     }else if(rd>=8&&rd<12){
-      text = text + "吃瓜群众突然开枪向第"+(rd-7)+"列扫射\n";
-      for(var i=0;i<maplen;i++){
-        var u = map[i][rd-8];
-        if(u!=0){
-          map[i][rd-8]=0;
-          userDeath(u.qq,runninggroup);
-          text = text + "【"+u.name+"】被炸死了\n"
+      if(downgua[rd]){
+        text = text + "吃瓜群众想开枪向第"+(rd-7)+"列扫射\n但是第"+(rd-7)+"列的射手倒下了\n";
+      }else {
+        text = text + "吃瓜群众突然开枪向第" + (rd - 7) + "列扫射\n";
+        for (var i = 0; i < maplen; i++) {
+          var u = map[i][rd - 8];
+          if (u != 0) {
+            map[i][rd - 8] = 0;
+            userDeath(u.qq, runninggroup);
+            text = text + "【" + u.name + "】被炸死了\n"
+          }
         }
       }
     }
@@ -355,7 +367,22 @@ function go(content,qq,callback) {
             map[pos[0]][pos[1]]=0;
             userDeath(user.qq,runninggroup);
           }else{
-            ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，墙上出现了个❤型裂痕\n"
+            if(Math.random()<0.5){
+              ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，竟然把墙穿透了\n";
+              var wstr = "第";
+              if(direction=="u"||direction=="d"){
+                wstr = wstr + (pos[0]+1) + "列";
+                downgua[pos[0]+8]=1;
+              }else{
+                wstr = wstr + (pos[1]+1) + "排";
+                downgua[pos[1]+4]=1;
+              }
+              ret = ret + wstr + "的吃瓜群众倒下了";
+
+            }else{
+              ret = ret + "【"+user.name+"】" + "一发子弹打到了墙上，墙上出现了个❤型裂痕\n"
+            }
+
           }
         }
       } else {
