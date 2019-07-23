@@ -256,11 +256,11 @@ function gonext(left,text,callback){
         }
       }
     }
-    if(hasbomb==1){
-      hasbomb=0;
-    }
   }else{
     turn--;
+  }
+  if(hasbomb==1){
+    hasbomb=0;
   }
   next2(text,callback);
 }
