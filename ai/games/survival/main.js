@@ -173,7 +173,6 @@ function gonext(left,text,callback){
   }
 
   var guarate = 1/(order.length+turn);
-  guarate = 1;
   if(Math.random()<guarate){
     turn=5;
     var nummax = (hasbomb==0?24:12);
