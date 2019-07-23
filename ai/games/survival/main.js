@@ -258,6 +258,9 @@ function gonext(left,text,callback){
     }
   }else{
     turn--;
+    if(turn<0){
+      turn =0;
+    }
   }
   if(hasbomb==1){
     hasbomb=0;
