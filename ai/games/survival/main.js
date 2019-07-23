@@ -180,8 +180,8 @@ function gonext(left,text,callback){
     var rd = Math.floor(Math.random()*nummax);
     if(rd>=12&&hasbomb==0){
       text = text + "吃瓜群众突然扔了一颗定时炸弹\n";
-      var aftertime = Math.floor(Math.random()*(order.length+5))+1;
-      aftertime=3;
+      var aftertime = Math.floor(Math.random()*(order.length+5))+2;
+      // aftertime=3;
       hasbomb = aftertime;
 
       var insert = 0;
