@@ -147,16 +147,20 @@ var hasbomb = 0;
 var bombpos = [-1,-1];
 
 function gonext(left,text,callback){
+  console.log('hasbomb:'+hasbomb);
   if(hasbomb>0){
     hasbomb--;
-    if(hasbomb==0){
-      var bomby = bombpos[0];
-      var bombx = bombpos[1];
-      var list = [[bomby-1,bombx],[bomby+1,bombx],[bomby,bombx-1],[bomby,bombx+1]];
+    if(hasbomb==1){
+      var bombx = bombpos[0];
+      var bomby = bombpos[1];
+      var list = [[bomby,bombx],[bomby-1,bombx],[bomby+1,bombx],[bomby,bombx-1],[bomby,bombx+1]];
+      console.log(list);
+      console.log(map);
+      text = text + "定时炸弹爆炸了\n";
       for(var i=0;i<list.length;i++){
         var uy = list[i][0];
-        var ux = list[i][i];
-        if(uy>0&&uy<maplen&&ux>0&&ux<maplen){
+        var ux = list[i][1];
+        if(uy>=0&&uy<maplen&&ux>=0&&ux<maplen){
           var u = map[uy][ux];
           if(u!=0){
             map[uy][ux]=0;
@@ -168,15 +172,17 @@ function gonext(left,text,callback){
     }
   }
 
-
-  if(Math.random()<1/(order.length+turn)){
+  var guarate = 1/(order.length+turn);
+  guarate = 1;
+  if(Math.random()<guarate){
     turn=5;
-    var nummax = (hasbomb==0?12:12);
+    var nummax = (hasbomb==0?24:12);
     var rd = Math.floor(Math.random()*nummax);
-    if(rd>=12){
+    if(rd>=12&&hasbomb==0){
       text = text + "吃瓜群众突然扔了一颗定时炸弹\n";
       var aftertime = Math.floor(Math.random()*(order.length+5))+1;
-      hashbomb = aftertime;
+      aftertime=3;
+      hasbomb = aftertime;
 
       var insert = 0;
       while(insert==0){
@@ -184,12 +190,11 @@ function gonext(left,text,callback){
         var hd = Math.floor(rd/maplen);
         var wd = rd%maplen;
         if(map[hd][wd]==0){
-          bombpos = [hd,wd];
+          bombpos = [wd,hd];
           insert = 1;
         }
       }
-
-
+      console.log(hasbomb,bombpos,"xxx");
     }else if(rd<4){
       text = text + "吃瓜群众突然向第"+(rd+1)+"象限扔了一颗手榴弹\n";
       if(rd==0){
@@ -251,6 +256,9 @@ function gonext(left,text,callback){
           }
         }
       }
+    }
+    if(hasbomb==1){
+      hasbomb=0;
     }
   }else{
     turn--;
@@ -534,6 +542,8 @@ function checkwin(callback,text){
   return(uret);
 }
 
+
+var indexStr = '①①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳'.split('');
 function generateImage(callback,utext){
   var img1 = new imageMagick("static/block.png");
   img1.autoOrient()
@@ -551,9 +561,10 @@ function generateImage(callback,utext){
       }
     }
   }
+  console.log(hasbomb,bombpos);
   if(hasbomb>0){
     img1.fontSize(30).fill('red')
-    img1.drawText(bombpos[0]*140+25,bombpos[1]*140+55,"💣"+hasbomb,'NorthWest')
+    img1.drawText(bombpos[0]*140+55,bombpos[1]*140+90,""+indexStr[(hasbomb-1)],'NorthWest')
   }
   sendGmImage(img1,utext,callback,1);
 }
@@ -579,5 +590,8 @@ function banUser(qq,group){
 
 
 module.exports={
-  handleGun
+  handleGun,
+  addplayer,
+  init,
+  generateImage
 }
