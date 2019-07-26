@@ -296,7 +296,11 @@ module.exports = function(content, qq, nickname, groupid, callback){
   renderGamer = groupid => {
     let gamerMsg = []
     Object.values(BmAdminObj[groupid].gamers).forEach(gamer => {
-      gamerMsg.push(`玩家${gamer.index}: ${atMsg(gamer.gamer)}(${gamer.hp > 0 ? gamer.hp : '死亡'})`)
+      if(gamer.hp > 0){
+        gamerMsg.push(`玩家${gamer.index}: ${atMsg(gamer.gamer)}(${gamer.hp > 0 ? gamer.hp : '死亡'})`)
+      } else {
+        gamerMsg.push(`玩家${gamer.index}: 死亡`)
+      }
     })
     return gamerMsg.join('\n')
   }
