@@ -1,5 +1,5 @@
 const fs = require('fs')
-const MARGIN = 5
+const MARGIN = 10
 const BLOCK_SIDE = 100
 const {createCanvas, loadImage} = require('canvas')
 
@@ -28,6 +28,7 @@ const renderImage = async (mapOption) => {
           BLOCK_SIDE,
         )
       }
+      ctx.lineWidth = 5
       ctx.strokeStyle = '#2196f3'
       ctx.strokeRect(x * (MARGIN + BLOCK_SIDE) + MARGIN, y * (MARGIN + BLOCK_SIDE) + MARGIN, BLOCK_SIDE, BLOCK_SIDE)
     }
