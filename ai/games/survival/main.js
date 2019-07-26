@@ -31,6 +31,7 @@ function handleGun(content,qq,username,groupid,callback){
     gunstr="";
     running=true;
     runninggroup=groupid;
+
     callback(ret);
     setTimeout(function(){
       init(callback);
@@ -81,8 +82,6 @@ function addplayer(qq,username,groupid,callback){
           return;
         }
       }
-
-
       var obj = {qq:qq,name:username,code:code,ts:now};
       players[qq]=obj;
       callback("【"+username+"】加入了游戏");
@@ -179,7 +178,7 @@ function gonext(left,text,callback){
     var rd = Math.floor(Math.random()*nummax);
     if(rd>=12&&hasbomb==0){
       text = text + "吃瓜群众突然扔了一颗定时炸弹\n";
-      var aftertime = Math.floor(Math.random()*(order.length+5))+2;
+      var aftertime = Math.floor(Math.random()*0.5*(order.length+5))+2;
       // aftertime=3;
       hasbomb = aftertime;
 
