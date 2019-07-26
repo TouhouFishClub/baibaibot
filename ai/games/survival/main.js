@@ -1,5 +1,6 @@
 var gm = require('gm')
 var request = require("request");
+var fs = require("fs");
 var imageMagick = gm.subClass({ imageMagick : true });
 var {sendGmImage} = require('../../../cq/sendImage');
 const {banUserInGroup} = require('../../../cq/cache');
@@ -85,10 +86,24 @@ function addplayer(qq,username,groupid,callback){
       var obj = {qq:qq,name:username,code:code,ts:now};
       players[qq]=obj;
       callback("【"+username+"】加入了游戏");
+      downloadAvatar(qq);
     }else{
       callback("【"+username+"】加入游戏失败，被扔到了吃瓜群众席位")
     }
   }
+}
+
+function downloadAvatar(qq){
+  var url = "https://q1.qlogo.cn/g?b=qq&nk="+qq+"&s=100";
+  request({
+    url: url,
+    method: "GET"
+  }, function(error, response, body){
+    if(error&&error.code){
+      console.log('pipe error catched!')
+      console.log(error);
+    }
+  }).pipe(fs.createWriteStream("static/avatar/"+qq+".jpg"));
 }
 
 
@@ -594,5 +609,6 @@ module.exports={
   handleGun,
   addplayer,
   init,
+  downloadAvatar,
   generateImage
 }
