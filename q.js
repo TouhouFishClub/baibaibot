@@ -12,8 +12,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var exec = require('child_process').exec;
 
-
-
 app.listen('10089', () => {
   console.log('server started')
   console.log('http://localhost:10089')
@@ -28,7 +26,7 @@ app.get('/restart',function(req,res){
 
     }
   });
-  res.send('restarting');
+  res.send('ok3');
 })
 
 
