@@ -3,22 +3,102 @@ const app = express();
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
-const {handleMsg,reconnect} = require('./baibai2');
+const {handleMsg,reconnect,handle_msg_D2} = require('./baibai2');
 const {getChat,saveChat} = require('./ai/chat/collect');
 const {checkError} = require('./tools/textCheck');
 const basicAuth = require('basic-auth');
+const {handlef1} = require("./route/f1")
+
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
 var request = require("request");
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
+/* set public path */
+
+
+
+
+var expressWs = require('express-ws')(app);
+var util = require('util');
+app.ws('/c/*', function(ws, req) {
+  var path = req.path.substring(1);
+  console.log(path);
+  var ret = {a:1};
+  ws.send(JSON.stringify(ret));
+  util.inspect(ws);
+  ws.on('message', function(msg) {
+    msg = JSON.parse(msg);
+    console.log(msg);
+    var msgType = msg.message_type;
+    console.log('ms:'+msgType+":"+(msgType=='group'));
+    if(msgType=='group'){
+      var content = msg.message;
+      var groupid = msg.group_id;
+      var from = msg.user_id;
+      var sender = msg.sender;
+      var name = sender?(sender.card?sender.card:sender.nickname):'[CQ:at,qq='+from+']';
+      var nickname = sender?(sender.nickname):'[CQ:at,qq='+from+']';
+      var groupName = 'group_'+groupid;
+      console.log(content,from,name,groupid,groupName,nickname,msgType)
+      var callback = function(replymsg){
+        setTimeout(function() {
+          var sendmsg = {
+            "action": "send_group_msg",
+            "params": {
+              "group_id": groupid,
+              "message": replymsg
+            },
+            "echo": new Date().getTime()
+          }
+          console.log(sendmsg);
+          ws.send(JSON.stringify(sendmsg));
+        },1000);
+      }
+      handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType)
+    }
+  });
+  ws.on('close', function() {
+
+  });
+});
+
+
 app.listen('10086', () => {
   console.log('server started')
   console.log('http://localhost:10086')
 })
 
-/* set public path */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -221,6 +301,10 @@ function groupm(req,res,path){
     }
   }).pipe(res);
 }
+
+app.get('/f1/*',function(req,res){
+  handlef1(req,res);
+})
 
 
 app.get('/xxx',function(req,res){
