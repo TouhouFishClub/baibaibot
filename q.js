@@ -18,7 +18,7 @@ app.listen('10089', () => {
 })
 
 app.get('/restart',function(req,res){
-  var cmdStr = './restart.sh';
+  var cmdStr = './bstart.sh';
   exec(cmdStr, function(err,stdout,stderr){
     if(err) {
       console.log('get weather api error:'+stderr);
