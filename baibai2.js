@@ -49,6 +49,7 @@ const rp = require('./ai/rp');
 const {G21Boss} = require('./ai/mabinogi/G21Boss');
 const checkIgnoreUser = require('./ai/ignoreUser');
 const {searchMHW} = require('./ai/mhw/index');
+const {searchFeChara} = require('./ai/fe/feChara');
 const {replyKancolleRoute} = require('./ai/kancolle/map_new');
 const {searchFF14Item} = require('./ai/ff14/item');
 const {searchQuest} = require('./ai/ff14/strategy');
@@ -550,14 +551,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(con.toLowerCase() === 'g21boss' || con.toLowerCase() === 'gboss'){
-    G21Boss(callback)
-    return
+  fi = con.substring(0,2)
+  if(fi=='fe'){
+    searchFeChara(content.substring(2),from,groupid,callback);
+    return;
   }
-  if(con.toLowerCase() === 'allboss'){
-    G21Boss(callback, true)
-    return
-  }
+
+
+
   let fie = con.substring(0, 3)
   if(fie.toLowerCase() == 'ark'){
     switch(con.substring(3, 4)){
