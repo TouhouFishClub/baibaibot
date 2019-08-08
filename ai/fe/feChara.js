@@ -67,7 +67,7 @@ function searchFeChara(content,userid,groupid,callback){
     }else{
       ret = '请选择：\n';
       for(var i=0;i<retlist.length;i++){
-        ret = ret + 'fe'+i+':'+retlist[i].name+'\n';
+        ret = ret + 'fex'+i+':'+retlist[i].name+'\n';
       }
       mem[groupid] = retlist;
     }
