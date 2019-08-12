@@ -144,6 +144,7 @@ function init(callback) {
       gunstr=gunstr+"0";
     }
   }
+  require('./render').renderImage(map);
   if(keys.length<2){
     callback("参加人数不足,游戏结束");
     running=false;
@@ -187,6 +188,9 @@ function gonext(left,text,callback){
   }
 
   var guarate = 1/(order.length+turn);
+  if(order.length+turn<=0){
+    guarate=1;
+  }
   if(Math.random()<guarate){
     turn=5;
     var nummax = (hasbomb==0?24:12);
@@ -272,9 +276,6 @@ function gonext(left,text,callback){
     }
   }else{
     turn--;
-    if(turn<0){
-      turn =0;
-    }
   }
   if(hasbomb==1){
     hasbomb=0;
