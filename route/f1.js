@@ -7,6 +7,7 @@ const APPID = 'wxd9959a1df47cc313'
 const noncestr = 'Wm3WZYTPz0wzccnW'
 
 function handlef1(req, res){
+  console.log(req.query)
   getToken(req.query.url || 'https://flandrescarlet.gitee.io/tools/wechat/', res)
 
   // var path = req.path;
