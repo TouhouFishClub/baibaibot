@@ -413,6 +413,8 @@ const currencyToCodeSynonyms = str => {
     case '港币':
       return currencyToCode('港元')
     case '台币':
+    case 'NTD':
+    case 'ntd':
       return currencyToCode('新台币')
     case '毛爷爷':
     case 'RMB':
