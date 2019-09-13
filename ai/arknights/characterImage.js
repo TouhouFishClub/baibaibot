@@ -386,7 +386,7 @@ const renderItem = async (ctx, offsetLeft, offsetTop, width, itemId, itemCount) 
   ctx.fill()
   ctx.fillStyle = '#fff'
   ctx.font = `16px ${fontFamily}`
-  ctx.fillText(itemCount, offsetLeft + width - (itemCount > 10 ? 13 : 9), offsetTop + width - 2)
+  ctx.fillText(itemCount, offsetLeft + width - (itemCount >= 10 ? 13 : 9), offsetTop + width - 2)
 
 }
 
