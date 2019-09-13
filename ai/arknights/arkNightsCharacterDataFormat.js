@@ -44,6 +44,7 @@ const formatCharacter = () => {
           appellation: ch.appellation,
           displayLogo: ch.displayLogo,
           profession: ch.profession,
+          source: ch,
         }
         if(ch.rarity >= 2){
           akc_data.push(data)

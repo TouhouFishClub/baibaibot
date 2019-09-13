@@ -256,5 +256,5 @@ const drawImageSync = async (ctx, url, ...args) => {
 
 
 module.exports = {
-  renderImage
+  renderImage,
 }

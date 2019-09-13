@@ -4,7 +4,7 @@ const path = require('path-extra')
 let ark_skill
 let ark_skill_init = false
 
-module.exports = function(key, level) {
+const loadSkillFile = () => {
   if(!ark_skill_init){
     ark_skill = fs.readJsonSync(path.join(__dirname, 'data', 'skill_table.json'))
     // console.log(ark_skill[])
@@ -59,14 +59,23 @@ module.exports = function(key, level) {
           spCost: lev.spData.spCost,
           duration: lev.duration,
           name: lev.name,
+          source: lev
         }
       })
     })
   }
+  return ark_skill
+}
 
-  if(ark_skill[key].levels.length < level + 1){
-    return `【${ark_skill[key].levels[0].name}| 1 级】\n${ark_skill[key].levels[0].desc}\n〖初始〗：${ark_skill[key].levels[0].initSp} 〖释放〗：${ark_skill[key].levels[0].spCost} 〖持续〗：${ark_skill[key].levels[0].duration}秒`
-  } else {
-    return `【${ark_skill[key].levels[0].name} | ${parseInt(level) + 1} 级】\n${ark_skill[key].levels[level].desc}\n〖初始〗：${ark_skill[key].levels[level].initSp} 〖释放〗：${ark_skill[key].levels[level].spCost} 〖持续〗：${ark_skill[key].levels[level].duration}秒`
-  }
+module.exports = function(key) {
+  loadSkillFile()
+  // console.log('>>>>>>>')
+  // console.log(ark_skill[key])
+  return ark_skill[key]
+
+  // if(ark_skill[key].levels.length < level + 1){
+  //   return ark_skill[key].levels[0]
+  // } else {
+  //   return ark_skill[key].levels[level]
+  // }
 }

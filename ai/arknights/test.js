@@ -1,6 +1,6 @@
 // const ak = require('./arkNightsRecruit')
 // const akc = require('./arkNightsCalc')
-// const aks = require('./arkNightsCharacter')
+const aks = require('./arkNightsCharacter')
 // const akk = require('./arkNightsSkill')
 // const akl = require('./arkNightsRecruitLimit')
 // const {baiduocr} = require('../image/baiduocr');
@@ -10,17 +10,21 @@ const c = m => {
   console.log(m)
 }
 
-akb('111', '货运仓库', c)
+// akb('111', '货运仓库', c)
 
 // console.log(akk('skchr_plosis_2', '3'))
 // akc('123456', '5 1-1 1-80   ', c)
-// aks('123456', '白面鸮 adfa', c)
+// aks('123456', '初雪', c)
+aks('123456', '伊芙 8', c)
+// aks('123456', '安洁 8', c)
+// aks('123456', '空爆 8', c)
 // aks('123456', '艾雅法拉 8', c)
+// aks('123456', '夜莺 8', c)
 // console.log(Date.now())
 // aks('123456', '\\S+', c)
-// aks('123456', '空爆', c)
+// aks('123456', '空$', c)
 // aks('123456', '推进 9', c)
-// aks('123456', '月见夜 10', c)
+// aks('123456', '\\S+', c)
 // akl()
 // ak(123,'[CQ:image,file=D92B8C3ECBA963C3563701F900F72FF1.jpg,url=https://gchat.qpic.cn/gchatpic_new/799018865/577587780-2346967126-D92B8C3ECBA963C3563701F900F72FF1/0?vuin=2375373419&term=2]', c)
 // console.log(Date.now())
