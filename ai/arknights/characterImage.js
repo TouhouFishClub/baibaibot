@@ -20,6 +20,7 @@ const rangeMap = AllRangeData()
 const renderImage = async (chInfo, level, callback) => {
   // console.log('=======')
   // console.log(chInfo)
+  TAB_HEIGHT = 1330
 
   TAB_HEIGHT = TAB_HEIGHT - 130 * (3 - chInfo.info.source.skills.length)
 
