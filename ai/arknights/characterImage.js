@@ -7,7 +7,7 @@ const fs = require('fs'),
 const aks = require('./arkNightsSkill')
 const TAB_MARGIN = 20
 const TAB_WIDTH = 600
-let TAB_HEIGHT = 1330
+let TAB_HEIGHT = 1380
 const INSET_MARGIN = 10
 const AVATAR_WIDTH = 150
 const fontFamily = 'STXIHEI'
@@ -20,7 +20,7 @@ const rangeMap = AllRangeData()
 const renderImage = async (chInfo, level, callback) => {
   // console.log('=======')
   // console.log(chInfo)
-  TAB_HEIGHT = 1330
+  TAB_HEIGHT = 1380
 
   TAB_HEIGHT = TAB_HEIGHT - 130 * (3 - chInfo.info.source.skills.length)
 
@@ -223,6 +223,76 @@ const renderImage = async (chInfo, level, callback) => {
 
   offsetTop += 130
 
+  /* 精英化 */
+
+  ctx.fillStyle = '#000'
+  ctx.font = `20px ${fontFamily}`
+  ctx.fillText('精英材料', offsetLeft + INSET_MARGIN, offsetTop + 35)
+
+  offsetLeft += ctx.measureText('精英材料').width + INSET_MARGIN * 2
+  if(chInfo.info.source.phases[1]) {
+    ctx.fillStyle = '#000'
+    ctx.font = `20px ${fontFamily}`
+    ctx.fillText('1阶', offsetLeft, offsetTop + 35)
+    offsetLeft += ctx.measureText('1阶').width + INSET_MARGIN
+    switch(chInfo.info.rare){
+      case 3:
+        await renderItem(ctx, offsetLeft, offsetTop + 5, 40, 4001, '1w')
+        break
+      case 4:
+        await renderItem(ctx, offsetLeft, offsetTop + 5, 40, 4001, '1.5w')
+        break
+      case 5:
+        await renderItem(ctx, offsetLeft, offsetTop + 5, 40, 4001, '2w')
+        break
+      case 6:
+        await renderItem(ctx, offsetLeft, offsetTop + 5, 40, 4001, '3w')
+        break
+    }
+    offsetLeft += 50
+    if(chInfo.info.source.phases[1].evolveCost && chInfo.info.source.phases[1].evolveCost.length){
+      let items = chInfo.info.source.phases[1].evolveCost
+      for(let i = 0; i < items.length; i++){
+        let item = items[i]
+        await renderItem(ctx, offsetLeft, offsetTop + 5, 40, item.id, item.count)
+        offsetLeft += 50
+      }
+    }
+  }
+  offsetLeft += INSET_MARGIN
+  if(chInfo.info.source.phases[2]) {
+    ctx.fillStyle = '#000'
+    ctx.font = `20px ${fontFamily}`
+    ctx.fillText('2阶', offsetLeft, offsetTop + 35)
+    offsetLeft += ctx.measureText('2阶').width + INSET_MARGIN
+    switch(chInfo.info.rare){
+      case 4:
+        await renderItem(ctx, offsetLeft, offsetTop + 5, 40, 4001, '6w')
+        break
+      case 5:
+        await renderItem(ctx, offsetLeft, offsetTop + 5, 40, 4001, '12w')
+        break
+      case 6:
+        await renderItem(ctx, offsetLeft, offsetTop + 5, 40, 4001, '18w')
+        break
+    }
+    offsetLeft += 50
+    if(chInfo.info.source.phases[2].evolveCost && chInfo.info.source.phases[2].evolveCost.length){
+      let items = chInfo.info.source.phases[2].evolveCost
+      for(let i = 0; i < items.length; i++){
+        let item = items[i]
+        await renderItem(ctx, offsetLeft, offsetTop + 5, 40, item.id, item.count)
+        offsetLeft += 50
+      }
+    }
+  }
+
+  offsetLeft = TAB_MARGIN
+  ctx.strokeRect(offsetLeft, offsetTop, TAB_WIDTH, 50)
+  offsetTop += 50
+
+
+
 
   /* potential */
   ctx.fillStyle = '#000'
@@ -387,7 +457,14 @@ const renderItem = async (ctx, offsetLeft, offsetTop, width, itemId, itemCount) 
   ctx.fill()
   ctx.fillStyle = '#fff'
   ctx.font = `16px ${fontFamily}`
-  ctx.fillText(itemCount, offsetLeft + width - (itemCount >= 10 ? 13 : 9), offsetTop + width - 2)
+  ctx.shadowColor = '#000'
+  ctx.shadowBlur = 1
+  ctx.shadowOffsetX = 2
+  ctx.shadowOffsetY = 2
+  ctx.fillText(itemCount, offsetLeft + width - ((itemCount >= 10 || typeof itemCount == 'string') ? 13 : 9), offsetTop + width - 2)
+  ctx.shadowBlur = 0
+  ctx.shadowOffsetX = 0
+  ctx.shadowOffsetY = 0
 
 }
 
