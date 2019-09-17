@@ -32,7 +32,28 @@ const list = [{"jp":"ボルボロス","en":"Barroth","zh":"土砂龍","cn":"土�
   {"jp":"ツィツィヤック","en":"Tzitzi-Ya-Ku","zh":"眩鳥","cn":"眩鸟"},
   {"jp":"クルルヤック","en":"Kulu-Ya-Ku","zh":"搔鳥","cn":"搔鸟"},
   {"jp":"ベヒーモス","en":"Behemoth","zh":"貝希摩斯","cn":"贝希摩斯"},
-  {"jp":"ナナ・テスカトリ","en":"Lunastra","zh":"炎妃龍","cn":"炎妃龙"}]
+  {"jp":"ナナ・テスカトリ","en":"Lunastra","zh":"炎妃龍","cn":"炎妃龙"},
+  {"jp":"","en":"","zh":"","cn":"痹毒龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"冰牙龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"冰鱼龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"冰呪龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"浮眠龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"轰龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"惶怒恐暴龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"雷颚龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"鹿首精","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"猛牛龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"溟波龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"霜翼风漂龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"水妖鸟","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"碎龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"雾瘴尸套龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"凶爪龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"迅龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"斩龙","fn":"c"},
+  {"jp":"","en":"","zh":"","cn":"天地煌啼龙","fn":"c"}
+
+]
 
 
 var mem={};
@@ -44,7 +65,12 @@ function searchMHW(content,userid,groupid,callback){
     console.log(m);
     var num = parseInt(content.substring(1));
     var d = m[num];
-    var ret = d.cn+'\n[CQ:image,file=send/mhw/monsters/'+d.en+']';
+    var ret
+    if(d.fn=="c"){
+      ret = d.cn+'\n[CQ:image,file=send/mhw/monsters/'+d.cn+'.jpg]';
+    }else{
+      ret = d.cn+'\n[CQ:image,file=send/mhw/monsters/'+d.en+']';
+    }
     callback(ret);
   }else{
     for(var i=0;i<list.length;i++){
@@ -55,7 +81,11 @@ function searchMHW(content,userid,groupid,callback){
     }
     var ret = ''
     if(retlist.length==1){
-      ret = retlist[0].cn+'\n[CQ:image,file=send/mhw/monsters/'+retlist[0].en+']';
+      if(retlist[0].fn=="c"){
+        ret = retlist[0].cn+'\n[CQ:image,file=send/mhw/monsters/'+retlist[0].cn+'.jpg]';
+      }else{
+        ret = retlist[0].cn+'\n[CQ:image,file=send/mhw/monsters/'+retlist[0].en+']';
+      }
     }else{
       ret = '请选择：\n';
       for(var i=0;i<retlist.length;i++){
