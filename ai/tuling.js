@@ -128,11 +128,29 @@ function handleTulingResponse(resdata){
 }
 
 
-
-
-
-
 function tulingMsg(userid,content,callback,groupid){
+  if(content.indexOf("百百")>=0){
+    if(content.indexOf("菜单")>=0){
+      if(content.length<8){
+        var ret = "";
+        ret = "百百bot帮助\n";
+        ret = ret + "日常帮助"
+
+      }
+    }
+  }
+
+
+  tulingMsg0(userid,content,callback,groupid);
+}
+
+
+
+function tulingMsg0(userid,content,callback,groupid){
+
+
+
+
   var options = {
     hostname: 'open.turingapi.com',
     port: 80,
@@ -164,42 +182,46 @@ function tulingMsg(userid,content,callback,groupid){
       resdata = resdata + chunk;
     });
     res.on('end', function () {
-      var ret = '';
-      var data = eval('('+resdata+')');
-      var code = data.code;
-      if(code==200){
-        var result = data.result;
-        if(result){
-          var datas = result.datas;
-          if(datas){
-            for(var i=0;i<datas.length;i++){
-              ret = ret + datas[i].value+"\n";
+      try{
+        var ret = '';
+        var data = eval('('+resdata+')');
+        var code = data.code;
+        if(code==200){
+          var result = data.result;
+          if(result){
+            var datas = result.datas;
+            if(datas){
+              for(var i=0;i<datas.length;i++){
+                ret = ret + datas[i].value+"\n";
+              }
             }
           }
         }
-      }
-      ret = ret.trim();
-      if(ret!='哇'){
-        nlp.sentiment(ret, function (data) {
-          try{
-            var dd = eval('('+data+')');
-            console.log(dd);
-            if(dd&&dd[0]&&dd[0][0]){
-              var positive = dd[0][0];
-              var negative = dd[0][1];
-              var addrate = positive-negative;
-              saveLike(userid,addrate,function(likeret){
-                if(likeret>1){
-                  callback('百百对您的好感度上升到了'+likeret+',输入【好感度】可查看好感度');
-                }
-              })
-            }
-          }catch(e){
+        ret = ret.trim();
+        if(ret!='哇'){
+          nlp.sentiment(ret, function (data) {
+            try{
+              var dd = eval('('+data+')');
+              console.log(dd);
+              if(dd&&dd[0]&&dd[0][0]){
+                var positive = dd[0][0];
+                var negative = dd[0][1];
+                var addrate = positive-negative;
+                saveLike(userid,addrate,function(likeret){
+                  if(likeret>1){
+                    callback('百百对您的好感度上升到了'+likeret+',输入【好感度】可查看好感度');
+                  }
+                })
+              }
+            }catch(e){
 
-          }
-        });
+            }
+          });
+        }
+        callback(ret);
+      }catch(e){
+
       }
-      callback(ret);
     });
   });
   req.on('error', function(err) {
