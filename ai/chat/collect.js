@@ -37,13 +37,13 @@ function getChat(gid,ts,callback,order,qq,keyword){
           query._id = {'$gt': new Date(parseInt(ts))};
           if(keyword&&keyword.length>1){
             query.d=new RegExp(keyword);
-            query._id['$lt']=new Date(parseInt(ts)+86400000)};
+            query._id['$lt']=new Date(parseInt(ts)+86400000);
           }
         } else {
           query._id = {'$lt': new Date(parseInt(ts))};
           if(keyword&&keyword.length>1){
             query.d=new RegExp(keyword);
-            query._id['$gt']=new Date(parseInt(ts)-86400000)};
+            query._id['$gt']=new Date(parseInt(ts)-86400000);
           }
         }
       }else{
