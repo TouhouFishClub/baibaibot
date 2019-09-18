@@ -35,19 +35,19 @@ function getChat(gid,ts,callback,order,qq,keyword){
       if (parseInt(ts) > 0) {
         if (order) {
           query._id = {'$gt': new Date(parseInt(ts))};
-          if(keyword.length>1){
+          if(keyword&&keyword.length>1){
             query.d=new RegExp(keyword);
             query._id = {'$lt': new Date(parseInt(ts)+86400000)};
           }
         } else {
           query._id = {'$lt': new Date(parseInt(ts))};
-          if(keyword.length>1){
+          if(keyword&&keyword.length>1){
             query.d=new RegExp(keyword);
             query._id = {'$gt': new Date(parseInt(ts)-86400000)};
           }
         }
       }else{
-        if(keyword.length>1){
+        if(keyword&&keyword.length>1){
           query.d=new RegExp(keyword);
           query._id = {'$gt': new Date(new Date().getTime()-86400000)};
         }
