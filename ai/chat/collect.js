@@ -20,7 +20,7 @@ function saveChat(gid,uid,name,content){
   });
 }
 
-function getChat(gid,ts,callback,order){
+function getChat(gid,ts,callback,order,qq,keyword){
   MongoClient.connect(mongourl, function(err, db) {
     if(err){
       console.log('mongo erro5re:!!!!!!!!!');
@@ -28,11 +28,28 @@ function getChat(gid,ts,callback,order){
     }else {
       var cl_chat = db.collection('cl_chat');
       var query = {gid: parseInt(gid)};
+      if(qq!=null){
+        query.uid=parseInt(qq);
+      }
+
       if (parseInt(ts) > 0) {
         if (order) {
           query._id = {'$gt': new Date(parseInt(ts))};
+          if(keyword.length>1){
+            query.d=new RegExp(keyword);
+            query._id = {'$lt': new Date(parseInt(ts)+86400000)};
+          }
         } else {
           query._id = {'$lt': new Date(parseInt(ts))};
+          if(keyword.length>1){
+            query.d=new RegExp(keyword);
+            query._id = {'$gt': new Date(parseInt(ts)-86400000)};
+          }
+        }
+      }else{
+        if(keyword.length>1){
+          query.d=new RegExp(keyword);
+          query._id = {'$gt': new Date(new Date().getTime()-86400000)};
         }
       }
       console.log(query);
@@ -45,7 +62,6 @@ function getChat(gid,ts,callback,order){
       })
       db.close();
     }
-
   });
 }
 

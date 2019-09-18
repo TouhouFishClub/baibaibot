@@ -108,13 +108,15 @@ app.get('/chathistory',function(req,res){
   var gid = querydata.gid;
   var ts = querydata.ts;
   var order = querydata.w;
+  var qq=querydata.qq;
+  var keyword = querydata.kw;
   var callback=function(r){
     var ret = {d:r}
     res.set("Access-Control-Allow-Origin", "*");
     res.send(JSON.stringify(ret));
   }
   if(gid){
-    getChat(gid,ts,callback,order);
+    getChat(gid,ts,callback,order,qq,keyword);
   }else{
     res.send('[]');
   }
