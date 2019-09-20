@@ -376,12 +376,12 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
     tsnew = thents;
     cnew = thenc+1;
   }
-  var maxtime = 5;
+  var maxtime = 10;
   if(new Date().getTime()<7){
-    maxtime = 10;
+    maxtime = 100;
   }
   if(cnew>maxtime){
-    callback(fromuin+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
+    callback(fromuin+'疲劳中无法完成指令,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
     return;
   }
 
