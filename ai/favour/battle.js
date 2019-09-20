@@ -84,15 +84,19 @@ function fightUser(from,to,callback){
   var thenc = then.c;
   var tsnew;
   var cnew;
-  if(now.getTime()-thents>300000){
+  if(now.getTime()-thents>1000000){
     tsnew = now.getTime();
     cnew = 1;
   }else{
     tsnew = thents;
     cnew = thenc+1;
   }
-  if(cnew>5){
-    callback(from+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+300000).toLocaleString());
+  var maxtime = maxtime;
+  if(new Date().getTime()<7){
+    maxtime = 10;
+  }
+  if(cnew>maxtime){
+    callback(from+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
     return;
   }
   limitFight[from]={ts:tsnew,c:cnew};
@@ -353,6 +357,38 @@ function getUserInfo(fromid,content,gid,callback){
 
 var limitItem = {};
 function useMagicOrItem(fromuin,userName,content,members,callback){
+
+
+
+  var now = new Date();
+  var then = limitFight[fromuin];
+  if(!then){
+    then = {ts:0,c:0};
+  }
+  var thents = then.ts;
+  var thenc = then.c;
+  var tsnew;
+  var cnew;
+  if(now.getTime()-thents>1000000){
+    tsnew = now.getTime();
+    cnew = 1;
+  }else{
+    tsnew = thents;
+    cnew = thenc+1;
+  }
+  var maxtime = 5;
+  if(new Date().getTime()<7){
+    maxtime = 10;
+  }
+  if(cnew>maxtime){
+    callback(fromuin+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
+    return;
+  }
+
+
+
+
+
   if(content==""){
     ret = "`f+要砍的人：攻击该玩家\n";
     ret = ret + " `g0:查询自己状态,`g0+名字:查询该人物状态\n";
