@@ -1,4 +1,5 @@
 var money = function(str){
+  str = str.trim();
   var unit = ['圆', '万', '亿', '万'];
   var unitrep = ['', '拾', '佰', '仟'];
   var Numlist = [];
