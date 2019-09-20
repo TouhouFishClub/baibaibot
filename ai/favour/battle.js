@@ -526,6 +526,9 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
             var rate = 0.51;
             if(un!=-1){
               decrease = parseInt(next.substring(un+1));
+              if(decrease>10000){
+                decrease=10000;
+              }
               next=next.substring(0,1);
               rate = Math.log(decrease)/16+0.18;
             }
