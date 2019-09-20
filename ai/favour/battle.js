@@ -91,8 +91,8 @@ function fightUser(from,to,callback){
     tsnew = thents;
     cnew = thenc+1;
   }
-  var maxtime = maxtime;
-  if(new Date().getTime()<7){
+  var maxtime = 3;
+  if(new Date().getHours()<7){
     maxtime = 10;
   }
   if(cnew>maxtime){
@@ -377,14 +377,14 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
     cnew = thenc+1;
   }
   var maxtime = 10;
-  if(new Date().getTime()<7){
+  if(new Date().getHours()<7){
     maxtime = 100;
   }
   if(cnew>maxtime){
     callback(fromuin+'疲劳中无法完成指令,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
     return;
   }
-
+  limitFight[fromuin]={ts:tsnew,c:cnew};
 
 
 
