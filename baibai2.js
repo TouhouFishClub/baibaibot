@@ -712,17 +712,9 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first=='w'||first=='W'){
     searchMHW(content.substring(1),from,groupid,callback);
   }else if(first=='f'||first=='F'){
-      if((groupid+"").startsWith('20570')>0||(groupid+"").startsWith('67096')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
-        fight(from,content.substring(1),groupid,callback);
-      }else{
-        callback('为防止刷屏，当前关闭游戏功能');
-      }
+    fight(from,content.substring(1),groupid,callback);
   }else if(first=='g'||first=='G'){
-      if((groupid+"").startsWith('20570')>0||(groupid+"").startsWith('67096')>0||(new Date().getHours()<=7&&new Date().getHours()>=0)){
-        useMagicOrItem(from,userName,content.substring(1),groupid,callback);
-      }else{
-        callback('为防止刷屏，当前关闭游戏功能');
-      }
+    useMagicOrItem(from,userName,content.substring(1),groupid,callback);
   }else if(first=='m'||first=='M'){
     handleUserOperation(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first==8){
