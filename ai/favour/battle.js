@@ -537,7 +537,7 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
               next=next.substring(0,1);
               rate = Math.log(decrease)/16+0.18;
             }
-            if(decrease>0&&data.gold>decrease){
+            if(decrease>0&&data.gold>=decrease){
               var ret = "消耗了"+decrease+"金钱";
               data.gold=data.gold-decrease;
               if(next==1){
@@ -614,7 +614,7 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
             ret = ret +  "`g54:速度+1,其他能力一定概率+1\n";
             callback(ret);
           }else{
-            if(data.exp>data.lv*data.lv*data.lv+50){
+            if(data.exp>=data.lv*data.lv*data.lv+50){
               if(data.lv<99){
                 data.exp=data.exp-data.lv*data.lv*data.lv-50;
                 data.lv=data.lv+1;
@@ -738,10 +738,12 @@ function regen(){
           }
         }
         if(u.hp<100){
-          u.hp=u.hp+5*addrate+10*Math.log(u.hp);
+          u.hp=u.hp+5*addrate+Math.floor(10*Math.log(u.hp));
           update = true;
         }else{
-          u.hp=u.hp+10*Math.log(u.hp);		
+		if(u._id=="百百"){
+          u.hp=u.hp+Math.floor(10*Math.log(u.hp));	
+		}
 	}
         if(u.mp<100){
           u.mp=u.mp+50*addrate;
