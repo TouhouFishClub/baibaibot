@@ -272,7 +272,7 @@ function generateDamage(data1,data2,type,rate2){
       rate = rate / 2;
     }
     var damage = 0;
-    if(atk<=def){
+    if(atk<def){
       damage = data2.hp*Math.random()*0.08;
     }else{
       damage = (atk-def)*rate/100;
