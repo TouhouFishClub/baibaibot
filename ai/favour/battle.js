@@ -743,6 +743,7 @@ function regen(){
         }else{
 		if(u._id=="百百"){
           u.hp=u.hp+Math.floor(10*Math.log(u.hp));	
+          update = true;
 		}
 	}
         if(u.mp<100){
