@@ -89,11 +89,11 @@ function fightUser(from,to,callback){
     cnew = 1;
   }else{
     tsnew = thents;
-    cnew = thenc+1;
+    cnew = thenc+3;
   }
-  var maxtime = 3;
-  if(new Date().getHours()<7){
-    maxtime = 10;
+  var maxtime = 5;
+  if(new Date().getHours()<8){
+    maxtime = 25;
   }
   if(cnew>maxtime){
     callback(from+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
@@ -381,9 +381,9 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
     tsnew = thents;
     cnew = thenc+1;
   }
-  var maxtime = 10;
-  if(new Date().getHours()<7){
-    maxtime = 100;
+  var maxtime = 9;
+  if(new Date().getHours()<8){
+    maxtime = 50;
   }
   if(cnew>maxtime){
     callback(fromuin+'疲劳中无法完成指令,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
@@ -733,11 +733,16 @@ function regen(){
             u.def=Math.floor(u.exp/2.22);;
             u.gold=5555+Math.floor(u.exp/2.02);
           }
+          if(u._id=="百百"){
+            u.gold=999999;
+          }
         }
         if(u.hp<100){
-          u.hp=u.hp+5*addrate;
+          u.hp=u.hp+5*addrate+10*Math.log(u.hp);
           update = true;
-        }
+        }else{
+          u.hp=u.hp+10*Math.log(u.hp);		
+	}
         if(u.mp<100){
           u.mp=u.mp+50*addrate;
           update = true;
