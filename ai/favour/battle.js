@@ -89,7 +89,7 @@ function fightUser(from,to,callback){
     cnew = 1;
   }else{
     tsnew = thents;
-    cnew = thenc+3;
+    cnew = thenc+4;
   }
   var maxtime = 5;
   if(new Date().getHours()<8){
