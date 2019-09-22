@@ -734,8 +734,8 @@ function regen(){
             u.gold=5555+Math.floor(u.exp/2.02);
           }
           if(u._id=="百百"){
-            u.hp=99999+Math.floor(Math.log(u.exp));
-            u.gold=u.gold+100*Math.floor(Math.log(u.exp));
+            u.hp=9999+999*Math.floor(Math.log(u.exp));
+            u.gold=u.gold+999*Math.floor(Math.log(u.exp));
           }
         }
         if(u.hp<100){
