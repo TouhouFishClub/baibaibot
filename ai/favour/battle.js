@@ -103,7 +103,7 @@ function fightUser(from,to,callback,gid){
     cnew = 1;
   }else{
     tsnew = thents;
-    cnew = thenc+4;
+    cnew = thenc;
   }
   var maxtime = 5;
   if(new Date().getHours()<8){
@@ -113,6 +113,7 @@ function fightUser(from,to,callback,gid){
     callback(from+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
     return;
   }
+  cnew = cnew+6;
   limitFight[from]={ts:tsnew,c:cnew};
   if(from==to){
     callback(from+'自杀了');
