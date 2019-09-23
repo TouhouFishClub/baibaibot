@@ -77,30 +77,6 @@ function fight(fromid,content,gid,callback){
 function fightUser(from,to,callback,gid){
   var now = new Date();
 
-  var gthen = limitFight[gid];
-  if(!gthen){
-    gthen = {ts:0,c:0};
-  }
-  var gthents = gthen.ts;
-  var gthenc = gthen.c;
-  var gtsnew;
-  var gcnew;
-  if(now.getTime()-gthents>1000000){
-    gtsnew = now.getTime();
-    gcnew = 1;
-  }else{
-    gtsnew = gthents;
-    gcnew = gthenc+6;
-  }
-  var gmaxtime = 5;
-  if(new Date().getHours()<8){
-    gmaxtime = 25;
-  }
-  if(gcnew>gmaxtime){
-    callback(gid+'疲劳中无法攻击,恢复时间：'+new Date(gtsnew+1000000).toLocaleString());
-    return;
-  }
-  limitFight[gid]={ts:gtsnew,c:gcnew};
 
 
 
