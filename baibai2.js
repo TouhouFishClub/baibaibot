@@ -75,6 +75,7 @@ const anc = require('./ai/arknights/arkNightsCalc')
 
 
 initWS();
+initWS2();
 
 var wsonline = false;
 function initWS(){
@@ -105,16 +106,47 @@ function initWS(){
   client.connect('ws://192.168.17.52:23335/event');
 }
 
+function initWS2(){
+  var WebSocketClient = require('websocket').client;
+
+  var client = new WebSocketClient();
+
+  client.on('connectFailed', function(error) {
+    console.log('Connect Error: ' + error.toString());
+  });
+
+  client.on('connect', function(connection) {
+    wsonline = true;
+    console.log('WebSocket Client Connected');
+    connection.on('error', function(error) {
+      console.log("Connection Error: " + error.toString());
+    });
+    connection.on('close', function() {
+      wsonline=false;
+      console.log('echo-protocol Connection Closed');
+    });
+    connection.on('message', function(message) {
+      if (message.type === 'utf8') {
+        handleMsg(JSON.parse(message.utf8Data),2)
+      }
+    });
+  });
+  client.connect('ws://192.168.17.52:24335/event');
+}
+
+
+
 function reconnect(){
   if(!wsonline){
     initWS();
+    initWS2()
   }
 }
 
 
 var queue = []
 var xqueue = []
-function addSendQueue(groupid,msg){
+function addSendQueue(groupid,msg,botqq){
   var gidstr = groupid+"";
   var vip = 0;
   if(gidstr.startsWith("20570")){
@@ -190,16 +222,22 @@ function addSendQueue(groupid,msg){
       vip=1;
     }
   }
+  var port;
+  if(botqq==2){
+    port = 23334;
+  }else{
+    port = 24334;
+  }
   setTimeout(function(){
     if(vip>0){
       if(vip>1){
-        queue.unshift({gid:groupid,msg:msg});
+        queue.unshift({gid:groupid,msg:msg,port:port});
       }else{
-        queue.push({gid:groupid,msg:msg})
+        queue.push({gid:groupid,msg:msg,port:port})
       }
 
     }else{
-      xqueue.push({gid:groupid,msg:msg});
+      xqueue.push({gid:groupid,msg:msg,port:port});
     }
   },666)
 
@@ -214,9 +252,10 @@ function doSend(thread){
     var msgData = queue.shift();
     var groupid = msgData.gid;
     var msgd = msgData.msg;
+    var port = msgData.port;
     var options = {
       host: '192.168.17.52',
-      port: 23334,
+      port: port,
       path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(msgd),
       method: 'GET',
       headers: {}
@@ -257,9 +296,10 @@ function doSend1(thread){
     var msgData = xqueue.shift();
     var groupid = msgData.gid;
     var msgd = msgData.msg;
+    var port = msgData.port;
     var options = {
       host: '192.168.17.52',
-      port: 23334,
+      port: port,
       path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(msgd),
       method: 'GET',
       headers: {}
@@ -305,15 +345,15 @@ doSend1(2);
 
 
 
-function handleMsg(msgObj,res){
+function handleMsg(msgObj,botqq){
   try{
-    handleMsg_D0(msgObj,res);
+    handleMsg_D0(msgObj,botqq);
   }catch(e){
     console.log(e);
   }
 }
 
-function handleMsg_D0(msgObj,res){
+function handleMsg_D0(msgObj,botqq){
   var content = msgObj.message;
   if (content) {
     if (content.indexOf('&amp;') > -1) {
@@ -331,16 +371,22 @@ function handleMsg_D0(msgObj,res){
     content = simplized(content);
     msgObj.message=content;
   }
-  handleMsg_D(msgObj,res);
+  handleMsg_D(msgObj,botqq);
 }
 
 
 
-function handleMsg_D(msgObj,response) {
+function handleMsg_D(msgObj,botqq) {
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
   var callback
+  var port;
+  if(botqq==2){
+    port = 23334;
+  }else{
+    port = 24334;
+  }
   if (type == 'private') {
     var userid = msgObj.user_id;
     callback = function (res) {
@@ -348,7 +394,7 @@ function handleMsg_D(msgObj,response) {
         setTimeout(function () {
           var options = {
             host: '192.168.17.52',
-            port: 23334,
+            port: port,
             path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(res),
             method: 'GET',
             headers: {}
@@ -394,7 +440,7 @@ function handleMsg_D(msgObj,response) {
   saveChat(groupid, from, name, content);
   callback = function (res, blank) {
     if (res.trim().length > 0) {
-      addSendQueue(groupid,res);
+      addSendQueue(groupid,res,botqq);
     }
   }
   handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group')
