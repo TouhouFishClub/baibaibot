@@ -17,7 +17,7 @@ function fight(fromid,content,gid,callback){
       var from=tmp.f;
       var to = tmp[no];
       if(from&&to){
-        fightUser(from,to,callback)
+        fightUser(from,to,callback,gid)
       }
     }else{
       callback(from+'砍向了'+'空气'+',造成'+Math.floor(Math.random()*100-50)+'点伤害');
@@ -46,14 +46,14 @@ function fight(fromid,content,gid,callback){
   }
   if(content.substring(0,1).toUpperCase()=="B"&&content.length==2){
     to = content.toUpperCase();
-    fightUser(from,to,callback);
+    fightUser(from,to,callback,gid);
     return;
   }
   var toa=Object.keys(tom);
   if(toa.length==1&&from){
     to=toa[0];
     if(from&&to){
-      fightUser(from,to,callback)
+      fightUser(from,to,callback,gid)
     }else{
       callback(content+'是谁？'+from+'砍向了'+content+',造成'+Math.floor(Math.random()*1999999-999999)+'点伤害');
     }
@@ -74,8 +74,46 @@ function fight(fromid,content,gid,callback){
 
 
 
-function fightUser(from,to,callback){
+function fightUser(from,to,callback,gid){
   var now = new Date();
+
+  var gthen = limitFight[gid];
+  if(!gthen){
+    gthen = {ts:0,c:0};
+  }
+  var gthents = gthen.ts;
+  var gthenc = gthen.c;
+  var gtsnew;
+  var gcnew;
+  if(now.getTime()-gthents>1000000){
+    gtsnew = now.getTime();
+    gcnew = 1;
+  }else{
+    gtsnew = gthents;
+    gcnew = gthenc+6;
+  }
+  var gmaxtime = 5;
+  if(new Date().getHours()<8){
+    gmaxtime = 25;
+  }
+  if(gcnew>gmaxtime){
+    callback(gid+'疲劳中无法攻击,恢复时间：'+new Date(gtsnew+1000000).toLocaleString());
+    return;
+  }
+  limitFight[gid]={ts:gtsnew,c:gcnew};
+
+
+
+
+
+
+
+
+
+
+
+
+
   var then = limitFight[from];
   if(!then){
     then = {ts:0,c:0};
