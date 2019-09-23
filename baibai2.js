@@ -256,8 +256,13 @@ function addSendQueue(groupid,msg,botqq){
         }
       }
     }
-    fs.copySync(ohead+s3,head+s3);
+
     console.log("copy:"+ohead+s3+"  -->  "+head+s3);
+    let readStream = fs.createReadStream(ohead+s3);
+    readStream.pipe(fs.createWriteStream(head+s3));
+
+
+
   }
 
 
