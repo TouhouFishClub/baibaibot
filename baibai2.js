@@ -229,9 +229,7 @@ function addSendQueue(groupid,msg,botqq){
   }else{
     port = 23334;
   }
-  if(gidstr.startsWith("20570")&&port==23334){
-    return;
-  }
+
   // [CQ:image,file=send/ff14/5471.png]
   var n = msg.indexOf('CQ:image')
   if(n>=0&&port==24334){
@@ -431,6 +429,11 @@ function handleMsg_D(msgObj,botqq) {
     port = 23334;
   }else{
     port = 24334;
+  }
+    
+  var gidstr= groupid+"";
+  if(gidstr.startsWith("20570")&&port==23334){
+    return;
   }
   if (type == 'private') {
     var userid = msgObj.user_id;
