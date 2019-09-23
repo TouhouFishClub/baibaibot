@@ -251,15 +251,21 @@ function addSendQueue(groupid,msg,botqq){
         }
       }
       if(i!=pa.length-1){
-        if(!fs.existsSync(head+fpath)){
-          fs.mkdirSync(head+fpath);
+        console.log(fpath);
+        if(!fs.existsSync(fpath)){
+          fs.mkdirSync(fpath);
         }
       }
     }
 
     console.log("copy:"+ohead+s3+"  -->  "+head+s3);
-    let readStream = fs.createReadStream(ohead+s3);
-    readStream.pipe(fs.createWriteStream(head+s3));
+    try{
+      let readStream = fs.createReadStream(ohead+s3);
+      readStream.pipe(fs.createWriteStream(head+s3));
+    }catch(e){
+      console.log(e);
+    }
+
 
 
 
