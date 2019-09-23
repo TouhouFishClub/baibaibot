@@ -99,7 +99,7 @@ function initWS(){
     });
     connection.on('message', function(message) {
       if (message.type === 'utf8') {
-        //handleMsg(JSON.parse(message.utf8Data))
+        handleMsg(JSON.parse(message.utf8Data))
       }
     });
   });
