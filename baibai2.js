@@ -1,6 +1,7 @@
 var http=require('http');
 var https=require('https');
 var tls = require('tls');
+var fs = require('fs');
 let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 
