@@ -241,19 +241,17 @@ function addSendQueue(groupid,msg,botqq){
     var ohead = '../coolq-data/cq/data/image/'
 
     var head = '../coolq-data/wcq/data/image/'
+    var fpath = head;
     for(var i=0;i<pa.length;i++){
-      var fpath = head;
-      for(var j=0;j<=i;j++){
-        if(j==0){
-          fpath=fpath+pa[j];
-        }else{
-          fpath+fpath+"/"+pa[j];
-        }
-        if(i!=pa.length-1){
-          console.log(fpath,fs.existsSync(fpath));
-          if(!fs.existsSync(fpath)){
-            fs.mkdirSync(fpath);
-          }
+      if(i==0){
+        fpath=fpath+pa[j];
+      }else{
+        fpath=fpath+"/"+pa[j];
+      }
+      if(i!=pa.length-1){
+        console.log(fpath,fs.existsSync(fpath));
+        if(!fs.existsSync(fpath)){
+          fs.mkdirSync(fpath);
         }
       }
     }
