@@ -230,7 +230,7 @@ function addSendQueue(groupid,msg,botqq){
   }
   // [CQ:image,file=send/ff14/5471.png]
   var n = msg.indexOf('CQ:image')
-  if(n>=0&&port=24334){
+  if(n>=0&&port==24334){
     var s1 = msg.substring(n+3);
     var n1 = s1.indexOf('file=');
     var s2 = s1.substring(n1+5);
