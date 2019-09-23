@@ -99,7 +99,7 @@ function initWS(){
     });
     connection.on('message', function(message) {
       if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data))
+        //handleMsg(JSON.parse(message.utf8Data))
       }
     });
   });
@@ -228,6 +228,38 @@ function addSendQueue(groupid,msg,botqq){
   }else{
     port = 23334;
   }
+  // [CQ:image,file=send/ff14/5471.png]
+  var n = msg.indexOf('CQ:image')
+  if(n>=0&&port=24334){
+    var s1 = msg.substring(n+3);
+    var n1 = s1.indexOf('file=');
+    var s2 = s1.substring(n1+5);
+    var n2 = s2.indexOf(']');
+    var s3 = s2.substring(0,n2);
+    var pa = s3.split('/');
+    var ohead = '../coolq-data/cq/data/image/'
+
+    var head = '../coolq-data/wcq/data/image/'
+    for(var i=0;i<pa.length;i++){
+      var fpath = head;
+      for(var j=0;j<=i;j++){
+        if(j==0){
+          fpath=fpath+pa[j];
+        }else{
+          fpath+fpath+"/"+pa[j];
+        }
+      }
+      if(i!=pa.length-1){
+        if(!fs.existsSync(fpath)){
+          fs.mkdirSync(fpath);
+        }
+      }
+    }
+    fs.copySync(ohead+s3,head+s3);
+    console.log("copy:"+ohead+s3+"  -->  "+head+s3);
+  }
+
+
   setTimeout(function(){
     if(vip>0){
       if(vip>1){
