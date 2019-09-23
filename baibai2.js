@@ -244,9 +244,9 @@ function addSendQueue(groupid,msg,botqq){
     var fpath = head;
     for(var i=0;i<pa.length;i++){
       if(i==0){
-        fpath=fpath+pa[j];
+        fpath=fpath+pa[i];
       }else{
-        fpath=fpath+"/"+pa[j];
+        fpath=fpath+"/"+pa[i];
       }
       if(i!=pa.length-1){
         console.log(fpath,fs.existsSync(fpath));
