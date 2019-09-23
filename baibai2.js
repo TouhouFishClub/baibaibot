@@ -249,11 +249,11 @@ function addSendQueue(groupid,msg,botqq){
         }else{
           fpath+fpath+"/"+pa[j];
         }
-      }
-      if(i!=pa.length-1){
-        console.log(fpath);
-        if(!fs.existsSync(fpath)){
-          fs.mkdirSync(fpath);
+        if(i!=pa.length-1){
+          console.log(fpath,fs.existsSync(fpath));
+          if(!fs.existsSync(fpath)){
+            fs.mkdirSync(fpath);
+          }
         }
       }
     }
