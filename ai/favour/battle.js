@@ -295,6 +295,7 @@ function generateDamage(data1,data2,type,rate2){
       damage = 0;
     }
     damage = Math.floor(damage*rate2);
+    damage = Math.floor(damage*(Math.random()+1));
     var str = data1._id+'砍向'+data2._id+'\n'+(critical?'会心一击!':'')+'造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }
