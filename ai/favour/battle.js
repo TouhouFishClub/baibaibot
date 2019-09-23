@@ -75,6 +75,9 @@ function fight(fromid,content,gid,callback){
 
 
 function fightUser(from,to,callback,gid){
+  if(from=="百百"){
+    return;
+  }
   var now = new Date();
 
 
@@ -379,8 +382,6 @@ function getUserInfo(fromid,content,gid,callback){
 var limitItem = {};
 function useMagicOrItem(fromuin,userName,content,members,callback){
 
-
-
   var now = new Date();
   var then = limitFight[fromuin];
   if(!then){
@@ -450,7 +451,10 @@ function useMagicOrItem(fromuin,userName,content,members,callback){
     }
   }
 	  userName=from;
-	  
+
+    if(userName=="百百"){
+      return;
+    }
 	  
     MongoClient.connect(mongourl, function(err, db) {
       var cl_user = db.collection('cl_user');
