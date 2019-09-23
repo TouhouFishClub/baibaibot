@@ -270,7 +270,7 @@ function generateDamage(data1,data2,type,rate2){
     }
     var atk = data1.atk*(criticalrate)*(Math.random()+0.5);
     if(data2._id=="B4"||data2._id=="B5"){
-      atk=atk*atk;
+      atk=Math.floor(atk*(1+Math.log(atk))*(1+Math.log(atk)));
     }
     var def = data2.def*(Math.random()*0.5+0.5);
     if(data2.status==2){
