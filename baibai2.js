@@ -251,8 +251,8 @@ function addSendQueue(groupid,msg,botqq){
         }
       }
       if(i!=pa.length-1){
-        if(!fs.existsSync(fpath)){
-          fs.mkdirSync(fpath);
+        if(!fs.existsSync(head+fpath)){
+          fs.mkdirSync(head+fpath);
         }
       }
     }
