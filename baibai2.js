@@ -426,9 +426,9 @@ function handleMsg_D(msgObj,botqq) {
   var callback
   var port;
   if(botqq==2){
-    port = 23334;
-  }else{
     port = 24334;
+  }else{
+    port = 23334;
   }
     
   var gidstr= groupid+"";
