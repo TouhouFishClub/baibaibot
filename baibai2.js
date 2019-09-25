@@ -264,11 +264,45 @@ function addSendQueue(groupid,msg,botqq){
     }catch(e){
       console.log(e);
     }
-
-
-
-
   }
+
+  n = msg.indexOf('CQ:record')
+  if(n>=0&&port==24334){
+    var s1 = msg.substring(n+3);
+    var n1 = s1.indexOf('file=');
+    var s2 = s1.substring(n1+5);
+    var n2 = s2.indexOf(']');
+    var s3 = s2.substring(0,n2);
+    var pa = s3.split('/');
+    var ohead = '../coolq-data/cq/data/record/'
+
+    var head = '../coolq-data/wcq/data/record/'
+    var fpath = head;
+    for(var i=0;i<pa.length;i++){
+      if(i==0){
+        fpath=fpath+pa[i];
+      }else{
+        fpath=fpath+"/"+pa[i];
+      }
+      if(i!=pa.length-1){
+        console.log(fpath,fs.existsSync(fpath));
+        if(!fs.existsSync(fpath)){
+          fs.mkdirSync(fpath);
+        }
+      }
+    }
+
+    console.log("copy:"+ohead+s3+"  -->  "+head+s3);
+    try{
+      let readStream = fs.createReadStream(ohead+s3);
+      readStream.pipe(fs.createWriteStream(head+s3));
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+
+
 
 
   setTimeout(function(){
