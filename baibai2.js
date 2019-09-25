@@ -77,6 +77,7 @@ const anc = require('./ai/arknights/arkNightsCalc')
 
 initWS();
 initWS2();
+initWS3();
 
 var wsonline = false;
 function initWS(){
@@ -137,10 +138,40 @@ function initWS2(){
 
 
 
+function initWS3(){
+  var WebSocketClient = require('websocket').client;
+
+  var client = new WebSocketClient();
+
+  client.on('connectFailed', function(error) {
+    console.log('Connect Error: ' + error.toString());
+  });
+
+  client.on('connect', function(connection) {
+    wsonline = true;
+    console.log('WebSocket Client Connected');
+    connection.on('error', function(error) {
+      console.log("Connection Error: " + error.toString());
+    });
+    connection.on('close', function() {
+      wsonline=false;
+      console.log('echo-protocol Connection Closed');
+    });
+    connection.on('message', function(message) {
+      if (message.type === 'utf8') {
+        handleMsg(JSON.parse(message.utf8Data),3)
+      }
+    });
+  });
+  client.connect('ws://192.168.17.52:25335/event');
+}
+
+
 function reconnect(){
   if(!wsonline){
     initWS();
     initWS2()
+    initWS3()
   }
 }
 
@@ -226,13 +257,23 @@ function addSendQueue(groupid,msg,botqq){
   var port;
   if(botqq==2){
     port = 24334;
+  }else if(botqq==3){
+    port = 25334;
   }else{
     port = 23334;
   }
 
   // [CQ:image,file=send/ff14/5471.png]
   var n = msg.indexOf('CQ:image')
-  if(n>=0&&port==24334){
+  if(n>=0&&port!=23334){
+    var npath;
+    if(port == 24334){
+      npath="wcq";
+    }else if(port == 25334){
+      npath="ecq";
+    }else{
+      npath="wcq";
+    }
     var s1 = msg.substring(n+3);
     var n1 = s1.indexOf('file=');
     var s2 = s1.substring(n1+5);
@@ -241,7 +282,7 @@ function addSendQueue(groupid,msg,botqq){
     var pa = s3.split('/');
     var ohead = '../coolq-data/cq/data/image/'
 
-    var head = '../coolq-data/wcq/data/image/'
+    var head = '../coolq-data/'+npath+'/data/image/'
     var fpath = head;
     for(var i=0;i<pa.length;i++){
       if(i==0){
@@ -267,7 +308,15 @@ function addSendQueue(groupid,msg,botqq){
   }
 
   n = msg.indexOf('CQ:record')
-  if(n>=0&&port==24334){
+  if(n>=0&&port!=23334){
+    var npath;
+    if(port == 24334){
+      npath="wcq";
+    }else if(port == 25334){
+      npath="ecq";
+    }else{
+      npath="wcq";
+    }
     var s1 = msg.substring(n+3);
     var n1 = s1.indexOf('file=');
     var s2 = s1.substring(n1+5);
@@ -276,7 +325,7 @@ function addSendQueue(groupid,msg,botqq){
     var pa = s3.split('/');
     var ohead = '../coolq-data/cq/data/record/'
 
-    var head = '../coolq-data/wcq/data/record/'
+    var head = '../coolq-data/'+npath+'/data/record/'
     var fpath = head;
     for(var i=0;i<pa.length;i++){
       if(i==0){
@@ -445,6 +494,9 @@ function handleMsg_D0(msgObj,botqq){
     if (content.indexOf('[CQ:at,qq=3291864216]') > -1) {
       content = content.replace(/\[CQ:at,qq=3291864216\]/g, '百百');
     }
+    if (content.indexOf('[CQ:at,qq=1840239061]') > -1) {
+      content = content.replace(/\[CQ:at,qq=3291864216\]/g, '百百');
+    }
     content = simplized(content);
     msgObj.message=content;
   }
@@ -461,6 +513,8 @@ function handleMsg_D(msgObj,botqq) {
   var port;
   if(botqq==2){
     port = 24334;
+  }else if(botqq==3){
+    port = 25334;
   }else{
     port = 23334;
   }
@@ -472,6 +526,13 @@ function handleMsg_D(msgObj,botqq) {
     )&&port==23334){
     return;
   }
+  if((
+      gidstr.startsWith("74633")
+    )&&port==25334){
+    return;
+  }
+
+
   if (type == 'private') {
     var userid = msgObj.user_id;
     callback = function (res) {
