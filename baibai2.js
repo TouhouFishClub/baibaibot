@@ -432,7 +432,10 @@ function handleMsg_D(msgObj,botqq) {
   }
     
   var gidstr= groupid+"";
-  if(gidstr.startsWith("20570")&&port==23334){
+  if((
+      gidstr.startsWith("20570")||
+      gidstr.startsWith("22169")
+    )&&port==23334){
     return;
   }
   if (type == 'private') {

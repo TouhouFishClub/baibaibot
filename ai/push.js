@@ -76,7 +76,7 @@ function pushToGroup(type) {
         setTimeout(function () {
           var options = {
             host: '192.168.17.52',
-            port: 23334,
+            port: 24334,
             path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(res),
             method: 'GET',
             headers: {}
