@@ -522,12 +522,13 @@ function handleMsg_D(msgObj,botqq) {
   var gidstr= groupid+"";
   if((
       gidstr.startsWith("20570")||
-      gidstr.startsWith("22169")
+      gidstr.startsWith("22169")||
+      gidstr.startsWith("74633")
     )&&port==23334){
     return;
   }
   if((
-      gidstr.startsWith("74633")
+      gidstr.startsWith("61614")
     )&&port==25334){
     return;
   }
