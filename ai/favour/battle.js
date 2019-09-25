@@ -116,6 +116,13 @@ function fightUser(from,to,callback,gid){
     callback(from+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
     return;
   }
+
+  var gidstr = gid + "";
+  var add=6;
+  if(gidstr.startsWith("74633")){
+    add=3;
+  }
+
   cnew = cnew+6;
   limitFight[from]={ts:tsnew,c:cnew};
   if(from==to){
