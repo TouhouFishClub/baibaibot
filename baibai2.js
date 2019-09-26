@@ -574,7 +574,7 @@ function handleMsg_D(msgObj,botqq) {
   }
   var from = msgObj.user_id;
 
-  var name = getUserNameInGroup(from, groupid);
+  var name = getUserNameInGroup(from, groupid,port);
   var nickname = getUserNickInGroupByCache(from, groupid);
   console.log(groupid + ":" + name + ":" + content)
   if (name == null) {
@@ -584,7 +584,7 @@ function handleMsg_D(msgObj,botqq) {
     name = '[CQ:at,qq=' + from + ']';
   }
 
-  var groupName = getGroupName(groupid);
+  var groupName = getGroupName(groupid,port);
   saveChat(groupid, from, name, content);
   callback = function (res, blank) {
     if (res.trim().length > 0) {

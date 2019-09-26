@@ -7,13 +7,16 @@ function getGroupMemInfo(gid){
   return cache[gid];
 }
 
-function getUserNameInGroup(qq,gid){
+function getUserNameInGroup(qq,gid,port){
   if(cache[gid]){
     return getUserNameInGroupByCache(cache[gid],qq);
   }else{
+    if(!port){
+      port=23334;
+    }
     var options = {
       host: '192.168.17.52',
-      port: 23334,
+      port: port,
       path: '/get_group_member_list?group_id='+gid,
       method: 'GET',
       headers: {
@@ -31,16 +34,21 @@ function getUserNameInGroup(qq,gid){
         var data = eval('('+resdata+')');
         var arr = {};
         var namearr = {};
-        if(data&&data.data){
-          for(var i=0;i<data.data.length;i++){
-            var user = data.data[i];
-            var uid = user.user_id;
-            arr[uid]=user;
-            namearr[user.card?user.card:user.nickname]=uid;
+        var retcode = data.retcode;
+        if(retcode==0){
+          if(data&&data.data){
+            for(var i=0;i<data.data.length;i++){
+              var user = data.data[i];
+              var uid = user.user_id;
+              arr[uid]=user;
+              namearr[user.card?user.card:user.nickname]=uid;
+            }
+            cache[gid] = arr;
+            namecache[gid]=namearr;
+            getUserNameInGroupByCache(data,qq);
           }
-          cache[gid] = arr;
-          namecache[gid]=namearr;
-          getUserNameInGroupByCache(data,qq);
+        }else{
+
         }
       });
     });
@@ -94,13 +102,16 @@ function getUserRoleInGroupByCache(qq,groupid){
 
 
 var gcache = {};
-function getGroupName(gid){
+function getGroupName(gid,port){
   if(gcache[gid]){
     return gcache[gid].group_name;
   }else{
+    if(!port){
+      port=23334;
+    }
     var options = {
       host: '192.168.17.52',
-      port: 23334,
+      port: port,
       path: '/get_group_list',
       method: 'GET',
       headers: {
@@ -163,10 +174,13 @@ function sendPrivateMsg(userid,msg){
   req.end();
 }
 
-function banUserInGroup(qq,groupid,seconds){
+function banUserInGroup(qq,groupid,seconds,port){
+  if(!port){
+    port=23334;
+  }
   var options = {
     host: '192.168.17.52',
-    port: 23334,
+    port: port,
     path: '/set_group_ban?group_id='+groupid+'&user_id='+qq+'&duration='+seconds,
     method: 'GET',
     headers: {
