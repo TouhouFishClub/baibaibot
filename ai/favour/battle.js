@@ -74,7 +74,7 @@ function fight(fromid,content,gid,callback){
 
 
 
-function fightUser(from,to,callback,gid){
+function fightUser(from,to,callback,gid,port){
   if(from=="百百"){
     return;
   }
@@ -82,8 +82,21 @@ function fightUser(from,to,callback,gid){
 
 
 
-
-
+  var add=6;
+  var gidstr = gid + "";
+  if((port==23334)&&(!gidstr.startsWith("20570"))){
+    callback('此群不支持砍人');
+    return;
+  }if(gidstr.startsWith("74633")){
+    add=3;
+  }else if(gidstr.startsWith("20570")){
+    add=6;
+  }else if(gidstr.startsWith("67096")){
+    add=3;
+  }else{
+    callback('此群不支持砍人');
+    return;
+  }
 
 
 
@@ -115,12 +128,6 @@ function fightUser(from,to,callback,gid){
   if(cnew>maxtime){
     callback(from+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
     return;
-  }
-
-  var gidstr = gid + "";
-  var add=6;
-  if(gidstr.startsWith("74633")){
-    add=3;
   }
 
   cnew = cnew+6;

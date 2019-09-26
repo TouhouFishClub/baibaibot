@@ -565,7 +565,7 @@ function handleMsg_D(msgObj,botqq) {
       var groupName = 'private_group_name';
       var name = 'n';
       var nickname = 'n'
-      handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'private')
+      handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'private',port)
     }
     return;
   }
@@ -591,10 +591,10 @@ function handleMsg_D(msgObj,botqq) {
       addSendQueue(groupid,res,botqq);
     }
   }
-  handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group')
+  handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group',port)
 }
 
-function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType){
+function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType,port){
 
 
 
@@ -810,7 +810,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n闲聊：``+对话";
       callback(ret);
     }else{
-      reply(c1,name,callback,groupid,from,groupName,nickname);
+      reply(c1,name,callback,groupid,from,groupName,nickname,port);
     }
     return;
   }
@@ -859,7 +859,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 }
 
-function reply(content,userName,callback,groupid,from,groupName,nickname){
+function reply(content,userName,callback,groupid,from,groupName,nickname,port){
   var first = content.substring(0,1);
   if(content.substring(0, 2) == 'gf'){
     gf(content.substring(2), callback)
@@ -906,9 +906,9 @@ function reply(content,userName,callback,groupid,from,groupName,nickname){
   }else if(first=='w'||first=='W'){
     searchMHW(content.substring(1),from,groupid,callback);
   }else if(first=='f'||first=='F'){
-    fight(from,content.substring(1),groupid,callback);
+    fight(from,content.substring(1),groupid,callback,port);
   }else if(first=='g'||first=='G'){
-    useMagicOrItem(from,userName,content.substring(1),groupid,callback);
+    useMagicOrItem(from,userName,content.substring(1),groupid,callback,port);
   }else if(first=='m'||first=='M'){
     handleUserOperation(from,content.substring(1),qqq.getMemberListInGroup(groupid),callback);
   }else if(first==8){
