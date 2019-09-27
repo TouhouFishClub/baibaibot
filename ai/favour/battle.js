@@ -241,7 +241,7 @@ function battle(data1,data2,db){
   var damage = damageAndStr[0];
   if(data2._id=="B3"){
     if(data1.lv<20){
-      damage=Math.min(Math.random()*lv*10,damage);
+      damage=Math.min(Math.random()*data1.lv*10,damage);
     }
   }
   var dmgstr = damageAndStr[1];
