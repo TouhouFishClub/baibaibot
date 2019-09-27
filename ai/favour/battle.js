@@ -700,12 +700,66 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
           if(next==""){
             var ret = "请选择：\n";
             ret = ret +  "`g51:攻击力+1,其他能力一定概率+1\n";
-            ret = ret +  "`g52:防御力+1,其他能力一定概率+1\n";
+            ret = ret +  "`g52:防御力+2,其他能力一定概率+1\n";
             ret = ret +  "`g53:幸运+1,其他能力一定概率+1\n";
             ret = ret +  "`g54:速度+1,其他能力一定概率+1\n";
+            ret = ret +  "`g55:升5级攻击\n";
+            ret = ret +  "`g56:升5级防御\n";
+            ret = ret +  "`g57:升5级幸运\n";
+            ret = ret +  "`g58:升5级速度\n";
             callback(ret);
           }else{
             if(next>4){
+              var exp = data.exp;
+              for(var i=0;i<5;i++){
+                exp = exp - (data.lv+i)*(data.lv+i)*(data.lv+i)-50;
+              }
+              if(exp>=0){
+                data.exp=exp;
+                if(next==5){
+                  data.atk=data.atk+5;
+                  ret = ret + ",atk+5"
+                }else if(next==6){
+                  data.def=data.def+10;
+                  ret = ret + ",def+10";
+                }else if(next==7){
+                  data.luck=data.luck+5;
+                  ret = ret + ",luck+5";
+                }else if(next==8){
+                  data.agi=data.agi+5;
+                  ret = ret + ",agi+5";
+                }else{
+
+                }
+                if(next!=5){
+                  var add = Math.round(Math.random()*2.25);
+                  if(add>=1){
+                    data.atk=data.atk+add;
+                    ret = ret + ",atk+"+add;
+                  }
+                }
+                if(next!=6){
+                  var add = Math.round(Math.random()*2.25);
+                  if(add>=1){
+                    data.def=data.def+add;
+                    ret = ret + ",def+"+add;
+                  }
+                }
+                if(next!=7){
+                  var add = Math.round(Math.random()*2.25);
+                  if(add>=1){
+                    data.luck=data.luck+add;
+                    ret = ret + ",luck+"+add;
+                  }
+                }
+                if(next!=8){
+                  var add = Math.round(Math.random()*2.25);
+                  if(add>=1){
+                    data.agi=data.agi+add;
+                    ret = ret + ",agi+"+add;
+                  }
+                }
+              }
 
             }else{
               if(data.exp>=data.lv*data.lv*data.lv+50){
@@ -717,8 +771,8 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
                     data.atk=data.atk+1;
                     ret = ret + ",atk+1"
                   }else if(next==2){
-                    data.def=data.def+1;
-                    ret = ret + ",def+1";
+                    data.def=data.def+3;
+                    ret = ret + ",def+2";
                   }else if(next==3){
                     data.luck=data.luck+1;
                     ret = ret + ",luck+1";
