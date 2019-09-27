@@ -113,7 +113,7 @@ function sendFightImage(wd,callback){
     .autoOrient()
     .fontSize(20)
     .fill('blue')
-    .font('STXIHEI')
+    .font('font/STXIHEI.ttf')
     .drawText(0,0,uw,'NorthWest');
   sendGmImage(img1,'',callback);
 }
