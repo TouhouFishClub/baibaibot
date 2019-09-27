@@ -761,6 +761,8 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
                   }
                 }
                 callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
+              }else{
+                callback(userName+'经验不足,不能升级');
               }
 
             }else{
