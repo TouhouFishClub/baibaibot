@@ -1,6 +1,9 @@
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 
+var {sendGmImage} = require('../../cq/sendImage');
+
+
 var tmpfight = {};
 var limitFight = {};
 
@@ -73,14 +76,52 @@ function fight(fromid,content,gid,callback){
 }
 
 
+function sendFightImage(wd,callback){
+  var wa = wd.split('\n');
+  var maxwd = 0;
+  var uwd = 32;
+  var uw = "";
+  for(var i=0;i<wa.length;i++){
+    var lw = wa[i];
+    var ud = "";
+    while(lw.length>uwd){
+      ud = ud + lw.substring(0,uwd)+"\n";
+      lw = lw.substring(uwd);
+    }
+    if(lw.length>0){
+      uw = uw + ud +lw+"\n";
+    }else{
+      uw = uw + ud;
+    }
+  }
+  var ua = uw.split('\n');
+  for(var i=0;i<ua.length;i++){
+    if(ua[i].length>maxwd){
+      maxwd = ua[i].length;
+    }
+  }
+  var img1 = new imageMagick("static/blank.png");
+  console.log("len:"+maxwd+":"+len);
+  img1.resize(maxwd*19+29, len*21+29,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+    .autoOrient()
+    .fontSize(20)
+    .fill('blue')
+    .font('./static/dfgw.ttf')
+    .drawText(0,0,uw,'NorthWest');
+  sendGmImage(img1,'',callback);
+}
 
-function fightUser(from,to,callback,gid,port){
+
+
+function fightUser(from,to,Ncallback,gid,port){
   if(from=="百百"){
     return;
   }
   var now = new Date();
 
-
+  var callback = function(ret){
+    sendFightImage(ret,Ncallback);
+  }
 
   var add=6;
   var gidstr = gid + "";
@@ -88,7 +129,7 @@ function fightUser(from,to,callback,gid,port){
     callback('此群不支持砍人');
     return;
   }if(gidstr.startsWith("74633")){
-    add=3;
+    add=4;
   }else if(gidstr.startsWith("20570")){
     add=6;
   }else if(gidstr.startsWith("67096")){
@@ -397,7 +438,13 @@ function getUserInfo(fromid,content,gid,callback){
 
 
 var limitItem = {};
-function useMagicOrItem(fromuin,userName,content,members,callback){
+function useMagicOrItem(fromuin,userName,content,members,Ncallback){
+
+
+  var callback = function(ret){
+    sendFightImage(ret,Ncallback);
+  }
+
 
   var now = new Date();
   var then = limitFight[fromuin];
