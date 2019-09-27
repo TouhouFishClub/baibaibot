@@ -761,7 +761,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
                     ret = ret + ",agi+"+add;
                   }
                 }
-                callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
+                callback(userName+'升级到'+data.lv+'级\n'+ret.substring(1))
               }else{
                 callback(userName+'经验不足,不能升级');
               }
@@ -803,7 +803,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
                     data.agi=data.agi+1;
                     ret = ret + ",agi+1";
                   }
-                  callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
+                  callback(userName+'升级到'+data.lv+'级\n'+ret.substring(1))
                 }else{
                   callback(userName+'不能在升级了,请转生后在升级');
                 }
