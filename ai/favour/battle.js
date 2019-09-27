@@ -81,7 +81,7 @@ function fight(fromid,content,gid,callback){
 function sendFightImage(wd,callback){
   var wa = wd.split('\n');
   var maxwd = 0;
-  var uwd = 29;
+  var uwd = 32;
   var uw = "";
   for(var i=0;i<wa.length;i++){
     var lw = wa[i];
@@ -113,7 +113,7 @@ function sendFightImage(wd,callback){
     .autoOrient()
     .fontSize(20)
     .fill('blue')
-    .font('font/STXIHEI.ttf')
+    .font('./font/STXIHEI.TTF')
     .drawText(0,0,uw,'NorthWest');
   sendGmImage(img1,'',callback);
 }
