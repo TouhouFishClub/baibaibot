@@ -103,7 +103,6 @@ function sendFightImage(wd,callback){
     }
   }
   var img1 = new imageMagick("static/blank.png");
-  console.log("len:"+maxwd+":"+len);
   img1.resize(maxwd*19+29, len*21+29,'!') //加('!')强行把图片缩放成对应尺寸150*150！
     .autoOrient()
     .fontSize(20)
