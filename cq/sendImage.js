@@ -24,7 +24,7 @@ function sendGmImage(gmObj,words='',callback,order){
     }else{
       ret = words+'\n[CQ:image,file='+imgname+']';
     }
-    callback(ret);
+    callback(ret.trim());
   });
 }
 
