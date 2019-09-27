@@ -174,7 +174,7 @@ function fightUser(from,to,Ncallback,gid,port){
     maxtime = 25;
   }
   if(cnew>maxtime){
-    callback(from+'疲劳中无法攻击,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
+    callback(from+'疲劳中无法攻击,恢复时间：\n'+new Date(tsnew+1000000).toLocaleString());
     return;
   }
 
@@ -474,7 +474,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
     maxtime = 50;
   }
   if(cnew>maxtime){
-    callback(fromuin+'疲劳中无法完成指令,恢复时间：'+new Date(tsnew+1000000).toLocaleString());
+    callback(fromuin+'疲劳中无法完成指令,恢复时间：\n'+new Date(tsnew+1000000).toLocaleString());
     return;
   }
   limitFight[fromuin]={ts:tsnew,c:cnew};
