@@ -716,6 +716,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
               }
               if(exp>=0){
                 data.exp=exp;
+                data.lv=data.lv+5;
                 if(next==5){
                   data.atk=data.atk+5;
                   ret = ret + ",atk+5"
@@ -759,6 +760,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
                     ret = ret + ",agi+"+add;
                   }
                 }
+                callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
               }
 
             }else{
