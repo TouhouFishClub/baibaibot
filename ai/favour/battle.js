@@ -715,6 +715,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
                 exp = exp - (data.lv+i)*(data.lv+i)*(data.lv+i)-50;
               }
               if(exp>=0){
+                var ret = "";
                 data.exp=exp;
                 data.lv=data.lv+5;
                 if(next==5){
