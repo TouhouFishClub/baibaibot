@@ -2,6 +2,7 @@ var https=require('https');
 var http = require('http');
 var timer = 0;
 var path = require('path');
+var fs = require('fs');
 
 const {cm,combine} = require(path.join(__dirname, '/coin/market.js'))
 const {getStock} = require(path.join(__dirname, '/coin/stock.js'))
@@ -72,6 +73,67 @@ function pushToGroup(type) {
   if (type == 2) {
     var groupid = 221698514;
     var callback = function (res, blank) {
+
+      var msg = res.trim();
+      var port = 24334;
+      var n = msg.indexOf('CQ:image')
+      if(n>=0&&port!=23334){
+        var npath;
+        if(port == 24334){
+          npath="wcq";
+        }else if(port == 25334){
+          npath="ecq";
+        }else{
+          npath="wcq";
+        }
+        var s1 = msg.substring(n+3);
+        var n1 = s1.indexOf('file=');
+        var s2 = s1.substring(n1+5);
+        var n2 = s2.indexOf(']');
+        var s3 = s2.substring(0,n2);
+        var pa = s3.split('/');
+        var ohead = '../coolq-data/cq/data/image/'
+
+        var head = '../coolq-data/'+npath+'/data/image/'
+        var fpath = head;
+        for(var i=0;i<pa.length;i++){
+          if(i==0){
+            fpath=fpath+pa[i];
+          }else{
+            fpath=fpath+"/"+pa[i];
+          }
+          if(i!=pa.length-1){
+            if(!fs.existsSync(fpath)){
+              fs.mkdirSync(fpath);
+            }
+          }
+        }
+
+        console.log("copy:"+ohead+s3+"  -->  "+head+s3);
+        try{
+          let readStream = fs.createReadStream(ohead+s3);
+          readStream.pipe(fs.createWriteStream(head+s3));
+        }catch(e){
+          console.log(e);
+        }
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       if (res.trim().length > 0) {
         setTimeout(function () {
           var options = {
@@ -89,11 +151,9 @@ function pushToGroup(type) {
     var now = new Date();
     if (now.getMinutes() > 25 && now.getMinutes() < 35) {
       combine(callback);
-
       if (now.getDay() >= 1 && now.getDay() <= 5 && now.getHours() == 15) {
         getStock(callback);
       }
-
     } else {
       combine(callback);
     }

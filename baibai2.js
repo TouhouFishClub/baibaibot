@@ -291,7 +291,6 @@ function addSendQueue(groupid,msg,botqq){
         fpath=fpath+"/"+pa[i];
       }
       if(i!=pa.length-1){
-        console.log(fpath,fs.existsSync(fpath));
         if(!fs.existsSync(fpath)){
           fs.mkdirSync(fpath);
         }
@@ -334,7 +333,6 @@ function addSendQueue(groupid,msg,botqq){
         fpath=fpath+"/"+pa[i];
       }
       if(i!=pa.length-1){
-        console.log(fpath,fs.existsSync(fpath));
         if(!fs.existsSync(fpath)){
           fs.mkdirSync(fpath);
         }
