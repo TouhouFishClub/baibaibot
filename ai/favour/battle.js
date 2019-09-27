@@ -239,11 +239,7 @@ function battle(data1,data2,db){
   var ret='';
   var damageAndStr = generateDamage(data1,data2,1,1);
   var damage = damageAndStr[0];
-  if(data2._id=="B3"){
-    if(data1.lv<20){
-      damage=Math.min(Math.random()*data1.lv*10,damage);
-    }
-  }
+
   var dmgstr = damageAndStr[1];
   ret = ret + dmgstr;
   data1.exp=data1.exp+damage;
