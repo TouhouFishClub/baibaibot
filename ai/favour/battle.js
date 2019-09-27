@@ -628,7 +628,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
               next=next.substring(0,1);
               rate = Math.log(decrease)/16+0.18;
             }
-            if(decrease>0&&data.gold>=decrease){
+            if(decrease>=200&&data.gold>=decrease){
               var ret = "消耗了"+decrease+"金钱";
               data.gold=data.gold-decrease;
               if(next==1){
@@ -669,7 +669,11 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
               }
               callback(ret);
             }else{
-              callback(userName+"金钱不足");
+              if(decrease<200){
+                callback(userName+"最少消耗200金币");
+              }else{
+                callback(userName+"金钱不足");
+              }
             }
           }
         }else if(content==7){
@@ -705,49 +709,54 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
             ret = ret +  "`g54:速度+1,其他能力一定概率+1\n";
             callback(ret);
           }else{
-            if(data.exp>=data.lv*data.lv*data.lv+50){
-              if(data.lv<99){
-                data.exp=data.exp-data.lv*data.lv*data.lv-50;
-                data.lv=data.lv+1;
-                var ret = "";
-                if(next==1){
-                  data.atk=data.atk+1;
-                  ret = ret + ",atk+1"
-                }else if(next==2){
-                  data.def=data.def+1;
-                  ret = ret + ",def+1";
-                }else if(next==3){
-                  data.luck=data.luck+1;
-                  ret = ret + ",luck+1";
-                }else if(next==4){
-                  data.agi=data.agi+1;
-                  ret = ret + ",agi+1";
-                }else{
+            if(next>4){
 
-                }
-                if(next!=1&&Math.random()<0.45){
-                  data.atk=data.atk+1;
-                  ret = ret + ",atk+1"
-                }
-                if(next!=2&&Math.random()<0.45){
-                  data.def=data.def+1;
-                  ret = ret + ",def+1";
-                }
-                if(next!=3&&Math.random()<0.45){
-                  data.luck=data.luck+1;
-                  ret = ret + ",luck+1";
-                }
-                if(next!=4&&Math.random()<0.45){
-                  data.agi=data.agi+1;
-                  ret = ret + ",agi+1";
-                }
-                callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
-              }else{
-                callback(userName+'不能在升级了,请转生后在升级');
-              }
             }else{
-              callback(userName+'经验不足,不能升级');
+              if(data.exp>=data.lv*data.lv*data.lv+50){
+                if(data.lv<99){
+                  data.exp=data.exp-data.lv*data.lv*data.lv-50;
+                  data.lv=data.lv+1;
+                  var ret = "";
+                  if(next==1){
+                    data.atk=data.atk+1;
+                    ret = ret + ",atk+1"
+                  }else if(next==2){
+                    data.def=data.def+1;
+                    ret = ret + ",def+1";
+                  }else if(next==3){
+                    data.luck=data.luck+1;
+                    ret = ret + ",luck+1";
+                  }else if(next==4){
+                    data.agi=data.agi+1;
+                    ret = ret + ",agi+1";
+                  }else{
+
+                  }
+                  if(next!=1&&Math.random()<0.45){
+                    data.atk=data.atk+1;
+                    ret = ret + ",atk+1"
+                  }
+                  if(next!=2&&Math.random()<0.45){
+                    data.def=data.def+1;
+                    ret = ret + ",def+1";
+                  }
+                  if(next!=3&&Math.random()<0.45){
+                    data.luck=data.luck+1;
+                    ret = ret + ",luck+1";
+                  }
+                  if(next!=4&&Math.random()<0.45){
+                    data.agi=data.agi+1;
+                    ret = ret + ",agi+1";
+                  }
+                  callback(userName+'升级到'+data.lv+'级,'+ret.substring(1))
+                }else{
+                  callback(userName+'不能在升级了,请转生后在升级');
+                }
+              }else{
+                callback(userName+'经验不足,不能升级');
+              }
             }
+
           }
         }
         cl_user.save(data);
