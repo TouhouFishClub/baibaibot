@@ -734,28 +734,28 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
 
                 }
                 if(next!=5){
-                  var add = Math.round(Math.random()*2.25);
+                  var add = Math.round(Math.random()*4.5);
                   if(add>=1){
                     data.atk=data.atk+add;
                     ret = ret + ",atk+"+add;
                   }
                 }
                 if(next!=6){
-                  var add = Math.round(Math.random()*2.25);
+                  var add = Math.round(Math.random()*4.5);
                   if(add>=1){
                     data.def=data.def+add;
                     ret = ret + ",def+"+add;
                   }
                 }
                 if(next!=7){
-                  var add = Math.round(Math.random()*2.25);
+                  var add = Math.round(Math.random()*4.5);
                   if(add>=1){
                     data.luck=data.luck+add;
                     ret = ret + ",luck+"+add;
                   }
                 }
                 if(next!=8){
-                  var add = Math.round(Math.random()*2.25);
+                  var add = Math.round(Math.random()*4.5);
                   if(add>=1){
                     data.agi=data.agi+add;
                     ret = ret + ",agi+"+add;
