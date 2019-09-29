@@ -304,7 +304,7 @@ function fightUser(from,to,Ncallback,gid,port){
         if(data2.status==1){
           callback(from+'想鞭尸'+to+',但砍到了自己,受到'+Math.floor(Math.random()*100000-50000)+'点伤害');
         }else{
-          var ret = battle(data,data2,db);
+          var ret = battle(data,data2);
           callback(ret);
         }
       })
@@ -314,7 +314,7 @@ function fightUser(from,to,Ncallback,gid,port){
 
 
 const {battlePlusBeforeDamage,battlePlusAfterDamage} = require('./job');
-function battle(data1,data2,db){
+function battle(data1,data2){
   var ret='';
   var damageAndStr = generateDamage(data1,data2,1,1);
   var damage = damageAndStr[0];
