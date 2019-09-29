@@ -188,7 +188,7 @@ function fightUser(from,to,Ncallback,gid,port){
     var daynow = Math.floor((now.getTime()+3600000*8)/86400000);
     if(daythen==daynow){
       var cthencount = chatCount.n;
-      if(chatCount<2000){
+      if(cthencount<2000){
         var sub = Math.floor((now.getTime()-cthents)*150/3600000);
         if(sub+cthencount>2000){
           chatCount();
@@ -527,28 +527,24 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
 
   var now = new Date();
   var chatCount = checkmsg[port];
-  var canf;
+  var canf=true;
   if(!chatCount){
     checkChat(port);
-    canf=true
   }else{
     var cthents = chatCount.ts;
     var daythen = Math.floor((cthents+3600000*8)/86400000);
     var daynow = Math.floor((now.getTime()+3600000*8)/86400000);
     if(daythen==daynow){
       var cthencount = chatCount.n;
-      if(chatCount<2000){
+      if(cthencount<2000){
         var sub = Math.floor((now.getTime()-cthents)*150/3600000);
         if(sub+cthencount>2000){
           chatCount();
         }
         console.log("count:"+chatCount);
-        canf=true;
       }else{
         canf=false;
       }
-    }else{
-      canf=true;
     }
   }
   if(!canf){
