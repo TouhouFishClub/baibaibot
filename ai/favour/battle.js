@@ -8,8 +8,39 @@ var {sendGmImage} = require('../../cq/sendImage');
 
 var tmpfight = {};
 var limitFight = {};
+var checkmsg = {};
+
+
 
 const {getGroupMemInfo} = require('../../cq/cache');
+
+
+
+
+
+var udb;
+var cl_user;
+var cl_chat;
+
+initDB();
+function initDB(){
+  MongoClient.connect(mongourl, function(err, db) {
+    udb=db;
+    cl_user = db.collection('cl_user');
+    cl_chat = db.collection('cl_chat');
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
 function fight(fromid,content,gid,callback){
   var from;
   var to;
@@ -78,6 +109,8 @@ function fight(fromid,content,gid,callback){
 }
 
 
+
+
 function sendFightImage(wd,callback){
   var wa = wd.split('\n');
   var maxwd = 0;
@@ -120,11 +153,65 @@ function sendFightImage(wd,callback){
 
 
 
+
+
+
+
+
+function checkChat(port){
+  var from = new Date();
+  from.setHours(0);
+  from.setMinutes(0);
+  from.setSeconds(0);
+  var query = {'_id': {'$gt':from}};
+  cl_chat.count(query).then(function(err,ret){
+    if(err){
+      console.log("db err");
+    }else{
+      checkmsg[port]={n:ret,ts:new Date().getTime()};
+    }
+  })
+}
+
+
+
 function fightUser(from,to,Ncallback,gid,port){
   if(from=="百百"){
     return;
   }
   var now = new Date();
+
+  var chatCount = checkmsg[port];
+  var canf;
+  if(!chatCount){
+    checkChat(port);
+    canf=true
+  }else{
+    var cthents = chatCount.ts;
+    var daythen = Math.floor((cthents+3600000*8)/86400000);
+    var daynow = Math.floor((now.getTime()+3600000*8)/86400000);
+    if(daythen==daynow){
+      var cthencount = chatCount.n;
+      if(chatCount<2000){
+        var sub = Math.floor((now.getTime()-cthents)*150/3600000);
+        if(sub+cthencount>2000){
+          chatCount();
+        }
+        console.log("count:"+chatCount);
+        canf=true;
+      }else{
+        canf=false;
+      }
+    }else{
+      canf=true;
+    }
+  }
+  if(!canf){
+    Ncallback('本日砍人次数已用尽');
+    return;
+  }
+
+
 
   var callback = function(ret){
     sendFightImage(ret,Ncallback);
@@ -184,52 +271,49 @@ function fightUser(from,to,Ncallback,gid,port){
     callback(from+'自杀了');
     return;
   }
-  MongoClient.connect(mongourl, function(err, db) {
-    var cl_user = db.collection('cl_user');
-    var query = {'_id':from};
-    cl_user.findOne(query, function(err, data) {
-      if (data) {
+  var cl_user = db.collection('cl_user');
+  var query = {'_id':from};
+  cl_user.findOne(query, function(err, data) {
+    if (data) {
 
-      } else {
-        init = {'_id': from, hp: 100, mp: 100, tp: 100, gold: 100,lv: 1,exp:0,
-           str: 9, int: 9, agi: 9, atk:9, def:9, mag:9,luck:9,status:0,
-          love: 0}
-        data = init;
-      }
-      var mpcost = 20;
-      if(data.status==3){
-        mpcost = 50;
-      }
-      if(data.status==4){
-        mpcost = 0;
-        data.hp=Math.floor(data.hp/2);
-      }
-      if(data.mp<=mpcost){
-        callback(from+'mp不足,无法发动攻击');
-      }else if(data.status==1){
-        callback(from+'死了也想砍'+to+',但砍到了自己,受到'+Math.floor(Math.random()*10000-5000)+'点伤害');
-      }else{
-        data.mp=data.mp-mpcost;
-        var q2 = {'_id':to};
-        cl_user.findOne(q2,function(err, data2) {
-          if (data2) {
+    } else {
+      init = {'_id': from, hp: 100, mp: 100, tp: 100, gold: 100,lv: 1,exp:0,
+         str: 9, int: 9, agi: 9, atk:9, def:9, mag:9,luck:9,status:0,
+        love: 0}
+      data = init;
+    }
+    var mpcost = 20;
+    if(data.status==3){
+      mpcost = 50;
+    }
+    if(data.status==4){
+      mpcost = 0;
+      data.hp=Math.floor(data.hp/2);
+    }
+    if(data.mp<=mpcost){
+      callback(from+'mp不足,无法发动攻击');
+    }else if(data.status==1){
+      callback(from+'死了也想砍'+to+',但砍到了自己,受到'+Math.floor(Math.random()*10000-5000)+'点伤害');
+    }else{
+      data.mp=data.mp-mpcost;
+      var q2 = {'_id':to};
+      cl_user.findOne(q2,function(err, data2) {
+        if (data2) {
 
-          } else {
-            init = {'_id': to, hp: 100, mp: 100, tp: 100, gold: 100,lv: 1,exp:0,
-              str: 9, int: 9, agi: 9, atk:9, def:9, mag:9,luck:9,status:0,
-              love: 0}
-            data2 = init;
-          }
-          if(data2.status==1){
-            callback(from+'想鞭尸'+to+',但砍到了自己,受到'+Math.floor(Math.random()*100000-50000)+'点伤害');
-          }else{
-            var ret = battle(data,data2,db);
-            callback(ret);
-          }
-        })
-      }
-
-    });
+        } else {
+          init = {'_id': to, hp: 100, mp: 100, tp: 100, gold: 100,lv: 1,exp:0,
+            str: 9, int: 9, agi: 9, atk:9, def:9, mag:9,luck:9,status:0,
+            love: 0}
+          data2 = init;
+        }
+        if(data2.status==1){
+          callback(from+'想鞭尸'+to+',但砍到了自己,受到'+Math.floor(Math.random()*100000-50000)+'点伤害');
+        }else{
+          var ret = battle(data,data2,db);
+          callback(ret);
+        }
+      })
+    }
   });
 }
 
@@ -406,35 +490,32 @@ function getUserInfo(fromid,content,gid,callback){
     return;
   }
 
-  MongoClient.connect(mongourl, function(err, db) {
-    var cl_user = db.collection('cl_user');
-    var query = {'_id': userName};
-    console.log(query);
-    cl_user.findOne(query, function (err, data) {
-      if (data) {
-        var statusstr;
-        if(data.status==0){
-          statusstr='普通';
-        }else if(data.status==1){
-          statusstr='死亡';
-        }else if(data.status==2){
-          statusstr='防御';
-        }else if(data.status==3){
-          statusstr='攻击';
-        }else if(data.status==4){
-          statusstr='狂怒';
-        }
-        var ret = data._id + "\n";
-        ret = ret + "hp:" + data.hp + "   mp:" + data.mp + "\n";
-        ret = ret + "lv:" + data.lv + "   exp:" + data.exp + "/"+(50+data.lv*data.lv*data.lv)+"\n";
-        ret = ret + "atk:" + data.atk + "   def:" + data.def + "\n";
-        ret = ret + "luck:" + data.luck + "   agi:" + data.agi + "\n";
-        ret = ret + "gold:" + data.gold + "   status:" + statusstr + "\n";
-        callback(ret);
-      } else {
-        callback(content + '是谁？');
+  var query = {'_id': userName};
+  console.log(query);
+  cl_user.findOne(query, function (err, data) {
+    if (data) {
+      var statusstr;
+      if(data.status==0){
+        statusstr='普通';
+      }else if(data.status==1){
+        statusstr='死亡';
+      }else if(data.status==2){
+        statusstr='防御';
+      }else if(data.status==3){
+        statusstr='攻击';
+      }else if(data.status==4){
+        statusstr='狂怒';
       }
-    });
+      var ret = data._id + "\n";
+      ret = ret + "hp:" + data.hp + "   mp:" + data.mp + "\n";
+      ret = ret + "lv:" + data.lv + "   exp:" + data.exp + "/"+(50+data.lv*data.lv*data.lv)+"\n";
+      ret = ret + "atk:" + data.atk + "   def:" + data.def + "\n";
+      ret = ret + "luck:" + data.luck + "   agi:" + data.agi + "\n";
+      ret = ret + "gold:" + data.gold + "   status:" + statusstr + "\n";
+      callback(ret);
+    } else {
+      callback(content + '是谁？');
+    }
   });
 }
 
@@ -446,6 +527,46 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
   var callback = function(ret){
     sendFightImage(ret,Ncallback);
   }
+
+
+
+  var chatCount = checkmsg[port];
+  var canf;
+  if(!chatCount){
+    checkChat(port);
+    canf=true
+  }else{
+    var cthents = chatCount.ts;
+    var daythen = Math.floor((cthents+3600000*8)/86400000);
+    var daynow = Math.floor((now.getTime()+3600000*8)/86400000);
+    if(daythen==daynow){
+      var cthencount = chatCount.n;
+      if(chatCount<2000){
+        var sub = Math.floor((now.getTime()-cthents)*150/3600000);
+        if(sub+cthencount>2000){
+          chatCount();
+        }
+        console.log("count:"+chatCount);
+        canf=true;
+      }else{
+        canf=false;
+      }
+    }else{
+      canf=true;
+    }
+  }
+  if(!canf){
+    Ncallback('本日砍人次数已用尽');
+    return;
+  }
+
+
+
+
+
+
+
+
 
 
   var now = new Date();
@@ -522,8 +643,6 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
       return;
     }
 	  
-    MongoClient.connect(mongourl, function(err, db) {
-      var cl_user = db.collection('cl_user');
       var query = {'_id': from};
       cl_user.findOne(query, function (err, data) {
         if (data) {
@@ -815,7 +934,6 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback){
         }
         cl_user.save(data);
       });
-    });
   }
 }
 
@@ -835,8 +953,6 @@ function regenTimer(){
 }
 
 function regen(){
-  MongoClient.connect(mongourl, function(err, db) {
-    var cl_user = db.collection('cl_user');
     var query = {};
     cl_user.find().toArray(function(err, userArr) {
       for(var i=0;i<userArr.length;i++){
@@ -914,7 +1030,6 @@ function regen(){
         }
       }
     });
-  });
 }
 
 function fixUser(){
