@@ -165,6 +165,7 @@ function checkChat(port){
   from.setSeconds(0);
   var query = {'_id': {'$gt':from}};
   cl_chat.count(query).then(function(err,ret){
+    console.log(err);
     if(err){
       console.log("db err");
     }else{
