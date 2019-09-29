@@ -521,7 +521,7 @@ function getUserInfo(fromid,content,gid,callback){
 
 
 var limitItem = {};
-function useMagicOrItem(fromuin,userName,content,members,Ncallback){
+function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
 
 
   var callback = function(ret){
