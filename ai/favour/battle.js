@@ -267,7 +267,6 @@ function fightUser(from,to,Ncallback,gid,port){
     callback(from+'自杀了');
     return;
   }
-  var cl_user = db.collection('cl_user');
   var query = {'_id':from};
   cl_user.findOne(query, function(err, data) {
     if (data) {
@@ -384,7 +383,6 @@ function battle(data1,data2,db){
       }
     }
   }
-  var cl_user = db.collection('cl_user');
   cl_user.save(data1);
   cl_user.save(data2);
   return ret;
