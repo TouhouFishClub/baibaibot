@@ -163,7 +163,7 @@ function checkChat(port){
   from.setHours(0);
   from.setMinutes(0);
   from.setSeconds(0);
-  var query = {'_id': {'$gt':from}};
+  var query = {'_id': {'$gt':from},uid:2375373419};
   console.log(query);
   cl_chat.count(query).then(function(ret){
     checkmsg[port]={n:ret,ts:new Date().getTime()};
