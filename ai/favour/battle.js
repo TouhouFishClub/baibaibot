@@ -164,6 +164,7 @@ function checkChat(port){
   from.setMinutes(0);
   from.setSeconds(0);
   var query = {'_id': {'$gt':from}};
+  console.log(query);
   cl_chat.count(query).then(function(ret){
     checkmsg[port]={n:ret,ts:new Date().getTime()};
   })
@@ -178,6 +179,7 @@ function fightUser(from,to,Ncallback,gid,port){
   var now = new Date();
 
   var chatCount = checkmsg[port];
+  console.log(chatCount);
   var canf;
   if(!chatCount){
     checkChat(port);
@@ -390,7 +392,7 @@ function battle(data1,data2){
 
 function generateDamage(data1,data2,type,rate2){
   if(data1.status==1||data1.status==2){
-    var damage = 0;
+    var damage = 1;
     var str = data1._id+'砍向'+data2._id+',造成'+damage+'点伤害,获得'+damage+'点经验\n';
     return [damage,str];
   }else{
