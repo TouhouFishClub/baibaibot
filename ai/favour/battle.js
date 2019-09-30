@@ -526,7 +526,10 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
 
 
   var now = new Date();
+
   var chatCount = checkmsg[port];
+  console.log(chatCount);
+
   var canf=true;
   if(!chatCount){
     checkChat(port);
