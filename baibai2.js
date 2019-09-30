@@ -265,7 +265,8 @@ function addSendQueue(groupid,msg,botqq){
 
   // [CQ:image,file=send/ff14/5471.png]
   var n = msg.indexOf('CQ:image')
-  if(n>=0&&port!=23334){
+  var n1 = msg.indexOf("url=http");
+  if(n1==-1&&n>=0&&port!=23334){
     var npath;
     if(port == 24334){
       npath="wcq";
@@ -307,7 +308,8 @@ function addSendQueue(groupid,msg,botqq){
   }
 
   n = msg.indexOf('CQ:record')
-  if(n>=0&&port!=23334){
+  n1 = msg.indexOf("url=http");
+  if(n1==-1&&n>=0&&port!=23334){
     var npath;
     if(port == 24334){
       npath="wcq";
