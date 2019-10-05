@@ -528,8 +528,7 @@ function handleMsg_D(msgObj,botqq) {
     return;
   }
   if((
-      gidstr.startsWith("20570")||
-      gidstr.startsWith("61614")
+      gidstr.startsWith("20570")
     )&&port==25334){
     return;
   }
