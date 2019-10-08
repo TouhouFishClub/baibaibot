@@ -633,7 +633,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
     ret = ret + " `g0:查询自己状态,`g0+名字:查询该人物状态\n";
     ret = ret + " `g1:回复魔法(消耗25MP,回复0-200点HP)\n";
     ret = ret + " `g2:转换为防御状态(防御力2倍)\n";
-    ret = ret + " `g3:购买MP药水(消耗50金钱,回复20-150MP)\n";
+    ret = ret + " `g3:购买MP药水(消耗45金钱,回复20-150MP)\n";
     ret = ret + " `g4:转换为普通状态(自然回复2倍)\n";
     ret = ret + " `g5:升级\n";
     ret = ret + " `g6:转换为攻击状态(攻击力2倍,每次攻击消耗50点MP)\n";
@@ -697,8 +697,8 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
           }
           then.i1 = now.getTime();
           limitItem[fromuin]=then;
-          if(data.mp>=50){
-            data.mp=data.mp-50;
+          if(data.mp>=25){
+            data.mp=data.mp-25;
             var addhp = Math.floor(20000/(100+data.hp))
             data.hp=data.hp+addhp;
             if(data.hp>data.lv*20+200){
@@ -719,8 +719,8 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
           }
           then.i3 = now.getTime();
           limitItem[fromuin]=then;
-          if(data.gold>=25){
-            data.gold=data.gold-25;
+          if(data.gold>=40){
+            data.gold=data.gold-40;
             var addmp = Math.floor(13000/(100+data.mp)+20*Math.random())
             data.mp=data.mp+addmp;
             if(data.mp>data.lv*20+200){
