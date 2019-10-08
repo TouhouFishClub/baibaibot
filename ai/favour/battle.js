@@ -539,6 +539,10 @@ function getUserInfo(fromid,content,gid,callback){
       ret = ret + "atk:" + data.atk + "   def:" + data.def + "\n";
       ret = ret + "luck:" + data.luck + "   agi:" + data.agi + "\n";
       ret = ret + "gold:" + data.gold + "   status:" + statusstr + "\n";
+      if(data._id=="B3"){
+        ret = ret + "skill:吸食（被自己杀死的敌人一定概率某项能力-1）\n";
+      }
+
       callback(ret);
     } else {
       callback(content + '是谁？');
