@@ -349,6 +349,24 @@ function battle(data1,data2){
       ret = ret + data1._id+'被砍死了失去'+(data1.gold/2)+'金钱,稍后复活\n'+data2._id+'获得'+(15+data1.gold/2)+'金钱';
       data2.gold=data2.gold+Math.floor(15+data1.gold/2);
       data1.gold=data1.gold-Math.floor(data1.gold/2);
+      if(data1._id=="B3"){
+        var rd = Math.floor(Math.random()*5);
+        if(rd==0){
+          data2.atk=data2.atk-1;
+          ret = ret + "\nB3发动了吸食,"+data2._id+"攻击力-1";
+        }else if(rd==1){
+          data2.def=data2.def-1;
+          ret = ret + "\nB3发动了吸食,"+data2._id+"防御力-1";
+        }else if(rd==2){
+          data2.luck=data2.luck-1;
+          ret = ret + "\nB3发动了吸食,"+data2._id+"幸运-1";
+        }else if(rd==3){
+          data2.agi=data2.agi-1;
+          ret = ret + "\nB3发动了吸食,"+data2._id+"速度-1";
+        }else{
+          ret = ret + "\nB3发动吸食失败了";
+        }
+      }
     }else{
       data1.hp=data1.hp-damage;
       if(data1.agi>data2.agi*(Math.random()/2+1)){
