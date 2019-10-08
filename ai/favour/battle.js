@@ -631,7 +631,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
   if(content==""){
     ret = "`f+要砍的人：攻击该玩家\n";
     ret = ret + " `g0:查询自己状态,`g0+名字:查询该人物状态\n";
-    ret = ret + " `g1:回复魔法(消耗50MP,回复0-200点HP)\n";
+    ret = ret + " `g1:回复魔法(消耗25MP,回复0-200点HP)\n";
     ret = ret + " `g2:转换为防御状态(防御力2倍)\n";
     ret = ret + " `g3:购买MP药水(消耗50金钱,回复20-150MP)\n";
     ret = ret + " `g4:转换为普通状态(自然回复2倍)\n";
@@ -719,8 +719,8 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
           }
           then.i3 = now.getTime();
           limitItem[fromuin]=then;
-          if(data.gold>=50){
-            data.gold=data.gold-50;
+          if(data.gold>=25){
+            data.gold=data.gold-25;
             var addmp = Math.floor(13000/(100+data.mp)+20*Math.random())
             data.mp=data.mp+addmp;
             if(data.mp>data.lv*20+200){
@@ -1042,17 +1042,17 @@ function regen(){
           u.hp=u.hp+5*addrate+Math.floor(10*Math.log(u.hp));
           update = true;
         }else{
-		if(u._id=="百百"){
-          u.hp=u.hp+Math.floor(10*Math.log(u.hp));	
-          update = true;
-		}
-	}
-        if(u.mp<100){
-          u.mp=u.mp+50*addrate;
+          if(u._id=="百百"){
+                u.hp=u.hp+Math.floor(10*Math.log(u.hp));
+                update = true;
+          }
+	      }
+        if(u.mp<200){
+          u.mp=u.mp+60*addrate;
           update = true;
         }
-        if(u.gold<100){
-          u.gold=u.gold+5*addrate;
+        if(u.gold<150){
+          u.gold=u.gold+6*addrate;
           update = true;
         }
         if(update){
