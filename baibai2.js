@@ -398,7 +398,7 @@ function doSend(thread){
         },Math.floor(Math.random()*3500+500));
       });
     });
-    saveChat(groupid, 2375373419, '百百', msgd);
+    saveChat(groupid, 2375373419, '百百', msgd,port);
     req.on('error', function (err) {
       console.log('req err:');
       console.log(err);
@@ -442,7 +442,7 @@ function doSend1(thread){
         },Math.floor(Math.random()*3500+2500));
       });
     });
-    saveChat(groupid, 2375373419, '百百', msgd);
+    saveChat(groupid, 2375373419, '百百', msgd,port);
     req.on('error', function (err) {
       console.log('req err:');
       console.log(err);
@@ -584,7 +584,7 @@ function handleMsg_D(msgObj,botqq) {
   }
 
   var groupName = getGroupName(groupid,port);
-  saveChat(groupid, from, name, content);
+  saveChat(groupid, from, name, content,port);
   callback = function (res, blank) {
     if (res.trim().length > 0) {
       addSendQueue(groupid,res,botqq);
