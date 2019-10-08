@@ -997,7 +997,7 @@ function regen(){
           u.status=0;
 		      if(u._id=="B1"){
             u.hp=999+u.lv*50;
-            u.atk=u.lv*4+30;
+            u.atk=u.lv*4+3;
             u.lv=u.lv+1;
 		        u.gold=u.gold+u.exp*1.5+99;
 			      u.exp=0
@@ -1011,7 +1011,7 @@ function regen(){
           }
           if(u._id=="B3"){
             u.hp=u.exp*3;
-            u.atk=333+Math.floor(Math.pow(u.exp,0.32));
+            u.atk=233+Math.floor(Math.pow(u.exp,0.32));
             u.agi=9+Math.floor(Math.log(u.exp));
             u.lv=Math.floor(Math.log(u.exp));
             u.def=Math.floor(u.exp/2.22);
@@ -1019,7 +1019,7 @@ function regen(){
           }
           if(u._id=="B4"){
             u.hp=999+u.exp;
-            u.atk=363+Math.floor(Math.pow(u.exp,0.32));
+            u.atk=263+Math.floor(Math.pow(u.exp,0.32));
             u.agi=1;
             u.lv=1;
             u.def=0;
@@ -1027,7 +1027,7 @@ function regen(){
           }
           if(u._id=="B5"){
             u.hp=u.exp*2;
-            u.atk=273+Math.floor(Math.pow(u.exp,0.32));
+            u.atk=173+Math.floor(Math.pow(u.exp,0.32));
             u.agi=1;
             u.lv=1;
             u.def=Math.floor(u.exp/2.22);;
