@@ -1017,7 +1017,7 @@ function regen(){
             u.hp=u.exp*3;
             u.atk=263+Math.floor(Math.pow(u.exp,0.32));
             u.agi=9+Math.floor(Math.log(u.exp));
-            u.lv=Math.floor(Math.log(u.exp));
+            u.lv=Math.floor(1.2*Math.log(u.exp));
             u.def=Math.floor(u.exp/2.22);
             u.gold=3333+Math.floor(u.exp/2.62);
           }
