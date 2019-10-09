@@ -430,9 +430,6 @@ function generateDamage(data1,data2,type,rate2){
     var sum = data1.atk+data1.luck+data1.agi;
     var max = sum/3;
     var criticalrate = ((data1.luck<max?data1.luck:(max+Math.sqrt(data1.luck)))-data2.lv);
-    if(data2._id=="B3"){
-      criticalrate=criticalrate*0.7;
-    }
     var critical = Math.random()*100<criticalrate;
     if(type==2){
       critical=false;
@@ -1017,7 +1014,7 @@ function regen(){
             u.hp=u.exp*3;
             u.atk=263+Math.floor(Math.pow(u.exp,0.32));
             u.agi=9+Math.floor(Math.log(u.exp));
-            u.lv=Math.floor(1.2*Math.log(u.exp));
+            u.lv=Math.floor(1.6*Math.log(u.exp));
             u.def=Math.floor(u.exp/2.22);
             u.gold=3333+Math.floor(u.exp/2.62);
           }
