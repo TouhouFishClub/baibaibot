@@ -31,10 +31,11 @@ function drawPixiv(username){
     var num = Math.floor(Math.random()*pixivDailyList.length);
     var data = pixivDailyList[num];
     var fn = data.fn;
+    var ret;
     if(fs.existsSync(fn)){
-      var ret = username+"抽到了："+data.title+"\n"+data.img+"\nid:"+data.id;
+      ret = username+"抽到了："+data.title+"\n"+data.img+"\nid:"+data.id;
     }else{
-
+      ret = "";
     }
     return ret;
   }
