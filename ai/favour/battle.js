@@ -593,7 +593,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
       if(cthencount<2000){
         var sub = Math.floor((now.getTime()-cthents)*150/3600000);
         if(sub+cthencount>2000){
-          chatCount();
+          checkChat();
         }
         console.log("count:"+chatCount);
       }else{
