@@ -334,11 +334,16 @@ function battle(data1,data2){
       data2.hp=100;
     }
 
-
-
-
-
     ret = ret + data2._id+'被砍死了,失去'+(data2.gold/2)+'金钱,稍后复活\n'+data1._id+'获得'+(15+data2.gold/2)+'金钱';
+
+    var lvsub = data2.lv-data1.lv;
+    var addexp = 25+data2.lv*data2.lv*data2.lv;
+    var subadd = 35+Math.floor(Math.min(addexp,Math.pow(2,lvsub)));
+    addexp=addexp+subadd;
+    data1.exp = data1.exp+addexp;
+    ret = ret + "\n"+data1._id+'砍死敌人，获得额外'+addexp+'经验';
+
+
     data1.gold=data1.gold+Math.floor(15+data2.gold/2);
     data2.gold=data2.gold-Math.floor(data2.gold/2);
   }else{
@@ -406,6 +411,16 @@ function battle(data1,data2){
             data2.hp=100;
           }
           ret = ret + data2._id+'被砍死了,失去'+(data2.gold/2)+'金钱,稍后复活\n'+data1._id+'获得'+(15+data2.gold/2)+'金钱';
+
+
+          var lvsub = data2.lv-data1.lv;
+          var addexp = 25+data2.lv*data2.lv*data2.lv;
+          var subadd = 35+Math.floor(Math.min(addexp,Math.pow(2,lvsub)));
+          addexp=addexp+subadd;
+          data1.exp = data1.exp+addexp;
+          ret = ret + "\n"+data1._id+'砍死敌人，获得额外'+addexp+'经验';
+
+
           data1.gold=data1.gold+Math.floor(15+data2.gold/2);
           data2.gold=data2.gold-Math.floor(data2.gold/2);
         }else {
@@ -440,7 +455,7 @@ function generateDamage(data1,data2,type,rate2){
     }
     var atk = data1.atk*(criticalrate)*(Math.random()+0.5);
     if(data2._id=="B4"||data2._id=="B5"){
-      atk=Math.floor(atk*(2+Math.log(Math.abs(atk))));
+      atk=Math.floor(atk*(2+Math.log(1+Math.abs(atk))));
     }
     var def = data2.def*(Math.random()*0.5+0.5);
     if(data2.status==2){
@@ -451,7 +466,7 @@ function generateDamage(data1,data2,type,rate2){
     }
     if(critical){
       if(data1.status==3){
-        atk = atk + Math.floor(1.9*data2.def*Math.random())
+        atk = atk + Math.floor(1.8*data2.def*Math.random())
       }
     }
     var rate = (80 + data1.lv+(data1.hp<200?data1.hp:200))/2;
