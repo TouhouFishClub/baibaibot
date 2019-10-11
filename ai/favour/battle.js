@@ -340,6 +340,13 @@ function battle(data1,data2){
     var addexp = 25+data2.lv*data2.lv*data2.lv;
     var subadd = 35+Math.floor(Math.min(addexp,Math.pow(2,lvsub)));
     addexp=addexp+subadd;
+    if(lvsub>-40){
+      addexp = Math.floor(addexp*(0.5+lvsub/100))
+    }else{
+      addexp = 29+Math.floor(Math.random()*60);
+    }
+
+
     data1.exp = data1.exp+addexp;
     ret = ret + "\n"+data1._id+'砍死敌人，获得额外'+addexp+'经验';
 
@@ -417,6 +424,12 @@ function battle(data1,data2){
           var addexp = 25+data2.lv*data2.lv*data2.lv;
           var subadd = 35+Math.floor(Math.min(addexp,Math.pow(2,lvsub)));
           addexp=addexp+subadd;
+          if(lvsub>-40){
+            addexp = Math.floor(addexp*(0.5+lvsub/100))
+          }else{
+            addexp = 29+Math.floor(Math.random()*60);
+          }
+
           data1.exp = data1.exp+addexp;
           ret = ret + "\n"+data1._id+'砍死敌人，获得额外'+addexp+'经验';
 
