@@ -31,7 +31,7 @@ function getTid(callback){
       var tid = s2.substring(0,n2);
       callback(tid,cookie);
     });
-  });s
+  });
   req.on('error', function(err) {
     console.log('req err:');
     console.log(err);
