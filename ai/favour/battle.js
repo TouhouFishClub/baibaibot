@@ -142,7 +142,7 @@ function sendFightImage(wd,callback){
 
   var img1 = new imageMagick("static/blank.png");
   console.log("len:"+maxwd+":"+len);
-  img1.resize(maxwd*19+29, len*24+29,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+  img1.resize(maxwd*19+29, len*26+24,'!') //加('!')强行把图片缩放成对应尺寸150*150！
     .autoOrient()
     .fontSize(20)
     .fill('blue')
@@ -179,7 +179,9 @@ function fightUser(from,to,Ncallback,gid,port){
   var now = new Date();
 
   var chatCount = checkmsg[port];
-  console.log(chatCount);
+  if(chatCount){
+    console.log(JSON.stringify(chatCount));
+  }
   var canf;
   if(!chatCount){
     checkChat(port);
@@ -195,8 +197,7 @@ function fightUser(from,to,Ncallback,gid,port){
         if(sub+cthencount>2000){
           chatCount();
         }
-        console.log("count:");
-        console.log(chatCount);
+        console.log(JSON.stringify(chatCount));
         canf=true;
       }else{
         canf=false;
