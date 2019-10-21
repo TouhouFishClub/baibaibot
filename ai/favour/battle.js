@@ -670,6 +670,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
     ret = ret + " `g7:购买重生药水(消耗60金钱,重置等级和经验值)\n";
     ret = ret + " `g8:转换为狂怒状态(攻击消耗一半HP不消耗MP)\n";
     ret = ret + " `g9:乾坤一掷\n";
+    ret = ret + " `ga:学习技能\n";
     callback(ret);
   }else if(content.substring(0,1)==0){
     getUserInfo(fromuin,content.substring(1).trim(),members,callback);
