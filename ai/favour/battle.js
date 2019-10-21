@@ -878,7 +878,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
           }else{
             if(data.lv>=99){
               if(next==1){
-                if(data.a1){
+                if(!data.a1){
                   data.a1=1;
                 }else{
                   data.a1=data.a1+1;
@@ -888,8 +888,9 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
                 data.def=data.def-10;
                 data.luck=data.luck-10;
                 data.agi=data.agi-10;
+                callback(userName+"的回复魔法升级到了"+data.a1+"级");
               }else if(next==2){
-                if(data.a2){
+                if(!data.a2){
                   data.a2=1;
                 }else{
                   data.a2=data.a2+1;
@@ -899,8 +900,10 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
                 data.def=data.def-10;
                 data.luck=data.luck-10;
                 data.agi=data.agi-10;
+                callback(userName+"的MP药水效果升级到了"+data.a2+"级");
+
               }else if(next==3){
-                if(data.a3){
+                if(!data.a3){
                   data.a3=1;
                 }else{
                   data.a3=data.a3+1;
@@ -910,12 +913,14 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
                 data.def=data.def-10;
                 data.luck=data.luck-10;
                 data.agi=data.agi-10;
+                callback(userName+"的等级上限升级到了 "+(data.a3+99)+"");
               }else if(next==4){
                 data.lv=data.lv-10;
                 data.atk=data.atk-3;
                 data.def=data.def-3;
                 data.luck=data.luck-3;
                 data.agi=data.agi-3;
+                callback(userName+"等级-10,全属性-3");
               }
             }
           }
