@@ -728,12 +728,9 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
           limitItem[fromuin]=then;
           if(data.mp>=25){
             data.mp=data.mp-25;
-            var addhp = Math.floor(20000/(100+data.hp))
+            var rate=data.a1?(data.a1+1):1;
+            var addhp = Math.floor(20000/(100+data.hp-10*Math.random())*rate)
             data.hp=data.hp+addhp;
-            if(data.hp>data.lv*20+200){
-              data.hp=data.lv*20+200;
-              addhp = addhp + data.lv*20+200 - data.hp;
-            }
             callback(userName+'使用了回复魔法回复了'+addhp+'点HP');
           }
         }else if(content==3){
@@ -750,12 +747,9 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
           limitItem[fromuin]=then;
           if(data.gold>=40){
             data.gold=data.gold-40;
-            var addmp = Math.floor(13000/(100+data.mp)+20*Math.random())
+            var rate=data.a2?(data.a2+1):1;
+            var addmp = Math.floor(13000/(100+data.mp)+20*Math.random())*rate;
             data.mp=data.mp+addmp;
-            if(data.mp>data.lv*20+200){
-              data.mp=data.lv*20+200;
-              addmp = addmp + data.lv*20+200 - data.mp;
-            }
             callback(userName+'使用了魔法药水回复了'+addmp+'点MP');
           }
         }else if(content==2){
@@ -872,6 +866,59 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
           }else{
             callback(userName+'金钱不足,无法获得新生');
           }
+        }else if(content.substring(0,1)=="a"){
+          var next = content.substring(1);
+          if(next==""){
+            var ret = "99级以上可以学习技能,请选择：\n";
+            ret = ret +  "`ga1:等级-10,全属性-10,升级回复魔法\n(当前等级"+(data.a1?data.a1:0)+")\n";
+            ret = ret +  "`ga2:等级-10,全属性-10,升级MP药水效果\n(当前等级"+(data.a2?data.a2:0)+")\n";
+            ret = ret +  "`ga3:等级-10,全属性-10,等级上限+1\n(当前等级上限"+(data.a3?(data.a3+99):99)+")\n";
+            ret = ret +  "`ga4:等级-10,全属性-3\n";
+            callback(ret);
+          }else{
+            if(data.lv>=99){
+              if(next==1){
+                if(data.a1){
+                  data.a1=1;
+                }else{
+                  data.a1=data.a1+1;
+                }
+                data.lv=data.lv-10;
+                data.atk=data.atk-10;
+                data.def=data.def-10;
+                data.luck=data.luck-10;
+                data.agi=data.agi-10;
+              }else if(next==2){
+                if(data.a2){
+                  data.a2=1;
+                }else{
+                  data.a2=data.a2+1;
+                }
+                data.lv=data.lv-10;
+                data.atk=data.atk-10;
+                data.def=data.def-10;
+                data.luck=data.luck-10;
+                data.agi=data.agi-10;
+              }else if(next==3){
+                if(data.a3){
+                  data.a3=1;
+                }else{
+                  data.a3=data.a3+1;
+                }
+                data.lv=data.lv-10;
+                data.atk=data.atk-10;
+                data.def=data.def-10;
+                data.luck=data.luck-10;
+                data.agi=data.agi-10;
+              }else if(next==4){
+                data.lv=data.lv-10;
+                data.atk=data.atk-3;
+                data.def=data.def-3;
+                data.luck=data.luck-3;
+                data.agi=data.agi-3;
+              }
+            }
+          }
         }else if(content.substring(0,1)==5){
           var next = content.substring(1);
           if(next==""){
@@ -886,7 +933,8 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
             ret = ret +  "`g58:升5级速度\n";
             callback(ret);
           }else{
-            if(next>4){
+            var maxlv = data.a3?(data.a3+99):99
+            if(next>4&&data.lv<=maxlv){
               var exp = data.exp;
               for(var i=0;i<5;i++){
                 exp = exp - (data.lv+i)*(data.lv+i)*(data.lv+i)-50;
@@ -945,7 +993,7 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
 
             }else{
               if(data.exp>=data.lv*data.lv*data.lv+50){
-                if(data.lv<99){
+                if(data.lv<maxlv){
                   data.exp=data.exp-data.lv*data.lv*data.lv-50;
                   data.lv=data.lv+1;
                   var ret = "";
