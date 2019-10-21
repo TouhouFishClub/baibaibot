@@ -195,7 +195,8 @@ function fightUser(from,to,Ncallback,gid,port){
         if(sub+cthencount>2000){
           chatCount();
         }
-        console.log("count:"+chatCount);
+        console.log("count:");
+        console.log(chatCount);
         canf=true;
       }else{
         canf=false;
@@ -869,14 +870,14 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
         }else if(content.substring(0,1)=="a"){
           var next = content.substring(1);
           if(next==""){
-            var ret = "99级以上可以学习技能,请选择：\n";
+            var ret = "95级以上可以学习技能,请选择：\n";
             ret = ret +  "`ga1:等级-10,全属性-10,升级回复魔法\n(当前等级"+(data.a1?data.a1:0)+")\n";
             ret = ret +  "`ga2:等级-10,全属性-10,升级MP药水效果\n(当前等级"+(data.a2?data.a2:0)+")\n";
             ret = ret +  "`ga3:等级-10,全属性-10,等级上限+1\n(当前等级上限"+(data.a3?(data.a3+99):99)+")\n";
             ret = ret +  "`ga4:等级-10,全属性-3\n";
             callback(ret);
           }else{
-            if(data.lv>=99){
+            if(data.lv>=95){
               if(next==1){
                 if(!data.a1){
                   data.a1=1;
@@ -922,6 +923,8 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
                 data.agi=data.agi-3;
                 callback(userName+"等级-10,全属性-3");
               }
+            }else{
+              callback(userName+"等级不足，不能学习技能");
             }
           }
         }else if(content.substring(0,1)==5){
