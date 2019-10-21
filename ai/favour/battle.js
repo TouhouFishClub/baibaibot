@@ -872,58 +872,62 @@ function useMagicOrItem(fromuin,userName,content,members,Ncallback,port){
         }else if(content.substring(0,1)=="a"){
           var next = content.substring(1);
           if(next==""){
-            var ret = "95级以上可以学习技能,请选择：\n";
+            var ret = "91级以上可以学习技能,每次学习技能消耗1000金币：\n";
             ret = ret +  "`ga1:等级-10,全属性-10,升级回复魔法\n(当前等级"+(data.a1?data.a1:0)+")\n";
             ret = ret +  "`ga2:等级-10,全属性-10,升级MP药水效果\n(当前等级"+(data.a2?data.a2:0)+")\n";
             ret = ret +  "`ga3:等级-10,全属性-10,等级上限+1\n(当前等级上限"+(data.a3?(data.a3+99):99)+")\n";
             ret = ret +  "`ga4:等级-10,全属性-3\n";
             callback(ret);
           }else{
-            if(data.lv>=95){
-              if(next==1){
-                if(!data.a1){
-                  data.a1=1;
-                }else{
-                  data.a1=data.a1+1;
-                }
-                data.lv=data.lv-10;
-                data.atk=data.atk-10;
-                data.def=data.def-10;
-                data.luck=data.luck-10;
-                data.agi=data.agi-10;
-                callback(userName+"的回复魔法升级到了"+data.a1+"级");
-              }else if(next==2){
-                if(!data.a2){
-                  data.a2=1;
-                }else{
-                  data.a2=data.a2+1;
-                }
-                data.lv=data.lv-10;
-                data.atk=data.atk-10;
-                data.def=data.def-10;
-                data.luck=data.luck-10;
-                data.agi=data.agi-10;
-                callback(userName+"的MP药水效果升级到了"+data.a2+"级");
+            if(data.lv>=91){
+              if(data.gold>=1000){
+                if(next==1){
+                  if(!data.a1){
+                    data.a1=1;
+                  }else{
+                    data.a1=data.a1+1;
+                  }
+                  data.lv=data.lv-10;
+                  data.atk=data.atk-10;
+                  data.def=data.def-10;
+                  data.luck=data.luck-10;
+                  data.agi=data.agi-10;
+                  callback(userName+"的回复魔法升级到了"+data.a1+"级");
+                }else if(next==2){
+                  if(!data.a2){
+                    data.a2=1;
+                  }else{
+                    data.a2=data.a2+1;
+                  }
+                  data.lv=data.lv-10;
+                  data.atk=data.atk-10;
+                  data.def=data.def-10;
+                  data.luck=data.luck-10;
+                  data.agi=data.agi-10;
+                  callback(userName+"的MP药水效果升级到了"+data.a2+"级");
 
-              }else if(next==3){
-                if(!data.a3){
-                  data.a3=1;
-                }else{
-                  data.a3=data.a3+1;
+                }else if(next==3){
+                  if(!data.a3){
+                    data.a3=1;
+                  }else{
+                    data.a3=data.a3+1;
+                  }
+                  data.lv=data.lv-10;
+                  data.atk=data.atk-10;
+                  data.def=data.def-10;
+                  data.luck=data.luck-10;
+                  data.agi=data.agi-10;
+                  callback(userName+"的等级上限升级到了 "+(data.a3+99)+"");
+                }else if(next==4){
+                  data.lv=data.lv-10;
+                  data.atk=data.atk-3;
+                  data.def=data.def-3;
+                  data.luck=data.luck-3;
+                  data.agi=data.agi-3;
+                  callback(userName+"等级-10,全属性-3");
                 }
-                data.lv=data.lv-10;
-                data.atk=data.atk-10;
-                data.def=data.def-10;
-                data.luck=data.luck-10;
-                data.agi=data.agi-10;
-                callback(userName+"的等级上限升级到了 "+(data.a3+99)+"");
-              }else if(next==4){
-                data.lv=data.lv-10;
-                data.atk=data.atk-3;
-                data.def=data.def-3;
-                data.luck=data.luck-3;
-                data.agi=data.agi-3;
-                callback(userName+"等级-10,全属性-3");
+              }else{
+                callback(userName+"金钱不足，不能学习技能");
               }
             }else{
               callback(userName+"等级不足，不能学习技能");
