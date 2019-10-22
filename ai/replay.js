@@ -4,7 +4,7 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 
 
 var memory={};
-function replayReply(content,userName,groupuin,callback,qq){
+function replayReply(content,userName,groupuin,callback,qq,port){
   if((groupuin+"").startsWith("63508")||
     (groupuin+"").startsWith("69738")){
     return;
@@ -43,24 +43,24 @@ function replayReply(content,userName,groupuin,callback,qq){
           txt = txt + '口球将于'+Math.floor(delay/1000)+'秒后飞入[CQ:at,qq='+banqq+']的嘴里';
           callback(txt);
           setTimeout(function(){
-            banUserInGroup(banqq,groupuin,time);
+            banUserInGroup(banqq,groupuin,time,port);
             memory[groupuin].lx=[banqq];
             var uban = Math.floor(Math.random()*time*1000);
             //var realbandur = time*1000-uban;
             saveBan(banqq,groupuin,uban,callback);
             setTimeout(function(){
-              banUserInGroup(banqq,groupuin,0);
+              banUserInGroup(banqq,groupuin,0,port);
             },uban)
           },delay);
         }else{
           callback('发现大量复读姬出没！\n下面百百要选择一名复读姬黑了他\n到底是哪位小朋友这么幸运呢？\n就决定是你了[CQ:at,qq='+banqq+']');
-          banUserInGroup(banqq,groupuin,time);
+          banUserInGroup(banqq,groupuin,time,port);
           memory[groupuin].lx=[banqq];
           var uban = Math.floor(Math.random()*time*1000);
           //var realbandur = time*1000-uban;
-          saveBan(banqq,groupuin,uban,callback);
+          saveBan(banqq,groupuin,uban,callback,port);
           setTimeout(function(){
-            banUserInGroup(banqq,groupuin,0);
+            banUserInGroup(banqq,groupuin,0,port);
           },uban)
         }
       }
@@ -72,7 +72,7 @@ function replayReply(content,userName,groupuin,callback,qq){
   }
 }
 
-function saveBan(qq,gid,dur,callback){
+function saveBan(qq,gid,dur,callback,port){
   console.log('ban:'+qq+':in:'+gid+':dur:'+dur);
   MongoClient.connect(mongourl, function(err, db) {
     var now = new Date();
@@ -98,7 +98,7 @@ function saveBan(qq,gid,dur,callback){
                 time = time + 200 + Math.floor(Math.random() * 200);
               }
               callback('[CQ:at,qq=' + qq + ']本日已被口球' + count + '次,将额外塞' + count + '个口球封住他的嘴');
-              cban(qq, gid, count - 1, callback);
+              cban(qq, gid, count - 1, callback,port);
             }, dur + 1000);
           }
         }
@@ -107,9 +107,9 @@ function saveBan(qq,gid,dur,callback){
   })
 }
 
-function cban(banqq,gid,c,callback){
+function cban(banqq,gid,c,callback,port){
   var time = 100 + Math.floor(Math.random() * (20000/(c*10+100)));
-  banUserInGroup(banqq, gid, time);
+  banUserInGroup(banqq, gid, time,port);
   var uban = Math.floor(Math.random() * time * 1000);
   console.log(banqq+'next:'+uban+":"+c);
   if(c<=0){
@@ -118,7 +118,7 @@ function cban(banqq,gid,c,callback){
   setTimeout(function () {
     var nextban = Math.floor(Math.random()*60000+10000);
     console.log('nextban:'+nextban)
-    banUserInGroup(banqq, gid, 0);
+    banUserInGroup(banqq, gid, 0,port);
     if(Math.random()*c>1.5){
       c = c - 1;
       callback('[CQ:at,qq='+banqq+']竟然吞掉了一个口球,为他鼓掌！');

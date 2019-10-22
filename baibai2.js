@@ -853,7 +853,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   answer(content,name,groupName,callback,groupid,from);
-  replayReply(content,name,groupid,callback,from);
+  replayReply(content,name,groupid,callback,from,port);
   if(msgType=='private'){
     tulingMsg(from,content.trim(),callback,groupid);
     return;
