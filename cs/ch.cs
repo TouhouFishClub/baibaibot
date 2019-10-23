@@ -40,7 +40,7 @@ namespace HttpServer
         static string handleReq(string req){
             Console.WriteLine(req);
             // handle req
-            string res = "aaabbb";
+            string res = "";
             return res;
         }    
     }
