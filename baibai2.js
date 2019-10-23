@@ -608,7 +608,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     var options = {
       host: '192.168.17.52',
       port: 11005,
-      path: '/c?d='+encodeURIComponent(content)+'&gid='+groupid+"&name="+name+"&qq="+from+"&port="+port,
+      path: '/c?d='+encodeURIComponent(content)+'&gid='+groupid+"&name="+encodeURIComponent(name)+"&qq="+from+"&port="+port,
       method: 'GET',
       headers: {}
     };
