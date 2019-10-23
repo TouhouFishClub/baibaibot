@@ -599,7 +599,40 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
 
+
+
   content=content.trim();
+
+  if(content.startsWith("w")){
+
+    var options = {
+      host: '192.168.17.52',
+      port: 11005,
+      path: '/c?d='+encodeURIComponent(content)+'&gid='+groupid+"&name="+name+"&qq="+from+"&port="+port,
+      method: 'GET',
+      headers: {}
+    };
+    var req = http.request(options,function(res){
+      var resdata = '';
+      res.on('data', function (chunk) {
+        resdata = resdata + chunk;
+      });
+      res.on('end', function () {
+        if(resdata.length>0){
+          callback(resdata);
+        }
+      });
+    });
+    req.on('error', function (err) {
+      console.log('req err:');
+      console.log(err);
+    });
+    req.end();
+
+
+    return;
+  }
+
 
   if(
     content === '炸弹人' ||
