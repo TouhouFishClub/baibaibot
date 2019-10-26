@@ -77,9 +77,11 @@ function searchFF14Item_d(content,UserName,callback){
     path: '/ff14/api.php?format=json&action=parse&disablelimitreport=true&prop=text&title=ItemSearch&text=%7B%7BItemSearch%7Cname='+encodeURIComponent(content)+'%7C%7D%7D',
     method: 'GET',
     headers: {
+      'referer': 'http://ff14.huijiwiki.com/wiki/ItemSearch?name='+encodeURIComponent(content),
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
   };
+  console.log(options);
   var req = http.request(options, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
@@ -87,12 +89,10 @@ function searchFF14Item_d(content,UserName,callback){
       resdata = resdata + chunk;
     });
     res.on('end', function () {
-      var data={};
-      try{
-        data = eval('('+resdata+')');
-      }catch(e){
-        console.log(resdata);
-      }
+        
+      
+      
+      data = eval('('+resdata+')');
       var text = data.parse.text['*'];
 
       var n1 = text.indexOf('共有 1 个符合条件的物品');
