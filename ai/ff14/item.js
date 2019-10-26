@@ -87,7 +87,12 @@ function searchFF14Item_d(content,UserName,callback){
       resdata = resdata + chunk;
     });
     res.on('end', function () {
-      var data = eval('('+resdata+')');
+      var data={};
+      try{
+        data = eval('('+resdata+')');
+      }catch(e){
+        console.log(resdata);
+      }
       var text = data.parse.text['*'];
 
       var n1 = text.indexOf('共有 1 个符合条件的物品');
