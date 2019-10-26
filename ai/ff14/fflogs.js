@@ -244,6 +244,22 @@ var bosses = [
     "name": "The Final Omega",
     "cn": "o12s本体"
   }
+  
+  
+    
+  {
+    "zid":28,
+    "id": 1045,
+    "name": "妖精王 Titania",
+    "cn": "缇坦妮雅"
+  },
+  {
+    "zid":28,
+    "id": 1046,
+    "name": "Innocence",
+    "cn": "无瑕灵君"
+  }
+  
 ]
 
 
