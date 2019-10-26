@@ -195,7 +195,8 @@ function searchFF14ItemByID(itemid,username,callback,detailresdata){
     path: '/ff14/api.php?format=json&action=parse&disablelimitreport=true&prop=text&text=%7B%7BItemTooltip%7Cid='+itemid+'%7D%7D',
     method: 'GET',
     headers: {
-      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
+      'referer':'https://ff14.huijiwiki.com/wiki/ItemSearch'
     },
   };
   var req = http.request(options, function(res) {
