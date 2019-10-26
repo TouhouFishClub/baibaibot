@@ -524,6 +524,7 @@ function handleMsg_D(msgObj,botqq) {
       gidstr.startsWith("20570")||
       gidstr.startsWith("22169")||
       gidstr.startsWith("74633")||
+      gidstr.startsWith("69738")||
       gidstr.startsWith("67096")
     )&&port==23334){
     return;
