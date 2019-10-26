@@ -243,7 +243,7 @@ var bosses = [
     "id": 64,
     "name": "The Final Omega",
     "cn": "o12s本体"
-  }
+  },
   
   
     
