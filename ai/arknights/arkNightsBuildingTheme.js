@@ -4,21 +4,31 @@ module.exports = function(qq, content, callback) {
   if(content.trim()){
     let themeId = searchTheme(content.trim())
     if(themeId){
-      let allComfort = 0
+      let fur = getAllThemeFurnitures(themeId), group = filterThemeGroup(themeId), s = ''
 
-      getAllThemeFurnitures(themeId)
+      s += '====== 家具 ======\n'
+      s += Object.values(fur).map(d => `${d.furniture.name}【${d.furniture.comfort}】 x ${d.count}`).join('\n')
+      s += '\n====== 套装 ======\n'
+      s += group.map(g => `${g.name}【${g.comfort}】`).join('\n')
+      s += '\n====== 舒适度 ======\n'
+      s += `单件舒适度： ${Object.values(fur).reduce((p, c) => p + c.furniture.comfort, 0) + group.reduce((p, c) => p + c.comfort, 0)}\n`
+      s += `整套舒适度： ${Object.values(fur).reduce((p, c) => p + c.furniture.comfort * c.count, 0) + group.reduce((p, c) => p + c.comfort, 0)}`
 
+      callback(s)
 
-      let groupComfort = filterThemeGroup(themeId).map(g => {
-        allComfort += g.comfort
-        return `${g.name}\t${g.comfort}`
-      }).join('\n')
-      // console.log(groupComfort)
+      // for(let i of Object.values(fur).values()){
+      //   console.log('=================')
+      //   console.log(i)
+      // }
+      // for(let [index, item] of Object.entries(fur).entries()){
+      //   console.log(index, item)
+      // }
+
     } else {
-      callback('NOT FOUND BUILD THEME')
+      callback('没有找到基建')
     }
   } else {
-    callback(`FOUND MUTIPLE THEME IS ${Object.values(build.AllBuildingTheme()).map(b => b.name).join(',')}`)
+    callback(`查找到以下基建\n\n${Object.values(build.AllBuildingTheme()).map(b => b.name).join(',\n')}`)
   }
 }
 
@@ -36,6 +46,17 @@ const searchTheme = str => {
 const filterThemeGroup = themeId => Object.values(build.AllBuildingGroups()).filter(g => g.themeId == themeId)
 
 const getAllThemeFurnitures = themeId => {
-  let qs = build.AllBuildingTheme()[themeId].quickSetup
-  console.log(qs)
+  let qs = build.AllBuildingTheme()[themeId].quickSetup, o = {}
+  qs.forEach(q => {
+    if(o[q.furnitureId]) {
+      o[q.furnitureId].count = o[q.furnitureId].count + 1
+    } else {
+      o[q.furnitureId] = {
+        count: 1,
+        furniture: build.AllBuildingFurnitures()[q.furnitureId]
+      }
+    }
+  })
+  // console.log(o)
+  return o
 }

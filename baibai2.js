@@ -73,6 +73,7 @@ const {handleFF14weatherReply} = require('./ai/ff14/ff14weather');
 const anr = require('./ai/arknights/arkNightsRecruit')
 const ans = require('./ai/arknights/arkNightsCharacter')
 const anc = require('./ai/arknights/arkNightsCalc')
+const and = require('./ai/arknights/arkNightsBuildingTheme')
 
 
 initWS();
@@ -798,6 +799,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       case 'e':
       case 'E':
         anc(from, con.substring(4), callback)
+        break;
+      case 'd':
+      case 'D':
+        and(from, con.substring(4), callback)
         break;
       default:
         anr(from, con.substring(3), callback)
