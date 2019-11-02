@@ -36,7 +36,7 @@ const formatCharacter = () => {
           pid: ch.potentialItemId,
           pubId: pubId,
           sex: sex,
-          tag: ([type[ch.profession], ch.position, sex == '男' ? '男性干员' : '女性干员']).concat(ch.rarity == 4 ? ['资深干员']: ch.rarity == 5 ? ['高级资深干员'] : []).concat(ch.tagList || []),
+          tag: ([type[ch.profession], ch.position == 'RANGED' ? '远程位' : '近战位', sex == '男' ? '男性干员' : '女性干员']).concat(ch.rarity == 4 ? ['资深干员']: ch.rarity == 5 ? ['高级资深干员'] : []).concat(ch.tagList || []),
           rare: ch.rarity + 1,
           canRecruit: hasTarget(canRecruit, ch.name),
           onlyRecruit: hasTarget(onlyRecruit, ch.name),
