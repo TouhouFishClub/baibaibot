@@ -75,6 +75,7 @@ const ans = require('./ai/arknights/arkNightsCharacter')
 const anc = require('./ai/arknights/arkNightsCalc')
 const and = require('./ai/arknights/arkNightsBuildingTheme')
 
+const { PerfectCactpot } = require('./ai/ff14/cactpot')
 
 initWS();
 initWS2();
@@ -754,6 +755,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(fi == 'cnlog'){
     fflogsReply(con.substring(5).trim(),name,callback,1);
     return;
+  }
+
+  fi = con.substring(0, 3)
+  if(fi == 'ffc') {
+    PerfectCactpot(con.substring(3), callback)
   }
 
 
