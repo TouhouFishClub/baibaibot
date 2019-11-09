@@ -65,7 +65,7 @@ const ROWTAG = {
   7: '→ 上3'
 }
 const PerfectCactpot = (content, callback, details = false) => {
-  if(content[0].toLowerCase() == 'a') {
+  if(content[0] && content[0].toLowerCase() == 'a') {
     details = true
     content = content.substr(1)
   }
