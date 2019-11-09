@@ -69,7 +69,7 @@ const PerfectCactpot = (content, callback, details = false) => {
     details = true
     content = content.substr(1)
   }
-  let c = content.trim().toLowerCase().replace(/[\n ]/g, '')
+  let c = content.trim().toLowerCase().replace(/[\n|\r| ]/g, '')
   if(/[\d|x]{9}/.test(c) && c.split('').length == 9 && Array.from(new Set(c.replace(/[x|0]/g, ''))).length == 4) {
     let input = c.split('').map(c => c == 'x' ? 0: parseInt(c)),
       unknown = _.xor([0,1,2,3,4,5,6,7,8,9], Array.from(new Set(input))),
