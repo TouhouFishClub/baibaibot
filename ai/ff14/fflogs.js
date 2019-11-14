@@ -17,7 +17,9 @@ var job_cn = {
   "DarkKnight":"暗黑骑士",
   "BlackMage":"黑魔法师",
   "Bard":"吟游诗人",
-  "Astrologian":"占星术士"
+  "Astrologian":"占星术士",
+  "Dancer":"舞者",
+  "Gunbreaker":"绝枪战士"
 }
 
 var jobs = [
@@ -95,6 +97,16 @@ var jobs = [
     id:15,
     cn:"武士",
     en:"Samurai"
+  },
+  {
+    id:16,
+    cn:"舞者",
+    en:"Dancer"
+  },
+  {
+    id:17,
+    cn:"枪刃 绝枪战士",
+    en:"Gunbreaker"
   },
 ]
 
