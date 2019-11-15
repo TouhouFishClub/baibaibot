@@ -50,7 +50,7 @@ function beautyReply(content,gid,callback){
 }
 
 function getavDetail(avid,callback,title){
-  avid = 74076143;
+  // avid = 74076143;
   var url = "https://www.bilibili.com/video/av"+avid;
   request({
     headers:{
