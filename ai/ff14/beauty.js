@@ -80,10 +80,11 @@ function getavDetail(avid,callback,title){
 
 
 function sendBeautyImage(titlewd,imgwd,callback){
+  imgwd = imgwd.replace(/&lt;/g,'<').replace(/&gt;/g,'>');
   var wd = imgwd;
   var wa = wd.split('\n');
   var maxwd = 0;
-  var uwd = 40;
+  var uwd = 45;
   var uw = "";
   for(var i=0;i<wa.length;i++){
     var lw = wa[i];
@@ -111,7 +112,7 @@ function sendBeautyImage(titlewd,imgwd,callback){
 
   var img1 = new imageMagick("static/blank.png");
   console.log("len:"+maxwd+":"+len);
-  img1.resize(maxwd*14+33, len*22+24,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+  img1.resize(maxwd*14+30, len*22+24,'!') //加('!')强行把图片缩放成对应尺寸150*150！
     .autoOrient()
     .fontSize(16)
     .fill('blue')
