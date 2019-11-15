@@ -31,7 +31,9 @@ const {getShip} = require('./ai/kancolle/ship');
 const roulette = require('./ai/Roulette')
 
 require('./ai/push');
-require('./ai/ff14/activity');
+
+
+const {beautyReply} = require('./ai/ff14/beauty');
 
 const {replayReply} = require('./ai/replay');
 const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,getGroupMemberNum,banUserRandom} = require('./cq/cache');
@@ -725,6 +727,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.trim() === '走私查询'){
     smuggler(callback)
     return
+  }
+
+  if(content.trim()=='时尚品鉴'){
+    beautyReply(content,groupid,callback);
+    return;
   }
 
 
