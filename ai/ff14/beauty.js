@@ -14,7 +14,7 @@ function beautyReply(content,gid,callback){
   var options = {
     hostname: "api.bilibili.com",
     port: 443,
-    path: "/x/space/channel/video?mid=15503317&cid=55877&pn=1&ps=1&order=0&jsonp=jsonp",
+    path: "/x/space/arc/search?mid=15503317&ps=10&tid=0&pn=1&keyword=&order=pubdate",
     headers: {
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
@@ -31,10 +31,19 @@ function beautyReply(content,gid,callback){
       res.on('end', function () {
         try{
           var data = eval('('+resdata+')');
-          var avid = data.data.list.archives[0].aid;
-          var title = data.data.list.archives[0].title;
-          console.log("av:"+avid);
-          getavDetail(avid,callback,title)
+          var vlist = data.data.list.vlist;
+          var rpy = false;
+          for(var i=0;i<vlist.length;i++){
+            if(rpy==false){
+              var title = vlist[i].title;
+              if(title.indexOf("时尚品鉴")>=0){
+                var avid = vlist[i].aid;
+                getavDetail(avid,callback,title);
+                rpy=true;
+                break;
+              }
+            }
+          }
         }catch(e){
           console.log(e);
         }
