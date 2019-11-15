@@ -4,13 +4,15 @@
 // const akk = require('./arkNightsSkill')
 // const akl = require('./arkNightsRecruitLimit')
 // const {baiduocr} = require('../image/baiduocr');
-const akb = require('./arkNightsBuildingTheme')
+// const akb = require('./arkNightsBuildingTheme')
+const akc = require('./arkNightChallenge')
 const c = m => {
   console.log('===== output =====')
   console.log(m)
 }
 
-akb('111', '陈的办公室', c)
+akc('213', c)
+// akb('111', '陈的办公室', c)
 
 // console.log(akk('skchr_plosis_2', '3'))
 // akc('123456', '5 1-1 1-80   ', c)
