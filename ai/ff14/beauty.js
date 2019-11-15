@@ -74,7 +74,7 @@ function getavDetail(avid,callback,title){
     var s2 = s1.substring(n2+1);
     var n3 = s2.indexOf('<');
     var ret = s2.substring(0,n3);
-    sendBeautyImage(title+"\n"+url+"\n",ret,callback);
+    sendBeautyImage(title+"\n"+url+"",ret.trim(),callback);
   });
 }
 
