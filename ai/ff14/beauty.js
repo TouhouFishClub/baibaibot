@@ -3,7 +3,10 @@ var https=require('https');
 var fs = require('fs');
 var zlib = require('zlib');
 var request = require('request');
+var gm = require('gm')
 
+var imageMagick = gm.subClass({ imageMagick : true });
+var {sendGmImage} = require('../../cq/sendImage');
 
 function beautyReply(content,gid,callback){
   var url = 'https://api.bilibili.com/x/space/channel/video?mid=15503317&cid=55877&pn=1&ps=1&order=0&jsonp=jsonp';
@@ -29,8 +32,9 @@ function beautyReply(content,gid,callback){
         try{
           var data = eval('('+resdata+')');
           var avid = data.data.list.archives[0].aid;
+          var title = data.data.list.archives[0].title;
           console.log("av:"+avid);
-          getavDetail(avid,callback)
+          getavDetail(avid,callback,title)
         }catch(e){
           console.log(e);
         }
@@ -45,8 +49,8 @@ function beautyReply(content,gid,callback){
   req.end();
 }
 
-function getavDetail(avid,callback){
-  // avid = 74076143;
+function getavDetail(avid,callback,title){
+  avid = 74076143;
   var url = "https://www.bilibili.com/video/av"+avid;
   request({
     headers:{
@@ -61,9 +65,52 @@ function getavDetail(avid,callback){
     var s2 = s1.substring(n2+1);
     var n3 = s2.indexOf('<');
     var ret = s2.substring(0,n3);
-    callback(ret+"\n\n"+url);
+    sendBeautyImage(title+"\n"+url+"\n",ret,callback);
   });
 }
+
+
+function sendBeautyImage(titlewd,imgwd,callback){
+  var wd = imgwd;
+  var wa = wd.split('\n');
+  var maxwd = 0;
+  var uwd = 32;
+  var uw = "";
+  for(var i=0;i<wa.length;i++){
+    var lw = wa[i];
+    var ud = "";
+    while(lw.length>uwd){
+      ud = ud + lw.substring(0,uwd)+"\n";
+      lw = lw.substring(uwd);
+    }
+    if(lw.length>0){
+      uw = uw + ud +lw+"\n";
+    }else{
+      uw = uw + ud;
+    }
+  }
+  var ua = uw.split('\n');
+  for(var i=0;i<ua.length;i++){
+    if(ua[i].length>maxwd){
+      maxwd = ua[i].length;
+    }
+  }
+
+  var len = ua.length;
+  var imgname = new Date().getTime()+"";
+  var folder = 'static/'
+
+  var img1 = new imageMagick("static/blank.png");
+  console.log("len:"+maxwd+":"+len);
+  img1.resize(maxwd*14+29, len*22+24,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+    .autoOrient()
+    .fontSize(16)
+    .fill('blue')
+    .font('./font/STXIHEI.TTF')
+    .drawText(0,0,uw,'NorthWest');
+  sendGmImage(img1,titlewd,callback);
+}
+
 
 
 module.exports={
