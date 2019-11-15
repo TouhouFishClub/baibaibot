@@ -76,6 +76,7 @@ const anr = require('./ai/arknights/arkNightsRecruit')
 const ans = require('./ai/arknights/arkNightsCharacter')
 const anc = require('./ai/arknights/arkNightsCalc')
 const and = require('./ai/arknights/arkNightsBuildingTheme')
+const anchan = require('./ai/arknights/arkNightsChallenge')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 
@@ -816,6 +817,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       case 'd':
       case 'D':
         and(from, con.substring(4), callback)
+        break;
+      case 'c':
+      case 'C':
+        anchan(con.substring(4), callback)
         break;
       default:
         anr(from, con.substring(3), callback)
