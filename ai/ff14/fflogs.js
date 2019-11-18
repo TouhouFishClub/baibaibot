@@ -262,13 +262,13 @@ var bosses = [
   {
     "zid":28,
     "id": 1045,
-    "name": "妖精王 Titania",
+    "name": "妖精王 妖灵王 Titania",
     "cn": "缇坦妮雅"
   },
   {
     "zid":28,
     "id": 1046,
-    "name": "肥宅 Innocence",
+    "name": "肥宅 完美神 Innocence",
     "cn": "无瑕灵君"
   },
 
