@@ -897,9 +897,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     var c1 = content.substring(1);
     if(c1==""){
       var ret = "`1+名词：百科查询\n翻译成中文：`6+要翻译的内容\n翻译成日文：`2+要翻译的内容\n翻译成英文：`3+要翻译的内容\n";
-      ret = ret + "`4+内容：百度查询\n`c汇率转换\n`0+数字：大写数字转换\n`8+地点A-地点B：公交查询\n";
-      ret = ret + '`r+数字：ROLL一个小于该数字的随机整数\n';
-      ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n闲聊：``+对话";
+      ret = ret + "`4+内容：百度查询\n`c汇率转换\n`0+数字：大写数字转换\n";
+      ret = ret + '`d50x10：ROLL10次小于50整数\n';
+      ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n闲聊：``+对话\n";
+      ret = ret + "今日运势占卜【今日运势】【jrrp】\n";
       callback(ret);
     }else{
       reply(c1,name,callback,groupid,from,groupName,nickname,port);
