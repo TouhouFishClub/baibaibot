@@ -401,7 +401,7 @@ function fflogsReply(content,userName,callback,cn){
       url = "https://"+host+"/zone/statistics/"+zid+"/#class=Global&spec="+job+"&boss="+bossid+"&dataset="+rt
     }
     if(team==true){
-      var url2 = "https://cn.fflogs.com/zone/statistics/"+zid+"/#metric=fightdps&boss="+bossid+"&dataset=0"
+      var url2 = "https://"+host+"/zone/statistics/"+zid+"/#metric=fightdps&boss="+bossid+"&dataset=0"
       getPic(url2,callback)
       setTimeout(function(){
         getPic(url,callback)
