@@ -1,7 +1,8 @@
 var gm = require('gm')
 var imageMagick = gm.subClass({ imageMagick : true });
 const {baiduocr,numocr} = require('../image/baiduocr');
-
+var fs = require('fs');
+var https = require('https');
 
 var gain = {
     6: 10000,
@@ -26,11 +27,46 @@ var gain = {
 };
 
 function calMiniCatapot(){
-  imgurl = 'https://gchat.qpic.cn/gchatpic_new/357474405/2195700800-2607921348-EA59F0521D90F50D932A0BA9862D60AE/0?vuin=2375373419&term=2'
+  var bitmap = fs.readFileSync("/home/ter/qw/123.png");
+  var base64 = new Buffer(bitmap).toString('base64');
 
-  numocr(imgurl,function(r){
-    console.log(r);
-  })
+
+  var options = {
+    hostname: "aip.baidubce.com",
+    port: 443,
+    path: '/rest/2.0/ocr/v1/numbers?access_token=24.4bafe943aa6e4d2751a9ccdde6ac35e6.2592000.1561793451.282335-16393341',
+    method: 'POST',
+    headers:{
+      'Content-Type':'application/x-www-form-urlencoded'
+    }
+  };
+  console.log(options);
+  console.log('===============')
+  var body = 'image='+encodeURIComponent(base64);
+  var req = https.request(options, function(res) {
+    res.setEncoding('utf8');
+    var code = res.statusCode;
+    res.setEncoding('utf8');
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+    res.on('end', function () {
+      console.log('code1:'+code);
+      console.log(resdata);
+    });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.setTimeout(5000,function(){
+    console.log('boom!');
+  });
+  req.write(body)
+  req.end();
+
+
 }
 
 function calMiniCatapot_d(arr){

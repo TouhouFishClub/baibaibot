@@ -270,7 +270,43 @@ var bosses = [
     "id": 1046,
     "name": "肥宅 Innocence",
     "cn": "无瑕灵君"
-  }
+  },
+
+
+  {
+    "zid":28,
+    "id": 1049,
+    "name": "哈迪斯 Hades",
+    "cn": "哈迪斯"
+  },
+
+  {
+    "zid":29,
+    "id": 65,
+    "name": "Eden",
+    "cn": "e1s"
+  },
+  {
+    "zid":29,
+    "id": 66,
+    "name": "Voidwalker",
+    "cn": "e2s"
+  },
+  {
+    "zid":29,
+    "id": 67,
+    "name": "Leviathan",
+    "cn": "e3s"
+  },
+  {
+    "zid":29,
+    "id": 68,
+    "name": "Titan",
+    "cn": "e4s"
+  },
+
+
+
   
 ]
 
