@@ -649,6 +649,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ret = ret + "少女前线导航【gf】\n";
     ret = ret + "洛奇导航【opt】\n"
     ret = ret + "舰队collection导航【'e】"
+    ret = ret + "其他【https://github.com/TouhouFishClub/baibaibot】"
     callback(ret.trim());
     return;
   }
