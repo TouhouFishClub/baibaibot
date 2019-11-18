@@ -639,6 +639,37 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
+  if((content=='百百')||(content.indexOf('百百')>=0&&content.indexOf('菜单')>=0)){
+    var ret = "";
+    ret = ret + "欢迎使用百百型机器人\n";
+    ret = ret + "通用功能导航：【`】【·】【ˋ】【'】【‘】【，】任选其一\n";
+    ret = ret + "游戏导航：【玩游戏】\n";
+    ret = ret + "最终幻想XIV导航【ffxiv】\n";
+    ret = ret + "明日方舟导航【ark】\n";
+    ret = ret + "少女前线导航【gf】\n";
+    ret = ret + "洛奇导航【opt】"
+    callback(ret.trim());
+    return;
+  }
+
+  if(content=="玩游戏"){
+    var ret = "";
+    ret = ret + "俄罗斯轮盘【俄罗斯轮盘】\n";
+    ret = ret + "炸弹人【炸弹人】\n";
+    ret = ret + "抽卡【抽卡】\n";
+    ret = ret + "群友互砍【'g】\n";
+    ret = ret + ""
+    callback(ret.trim());
+    return;
+  }
+
+
+
+
+
+
+
+
 
   if(
     content === '炸弹人' ||
@@ -654,6 +685,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     bomberman(content, from, name, groupid, callback)
     return
   }
+
+
+
 
 
   var rcontent = content;

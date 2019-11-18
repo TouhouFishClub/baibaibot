@@ -26,9 +26,13 @@ var ila = itemListTemplate.split('~');
 function searchFF14Item(content,UserName,callback){
   content=content.trim();
   if(content==""){
-    var ret = "FF14物品查询器\n输入格式【ffiv+物品ID/名称】\n如【ffiv5471】或【ffiv植物成长剂2型】\n";
-    ret = ret + "支持模糊查询,如【ffiv物成长剂2】\n绝对查询请在末尾加感叹号如【ffiv棉布！】\n"
-    ret = ret + "支持图片文字识别,如【ffiv+图片】\n所有资料来自【ff14.huijiwiki.com】"
+    var ret = "FF14物品查询器\n输入格式【ffiv+物品ID/名称】\n";
+    ret = ret + "支持模糊查询\n绝对查询请在末尾加感叹号如【ffiv棉布！】\n"
+    ret = ret + "支持图片文字识别,如【ffiv+图片】\n";
+    ret = ret + "最新一周时尚品鉴【时尚品鉴】\n";
+    ret = ret + "logs查询【fflog】【cnlog】\n";
+    ret = ret + "优雷卡天气查询【常风天气】【恒冰天气】【涌火天气】【丰水天气】";
+
     callback(ret);
     return;
   }
