@@ -414,12 +414,12 @@ function getAbsuloteItemDetail(itemname,userName,callback){
       resdata = resdata + chunk;
     });
     res.on('end', function () {
-      var str = 'ff14.huijiwiki.com/p/';
+      var str = 'name="pageId" value="';
       var n1 = resdata.indexOf(str);
       if(n1>0){
         var s1 = resdata.substring(n1+str.length);
-        var n2 = s1.indexOf('/');
-        var itemid = s1.substring(0,n2);
+        var n2 = s1.indexOf('"');
+        var itemid = s1.substring(0,n2).trim();
         searchFF14ItemByID(itemid,userName,callback,resdata);
       }else{
         callback('没有找到【'+itemname+'】');
