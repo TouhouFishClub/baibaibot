@@ -414,8 +414,8 @@ function getAbsuloteItemDetail(itemname,userName,callback){
       resdata = resdata + chunk;
     });
     res.on('end', function () {
-      var str = 'xivdb.com/item/';
-      var n1 = resdata.indexOf('xivdb.com/item/');
+      var str = 'ff14.huijiwiki.com/p/';
+      var n1 = resdata.indexOf(str);
       if(n1>0){
         var s1 = resdata.substring(n1+str.length);
         var n2 = s1.indexOf('/');
