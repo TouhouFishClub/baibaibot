@@ -69,7 +69,7 @@ function fflogs2Reply(content,userName,callback,cn){
     host = "cn.fflogs.com";
 
   var url = 'https://'+host+'/zone/statistics/table/'+zid;
-  url = url +'/dps/'+bossid+'/100/8/5/100/1/14/0/Global/'+job;
+  url = url +'/dps/'+bossid+'/100/8/3/100/1/14/0/Global/'+job;
   url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps';
 
 
@@ -97,7 +97,9 @@ function fflogs2Reply(content,userName,callback,cn){
       var dpslist = [];
       var keylist = [100,99,95,75,50,25,10];
       var kl = keylist.map(function(e){return 'series'+e+'.data.push('});
+      console.log(body);
       if(n1>0){
+
         var s1 = body.substring(n1+q1.length);
         var n2 = s1.indexOf(')');
         d100 = parseFloat(s1.substring(0,n2));
