@@ -105,7 +105,7 @@ function fflogs2Reply(content,userName,callback,cn){
           s2 = s3.substring(n4+1);
         }
         console.log(dpslist);
-        var ret = "";
+        var ret = ba[0].cn + " " + job_cn[a[0]]+"\n";
         for(var i=0;i<keylist.length;i++){
           ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
         }
