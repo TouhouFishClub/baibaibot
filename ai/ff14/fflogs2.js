@@ -79,7 +79,7 @@ function fflogs2Reply(content,userName,callback,cn){
 
 
   if(job=="Any"){
-    url = 'https://www.fflogs.com/zone/statistics/table/'+zid;
+    url = 'https://'+host+'/zone/statistics/table/'+zid;
     url = url +'/fightdps/'+bossid+'/'+hid+'/8/3/100/1/14/0/Global/Any';
     url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps'
   }
@@ -101,7 +101,7 @@ function fflogs2Reply(content,userName,callback,cn){
       var dpslist = [];
       var keylist = [100,99,95,75,50,25,10];
       var kl = keylist.map(function(e){return 'series'+e+'.data.push('});
-      console.log(body);
+      // console.log(body);
       if(n1>0){
 
         var s1 = body.substring(n1+q1.length);
