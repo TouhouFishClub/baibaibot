@@ -65,18 +65,22 @@ function fflogs2Reply(content,userName,callback,cn){
 
 
   var host = "www.fflogs.com";
-  if(cn==1){
+  if(cn==1) {
     host = "cn.fflogs.com";
+  }
+  var hid = 100;
+  if(zid==29){
+    hid=101
+  }
 
   var url = 'https://'+host+'/zone/statistics/table/'+zid;
-  url = url +'/dps/'+bossid+'/100/8/3/100/1/14/0/Global/'+job;
+  url = url +'/dps/'+bossid+'/'+hid+'/8/3/100/1/14/0/Global/'+job;
   url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps';
 
 
-  }
   if(job=="Any"){
     url = 'https://www.fflogs.com/zone/statistics/table/'+zid;
-    url = url +'/fightdps/'+bossid+'/101/8/3/100/1/14/0/Global/Any';
+    url = url +'/fightdps/'+bossid+'/'+hid+'/8/3/100/1/14/0/Global/Any';
     url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps'
   }
   console.log(url);
