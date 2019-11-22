@@ -107,7 +107,7 @@ function fflogs2Reply(content,userName,callback,cn){
         console.log(dpslist);
         var ret = "";
         for(var i=0;i<keylist.length;i++){
-          ret = ret + keylist[i]+"% \t:"+" \t"+dpslist[i].toFixed(1)+"\n";
+          ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
         }
         callback(ret.trim());
       }
