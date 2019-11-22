@@ -304,10 +304,6 @@ var bosses = [
     "name": "Titan",
     "cn": "e4s"
   },
-
-
-
-  
 ]
 
 
@@ -462,5 +458,8 @@ let lateTime = ( time ) =>{
 }
 
 module.exports={
-  fflogsReply
+  fflogsReply,
+  jobs,
+  job_cn,
+  bosses
 }

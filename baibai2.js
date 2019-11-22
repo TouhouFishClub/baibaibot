@@ -66,6 +66,7 @@ const {simplized,traditionalized,qqlized} = require('./lib/chs_cht');
 
 
 const {fflogsReply} = require('./ai/ff14/fflogs');
+const {fflogs2Reply} = require('./ai/ff14/fflogs2');
 
 const gf = require('./ai/girlsfrontline/index')
 const {handleGun} = require('./ai/games/survival/main');
@@ -794,11 +795,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fi == 'fflog'){
-    fflogsReply(con.substring(5).trim(),name,callback,0);
+    fflogs2Reply(con.substring(5).trim(),name,callback,0);
     return;
   }
   if(fi == 'cnlog'){
-    fflogsReply(con.substring(5).trim(),name,callback,1);
+    fflogs2Reply(con.substring(5).trim(),name,callback,1);
     return;
   }
 
