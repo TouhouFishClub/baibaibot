@@ -74,7 +74,7 @@ function fflogs2Reply(content,userName,callback,cn){
   }
 
   var url = 'https://'+host+'/zone/statistics/table/'+zid;
-  url = url +'/dps/'+bossid+'/'+hid+'/8/3/100/1/14/0/Global/'+job;
+  url = url +'/dps/'+bossid+'/'+hid+'/8/3/0/1/14/0/Global/'+job;
   url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps';
 
 
@@ -123,7 +123,7 @@ function fflogs2Reply(content,userName,callback,cn){
           for(var i=1;i<keylist.length;i++){
             ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
           }
-          ret = ret + "min:" + " \t"+dpslist[0].toFixed(1)+"\n";
+          ret = ret + "min:" + "  \t"+dpslist[0].toFixed(1)+"\n";
           callback(ret.trim());
         }else{
           var ret = ba[0].cn + " " + job_cn[a[0]]+"\n";
