@@ -76,7 +76,7 @@ function fflogs2Reply(content,userName,callback,cn){
   request({
     headers:{
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
-      'Referer': 'https://cn.fflogs.com/zone/statistics/'+zid+'/'
+      'Referer': 'https://'+host+'/zone/statistics/'+zid+'/'
     },
     url: url,
   }, function(error, response, body) {
@@ -104,12 +104,14 @@ function fflogs2Reply(content,userName,callback,cn){
           dpslist.push(dps);
           s2 = s3.substring(n4+1);
         }
+        console.log(dpslist);
+        var ret = "";
+        for(var i=0;i<keylist.length;i++){
+          ret = ret + keylist[i]+":"+" \t"+dpslist[i].toFixed(1)+"\n";
+        }
+        callback(ret.trim());
       }
-      var ret = "";
-      for(var i=0;i<keylist.length;i++){
-        ret = ret + keylist[i]+":"+" \t"+dpslist[i].toFixed(1)+"\n";
-      }
-      callback(ret.trim());
+
     }
   });
 }
