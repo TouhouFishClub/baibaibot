@@ -67,11 +67,18 @@ function fflogs2Reply(content,userName,callback,cn){
   var host = "www.fflogs.com";
   if(cn==1){
     host = "cn.fflogs.com";
-  }
 
   var url = 'https://'+host+'/zone/statistics/table/'+zid;
   url = url +'/dps/'+bossid+'/100/8/5/100/1/14/0/Global/'+job;
   url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps';
+
+
+  }
+  if(job=="Any"){
+    url = 'https://www.fflogs.com/zone/statistics/table/'+zid;
+    url = url +'/fightdps/'+bossid+'/101/8/3/100/1/14/0/Global/Any';
+    url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps'
+  }
   console.log(url);
   request({
     headers:{
@@ -105,11 +112,21 @@ function fflogs2Reply(content,userName,callback,cn){
           s2 = s3.substring(n4+1);
         }
         console.log(dpslist);
-        var ret = ba[0].cn + " " + job_cn[a[0]]+"\n";
-        for(var i=0;i<keylist.length;i++){
-          ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
+        if(job=="Any"){
+          var ret = ba[0].cn+"\n";
+          for(var i=1;i<keylist.length;i++){
+            ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
+          }
+          ret = ret + "min:" + " \t"+dpslist[0].toFixed(1)+"\n";
+          callback(ret.trim());
+        }else{
+          var ret = ba[0].cn + " " + job_cn[a[0]]+"\n";
+          for(var i=0;i<keylist.length;i++){
+            ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
+          }
+          callback(ret.trim());
         }
-        callback(ret.trim());
+
       }
 
     }
