@@ -1,6 +1,7 @@
 const fs = require('fs'),
   path = require('path'),
   { sendImageMsgBuffer } = require(path.join(__dirname, '../../cq/sendImage.js'))
+var http = require('http');
 const { createCanvas, Canvas } = require('canvas')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
