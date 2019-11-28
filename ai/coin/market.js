@@ -2,6 +2,7 @@ const fs = require('fs'),
   path = require('path'),
   { sendImageMsgBuffer } = require(path.join(__dirname, '../../cq/sendImage.js'))
 var http = require('http');
+var request = require('request');
 const { createCanvas, Canvas } = require('canvas')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
@@ -98,7 +99,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
   console.log('will get conmarket:'+withproxy);
   var options = {
     hostname: "api.coinmarketcap.com",
-    port: 443,
+    port: 80,
     path: '/v1/ticker/?convert=CNY&limit=30',
     headers: {
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
@@ -109,7 +110,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     options.agent=agent;
   }
   //options.agent=agent;
-  var req = https.request(options, function(res) {
+  var req = http.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
     if(code==200){
