@@ -108,7 +108,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     options.agent=agent;
   }
   //options.agent=agent;
-  var req = https.request(options, function(res) {
+  var req = http.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
     if(code==200){
