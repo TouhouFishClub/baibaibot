@@ -81,6 +81,8 @@ const anchan = require('./ai/arknights/arkNightsChallenge')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 
+const wfp = require('./ai/worldflipper/BossBattlePushing')
+
 initWS();
 initWS2();
 initWS3();
@@ -863,6 +865,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       default:
         anr(from, con.substring(3), callback)
     }
+    return
+  }
+  if(fie.toLowerCase() == 'wfp'){
+    wfp(con.substring(3), from, callback)
     return
   }
 
