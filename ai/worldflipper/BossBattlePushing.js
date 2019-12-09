@@ -1,7 +1,7 @@
 const http = require('http')
 const WebSocketClient = require('websocket').client;
 const client = new WebSocketClient()
-const pushingList = [577587780]
+const pushingList = [577587780, 865472485]
 const serverUri = 'wss://ws-ap3.pusher.com/app/1263f38c797817613c6d?protocol=7&client=js&version=4.1.0&flash=false'
 const MINIMUM_INTERVAL = 20 * 1000
 const MAXIMUM_TIME_STACK = 10 * 60 * 1000
@@ -33,8 +33,8 @@ const wfp = (content, qq, callback) => {
     }
     return
   }
-  console.log('<<<<<================>>>>>>')
-  console.log(BossBusStack)
+  // console.log('<<<<<================>>>>>>')
+  // console.log(BossBusStack)
   if(BossBusStack.length > 0) {
     callback(BossBusStack.slice(0, MAX_SHOW_ITEM).map(d => `Time: ${formatTime(d.data.time)}（${Date.now() - d.data.time < 60000 ? '刚刚' : (parseInt((Date.now() - d.data.time) / 1000 / 60) + '分前')}）\nRoom: ${d.data.room}\nBoss: ${d.data.boss}（${BossType(d.data.boss)}）\nDesc: ${d.data.desc || '无'}`).join(`\n==========\n`))
   } else {
