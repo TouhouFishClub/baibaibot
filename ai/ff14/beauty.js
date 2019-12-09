@@ -74,11 +74,11 @@ function getavDetail(avid,callback,title){
     var s2 = s1.substring(n2+1);
     var n3 = s2.indexOf('<');
     var ret = s2.substring(0,n3);
-    getColorReply(avid,ret.trim(),title,url);
+    getColorReply(avid,ret.trim(),title,url,callback);
   });
 }
 
-function getColorReply(avid,maintxt,title,burl){
+function getColorReply(avid,maintxt,title,burl,callback){
   var url = 'https://api.bilibili.com/x/v2/reply?jsonp=jsonp&pn=1&type=1&oid='+avid+'&sort=2&_=1575857695016'
   request({
     headers:{
