@@ -36,7 +36,7 @@ const wfp = (content, qq, callback) => {
   // console.log('<<<<<================>>>>>>')
   // console.log(BossBusStack)
   if(BossBusStack.length > 0) {
-    callback(BossBusStack.slice(0, MAX_SHOW_ITEM).map(d => `Time: ${formatTime(d.data.time)}（${Date.now() - d.data.time < 60000 ? '刚刚' : (parseInt((Date.now() - d.data.time) / 1000 / 60) + '分前')}）\nRoom: ${d.data.room}\nBoss: ${d.data.boss}（${BossType(d.data.boss)}）\nDesc: ${d.data.desc || '无'}`).join(`\n==========\n`))
+    callback(BossBusStack.slice(0, MAX_SHOW_ITEM).map(d => `Time: ${formatTime(d.data.time)}（${Date.now() - d.data.time < 60000 ? '刚刚' : (parseInt((Date.now() - d.data.time) / 1000 / 60) + '分前')}）\nRoom: ${d.data.room}\nBoss: ${d.data.boss}（${BossType(d.data.boss)}）\nType: ${data.period == 1 ? '周回/长途' : '不定'}\nDesc: ${d.data.desc || '无'}`).join(`\n==========\n`))
   } else {
     callback('最近没有数据')
   }
@@ -75,7 +75,8 @@ const startWebSocket = () => {
                 time: data.id * 1000,
                 room: data.value,
                 boss: data.boss_id,
-                desc: data.remark
+                desc: data.remark,
+                period: data.period
               })
               break
             case 'pusher:connection_established':
@@ -140,7 +141,7 @@ const pusher = data => {
     if(ignoreIdSet.has(parseInt(data.room))){
       return
     }
-    let renderData = `Time: ${formatTime(data.time)}\nRoom: ${data.room}\nBoss: ${data.boss}（${BossType(data.boss)}）\nDesc: ${data.desc || '无'}`
+    let renderData = `Time: ${formatTime(data.time)}\nRoom: ${data.room}\nBoss: ${data.boss}（${BossType(data.boss)}）\nType: ${data.period == 1 ? '周回/长途' : '不定'}\nDesc: ${data.desc || '无'}`
     //TODO： test output
     // console.log(renderData)
     // return
