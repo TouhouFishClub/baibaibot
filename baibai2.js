@@ -868,6 +868,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
   if(fie.toLowerCase() == 'wfp'){
+    console.log('================>>>>>>')
+    console.log(con)
+    console.log(con.substring(3), from, callback)
     wfp(con.substring(3), from, callback)
     return
   }
