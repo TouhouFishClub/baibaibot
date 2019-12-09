@@ -1,4 +1,4 @@
-const bbp = require('./BossBattlePushing')
+const { wfp }  = require('./BossBattlePushing')
 
 const c = m => {
   console.log('===== output =====')
@@ -31,7 +31,7 @@ setTimeout(() => {
     return
   }
   if(fie.toLowerCase() == 'wfp'){
-    bbp(con.substring(3), from, callback)
+    wfp(con.substring(3), from, callback)
     return
   }
 

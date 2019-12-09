@@ -81,7 +81,7 @@ const anchan = require('./ai/arknights/arkNightsChallenge')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 
-const wfp = require('./ai/worldflipper/BossBattlePushing')
+const { wfp } = require('./ai/worldflipper/BossBattlePushing')
 
 initWS();
 initWS2();

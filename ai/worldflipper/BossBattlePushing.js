@@ -10,8 +10,21 @@ let BossBusStack = []
 let isStart = false
 let reConnectCount = 0
 let latestUpdateTime = 0
+const ignoreIdSet = new Set([
+  111111,
+  123456,
+  654321,
+  114514,
+  233333,
+  222222,
+  333333,
+  444444,
+  555555,
+  666666,
+  654321,
+])
 
-module.exports = function(content, qq, callback) {
+const wfp = (content, qq, callback) => {
   if(content == '强制重启'){
     if(qq == 799018865 && client) {
       reConnectCount = 0
@@ -28,7 +41,6 @@ module.exports = function(content, qq, callback) {
     callback('最近没有数据')
   }
 }
-
 
 const startWebSocket = () => {
   if(!isStart) {
@@ -125,6 +137,9 @@ const formatStack = () => {
 const pusher = data => {
   if(Date.now() - latestUpdateTime > MINIMUM_INTERVAL) {
     latestUpdateTime = Date.now()
+    if(ignoreIdSet.has(parseInt(data.room))){
+      return
+    }
     let renderData = `Time: ${formatTime(data.time)}\nRoom: ${data.room}\nBoss: ${data.boss}（${BossType(data.boss)}）\nDesc: ${data.desc || '无'}`
     //TODO： test output
     // console.log(renderData)
@@ -151,4 +166,8 @@ const pusher = data => {
       req.end();
     })
   }
+}
+
+module.exports = {
+  wfp,
 }
