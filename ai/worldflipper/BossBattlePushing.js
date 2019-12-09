@@ -33,6 +33,7 @@ const wfp = (content, qq, callback) => {
     }
     return
   }
+  formatStack()
   // console.log('<<<<<================>>>>>>')
   // console.log(BossBusStack)
   if(BossBusStack.length > 0) {
