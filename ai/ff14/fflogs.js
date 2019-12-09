@@ -268,7 +268,7 @@ var bosses = [
   {
     "zid":28,
     "id": 1046,
-    "name": "肥宅 完美神 Innocence",
+    "name": "肥宅王 完美神 Innocence",
     "cn": "无瑕灵君"
   },
 

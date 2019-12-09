@@ -10,7 +10,6 @@ function fflogs2Reply(content,userName,callback,cn){
 
   content = content.toLowerCase();
   if(content==""){
-    return;
     var ret = "fflog查询 输入格式：\n";
     ret = ret + "fflog + BOSS名/ID + 职业名\n";
     ret = ret + "如 【fflog o5s 黑魔】\n";
@@ -65,13 +64,26 @@ function fflogs2Reply(content,userName,callback,cn){
 
 
   var host = "www.fflogs.com";
-  if(cn==1){
+  var cid = 3;
+  if(cn==1) {
     host = "cn.fflogs.com";
+    cid = 5;
+  }
+  var hid = 100;
+  if(zid==29){
+    hid=101
   }
 
   var url = 'https://'+host+'/zone/statistics/table/'+zid;
-  url = url +'/dps/'+bossid+'/100/8/5/100/1/14/0/Global/'+job;
-  url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps';
+  url = url +'/dps/'+bossid+'/'+hid+'/8/'+cid+'/100/1/14/0/Global/'+job;
+  url = url +'/All/0/amount/single/0/-1/?keystone=15&dpstype=rdps';
+
+
+  if(job=="Any"){
+    url = 'https://'+host+'/zone/statistics/table/'+zid;
+    url = url +'/fightdps/'+bossid+'/'+hid+'/8/'+cid+'/0/1/14/0/Global/Any';
+    url = url +'/All/0/amount/single/0/-1/?keystone=15&dpstype=rdps'
+  }
   console.log(url);
   request({
     headers:{
@@ -90,7 +102,9 @@ function fflogs2Reply(content,userName,callback,cn){
       var dpslist = [];
       var keylist = [100,99,95,75,50,25,10];
       var kl = keylist.map(function(e){return 'series'+e+'.data.push('});
+      // console.log(body);
       if(n1>0){
+
         var s1 = body.substring(n1+q1.length);
         var n2 = s1.indexOf(')');
         d100 = parseFloat(s1.substring(0,n2));
@@ -105,11 +119,21 @@ function fflogs2Reply(content,userName,callback,cn){
           s2 = s3.substring(n4+1);
         }
         console.log(dpslist);
-        var ret = "";
-        for(var i=0;i<keylist.length;i++){
-          ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
+        if(job=="Any"){
+          var ret = ba[0].cn+"\n";
+          for(var i=1;i<keylist.length;i++){
+            ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
+          }
+          ret = ret + "min:" + "  \t"+dpslist[0].toFixed(1)+"\n";
+          callback(ret.trim());
+        }else{
+          var ret = ba[0].cn + " " + job_cn[a[0]]+"\n";
+          for(var i=0;i<keylist.length;i++){
+            ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
+          }
+          callback(ret.trim());
         }
-        callback(ret.trim());
+
       }
 
     }
