@@ -90,7 +90,7 @@ function getColorReply(avid,maintxt,title,burl,callback){
     var colortxt = '';
     try{
       data = eval('('+body+')');
-      colortxt = data.data.upper.top.message;
+      colortxt = data.data.upper.top.content.message;
     }catch(e){
 
     }
