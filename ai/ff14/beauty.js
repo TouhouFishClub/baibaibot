@@ -74,7 +74,27 @@ function getavDetail(avid,callback,title){
     var s2 = s1.substring(n2+1);
     var n3 = s2.indexOf('<');
     var ret = s2.substring(0,n3);
-    sendBeautyImage(title+"\n"+url+"",ret.trim(),callback);
+    getColorReply(avid,ret.trim(),title,url);
+  });
+}
+
+function getColorReply(avid,maintxt,title,burl){
+  var url = 'https://api.bilibili.com/x/v2/reply?jsonp=jsonp&pn=1&type=1&oid='+avid+'&sort=2&_=1575857695016'
+  request({
+    headers:{
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
+      'Referer':'https://www.bilibili.com/video/av'+avid
+    },
+    url: url,
+  }, function(err, response, body) {
+    var colortxt = '';
+    try{
+      data = eval('('+body+')');
+      colortxt = data.data.upper.top.message;
+    }catch(e){
+
+    }
+    sendBeautyImage(title+"\n"+burl+"",maintxt+"\n\n"+colortxt,callback);
   });
 }
 
