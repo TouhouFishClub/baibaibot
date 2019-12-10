@@ -5,7 +5,7 @@ const c = m => {
   console.log(m)
 }
 setTimeout(() => {
-  let con = 'wfp'
+  let con = 'wfp强制重启'
   let fie = con.substring(0, 3), from = 799018865, callback = c
   if(fie.toLowerCase() == 'ark'){
     switch(con.substring(3, 4)){
@@ -36,4 +36,4 @@ setTimeout(() => {
   }
 
   // bbp('', 799018865, c)
-}, 10000)
+}, 3000)
