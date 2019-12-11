@@ -129,19 +129,10 @@ function handleTulingResponse(resdata){
 
 
 function tulingMsg(userid,content,callback,groupid){
-  if(content.indexOf("百百")>=0){
-    if(content.indexOf("菜单")>=0){
-      if(content.length<8){
-        var ret = "";
-        ret = "百百bot帮助\n";
-        ret = ret + "日常帮助"
 
-      }
-    }
-  }
+  getQAIresponse(userid,content,callback,groupid);
 
-
-  tulingMsg0(userid,content,callback,groupid);
+  // tulingMsg0(userid,content,callback,groupid);
 }
 
 
@@ -333,7 +324,9 @@ function getQAIresponse(userid,content,callback,groupid){
   }
   limit[groupid]=new Date().getTime();
 
-
+  if(content.toUpperCase().indexOf('CQ:')>=0){
+    return;
+  }
 
 
 
