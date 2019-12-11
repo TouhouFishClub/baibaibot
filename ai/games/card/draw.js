@@ -130,7 +130,7 @@ function drawNameCard_1(username,qq,callback,groupid){
     drawBangumi(qq,username,callback);
     return;
   }
-  if(Math.random()<0.49){
+  if(Math.random()<0.0){
     draw2df(qq,username,callback);
     return;
   }
@@ -392,6 +392,7 @@ function generateImageByWords(img,wd,callback,words){
     var imgname = new Date().getTime()+"";
     var folder = 'static/'
     try{
+      img = img.replace('','img.tdgujian.com');
       var imgreq = request({
         url: img,
         method: "GET"
