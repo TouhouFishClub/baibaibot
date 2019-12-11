@@ -1,11 +1,11 @@
-const bbp = require('./BossBattlePushing')
+const { wfp }  = require('./BossBattlePushing')
 
 const c = m => {
   console.log('===== output =====')
   console.log(m)
 }
 setTimeout(() => {
-  let con = 'wfp'
+  let con = 'wfp强制重启'
   let fie = con.substring(0, 3), from = 799018865, callback = c
   if(fie.toLowerCase() == 'ark'){
     switch(con.substring(3, 4)){
@@ -31,9 +31,9 @@ setTimeout(() => {
     return
   }
   if(fie.toLowerCase() == 'wfp'){
-    bbp(con.substring(3), from, callback)
+    wfp(con.substring(3), from, callback)
     return
   }
 
   // bbp('', 799018865, c)
-}, 10000)
+}, 3000)

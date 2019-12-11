@@ -1,7 +1,7 @@
 const http = require('http')
 const WebSocketClient = require('websocket').client;
 const client = new WebSocketClient()
-const pushingList = [577587780]
+const pushingList = [577587780, 865472485]
 const serverUri = 'wss://ws-ap3.pusher.com/app/1263f38c797817613c6d?protocol=7&client=js&version=4.1.0&flash=false'
 const MINIMUM_INTERVAL = 20 * 1000
 const MAXIMUM_TIME_STACK = 10 * 60 * 1000
@@ -10,8 +10,21 @@ let BossBusStack = []
 let isStart = false
 let reConnectCount = 0
 let latestUpdateTime = 0
+const ignoreIdSet = new Set([
+  111111,
+  123456,
+  654321,
+  114514,
+  233333,
+  222222,
+  333333,
+  444444,
+  555555,
+  666666,
+  654321,
+])
 
-module.exports = function(content, qq, callback) {
+const wfp = (content, qq, callback) => {
   if(content == '强制重启'){
     if(qq == 799018865 && client) {
       reConnectCount = 0
@@ -20,15 +33,15 @@ module.exports = function(content, qq, callback) {
     }
     return
   }
-  console.log('<<<<<================>>>>>>')
-  console.log(BossBusStack)
+  formatStack()
+  // console.log('<<<<<================>>>>>>')
+  // console.log(BossBusStack)
   if(BossBusStack.length > 0) {
-    callback(BossBusStack.slice(0, MAX_SHOW_ITEM).map(d => `Time: ${formatTime(d.data.time)}（${Date.now() - d.data.time < 60000 ? '刚刚' : (parseInt((Date.now() - d.data.time) / 1000 / 60) + '分前')}）\nRoom: ${d.data.room}\nBoss: ${d.data.boss}（${BossType(d.data.boss)}）\nDesc: ${d.data.desc || '无'}`).join(`\n==========\n`))
+    callback(BossBusStack.slice(0, MAX_SHOW_ITEM).map(d => `Time: ${formatTime(d.data.time)}（${Date.now() - d.data.time < 60000 ? '刚刚' : (parseInt((Date.now() - d.data.time) / 1000 / 60) + '分前')}）\nRoom: ${d.data.room}\nBoss: ${d.data.boss}（${BossType(d.data.boss)}）\nType: ${data.period == 1 ? '周回/长途' : '不定'}\nDesc: ${d.data.desc || '无'}`).join(`\n==========\n`))
   } else {
     callback('最近没有数据')
   }
 }
-
 
 const startWebSocket = () => {
   if(!isStart) {
@@ -63,7 +76,8 @@ const startWebSocket = () => {
                 time: data.id * 1000,
                 room: data.value,
                 boss: data.boss_id,
-                desc: data.remark
+                desc: data.remark,
+                period: data.period
               })
               break
             case 'pusher:connection_established':
@@ -125,7 +139,10 @@ const formatStack = () => {
 const pusher = data => {
   if(Date.now() - latestUpdateTime > MINIMUM_INTERVAL) {
     latestUpdateTime = Date.now()
-    let renderData = `Time: ${formatTime(data.time)}\nRoom: ${data.room}\nBoss: ${data.boss}（${BossType(data.boss)}）\nDesc: ${data.desc || '无'}`
+    if(ignoreIdSet.has(parseInt(data.room))){
+      return
+    }
+    let renderData = `Time: ${formatTime(data.time)}\nRoom: ${data.room}\nBoss: ${data.boss}（${BossType(data.boss)}）\nType: ${data.period == 1 ? '周回/长途' : '不定'}\nDesc: ${data.desc || '无'}`
     //TODO： test output
     // console.log(renderData)
     // return
@@ -151,4 +168,8 @@ const pusher = data => {
       req.end();
     })
   }
+}
+
+module.exports = {
+  wfp,
 }
