@@ -6,7 +6,8 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var memory={};
 function replayReply(content,userName,groupuin,callback,qq,port){
   if((groupuin+"").startsWith("63508")||
-    (groupuin+"").startsWith("69738")){
+    (groupuin+"").startsWith("69738"))||
+    (groupuin+"").startsWith("96435")){
     return;
   }
   content=content.trim();
@@ -47,7 +48,6 @@ function replayReply(content,userName,groupuin,callback,qq,port){
             txt = '发现大量复读姬出没！\n下面百百要选择一名复读姬塞上口球\n到底是哪位小朋友这么幸运呢？\n就决定是\n';
             txt = txt + '口球将于'+Math.floor(delay/1000)+'秒后飞入[CQ:at,qq='+banqq+']的嘴里';
           }
-
           callback(txt);
           setTimeout(function(){
             banUserInGroup(banqq,groupuin,time,port);
