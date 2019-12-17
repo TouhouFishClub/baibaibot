@@ -130,7 +130,7 @@ function drawNameCard_1(username,qq,callback,groupid){
     drawBangumi(qq,username,callback);
     return;
   }
-  if(Math.random()<0.0){
+  if(Math.random()<1.0){
     draw2df(qq,username,callback);
     return;
   }
@@ -442,7 +442,7 @@ function draw2df(qq,username,callback){
       console.log('mongo errorm:!!!!!!!!!');
       console.log(err);
     }else {
-      var cl_card_2df = db.collection('cl_card_2df');
+      var cl_card_2df = db.collection('cl_2df_card');
       var ag = [];
       if (true) {
       }
@@ -456,6 +456,8 @@ function draw2df(qq,username,callback){
           var ud = data[0];
           var name = ud._id;
           var img = ud.img;
+          var charimg=img;
+          var gameimg = ud.gimg;
           var n = name.indexOf(':');
           var gamename = name.substring(0, n);
           var cd = name.substring(n + 1);
@@ -497,7 +499,7 @@ function draw2df(qq,username,callback){
           if (img && dr) {
             var words = gamename + "\n" + dr;
             words = words.replace(/&nbsp;/g, '').replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&#160;/g, '<');
-            generateImageByWords(img, words, callback, ret);
+            generateImage2df(gameimg,charimg,words,ret,callback)
           } else {
             callback(ret);
           }
@@ -505,6 +507,54 @@ function draw2df(qq,username,callback){
       });
     }
   });
+}
+
+function generateImage2df(gameimg,charimg,words,ret,callback){
+  var wa = words.split('\n');
+  var maxwd = 0;
+  var uwd = 23;
+  var uw = "";
+  for(var i=0;i<wa.length;i++){
+    var lw = wa[i];
+    var ud = "";
+    while(lw.length>uwd){
+      ud = ud + lw.substring(0,uwd)+"\n";
+      lw = lw.substring(uwd);
+    }
+    if(lw.length>0){
+      uw = uw + ud +lw+"\n";
+    }else{
+      uw = uw + ud;
+    }
+  }
+  var ua = uw.split('\n');
+  for(var i=0;i<ua.length;i++){
+    if(ua[i].length>maxwd){
+      maxwd = ua[i].length;
+    }
+  }
+  var len = ua.length;
+  var imgname = new Date().getTime()+"";
+  var folder = 'static/'
+
+
+
+  var imgg = new imageMagick("2df/g_"+gameimg);
+  var img0 = new imageMagick(charimg);
+  var img1 = new imageMagick("static/blank.png");
+  console.log("len:"+maxwd+":"+len);
+  img1.resize(maxwd*19+29, len*21+29,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+    .autoOrient()
+    .fontSize(20)
+    .fill('blue')
+    .font('./font/STXIHEI.TTF')
+    .drawText(0,0,uw,'NorthWest')
+    .write(folder+imgname+"_blank.jpg", function(err){
+      img0.size(function(err,imgsize){
+        console.log(imgsize);
+        sendGmImage(imgg.append(img0.append(folder+imgname+"_blank.jpg",true),false),ret,callback);
+      });
+    });
 }
 
 

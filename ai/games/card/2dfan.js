@@ -3,9 +3,16 @@ var https = require('https');
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var fs = require('fs');
+var request = require('request');
 
 
-function fetchGame(id,lastret,page,gamename){
+function fetch0(id,gamename,gameimg){
+  console.log(id,gamename,gameimg);
+  fetchGame(id,[],1,gamename,gameimg)
+}
+
+function fetchGame(id,lastret,page,gamename,gameimg){
+  console.log(gamename,gameimg);
   if(!lastret){
     lastret=[];
   }
@@ -41,10 +48,11 @@ function fetchGame(id,lastret,page,gamename){
           var s1 = s0.substring(n1+h1.length);
           var n2 = s1.indexOf('<h3');
           var n3 = s1.indexOf('</h3>');
+
           if(n2>0&&n3>0){
+
             var sh = s1.substring(n2+4,n3);
             if(sh.endsWith('介绍')){
-              var gamename = sh.substring(0,sh.length-2);
               var s2 = s1.substring(n3+3);
               var n4 = s2.indexOf('<p>')
               var n5 = s2.indexOf('分享到');
@@ -73,6 +81,7 @@ function fetchGame(id,lastret,page,gamename){
                     var s15 = inh.substring(n15);
                     var n16 = s15.indexOf('"');
                     var imgsrc = s15.substring(0,n16);
+
                     liner = liner + imgsrc+"\n";
                   }
                   liner = liner + s13.substring(0,n13)+"\n";
@@ -83,22 +92,33 @@ function fetchGame(id,lastret,page,gamename){
                 ret.push(liner);
               }while(n>=0)
               var nret = lastret.concat(ret);
-              fetchGame(id,nret,page+1,gamename);
+              if((page>35)||(ret[0].startsWith("分享到")&&ret.length<50)){
+                saveGame(gamename,lastret,id,gameimg);
+                handleGameDesp(gamename,lastret,id,gameimg);
+                setTimeout(function(){
+
+                },1000);
+              }else{
+                fetchGame(id,nret,page+1,gamename,gameimg);
+              }
+            }else{
+              //fetchGame(id+1,[],1,"")
             }
           }
         }
       })
     }else if(res.statusCode==500){
-      //console.log(gamename);
-      //console.log(lastret);
-      saveGame(gamename,lastret,id);
-      handleGameDesp(gamename,lastret,id);
+      console.log(11111);
+      saveGame(gamename,lastret,id,gameimg);
+      handleGameDesp(gamename,lastret,id,gameimg);
       setTimeout(function(){
-        fetchGame(id+1,[],1,"")
+        //fetchGame(id+1,[],1,"")
       },1000);
     }else{
+      console.log(222222222);
+
       setTimeout(function(){
-        fetchGame(id+1,[],1,"")
+        //fetchGame(id+1,[],1,"")
       },1000);
     }
 
@@ -107,62 +127,113 @@ function fetchGame(id,lastret,page,gamename){
 }
 
 
-function handleGameDesp(gamename,desArr){
-  console.log(desArr);
-  for(var i=0;i<desArr.length;i++){
-    var des = desArr[i].trim();
-    if(i==desArr.length-1){
-      break;
+function handleGameDesp(gamename,desArr,id,gameimg){
+  var imgreq = request({
+    url: gameimg,
+    method: "GET",
+    headers:{
+      'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+      'Referer':'https://www.2dfan.com/subjects/page/1?order=comments_count'
     }
-    var nextdes = desArr[i+1].trim();
-    if(des.indexOf('cv')>=-1){
-      if(nextdes.startsWith("http")){
-        var n = des.indexOf('cv');
-        var char;
-        if(n>0){
-          char = des.substring(0,n).trim();
-        }else{
-          char = des;
-        }
-        console.log(111111);
-        console.log(char);
-        console.log(char.length);
-        if(char.length>52){
-          continue;
-        }
-        var chara = [];
-        chara.push(des);
-        var charimg = nextdes;
-        for(var k=0;k<100;k++){
-          var kdes = desArr[i+2];
-          console.log(333333);
-          console.log(kdes);
-          if(!kdes){
-            break;
+  }, function(error, response, body){
+    if(error&&error.code){
+      console.log('pipe error catched!')
+      console.log(error);
+    }
+  }).pipe(fs.createWriteStream("2df/g_"+id+"_"+gamename));
+  imgreq.on('error',function(err){
+    console.log(err);
+  });
+  imgreq.on('close',function(){
+    for(var i=0;i<desArr.length;i++){
+      var des = desArr[i].trim();
+      if(i==desArr.length-1){
+        break;
+      }
+      var nextdes = desArr[i+1].trim();
+      if(des.indexOf('cv')>=-1){
+        if(nextdes.startsWith("http")){
+          var n = des.indexOf('cv');
+          var char;
+          if(n>0){
+            char = des.substring(0,n).trim();
+          }else{
+            char = des;
           }
-          var kkdes = desArr[i+3];
-          if(!kkdes){
-            break;
-          }else if(kkdes.startsWith("http")){
-            break;
+          if(char.length>52){
+            continue;
           }
-          i++;
-          chara.push(kdes);
-        }
+          var chara = [];
+          chara.push(des);
+          var charimg = nextdes;
+          for(var k=0;k<100;k++){
+            var kdes = desArr[i+2];
+            if(!kdes){
+              break;
+            }
+            var kkdes = desArr[i+3];
+            if(!kkdes){
+              break;
+            }else if(kkdes.startsWith("http")){
+              break;
+            }
+            i++;
+            chara.push(kdes);
+          }
 
-        saveChar(gamename,char,charimg,chara);
+          saveChar(gamename,char,charimg,chara,id,gameimg);
+        }
       }
     }
-  }
+  });
+
+
+
+
+
 }
 
-function saveChar(gamename,char,charimg,chara){
+function saveChar(gamename,char,charimg,chara,id,gameimg){
+  var n1=char.indexOf('\n');
+  var imgname;
+  if(n1>0){
+    imgname = "2df/"+id+"_"+char.substring(0,n1);
+  }else{
+    imgname = "2df/"+id+"_"+char;
+  }
+
+
   MongoClient.connect(mongourl, function(err, db) {
-    var cl_card_2df = db.collection('cl_card_2df');
-    var Obj =  {'_id':gamename+":"+char,img:charimg,d:chara,ts:new Date()};
-    cl_card_2df.save(Obj,function(){
-      db.close();
+    var imgreq = request({
+      url: charimg,
+      method: "GET",
+      headers:{
+        'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+        'Referer':'https://www.2dfan.com/topics/'+id+'/page/'+1
+      }
+    }, function(error, response, body){
+      if(error&&error.code){
+        console.log('pipe error catched!')
+        console.log(error);
+      }
+    }).pipe(fs.createWriteStream("2df/"+id+"_"+char));
+    imgreq.on('error',function(err){
+      console.log(err);
     });
+
+
+
+    imgreq.on('close',function(){
+      var cl_card_2df = db.collection('cl_2df_card');
+      var Obj =  {'_id':gamename+":"+char,imgurl:charimg,img:imgname,d:chara,ts:new Date(),
+        gameid:id,gimgurl:gameimg,gimg:id+"_"+gamename};
+      cl_card_2df.save(Obj,function(){
+        db.close();
+      });
+    });
+    // cl_card_2df.save(Obj,function(){
+    //   db.close();
+    // });
   });
 }
 
@@ -172,7 +243,7 @@ function saveGame(gamename,desa,id){
       console.log('mongo error2:!!!!!!!!!');
       console.log(err);
     }else {
-      var cl_game_2df = db.collection('cl_game_2df');
+      var cl_game_2df = db.collection('cl_2df_game');
       var Obj = {'_id': gamename, id: id, d: desa, ts: new Date()};
       cl_game_2df.save(Obj, function () {
         db.close();
@@ -181,10 +252,79 @@ function saveGame(gamename,desa,id){
   });
 }
 
+var wid=3;
+function fetchRank(wid){
+  if(!wid){
+    wid=3
+  }
+  console.log('widddddddddddddddddddddd:'+wid);
+  var url = 'https://www.2dfan.com/subjects/page/'+wid+'?order=comments_count';
+  request({
+    headers:{
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
+    },
+    url: url,
+  }, function(error, response, body) {
+    if (error && error.code) {
+      console.log('pipe error catched!')
+      console.log(error);
+    } else {
+      var sa = body.split('<h4 class="media-heading">');
+      console.log(sa.length);
+      for(var i=1;i<sa.length;i++){
+        var ss=sa[i];
+        var n = ss.indexOf('href="/subjects/');
+        var s1 = ss.substring(n+16);
+        var n1 = s1.indexOf('</h4>');
+        var s2 = s1.substring(0,n1);
+        var n3 = s2.indexOf('"');
+        var id = s2.substring(0,n3);
+        var n4 = s2.indexOf('>');
+        var n5 = s2.indexOf('<');
+        var gamename = s2.substring(n4+1,n5);
+
+        var ls = sa[i-1];
+        var n6 = ls.indexOf('data-normal="');
+        var s6 = ls.substring(n6+13);
+        var n7 = s6.indexOf('"');
+        var imgsrc = s6.substring(0,n7);
+        task.push({id:id,gamename:gamename,gameimg:imgsrc});
+      }
+    }
+  });
+}
+
+
+var task = [];
+var working = 0;
+function run(){
+  setTimeout(function(){
+    if(task.length>0){
+      var obj = task.pop();
+      console.log('now fetching:');
+      var gaimg = obj.gameimg;
+      working++;
+      fetch0(obj.id,obj.gamename,gaimg);
+    }else{
+      console.log('no task');
+      working++;
+      if(working>10){
+        working=0;
+        wid=wid+1;
+        fetchRank(wid);
+      }
+    }
+    run();
+  },3000)
+}
+run()
+
+
 
 
 module.exports={
-  fetchGame
+  fetchGame,
+  fetchRank
 }
 
 
