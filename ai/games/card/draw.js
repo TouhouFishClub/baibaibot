@@ -496,6 +496,7 @@ function draw2df(qq,username,callback){
             baiduVoice(voice, callback);
           }
           saveCard(qq, name);
+          console.log(img,gimg);
           if (img && dr) {
             var words = gamename + "\n" + dr;
             words = words.replace(/&nbsp;/g, '').replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&#160;/g, '<');
