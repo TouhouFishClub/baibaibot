@@ -442,7 +442,7 @@ function draw2df(qq,username,callback){
       console.log('mongo errorm:!!!!!!!!!');
       console.log(err);
     }else {
-      var cl_card_2df = db.collection('cl_2df_card');
+      var cl_card_2df = db.collection('cl_sdf_card');
       var ag = [];
       if (true) {
       }
