@@ -540,7 +540,7 @@ function generateImage2df(gameimg,charimg,words,ret,callback){
 
 
 
-  var imgg = new imageMagick("2df/g_"+gameimg);
+  var imgg = new imageMagick("4df/g_"+gameimg);
   var img0 = new imageMagick(charimg);
   var img1 = new imageMagick("static/blank.png");
   console.log("len:"+maxwd+":"+len);
