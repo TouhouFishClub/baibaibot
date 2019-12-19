@@ -546,14 +546,14 @@ function generateImage2df(gameimg,charimg,words,ret,callback){
   console.log("len:"+maxwd+":"+len);
   img1.resize(maxwd*19+29, len*21+29,'!') //加('!')强行把图片缩放成对应尺寸150*150！
     .autoOrient()
-    .fontSize(20)
+    .fontSize(18)
     .fill('blue')
     .font('./font/STXIHEI.TTF')
     .drawText(0,0,uw,'NorthWest')
     .write(folder+imgname+"_blank.jpg", function(err){
       img0.size(function(err,imgsize){
         console.log(imgsize);
-        sendGmImage(img0.append(folder+imgname+"_blank.jpg",true),ret,callback);
+        sendGmImage(imgg.append(img0.append(folder+imgname+"_blank.jpg",true),false),ret,callback);
       });
     });
 }
