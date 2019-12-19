@@ -554,7 +554,7 @@ function generateImage2df(gameimg,charimg,words,ret,callback){
       img0.size(function(err,imgsize){
         console.log(imgsize);
         sendGmImage(imgg,'',callback);
-        sendGmImage(img0.append(folder+imgname+"_blank.jpg",true),ret,callback);
+        sendGmImage(imgg.append(img0.append(folder+imgname+"_blank.jpg",true),true),ret,callback);
       });
     });
 }
