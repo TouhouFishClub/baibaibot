@@ -76,14 +76,15 @@ function fflogs2Reply(content,userName,callback,cn){
 
   var url = 'https://'+host+'/zone/statistics/table/'+zid;
   url = url +'/dps/'+bossid+'/'+hid+'/8/'+cid+'/100/1/14/0/Global/'+job;
-  url = url +'/All/0/amount/single/0/-1/?keystone=15&dpstype=rdps';
+  url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps';
 
 
   if(job=="Any"){
     url = 'https://'+host+'/zone/statistics/table/'+zid;
     url = url +'/fightdps/'+bossid+'/'+hid+'/8/'+cid+'/0/1/14/0/Global/Any';
-    url = url +'/All/0/amount/single/0/-1/?keystone=15&dpstype=rdps'
-  }
+    url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps'
+
+      }
   console.log(url);
   request({
     headers:{
