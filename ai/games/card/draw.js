@@ -551,8 +551,8 @@ function generateImage2df(gameimg,charimg,words,ret,callback){
     .font('./font/STXIHEI.TTF')
     .drawText(0,0,uw,'NorthWest')
     .write(folder+imgname+"_blank.jpg", function(err){
-      img0.append(folder+imgname+"_blank.jpg").write(folder+imgname+"_wc.jpg",function(err){
-        sendGmImage(imgg.append(charimg,folder+imgname+"_wc.jpg"),ret,callback);
+      img0.append(folder+imgname+"_blank.jpg",true).write(folder+imgname+"_wc.jpg",function(err){
+        sendGmImage(imgg.append(folder+imgname+"_wc.jpg"),ret,callback);
       });
     });
 }
