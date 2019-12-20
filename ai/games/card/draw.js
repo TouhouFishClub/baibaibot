@@ -546,7 +546,7 @@ function generateImage2df(gameimg,charimg,words,ret,callback){
   console.log("len:"+maxwd+":"+len);
   img1.resize(maxwd*21+31, len*23+33,'!') //加('!')强行把图片缩放成对应尺寸150*150！
     .autoOrient()
-    .fontSize(20)
+    .fontSize(19)
     .fill('blue')
     .font('./font/STXIHEI.TTF')
     .drawText(0,0,uw,'NorthWest')
