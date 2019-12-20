@@ -544,9 +544,9 @@ function generateImage2df(gameimg,charimg,words,ret,callback){
   var img0 = new imageMagick(charimg);
   var img1 = new imageMagick("static/blank.png");
   console.log("len:"+maxwd+":"+len);
-  img1.resize(maxwd*19+29, len*21+29,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+  img1.resize(maxwd*21+31, len*23+33,'!') //加('!')强行把图片缩放成对应尺寸150*150！
     .autoOrient()
-    .fontSize(18)
+    .fontSize(20)
     .fill('blue')
     .font('./font/STXIHEI.TTF')
     .drawText(0,0,uw,'NorthWest')
