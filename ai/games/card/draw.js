@@ -553,7 +553,7 @@ function generateImage2df(gameimg,charimg,words,ret,callback){
     .write(folder+imgname+"_blank.jpg", function(err){
       imgg.append(charimg).write(folder+imgname+"_wc.jpg",function(err){
         var imggg = new imageMagick(folder+imgname+"_wc.jpg");
-        sendGmImage(imggg.append(folder+imgname+"_blank.jpg"),ret,callback);
+        sendGmImage(imggg.append(folder+imgname+"_blank.jpg",true),ret,callback);
       });
     });
 }
