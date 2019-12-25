@@ -80,7 +80,7 @@ const and = require('./ai/arknights/arkNightsBuildingTheme')
 const anchan = require('./ai/arknights/arkNightsChallenge')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
-
+const {runsetu} = require('./ai/games/card/setu');
 const { wfp } = require('./ai/worldflipper/BossBattlePushing')
 require('./ai/ff14/activity')
 
@@ -535,6 +535,7 @@ function handleMsg_D(msgObj,botqq) {
       gidstr.startsWith("22169")||
       gidstr.startsWith("74633")||
       gidstr.startsWith("69738")||
+      gidstr.startsWith("22169")||
       gidstr.startsWith("67096")
     )&&port==23334){
     return;
@@ -890,6 +891,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     drawNameCard(name,from,callback,groupid);
     return;
   }
+
+  if(rcontent.startsWith("色图")){
+    runsetu(rcontent,groupid,from,callback);
+    return;
+  }
+
   if(rcontent.startsWith("搜图")){
     googleImageSearch(content.substring(2),callback)
     return;
