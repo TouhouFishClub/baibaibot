@@ -20,6 +20,12 @@ function calAttr(content,qq,callback){
     var nextspeed = 2000-(cx-0.01)*100*10000/2500
     var next = Math.ceil((nextspeed-1000)*3300/130+380)
     callback('速度:'+rate+""+"\n2.5sGCD:"+cx+"\n下一个阈值:"+next);
+  }else if(content.startsWith("信念")){
+    var left = content.substring(2).trim();
+    var num = parseInt(left);
+    var rate = Math.floor(130*(num - 340)/ 3300 + 1000)/10;
+    var next = Math.ceil((rate-99.9)*10*3300/130+340);
+    callback('信念收益:'+rate+"%"+"\n下一个阈值:"+next);
   }else{
 
   }
