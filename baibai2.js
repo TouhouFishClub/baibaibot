@@ -82,6 +82,7 @@ const anchan = require('./ai/arknights/arkNightsChallenge')
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 const {runsetu} = require('./ai/games/card/setu');
 const { wfp } = require('./ai/worldflipper/BossBattlePushing')
+const {calAttr} = require('./ai/ff14/attr');
 require('./ai/ff14/activity')
 
 
@@ -793,6 +794,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(fi == 'ffiq'){
     searchQuest(con.substring(4),name,callback);
+    return;
+  }
+  if(con.startsWith("/")){
+    calAttr(content.substring(1),from,callback);
     return;
   }
   fi = con.substring(0,5)
