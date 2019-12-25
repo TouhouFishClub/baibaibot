@@ -37,7 +37,7 @@ function alarmBox(){
   var groupid = 697381070
   var options = {
     host: '192.168.17.52',
-    port: 23334,
+    port: 25334,
     path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
     method: 'GET',
     headers: {
