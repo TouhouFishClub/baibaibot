@@ -8,11 +8,16 @@ function runFF14activity(){
 var timer = 0;
 function springActivity(){
   var now = new Date();
-  if(now.getFullYear()==2019&&now.getMonth()==1&&now.getDate()<=11){
-    var left = 3600000*14 - new Date().getTime()%86400000;
-    if(left<0){
-      left = left + 86400000;
+  if(now.getTime()<1578449758429){
+    var left1 = 3600000*14 - new Date().getTime()%86400000;
+    if(left1<0){
+      left1 = left1 + 86400000;
     }
+    var left2 = 3600000*5 - new Date().getTime()%86400000;
+    if(left2<0){
+      left2 = left2 + 86400000;
+    }
+    var left = Math.min(left1,left2);
     console.log('will start ff14 spring activity '+ (left/60000).toFixed(0) + 'minutes')
     if(timer==0){
       timer = 1;
@@ -28,8 +33,8 @@ function springActivity(){
 }
 
 function alarmBox(){
-  var res = "领新春箱子啦,各位光战们可别忘了哦\nhttp://act.ff.sdo.com/20190129NewYear/index.html#page2\n";
-  var groupid = 635084427
+  var res = "提醒签到小助手,该去签到领暗影值啦\nhttp://act.ff.sdo.com/20191225Christmas/index.html#/index\n";
+  var groupid = 697381070
   var options = {
     host: '192.168.17.52',
     port: 23334,
