@@ -45,7 +45,7 @@ function runsetu(content,gid,qq,callback){
           var filename = "../coolq-data/cq/data/image/send/setu/"+imgdata.pid;
           if (data) {
             if(fs.existsSync(filename)){
-              var ret = '[CQ:image,file='+filename+']';
+              var ret = '[CQ:image,file=send/setu/'+imgdata.pid+']';
               callback(ret);
             }else{
               var imgurl = imgdata.url;
@@ -59,7 +59,7 @@ function runsetu(content,gid,qq,callback){
                 }
               }).pipe(fs.createWriteStream(filename));
               imgreq.on('close',function(){
-                var ret = '[CQ:image,file='+filename+']';
+                var ret = '[CQ:image,file=send/setu/'+imgdata.pid+']';
                 callback(ret);
               });
             }
@@ -76,7 +76,7 @@ function runsetu(content,gid,qq,callback){
               }
             }).pipe(fs.createWriteStream(filename));
             imgreq.on('close',function(){
-              var ret = '[CQ:image,file='+filename+']';
+              var ret = '[CQ:image,file=send/setu/'+imgdata.pid+']';
               callback(ret);
             });
           }
