@@ -894,7 +894,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(rcontent.startsWith("色图")){
+  if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
     runsetu(rcontent,groupid,from,callback);
     return;
   }
