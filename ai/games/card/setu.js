@@ -59,12 +59,20 @@ function runsetu(content,gid,qq,callback){
                 }
               }).pipe(fs.createWriteStream(filename));
               imgreq.on('close',function(){
-                var ret = '[CQ:image,file=send/setu/'+imgdata.pid+']';
-                callback(ret);
+                if(fs.existsSync(filename)) {
+                  var ret = '[CQ:image,file=send/setu/' + imgdata.pid + ']';
+                  callback(ret);
+                }else{
+                  fs.readdir('../coolq-data/cq/data/image/send/setu/',function(err,files){
+                    var len = files.length;
+                    var rdfile = files[Math.floor(Math.random()*len)];
+                    var ret = '[CQ:image,file=send/setu/' + rdfile + ']';
+                    callback(ret);
+                  })
+                }
               });
             }
           }else{
-            cl_setu.save(imgdata);
             var imgurl = imgdata.url;
             var imgreq = request({
               url: imgurl,
@@ -76,8 +84,18 @@ function runsetu(content,gid,qq,callback){
               }
             }).pipe(fs.createWriteStream(filename));
             imgreq.on('close',function(){
-              var ret = '[CQ:image,file=send/setu/'+imgdata.pid+']';
-              callback(ret);
+              if(fs.existsSync(filename)) {
+                cl_setu.save(imgdata);
+                var ret = '[CQ:image,file=send/setu/' + imgdata.pid + ']';
+                callback(ret);
+              }else{
+                fs.readdir('../coolq-data/cq/data/image/send/setu/',function(err,files){
+                  var len = files.length;
+                  var rdfile = files[Math.floor(Math.random()*len)];
+                  var ret = '[CQ:image,file=send/setu/' + rdfile + ']';
+                  callback(ret);
+                })
+              }
             });
           }
         }
