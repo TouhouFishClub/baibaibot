@@ -81,7 +81,7 @@ function fflogs2Reply(content,userName,callback,cn){
 
   if(job=="Any"){
     url = 'https://'+host+'/zone/statistics/table/'+zid;
-    url = url +'/fightdps/'+bossid+'/'+hid+'/8/'+cid+'/10/1/14/0/Global/Any';
+    url = url +'/fightdps/'+bossid+'/'+hid+'/8/'+cid+'/0/1/14/0/Global/Any';
     url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps'
 
       }
