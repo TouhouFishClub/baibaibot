@@ -9,7 +9,7 @@ function calAttr(content,qq,callback){
     var nowwin = Math.round((rate*1.25+(100-rate))*100000)/100000;
     var nextwin = Math.round((nextrate*1.25+(100-nextrate))*100000)/100000;;
     var each = Math.round((nextwin-nowwin)/nowwin/(next-lastnum)*10000000)/1000;
-    var add = Math.round((rate*1.25+(100-rate))*10000/lastnum)/1000;
+    var add = Math.round(nowwin*10000/lastnum)/1000;
     callback('直击率:'+rate+"%"+"\n直击伤害:125%\n下一个阈值:"+next+"\n直击收益:"+nowwin+"%\n直击每点收益:"+add+"\n直击每点增益:"+each);
   }else if(content.startsWith("暴击")){
     var left = content.substring(2).trim();
@@ -23,7 +23,7 @@ function calAttr(content,qq,callback){
     var nowwin = Math.round((rate*cx/100+(100-rate))*100000)/100000;
     var nextwin = Math.round((nextrate*nextcx/100+(100-nextrate))*100000)/100000;;
     var each = Math.round((nextwin-nowwin)/nowwin/(next-lastnum)*10000000)/1000;
-    var add = Math.round((rate*cx/100+(100-rate))*10000/lastnum)/1000;
+    var add = Math.round(nowwin*10000/lastnum)/1000;
     callback('暴击率:'+rate+"%"+"\n暴击伤害:"+cx+"%\n下一个阈值:"+next+"\n暴击收益:"+nowwin+"%\n暴击每点收益:"+add+"\n暴击每点增益:"+each);
   }else if(content.startsWith("速度")||content.startsWith("技速")||content.startsWith("咏速")){
     var left = content.substring(2).trim();
