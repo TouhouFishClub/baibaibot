@@ -30,9 +30,11 @@ function calAttr(content,qq,callback){
     var num = parseInt(left);
     var rate = Math.floor(130*(num - 380)/ 3300 + 1000);
     var cx = Math.floor(( 2000 - rate ) * 2500 / 10000)/100;
-    var nextspeed = 2000-(cx-0.01)*100*10000/2500
-    var next = Math.ceil((nextspeed-1000)*3300/130+380)
-    callback('速度:'+rate+""+"\n2.5sGCD:"+cx+"\n下一个阈值:"+next);
+    var nextspeed = Math.ceil(2000-(cx-0.001)*100*10000/2500);
+    var next = Math.ceil((nextspeed-1000)*3300/130+380);
+    var lastspeed = Math.ceil(2000-(cx+0.009)*100*10000/2500);
+    var last = Math.ceil((lastspeed-1000)*3300/130+380);
+    callback('速度:'+rate+""+"\n2.5sGCD:"+cx+"s\n上一个阈值:"+last+"\n下一个阈值:"+next);
   }else if(content.startsWith("信念")){
     var left = content.substring(2).trim();
     var num = parseInt(left);

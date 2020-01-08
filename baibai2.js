@@ -29,6 +29,7 @@ const {pairReply}=require('./ai/pairAI');
 const {getKancollStaffTweet} = require('./ai/twitter');
 const {getShip} = require('./ai/kancolle/ship');
 const roulette = require('./ai/Roulette')
+const {copperReply} = require('./ai/games/card/copper');
 
 require('./ai/push');
 
@@ -899,10 +900,18 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
+
+  if(rcontent.startsWith("炼铜1")){
+    copperReply(rcontent,groupid,from,callback);
+    return;
+  }
+
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
     runsetu(rcontent,groupid,from,callback);
     return;
   }
+
+
 
   if(rcontent.startsWith("搜图")){
     googleImageSearch(content.substring(2),callback)
