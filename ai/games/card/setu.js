@@ -36,7 +36,7 @@ function runsetu(content,gid,qq,callback,port){
     var cc = cache[qq].c;
     if (now - then < cooldown) {
       if (cc >= maxtimes) {
-        callback('【' + username + '】的炼铜技能CD中!恢复时间：' + new Date(then + cooldown).toLocaleString());
+        callback('【' + '[CQ:at,qq='+qq+']' + '】的炼铜技能CD中!恢复时间：' + new Date(then + cooldown).toLocaleString());
         return;
       } else {
         cache[qq] = {ts: now, c: cc + 1};
