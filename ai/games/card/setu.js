@@ -10,16 +10,48 @@ var fs = require('fs');
 
 
 var udb;
+var cl_user;
+var cl_chat;
 initDB();
 function initDB(){
   MongoClient.connect(mongourl, function(err, db) {
     udb=db;
+    cl_user = db.collection('cl_user');
+    cl_chat = db.collection('cl_chat');
   });
 }
 
 
+var cache = {};
+function runsetu(content,gid,qq,callback,port){
+  var cooldown = 60000 * 10;
+  var maxtimes = 2;
+  if(port!=23334){
+    cooldown = 60000 * 10;
+    maxtimes = 10;
+  }
+  var now = new Date().getTime();
+  if (cache[qq]) {
+    var then = cache[qq].ts;
+    var cc = cache[qq].c;
+    if (now - then < cooldown) {
+      if (cc >= maxtimes) {
+        callback('【' + username + '】的炼铜技能CD中!恢复时间：' + new Date(then + cooldown).toLocaleString());
+        return;
+      } else {
+        cache[qq] = {ts: now, c: cc + 1};
+      }
+    } else {
+      cache[qq] = {ts: now, c: 1};
+    }
+  } else {
+    cache[qq] = {ts: now, c: 1};
+  }
 
-function runsetu(content,gid,qq,callback){
+
+
+
+
   var url = 'https://api.lolicon.app/setu/';
   request({
     headers:{
