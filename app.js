@@ -4,7 +4,7 @@ const http = require('http')
 const fs = require('fs')
 const path = require('path')
 const {handleMsg,reconnect,handle_msg_D2} = require('./baibai2');
-const {getChat,saveChat} = require('./ai/chat/collect');
+const {getChat,saveChat,getImage} = require('./ai/chat/collect');
 const {checkError} = require('./tools/textCheck');
 const basicAuth = require('basic-auth');
 const {handlef1} = require("./route/f1")
@@ -148,6 +148,19 @@ app.get('/image',function(req,res){
     }).pipe(res);
   }
 });
+
+app.get('/listimg',function(req,res){
+  var querydata = req.query;
+  var ts = querydata.ts;
+  var set = querydata.d;
+  var callback=function(r){
+    var ret = {d:r}
+    res.set("Access-Control-Allow-Origin", "*");
+    res.send(JSON.stringify(ret));
+  }
+  getImage(ts,set,callback);
+})
+
 
 app.get('/ngaImgPipe/*',function(req,res){
   var path = req.path;

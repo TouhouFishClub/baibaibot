@@ -65,9 +65,36 @@ function getChat(gid,ts,callback,order,qq,keyword){
   });
 }
 
+function getImage(ts,set,callback){
+  MongoClient.connect(mongourl, function(err, db) {
+    if(err){
+      console.log('mongo erro5re:!!!!!!!!!');
+      console.log(err)
+    }else {
+      var cl_stu = db.collection('cl_stu_'+set);
+      var query = {gid: parseInt(gid)};
+      var head = '[CQ:image,file=send/save/';
+
+      if (parseInt(ts) > 0) {
+        query._id={'$lt':head+ts};
+      }else{
+        query._id={'$lt':head+3};
+      }
+      console.log(query);
+      var wr = cl_stu.find(query).limit(100);
+      wr.toArray(function (err, arr) {
+        callback(arr);
+      })
+      db.close();
+    }
+  });
+}
+
+
 
 
 module.exports={
   saveChat,
-  getChat
+  getChat,
+  getImage
 }
