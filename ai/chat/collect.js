@@ -72,7 +72,7 @@ function getImage(ts,set,callback){
       console.log(err)
     }else {
       var cl_stu = db.collection('cl_stu_'+set);
-      var query = {gid: parseInt(gid)};
+      var query = {};
       var head = '[CQ:image,file=send/save/';
 
       if (parseInt(ts) > 0) {
@@ -81,7 +81,7 @@ function getImage(ts,set,callback){
         query._id={'$lt':head+3};
       }
       console.log(query);
-      var wr = cl_stu.find(query).limit(100);
+      var wr = cl_stu.find(query).sort({"_id":-1}).limit(100);
       wr.toArray(function (err, arr) {
         callback(arr);
       })
