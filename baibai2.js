@@ -539,7 +539,8 @@ function handleMsg_D(msgObj,botqq) {
       gidstr.startsWith("69738")||
       gidstr.startsWith("22169")||
       gidstr.startsWith("67096")||
-      gidstr.startsWith("61614")
+      gidstr.startsWith("61614")||
+      gidstr.startsWith("77670")
 
     )&&port==23334){
     return;
@@ -906,9 +907,13 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     copperReply(rcontent,groupid,from,callback);
     return;
   }
+  if(rcontent.startsWith("炼铜2")){
+    copperReply(rcontent,groupid,from,callback);
+    return;
+  }
 
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
-    runsetu(rcontent,groupid,from,callback);
+    runsetu(rcontent,groupid,from,callback,port);
     return;
   }
 
