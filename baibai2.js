@@ -536,10 +536,8 @@ function handleMsg_D(msgObj,botqq) {
       gidstr.startsWith("20570")||
       gidstr.startsWith("22169")||
       gidstr.startsWith("74633")||
-      gidstr.startsWith("69738")||
       gidstr.startsWith("22169")||
       gidstr.startsWith("67096")||
-      gidstr.startsWith("61614")||
       gidstr.startsWith("77670")
 
     )&&port==23334){
@@ -547,7 +545,9 @@ function handleMsg_D(msgObj,botqq) {
   }
   if((
       gidstr.startsWith("20570")||
-      gidstr.startsWith("22169")
+      gidstr.startsWith("22169")||
+      gidstr.startsWith("69738")||
+      gidstr.startsWith("61614")
 
     )&&port==25334){
     return;
