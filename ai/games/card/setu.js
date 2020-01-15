@@ -48,6 +48,15 @@ function runsetu(content,gid,qq,callback,port){
     cache[qq] = {ts: now, c: 1};
   }
 
+  if(!cache[gid]){
+    cache[gid]=1;
+  }else{
+    cache[gid]=cache[gid]+1;
+  }
+  if(cache[gid]==10||(cache[gid]%100)==99){
+    callback('炼铜引擎1:【炼铜】\n炼铜引擎2:【炼铜2】\n炼铜引擎3:【炼铜3】\n');
+  }
+
 
 
 
