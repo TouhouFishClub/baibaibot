@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var exec = require('child_process').exec;
 
-app.listen('10089', () => {
+app.listen('10099', () => {
   console.log('server started')
   console.log('http://localhost:10089')
 })
