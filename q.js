@@ -20,11 +20,11 @@ app.listen('10099', () => {
 
 app.get('/restart',function(req,res){
 
-  var user = basicAuth(reqp);
+  var user = basicAuth(req);
   var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
   if (check) {
-    resp.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-    resp.send(401);
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    res.send(401);
   }else{
     var cmdStr = './bstart.sh';
     exec(cmdStr, function(err,stdout,stderr){
