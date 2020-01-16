@@ -3,6 +3,7 @@ const app = express();
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
+const basicAuth = require('basic-auth');
 
 
 var bodyParser = require('body-parser');
@@ -18,15 +19,25 @@ app.listen('10099', () => {
 })
 
 app.get('/restart',function(req,res){
-  var cmdStr = './bstart.sh';
-  exec(cmdStr, function(err,stdout,stderr){
-    if(err) {
-      console.log('get weather api error:'+stderr);
-    } else {
 
-    }
-  });
-  res.send('ok3');
+  var user = basicAuth(reqp);
+  var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
+  if (check) {
+    resp.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    resp.send(401);
+  }else{
+    var cmdStr = './bstart.sh';
+    exec(cmdStr, function(err,stdout,stderr){
+      if(err) {
+        console.log('get weather api error:'+stderr);
+      } else {
+
+      }
+    });
+    res.send('ok3');
+  }
+
+
 })
 
 
