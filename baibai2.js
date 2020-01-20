@@ -663,7 +663,6 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ret = ret + "游戏导航：【玩游戏】\n";
     ret = ret + "最终幻想XIV导航【ffxiv】\n";
     ret = ret + "明日方舟导航【ark】\n";
-    ret = ret + "少女前线导航【gf】\n";
     ret = ret + "洛奇导航【opt】\n"
     ret = ret + "舰队collection导航【'e】\n"
     ret = ret + "其他/意见或建议/定制功能请到\n"
