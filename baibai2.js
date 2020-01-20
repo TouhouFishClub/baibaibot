@@ -319,6 +319,10 @@ function addSendQueue(groupid,msg,botqq){
     }
   }
 
+  if(port!=23334){
+    vip = vip +1;
+  }
+
   n = msg.indexOf('CQ:record')
   n1 = msg.indexOf("url=http");
   if(n1==-1&&n>=0&&port!=23334){
