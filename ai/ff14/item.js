@@ -76,7 +76,7 @@ function searchFF14Item_d(content,UserName,callback){
     content=content.substring(0,content.length-1);
   }
   var options = {
-    host: 'cdn.huijiwiki.com',
+    host: 'www.huijiwiki.com',
     port: 80,
     path: '/ff14/api.php?format=json&action=parse&disablelimitreport=true&prop=text&title=ItemSearch&text=%7B%7BItemSearch%7Cname='+encodeURIComponent(content)+'%7C%7D%7D',
     method: 'GET',
@@ -194,7 +194,7 @@ function searchFF14ItemByID(itemid,username,callback,detailresdata){
     }
   }
   var options = {
-    host: 'cdn.huijiwiki.com',
+    host: 'www.huijiwiki.com',
     port: 80,
     path: '/ff14/api.php?format=json&action=parse&disablelimitreport=true&prop=text&text=%7B%7BItemTooltip%7Cid='+itemid+'%7D%7D',
     method: 'GET',
