@@ -18,7 +18,7 @@ function copperReply(content,gid,qq,callback,nextfolder){
       if(rdfile.endsWith(".txt")){
         copperReply(content,gid,qq,callback,nextfolder)
       }else{
-        var ret = '[CQ:image,file=send/copper'+sets+nextfolder+ rdfile + ']';
+        var ret = '【】\n[CQ:image,file=send/copper'+sets+nextfolder+ rdfile + ']';
         callback(ret);
       }
     }
