@@ -107,7 +107,7 @@ function runsetu(content,gid,qq,callback,port){
                   fs.readdir('../coolq-data/cq/data/image/send/setu/',function(err,files){
                     var len = files.length;
                     var rdfile = files[Math.floor(Math.random()*len)];
-                    var ret = '[CQ:image,file=send/setu/' + rdfile + ']';
+                    var ret = '【' + '[CQ:at,qq='+qq+']' + '】\n'+'[CQ:image,file=send/setu/' + rdfile + ']';
                     callback(ret);
                   })
                 }
