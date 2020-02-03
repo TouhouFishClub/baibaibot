@@ -127,13 +127,13 @@ function runsetu(content,gid,qq,callback,port){
             imgreq.on('close',function(){
               if(fs.existsSync(filename)) {
                 cl_setu.save(imgdata);
-                var ret = '[CQ:image,file=send/setu/' + imgdata.pid + ']';
+                var ret = '【' + '[CQ:at,qq='+qq+']' + '】'+'[CQ:image,file=send/setu/' + imgdata.pid + ']';
                 callback(ret);
               }else{
                 fs.readdir('../coolq-data/cq/data/image/send/setu/',function(err,files){
                   var len = files.length;
                   var rdfile = files[Math.floor(Math.random()*len)];
-                  var ret = '[CQ:image,file=send/setu/' + rdfile + ']';
+                  var ret = '【' + '[CQ:at,qq='+qq+']' + '】'+'[CQ:image,file=send/setu/' + rdfile + ']';
                   callback(ret);
                 })
               }
