@@ -15,7 +15,7 @@ module.exports = function(qq, content, callback){
   for(var i = 0; i < all_data.length; i++){
     let akc = all_data[i]
     // console.log(sp[1])
-    if(sp[0] && sp[0].trim() != '' && new RegExp(sp[0], 'i').test(akc.name)){
+    if(sp[0] && sp[0].trim() != '' && (new RegExp(sp[0], 'i').test(akc.name) || sp[0].toLowerCase() == akc.appellation.toLowerCase())){
       flag = false
       chTmp.push({
         name: akc.name,
