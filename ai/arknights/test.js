@@ -3,15 +3,15 @@
 // const aks = require('./arkNightsCharacter')
 // const akk = require('./arkNightsSkill')
 // const akl = require('./arkNightsRecruitLimit')
-// const {baiduocr} = require('../image/baiduocr');
+const {baiduocr} = require('../image/baiduocr');
 // const akb = require('./arkNightsBuildingTheme')
-const akc = require('./arkNightChallenge')
+// const akc = require('./arkNightChallenge')
 const c = m => {
   console.log('===== output =====')
   console.log(m)
 }
 
-akc('213', c)
+// akc('213', c)
 // akb('111', '陈的办公室', c)
 
 // console.log(akk('skchr_plosis_2', '3'))
@@ -37,7 +37,7 @@ akc('213', c)
 // ak(123132, '高级资深处男', c)
 // ak('[CQ:image,file=9A38768CEBF470A313C6A4B7441B9242.png,url=https://gchat.qpic.cn/gchatpic_new/912008974/549823679-3005667254-9A38768CEBF470A313C6A4B7441B9242/0?vuin=2375373419&term=2]', c)
 // ak('[CQ:image,file=200EB4D8FBB1A7B34FA47E4240C895BA.png,url=https://gchat.qpic.cn/gchatpic_new/771210053/549823679-2274281053-200EB4D8FBB1A7B34FA47E4240C895BA/0?vuin=2375373419&term=2][CQ:image,file=200EB4D8FBB1A7B34FA47E4240C895BA.png,url=https://gchat.qpic.cn/gchatpic_new/771210053/549823679-2274281053-200EB4D8FBB1A7B34FA47E4240C895BA/0?vuin=2375373419&term=2]', c)
-// baiduocr('https://gchat.qpic.cn/gchatpic_new/540540678/577587780-3031794996-46C9FF58020E58EDDAABE149F058591C/0?vuin=2375373419&term=2', d => {
-//   console.log(d.split('\n'))
-// })
+baiduocr('https://gchat.qpic.cn/gchatpic_new/799018865/720801895-2187320775-2F46694E65760AE285D40837BF1D1525/0?term=2', d => {
+  console.log(d.replace(/干员/g, '\n').split('\n').filter(x => x.trim() != ''))
+})
 

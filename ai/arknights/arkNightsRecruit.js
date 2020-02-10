@@ -99,7 +99,7 @@ module.exports = function(qq, content, callback){
         // console.log(sp[1])
         baiduocr(sp[1], d => {
           console.log('----')
-          arkNight(qq, checkTags(d.split('\n').map(t => simMap(t))).join(' '), callback)
+          arkNight(qq, checkTags(d.replace(/干员/g, '\n').split('\n').filter(x => x.trim() != '').map(t => simMap(t))).join(' '), callback)
         })
       }
     })
