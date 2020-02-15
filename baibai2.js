@@ -90,6 +90,7 @@ require('./ai/ff14/activity')
 initWS();
 initWS2();
 initWS3();
+initWS4();
 
 var wsonline = false;
 function initWS(){
@@ -177,6 +178,35 @@ function initWS3(){
   });
   client.connect('ws://192.168.17.52:25335/event');
 }
+
+function initWS4(){
+  var WebSocketClient = require('websocket').client;
+
+  var client = new WebSocketClient();
+
+  client.on('connectFailed', function(error) {
+    console.log('Connect Error: ' + error.toString());
+  });
+
+  client.on('connect', function(connection) {
+    wsonline = true;
+    console.log('WebSocket Client Connected');
+    connection.on('error', function(error) {
+      console.log("Connection Error: " + error.toString());
+    });
+    connection.on('close', function() {
+      wsonline=false;
+      console.log('echo-protocol Connection Closed');
+    });
+    connection.on('message', function(message) {
+      if (message.type === 'utf8') {
+        handleMsg(JSON.parse(message.utf8Data),4)
+      }
+    });
+  });
+  client.connect('ws://192.168.17.52:26335/event');
+}
+
 
 
 function reconnect(){
@@ -271,6 +301,8 @@ function addSendQueue(groupid,msg,botqq){
     port = 24334;
   }else if(botqq==3){
     port = 25334;
+  }else if(botqq==4){
+    port = 26334;
   }else{
     port = 23334;
   }
@@ -284,6 +316,8 @@ function addSendQueue(groupid,msg,botqq){
       npath="wcq";
     }else if(port == 25334){
       npath="ecq";
+    }else if(port == 26334){
+      npath="4cq";
     }else{
       npath="wcq";
     }
@@ -531,6 +565,8 @@ function handleMsg_D(msgObj,botqq) {
     port = 24334;
   }else if(botqq==3){
     port = 25334;
+  }else if(botqq==4){
+    port = 26334;
   }else{
     port = 23334;
   }
