@@ -1010,7 +1010,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   let co = content.indexOf('疫情')
-  if(co >= 0 && co <= 6) {
+  if(co >= 0 && co <= 6 && content.length - co == 2) {
     cov(content.substring(0, co), callback)
   }
 
