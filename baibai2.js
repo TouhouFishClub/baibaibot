@@ -86,6 +86,8 @@ const { wfp } = require('./ai/worldflipper/BossBattlePushing')
 const {calAttr} = require('./ai/ff14/attr');
 require('./ai/ff14/activity')
 
+const cov = require('./ai/CoV2020')
+
 
 initWS();
 initWS2();
@@ -1005,6 +1007,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       handleFF14weatherReply(content,callback);
       return;
     }
+  }
+
+  let co = content.indexOf('疫情')
+  if(co >= 0 && co <= 6) {
+    cov(content.substring(0, co), callback)
   }
 
   if(n>1&&n<10&&rcontent.length==n+2){
