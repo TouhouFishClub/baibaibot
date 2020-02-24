@@ -1,4 +1,5 @@
 const http = require('http')
+let cityMap = {}
 
 module.exports = function(content, callback) {
   http.get({
@@ -14,6 +15,14 @@ module.exports = function(content, callback) {
     res.on('data', data => chunk += data)
     res.on('end', () => {
       let allData = JSON.parse(chunk), str = ''
+      /* format city */
+      if(Object.keys(cityMap).length == 0) {
+        allData.data.list.forEach(el => {
+          el.city.forEach(ci => {
+            cityMap[ci.name] = el.name
+          })
+        })
+      }
       if(content.trim()) {
         let area = allData.data.list.find(ele => new RegExp(content).test(ele.name))
         if(area) {
@@ -27,7 +36,24 @@ module.exports = function(content, callback) {
           str += `累计治愈：${area.cureNum}(${area.adddaily.cureadd.trim()})\n`
           callback(str)
         } else {
-          callback(`未找到相关地名，仅支持省、直辖市、特别行政区`)
+          if(cityMap[content]) {
+            let city = allData.data.list.find(ele => ele.name == cityMap[content]).city.find(ci => ci.name == content)
+            if(city) {
+              str += `(${cityMap[content]} - ${city.name})`
+              str += `${allData.data.times}\n`
+              str += `更新时间：${allData.data.mtime}\n`
+              str += `累计确诊：${city.conNum}\n`
+              str += `现有确诊：${city.conNum - city.cureNum - city.deathNum}\n`
+              str += `现有疑似：${city.susNum}\n`
+              str += `累计死亡：${city.deathNum}\n`
+              str += `累计治愈：${city.cureNum}\n`
+              callback(str)
+            } else {
+              callback(`未找到相关地名，仅省、直辖市、特别行政区支持模糊搜索`)
+            }
+          } else {
+            callback(`未找到相关地名，仅省、直辖市、特别行政区支持模糊搜索`)
+          }
         }
       } else {
         str += `(全国)`

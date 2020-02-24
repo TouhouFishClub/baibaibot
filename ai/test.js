@@ -4,4 +4,4 @@ const c = m => {
   console.log(m)
 }
 
-akc('日本', c)
+akc('朝阳', c)
