@@ -954,6 +954,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       return;
     }
     if(rcontent.startsWith("炼铜2")){
+      if(groupid == 720801895) return
       copperReply(rcontent,groupid,from,callback);
       return;
     }
