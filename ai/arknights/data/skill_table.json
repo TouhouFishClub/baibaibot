@@ -28510,6 +28510,233 @@
       }
     ]
   },
+  "skchr_leizi_2": {
+    "skillId": "skchr_leizi_2",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "初雷",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击在跳跃时<@ba.vup>不再降低伤害</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 40,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_leizi_2",
+        "duration": 30.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.6
+          }
+        ]
+      },
+      {
+        "name": "初雷",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击在跳跃时<@ba.vup>不再降低伤害</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 41,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_leizi_2",
+        "duration": 30.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.65
+          }
+        ]
+      },
+      {
+        "name": "初雷",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击在跳跃时<@ba.vup>不再降低伤害</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 42,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_leizi_2",
+        "duration": 30.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.7
+          }
+        ]
+      },
+      {
+        "name": "初雷",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击在跳跃时<@ba.vup>不再降低伤害</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 43,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_leizi_2",
+        "duration": 31.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.8
+          }
+        ]
+      },
+      {
+        "name": "初雷",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击在跳跃时<@ba.vup>不再降低伤害</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 44,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_leizi_2",
+        "duration": 31.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.85
+          }
+        ]
+      },
+      {
+        "name": "初雷",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击在跳跃时<@ba.vup>不再降低伤害</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 45,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_leizi_2",
+        "duration": 31.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.9
+          }
+        ]
+      },
+      {
+        "name": "初雷",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击在跳跃时<@ba.vup>不再降低伤害</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 46,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_leizi_2",
+        "duration": 32.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "初雷",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击在跳跃时<@ba.vup>不再降低伤害</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 47,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_leizi_2",
+        "duration": 33.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.15
+          }
+        ]
+      },
+      {
+        "name": "初雷",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击在跳跃时<@ba.vup>不再降低伤害</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 48,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_leizi_2",
+        "duration": 34.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.3
+          }
+        ]
+      },
+      {
+        "name": "初雷",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击在跳跃时<@ba.vup>不再降低伤害</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 50,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_leizi_2",
+        "duration": 35.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.5
+          }
+        ]
+      }
+    ]
+  },
   "skchr_otter_1": {
     "skillId": "skchr_otter_1",
     "iconId": null,
@@ -45765,7 +45992,7 @@
       {
         "name": "灼地",
         "rangeId": null,
-        "description": "对攻击范围内的敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
+        "description": "对攻击范围内的地面敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
         "skillType": 1,
         "spData": {
           "spType": 1,
@@ -45795,7 +46022,7 @@
       {
         "name": "灼地",
         "rangeId": null,
-        "description": "对攻击范围内的敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
+        "description": "对攻击范围内的地面敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
         "skillType": 1,
         "spData": {
           "spType": 1,
@@ -45825,7 +46052,7 @@
       {
         "name": "灼地",
         "rangeId": null,
-        "description": "对攻击范围内的敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
+        "description": "对攻击范围内的地面敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
         "skillType": 1,
         "spData": {
           "spType": 1,
@@ -45855,7 +46082,7 @@
       {
         "name": "灼地",
         "rangeId": null,
-        "description": "对攻击范围内的敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
+        "description": "对攻击范围内的地面敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
         "skillType": 1,
         "spData": {
           "spType": 1,
@@ -45885,7 +46112,7 @@
       {
         "name": "灼地",
         "rangeId": null,
-        "description": "对攻击范围内的敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
+        "description": "对攻击范围内的地面敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
         "skillType": 1,
         "spData": {
           "spType": 1,
@@ -45915,7 +46142,7 @@
       {
         "name": "灼地",
         "rangeId": null,
-        "description": "对攻击范围内的敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
+        "description": "对攻击范围内的地面敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
         "skillType": 1,
         "spData": {
           "spType": 1,
@@ -45945,7 +46172,7 @@
       {
         "name": "灼地",
         "rangeId": null,
-        "description": "对攻击范围内的敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
+        "description": "对攻击范围内的地面敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
         "skillType": 1,
         "spData": {
           "spType": 1,
@@ -45975,7 +46202,7 @@
       {
         "name": "灼地",
         "rangeId": null,
-        "description": "对攻击范围内的敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
+        "description": "对攻击范围内的地面敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
         "skillType": 1,
         "spData": {
           "spType": 1,
@@ -46005,7 +46232,7 @@
       {
         "name": "灼地",
         "rangeId": null,
-        "description": "对攻击范围内的敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
+        "description": "对攻击范围内的地面敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
         "skillType": 1,
         "spData": {
           "spType": 1,
@@ -46035,7 +46262,7 @@
       {
         "name": "灼地",
         "rangeId": null,
-        "description": "对攻击范围内的敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
+        "description": "对攻击范围内的地面敌人造成每秒相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，命中目标的法术抗性<@ba.vup>-{-magic_resistance}</>\\n<@ba.rem>自己每秒损失最大生命值的{hp_ratio:0%}</>",
         "skillType": 1,
         "spData": {
           "spType": 1,
@@ -47674,6 +47901,807 @@
           {
             "key": "attack@max_target",
             "value": 6.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_cerber_1": {
+    "skillId": "skchr_cerber_1",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "“很冰的斧”",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，优先攻击没有被阻挡的目标，并令目标束缚<@ba.vup>{duration}</>秒\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 8,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.5
+          },
+          {
+            "key": "duration",
+            "value": 1.5
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“很冰的斧”",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，优先攻击没有被阻挡的目标，并令目标束缚<@ba.vup>{duration}</>秒\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 8,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.55
+          },
+          {
+            "key": "duration",
+            "value": 1.5
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“很冰的斧”",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，优先攻击没有被阻挡的目标，并令目标束缚<@ba.vup>{duration}</>秒\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 8,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.6
+          },
+          {
+            "key": "duration",
+            "value": 1.5
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“很冰的斧”",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，优先攻击没有被阻挡的目标，并令目标束缚<@ba.vup>{duration}</>秒\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 7,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.65
+          },
+          {
+            "key": "duration",
+            "value": 2.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“很冰的斧”",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，优先攻击没有被阻挡的目标，并令目标束缚<@ba.vup>{duration}</>秒\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 7,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.7
+          },
+          {
+            "key": "duration",
+            "value": 2.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“很冰的斧”",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，优先攻击没有被阻挡的目标，并令目标束缚<@ba.vup>{duration}</>秒\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 7,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.75
+          },
+          {
+            "key": "duration",
+            "value": 2.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“很冰的斧”",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，优先攻击没有被阻挡的目标，并令目标束缚<@ba.vup>{duration}</>秒\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 2,
+          "spCost": 7,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.8
+          },
+          {
+            "key": "duration",
+            "value": 2.5
+          },
+          {
+            "key": "cnt",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "“很冰的斧”",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，优先攻击没有被阻挡的目标，并令目标束缚<@ba.vup>{duration}</>秒\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 2,
+          "spCost": 7,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.9
+          },
+          {
+            "key": "duration",
+            "value": 2.5
+          },
+          {
+            "key": "cnt",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "“很冰的斧”",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，优先攻击没有被阻挡的目标，并令目标束缚<@ba.vup>{duration}</>秒\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 3,
+          "spCost": 7,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.0
+          },
+          {
+            "key": "duration",
+            "value": 2.5
+          },
+          {
+            "key": "cnt",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "“很冰的斧”",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，优先攻击没有被阻挡的目标，并令目标束缚<@ba.vup>{duration}</>秒\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 3,
+          "spCost": 6,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.1
+          },
+          {
+            "key": "duration",
+            "value": 3.0
+          },
+          {
+            "key": "cnt",
+            "value": 3.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_cerber_2": {
+    "skillId": "skchr_cerber_2",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "“很热的刀”",
+        "rangeId": null,
+        "description": "攻击间隔<@ba.vup>小幅度缩短</>，优先攻击防御力最高的目标",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 50,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_2",
+        "duration": 30.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          }
+        ]
+      },
+      {
+        "name": "“很热的刀”",
+        "rangeId": null,
+        "description": "攻击间隔<@ba.vup>小幅度缩短</>，优先攻击防御力最高的目标",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 49,
+          "initSp": 11,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_2",
+        "duration": 31.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          }
+        ]
+      },
+      {
+        "name": "“很热的刀”",
+        "rangeId": null,
+        "description": "攻击间隔<@ba.vup>小幅度缩短</>，优先攻击防御力最高的目标",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 48,
+          "initSp": 12,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_2",
+        "duration": 32.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          }
+        ]
+      },
+      {
+        "name": "“很热的刀”",
+        "rangeId": null,
+        "description": "攻击间隔<@ba.vup>缩短</>，优先攻击防御力最高的目标",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 47,
+          "initSp": 13,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_2",
+        "duration": 33.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.6
+          }
+        ]
+      },
+      {
+        "name": "“很热的刀”",
+        "rangeId": null,
+        "description": "攻击间隔<@ba.vup>缩短</>，优先攻击防御力最高的目标",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 46,
+          "initSp": 14,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_2",
+        "duration": 34.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.6
+          }
+        ]
+      },
+      {
+        "name": "“很热的刀”",
+        "rangeId": null,
+        "description": "攻击间隔<@ba.vup>缩短</>，优先攻击防御力最高的目标",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 45,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_2",
+        "duration": 35.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.6
+          }
+        ]
+      },
+      {
+        "name": "“很热的刀”",
+        "rangeId": null,
+        "description": "攻击间隔<@ba.vup>较大幅度缩短</>，优先攻击防御力最高的目标",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 44,
+          "initSp": 16,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_2",
+        "duration": 36.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.4
+          }
+        ]
+      },
+      {
+        "name": "“很热的刀”",
+        "rangeId": null,
+        "description": "攻击间隔<@ba.vup>大幅度缩短</>，优先攻击防御力最高的目标",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 43,
+          "initSp": 18,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_2",
+        "duration": 37.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.36
+          }
+        ]
+      },
+      {
+        "name": "“很热的刀”",
+        "rangeId": null,
+        "description": "攻击间隔<@ba.vup>大幅度缩短</>，优先攻击防御力最高的目标",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 42,
+          "initSp": 20,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_2",
+        "duration": 38.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.36
+          }
+        ]
+      },
+      {
+        "name": "“很热的刀”",
+        "rangeId": null,
+        "description": "攻击间隔<@ba.vup>超大幅度缩短</>，优先攻击防御力最高的目标",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 40,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_2",
+        "duration": 40.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.33
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_cerber_3": {
+    "skillId": "skchr_cerber_3",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "“很重的枪”",
+        "rangeId": "3-3",
+        "description": "攻击范围<@ba.vup>扩大</>，攻击力<@ba.vup>+{atk:0%}</>，伤害类型变为<@ba.vup>物理</>，优先攻击防御力最低的目标，并令其失去特殊能力<@ba.vup>{attack@silence}</>秒",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 35,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_3",
+        "duration": 55.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.0
+          },
+          {
+            "key": "attack@silence",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "“很重的枪”",
+        "rangeId": "3-3",
+        "description": "攻击范围<@ba.vup>扩大</>，攻击力<@ba.vup>+{atk:0%}</>，伤害类型变为<@ba.vup>物理</>，优先攻击防御力最低的目标，并令其失去特殊能力<@ba.vup>{attack@silence}</>秒",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 37,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_3",
+        "duration": 55.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.1
+          },
+          {
+            "key": "attack@silence",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "“很重的枪”",
+        "rangeId": "3-3",
+        "description": "攻击范围<@ba.vup>扩大</>，攻击力<@ba.vup>+{atk:0%}</>，伤害类型变为<@ba.vup>物理</>，优先攻击防御力最低的目标，并令其失去特殊能力<@ba.vup>{attack@silence}</>秒",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 39,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_3",
+        "duration": 55.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.2
+          },
+          {
+            "key": "attack@silence",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "“很重的枪”",
+        "rangeId": "3-3",
+        "description": "攻击范围<@ba.vup>扩大</>，攻击力<@ba.vup>+{atk:0%}</>，伤害类型变为<@ba.vup>物理</>，优先攻击防御力最低的目标，并令其失去特殊能力<@ba.vup>{attack@silence}</>秒",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 41,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_3",
+        "duration": 56.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.3
+          },
+          {
+            "key": "attack@silence",
+            "value": 2.5
+          }
+        ]
+      },
+      {
+        "name": "“很重的枪”",
+        "rangeId": "3-3",
+        "description": "攻击范围<@ba.vup>扩大</>，攻击力<@ba.vup>+{atk:0%}</>，伤害类型变为<@ba.vup>物理</>，优先攻击防御力最低的目标，并令其失去特殊能力<@ba.vup>{attack@silence}</>秒",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 43,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_3",
+        "duration": 56.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.4
+          },
+          {
+            "key": "attack@silence",
+            "value": 2.5
+          }
+        ]
+      },
+      {
+        "name": "“很重的枪”",
+        "rangeId": "3-3",
+        "description": "攻击范围<@ba.vup>扩大</>，攻击力<@ba.vup>+{atk:0%}</>，伤害类型变为<@ba.vup>物理</>，优先攻击防御力最低的目标，并令其失去特殊能力<@ba.vup>{attack@silence}</>秒",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 45,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_3",
+        "duration": 56.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.5
+          },
+          {
+            "key": "attack@silence",
+            "value": 2.5
+          }
+        ]
+      },
+      {
+        "name": "“很重的枪”",
+        "rangeId": "3-3",
+        "description": "攻击范围<@ba.vup>扩大</>，攻击力<@ba.vup>+{atk:0%}</>，伤害类型变为<@ba.vup>物理</>，优先攻击防御力最低的目标，并令其失去特殊能力<@ba.vup>{attack@silence}</>秒",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 47,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_3",
+        "duration": 57.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.6
+          },
+          {
+            "key": "attack@silence",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "“很重的枪”",
+        "rangeId": "3-3",
+        "description": "攻击范围<@ba.vup>扩大</>，攻击力<@ba.vup>+{atk:0%}</>，伤害类型变为<@ba.vup>物理</>，优先攻击防御力最低的目标，并令其失去特殊能力<@ba.vup>{attack@silence}</>秒",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 49,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_3",
+        "duration": 58.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.75
+          },
+          {
+            "key": "attack@silence",
+            "value": 3.5
+          }
+        ]
+      },
+      {
+        "name": "“很重的枪”",
+        "rangeId": "3-3",
+        "description": "攻击范围<@ba.vup>扩大</>，攻击力<@ba.vup>+{atk:0%}</>，伤害类型变为<@ba.vup>物理</>，优先攻击防御力最低的目标，并令其失去特殊能力<@ba.vup>{attack@silence}</>秒",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 52,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_3",
+        "duration": 59.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 1.9
+          },
+          {
+            "key": "attack@silence",
+            "value": 4.0
+          }
+        ]
+      },
+      {
+        "name": "“很重的枪”",
+        "rangeId": "3-3",
+        "description": "攻击范围<@ba.vup>扩大</>，攻击力<@ba.vup>+{atk:0%}</>，伤害类型变为<@ba.vup>物理</>，优先攻击防御力最低的目标，并令其失去特殊能力<@ba.vup>{attack@silence}</>秒",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 80,
+          "initSp": 55,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_cerber_3",
+        "duration": 60.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 2.1
+          },
+          {
+            "key": "attack@silence",
+            "value": 5.0
           }
         ]
       }
@@ -49786,7 +50814,7 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
+          "spCost": 30,
           "initSp": 15,
           "increment": 1.0
         },
@@ -49808,7 +50836,7 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
+          "spCost": 30,
           "initSp": 15,
           "increment": 1.0
         },
@@ -49830,7 +50858,7 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
+          "spCost": 30,
           "initSp": 15,
           "increment": 1.0
         },
@@ -49852,8 +50880,8 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
-          "initSp": 15,
+          "spCost": 30,
+          "initSp": 16,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_1",
@@ -49874,8 +50902,8 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
-          "initSp": 15,
+          "spCost": 30,
+          "initSp": 16,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_1",
@@ -49896,8 +50924,8 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
-          "initSp": 15,
+          "spCost": 30,
+          "initSp": 16,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_1",
@@ -49918,8 +50946,8 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
-          "initSp": 15,
+          "spCost": 30,
+          "initSp": 17,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_1",
@@ -49940,8 +50968,8 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
-          "initSp": 15,
+          "spCost": 30,
+          "initSp": 18,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_1",
@@ -49962,8 +50990,8 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
-          "initSp": 15,
+          "spCost": 30,
+          "initSp": 19,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_1",
@@ -49984,8 +51012,8 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
-          "initSp": 15,
+          "spCost": 30,
+          "initSp": 20,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_1",
@@ -50014,11 +51042,11 @@
           "levelUpCost": null,
           "maxChargeTime": 1,
           "spCost": 40,
-          "initSp": 15,
+          "initSp": 20,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_2",
-        "duration": 25.0,
+        "duration": 30.0,
         "blackboard": [
           {
             "key": "max_hp",
@@ -50044,11 +51072,11 @@
           "levelUpCost": null,
           "maxChargeTime": 1,
           "spCost": 39,
-          "initSp": 15,
+          "initSp": 20,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_2",
-        "duration": 25.0,
+        "duration": 30.0,
         "blackboard": [
           {
             "key": "max_hp",
@@ -50074,11 +51102,11 @@
           "levelUpCost": null,
           "maxChargeTime": 1,
           "spCost": 38,
-          "initSp": 15,
+          "initSp": 20,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_2",
-        "duration": 25.0,
+        "duration": 30.0,
         "blackboard": [
           {
             "key": "max_hp",
@@ -50104,11 +51132,11 @@
           "levelUpCost": null,
           "maxChargeTime": 1,
           "spCost": 37,
-          "initSp": 15,
+          "initSp": 21,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_2",
-        "duration": 25.0,
+        "duration": 30.0,
         "blackboard": [
           {
             "key": "max_hp",
@@ -50134,11 +51162,11 @@
           "levelUpCost": null,
           "maxChargeTime": 1,
           "spCost": 36,
-          "initSp": 15,
+          "initSp": 21,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_2",
-        "duration": 25.0,
+        "duration": 30.0,
         "blackboard": [
           {
             "key": "max_hp",
@@ -50164,11 +51192,11 @@
           "levelUpCost": null,
           "maxChargeTime": 1,
           "spCost": 35,
-          "initSp": 15,
+          "initSp": 21,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_2",
-        "duration": 25.0,
+        "duration": 30.0,
         "blackboard": [
           {
             "key": "max_hp",
@@ -50194,11 +51222,11 @@
           "levelUpCost": null,
           "maxChargeTime": 1,
           "spCost": 34,
-          "initSp": 15,
+          "initSp": 22,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_2",
-        "duration": 25.0,
+        "duration": 30.0,
         "blackboard": [
           {
             "key": "max_hp",
@@ -50224,11 +51252,11 @@
           "levelUpCost": null,
           "maxChargeTime": 1,
           "spCost": 33,
-          "initSp": 15,
+          "initSp": 23,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_2",
-        "duration": 25.0,
+        "duration": 30.0,
         "blackboard": [
           {
             "key": "max_hp",
@@ -50254,11 +51282,11 @@
           "levelUpCost": null,
           "maxChargeTime": 1,
           "spCost": 32,
-          "initSp": 15,
+          "initSp": 24,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_2",
-        "duration": 25.0,
+        "duration": 30.0,
         "blackboard": [
           {
             "key": "max_hp",
@@ -50284,11 +51312,11 @@
           "levelUpCost": null,
           "maxChargeTime": 1,
           "spCost": 30,
-          "initSp": 15,
+          "initSp": 25,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_2",
-        "duration": 25.0,
+        "duration": 30.0,
         "blackboard": [
           {
             "key": "max_hp",
@@ -50329,11 +51357,11 @@
         "blackboard": [
           {
             "key": "atk",
-            "value": 0.3
+            "value": 0.25
           },
           {
             "key": "attack_speed",
-            "value": 15.0
+            "value": 25.0
           },
           {
             "key": "damage",
@@ -50359,11 +51387,11 @@
         "blackboard": [
           {
             "key": "atk",
-            "value": 0.3
+            "value": 0.25
           },
           {
             "key": "attack_speed",
-            "value": 15.0
+            "value": 25.0
           },
           {
             "key": "damage",
@@ -50389,127 +51417,7 @@
         "blackboard": [
           {
             "key": "atk",
-            "value": 0.3
-          },
-          {
-            "key": "attack_speed",
-            "value": 15.0
-          },
-          {
-            "key": "damage",
-            "value": 500.0
-          }
-        ]
-      },
-      {
-        "name": "爆发剂·榴莲味",
-        "rangeId": null,
-        "description": "立即对前方最近（优先选取正前方）的一名友方单位用<@ba.vup>{damage}</>的攻击力攻击<@ba.vup>15</>次，之后持续时间内使自身和目标攻击力<@ba.vup>+{atk:0%}</>，攻击速度<@ba.vup>+{attack_speed}</>",
-        "skillType": 1,
-        "spData": {
-          "spType": 1,
-          "levelUpCost": null,
-          "maxChargeTime": 1,
-          "spCost": 44,
-          "initSp": 25,
-          "increment": 1.0
-        },
-        "prefabId": "skchr_haak_3",
-        "duration": 20.0,
-        "blackboard": [
-          {
-            "key": "atk",
-            "value": 0.35
-          },
-          {
-            "key": "attack_speed",
-            "value": 20.0
-          },
-          {
-            "key": "damage",
-            "value": 500.0
-          }
-        ]
-      },
-      {
-        "name": "爆发剂·榴莲味",
-        "rangeId": null,
-        "description": "立即对前方最近（优先选取正前方）的一名友方单位用<@ba.vup>{damage}</>的攻击力攻击<@ba.vup>15</>次，之后持续时间内使自身和目标攻击力<@ba.vup>+{atk:0%}</>，攻击速度<@ba.vup>+{attack_speed}</>",
-        "skillType": 1,
-        "spData": {
-          "spType": 1,
-          "levelUpCost": null,
-          "maxChargeTime": 1,
-          "spCost": 43,
-          "initSp": 25,
-          "increment": 1.0
-        },
-        "prefabId": "skchr_haak_3",
-        "duration": 20.0,
-        "blackboard": [
-          {
-            "key": "atk",
-            "value": 0.35
-          },
-          {
-            "key": "attack_speed",
-            "value": 20.0
-          },
-          {
-            "key": "damage",
-            "value": 500.0
-          }
-        ]
-      },
-      {
-        "name": "爆发剂·榴莲味",
-        "rangeId": null,
-        "description": "立即对前方最近（优先选取正前方）的一名友方单位用<@ba.vup>{damage}</>的攻击力攻击<@ba.vup>15</>次，之后持续时间内使自身和目标攻击力<@ba.vup>+{atk:0%}</>，攻击速度<@ba.vup>+{attack_speed}</>",
-        "skillType": 1,
-        "spData": {
-          "spType": 1,
-          "levelUpCost": null,
-          "maxChargeTime": 1,
-          "spCost": 42,
-          "initSp": 25,
-          "increment": 1.0
-        },
-        "prefabId": "skchr_haak_3",
-        "duration": 20.0,
-        "blackboard": [
-          {
-            "key": "atk",
-            "value": 0.35
-          },
-          {
-            "key": "attack_speed",
-            "value": 20.0
-          },
-          {
-            "key": "damage",
-            "value": 500.0
-          }
-        ]
-      },
-      {
-        "name": "爆发剂·榴莲味",
-        "rangeId": null,
-        "description": "立即对前方最近（优先选取正前方）的一名友方单位用<@ba.vup>{damage}</>的攻击力攻击<@ba.vup>15</>次，之后持续时间内使自身和目标攻击力<@ba.vup>+{atk:0%}</>，攻击速度<@ba.vup>+{attack_speed}</>",
-        "skillType": 1,
-        "spData": {
-          "spType": 1,
-          "levelUpCost": null,
-          "maxChargeTime": 1,
-          "spCost": 41,
-          "initSp": 25,
-          "increment": 1.0
-        },
-        "prefabId": "skchr_haak_3",
-        "duration": 20.0,
-        "blackboard": [
-          {
-            "key": "atk",
-            "value": 0.4
+            "value": 0.25
           },
           {
             "key": "attack_speed",
@@ -50530,8 +51438,8 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 39,
-          "initSp": 25,
+          "spCost": 44,
+          "initSp": 26,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_3",
@@ -50539,7 +51447,7 @@
         "blackboard": [
           {
             "key": "atk",
-            "value": 0.45
+            "value": 0.3
           },
           {
             "key": "attack_speed",
@@ -50560,8 +51468,8 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 37,
-          "initSp": 25,
+          "spCost": 43,
+          "initSp": 26,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_3",
@@ -50569,7 +51477,67 @@
         "blackboard": [
           {
             "key": "atk",
-            "value": 0.5
+            "value": 0.3
+          },
+          {
+            "key": "attack_speed",
+            "value": 30.0
+          },
+          {
+            "key": "damage",
+            "value": 500.0
+          }
+        ]
+      },
+      {
+        "name": "爆发剂·榴莲味",
+        "rangeId": null,
+        "description": "立即对前方最近（优先选取正前方）的一名友方单位用<@ba.vup>{damage}</>的攻击力攻击<@ba.vup>15</>次，之后持续时间内使自身和目标攻击力<@ba.vup>+{atk:0%}</>，攻击速度<@ba.vup>+{attack_speed}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 42,
+          "initSp": 26,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_haak_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.3
+          },
+          {
+            "key": "attack_speed",
+            "value": 30.0
+          },
+          {
+            "key": "damage",
+            "value": 500.0
+          }
+        ]
+      },
+      {
+        "name": "爆发剂·榴莲味",
+        "rangeId": null,
+        "description": "立即对前方最近（优先选取正前方）的一名友方单位用<@ba.vup>{damage}</>的攻击力攻击<@ba.vup>15</>次，之后持续时间内使自身和目标攻击力<@ba.vup>+{atk:0%}</>，攻击速度<@ba.vup>+{attack_speed}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 41,
+          "initSp": 27,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_haak_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.35
           },
           {
             "key": "attack_speed",
@@ -50590,8 +51558,8 @@
           "spType": 1,
           "levelUpCost": null,
           "maxChargeTime": 1,
-          "spCost": 35,
-          "initSp": 25,
+          "spCost": 39,
+          "initSp": 28,
           "increment": 1.0
         },
         "prefabId": "skchr_haak_3",
@@ -50599,11 +51567,71 @@
         "blackboard": [
           {
             "key": "atk",
-            "value": 0.6
+            "value": 0.4
           },
           {
             "key": "attack_speed",
             "value": 40.0
+          },
+          {
+            "key": "damage",
+            "value": 500.0
+          }
+        ]
+      },
+      {
+        "name": "爆发剂·榴莲味",
+        "rangeId": null,
+        "description": "立即对前方最近（优先选取正前方）的一名友方单位用<@ba.vup>{damage}</>的攻击力攻击<@ba.vup>15</>次，之后持续时间内使自身和目标攻击力<@ba.vup>+{atk:0%}</>，攻击速度<@ba.vup>+{attack_speed}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 37,
+          "initSp": 29,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_haak_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.45
+          },
+          {
+            "key": "attack_speed",
+            "value": 45.0
+          },
+          {
+            "key": "damage",
+            "value": 500.0
+          }
+        ]
+      },
+      {
+        "name": "爆发剂·榴莲味",
+        "rangeId": null,
+        "description": "立即对前方最近（优先选取正前方）的一名友方单位用<@ba.vup>{damage}</>的攻击力攻击<@ba.vup>15</>次，之后持续时间内使自身和目标攻击力<@ba.vup>+{atk:0%}</>，攻击速度<@ba.vup>+{attack_speed}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 35,
+          "initSp": 30,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_haak_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.5
+          },
+          {
+            "key": "attack_speed",
+            "value": 50.0
           },
           {
             "key": "damage",
