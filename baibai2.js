@@ -930,7 +930,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         break;
       case 'p':
       case 'P':
-        anp(con.substring(4), callback)
+        anp(from, con.substring(4), callback)
         break;
       default:
         anr(from, con.substring(3), callback)
