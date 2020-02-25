@@ -1,6 +1,7 @@
 const searchCharacter = require('./arkNightsCharacter')
 const fs = require('fs')
 const path = require('path')
+const { sendImageMsgBuffer } = require('../../cq/sendImage')
 const {createCanvas, loadImage} = require('canvas')
 const OUTER_MARGIN = 50
 const INSET_MARGIN = 50
