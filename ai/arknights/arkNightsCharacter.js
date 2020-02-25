@@ -5,7 +5,7 @@ const fs = require('fs-extra')
 const path = require('path-extra')
 
 
-module.exports = function(qq, content, callback){
+module.exports = function(qq, content, callback, getData = false){
   let { akc_data, akc_other_data } = formatCharacter()
 
   // console.log('====')
@@ -27,25 +27,33 @@ module.exports = function(qq, content, callback){
     }
   }
   // console.log(Date.now())
-  if(flag){
-    callback('没有查询到此干员')
-  } else {
-    var words;
-    var str;
-    if(chTmp.length > 1){
-      str = `查询到${chTmp.length}位干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}\n若精确查找干员，请使用正则表达式搜索：如arks ^红$`
-      //TODO: 测试缺少的头像
-      // chTmp.forEach(ch => {
-      //   try{
-      //     fs.readFileSync(path.join(__dirname, `chara/${ch.info.source.appellation}.png`))
-      //   } catch (e) {
-      //     console.log(ch.info.source.appellation)
-      //   }
-      // })
-      drawTxtImage('',str,callback);
+  if(getData) {
+    if(flag) {
+      callback('没有查询到此干员')
     } else {
-      renderImage(chTmp[0], skillLevel - 1, callback)
+      callback(chTmp)
     }
-    // console.log(str)
+  } else {
+    if(flag){
+      callback('没有查询到此干员')
+    } else {
+      var words;
+      var str;
+      if(chTmp.length > 1){
+        str = `查询到${chTmp.length}位干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}\n若精确查找干员，请使用正则表达式搜索：如arks ^红$`
+        //TODO: 测试缺少的头像
+        // chTmp.forEach(ch => {
+        //   try{
+        //     fs.readFileSync(path.join(__dirname, `chara/${ch.info.source.appellation}.png`))
+        //   } catch (e) {
+        //     console.log(ch.info.source.appellation)
+        //   }
+        // })
+        drawTxtImage('',str,callback);
+      } else {
+        renderImage(chTmp[0], skillLevel - 1, callback)
+      }
+      // console.log(str)
+    }
   }
 }
