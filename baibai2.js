@@ -80,7 +80,7 @@ const anc = require('./ai/arknights/arkNightsCalc')
 const and = require('./ai/arknights/arkNightsBuildingTheme')
 const anchan = require('./ai/arknights/arkNightsChallenge')
 const anp = require('./ai/arknights/arkNightsCharacterCompare')
-const { calendar } = require('./ai/arkNightsCalendar')
+const { calendar } = require('./ai/arknights/arkNightsCalendar')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 const {runsetu} = require('./ai/games/card/setu');
