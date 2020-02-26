@@ -13,7 +13,7 @@ module.exports = function(qq, content, callback) {
   let sp = content.split('-').splice(0, 2), charaArr = []
   for(let i = 0; i < sp.length; i++) {
     let tmp
-    searchCharacter(1, sp[i], d => tmp = d, true)
+    searchCharacter(1, sp[i].trim(), d => tmp = d, true)
     if(typeof tmp == 'string') {
       callback(`${sp[i]} : 未找到此干员`)
       return
