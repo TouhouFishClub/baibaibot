@@ -189,7 +189,7 @@ const renderImage = (pick, direct, drink, star, callback) => {
   offsetTop += INSET_MARGIN
   offsetTop = renderText(
     ctx,
-    `姿势加成：喝点${drink}，有助于出货`,
+    `姿势加成：在卧室中${drink}，有助于出货`,
     offsetTop,
     OUTER_MARGIN,
     cWidth,
