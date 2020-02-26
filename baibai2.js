@@ -80,6 +80,7 @@ const anc = require('./ai/arknights/arkNightsCalc')
 const and = require('./ai/arknights/arkNightsBuildingTheme')
 const anchan = require('./ai/arknights/arkNightsChallenge')
 const anp = require('./ai/arknights/arkNightsCharacterCompare')
+const { calendar } = require('./ai/arkNightsCalendar')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 const {runsetu} = require('./ai/games/card/setu');
@@ -902,6 +903,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
 
+  if(con == '方舟老黄历') {
+    calendar(callback)
+  }
   let fie = con.substring(0, 3)
   if(fie.toLowerCase() == 'flp'){
     // console.log('================>>>>>>')
@@ -931,6 +935,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       case 'p':
       case 'P':
         anp(from, con.substring(4), callback)
+        break;
+      case 'l':
+      case 'L':
+        calendar(callback)
         break;
       default:
         anr(from, con.substring(3), callback)

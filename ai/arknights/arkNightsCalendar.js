@@ -149,7 +149,7 @@ const renderImage = (pick, direct, drink, star, callback) => {
     ctx.fillStyle = '#777'
     offsetTop = renderText(
       ctx,
-      bad.good,
+      bad.bad,
       offsetTop,
       OUTER_MARGIN + PANEL_LABEL_WIDTH + PANEL_PADDING,
       PANEL_WIDTH,
@@ -205,17 +205,17 @@ const renderImage = (pick, direct, drink, star, callback) => {
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
 
-  // sendImageMsgBuffer(dataBuffer, content, 'arknights', msg => {
-  //   callback(msg)
-  // })
+  sendImageMsgBuffer(dataBuffer, dayStr, 'arknights', msg => {
+    callback(msg)
+  })
 
-  fs.writeFile(path.join(__dirname, '/test/char.png'), dataBuffer, function(err) {
-    if(err){
-      console.log(err)
-    }else{
-      console.log("保存成功！");
-    }
-  });
+  // fs.writeFile(path.join(__dirname, '/test/char.png'), dataBuffer, function(err) {
+  //   if(err){
+  //     console.log(err)
+  //   }else{
+  //     console.log("保存成功！");
+  //   }
+  // });
 
 }
 
