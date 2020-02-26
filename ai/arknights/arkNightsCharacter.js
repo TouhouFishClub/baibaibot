@@ -6,6 +6,144 @@ const path = require('path-extra')
 
 
 module.exports = function(qq, content, callback, getData = false){
+  // console.log(content)
+  if(getData && (content == '1551' || content.toLowerCase() == 'ywwuyi' || /^爽/.test(content))) {
+    // console.log(11111)
+    callback([
+      {
+        name: 'Ywwuyi',
+        desc: '',
+        skills: [],
+        info: {
+          name: 'Ywwuyi',
+          pid: 'p_1551',
+          pubId: 'ywwuyi_1551',
+          sex: '处男',
+          tag: '高级资深处男',
+          rare: 6,
+          canRecruit: false,
+          onlyRecruit: true,
+          skills: [],
+          appellation: '1551',
+          displayLogo: 'logo_rhodes',
+          profession: 'CASTER',
+          source: {
+            "name": "Ywwuyi",
+            "description": "",
+            "canUseGeneralPotentialItem": false,
+            "potentialItemId": "p_1551",
+            "team": -1,
+            "displayNumber": "R1551",
+            "tokenKey": null,
+            "appellation": "1551",
+            "position": "CASTER",
+            "tagList": [
+              "处男"
+            ],
+            "displayLogo": "logo_rhodes",
+            "itemUsage": "",
+            "itemDesc": "",
+            "itemObtainApproach": "",
+            "maxPotentialLevel": 0,
+            "rarity": 0,
+            "profession": "CASTER",
+            "trait": null,
+            "phases": [
+              {
+                "characterPrefabKey": "char_285_medic2",
+                "rangeId": "3-1",
+                "maxLevel": 30,
+                "attributesKeyFrames": [
+                  {
+                    "level": 1,
+                    "data": {
+                      "maxHp": 261,
+                      "atk": 42,
+                      "def": 16,
+                      "magicResistance": 0.0,
+                      "cost": 3,
+                      "blockCnt": 1,
+                      "moveSpeed": 1.0,
+                      "attackSpeed": 100.0,
+                      "baseAttackTime": 2.85,
+                      "respawnTime": 200,
+                      "hpRecoveryPerSec": 0.0,
+                      "spRecoveryPerSec": 1.0,
+                      "maxDeployCount": 1,
+                      "maxDeckStackCnt": 0,
+                      "tauntLevel": 0,
+                      "massLevel": 0,
+                      "baseForceLevel": 0,
+                      "stunImmune": false,
+                      "silenceImmune": false,
+                      "sleepImmune": false
+                    }
+                  },
+                  {
+                    "level": 30,
+                    "data": {
+                      "maxHp": 4225,
+                      "atk": 1175,
+                      "def": 796,
+                      "magicResistance": 30.0,
+                      "cost": 0,
+                      "blockCnt": 3,
+                      "moveSpeed": 1.0,
+                      "attackSpeed": 100.0,
+                      "baseAttackTime": 0.66,
+                      "respawnTime": 0,
+                      "hpRecoveryPerSec": 0.0,
+                      "spRecoveryPerSec": 1.0,
+                      "maxDeployCount": 1,
+                      "maxDeckStackCnt": 0,
+                      "tauntLevel": 0,
+                      "massLevel": 0,
+                      "baseForceLevel": 0,
+                      "stunImmune": false,
+                      "silenceImmune": false,
+                      "sleepImmune": false
+                    }
+                  }
+                ],
+                "evolveCost": null
+              }
+            ],
+            "skills": [],
+            "talents": [],
+            "potentialRanks": [            ],
+            "favorKeyFrames": [
+              {
+                "level": 0,
+                "data": {
+                  "maxHp": 0,
+                  "atk": 0,
+                  "def": 0,
+                  "magicResistance": 0.0,
+                  "cost": 0,
+                  "blockCnt": 0,
+                  "moveSpeed": 0.0,
+                  "attackSpeed": 0.0,
+                  "baseAttackTime": 0.0,
+                  "respawnTime": 0,
+                  "hpRecoveryPerSec": 0.0,
+                  "spRecoveryPerSec": 0.0,
+                  "maxDeployCount": 0,
+                  "maxDeckStackCnt": 0,
+                  "tauntLevel": 0,
+                  "massLevel": 0,
+                  "baseForceLevel": 0,
+                  "stunImmune": false,
+                  "silenceImmune": false,
+                  "sleepImmune": false
+                }
+              }],
+            "allSkillLvlup": []
+          },
+        }
+      }
+    ])
+    return
+  }
   let { akc_data, akc_other_data } = formatCharacter()
 
   // console.log('====')
