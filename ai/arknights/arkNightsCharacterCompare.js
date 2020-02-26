@@ -100,7 +100,7 @@ const renderImage = async (content, chs, callback) => {
   }
 
   ctx.font = `16px ${fontFamily}`
-  let strArr = ['生命', '攻击', '防御', '阻挡数', '法术抗性', '攻击速度', '部署费用', '再部署时间']
+  let strArr = ['生命', '攻击', '防御', '阻挡数', '法术抗性', '攻击速度(次/秒)', '部署费用', '再部署时间']
   for(let i = 0; i < 8; i++) {
     ctx.fillText(
       strArr[i],
@@ -109,7 +109,7 @@ const renderImage = async (content, chs, callback) => {
     )
   }
 
-  let maxVal = [4225, 1175, 796, 3, 30, 3.5, 35, 200]
+  let maxVal = [4225, 1175, 796, 3, 30, 1.5, 40, 300]
   let item = ['maxHp', 'atk', 'def', 'blockCnt', 'magicResistance', 'baseAttackTime', 'cost', 'respawnTime']
   for(let i = 0; i < 2; i++) {
     ctx.fillStyle = `rgba(${colors[i]},.1)`
@@ -118,9 +118,21 @@ const renderImage = async (content, chs, callback) => {
     ctx.beginPath()
     for(let j = 0; j < 8; j ++) {
       if(j){
+        let val = infoText(chs[i], item[j])
+        switch(j) {
+          case 5:
+            val = 1 / val
+            break
+          case 6:
+            val = 40 - val
+            break
+          case 7:
+            val = 300 - val
+            break
+        }
         ctx.lineTo(
-          cWidth / 2 + Math.sin(2 * Math.PI / 8 * j) * CHART_WIDTH / 2 * infoText(chs[i], item[j]) / maxVal[j],
-          cHeight / 2 - Math.cos(2 * Math.PI / 8 * j) * CHART_WIDTH / 2 * infoText(chs[i], item[j]) / maxVal[j]
+          cWidth / 2 + Math.sin(2 * Math.PI / 8 * j) * CHART_WIDTH / 2 * val / maxVal[j],
+          cHeight / 2 - Math.cos(2 * Math.PI / 8 * j) * CHART_WIDTH / 2 * val / maxVal[j]
         )
       } else {
         ctx.moveTo(
