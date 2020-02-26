@@ -147,10 +147,22 @@ const renderImage = async (content, chs, callback) => {
 
     for(let j = 0; j < 8; j ++) {
       ctx.fillStyle = `rgba(${colors[i]},1)`
+      let val = infoText(chs[i], item[j])
+      switch(j) {
+        case 5:
+          val = 1 / val
+          break
+        case 6:
+          val = 40 - val
+          break
+        case 7:
+          val = 300 - val
+          break
+      }
       ctx.fillText(
         infoText(chs[i], item[j]),
-        cWidth / 2 + Math.sin(2 * Math.PI / 8 * j) * (CHART_WIDTH / 2 + 20) * infoText(chs[i], item[j]) / maxVal[j] - ctx.measureText(infoText(chs[i], item[j])).width / 2,
-        cHeight / 2 - Math.cos(2 * Math.PI / 8 * j) * (CHART_WIDTH / 2 + 15) * infoText(chs[i], item[j]) / maxVal[j] + 16 * i
+        cWidth / 2 + Math.sin(2 * Math.PI / 8 * j) * (CHART_WIDTH / 2 + 20) * val / maxVal[j] - ctx.measureText(infoText(chs[i], item[j])).width / 2,
+        cHeight / 2 - Math.cos(2 * Math.PI / 8 * j) * (CHART_WIDTH / 2 + 15) * val / maxVal[j] + 16 * i
       )
     }
   }
