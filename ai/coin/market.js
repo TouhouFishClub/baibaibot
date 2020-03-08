@@ -102,7 +102,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     port: 443,
     path: '/v1/cryptocurrency/listings/latest',
     headers: {
-      '"X-CMC_PRO_API_KEY': 'c49890a2-7390-4c64-8c92-54872366b94e'.
+      '"X-CMC_PRO_API_KEY': 'c49890a2-7390-4c64-8c92-54872366b94e',
       'Accept':'application/json',
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
