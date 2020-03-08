@@ -108,7 +108,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     },
     method: 'POST'
   };
-  var body = 'start=1&limit=30&convert=USD',
+  var body = 'start=1&limit=30&convert=USD';
   if(withproxy){
     options.agent=agent;
   }
