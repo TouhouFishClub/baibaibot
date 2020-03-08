@@ -98,14 +98,17 @@ function getCoinMarket(callback,withproxy, isInterface = false){
   var now = new Date();
   console.log('will get conmarket:'+withproxy);
   var options = {
-    hostname: "api.coinmarketcap.com",
+    hostname: "pro-api.coinmarketcap.com",
     port: 443,
-    path: '/v1/ticker/?convert=CNY&limit=30',
+    path: '/v1/cryptocurrency/listings/latest',
     headers: {
+      '"X-CMC_PRO_API_KEY': 'c49890a2-7390-4c64-8c92-54872366b94e'.
+      'Accept':'application/json',
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
-    method: 'GET'
+    method: 'POST'
   };
+  var body = 'start=1&limit=30&convert=USD',
   if(withproxy){
     options.agent=agent;
   }
@@ -130,16 +133,17 @@ function getCoinMarket(callback,withproxy, isInterface = false){
           var pd = data[i];
           var symbol=pd.symbol;
           if(n[symbol.toLowerCase()]){
-            var price_usd=parseFloat(pd.price_usd);
-            var price_cny=parseFloat(pd.price_cny);
+            var pdd = data[i].quote.USD
+            var price_usd=parseFloat(pdd.price);
+            var price_cny=parseFloat(pdd.price)*6.95;
             USDCNYRATE = price_cny/price_usd;
             if(isInterface){
               ret.push({
                 type: symbol,
                 usd: price_usd.toFixed(2),
                 cny: price_cny.toFixed(2),
-                c1h: pd.percent_change_1h,
-                c1d: pd.percent_change_24h
+                c1h: pdd.percent_change_1h,
+                c1d: pdd.percent_change_24h
               })
             } else {
               ret = ret + symbol + ":$"+price_usd.toFixed(2)+"   \t￥"+price_cny.toFixed(2)+"\n";
@@ -153,6 +157,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
       })
     }
   });
+  req.write(body);
   req.on('error', function(err) {
     console.log('req err:');
     console.log(err);
