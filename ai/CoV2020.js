@@ -52,7 +52,20 @@ module.exports = function(content, callback) {
               callback(`未找到相关地名，仅省、直辖市、特别行政区支持模糊搜索`)
             }
           } else {
-            callback(`未找到相关地名，仅省、直辖市、特别行政区支持模糊搜索`)
+            let word = allData.data.worldlist.find(ele => new RegExp(content).test(ele.name))
+            if(word) {
+              str += `(${word.name})`
+              str += `${allData.data.times}\n`
+              str += `更新时间：${allData.data.mtime}\n`
+              str += `累计确诊：${word.value}(+${word.conadd.trim()})\n`
+              str += `现有确诊：${word.value - word.cureNum - word.deathNum}\n`
+              str += `现有疑似：${word.susNum}\n`
+              str += `累计死亡：${word.deathNum}(+${word.deathadd.trim()})\n`
+              str += `累计治愈：${word.cureNum}(${word.cureadd.trim()})\n`
+              callback(str)
+            } else {
+              callback(`未找到相关地名，仅省、直辖市、特别行政区支持模糊搜索`)
+            }
           }
         }
       } else {
