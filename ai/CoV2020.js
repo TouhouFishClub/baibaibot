@@ -61,7 +61,7 @@ module.exports = function(content, callback) {
               str += `现有确诊：${word.value - word.cureNum - word.deathNum}\n`
               str += `现有疑似：${word.susNum}\n`
               str += `累计死亡：${word.deathNum}(+${word.deathadd.trim()})\n`
-              str += `累计治愈：${word.cureNum}(${word.cureadd.trim()})\n`
+              str += `累计治愈：${word.cureNum}(+${word.cureadd.trim()})\n`
               callback(str)
             } else {
               callback(`未找到相关地名，仅省、直辖市、特别行政区支持模糊搜索`)
