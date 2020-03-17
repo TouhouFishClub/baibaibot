@@ -6,17 +6,17 @@
 // const {baiduocr} = require('../image/baiduocr');
 // const akb = require('./arkNightsBuildingTheme')
 // const akc = require('./arkNightChallenge')
-// const akcc = require('./arkNightsCharacterCompare')
-const { calendar } = require('./arkNightsCalendar')
+const akcc = require('./arkNightsCharacterCompare')
+// const { calendar } = require('./arkNightsCalendar')
 const c = m => {
   console.log('===== output =====')
   console.log(m)
 }
 
-calendar(c)
+// calendar(c)
 // akc('213', c)
 // akb('111', '陈的办公室', c)
-// akcc('111', '1551-蛇屠箱', c)
+akcc('111', '1551-蛇屠箱', c)
 // akcc('111', '\\S+', c)
 // console.log(akk('skchr_plosis_2', '3'))
 // akc('123456', '5 1-1 1-80   ', c)

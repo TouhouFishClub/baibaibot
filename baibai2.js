@@ -88,7 +88,8 @@ const { wfp } = require('./ai/worldflipper/BossBattlePushing')
 const {calAttr} = require('./ai/ff14/attr');
 require('./ai/ff14/activity')
 
-const cov = require('./ai/CoV2020')
+// const cov = require('./ai/CoV2020')
+const { cov } = require('./ai/CoV2019ByTianApi')
 
 
 initWS();
