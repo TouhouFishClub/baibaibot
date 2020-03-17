@@ -5,7 +5,7 @@ const c = m => {
   console.log(m)
 }
 
-cov('中国', c)
+cov('武汉', c)
 setTimeout(() => {
-  cov('武汉', c)
+  cov('日本', c)
 }, 20000)

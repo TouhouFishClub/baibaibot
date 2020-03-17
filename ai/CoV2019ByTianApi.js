@@ -164,7 +164,7 @@ const cov = async (content, callback) => {
   let sa = AllArea.filter(x => new RegExp(content).test(x.name))
   console.log(sa)
   if (sa.length == 1) {
-    renderImage(sa[0], AllData[sa[0].locationId], callback)
+    renderImage(sa[0], AllData[sa[0].locationId], content, callback)
   } else {
     callback(`查找到以下国家或地区：${sa.map(x => x.name).join('、')}, 使用正则表达式精确查找`)
   }
