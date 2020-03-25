@@ -61,12 +61,13 @@ var cm=function(callback){
 
 function combine(callback){
   getCoinMarket(function(data1){
-    getHT(function(data2){
-      getOKB(function(data3){
-        var data = data1.concat(data2).concat(data3);
-        drawImg(data,callback);
-      })
-    })
+    // getHT(function(data2){
+    //   getOKB(function(data3){
+    //     var data = data1.concat(data2).concat(data3);
+    //
+    //   })
+    // })
+    drawImg(data1,callback);
   },false,true)
 }
 
@@ -125,10 +126,12 @@ function getCoinMarket(callback,withproxy, isInterface = false){
       });
       res.on('end', function () {
         failed = 0;
-        console.log(resdata);
-        var data = eval('('+resdata+')');
+        var ddata = eval('('+resdata+')');
+        var data=ddata.data;
+        console.log(data);
         var ret = "数字货币行情(CoinMarket)："+now.toLocaleString()+"\n";
-        var n={"btc":1,"ltc":1,"eth":1,"etc":1,"xrp":1,"eos":1,"bch":1,"qtum":1,"dash":1,"neo":1,"ada":1,"bsv":1}
+        var n={"btc":1,"ltc":1,"eth":1,"etc":1,"xrp":1,"eos":1,"bch":1,"qtum":1,
+          "dash":1,"neo":1,"ada":1,"bsv":1,"ht":1,"okb":1}
         if(isInterface){
           ret = []
         }
@@ -138,7 +141,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
           if(n[symbol.toLowerCase()]){
             var pdd = data[i].quote.USD
             var price_usd=parseFloat(pdd.price);
-            var price_cny=parseFloat(pdd.price)*6.95;
+            var price_cny=parseFloat(pdd.price)*7.07;
             USDCNYRATE = price_cny/price_usd;
             if(isInterface){
               ret.push({
@@ -172,7 +175,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
         callback('CoinMarket BOOM!');
       }
     }else{
-      getCoinMarket(callback,true,isInterface);
+      getCoinMarket(callback,false,isInterface);
     }
   });
   req.setTimeout(5000,function(){
@@ -180,7 +183,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     if(failed>2){
       callback('CoinMarket BOOM!');
     }else{
-      getCoinMarket(callback,true,isInterface);
+      getCoinMarket(callback,false,isInterface);
     }
   });
   req.end();
@@ -313,6 +316,7 @@ function getOKB(callback){
 
 
 function drawImg(data,callback){
+  console.log(data);
   if(data.length==0){
     callback('coinmarket BOOM!')
   }else{
