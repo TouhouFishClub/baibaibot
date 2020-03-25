@@ -89,7 +89,7 @@ module.exports={
 
 var https = require('https');
 var HttpsProxyAgent = require('https-proxy-agent')
-var proxy = 'http://192.168.17.62:3128';
+var proxy = 'http://192.168.17.52:2020';
 var agent = new HttpsProxyAgent(proxy);
 var failed = 0;
 var USDCNYRATE = 6.3;
@@ -100,15 +100,16 @@ function getCoinMarket(callback,withproxy, isInterface = false){
   var options = {
     hostname: "pro-api.coinmarketcap.com",
     port: 443,
-    path: '/v1/cryptocurrency/listings/latest',
+    path: '/v1/cryptocurrency/listings/latest?start=1&limit=30&convert=USD',
     headers: {
       'X-CMC_PRO_API_KEY': 'c49890a2-7390-4c64-8c92-54872366b94e',
       'Accept':'application/json',
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
-    method: 'POST'
+    method: 'GET'
   };
-  var body = 'start=1&limit=30&convert=USD';
+  console.log(options);
+  var body = '';
   if(withproxy){
     options.agent=agent;
   }
@@ -116,6 +117,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
   var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
+    console.log(code);
     if(code==200){
       var resdata = '';
       res.on('data', function (chunk) {
@@ -123,7 +125,8 @@ function getCoinMarket(callback,withproxy, isInterface = false){
       });
       res.on('end', function () {
         failed = 0;
-        var data = eval(resdata);
+        console.log(resdata);
+        var data = eval('('+resdata+')');
         var ret = "数字货币行情(CoinMarket)："+now.toLocaleString()+"\n";
         var n={"btc":1,"ltc":1,"eth":1,"etc":1,"xrp":1,"eos":1,"bch":1,"qtum":1,"dash":1,"neo":1,"ada":1,"bsv":1}
         if(isInterface){
@@ -187,7 +190,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
 function getHT(callback){
   console.log('will get ht');
   var options = {
-    hostname: "api.huobi.pro",
+    hostname: "api-aws.huobi.pro",
     port: 443,
     path: '/market/history/kline?period=60min&size=1&symbol=htusdt',
     headers: {
