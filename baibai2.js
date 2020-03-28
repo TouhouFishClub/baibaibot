@@ -90,6 +90,7 @@ require('./ai/ff14/activity')
 
 // const cov = require('./ai/CoV2020')
 const { cov } = require('./ai/CoV2019ByTianApi')
+const chp = require('./ai/chp')
 
 
 initWS();
@@ -907,6 +908,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(con == '方舟老黄历') {
     calendar(callback)
   }
+  if(con == 'chp' || con == '彩虹屁') {
+    chp(callback)
+  }
+
   let fie = con.substring(0, 3)
   if(fie.toLowerCase() == 'flp'){
     // console.log('================>>>>>>')
