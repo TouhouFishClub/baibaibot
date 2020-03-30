@@ -8,6 +8,7 @@ const { sendImageMsgBuffer } = require('../cq/sendImage')
 const {createCanvas, loadImage} = require('canvas')
 
 const fontFamily = 'STXIHEI'
+const maxGetDay = 7
 
 let updateDay = 0
 let lastUpdateTime = 0
@@ -23,7 +24,7 @@ const cov = async (content, callback) => {
   if(checkDate()) {
     console.log('更新所有数据')
     AllData = {}
-    for(let i = 0; i < 7; i ++) {
+    for(let i = 0; i < maxGetDay; i ++) {
       // console.log(i)
       let now = new Date()
       let date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
@@ -161,18 +162,61 @@ const cov = async (content, callback) => {
   // console.log(AllData)
 
   /* search */
-  let sa = AllArea.filter(x => new RegExp(content).test(x.name))
-  console.log(sa)
-  if (sa.length == 1) {
-    renderImage(sa[0], AllData[sa[0].locationId], content, callback)
+  if(content == '国外' || content == '外国' || content == '非中国') {
+    let sa = AllArea.filter(x => x.type == 'abroad' && x.name != '中国')
+    let confirmedCount = [], curedCount = [], currentConfirmedCount = [], deadCount = []
+    sa.forEach(x => {
+      if(AllData[x.locationId].confirmedCount.length <= maxGetDay) {
+        confirmedCount = arrAdd(confirmedCount, AllData[x.locationId].confirmedCount)
+      }
+      if(AllData[x.locationId].curedCount.length <= maxGetDay) {
+        curedCount = arrAdd(curedCount, AllData[x.locationId].curedCount)
+      }
+      if(AllData[x.locationId].currentConfirmedCount.length <= maxGetDay) {
+        currentConfirmedCount = arrAdd(currentConfirmedCount, AllData[x.locationId].currentConfirmedCount)
+      }
+      if(AllData[x.locationId].deadCount.length <= maxGetDay) {
+        deadCount = arrAdd(deadCount, AllData[x.locationId].deadCount)
+      }
+    })
+    renderImage(
+      {
+        name: '非中国',
+        type: 'other',
+      },
+      {
+        confirmedCount: confirmedCount,
+        curedCount: curedCount,
+        currentConfirmedCount: currentConfirmedCount,
+        deadCount: deadCount,
+      },
+      '非中国',
+      callback
+    )
   } else {
-    callback(`查找到以下国家或地区：${sa.map(x => x.name).join('、')}, 使用正则表达式精确查找`)
+    let sa = AllArea.filter(x => new RegExp(content).test(x.name))
+    // console.log(sa[0])
+    // console.log(AllData[sa[0].locationId])
+    if (sa.length == 1) {
+      renderImage(sa[0], AllData[sa[0].locationId], content, callback)
+    } else {
+      callback(`查找到以下国家或地区：${sa.map(x => x.name).join('、')}, 使用正则表达式精确查找`)
+    }
   }
 }
 
+const arrAdd = (arr1, arr2) => {
+  let length = Math.max(arr1.length, arr2.length)
+  let arrTmp = []
+  for(let i = 0; i < length; i++){
+    arrTmp[i] = parseInt(arr1[i]||0) + parseInt(arr2[i]||0)
+  }
+  return arrTmp
+}
+
 const renderImage = (area, data, content, callback) => {
-  console.log(area)
-  console.log(data)
+  // console.log(area)
+  // console.log(data)
 
   let canvas = createCanvas(800, 260)
     , ctx = canvas.getContext('2d')
@@ -191,6 +235,9 @@ const renderImage = (area, data, content, callback) => {
       title = `${area.parentName} - ${area.name}`
       break
     case 'prov':
+      title = `${area.name}`
+      break
+    case 'other':
       title = `${area.name}`
       break
     default:
