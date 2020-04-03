@@ -1,5 +1,5 @@
-const MAP_MAX_WIDTH = 13 // 最大13
-const MAP_MAX_HEIGHT = 1
+const MAP_MAX_WIDTH = 8 // 最大13
+const MAP_MAX_HEIGHT = 3
 const MAX_USER = 10
 const MIN_USER = 2
 const WAIT_GAME_START = 60000
