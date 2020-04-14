@@ -11,12 +11,8 @@ module.exports = function(content, group, type, callback) {
   for(let i = 0; i < sp.length; i++) {
     // console.log(i)
     if(sp[i] == 'x') {
-      if(i == 0) {
-        inputArr.push(NaN)
-      } else {
-        inputArr.push(NaN)
-        inputArr.push(NaN)
-      }
+      inputArr.push(NaN)
+      inputArr.push(NaN)
       continue
     }
     if(i > 0 && /^(\d{1,3}|x)-(\d{1,3}|x)$/.test(sp[i])) {
@@ -47,7 +43,6 @@ module.exports = function(content, group, type, callback) {
     return
   }
   let calc = analyze_possibilities(inputArr, false, -1)
-  console.log(calc[0])
   render(calc, callback)
 
 
