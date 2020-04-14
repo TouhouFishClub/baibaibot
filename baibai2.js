@@ -92,6 +92,8 @@ require('./ai/ff14/activity')
 const { cov } = require('./ai/CoV2019ByTianApi')
 const chp = require('./ai/chp')
 
+const actp = require('./ai/AnimalCrossing/TurnipProphet')
+
 
 initWS();
 initWS2();
@@ -950,6 +952,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         anr(from, con.substring(3), callback)
     }
     return
+  }
+
+  if(fie.toLowerCase() == 'dtc'){
+    actp(con.substring(3), groupid, 1, callback)
   }
 
   if(fie == 'opt' && fi != 'opts'){
