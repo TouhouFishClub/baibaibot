@@ -93,7 +93,7 @@ const { cov } = require('./ai/CoV2019ByTianApi')
 const chp = require('./ai/chp')
 
 const actp = require('./ai/AnimalCrossing/TurnipProphet')
-const saveDTCPrice = require('./ai/AnimalCrossing/priceRecord');
+const { saveDTCPrice } = require('./ai/AnimalCrossing/priceRecord');
 
 
 initWS();
