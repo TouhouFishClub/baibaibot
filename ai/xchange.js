@@ -242,7 +242,7 @@ const getYQLData = code =>
 
 const getFixerData = code =>
   new Promise((resolve, reject) => {
-    Axios.get('http://data.fixer.io/api/latest&access_key=bfa9904b7c9dc8e4d73007918d9f515e', {
+    Axios.get('http://data.fixer.io/api/latest?access_key=01a69c4322e94ee4533267a407dea588', {
       timeout: TIME_OUT,
       headers: {
         'User-Agent': USER_AGENT
