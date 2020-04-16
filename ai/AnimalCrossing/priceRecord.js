@@ -17,10 +17,10 @@ function saveDTCPrice(content,qq,gid,callback){
   var cl_animal_dtc = udb.collection('cl_animal_dtc');
   var query = {'_id':qq};
   content = content.toLowerCase().trim();
-  var n = content.indexOf("utc+");
+  var n = content.indexOf("utc");
   var tz = 16;
   if(n>=0){
-    tz = 2*parseInt(content.substring(n+4));
+    tz = 2*parseInt(content.substring(n+3));
     content = content.substring(0,n);
   }
   if(tz>24||tz<-24){
