@@ -132,7 +132,23 @@ function saveDTCPrice(content,qq,gid,callback){
   });
 }
 
+function getUserDTCInfo(qq,callback){
+  var cl_animal_dtc = udb.collection('cl_animal_dtc');
+  var query = {'_id':qq};
+
+  cl_animal_dtc.findOne(query, function(err, data) {
+    if (err) {
+      console.log('mongo error2:!!!!!!!!!');
+      console.log(err);
+      callback({});
+    } else {
+      callback(data);
+    }
+  });
+}
+
 
 module.exports={
-  saveDTCPrice
+  saveDTCPrice,
+  getUserDTCInfo
 }
