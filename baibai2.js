@@ -93,6 +93,7 @@ const { cov } = require('./ai/CoV2019ByTianApi')
 const chp = require('./ai/chp')
 
 const actp = require('./ai/AnimalCrossing/TurnipProphet')
+const saveDTCPrice = require('./ai/AnimalCrossing/priceRecord');
 
 
 initWS();
@@ -955,7 +956,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie.toLowerCase() == 'dtc'){
-    actp(con.substring(3), groupid, 1, callback)
+    actp(con.substring(3), groupid, 1, callback);
+    return;
+  }
+  if(fie.toLowerCase() == 'dts'){
+    saveDTCPrice(con.substring(3),from,groupid,callback);
+    return;
   }
 
   if(fie == 'opt' && fi != 'opts'){
