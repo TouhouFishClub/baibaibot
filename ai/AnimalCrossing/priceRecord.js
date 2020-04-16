@@ -40,6 +40,9 @@ function saveDTCPrice(content,qq,gid,callback){
     if(pa.length==2){
       p0 = parseInt(pa[0]);
       p1 = parseInt(pa[1]);
+      if(hour<12){
+        p1=0;
+      }
     }
   }else{
     if(hour<12){
@@ -87,12 +90,27 @@ function saveDTCPrice(content,qq,gid,callback){
           data.d=dd;
         }
         cl_animal_dtc.save(data);
+        var ret = "本周记录:\n";
+        var pd = (day+4)%7;
+        for(var i=pd;i>=0;i--){
+          var thenprice = data.d[day-i]?(data.d[day-i].p0+"-"+data.d[day-i].p1):"0-0";
+          ret = ret + "周"+(pd-i)+":"+thenprice+"\n";
+        }
+        callback(ret.trim());
       }else{
         var dd = {};
         dd[day]={p0:p0,p1:p1}
-        cl_animal_dtc.save({"_id":qq,gid:[gid],d:dd,tz:tz});
-      }
+        data = {"_id":qq,gid:[gid],d:dd,tz:tz}
+        cl_animal_dtc.save(data);
+        var ret = "本周记录:\n";
+        var pd = (day+4)%7;
+        for(var i=pd;i>=0;i--){
+          var thenprice = data.d[day-i]?(data.d[day-i].p0+"-"+data.d[day-i].p1):"0-0";
+          ret = ret + "周"+(pd-i)+":"+thenprice+"\n";
+        }
+        callback(ret.trim());
 
+      }
     }
   });
 }
