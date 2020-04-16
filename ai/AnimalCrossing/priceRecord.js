@@ -99,5 +99,5 @@ function saveDTCPrice(content,qq,gid,callback){
 
 
 module.exports={
-  saveDTCPrice;
+  saveDTCPrice
 }
