@@ -124,7 +124,7 @@ function saveDTCPrice(content,qq,gid,callback){
           var thenprice = data.d[day-i]?(data.d[day-i].p0+"-"+data.d[day-i].p1):"0-0";
           ret = ret + "周"+(pd-i)+":"+thenprice+"\n";
         }
-        ret = ret + '您的时区为:UTC'+((tz/2)>0)?("+"+(tz/2)):(tz/2);
+        ret = ret + '您的时区为:UTC'+((tz>0)?("+"+(tz/2)):(tz/2));
         callback(ret.trim());
 
       }
