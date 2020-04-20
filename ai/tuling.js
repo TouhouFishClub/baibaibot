@@ -30,6 +30,8 @@ var tulingkeyarr=[
 ]
 
 function tulingMsg3(userid,content,callback,groupid){
+  if(groupid == 1098831698)
+    return
   var then=limit[groupid];
   if(then){
     if(new Date().getTime()-then<3000){
