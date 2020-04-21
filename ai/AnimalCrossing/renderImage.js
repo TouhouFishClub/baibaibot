@@ -158,7 +158,7 @@ module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
 
-  sendImageMsgBuffer(dataBuffer, `大头菜_${qq}`.getTime(), 'other', msg => {
+  sendImageMsgBuffer(dataBuffer, `大头菜_${parseInt(qq)}`.getTime(), 'other', msg => {
     callback(msg)
   })
 
