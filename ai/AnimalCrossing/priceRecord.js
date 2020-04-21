@@ -4,7 +4,8 @@ var path = require('path');
 var request = require("request");
 var fs = require('fs');
 
-const actp = require('./TurnipProphet');
+const actp = require(path.join(__dirname, './TurnipProphet'))
+
 
 var udb;
 initDB();
