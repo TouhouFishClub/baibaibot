@@ -57,7 +57,7 @@ const findSaveData = (qq, type, callback) => {
   })
 }
 
-module.exports = function(content, qq, group, type, callback) {
+function actp(content, qq, group, type, callback) {
   if(content.trim() == ''){
     findSaveData(qq, type, callback)
     // formatSaveData(testJson, type, callback)
@@ -104,4 +104,8 @@ module.exports = function(content, qq, group, type, callback) {
   render(calc, callback)
 
 
+}
+
+module.exports={
+  actp
 }

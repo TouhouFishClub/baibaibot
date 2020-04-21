@@ -5,6 +5,7 @@ var request = require("request");
 var fs = require('fs');
 
 
+
 var udb;
 initDB();
 function initDB(){
@@ -48,7 +49,7 @@ function saveDTCPrice(content,qq,gid,callback){
           }
         }
       }
-
+      const {actp} = require(path.join(__dirname, './TurnipProphet'))
 
 
       var now = new Date();
@@ -104,28 +105,37 @@ function saveDTCPrice(content,qq,gid,callback){
           dd[day]={p0:p0,p1:p1}
           data.d=dd;
         }
-        cl_animal_dtc.save(data);
-        var ret = "本周记录:\n";
-        var pd = (day+4)%7;
-        for(var i=pd;i>=0;i--){
-          var thenprice = data.d[day-i]?(data.d[day-i].p0+"-"+data.d[day-i].p1):"0-0";
-          ret = ret + "周"+(pd-i)+":"+thenprice+"\n";
-        }
-        ret = ret + '您的时区为:UTC'+((tz>0)?("+"+(tz/2)):(tz/2));
-        callback(ret.trim());
+        cl_animal_dtc.save(data,function(){
+          var ret = "本周记录:\n";
+          var pd = (day+4)%7;
+          for(var i=pd;i>=0;i--){
+            var thenprice = data.d[day-i]?(data.d[day-i].p0+"-"+data.d[day-i].p1):"0-0";
+            ret = ret + "周"+(pd-i)+":"+thenprice+"\n";
+          }
+          ret = ret + '您的时区为:UTC'+((tz>0)?("+"+(tz/2)):(tz/2));
+          actp("",qq,gid,1,function(r){
+            callback(ret + "\n" + r);
+          })
+        });
+
+        // callback(ret.trim());
       }else{
         var dd = {};
         dd[day]={p0:p0,p1:p1}
         data = {"_id":qq,gid:[gid],d:dd,tz:tz}
-        cl_animal_dtc.save(data);
-        var ret = "本周记录:\n";
-        var pd = (day+4)%7;
-        for(var i=pd;i>=0;i--){
-          var thenprice = data.d[day-i]?(data.d[day-i].p0+"-"+data.d[day-i].p1):"0-0";
-          ret = ret + "周"+(pd-i)+":"+thenprice+"\n";
-        }
-        ret = ret + '您的时区为:UTC'+((tz>0)?("+"+(tz/2)):(tz/2));
-        callback(ret.trim());
+        cl_animal_dtc.save(data,function(){
+          var ret = "本周记录:\n";
+          var pd = (day+4)%7;
+          for(var i=pd;i>=0;i--){
+            var thenprice = data.d[day-i]?(data.d[day-i].p0+"-"+data.d[day-i].p1):"0-0";
+            ret = ret + "周"+(pd-i)+":"+thenprice+"\n";
+          }
+          ret = ret + '您的时区为:UTC'+((tz>0)?("+"+(tz/2)):(tz/2));
+          actp("",qq,gid,1,function(r){
+            callback(ret + "\n" + r);
+          })
+        });
+
 
       }
     }

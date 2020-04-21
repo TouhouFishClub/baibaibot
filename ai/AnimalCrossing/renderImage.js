@@ -116,7 +116,7 @@ module.exports = (data, callback, otherMsg) => {
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
 
-  sendImageMsgBuffer(dataBuffer, '大头菜', 'other', msg => {
+  sendImageMsgBuffer(dataBuffer, '大头菜_'+new Date().getTime(), 'other', msg => {
     callback(msg)
   })
 
