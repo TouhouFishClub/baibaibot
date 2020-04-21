@@ -85,7 +85,7 @@ module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
   }
 
   // console.log(all[0].prices)
-  let chartPrice = all[0].prices
+  let chartPrice = all[0].prices.concat([])
   chartPrice.shift()
   ctx.setLineDash([])
   ctx.beginPath()
