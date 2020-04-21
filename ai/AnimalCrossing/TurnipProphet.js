@@ -8,7 +8,7 @@ const help = callback => {
   callback('这是帮助')
 }
 
-const formatSaveData = (data, type, callback) => {
+const formatSaveData = (data, qq, type, callback) => {
   let d = data.d
 
   var tz = 16;
@@ -44,27 +44,27 @@ const formatSaveData = (data, type, callback) => {
     }
   }
   let calc = analyze_possibilities(outArr, false, -1)
-  render(calc, callback)
+  render(calc, qq, outArr, type, false, callback)
 }
 
 const findSaveData = (qq, type, callback) => {
   getUserDTCInfo(qq, data => {
     if(data && data.d) {
-      formatSaveData(data, type, callback)
+      formatSaveData(data, qq, type, callback)
     } else {
-      help()
+      help(callback)
     }
   })
 }
 
-function actp(content, qq, group, type, callback) {
+function actp(content, qq, group, type = -1, callback, isFirst = false) {
   if(content.trim() == ''){
     findSaveData(qq, type, callback)
     // formatSaveData(testJson, type, callback)
     // help(callback)
     return
   }
-  let format = content.replace(/ +/g, ' ').trim().split(' ')
+  let format = content.toLowerCase().replace(/ +/g, ' ').trim().split(' ')
   let sp = format.slice(0, 7), inputArr = []
   for(let i = 0; i < sp.length; i++) {
     // console.log(i)
@@ -100,8 +100,9 @@ function actp(content, qq, group, type, callback) {
     callback('输入错误')
     return
   }
-  let calc = analyze_possibilities(inputArr, false, -1)
-  render(calc, callback)
+
+  let calc = analyze_possibilities(inputArr.concat([]), isFirst, type)
+  render(calc, qq, inputArr, type, isFirst, callback)
 
 
 }

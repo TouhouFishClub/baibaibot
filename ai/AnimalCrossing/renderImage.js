@@ -8,17 +8,59 @@ const GLOBAL_MARGIN = 20
 const TABLE_WIDTH = 80
 const TABLE_HEIGHT = 30
 const fontFamily = 'STXIHEI'
+const titleHeight = 250
 
-module.exports = (data, callback, otherMsg) => {
+module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
+
+  // console.log(data)
+  let all = data.filter(d => d.pattern_number == 4)
+  let other = data.filter(d => d.pattern_number != 4)
+  // console.log(all)
+
+
+
   let length = data.length
-  let ds = data.slice(0, MAX_SHOW_DATA + 1)
+  let ds = other.slice(0, MAX_SHOW_DATA).concat(all)
 
   let width = TABLE_WIDTH * ( 1 + 6 * 2 + 4) + GLOBAL_MARGIN * 2,
-    height = (ds.length + 2) * TABLE_HEIGHT + GLOBAL_MARGIN * 2
+    height = (ds.length + 2) * TABLE_HEIGHT + GLOBAL_MARGIN * 2 + titleHeight
   let canvas = createCanvas(width, height)
     , ctx = canvas.getContext('2d')
   ctx.fillStyle = 'rgba(255,255,255,1)'
   ctx.fillRect(0, 0, width, height)
+  let offsetTop = GLOBAL_MARGIN
+
+  /* title （font-size：16， line-height: 20）*/
+  let line = 25, textDown = (line - 16) / 2 + 16
+  ctx.font = `16px ${fontFamily}`
+  ctx.fillStyle = '#333'
+  ctx.fillText('输入信息：', GLOBAL_MARGIN, offsetTop + textDown)
+  offsetTop += line
+
+  ctx.fillText(`买入价：${inputArr[0] || '未知'}\t\t${isFirst ? '' : '非'}首次购入\t\t上周走势: ${type == -1 ? '未知' : ['波动型', '大幅上涨（三期型）', '递减型', '小幅上涨（四期型）'][type]}` , GLOBAL_MARGIN, offsetTop + textDown)
+  offsetTop += line
+
+  ctx.fillText(`【周一】上午：${inputArr[2] || '未知'}   下午：${inputArr[3] || '未知'}`, GLOBAL_MARGIN, offsetTop + textDown)
+  ctx.fillText(`【周二】上午：${inputArr[4] || '未知'}   下午：${inputArr[5] || '未知'}`, GLOBAL_MARGIN + 300, offsetTop + textDown)
+  offsetTop += line
+
+  ctx.fillText(`【周三】上午：${inputArr[6] || '未知'}   下午：${inputArr[7] || '未知'}`, GLOBAL_MARGIN, offsetTop + textDown)
+  ctx.fillText(`【周四】上午：${inputArr[8] || '未知'}   下午：${inputArr[9] || '未知'}`, GLOBAL_MARGIN + 300, offsetTop + textDown)
+  offsetTop += line
+
+  ctx.fillText(`【周五】上午：${inputArr[10] || '未知'}   下午：${inputArr[11] || '未知'}`, GLOBAL_MARGIN, offsetTop + textDown)
+  ctx.fillText(`【周六】上午：${inputArr[12] || '未知'}   下午：${inputArr[13] || '未知'}`, GLOBAL_MARGIN + 300, offsetTop + textDown)
+  offsetTop += line
+  offsetTop += 12
+
+  ctx.fillText('波动型：一周的卖价随机，价格最高为1.1～1.4倍', GLOBAL_MARGIN, offsetTop + textDown)
+  offsetTop += line
+  ctx.fillText('递减型：一周卖价会持续走低，必赔', GLOBAL_MARGIN, offsetTop + textDown)
+  offsetTop += line
+  ctx.fillText('三期型：开始阶段卖价递减，当突然发生上涨时，且下一次价格大于买入价的1.4倍，价格顶峰会出现在上涨后的下下次，卖价为买入价的2～6倍', GLOBAL_MARGIN, offsetTop + textDown)
+  offsetTop += line
+  ctx.fillText('四期型：开始阶段卖价递减，当突然发生上涨时，且下一次价格大于买入价的1.4倍，价格顶峰会出现在上涨后的下下下次，卖价为买入价的1.4～2倍', GLOBAL_MARGIN, offsetTop + textDown)
+  offsetTop += line
 
   /* thead */
   ~['模式', '概率', '周日'].forEach((msg, index) => {
@@ -76,7 +118,7 @@ module.exports = (data, callback, otherMsg) => {
       msg,
       {
         bold: true,
-        color: '#CCC',
+        color: '#aaa',
       }
     )
   })
@@ -84,7 +126,7 @@ module.exports = (data, callback, otherMsg) => {
   ds.forEach((msg, row) => {
     let renderArr = [
       {msg: msg.pattern_description},
-      {msg: `${(100 / length - 1).toFixed(2)}%`}
+      {msg: msg.pattern_number == 4 ? '-' : `${(100 / (length - 1)).toFixed(2)}%`}
     ].concat(msg.prices.slice(1).map(p => {
       return {
         msg: p.max == p.min ? p.max : `${p.min}~${p.max}`,
@@ -116,11 +158,11 @@ module.exports = (data, callback, otherMsg) => {
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
 
-  sendImageMsgBuffer(dataBuffer, '大头菜_'+new Date().getTime(), 'other', msg => {
+  sendImageMsgBuffer(dataBuffer, `大头菜_${qq}`.getTime(), 'other', msg => {
     callback(msg)
   })
 
-  // fs.writeFile(path.join(__dirname, `大头菜.png`), dataBuffer, function(err) {
+  // fs.writeFile(path.join(__dirname, `大头菜${qq}.png`), dataBuffer, function(err) {
   //   if(err){
   //     console.log(err)
   //   }else{
@@ -133,7 +175,7 @@ module.exports = (data, callback, otherMsg) => {
 
 const renderTable = (ctx, row, col, msg, options = {}) => {
   let offsetLeft = (col - 1) * TABLE_WIDTH + GLOBAL_MARGIN,
-    offsetTop = (row - 1) * TABLE_HEIGHT + GLOBAL_MARGIN
+    offsetTop = (row - 1) * TABLE_HEIGHT + GLOBAL_MARGIN + titleHeight
   let option = Object.assign({
     bold: false,
     size: 16,

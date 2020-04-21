@@ -6,10 +6,10 @@ const c = m => {
   console.log(m)
 }
 
-const tpa = require('./TurnipProphet')
+const { actp } = require('./TurnipProphet')
 
-console.log(typeof tpa)
+// console.log(typeof actp)
 
 // tpa('92 102-122 92', '10000', 1, c)
 // tpa('109 152-134 127-142', '10000', 1, c)
-tpa('', '10000', '10000', 1, c)
+actp('x 152-134 127-142', '10000', '10000', -1, c)

@@ -639,7 +639,7 @@ function* generate_pattern_1_with_peak(given_prices, peak_start) {
     }
   }
   yield {
-    pattern_description: "大幅上涨（三期型）",
+    pattern_description: "三期型",
     pattern_number: 1,
     prices: predicted_prices,
     probability,
@@ -767,7 +767,7 @@ function* generate_pattern_3_with_peak(given_prices, peak_start) {
   }
 
   yield {
-    pattern_description: "小幅上涨（四期型）",
+    pattern_description: "四期型",
     pattern_number: 3,
     prices: predicted_prices,
     probability,
@@ -817,7 +817,7 @@ function* generate_possibilities(sell_prices, first_buy, previous_pattern) {
 
 function analyze_possibilities(sell_prices, first_buy, previous_pattern) {
   const generated_possibilities = Array.from(generate_possibilities(sell_prices, first_buy, previous_pattern));
-  console.log(generated_possibilities);
+  // console.log(generated_possibilities);
 
   const total_probability = generated_possibilities.reduce((acc, it) => acc + it.probability, 0);
   for (const it of generated_possibilities) {
