@@ -391,6 +391,7 @@ const init = async callback => {
       })
       AllArea = AllArea.concat(city)
     })
+    AllArea = Array.from(new Set(AllArea))
   } else {
     bindError(body1.code, callback)
     return
@@ -411,6 +412,7 @@ const init = async callback => {
       }
     })
     AllArea = AllArea.concat(abroad)
+    AllArea = Array.from(new Set(AllArea))
   } else {
     bindError(body2.code, callback)
     return
