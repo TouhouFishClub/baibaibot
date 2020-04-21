@@ -9,6 +9,7 @@ const TABLE_WIDTH = 80
 const TABLE_HEIGHT = 30
 const fontFamily = 'STXIHEI'
 const titleHeight = 250
+const chartHeight = 300
 
 module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
 
@@ -23,7 +24,7 @@ module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
   let ds = other.slice(0, MAX_SHOW_DATA).concat(all)
 
   let width = TABLE_WIDTH * ( 1 + 6 * 2 + 4) + GLOBAL_MARGIN * 2,
-    height = (ds.length + 2) * TABLE_HEIGHT + GLOBAL_MARGIN * 2 + titleHeight
+    height = (ds.length + 2) * TABLE_HEIGHT + GLOBAL_MARGIN * 3 + titleHeight + chartHeight
   let canvas = createCanvas(width, height)
     , ctx = canvas.getContext('2d')
   ctx.fillStyle = 'rgba(255,255,255,1)'
@@ -61,6 +62,56 @@ module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
   offsetTop += line
   ctx.fillText('四期型：开始阶段卖价递减，当突然发生上涨时，且下一次价格大于买入价的1.4倍，价格顶峰会出现在上涨后的下下下次，卖价为买入价的1.4～2倍', GLOBAL_MARGIN, offsetTop + textDown)
   offsetTop += line
+
+
+
+
+  /* charts */
+  let chartOffsetTop = GLOBAL_MARGIN  + titleHeight
+
+  ctx.strokeStyle = 'rgba(0,0,0,1)'
+  ctx.moveTo(GLOBAL_MARGIN + 2 * TABLE_WIDTH, chartOffsetTop)
+  ctx.lineTo(GLOBAL_MARGIN + 2 * TABLE_WIDTH, chartOffsetTop + chartHeight)
+  ctx.stroke()
+  ctx.moveTo(GLOBAL_MARGIN + 2 * TABLE_WIDTH, chartOffsetTop + chartHeight)
+  ctx.lineTo(width - GLOBAL_MARGIN - 2 * TABLE_WIDTH, chartOffsetTop + chartHeight)
+  ctx.stroke()
+  for(let i = 0; i < 6; i++) {
+    ctx.beginPath()
+    ctx.setLineDash([5, 10])
+    ctx.moveTo(GLOBAL_MARGIN + 2 * TABLE_WIDTH, chartOffsetTop + chartHeight / 6 * i)
+    ctx.lineTo(width - GLOBAL_MARGIN - 2 * TABLE_WIDTH, chartOffsetTop + chartHeight / 6 * i)
+    ctx.stroke()
+  }
+
+  // console.log(all[0].prices)
+  let chartPrice = all[0].prices
+  chartPrice.shift()
+  ctx.setLineDash([])
+  ctx.beginPath()
+  ctx.moveTo(
+    GLOBAL_MARGIN + 2 * TABLE_WIDTH + TABLE_WIDTH / 2,
+    chartOffsetTop + (600 - chartPrice[0].min) / 600 * chartHeight
+  )
+  for(let i = 0; i < chartPrice.length; i ++){
+    ctx.lineTo(
+      GLOBAL_MARGIN + 2 * TABLE_WIDTH + TABLE_WIDTH / 2 + TABLE_WIDTH * i,
+      chartOffsetTop + (600 - chartPrice[i].min) / 600 * chartHeight
+    )
+  }
+  for(let j = chartPrice.length - 1; j >= 0; j --){
+    ctx.lineTo(
+      GLOBAL_MARGIN + 2 * TABLE_WIDTH + TABLE_WIDTH / 2 + TABLE_WIDTH * j,
+      chartOffsetTop + (600 - chartPrice[j].max) / 600 * chartHeight
+    )
+  }
+  ctx.closePath()
+  ctx.fillStyle = 'rgba(10, 181, 205, .3)'
+  ctx.lineWidth = 3
+  ctx.strokeStyle = 'rgba(10, 181, 205, 1)'
+  ctx.stroke()
+  ctx.fill()
+  ctx.lineWidth = 1
 
   /* thead */
   ~['模式', '概率', '周日'].forEach((msg, index) => {
@@ -153,7 +204,6 @@ module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
 
 
 
-
   let imgData = canvas.toDataURL()
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
@@ -175,7 +225,7 @@ module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
 
 const renderTable = (ctx, row, col, msg, options = {}) => {
   let offsetLeft = (col - 1) * TABLE_WIDTH + GLOBAL_MARGIN,
-    offsetTop = (row - 1) * TABLE_HEIGHT + GLOBAL_MARGIN + titleHeight
+    offsetTop = (row - 1) * TABLE_HEIGHT + GLOBAL_MARGIN * 2 + titleHeight + chartHeight
   let option = Object.assign({
     bold: false,
     size: 16,
