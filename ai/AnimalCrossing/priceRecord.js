@@ -3,7 +3,7 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var path = require('path');
 var request = require("request");
 var fs = require('fs');
-const actp = require(path.join(__dirname, '../AnimalCrossing/TurnipProphet.js'))
+const actp = require('./TurnipProphet')
 
 
 var udb;
@@ -105,6 +105,7 @@ function saveDTCPrice(content,qq,gid,callback){
           dd[day]={p0:p0,p1:p1}
           data.d=dd;
         }
+        console.log(actp);
         cl_animal_dtc.save(data,function(){
           var ret = "本周记录:\n";
           var pd = (day+4)%7;
