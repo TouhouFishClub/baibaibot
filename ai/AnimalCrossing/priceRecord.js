@@ -3,8 +3,7 @@ var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var path = require('path');
 var request = require("request");
 var fs = require('fs');
-
-const actp = require(path.join(__dirname, './TurnipProphet'))
+const actp = require(path.join(__dirname, '../AnimalCrossing/TurnipProphet.js'))
 
 
 var udb;
