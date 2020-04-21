@@ -956,7 +956,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie.toLowerCase() == 'dtc'){
-    actp(con.substring(3), groupid, 1, callback);
+    actp(con.substring(3), from, groupid, 1, callback);
     return;
   }
   if(fie.toLowerCase() == 'dts'){
