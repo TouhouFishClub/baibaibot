@@ -1,4 +1,4 @@
-const { analyze_possibilities } = require('./core/predictions')
+const { exportCalc } = require('./core/predictions')
 const render = require('./renderImage')
 const { getUserDTCInfo } = require('./priceRecord')
 
@@ -43,7 +43,7 @@ const formatSaveData = (data, qq, type, callback) => {
       }
     }
   }
-  let calc = analyze_possibilities(outArr, false, -1)
+  let calc = exportCalc(outArr, false, -1)
   render(calc, qq, outArr, type, false, callback)
 }
 
@@ -101,9 +101,8 @@ function actp(content, qq, group, type = -1, callback, isFirst = false) {
     return
   }
 
-  let calc = analyze_possibilities(inputArr.concat([]), isFirst, type)
+  let calc = exportCalc(inputArr.concat([]), isFirst, type)
   render(calc, qq, inputArr, type, isFirst, callback)
-
 
 }
 
