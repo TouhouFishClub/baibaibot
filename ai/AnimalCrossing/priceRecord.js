@@ -116,7 +116,7 @@ function saveDTCPrice(content,qq,gid,callback){
             ret = ret + "周"+(pd-i)+":"+thenprice+"\n";
           }
           ret = ret + '您的时区为:UTC'+((tz>0)?("+"+(tz/2)):(tz/2));
-          actp("",qq,gid,1,function(r){
+          actp("",qq,gid,-1,function(r){
             callback(ret + "\n" + r);
           })
         });
