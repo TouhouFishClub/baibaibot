@@ -15,6 +15,9 @@ function initDB(){
 }
 
 function saveDTCPrice(content,qq,gid,callback){
+
+
+
   var cl_animal_dtc = udb.collection('cl_animal_dtc');
   var query = {'_id':qq};
   content = content.toLowerCase().trim();
@@ -157,8 +160,20 @@ function getUserDTCInfo(qq,callback){
   });
 }
 
+function getGroupDTCInfo(gid,callback){
+  var cl_animal_dtc = udb.collection('cl_animal_dtc');
+  var query = {gid:gid};
+
+
+  var wr = cl_animal_dtc.find(query).limit(50);
+  wr.toArray(function (err, arr) {
+    callback(arr);
+  })
+}
+
 
 module.exports={
   saveDTCPrice,
-  getUserDTCInfo
+  getUserDTCInfo,
+  getGroupDTCInfo
 }
