@@ -713,7 +713,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ret = ret + "明日方舟导航【ark】\n";
     ret = ret + "洛奇导航【opt】\n"
     ret = ret + "舰队collection导航【'e】\n"
-    ret = ret + "大头菜价记录【dtsh】\n"
+    ret = ret + "大头菜价记录和预测【dtsh】\n"
     ret = ret + "其他/意见或建议/定制功能请到\n"
     ret = ret + "https://github.com/TouhouFishClub/baibaibot/issues"
     callback(ret.trim());
