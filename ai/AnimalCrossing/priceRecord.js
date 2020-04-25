@@ -15,7 +15,14 @@ function initDB(){
 }
 
 function saveDTCPrice(content,qq,gid,callback){
-
+  if(content=="h"){
+    var ret = "";
+    ret = ret + '【dts 88】当前时间菜价为88\n'
+    ret = ret + '【dts 77-99】当天菜价上午77，下午99\n'
+    ret = ret + '【dts 65 UTC-4】当前时间菜价为65，时区为UTC-4（非北京时间只需记录一次时区）\n'
+    callback(ret.trim());
+    return;
+  }
 
 
   var cl_animal_dtc = udb.collection('cl_animal_dtc');
@@ -133,7 +140,9 @@ function saveDTCPrice(content,qq,gid,callback){
             var thenprice = data.d[day-i]?(data.d[day-i].p0+"-"+data.d[day-i].p1):"0-0";
             ret = ret + "周"+(pd-i)+":"+thenprice+"\n";
           }
-          ret = ret + '您的时区为:UTC'+((tz>0)?("+"+(tz/2)):(tz/2));
+          ret = ret + '您的时区为:UTC'+((tz>0)?("+"+(tz/2)):(tz/2))+"\n";
+
+
           actp("",qq,gid,1,function(r){
             callback(ret + "\n" + r);
           })
