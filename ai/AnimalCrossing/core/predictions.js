@@ -787,8 +787,12 @@ class Predictor {
 
   get_transition_probability(previous_pattern) {
     if (typeof previous_pattern === 'undefined' || Number.isNaN(previous_pattern) || previous_pattern === null || previous_pattern < 0 || previous_pattern > 3) {
-      // TODO: Fill the steady state pattern (https://github.com/mikebryant/ac-nh-turnip-prices/pull/90) here.
-      return [0.346278, 0.247363, 0.147607, 0.258752];
+      // Use the steady state probabilities of PROBABILITY_MATRIX if we don't
+      // know what the previous pattern was.
+      // See https://github.com/mikebryant/ac-nh-turnip-prices/issues/68
+      // and https://github.com/mikebryant/ac-nh-turnip-prices/pull/90
+      // for more information.
+      return [4530/13082, 3236/13082, 1931/13082, 3385/13082];
     }
 
     return PROBABILITY_MATRIX[previous_pattern];
@@ -806,13 +810,14 @@ class Predictor {
   * generate_possibilities(sell_prices, first_buy, previous_pattern) {
     if (first_buy || isNaN(sell_prices[0])) {
       for (var buy_price = 90; buy_price <= 110; buy_price++) {
-        sell_prices[0] = sell_prices[1] = buy_price;
+        const temp_sell_prices = sell_prices.slice();
+        temp_sell_prices[0] = temp_sell_prices[1] = buy_price;
         if (first_buy) {
-          yield* this.generate_pattern_3(sell_prices);
+          yield* this.generate_pattern_3(temp_sell_prices);
         } else {
           // All buy prices are equal probability and we're at the outmost layer,
           // so don't need to multiply_generator_probability here.
-          yield* this.generate_all_patterns(sell_prices, previous_pattern)
+          yield* this.generate_all_patterns(temp_sell_prices, previous_pattern)
         }
       }
     } else {
@@ -878,8 +883,8 @@ class Predictor {
     });
 
     let global_min_max = [];
-    for (var day = 0; day < 14; day++) {
-      let prices = {
+    for (let day = 0; day < 14; day++) {
+      const prices = {
         min: 999,
         max: 0,
       }
