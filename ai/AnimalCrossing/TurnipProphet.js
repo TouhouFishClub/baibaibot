@@ -27,8 +27,9 @@ const formatSaveData = (data, qq, type, callback) => {
   for(var i=pd;i>=0;i--){
     if(i == pd) {
       if(d[day - i]){
-        outArr.push(d[day - i].p0 || NaN)
-        outArr.push(d[day - i].p0 || NaN)
+        let sunday = d[day - i].p0 || d[day - i].p1
+        outArr.push(sunday || NaN)
+        outArr.push(sunday || NaN)
       } else {
         outArr.push(NaN)
         outArr.push(NaN)
