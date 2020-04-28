@@ -194,6 +194,7 @@ const cov = async (content, callback) => {
       callback
     )
   } else {
+    AllArea = Array.from(new Set(AllArea))
     let sa = AllArea.filter(x => new RegExp(content).test(x.name))
     // console.log(sa[0])
     // console.log(AllData[sa[0].locationId])
