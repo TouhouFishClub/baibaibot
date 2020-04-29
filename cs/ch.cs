@@ -4,43 +4,55 @@ using System.Linq;
 using System.Text;  
 using System.Net;  
 using System.Net.Sockets; 
+
 namespace HttpServer
 {
     class MainClass
     {
         static void Main(string[] args)  
-        {  
+        {
+            //while (true)
+            //{
+            //    string cmd = Console.ReadLine();
+            //    var vs = cmd.Split('_');
+            //    Console.WriteLine(BCR.BCRGuildBattle.Handle(vs[0], int.Parse(vs[1]), vs[2], int.Parse(vs[3])));
+            //    Console.WriteLine();
+            //    Console.WriteLine();
+            //}
             int port = 11005;//端口  
-            byte[] buf = new byte[1024];  
+            byte[] buf = new byte[1024];
             //IP是本地127.0.0.1  
-            TcpListener server = new TcpListener(IPAddress.Any, port);  
-            server.Start();  
+            TcpListener server = new TcpListener(IPAddress.Any, port);
+            server.Start();
 
-            Console.WriteLine("服务运行在[{0}]端口", port);  
-            while (true)  
-            {  
+            Console.WriteLine("服务运行在[{0}]端口", port);
+
+            //Mongo.DBConnection.Instance.Connect();
+
+            while (true)
+            {
 
 
-                Socket clent = server.AcceptSocket();  
-                clent.Receive(buf);  
+                Socket clent = server.AcceptSocket();
+                clent.Receive(buf);
                 string reqstr = Encoding.ASCII.GetString(buf);
 
-                string ss = "HTTP/1.0 200 OK\nContent-Type:text/plain\n\n";  
+                string ss = "HTTP/1.0 200 OK\nContent-Type:text/plain\n\n";
                 string ss1 = handleReq(reqstr);
-                string resstr = ss+ss1;
-                
+                string resstr = ss + ss1;
+
                 Console.WriteLine(resstr);
 
-                clent.Send(Encoding.ASCII.GetBytes(resstr));  
-                clent.Close();  
-                clent = null;  
-            }  
+                clent.Send(Encoding.ASCII.GetBytes(resstr));
+                clent.Close();
+                clent = null;
+            }
         }
 
         static string handleReq(string req){
             Console.WriteLine(req);
             // handle req
-            string res = "";
+            string res = Message.MessageHandle.Handle(req);
             return res;
         }    
     }
