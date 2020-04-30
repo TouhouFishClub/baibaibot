@@ -10,7 +10,7 @@ namespace HttpServer.BCR
         public static string tip = "提示：\n" +
             "R 10 20 30 40 50 5 ——— 重置boss信息，前5数字为血量，最后一个为每人刀数\n" +
             "K 50 ——— 出刀并对boss造成伤害\n" +
-            "W ——— 查询能否出刀" +
+            "W ——— 查询能否出刀\n" +
             "C ——— 查询当前boss血量\n" +
             "T ——— 上树\n" +
             "Q ——— 树上有谁\n" +
