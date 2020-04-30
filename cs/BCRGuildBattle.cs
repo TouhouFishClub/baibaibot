@@ -71,6 +71,7 @@ namespace HttpServer.BCR
                 }
                 if (chat.Length == 0) return tip;
                 char head = chat.ToUpper()[0];
+                //Console.WriteLine(head);
                 if (chat.Length >= 2)
                     chat = chat.Substring(2, chat.Length - 2);
                 switch (head)
@@ -133,9 +134,9 @@ namespace HttpServer.BCR
                             return string.Format("{0}正在出刀,不要抢刀", nowKiller.Name);
                         }
                     case 'C':
-                        bossId = int.Parse(chat) - 1;
-                        return string.Format("{0:D}号Boss为{0:D}轮，剩余血量{1:D},{2}%"
-                            , bossId, bossNowHps[bossId], (bossNowHps[bossId - 1] / bossHps[bossId - 1]).ToString("f2"));
+                        //bossId = int.Parse(chat) - 1;
+                        return string.Format("{0:D}号Boss为{1:D}轮，剩余血量{2:D},{3}%"
+                            , bossId, round, bossNowHps[bossId - 1], (bossNowHps[bossId - 1] / bossHps[bossId - 1] * 100).ToString("f2"));
                     case 'T':
                         p = getPlayer(qqId, name);
                         p.Tree = true;
