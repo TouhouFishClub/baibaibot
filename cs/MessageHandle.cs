@@ -45,15 +45,26 @@ namespace HttpServer.Message
                     case "port":
                         break;
                     default:
-                        throw new Exception("不正确的抬头");
+                        throw new Exception("不正确的抬头" + ss);
                 }
             }
             if (chat.StartsWith("wbcr"))
             {
-                chat = chat.Substring(5, chat.Length - 5);
-                return BCR.BCRGuildBattle.Handle(chat, groupId, UserName, qqId);
+                if (chat.Length >= 5)
+                {
+                    chat = chat.Substring(5, chat.Length - 5);
+                    return  BCR.BCRGuildBattle.Handle(chat, groupId, UserName, qqId);
+                }
+                else
+                {
+                    return BCRGuildBattle.tip;
+                }
             }
-            return $"群号：{groupId}，QQ号：{qqId}，名字：{UserName}，聊天信息：{chat}";
+            else
+            {
+                return "暂无对应功能";
+            }
+            //return string.Format( "群号：{0:D}，QQ号：{1:D}，名字：{2}，聊天信息：{3}", groupId, qqId, UserName, chat);
         }
 
         /// <summary>  

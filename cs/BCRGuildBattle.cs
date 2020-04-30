@@ -7,7 +7,7 @@ namespace HttpServer.BCR
 {
     public static class BCRGuildBattle
     {
-        static string tip = "提示：\n" +
+        public static string tip = "提示：\n" +
             "R 10 20 30 40 50 5 ——— 重置boss信息，前5数字为血量，最后一个为每人刀数\n" +
             "K 50 ——— 出刀并对boss造成伤害\n" +
             "W ——— 查询能否出刀" +
@@ -91,11 +91,11 @@ namespace HttpServer.BCR
                         int nowBossId = bossId;
                         if (p.Chance == 0)
                         {
-                            return $"{p.Name}没刀了，爬";
+                            return string.Format("{0}没刀了，爬",p.Name);
                         }
                         else if (p.Tree)
                         {
-                            return $"{p.Name}在树上，爬";
+                            return string.Format("{0}在树上，爬", p.Name);
                         }
                         else
                         {
@@ -118,25 +118,28 @@ namespace HttpServer.BCR
                             }
                             if (nowKiller == p)
                                 nowKiller = null;
-                            return $"{p.Name} 对 {nowBossId}号boss造成{damage}点伤害。 {bossId}号Boss为{round}轮，剩余血量{bossNowHps[bossId - 1]},{((float)(bossNowHps[bossId - 1]) / bossHps[bossId - 1] * 100).ToString("f2")}%";
+                            return string.Format("{0} 对 {1:D}号boss造成{2:D}点伤害。 {3:D}号Boss为{4:D}轮，剩余血量{5:D},{6}%"
+                                , p.Name, nowBossId, damage, bossId, round, bossNowHps[bossId - 1], ((float)(bossNowHps[bossId - 1]) / bossHps[bossId - 1] * 100).ToString("f2")
+                                );
                         }
                     case 'W':
                         if (nowKiller == null)
                         {
                             nowKiller = getPlayer(qqId, name);
-                            return $"{nowKiller.Name}出刀了";
+                            return string.Format("{0}出刀了", nowKiller.Name);
                         }
                         else
                         {
-                            return $"{nowKiller.Name}正在出刀,不要抢刀";
+                            return string.Format("{0}正在出刀,不要抢刀", nowKiller.Name);
                         }
                     case 'C':
                         bossId = int.Parse(chat) - 1;
-                        return $"{bossId}号Boss为{bossId}轮，剩余血量{bossNowHps[bossId]},{(bossNowHps[bossId - 1] / bossHps[bossId - 1]).ToString("f2")}%";
+                        return string.Format("{0:D}号Boss为{0:D}轮，剩余血量{1:D},{2}%"
+                            , bossId, bossNowHps[bossId], (bossNowHps[bossId - 1] / bossHps[bossId - 1]).ToString("f2"));
                     case 'T':
                         p = getPlayer(qqId, name);
                         p.Tree = true;
-                        return $"{p.Name}上树了";
+                        return string.Format("{0}上树了", p.Name);
                     case 'Q':
                         StringBuilder sb = new StringBuilder();
                         foreach (var pp in players)

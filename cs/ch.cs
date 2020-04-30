@@ -52,9 +52,17 @@ namespace HttpServer
 
         static string handleReq(string req){
             Console.WriteLine(req);
-            // handle req
-            string res = Message.MessageHandle.Handle(req);
-            return res;
+            try
+            {
+                // handle req
+                string res = Message.MessageHandle.Handle(req);
+                return res;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return "";
+            }
         }    
     }
 }
