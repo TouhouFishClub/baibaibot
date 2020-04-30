@@ -151,7 +151,7 @@ namespace HttpServer.BCR
                         sb = new StringBuilder();
                         foreach (var pp in players)
                         {
-                            sb.Append($"{pp.Name}出了{maxChance - pp.Chance}刀,共造成{pp.Damage.Sum()}伤害\n");
+                            sb.Append(pp.Name + "出了" + (maxChance - pp.Chance) + "刀,共造成" + (pp.Damage.Sum()) + "伤害\n");
                         }
                         return "伤害统计:\n" + sb.ToString();
                     case 'E':
