@@ -62,7 +62,7 @@ namespace HttpServer.Message
             }
             else
             {
-                return "暂无对应功能";
+                return "";
             }
             //return string.Format( "群号：{0:D}，QQ号：{1:D}，名字：{2}，聊天信息：{3}", groupId, qqId, UserName, chat);
         }
