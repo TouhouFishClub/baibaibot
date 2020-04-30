@@ -38,13 +38,13 @@ namespace HttpServer
                 clent.Receive(buf);
                 string reqstr = Encoding.ASCII.GetString(buf);
 
-                string ss = "HTTP/1.0 200 OK\nContent-Type:text/plain\n\n";
+                string ss = "HTTP/1.0 200 OK\nContent-Type:text/plain;charset=utf-8\n\n";
                 string ss1 = handleReq(reqstr);
                 string resstr = ss + ss1;
 
                 Console.WriteLine(resstr);
 
-                clent.Send(Encoding.ASCII.GetBytes(resstr));
+                clent.Send(Encoding.UTF8.GetBytes(resstr));
                 clent.Close();
                 clent = null;
             }
