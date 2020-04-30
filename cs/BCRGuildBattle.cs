@@ -70,7 +70,7 @@ namespace HttpServer.BCR
                     return "其他群组正在使用此功能";
                 }
                 if (chat.Length == 0) return tip;
-                char head = chat[0];
+                char head = chat.ToUpper()[0];
                 if (chat.Length >= 2)
                     chat = chat.Substring(2, chat.Length - 2);
                 switch (head)
