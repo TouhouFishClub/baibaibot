@@ -156,6 +156,7 @@ namespace HttpServer.BCR
                         return "伤害统计:\n" + sb.ToString();
                     case 'E':
                         Clear();
+                        groupId = -1;
                         return "此次工会战结束！";
                     default:
                         return tip;
