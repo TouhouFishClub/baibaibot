@@ -959,6 +959,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie.toLowerCase() == 'bcr'){
+    console.log('=============')
+    console.log(con.substring(3))
     discord(con.substring(3), from, groupid, callback);
     return;
   }

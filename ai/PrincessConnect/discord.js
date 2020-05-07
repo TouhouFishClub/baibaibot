@@ -21,6 +21,8 @@ const discord = (content, qq, group, callback) => {
     return
   let sp = content.toLowerCase().replace(/ +/g, ' ').trim().split(' '),
     collection = client.collection('cl_pcr_discord')
+  console.log('==============')
+  console.log(sp[0])
   switch(sp[0]) {
     case '初始化':
       init(sp.slice(1).map(x => parseInt(x)), group, collection, callback)
