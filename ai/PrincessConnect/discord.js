@@ -22,25 +22,25 @@ const discord = (content, qq, group, callback) => {
   let sp = content.toLowerCase().replace(/ +/g, ' ').trim().split(' '),
     collection = client.collection('cl_pcr_discord')
   switch(sp[0]) {
-    case 'init':
+    case '初始化':
       init(sp.slice(1).map(x => parseInt(x)), group, collection, callback)
       break
-    case 'recov':
+    case '重置':
       recov(sp.slice(1).map(x => parseInt(x)), group, collection, callback)
       break
-    case 'queue':
+    case '排刀':
       queue(qq, group, collection, callback)
       break
-    case 'attack':
+    case '报刀':
       attack(qq, group, sp[1], collection, callback)
       break
-    case 'tree':
+    case '挂树':
       tree(qq, group, collection, callback)
       break
-    case 'withdraw':
+    case '撤销':
       withdraw(qq, group, collection, callback)
       break
-    case 'where':
+    case '查树':
       where(group, collection, callback)
       break
     case 'help':

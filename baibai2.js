@@ -95,6 +95,8 @@ const chp = require('./ai/chp')
 const {actp} = require('./ai/AnimalCrossing/TurnipProphet')
 const { saveDTCPrice } = require('./ai/AnimalCrossing/priceRecord');
 
+const { discord } = require('./ai/PrincessConnect/discord')
+
 
 initWS();
 initWS2();
@@ -954,6 +956,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         anr(from, con.substring(3), callback)
     }
     return
+  }
+
+  if(fie.toLowerCase() == 'bcr'){
+    discord(con.substring(3), from, groupid, callback);
+    return;
   }
 
   if(fie.toLowerCase() == 'dtc'){
