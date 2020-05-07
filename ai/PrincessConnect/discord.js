@@ -261,7 +261,7 @@ const calc = (groupData, user, damage, callback) => {
       'tree': []
     }
   }
-  out = `${user}对boss${groupData.index + 1}造成了${damage}伤害\n当前：${boss.join(',')}\nindex: ${index}`
+  out = `[CQ:at,qq=${user}]对${groupData.index + 1}号boss造成了${damage}伤害\n当前是${index + 1}号boss\nboss列表：${boss.join(',')}`
   callback(out)
   return Object.assign({}, groupData, {
     'current': '',
