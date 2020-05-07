@@ -230,7 +230,7 @@ const info = async (group, collection, callback) => {
     return
   }
   if(col.boss) {
-    callback(`当前是${col.loop + 1}周目 ${col.index}号boss\n血量：${col.boss[col.index]}\nboss列表：${col.boss.join(',')}`)
+    callback(`当前是${col.loop + 1}周目 ${col.index + 1}号boss\n血量：${col.boss[col.index]}\nboss列表：${col.boss.join(',')}`)
   } else {
     help(callback)
   }
