@@ -21,8 +21,8 @@ const discord = (content, qq, group, callback) => {
     return
   let sp = content.toLowerCase().replace(/ +/g, ' ').trim().split(' '),
     collection = client.collection('cl_pcr_discord')
-  console.log('==============')
-  console.log(sp[0])
+  // console.log('==============')
+  // console.log(sp[0])
   switch(sp[0]) {
     case '初始化':
       init(sp.slice(1).map(x => parseInt(x)), group, collection, callback)
@@ -45,7 +45,13 @@ const discord = (content, qq, group, callback) => {
     case '查树':
       where(group, collection, callback)
       break
-    case 'help':
+    case '状态':
+      info(group, collection, callback)
+      break
+    case '帮助':
+      help(callback)
+      break
+    default:
       help(callback)
       break
   }
@@ -71,6 +77,10 @@ const init = async (BossList, group, collection, callback) => {
     callback(`无法初始化!\n${col.boss.join(',')}\nLoop: ${col.loop}`)
     return
   }
+  if(BossList.length < 1){
+    callback('boss初始化错误')
+    return
+  }
   collection.save({
     '_id': `${group}`,
     'boss': BossList,
@@ -87,6 +97,10 @@ const init = async (BossList, group, collection, callback) => {
 }
 
 const recov = async (BossList, group, collection, callback) => {
+  if(BossList.length < 1){
+    callback('boss初始化错误')
+    return
+  }
   collection.save({
     '_id': `${group}`,
     'boss': BossList,
@@ -118,12 +132,12 @@ const queue = async (user, group, collection, callback) => {
     if(col.current == user) {
       callback(`当前正在排队`)
     } else {
-      callback(`无法排队! 当前：${col.current}`)
+      callback(`无法排队! 当前[CQ:at,qq=${col.current}]正在排队`)
     }
   } else {
     if(usr) {
       if(usr.count >= ACTIVE_COUNT) {
-        callback(`排队失败，超过限制`)
+        callback(`排队失败，超过当天次数限制`)
         return
       }
     } else {
@@ -136,7 +150,7 @@ const queue = async (user, group, collection, callback) => {
       'current': `${user}`,
       'expiration': getNow().getTime() + EXPIRATION_TIME
     }))
-    callback(`${user}排队成功`)
+    callback(`[CQ:at,qq=${user}]排队成功`)
   }
 }
 
@@ -159,7 +173,7 @@ const attack = async (user, group, damage, collection, callback) => {
       callback(`输入错误`)
     }
   } else {
-    callback(`当前无法操作\n${col.current ? (col.current + '正在排队') : '没有人在排队'}`)
+    callback(`当前无法操作\n${col.current ? (`[CQ:at,qq=${col.current}]正在排队\n过期时间：${formatTime(col.expiration + UPDATE_TIME * 60 * 60 * 1000)}`) : '没有人在排队'}`)
   }
 }
 
@@ -174,9 +188,9 @@ const tree = async (user, group, collection, callback) => {
       'current': '',
       'tree': col.tree.concat([user]),
     }))
-    callback(`${user} 已挂树`)
+    callback(`[CQ:at,qq=${user}] 已挂树`)
   } else {
-    callback(`当前无法操作\n${col.current ? (col.current + '正在排队') : '没有人在排队'}`)
+    callback(`当前无法操作\n${col.current ? (`[CQ:at,qq=${col.current}]正在排队\n过期时间：${formatTime(col.expiration + UPDATE_TIME * 60 * 60 * 1000)}`) : '没有人在排队'}`)
   }
 }
 
@@ -203,9 +217,22 @@ const where = async (group, collection, callback) => {
     return
   }
   if(col.tree.length) {
-    callback(`树上有：\n${col.tree.join('\n')}`)
+    callback(`树上有：\n${col.tree.map(u => `[CQ:at,qq=${u}]`).join('\n')}`)
   } else {
     callback(`没有人在树上`)
+  }
+}
+
+const info = async (group, collection, callback) => {
+  let col = await getGroupData(group, collection)
+  if(!col) {
+    errorInit(callback)
+    return
+  }
+  if(col.boss) {
+    callback(`当前是${col.loop + 1}周目 ${col.index}号boss\n血量：${col.boss[col.index]}\nboss列表：${col.boss.join(',')}`)
+  } else {
+    help(callback)
   }
 }
 
@@ -245,11 +272,16 @@ const calc = (groupData, user, damage, callback) => {
 }
 
 const help = callback => {
-  callback(`这是帮助`)
+  callback(`======= 自助排刀系统 =====\n【bcr 初始化 boss1血量 boss2血量 boss3血量 ...】：初始化boss，如果之前初始化的boss被击杀完毕，则周目数会+1，boss未全部击杀不可再次初始化\n【bcr 重置 boss1血量 boss2血量 boss3血量 ...】：此设定与初始化相同，可以强制重置boss，并且会使周目数及记录清空\n【bcr 排刀】：进入排队，如果有人排队，则无法进入，排队后15分钟不报刀或者挂树，自动撤销排队\n【bcr 撤销】：撤销当前的排队\n【bcr 报刀 伤害数量】：对当前boss造成伤害，如boss被击杀自动进入下一个boss\n【bcr 挂树】：挂树\n【bcr 查树】：查询当前挂树的成员\n【bcr 状态】：查询当前boss状态`)
 }
 
 const errorInit = callback => {
-  callback(`未初始化`)
+  callback(`未初始化，请使用【bcr 帮助】获得细节`)
+}
+
+const formatTime = ts => {
+  let time = new Date(ts)
+  return `${time.getHours()} : ${time.getMinutes()} : ${time.getSeconds()}`
 }
 
 const getNow = () => {
