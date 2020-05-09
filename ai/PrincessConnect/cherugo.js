@@ -10,6 +10,7 @@ const cherugo = (content, encode, callback) => {
     help(callback)
     return
   }
+  content = content.trim()
   if(encode) {
     let c = ["切"]
     let e = iconv.encode(content, 'gbk')
