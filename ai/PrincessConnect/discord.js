@@ -25,30 +25,39 @@ const discord = (content, qq, group, callback) => {
   // console.log(sp[0])
   switch(sp[0]) {
     case '初始化':
+    case 'i':
       init(sp.slice(1).map(x => parseInt(x)), group, collection, callback)
       break
     case '重置':
+    case 'r':
       recov(sp.slice(1).map(x => parseInt(x)), group, collection, callback)
       break
     case '排刀':
+    case 'q':
       queue(qq, group, collection, callback)
       break
     case '报刀':
+    case 'f':
       attack(qq, group, sp[1], collection, callback)
       break
     case '挂树':
+    case 't':
       tree(qq, group, collection, callback)
       break
     case '撤销':
+    case 'c':
       withdraw(qq, group, collection, callback)
       break
     case '查树':
+    case 's':
       where(group, collection, callback)
       break
     case '状态':
+    case 'n':
       info(group, collection, callback)
       break
     case '帮助':
+    case 'h':
       help(callback)
       break
     default:
@@ -70,6 +79,14 @@ const getAttackUser = (user, group, collection) => {
 }
 
 const init = async (BossList, group, collection, callback) => {
+  if(BossList.filter(x => !/^\d+$/.test(x)).length > 0) {
+    callback('输入错误，请直接输入boss血量，如bcr 初始化 100 200 300 400 500')
+    return
+  }
+  if(BossList.length < 1){
+    callback('boss初始化错误')
+    return
+  }
   let col = await getGroupData(group, collection)
   // console.log('====')
   // console.log(col)
@@ -97,6 +114,10 @@ const init = async (BossList, group, collection, callback) => {
 }
 
 const recov = async (BossList, group, collection, callback) => {
+  if(BossList.filter(x => !/^\d+$/.test(x)).length > 0) {
+    callback('输入错误，请直接输入boss血量，如bcr 初始化 100 200 300 400 500')
+    return
+  }
   if(BossList.length < 1){
     callback('boss初始化错误')
     return
@@ -165,10 +186,8 @@ const attack = async (user, group, damage, collection, callback) => {
   // console.log(usr)
   if(col.current == user) {
     if(damage && /^\d+$/.test(damage)) {
-      await collection.save(calc(col, user, damage, callback))
-      await collection.save(Object.assign(usr, {
-        'count': usr.count + 1
-      }))
+      let obj = await calc(col, user, damage, collection, usr, callback)
+      await collection.save(obj)
     } else {
       callback(`输入错误`)
     }
@@ -236,7 +255,7 @@ const info = async (group, collection, callback) => {
   }
 }
 
-const calc = (groupData, user, damage, callback) => {
+const calc = async (groupData, user, damage, collection, userObj, callback) => {
   let boss = groupData.boss.concat([]),
     index = groupData.index,
     attack = groupData.attack.concat([]),
@@ -252,16 +271,22 @@ const calc = (groupData, user, damage, callback) => {
   // console.log(damage)
   // console.log(boss[index])
   // console.log(parseInt(damage) < parseInt(boss[index]))
+  let usrStr = ''
   if(parseInt(damage) < parseInt(boss[index])) {
     boss[index] = boss[index] - damage
+    usrStr = `当前第${userObj.count + 1}刀（完整刀）`
   } else {
+    usrStr = `当前第${userObj.count + 1}刀（收尾刀）`
     boss[index] = 0
     index ++
     clearTree = {
       'tree': []
     }
+    await collection.save(Object.assign(userObj, {
+      'count': userObj.count + 1
+    }))
   }
-  out = `[CQ:at,qq=${user}]对${groupData.index + 1}号boss造成了${damage}伤害\n当前是${index + 1}号boss\nboss列表：${boss.join(',')}`
+  out = `[CQ:at,qq=${user}]对${groupData.index + 1}号boss造成了${damage}伤害\n${usrStr}\n当前是${index + 1}号boss\nboss列表：${boss.join(',')}`
   callback(out)
   return Object.assign({}, groupData, {
     'current': '',
@@ -272,7 +297,11 @@ const calc = (groupData, user, damage, callback) => {
 }
 
 const help = callback => {
-  callback(`======= 自助排刀系统 =====\n【bcr 初始化 boss1血量 boss2血量 boss3血量 ...】：初始化boss，如果之前初始化的boss被击杀完毕，则周目数会+1，boss未全部击杀不可再次初始化\n【bcr 重置 boss1血量 boss2血量 boss3血量 ...】：此设定与初始化相同，可以强制重置boss，并且会使周目数及记录清空\n【bcr 排刀】：进入排队，如果有人排队，则无法进入，排队后15分钟不报刀或者挂树，自动撤销排队\n【bcr 撤销】：撤销当前的排队\n【bcr 报刀 伤害数量】：对当前boss造成伤害，如boss被击杀自动进入下一个boss\n【bcr 挂树】：挂树\n【bcr 查树】：查询当前挂树的成员\n【bcr 状态】：查询当前boss状态`)
+  callback(`======= 自助排刀系统 =====\n括号中为快捷输入，如排刀，既可以用bcr 排刀，也可以用bcrq\n【bcr(i) 初始化 boss1血量 boss2血量 boss3血量 ...】：初始化boss，如果之前初始化的boss被击杀完毕，则周目数会+1，boss未全部击杀不可再次初始化\n【bcr(r) 重置 boss1血量 boss2血量 boss3血量 ...】：此设定与初始化相同，可以强制重置boss，并且会使周目数及记录清空\n【bcr(q) 排刀】：进入排队，如果有人排队，则无法进入，排队后15分钟不报刀或者挂树，自动撤销排队\n【bcr(c) 撤销】：撤销当前的排队\n【bcr(f) 报刀 伤害数量】：对当前boss造成伤害，如boss被击杀自动进入下一个boss\n【bcr(t) 挂树】：挂树\n【bcr 查树】：查询当前挂树的成员\n【bcr(n) 状态】：查询当前boss状态`)
+}
+
+const changelog = callback => {
+  callback(``)
 }
 
 const errorInit = callback => {
