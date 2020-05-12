@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient
-const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
-// const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
+// const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
+const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
 const EXPIRATION_TIME = 15 * 60 * 1000
 const UPDATE_TIME = 5
 const ACTIVE_COUNT = 3
@@ -192,11 +192,20 @@ const attack = async (user, group, damage, collection, callback) => {
   }
   // console.log('=======')
   // console.log(usr)
+  let now = getNow()
+  if(!usr) {
+    usr = {
+      '_id': `${group}_${user}_${now.getMonth() + 1}_${now.getDate()}`,
+      'count': 0
+    }
+    await collection.save(usr)
+  }
   if(col.current == user || (col.current == '' || col.expiration < getNow().getTime())) {
     if(damage && /^\d+$/.test(damage)) {
       let obj = await calc(col, user, damage, collection, usr, callback)
       if(!obj) {
-        return 
+        callback(`已无可击杀boss，请使用初始化重置`)
+        return
       }
       await collection.save(obj)
     } else {
@@ -289,10 +298,10 @@ const calc = async (groupData, user, damage, collection, userObj, callback) => {
   // console.log(boss[index])
   // console.log(parseInt(damage) < parseInt(boss[index]))
   if(index >= boss.length) {
-    callback(`已无可击杀boss，请使用初始化重置`)
     return false
   }
   let usrStr = ''
+  // console.log(userObj)
   if(parseInt(damage) < parseInt(boss[index])) {
     boss[index] = boss[index] - damage
     usrStr = `今日第${userObj.count + 1}刀（完整刀）`
