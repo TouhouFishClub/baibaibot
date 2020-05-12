@@ -195,6 +195,9 @@ const attack = async (user, group, damage, collection, callback) => {
   if(col.current == user || (col.current == '' || col.expiration < getNow().getTime())) {
     if(damage && /^\d+$/.test(damage)) {
       let obj = await calc(col, user, damage, collection, usr, callback)
+      if(!obj) {
+        return 
+      }
       await collection.save(obj)
     } else {
       callback(`输入错误`)
@@ -287,6 +290,7 @@ const calc = async (groupData, user, damage, collection, userObj, callback) => {
   // console.log(parseInt(damage) < parseInt(boss[index]))
   if(index >= boss.length) {
     callback(`已无可击杀boss，请使用初始化重置`)
+    return false
   }
   let usrStr = ''
   if(parseInt(damage) < parseInt(boss[index])) {
