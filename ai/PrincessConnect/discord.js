@@ -285,6 +285,9 @@ const calc = async (groupData, user, damage, collection, userObj, callback) => {
   // console.log(damage)
   // console.log(boss[index])
   // console.log(parseInt(damage) < parseInt(boss[index]))
+  if(index >= boss.length) {
+    callback(`已无可击杀boss，请使用初始化重置`)
+  }
   let usrStr = ''
   if(parseInt(damage) < parseInt(boss[index])) {
     boss[index] = boss[index] - damage
@@ -304,7 +307,7 @@ const calc = async (groupData, user, damage, collection, userObj, callback) => {
   if(index >= boss.length) {
     bossInfo = `当前所有boss均被击杀，请使用初始化重置`
   } else {
-    bossInfo = `当前是${index + 1}号boss\\n血量：${boss[index]}`
+    bossInfo = `当前是${index + 1}号boss\n血量：${boss[index]}`
   }
   out = `[CQ:at,qq=${user}]对${groupData.index + 1}号boss造成了${damage}伤害\n${usrStr}\n${bossInfo}\nboss列表：${boss.join(',')}`
   callback(out)
