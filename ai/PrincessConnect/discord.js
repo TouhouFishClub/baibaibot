@@ -26,34 +26,42 @@ const discord = (content, qq, group, callback) => {
   switch(sp[0]) {
     case '初始化':
     case 'i':
+    case 'init':
       init(sp.slice(1).map(x => parseInt(x)), group, collection, callback)
       break
     case '重置':
     case 'r':
+    case 'recov':
       recov(sp.slice(1).map(x => parseInt(x)), group, collection, callback)
       break
     case '排刀':
     case 'q':
+    case 'queue':
       queue(qq, group, collection, callback)
       break
     case '报刀':
     case 'f':
+    case 'attack':
       attack(qq, group, sp[1], collection, callback)
       break
     case '挂树':
     case 't':
+    case 'tree':
       tree(qq, group, collection, callback)
       break
     case '撤销':
     case 'c':
+    case 'withdraw':
       withdraw(qq, group, collection, callback)
       break
     case '查树':
     case 's':
+    case 'where':
       where(group, collection, callback)
       break
     case '状态':
     case 'n':
+    case 'info':
       info(group, collection, callback)
       break
     case '帮助':
@@ -184,7 +192,7 @@ const attack = async (user, group, damage, collection, callback) => {
   }
   // console.log('=======')
   // console.log(usr)
-  if(col.current == user) {
+  if(col.current == user || (col.current == '' || col.expiration < getNow().getTime())) {
     if(damage && /^\d+$/.test(damage)) {
       let obj = await calc(col, user, damage, collection, usr, callback)
       await collection.save(obj)
@@ -275,6 +283,9 @@ const calc = async (groupData, user, damage, collection, userObj, callback) => {
   if(parseInt(damage) < parseInt(boss[index])) {
     boss[index] = boss[index] - damage
     usrStr = `当前第${userObj.count + 1}刀（完整刀）`
+    await collection.save(Object.assign(userObj, {
+      'count': userObj.count + 1
+    }))
   } else {
     usrStr = `当前第${userObj.count + 1}刀（收尾刀）`
     boss[index] = 0
@@ -282,11 +293,8 @@ const calc = async (groupData, user, damage, collection, userObj, callback) => {
     clearTree = {
       'tree': []
     }
-    await collection.save(Object.assign(userObj, {
-      'count': userObj.count + 1
-    }))
   }
-  out = `[CQ:at,qq=${user}]对${groupData.index + 1}号boss造成了${damage}伤害\n${usrStr}\n当前是${index + 1}号boss\nboss列表：${boss.join(',')}`
+  out = `[CQ:at,qq=${user}]对${groupData.index + 1}号boss造成了${damage}伤害\n${usrStr}\n当前是${index + 1}号boss\n血量：${boss[index]}\nboss列表：${boss.join(',')}`
   callback(out)
   return Object.assign({}, groupData, {
     'current': '',
