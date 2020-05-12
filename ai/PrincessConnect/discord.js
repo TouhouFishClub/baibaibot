@@ -257,7 +257,13 @@ const info = async (group, collection, callback) => {
     return
   }
   if(col.boss) {
-    callback(`当前是${col.loop + 1}周目 ${col.index + 1}号boss\n血量：${col.boss[col.index]}\nboss列表：${col.boss.join(',')}`)
+    let bossInfo = ''
+    if(col.index >= col.boss.length) {
+      bossInfo = `\n当前所有boss均被击杀，请使用初始化重置`
+    } else {
+      bossInfo = ` ${col.index + 1}号boss\n血量：${col.boss[col.index]}`
+    }
+    callback(`当前是${col.loop + 1}周目${bossInfo}\nboss列表：${col.boss.join(',')}`)
   } else {
     help(callback)
   }
@@ -282,19 +288,25 @@ const calc = async (groupData, user, damage, collection, userObj, callback) => {
   let usrStr = ''
   if(parseInt(damage) < parseInt(boss[index])) {
     boss[index] = boss[index] - damage
-    usrStr = `当前第${userObj.count + 1}刀（完整刀）`
+    usrStr = `今日第${userObj.count + 1}刀（完整刀）`
     await collection.save(Object.assign(userObj, {
       'count': userObj.count + 1
     }))
   } else {
-    usrStr = `当前第${userObj.count + 1}刀（收尾刀）`
+    usrStr = `今日第${userObj.count + 1}刀（收尾刀）`
     boss[index] = 0
     index ++
     clearTree = {
       'tree': []
     }
   }
-  out = `[CQ:at,qq=${user}]对${groupData.index + 1}号boss造成了${damage}伤害\n${usrStr}\n当前是${index + 1}号boss\n血量：${boss[index]}\nboss列表：${boss.join(',')}`
+  let bossInfo = ''
+  if(index >= boss.length) {
+    bossInfo = `当前所有boss均被击杀，请使用初始化重置`
+  } else {
+    bossInfo = `当前是${index + 1}号boss\\n血量：${boss[index]}`
+  }
+  out = `[CQ:at,qq=${user}]对${groupData.index + 1}号boss造成了${damage}伤害\n${usrStr}\n${bossInfo}\nboss列表：${boss.join(',')}`
   callback(out)
   return Object.assign({}, groupData, {
     'current': '',
