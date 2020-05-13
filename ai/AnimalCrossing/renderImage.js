@@ -15,7 +15,7 @@ module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
 
   let all = data.filter(d => d.pattern_number == 4)
   let other = data.filter(d => d.pattern_number != 4)
-  // console.log(all)
+  // console.log(other)
 
 
 
@@ -173,10 +173,15 @@ module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
     )
   })
 
+  let types = [0, 0, 0, 0, 0]
+  ds.forEach(msg => {
+    types[msg.pattern_number] ++
+  })
+
   ds.forEach((msg, row) => {
     let renderArr = [
       {msg: msg.pattern_description},
-      {msg: msg.pattern_number == 4 ? '-' : `${(100 / (length - 1)).toFixed(2)}%`}
+      {msg: msg.pattern_number == 4 ? '-' : `${(msg.category_total_probability * 100 / types[msg.pattern_number]).toFixed(2)}%`}
     ].concat(msg.prices.slice(1).map(p => {
       return {
         msg: p.max == p.min ? p.max : `${p.min}~${p.max}`,

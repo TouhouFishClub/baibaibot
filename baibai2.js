@@ -95,6 +95,9 @@ const chp = require('./ai/chp')
 const {actp} = require('./ai/AnimalCrossing/TurnipProphet')
 const { saveDTCPrice } = require('./ai/AnimalCrossing/priceRecord');
 
+const { discord } = require('./ai/PrincessConnect/discord')
+const { cherugo } = require('./ai/PrincessConnect/cherugo')
+
 
 initWS();
 initWS2();
@@ -916,6 +919,16 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     chp(callback)
   }
 
+  let fie4 = con.substring(0, 4)
+  if(fie4 == '切噜～♪') {
+    cherugo(con.substring(4), false, callback)
+    return
+  }
+  if(fie4 == '切噜一下') {
+    cherugo(con.substring(4), true, callback)
+    return
+  }
+
   let fie = con.substring(0, 3)
   if(fie.toLowerCase() == 'flp'){
     // console.log('================>>>>>>')
@@ -954,6 +967,13 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         anr(from, con.substring(3), callback)
     }
     return
+  }
+
+  if(fie.toLowerCase() == 'bcr'){
+    // console.log('=============')
+    // console.log(con.substring(3))
+    discord(con.substring(3), from, groupid, callback);
+    return;
   }
 
   if(fie.toLowerCase() == 'dtc'){

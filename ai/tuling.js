@@ -129,8 +129,8 @@ function handleTulingResponse(resdata){
 
 
 function tulingMsg(userid,content,callback,groupid){
-  if(groupid == 1098831698)
-    return
+  // if(groupid == 1098831698)
+  //   return
 
   getQAIresponse(userid,content,callback,groupid);
 
