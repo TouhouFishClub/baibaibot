@@ -195,13 +195,21 @@ const cov = async (content, callback) => {
     )
   } else {
     AllArea = Array.from(new Set(AllArea))
+    if(content.trim() == '') {
+      callback('输入地市查询疫情状态')
+      return
+    }
     let sa = AllArea.filter(x => new RegExp(content).test(x.name))
     // console.log(sa[0])
     // console.log(AllData[sa[0].locationId])
     if (sa.length == 1) {
       renderImage(sa[0], AllData[sa[0].locationId], content, callback)
     } else {
-      callback(`查找到以下国家或地区：${sa.map(x => x.name).join('、')}, 使用正则表达式精确查找`)
+      if(sa.length > 30) {
+        callback(`查询到过多国家或地区，请精确查找`)
+      } else {
+        callback(`查找到以下国家或地区：${sa.map(x => x.name).join('、')}, 使用正则表达式精确查找`)
+      }
     }
   }
 }
