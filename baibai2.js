@@ -929,6 +929,18 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
+  if(con.toLowerCase() === 'bcr') {
+    callback(`bcr模块指令已迁移至sbcr`)
+    return
+  }
+
+  if(fie4.toLowerCase() == 'sbcr'){
+    // console.log('=============')
+    // console.log(con.substring(3))
+    discord(con.substring(4), from, groupid, callback);
+    return;
+  }
+
   let fie = con.substring(0, 3)
   if(fie.toLowerCase() == 'flp'){
     // console.log('================>>>>>>')
@@ -967,13 +979,6 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         anr(from, con.substring(3), callback)
     }
     return
-  }
-
-  if(fie.toLowerCase() == 'bcr'){
-    // console.log('=============')
-    // console.log(con.substring(3))
-    discord(con.substring(3), from, groupid, callback);
-    return;
   }
 
   if(fie.toLowerCase() == 'dtc'){

@@ -88,7 +88,7 @@ const getAttackUser = (user, group, collection) => {
 
 const init = async (BossList, group, collection, callback) => {
   if(BossList.filter(x => !/^\d+$/.test(x)).length > 0) {
-    callback('输入错误，请直接输入boss血量，如bcr 初始化 100 200 300 400 500')
+    callback('输入错误，请直接输入boss血量，如sbcr 初始化 100 200 300 400 500')
     return
   }
   if(BossList.length < 1){
@@ -123,7 +123,7 @@ const init = async (BossList, group, collection, callback) => {
 
 const recov = async (BossList, group, collection, callback) => {
   if(BossList.filter(x => !/^\d+$/.test(x)).length > 0) {
-    callback('输入错误，请直接输入boss血量，如bcr 初始化 100 200 300 400 500')
+    callback('输入错误，请直接输入boss血量，如sbcr 初始化 100 200 300 400 500')
     return
   }
   if(BossList.length < 1){
@@ -333,7 +333,7 @@ const calc = async (groupData, user, damage, collection, userObj, callback) => {
 }
 
 const help = callback => {
-  callback(`======= 自助排刀系统 =====\n括号中为快捷输入，如排刀，既可以用bcr 排刀，也可以用bcrq\n【bcr(i) 初始化 boss1血量 boss2血量 boss3血量 ...】：初始化boss，如果之前初始化的boss被击杀完毕，则周目数会+1，boss未全部击杀不可再次初始化\n【bcr(r) 重置 boss1血量 boss2血量 boss3血量 ...】：此设定与初始化相同，可以强制重置boss，并且会使周目数及记录清空\n【bcr(q) 排刀】：进入排队，如果有人排队，则无法进入，排队后15分钟不报刀或者挂树，自动撤销排队\n【bcr(c) 撤销】：撤销当前的排队\n【bcr(f) 报刀 伤害数量】：对当前boss造成伤害，如boss被击杀自动进入下一个boss\n【bcr(t) 挂树】：挂树\n【bcr 查树】：查询当前挂树的成员\n【bcr(n) 状态】：查询当前boss状态`)
+  callback(`======= 自助排刀系统 =====\n括号中为快捷输入，如排刀，既可以用sbcr 排刀，也可以用sbcrq\n【sbcr(i) 初始化 boss1血量 boss2血量 boss3血量 ...】：初始化boss，如果之前初始化的boss被击杀完毕，则周目数会+1，boss未全部击杀不可再次初始化\n【sbcr(r) 重置 boss1血量 boss2血量 boss3血量 ...】：此设定与初始化相同，可以强制重置boss，并且会使周目数及记录清空\n【sbcr(q) 排刀】：进入排队，如果有人排队，则无法进入，排队后15分钟不报刀或者挂树，自动撤销排队\n【sbcr(c) 撤销】：撤销当前的排队\n【sbcr(f) 报刀 伤害数量】：对当前boss造成伤害，如boss被击杀自动进入下一个boss\n【sbcr(t) 挂树】：挂树\n【sbcr 查树】：查询当前挂树的成员\n【sbcr(n) 状态】：查询当前boss状态`)
 }
 
 const changelog = callback => {
@@ -341,7 +341,7 @@ const changelog = callback => {
 }
 
 const errorInit = callback => {
-  callback(`未初始化，请使用【bcr 帮助】获得细节`)
+  callback(`未初始化，请使用【sbcr 帮助】获得细节`)
 }
 
 const formatTime = ts => {
