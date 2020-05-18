@@ -173,15 +173,15 @@ module.exports = (data, qq, inputArr, type, isFirst, callback, otherMsg) => {
     )
   })
 
-  let types = [0, 0, 0, 0, 0]
-  ds.forEach(msg => {
-    types[msg.pattern_number] ++
-  })
+  // let types = [0, 0, 0, 0, 0]
+  // ds.forEach(msg => {
+  //   types[msg.pattern_number] ++
+  // })
 
   ds.forEach((msg, row) => {
     let renderArr = [
       {msg: msg.pattern_description},
-      {msg: msg.pattern_number == 4 ? '-' : `${(msg.category_total_probability * 100 / types[msg.pattern_number]).toFixed(2)}%`}
+      {msg: msg.pattern_number == 4 ? '-' : `${(msg.probability * 100).toFixed(2)}%`}
     ].concat(msg.prices.slice(1).map(p => {
       return {
         msg: p.max == p.min ? p.max : `${p.min}~${p.max}`,
