@@ -84,10 +84,10 @@ function addplayer(qq,username,groupid,callback){
     var code = Object.keys(players).length;
     if(code<13){
       if(death[groupid+"_"+qq]){
-        if(death[groupid+"_"+qq]>new Date().getTime()){
-          callback("【"+username+"】已经死亡，无法加入游戏\n复活时间："+new Date(death[groupid+"_"+qq]).toLocaleString());
-          return;
-        }
+        // if(death[groupid+"_"+qq]>new Date().getTime()){
+        //   callback("【"+username+"】已经死亡，无法加入游戏\n复活时间："+new Date(death[groupid+"_"+qq]).toLocaleString());
+        //   return;
+        // }
       }
       var obj = {qq:qq,name:username,code:code,ts:now};
       players[qq]=obj;
