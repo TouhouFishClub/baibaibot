@@ -25,30 +25,47 @@ const discord = (content, qq, group, callback) => {
   // console.log(sp[0])
   switch(sp[0]) {
     case '初始化':
+    case 'i':
+    case 'init':
       init(sp.slice(1).map(x => parseInt(x)), group, collection, callback)
       break
     case '重置':
+    case 'r':
+    case 'recov':
       recov(sp.slice(1).map(x => parseInt(x)), group, collection, callback)
       break
     case '排刀':
+    case 'q':
+    case 'queue':
       queue(qq, group, collection, callback)
       break
     case '报刀':
+    case 'f':
+    case 'attack':
       attack(qq, group, sp[1], collection, callback)
       break
     case '挂树':
+    case 't':
+    case 'tree':
       tree(qq, group, collection, callback)
       break
     case '撤销':
+    case 'c':
+    case 'withdraw':
       withdraw(qq, group, collection, callback)
       break
     case '查树':
+    case 's':
+    case 'where':
       where(group, collection, callback)
       break
     case '状态':
+    case 'n':
+    case 'info':
       info(group, collection, callback)
       break
     case '帮助':
+    case 'h':
       help(callback)
       break
     default:
@@ -70,6 +87,14 @@ const getAttackUser = (user, group, collection) => {
 }
 
 const init = async (BossList, group, collection, callback) => {
+  if(BossList.filter(x => !/^\d+$/.test(x)).length > 0) {
+    callback('输入错误，请直接输入boss血量，如sbcr 初始化 100 200 300 400 500')
+    return
+  }
+  if(BossList.length < 1){
+    callback('boss初始化错误')
+    return
+  }
   let col = await getGroupData(group, collection)
   // console.log('====')
   // console.log(col)
@@ -97,6 +122,10 @@ const init = async (BossList, group, collection, callback) => {
 }
 
 const recov = async (BossList, group, collection, callback) => {
+  if(BossList.filter(x => !/^\d+$/.test(x)).length > 0) {
+    callback('输入错误，请直接输入boss血量，如sbcr 初始化 100 200 300 400 500')
+    return
+  }
   if(BossList.length < 1){
     callback('boss初始化错误')
     return
@@ -163,12 +192,22 @@ const attack = async (user, group, damage, collection, callback) => {
   }
   // console.log('=======')
   // console.log(usr)
-  if(col.current == user) {
+  let now = getNow()
+  if(!usr) {
+    usr = {
+      '_id': `${group}_${user}_${now.getMonth() + 1}_${now.getDate()}`,
+      'count': 0
+    }
+    await collection.save(usr)
+  }
+  if(col.current == user || (col.current == '' || col.expiration < getNow().getTime())) {
     if(damage && /^\d+$/.test(damage)) {
-      await collection.save(calc(col, user, damage, callback))
-      await collection.save(Object.assign(usr, {
-        'count': usr.count + 1
-      }))
+      let obj = await calc(col, user, damage, collection, usr, callback)
+      if(!obj) {
+        callback(`已无可击杀boss，请使用初始化重置`)
+        return
+      }
+      await collection.save(obj)
     } else {
       callback(`输入错误`)
     }
@@ -230,13 +269,19 @@ const info = async (group, collection, callback) => {
     return
   }
   if(col.boss) {
-    callback(`当前是${col.loop + 1}周目 ${col.index + 1}号boss\n血量：${col.boss[col.index]}\nboss列表：${col.boss.join(',')}`)
+    let bossInfo = ''
+    if(col.index >= col.boss.length) {
+      bossInfo = `\n当前所有boss均被击杀，请使用初始化重置`
+    } else {
+      bossInfo = ` ${col.index + 1}号boss\n血量：${col.boss[col.index]}`
+    }
+    callback(`当前是${col.loop + 1}周目${bossInfo}\nboss列表：${col.boss.join(',')}`)
   } else {
     help(callback)
   }
 }
 
-const calc = (groupData, user, damage, callback) => {
+const calc = async (groupData, user, damage, collection, userObj, callback) => {
   let boss = groupData.boss.concat([]),
     index = groupData.index,
     attack = groupData.attack.concat([]),
@@ -252,16 +297,32 @@ const calc = (groupData, user, damage, callback) => {
   // console.log(damage)
   // console.log(boss[index])
   // console.log(parseInt(damage) < parseInt(boss[index]))
+  if(index >= boss.length) {
+    return false
+  }
+  let usrStr = ''
+  // console.log(userObj)
   if(parseInt(damage) < parseInt(boss[index])) {
     boss[index] = boss[index] - damage
+    usrStr = `今日第${userObj.count + 1}刀（完整刀）`
+    await collection.save(Object.assign(userObj, {
+      'count': userObj.count + 1
+    }))
   } else {
+    usrStr = `今日第${userObj.count + 1}刀（收尾刀）`
     boss[index] = 0
     index ++
     clearTree = {
       'tree': []
     }
   }
-  out = `[CQ:at,qq=${user}]对${groupData.index + 1}号boss造成了${damage}伤害\n当前是${index + 1}号boss\nboss列表：${boss.join(',')}`
+  let bossInfo = ''
+  if(index >= boss.length) {
+    bossInfo = `当前所有boss均被击杀，请使用初始化重置`
+  } else {
+    bossInfo = `当前是${index + 1}号boss\n血量：${boss[index]}`
+  }
+  out = `[CQ:at,qq=${user}]对${groupData.index + 1}号boss造成了${damage}伤害\n${usrStr}\n${bossInfo}\nboss列表：${boss.join(',')}`
   callback(out)
   return Object.assign({}, groupData, {
     'current': '',
@@ -272,11 +333,15 @@ const calc = (groupData, user, damage, callback) => {
 }
 
 const help = callback => {
-  callback(`======= 自助排刀系统 =====\n【bcr 初始化 boss1血量 boss2血量 boss3血量 ...】：初始化boss，如果之前初始化的boss被击杀完毕，则周目数会+1，boss未全部击杀不可再次初始化\n【bcr 重置 boss1血量 boss2血量 boss3血量 ...】：此设定与初始化相同，可以强制重置boss，并且会使周目数及记录清空\n【bcr 排刀】：进入排队，如果有人排队，则无法进入，排队后15分钟不报刀或者挂树，自动撤销排队\n【bcr 撤销】：撤销当前的排队\n【bcr 报刀 伤害数量】：对当前boss造成伤害，如boss被击杀自动进入下一个boss\n【bcr 挂树】：挂树\n【bcr 查树】：查询当前挂树的成员\n【bcr 状态】：查询当前boss状态`)
+  callback(`======= 自助排刀系统 =====\n括号中为快捷输入，如排刀，既可以用sbcr 排刀，也可以用sbcrq\n【sbcr(i) 初始化 boss1血量 boss2血量 boss3血量 ...】：初始化boss，如果之前初始化的boss被击杀完毕，则周目数会+1，boss未全部击杀不可再次初始化\n【sbcr(r) 重置 boss1血量 boss2血量 boss3血量 ...】：此设定与初始化相同，可以强制重置boss，并且会使周目数及记录清空\n【sbcr(q) 排刀】：进入排队，如果有人排队，则无法进入，排队后15分钟不报刀或者挂树，自动撤销排队\n【sbcr(c) 撤销】：撤销当前的排队\n【sbcr(f) 报刀 伤害数量】：对当前boss造成伤害，如boss被击杀自动进入下一个boss\n【sbcr(t) 挂树】：挂树\n【sbcr 查树】：查询当前挂树的成员\n【sbcr(n) 状态】：查询当前boss状态`)
+}
+
+const changelog = callback => {
+  callback(``)
 }
 
 const errorInit = callback => {
-  callback(`未初始化，请使用【bcr 帮助】获得细节`)
+  callback(`未初始化，请使用【sbcr 帮助】获得细节`)
 }
 
 const formatTime = ts => {

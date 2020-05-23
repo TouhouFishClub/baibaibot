@@ -5,8 +5,8 @@ const c = m => {
   console.log(m)
 }
 
-// const { discord } = require('./discord')
-const { cherugo } = require('./cherugo')
+const { discord } = require('./discord')
+// const { cherugo } = require('./cherugo')
 
 const wait = async time => {
   return new Promise(resolve => {
@@ -16,24 +16,24 @@ const wait = async time => {
   })
 }
 
-cherugo('', true, c)
+// cherugo('', true, c)
+//
+// cherugo('啊打发打发的', true, c)
+//
+// cherugo('切噜～♪切切噼卟噜哔噼叮铃啰噼叮噜哔噼叮铃啰噼叮噜唎噼哔巴', false, c)
 
-cherugo('啊打发打发的', true, c)
-
-cherugo('切噜～♪切切噼卟噜哔噼叮铃啰噼叮噜哔噼叮铃啰噼叮噜唎噼哔巴', false, c)
-
-// (async () => {
+(async () => {
 //
 // // console.log(typeof actp)
 //
 // // tpa('92 102-122 92', '10000', 1, c)
 // // tpa('109 152-134 127-142', '10000', 1, c)
-//   await wait(1000)
-//   discord('recov 1000 2000 3000', '1234', '10000', c)
+  await wait(1000)
+  discord('recov 1000 2000 3000', '1234', '10000', c)
 //   await wait(1000)
 //   discord('queue', '1234', '10000', c)
-//   await wait(1000)
-//   discord('attack 500', '1234', '10000', c)
+  await wait(1000)
+  discord('attack 500', '1234', '10000', c)
 //   await wait(1000)
 //   discord('queue', '1234', '10000', c)
 //   await wait(1000)
@@ -71,4 +71,4 @@ cherugo('切噜～♪切切噼卟噜哔噼叮铃啰噼叮噜哔噼叮铃啰噼�
 //   await wait(1000)
 //   discord('where', '4321', '10000', c)
 //   await wait(1000)
-// })()
+})()
