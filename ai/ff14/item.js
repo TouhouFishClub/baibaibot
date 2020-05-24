@@ -76,8 +76,8 @@ function searchFF14Item_d(content,UserName,callback){
     content=content.substring(0,content.length-1);
   }
   var options = {
-    host: 'www.huijiwiki.com',
-    port: 80,
+    host: 'cdn.huijiwiki.com',
+    port: 443,
     path: '/ff14/api.php?format=json&action=parse&disablelimitreport=true&prop=text&title=ItemSearch&text=%7B%7BItemSearch%7Cname='+encodeURIComponent(content)+'%7C%7D%7D',
     method: 'GET',
     headers: {
@@ -86,7 +86,7 @@ function searchFF14Item_d(content,UserName,callback){
     },
   };
   console.log(options);
-  var req = http.request(options, function(res) {
+  var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
     res.on('data', function (chunk) {
@@ -194,8 +194,8 @@ function searchFF14ItemByID(itemid,username,callback,detailresdata){
     }
   }
   var options = {
-    host: 'www.huijiwiki.com',
-    port: 80,
+    host: 'cdn.huijiwiki.com',
+    port: 443,
     path: '/ff14/api.php?format=json&action=parse&disablelimitreport=true&prop=text&text=%7B%7BItemTooltip%7Cid='+itemid+'%7D%7D',
     method: 'GET',
     headers: {
@@ -203,7 +203,7 @@ function searchFF14ItemByID(itemid,username,callback,detailresdata){
       'referer':'https://ff14.huijiwiki.com/wiki/ItemSearch'
     },
   };
-  var req = http.request(options, function(res) {
+  var req = https.request(options, function(res) {
     res.setEncoding('utf8');
     var resdata = '';
     res.on('data', function (chunk) {
@@ -307,7 +307,6 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
         
         var s13 = s8.substring(0,n10)+'<ta'+s10.substring(0,n13)+s14;
         cs = s13;
-
       }
       var cc=0;
       var nocache = false;
@@ -358,6 +357,7 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
           var n06 = s01.indexOf('<');
           ucs = cs.substring(0,n01)+leftstr+s01.substring(n06,n04)+futurelocaltime+s05
           cs = ucs
+          cs = '<div style="background-color:red">'+cs+'</div>';
         }
       }
 
@@ -370,6 +370,7 @@ function getItemDetail(itemname,text,itemid,userName,callback,detailresdata){
         var sc2 = sc1.substring(nc2);
         var nc3 = sc2.indexOf('</tr>');
         ch = sc2.substring(0,nc3+5);
+        ch = ch.replace(/<a href=/g,"<a _href=")
         ch = '<table class="wikitable item-craft-table filter-div--item">'+ch+'</table>';
       }
       if(ch!=''){
