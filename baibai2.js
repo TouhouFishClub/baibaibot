@@ -562,7 +562,7 @@ function handleMsg_D0(msgObj,botqq){
     if (content.indexOf('[CQ:at,qq=914853856]') > -1) {
       content = content.replace(/\[CQ:at,qq=914853856\]/g, '百百');
     }
-    // content = simplized(content);
+    content = simplized(content);
     msgObj.message=content;
   }
   handleMsg_D(msgObj,botqq);
