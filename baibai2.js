@@ -571,6 +571,10 @@ function handleMsg_D0(msgObj,botqq){
 
 
 function handleMsg_D(msgObj,botqq) {
+  console.log('\N======================')
+  console.log(msgObj)
+  console.log(botqq)
+  console.log('======================\N')
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
