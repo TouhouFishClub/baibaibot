@@ -618,7 +618,7 @@ function handleMsg_D(msgObj,botqq) {
     let wellcome
     switch(groupid){
       case 96681597:
-        `欢迎新人[CQ:at,qq=${msgObj.user_id}]，入服教程：https://bbs.gugu6.info/forum.php?mod=viewthread&tid=95#lastpost`
+        wellcome = `欢迎新人[CQ:at,qq=${msgObj.user_id}]，入服教程：https://bbs.gugu6.info/forum.php?mod=viewthread&tid=95#lastpost`
         break
       default:
         wellcome = `欢迎[CQ:at,qq=${msgObj.user_id}]加群`
