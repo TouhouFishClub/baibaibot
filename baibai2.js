@@ -614,18 +614,27 @@ function handleMsg_D(msgObj,botqq) {
   }
 
   if(msgObj.notice_type == 'group_increase') {
-
-
-    addSendQueue(groupid,`欢迎[CQ:at,qq=${msgObj.user_id}]加群`,botqq);
+    // 加群操作
+    let wellcome
+    switch(groupid){
+      case 96681597:
+        `欢迎新人[CQ:at,qq=${msgObj.user_id}]，入服教程：https://bbs.gugu6.info/forum.php?mod=viewthread&tid=95#lastpost`
+        break
+      default:
+        wellcome = `欢迎[CQ:at,qq=${msgObj.user_id}]加群`
+        break
+    }
+    addSendQueue(groupid,wellcome,botqq);
 
     return
   }
 
   if(msgObj.notice_type == 'group_decrease') {
-
-
-    addSendQueue(groupid,`${msgObj.user_id}溜走了`,botqq);
-
+    if(msgObj.sub_type == 'kick') {
+      addSendQueue(groupid,`${msgObj.user_id}被踹走了`,botqq);
+    } else {
+      addSendQueue(groupid,`${msgObj.user_id}溜走了`,botqq);
+    }
     return
   }
 
