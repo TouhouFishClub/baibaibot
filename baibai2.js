@@ -571,10 +571,10 @@ function handleMsg_D0(msgObj,botqq){
 
 
 function handleMsg_D(msgObj,botqq) {
-  console.log('\N======================')
-  console.log(msgObj)
-  console.log(botqq)
-  console.log('======================\N')
+  // console.log('\n======================')
+  // console.log(msgObj)
+  // console.log(botqq)
+  // console.log('======================\n')
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
@@ -611,6 +611,22 @@ function handleMsg_D(msgObj,botqq) {
 
     )&&port==25334){
     return;
+  }
+
+  if(msgObj.notice_type == 'group_increase') {
+
+
+    addSendQueue(groupid,`欢迎[CQ:at,qq=${msgObj.user_id}]加群`,botqq);
+
+    return
+  }
+
+  if(msgObj.notice_type == 'group_decrease') {
+
+
+    addSendQueue(groupid,`${msgObj.user_id}溜走了`,botqq);
+
+    return
   }
 
 
