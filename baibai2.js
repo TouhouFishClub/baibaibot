@@ -620,6 +620,9 @@ function handleMsg_D(msgObj,botqq) {
       case 96681597:
         wellcome = `欢迎新人[CQ:at,qq=${msgObj.user_id}]，入服教程：https://bbs.gugu6.info/forum.php?mod=viewthread&tid=95#lastpost`
         break
+      case 672926817:
+        wellcome = `看！新内鬼[CQ:at,qq=${msgObj.user_id}]`
+        break
       default:
         wellcome = `欢迎[CQ:at,qq=${msgObj.user_id}]加群`
         break
