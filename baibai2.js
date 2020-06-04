@@ -614,6 +614,9 @@ function handleMsg_D(msgObj,botqq) {
   }
 
   if(msgObj.notice_type == 'group_increase') {
+    if(new Set([2375373419, 3291864216, 1840239061]).has(msgObj.user_id)){
+      return
+    }
     // 加群操作
     let wellcome
     switch(groupid){
