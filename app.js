@@ -352,3 +352,34 @@ app.get('/x1',function(req,res){
   res.send(r);
 })
 
+app.get('/blive',function(req,res){
+  var querydata = req.query;
+  var roomid =  querydata.rid;
+  var username = querydata.un;
+  var message = querydata.d;
+  var userid;
+  if(roomid==39277){
+    userid = 357474405;
+  }else{
+
+  }
+  if(userid){
+    var replyData = username+":"+message;
+    var options = {
+      host: '192.168.17.52',
+      port: 23334,
+      path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(replyData),
+      method: 'GET',
+      headers: {}
+    };
+    var reqq = http.request(options);
+    reqq.on('error', function (err) {
+      console.log('req err:');
+      console.log(err);
+    });
+    reqq.end();
+  }
+  res.send('ok');
+})
+
+
