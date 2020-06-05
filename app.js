@@ -3,7 +3,7 @@ const app = express();
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
-const {handleMsg,reconnect,handle_msg_D2} = require('./baibai2');
+//const {handleMsg,reconnect,handle_msg_D2} = require('./baibai2');
 const {getChat,saveChat,getImage} = require('./ai/chat/collect');
 const {checkError} = require('./tools/textCheck');
 const basicAuth = require('basic-auth');
@@ -246,6 +246,7 @@ app.get('/chat', (req, res) => {
 app.get('/send_group_msg',(reqp, resp) => {
   var user = basicAuth(reqp);
   var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
+  var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
   if (check) {
     resp.set('WWW-Authenticate', 'Basic realm=Authorization Required');
     resp.send(401);
@@ -349,4 +350,35 @@ app.get('/x1',function(req,res){
   res.set('Content-Type','text/javascript')
   res.send(r);
 })
+
+app.get('/blive',function(req,res){
+  var querydata = reqp.query;
+  var roomid =  querydata.rid;
+  var username = querydata.un;
+  var message = querydata.d;
+  var userid;
+  if(roomid==39277){
+    userid = 357474405;
+  }else{
+
+  }
+  if(userid){
+    var replyData = username+":"+message;
+    var options = {
+      host: '192.168.17.52',
+      port: port,
+      path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(replyData),
+      method: 'GET',
+      headers: {}
+    };
+    var req = http.request(options);
+    req.on('error', function (err) {
+      console.log('req err:');
+      console.log(err);
+    });
+    req.end();
+  }
+  res.send('ok');
+})
+
 
