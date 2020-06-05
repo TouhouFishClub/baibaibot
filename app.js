@@ -230,7 +230,8 @@ app.post('/textCheck',function(req,res){
 
 app.get('/chat', (req, res) => {
   var user = basicAuth(req);
-  var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
+  // var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
+  var check = false
   if(!check){
     res.redirect("/baibai-group-logs/dist/index.html")
   }else{
@@ -245,7 +246,8 @@ app.get('/chat', (req, res) => {
 
 app.get('/send_group_msg',(reqp, resp) => {
   var user = basicAuth(reqp);
-  var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
+  // var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
+  var check = false
   if (check) {
     resp.set('WWW-Authenticate', 'Basic realm=Authorization Required');
     resp.send(401);
