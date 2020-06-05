@@ -296,6 +296,7 @@ if (!fs.existsSync(UPLOAD_TMP_URL)) {
 var upload = multer({dest: UPLOAD_TMP_URL});
 
 app.post('/send_group_multipart_data', upload.any(), (req, res, next) => {
+  res.set("Access-Control-Allow-Origin", "*");
   // console.log('============')
   // console.log(req.body)
   // console.log(req.files[0]);  // 上传的文件信息
