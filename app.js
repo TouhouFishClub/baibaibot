@@ -9,6 +9,7 @@ const {checkError} = require('./tools/textCheck');
 const basicAuth = require('basic-auth');
 const {handlef1} = require("./route/f1")
 const mkdirsSync = require('./lib/mkdirsSync')
+const multer = require('multer')
 const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
 const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
 
@@ -289,7 +290,6 @@ app.get('/send_group_msg',(reqp, resp) => {
   }
 })
 
-try{
 if (!fs.existsSync(UPLOAD_TMP_URL)) {
   mkdirsSync(UPLOAD_TMP_URL);
 }
@@ -319,10 +319,6 @@ app.post('/send_group_multipart_data', upload.any(), (req, res, next) => {
     })
   })
 })
-} catch(err) {
-  console.log('ERROR!!!!!!!!!!!!!!')
-  console.log(err)
-}
 
 
 app.get('/text', (req, res) => {
