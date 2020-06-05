@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import sys
-sys.setdefaultencoding('utf-8')
 import asyncio
 
 import blivedm
@@ -16,7 +14,7 @@ class MyBLiveClient(blivedm.BLiveClient):
 
     async def __on_vip_enter(self, command):
         print(command)
-    _COMMAND_HANDLERS['WELCOME'] = __on_vip_enter  # 老爷入场
+    _COMMAND_HANDLERS['WELCOME'] = __on_vip_enter
 
     async def _on_receive_popularity(self, popularity: int):
         print(f'当前人气值：{popularity}')
@@ -38,16 +36,10 @@ class MyBLiveClient(blivedm.BLiveClient):
 
 
 async def main():
-    # 参数1是直播间ID
-    # 如果SSL验证失败就把ssl设为False
     client = MyBLiveClient(39277, ssl=True)
     future = client.start()
     try:
-        # 5秒后停止，测试用
-        # await asyncio.sleep(5)
-        # future = client.stop()
-        # 或者
-        # future.cancel()
+
 
         await future
     finally:
