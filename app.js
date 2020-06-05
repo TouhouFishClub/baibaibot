@@ -352,7 +352,7 @@ app.get('/x1',function(req,res){
 })
 
 app.get('/blive',function(req,res){
-  var querydata = reqp.query;
+  var querydata = req.query;
   var roomid =  querydata.rid;
   var username = querydata.un;
   var message = querydata.d;
@@ -366,17 +366,17 @@ app.get('/blive',function(req,res){
     var replyData = username+":"+message;
     var options = {
       host: '192.168.17.52',
-      port: port,
+      port: 23334,
       path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(replyData),
       method: 'GET',
       headers: {}
     };
-    var req = http.request(options);
-    req.on('error', function (err) {
+    var reqq = http.request(options);
+    reqq.on('error', function (err) {
       console.log('req err:');
       console.log(err);
     });
-    req.end();
+    reqq.end();
   }
   res.send('ok');
 })
