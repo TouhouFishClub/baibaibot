@@ -8,6 +8,9 @@ const {getChat,saveChat,getImage} = require('./ai/chat/collect');
 const {checkError} = require('./tools/textCheck');
 const basicAuth = require('basic-auth');
 const {handlef1} = require("./route/f1")
+const mkdirsSync = require('./lib/mkdirsSync')
+const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
+const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
 
 
 var bodyParser = require('body-parser');
@@ -284,6 +287,36 @@ app.get('/send_group_msg',(reqp, resp) => {
       req.end();
     }
   }
+})
+
+if (!fs.existsSync(UPLOAD_TMP_URL)) {
+  mkdirsSync(UPLOAD_TMP_URL);
+}
+var upload = multer({dest: UPLOAD_TMP_URL});
+
+app.post('/send_group_multipart_data', upload.any(), (req, res, next) => {
+  // console.log('============')
+  // console.log(req.body)
+  // console.log(req.files[0]);  // 上传的文件信息
+  if (!fs.existsSync(UPLOAD_URL)) {
+    mkdirsSync(UPLOAD_URL);
+  }
+  var des_file = UPLOAD_URL + req.files[0].originalname;
+  fs.readFile( req.files[0].path, (err, data) => {
+    fs.writeFile(des_file, data, (err) => {
+      if( err ){
+        console.log('===== UPLOAD FILE ERROR =====')
+        console.log( err );
+      }else{
+        response = {
+          message:'File uploaded successfully',
+          filename:req.files[0].originalname
+        };
+        console.log( response );
+        res.end( JSON.stringify( response ) );
+      }
+    })
+  })
 })
 
 
