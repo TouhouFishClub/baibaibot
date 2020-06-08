@@ -344,9 +344,9 @@ app.get('/get_group_member_info',function(req,res){
 function groupm(req,res,path){
   res.set("Access-Control-Allow-Origin", "*");
   var url = 'http://192.168.17.52:23334/'+path;
-  let qs = qs.stringify(req.query)
-  if(qs) {
-    url = `${url}?${qs}`
+  let query = qs.stringify(req.query)
+  if(query) {
+    url = `${url}?${query}`
   }
   request({
     url: url,
