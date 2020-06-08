@@ -97,6 +97,7 @@ const { saveDTCPrice } = require('./ai/AnimalCrossing/priceRecord');
 
 const { discord } = require('./ai/PrincessConnect/discord')
 const { cherugo } = require('./ai/PrincessConnect/cherugo')
+const { chishenme } = require('./ai/chishenme')
 
 
 initWS();
@@ -949,6 +950,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(con == '方舟老黄历') {
     calendar(callback)
+  }
+  if(con == '中午吃什么') {
+    chishenme(callback)
   }
   if(con == 'chp' || con == '彩虹屁') {
     chp(callback)

@@ -3,6 +3,7 @@ const app = express();
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
+const qs = require("querystring")
 const {handleMsg,reconnect,handle_msg_D2} = require('./baibai2');
 const {getChat,saveChat,getImage} = require('./ai/chat/collect');
 const {checkError} = require('./tools/textCheck');
@@ -343,6 +344,10 @@ app.get('/get_group_member_info',function(req,res){
 function groupm(req,res,path){
   res.set("Access-Control-Allow-Origin", "*");
   var url = 'http://192.168.17.52:23334/'+path;
+  let qs = qs.stringify(req.query)
+  if(qs) {
+    url = `${url}?${qs}`
+  }
   request({
     url: url,
     method: "GET"
