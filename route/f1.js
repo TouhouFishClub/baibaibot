@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const https = require('https')
 const crypto = require('crypto')
-const SECRET = '9ae4c65eb6170863630fe0b9f5bdb1ff'
+const SECRET = 'c9227bfa34fd15667e11af0d72054df3'
 const APPID = 'wxd9959a1df47cc313'
 const noncestr = 'Wm3WZYTPz0wzccnW'
 
