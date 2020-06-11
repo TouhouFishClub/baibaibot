@@ -8,7 +8,17 @@ const TABLE_ITEM_MARGIN = 3
 const TABLE_INSET_MARGIN = 5
 const fontFamily = 'STXIHEI'
 const COLOR_GROUP = [
-  '#0068B7'
+  '#F44336',
+  '#F46A36',
+  '#FBC063',
+  '#21828E',
+  '#10C99A',
+  '#0068B7',
+  '#03A9F4',
+  '#00BCD4',
+  '#9E9E9E',
+  '#616161',
+  '#424242'
 ]
 const fs = require('fs'),
   path = require('path'),
