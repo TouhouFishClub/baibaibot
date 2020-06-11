@@ -244,7 +244,7 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
 
-  sendImageMsgBuffer(dataBuffer, `大头菜_${qq}`, 'other', msg => {
+  sendImageMsgBuffer(dataBuffer, `${year}_${month}${fileTip}.png`, 'other', msg => {
     callback(msg)
   })
 
