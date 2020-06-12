@@ -29,7 +29,7 @@ const schedule = (server = 'cn', callback) => {
       })
     }).on('error', (e) => {
       console.log('ERROR==============================================================================')
-      console.error(e);
+      console.log(e)
     })
   }
 }
