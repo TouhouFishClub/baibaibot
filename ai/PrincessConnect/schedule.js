@@ -28,6 +28,7 @@ const schedule = (server = 'cn', callback) => {
         renderCalendar(now.getFullYear(), now.getMonth() + 1, callback, JSON.parse(chunk), '_pcr')
       })
     }).on('error', (e) => {
+      console.log('ERROR==============================================================================')
       console.error(e);
     })
   }

@@ -956,7 +956,6 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     chishenme(callback)
   }
   if(con == 'bcr日程') {
-    console.log('==============================================================================')
     schedule('cn', callback)
   }
   if(con == 'pcr日程') {
