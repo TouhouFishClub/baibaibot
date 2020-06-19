@@ -185,7 +185,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
         for(let i = 0; i < 10; i ++){
           str += `opt ${finalArr[i].ID} | [${finalArr[i].Usage}]${finalArr[i].LocalName}(Rank ${finalArr[i].Level})\n`
         }
-        str += '超过搜索限制，请添加更多关键字'
+        str += `超过搜索限制，请添加更多关键字\nsearch count : ${finalArr.length}`
       }
       callback(str)
     }
