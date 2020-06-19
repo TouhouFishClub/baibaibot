@@ -29,7 +29,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
         callback('请输入至少一个查询条件')
       }
     } else {
-      callback('【释放查询】\n可使用 opts 或 释放查询 + 关键词搜索\n单关键字为按ID或按名称查询\n多个关键词用逗号隔开，支持接头接尾，释放卷等级，释放属性（负面属性前加-）\n如： opts 4，接头，智力，-修理费')
+      callback('【释放查询】\n可使用 opt 或 释放查询 + 关键词搜索\n单关键字为按ID或按名称查询\n多个关键词用逗号隔开，支持接头接尾，释放卷等级，释放属性（负面属性前加-）\n如： opt 4，接头，智力，-修理费')
     }
   }
   const analysisKeywords = keywords => {
@@ -177,13 +177,13 @@ module.exports = function(userId, context, type = 'normal', callback) {
     }
     if(finalArr.length > 1){
       str = '查询到复数释放卷，请选择：\n'
-      if(finalArr.length <= 5){
+      if(finalArr.length <= 10){
         finalArr.forEach(os => {
           str += `opts${os.ID} | [${os.Usage}]${os.LocalName}(Rank ${os.Level})\n`
         })
       } else {
-        for(let i = 0; i < 5; i ++){
-          str += `opts${finalArr[i].ID} | [${finalArr[i].Usage}]${finalArr[i].LocalName}(Rank ${finalArr[i].Level})\n`
+        for(let i = 0; i < 10; i ++){
+          str += `opt ${finalArr[i].ID} | [${finalArr[i].Usage}]${finalArr[i].LocalName}(Rank ${finalArr[i].Level})\n`
         }
         str += '超过搜索限制，请添加更多关键字'
       }
