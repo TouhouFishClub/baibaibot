@@ -179,7 +179,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
       str = '查询到复数释放卷，请选择：\n'
       if(finalArr.length <= 10){
         finalArr.forEach(os => {
-          str += `opts${os.ID} | [${os.Usage}]${os.LocalName}(Rank ${os.Level})\n`
+          str += `opt ${os.ID} | [${os.Usage}]${os.LocalName}(Rank ${os.Level})\n`
         })
       } else {
         for(let i = 0; i < 10; i ++){
