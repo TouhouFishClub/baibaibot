@@ -10,7 +10,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
     const maxKeywords = 6, maxSearch = 10
     let ctx = context.trim()
     if(ctx){
-      let searchArr = ctx.replace(/，/g, ',').split(',')
+      let searchArr = ctx.replace(/[， ]/g, ',').split(',')
       if(searchArr.length > 0){
         if(searchArr.length < maxKeywords){
           if(searchArr.length === 1){
