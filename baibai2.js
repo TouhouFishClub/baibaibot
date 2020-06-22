@@ -9,7 +9,7 @@ var path = require('path');
 
 //const { QQ, MsgHandler } = require('./qqlib');
 
-const{saveTxt,answer} = require(path.join(__dirname, '/lib/mongo.js'))
+const{saveTxt,answer,getMsgCount} = require(path.join(__dirname, '/lib/mongo.js'))
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
@@ -612,6 +612,9 @@ function handleMsg_D(msgObj,botqq) {
       gidstr.startsWith("xxxxx")
 
     )&&port==25334){
+    return;
+  }
+  if(getMsgCount(port)>1600){
     return;
   }
 
