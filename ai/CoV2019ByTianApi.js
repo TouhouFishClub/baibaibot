@@ -162,6 +162,24 @@ const cov = async (content, callback) => {
   // console.log(AllData)
 
   /* search */
+  if(content == '你群') {
+    renderImage(
+      ['现有女友', '疑似女友', '群内女友', '确诊女友', '境外女友'],
+      {
+        name: '你群',
+        type: 'other',
+      },
+      {
+        confirmedCount: [0, 0],
+        curedCount: [0, 0],
+        currentConfirmedCount: [0, 0],
+        deadCount: [0, 0],
+      },
+      '你群',
+      callback
+    )
+    return
+  }
   if(content == '国外' || content == '外国' || content == '非中国') {
     let sa = AllArea.filter(x => x.type == 'abroad' && x.name != '中国')
     let confirmedCount = [], curedCount = [], currentConfirmedCount = [], deadCount = []
