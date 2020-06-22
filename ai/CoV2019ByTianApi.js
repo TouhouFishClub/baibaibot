@@ -180,6 +180,7 @@ const cov = async (content, callback) => {
       }
     })
     renderImage(
+      ['现有确诊', '现有疑似', '累计确诊', '累计治愈', '累计死亡'],
       {
         name: '非中国',
         type: 'other',
@@ -203,12 +204,29 @@ const cov = async (content, callback) => {
     // console.log(sa[0])
     // console.log(AllData[sa[0].locationId])
     if (sa.length == 1) {
-      renderImage(sa[0], AllData[sa[0].locationId], content, callback)
+      renderImage(['现有确诊', '现有疑似', '累计确诊', '累计治愈', '累计死亡'], sa[0], AllData[sa[0].locationId], content, callback)
     } else {
       if(sa.length > 30) {
         callback(`查询到过多国家或地区，请精确查找`)
       } else {
-        callback(`查找到以下国家或地区：${sa.map(x => x.name).join('、')}, 使用正则表达式精确查找`)
+        if(sa.length == 0) {
+          callback('未查找到相关国家或地区')
+        } else {
+          let flag = false, tmp
+          for(let i = 0; i < sa.length; i++) {
+            if(sa[i].name == content) {
+              flag = true
+              tmp = sa[i]
+              break
+            }
+          }
+          if(flag) {
+            callback(`查找到以下国家或地区：${sa.map(x => x.name).join('、')}, 已为您匹配到: ${content}`)
+            renderImage(['现有确诊', '现有疑似', '累计确诊', '累计治愈', '累计死亡'], tmp, AllData[tmp.locationId], content, callback)
+          } else {
+            callback(`查找到以下国家或地区：${sa.map(x => x.name).join('、')}, 使用正则表达式精确查找`)
+          }
+        }
       }
     }
   }
@@ -223,7 +241,7 @@ const arrAdd = (arr1, arr2) => {
   return arrTmp
 }
 
-const renderImage = (area, data, content, callback) => {
+const renderImage = (typeName, area, data, content, callback) => {
   // console.log(area)
   // console.log(data)
 
@@ -264,6 +282,7 @@ const renderImage = (area, data, content, callback) => {
   ctx.fillText(updateStr, 800 - 25 - width, 66)
 
   renderItem(
+    typeName,
     ctx,
     25,
     80,
@@ -273,6 +292,7 @@ const renderImage = (area, data, content, callback) => {
   )
 
   renderItem(
+    typeName,
     ctx,
     275,
     80,
@@ -284,6 +304,7 @@ const renderImage = (area, data, content, callback) => {
   )
 
   renderItem(
+    typeName,
     ctx,
     525,
     80,
@@ -293,6 +314,7 @@ const renderImage = (area, data, content, callback) => {
   )
 
   renderItem(
+    typeName,
     ctx,
     25,
     160,
@@ -302,6 +324,7 @@ const renderImage = (area, data, content, callback) => {
   )
 
   renderItem(
+    typeName,
     ctx,
     275,
     160,
@@ -333,8 +356,8 @@ const renderImage = (area, data, content, callback) => {
   // });
 }
 
-const renderItem = (ctx, offsetX, offsetY, type, value, yesterday, ignore = false) => {
-  let typeStr = ['现有确诊', '现有疑似', '累计确诊', '累计治愈', '累计死亡']
+const renderItem = (typeName, ctx, offsetX, offsetY, type, value, yesterday, ignore = false) => {
+  let typeStr = typeName
   let colorType = [
     'rgba(255,106,87,1)',
     'rgba(236,146,23,1)',
