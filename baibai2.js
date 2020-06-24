@@ -614,7 +614,7 @@ function handleMsg_D(msgObj,botqq) {
     )&&port==25334){
     return;
   }
-  if(getMsgCount(port)>1600){
+  if(getMsgCount(port)>1700){
     return;
   }
 
