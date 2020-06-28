@@ -999,33 +999,68 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
   if(fie.toLowerCase() == 'ark'){
+    let sa, si
     switch(con.substring(3, 4)){
       case 's':
       case 'S':
-        ans(from, con.substring(4), callback)
+        sa = con.substring(4)
+        si = sa.indexOf('+')
+        if(si > -1) {
+          sa = sa.substring(si + 1)
+        }
+        ans(from, sa, callback)
         break;
       case 'e':
       case 'E':
-        anc(from, con.substring(4), callback)
+        sa = con.substring(4)
+        si = sa.indexOf('+')
+        if(si > -1) {
+          sa = sa.substring(si + 1)
+        }
+        anc(from, sa, callback)
         break;
       case 'd':
       case 'D':
-        and(from, con.substring(4), callback)
+        sa = con.substring(4)
+        si = sa.indexOf('+')
+        if(si > -1) {
+          sa = sa.substring(si + 1)
+        }
+        and(from, sa, callback)
         break;
       case 'c':
       case 'C':
-        anchan(con.substring(4), callback)
+        sa = con.substring(4)
+        si = sa.indexOf('+')
+        if(si > -1) {
+          sa = sa.substring(si + 1)
+        }
+        anchan(sa, callback)
         break;
       case 'p':
       case 'P':
-        anp(from, con.substring(4), callback)
+        sa = con.substring(4)
+        si = sa.indexOf('+')
+        if(si > -1) {
+          sa = sa.substring(si + 1)
+        }
+        anp(from, sa, callback)
         break;
       case 'l':
       case 'L':
         calendar(callback)
         break;
       default:
-        anr(from, con.substring(3), callback)
+        sa = con.substring(3)
+        si = sa.indexOf('+')
+        if(si > -1) {
+          sa = sa.substring(si + 1)
+        }
+        si = sa.toLowerCase().indexOf('tag')
+        if(si > -1) {
+          sa = sa.substring(si + 3)
+        }
+        anr(from, sa, callback)
     }
     return
   }
