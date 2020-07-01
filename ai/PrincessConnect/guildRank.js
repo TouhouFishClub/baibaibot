@@ -142,12 +142,16 @@ const getAPIData = (searchContent, type, callback) => {
       data += chunk
     });
     res.on('end', () => {
-      renderMsg(JSON.parse(data), 'api', callback)
-      collection.save({
-        '_id': `${type}_${searchContent}`,
-        'd': JSON.parse(data),
-        'expire': Date.now() + DB_EXPIRE_TIME
-      })
+      if(JSON.parse(data).length){
+        renderMsg(JSON.parse(data), 'api', callback)
+        collection.save({
+          '_id': `${type}_${searchContent}`,
+          'd': JSON.parse(data),
+          'expire': Date.now() + DB_EXPIRE_TIME
+        })
+      } else {
+        callback('未找到相关数据')
+      }
     });
   });
 
