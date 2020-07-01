@@ -2,8 +2,8 @@ const DB_EXPIRE_TIME = 60 * 60 * 1000
 const GLOBAL_EXPIRE_TIME = 60 * 60 * 1000
 const GLOBAL_COUNT_LIMIT = 20
 const MongoClient = require('mongodb').MongoClient
-// const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
-const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
+const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
+// const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
 const https = require('https')
 var qs = require('querystring');
 
