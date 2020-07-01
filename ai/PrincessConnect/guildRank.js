@@ -181,7 +181,7 @@ const renderMsg = async (data, source, callback, otherMsg = '') => {
   }
   msg += `更新时间: ${formatTime(data.ts * 1000)}\n`
   for(var i = 0; i < data.data.length; i++){
-    let ele = data.data[i]
+    let ele = Object.assign({'updateTs': data.ts * 1000}, data.data[i])
     let tmp = await findDb(ele.clan_name)
     let dataList = [ele]
     if(tmp) {
@@ -191,13 +191,11 @@ const renderMsg = async (data, source, callback, otherMsg = '') => {
       await collection.save({
         '_id': ele.clan_name,
         'd': dataList,
-        'updateTs': data.ts * 1000
       })
     } else {
       await collection.save({
         '_id': ele.clan_name,
         'd': dataList,
-        'updateTs': data.ts * 1000
       })
     }
     if(dataList.length > 1){
