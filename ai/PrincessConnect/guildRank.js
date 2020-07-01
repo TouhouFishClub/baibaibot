@@ -162,7 +162,7 @@ const getAPIData = (searchContent, type, callback) => {
 
 }
 
-const renderMsg = (data, source, callback, otherMsg = '') => {
+const renderMsg = async (data, source, callback, otherMsg = '') => {
   // console.log(data)
   let msg = ''
   msg += `>>> 工会战查询 <<<\n`
@@ -178,13 +178,30 @@ const renderMsg = (data, source, callback, otherMsg = '') => {
     msg += `${otherMsg}\n`
   }
   msg += `更新时间: ${formatTime(data.ts * 1000)}\n`
-  data.data.forEach(ele => {
-    msg += `==============\n`
-    msg += `排名： ${ele.rank}\n`
-    msg += `公会： ${ele.clan_name}\n`
-    msg += `分数： ${ele.damage}\n`
-    msg += `会长： ${ele.leader_name}\n`
-  })
+  for(var i = 0; i < data.data.length; i++){
+    let ele = data.data[i]
+    let tmp = await findDb(ele.clan_name)
+    if(tmp.damage == ele.damage){
+      msg += `==============\n`
+      msg += `排名： ${ele.rank}\n`
+      msg += `公会： ${ele.clan_name}\n`
+      msg += `分数： ${ele.damage}\n`
+      msg += `会长： ${ele.leader_name}\n`
+    } else {
+      msg += `==============\n`
+      msg += `排名： ${ele.rank} ${tmp.rank - ele.rank < 0 ? '↑': '↓'}${Math.abs(tmp.rank - ele.rank)}\n`
+      msg += `公会： ${ele.clan_name}\n`
+      msg += `分数： ${ele.damage} ${tmp.damage - ele.damage < 0 ? '↑': '↓'}${Math.abs(tmp.damage - ele.damage)}\n`
+      msg += `会长： ${ele.leader_name}\n`
+      msg += `上次更新时间： ${formatTime(ele.updateTs)}\n`
+
+      await collection.save({
+        '_id': ele.clan_name,
+        'd': ele,
+        'updateTs': data.ts * 1000
+      })
+    }
+  }
 
   callback(msg)
 }
