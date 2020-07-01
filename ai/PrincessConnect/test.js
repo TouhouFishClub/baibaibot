@@ -17,9 +17,28 @@ const wait = async time => {
     }, time)
   })
 }
+let con = 'brs 会长#幻天 -- forceApi', from = 799018865, groupid=111;
 (async () => {
   await wait(1000)
-  guildRankSearch('会长#幻天', 111, 111111, c)
+
+  let grs = con.substring(3).trim(), sp = grs.split(' -- '), option = {}
+  if(sp.length == 2) {
+    grs = sp[0]
+    if(from == 799018865) {
+      let params = sp[1]
+      params.split('&').forEach(p => {
+        let s = p.split('=')
+        if(s.length == 2) {
+          option[s[0]] = s[1]
+        } else {
+          option[s[0]] = true
+        }
+      })
+    }
+  }
+  console.log('search: ', grs)
+  guildRankSearch(grs, from, groupid, c, option)
+  // guildRankSearch('会长#幻天', 111, 111111, c)
 })()
 // cherugo('', true, c)
 //

@@ -2,8 +2,8 @@ const DB_EXPIRE_TIME = 60 * 60 * 1000
 const GLOBAL_EXPIRE_TIME = 60 * 60 * 1000
 const GLOBAL_COUNT_LIMIT = 20
 const MongoClient = require('mongodb').MongoClient
-const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
-// const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
+// const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
+const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
 const https = require('https')
 var qs = require('querystring');
 
@@ -66,7 +66,7 @@ const guildRankSearch = (content, qq, group, callback, params) => {
 const searchDb = async (searchContent, type, callback, params) => {
   let searchKey = `${type}_${searchContent}`
   let data = await findDb(searchKey)
-  if(data && data.expire > Date.now() || !params.forceApi){
+  if(data && data.expire > Date.now() && !params.forceApi){
     renderMsg(data.d, 'db', callback)
   } else {
     searchAPI(searchContent, type, data ? data.d : {}, callback, params)
@@ -133,8 +133,6 @@ const getAPIData = (searchContent, type, callback) => {
   // console.log(postData)
 
   const req = https.request(options, (res) => {
-    // console.log(`STATUS: ${res.statusCode}`);
-    // console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
     res.setEncoding('utf8');
     let data = ''
     res.on('data', (chunk) => {
@@ -142,7 +140,7 @@ const getAPIData = (searchContent, type, callback) => {
       data += chunk
     });
     res.on('end', () => {
-      if(JSON.parse(data).length){
+      if(JSON.parse(data).data.length){
         renderMsg(JSON.parse(data), 'api', callback)
         collection.save({
           '_id': `${type}_${searchContent}`,
