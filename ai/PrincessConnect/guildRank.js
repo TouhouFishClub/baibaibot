@@ -130,9 +130,9 @@ const getAPIData = (searchContent, type, callback) => {
   }
   let postData = JSON.stringify(postObj)
 
-  console.log(path)
-  console.log(postObj)
-  console.log(postData)
+  // console.log(path)
+  // console.log(postObj)
+  // console.log(postData)
 
   const req = https.request(options, (res) => {
     res.setEncoding('utf8');
@@ -165,7 +165,7 @@ const getAPIData = (searchContent, type, callback) => {
 }
 
 const renderMsg = async (data, source, callback, otherMsg = '') => {
-  console.log(data)
+  // console.log(data)
   let msg = ''
   msg += `>>> 工会战查询 <<<\n`
   switch(source){
@@ -189,6 +189,13 @@ const renderMsg = async (data, source, callback, otherMsg = '') => {
       msg += `公会： ${ele.clan_name}\n`
       msg += `分数： ${ele.damage}\n`
       msg += `会长： ${ele.leader_name}\n`
+      if(!tmp) {
+        await collection.save({
+          '_id': ele.clan_name,
+          'd': ele,
+          'updateTs': data.ts * 1000
+        })
+      }
     } else {
       msg += `==============\n`
       msg += `排名： ${ele.rank} ${tmp.rank - ele.rank < 0 ? '↑': '↓'}${Math.abs(tmp.rank - ele.rank)}\n`
