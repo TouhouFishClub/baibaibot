@@ -7,7 +7,8 @@ const c = m => {
 
 // const { discord } = require('./discord')
 // const { cherugo } = require('./cherugo')
-const { schedule } = require('./schedule')
+// const { schedule } = require('./schedule')
+const { guildRankSearch } = require('./guildRank')
 
 const wait = async time => {
   return new Promise(resolve => {
@@ -16,8 +17,10 @@ const wait = async time => {
     }, time)
   })
 }
-
-schedule()
+(async () => {
+  await wait(1000)
+  guildRankSearch('会长#幻天', 111, 111111, c)
+})()
 // cherugo('', true, c)
 //
 // cherugo('啊打发打发的', true, c)
