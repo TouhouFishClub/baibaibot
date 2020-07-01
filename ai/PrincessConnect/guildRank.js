@@ -60,6 +60,8 @@ const guildRankSearch = (content, qq, group, callback, params) => {
       default:
         searchDb(content, 'clan', callback, params)
     }
+  } else {
+    searchDb(content, 'clan', callback, params)
   }
 }
 
@@ -128,9 +130,9 @@ const getAPIData = (searchContent, type, callback) => {
   }
   let postData = JSON.stringify(postObj)
 
-  // console.log(path)
-  // console.log(postObj)
-  // console.log(postData)
+  console.log(path)
+  console.log(postObj)
+  console.log(postData)
 
   const req = https.request(options, (res) => {
     res.setEncoding('utf8');
@@ -163,7 +165,7 @@ const getAPIData = (searchContent, type, callback) => {
 }
 
 const renderMsg = async (data, source, callback, otherMsg = '') => {
-  // console.log(data)
+  console.log(data)
   let msg = ''
   msg += `>>> 工会战查询 <<<\n`
   switch(source){
