@@ -58,7 +58,7 @@ const guildRankSearch = (content, qq, group, callback, params) => {
         }
         break
       default:
-        searchDb(ci, 'clan', callback, params)
+        searchDb(content, 'clan', callback, params)
     }
   }
 }
