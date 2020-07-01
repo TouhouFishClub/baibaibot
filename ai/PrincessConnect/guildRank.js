@@ -199,7 +199,7 @@ const findDb = _id => {
 }
 
 const help = callback => {
-  callback(`这是帮助`)
+  callback(`===== 公会战查询 =====\n可使用【bcs 公会名】或者【brs [类型]#[名称/数值]】查询，类型可为公会、会长、排名、分数，例如：【brs 会长#ALG】。\n其中，排名与分数必须为数值，公会和会长可使用字符模式（支持正则表达式）`)
 }
 
 const formatTime = ts => `${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}:${addZero(new Date(ts).getSeconds())}`
