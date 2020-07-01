@@ -984,11 +984,6 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
-  if(con.toLowerCase() === 'bcs') {
-    guildRankSearch(con.substring(3), from, groupid, callback)
-    return
-  }
-
   if(fie4.toLowerCase() == 'sbcr'){
     // console.log('=============')
     // console.log(con.substring(3))
@@ -1002,6 +997,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     // console.log(con)
     // console.log(con.substring(3), from, callback)
     wfp(con.substring(3), from, callback)
+    return
+  }
+
+  if(fie.toLowerCase() === 'bcs') {
+    guildRankSearch(con.substring(3).trim(), from, groupid, callback)
     return
   }
   if(fie.toLowerCase() == 'ark'){
