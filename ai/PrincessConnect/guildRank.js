@@ -66,7 +66,7 @@ const guildRankSearch = (content, qq, group, callback, params) => {
 const searchDb = async (searchContent, type, callback, params) => {
   let searchKey = `${type}_${searchContent}`
   let data = await findDb(searchKey)
-  if(data && data.expire > Date.now()){
+  if(data && data.expire > Date.now() || !params.forceApi){
     renderMsg(data.d, 'db', callback)
   } else {
     searchAPI(searchContent, type, data ? data.d : {}, callback, params)

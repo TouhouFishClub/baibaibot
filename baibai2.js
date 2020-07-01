@@ -1001,7 +1001,22 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie.toLowerCase() === 'bcs') {
-    guildRankSearch(con.substring(3).trim(), from, groupid, callback)
+    let grs = con.substring(3).trim(), sp = grs.split(' -- '), option = {}
+    if(sp.length == 2) {
+      grs = sp[0]
+      if(from == 799018865) {
+        let params = sp[1]
+        params.split('&').forEach(p => {
+          let s = p.split('=')
+          if(s.length == 2) {
+            option[s[0]] = s[1]
+          } else {
+            option[s[0]] = true
+          }
+        })
+      }
+    }
+    guildRankSearch(grs, from, groupid, callback, option)
     return
   }
   if(fie.toLowerCase() == 'ark'){
