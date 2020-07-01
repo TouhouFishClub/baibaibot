@@ -185,13 +185,15 @@ const renderMsg = async (data, source, callback, otherMsg = '') => {
     let tmp = await findDb(ele.clan_name)
     let dataList = [ele]
     if(tmp) {
-      if(tmp.d[tmp.d.length - 1].updateTs != data.ts){
+      if(tmp.d[tmp.d.length - 1].updateTs != data.ts * 1000){
         dataList = tmp.d.concat([ele])
+        await collection.save({
+          '_id': ele.clan_name,
+          'd': dataList,
+        })
+      } else {
+        dataList = tmp.d
       }
-      await collection.save({
-        '_id': ele.clan_name,
-        'd': dataList,
-      })
     } else {
       await collection.save({
         '_id': ele.clan_name,
@@ -199,14 +201,14 @@ const renderMsg = async (data, source, callback, otherMsg = '') => {
       })
     }
     if(dataList.length > 1){
-      let s1 = tmp.d[tmp.d.length - 1]
-      let s2 = tmp.d[tmp.d.length - 2]
+      let s1 = dataList[dataList.length - 1]
+      let s2 = dataList[dataList.length - 2]
       msg += `==============\n`
       msg += `排名： ${s1.rank} ${s1.rank - s2.rank <= 0 ? '↑': '↓'}${Math.abs(s1.rank - s2.rank)}\n`
       msg += `公会： ${s1.clan_name}\n`
-      msg += `分数： ${s1.damage} ${s1.damage - s2.damage < 0 ? '↑': '↓'}${Math.abs(s1.damage - s2.damage)}\n`
+      msg += `分数： ${s1.damage} ${s2.damage - s1.damage < 0 ? '↑': '↓'}${Math.abs(s1.damage - s2.damage)}\n`
       msg += `会长： ${s1.leader_name}\n`
-      msg += `上次更新时间： ${formatTime(s1.updateTs)}\n`
+      msg += `上次更新时间： ${formatTime(s2.updateTs)}\n`
     } else {
       msg += `==============\n`
       msg += `排名： ${ele.rank}\n`
