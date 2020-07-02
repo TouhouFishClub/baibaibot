@@ -37,7 +37,7 @@ const guildRankSearch = async (content, qq, group, callback, params) => {
     }
   }
   if(content.startsWith('设置')){
-    content = content.substr(3)
+    content = content.substr(2)
     await collection.save({
       '_id': `query_${group}`,
       'd': content
