@@ -36,6 +36,10 @@ const guildRankSearch = async (content, qq, group, callback, params) => {
       return
     }
   }
+  if(content == 'help' || content == 'h') {
+    help(callback)
+    return
+  }
   if(content.startsWith('设置')){
     content = content.substr(2)
     await collection.save({
