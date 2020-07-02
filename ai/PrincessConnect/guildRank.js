@@ -259,7 +259,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
         msg += `分数： ${ele.damage}\n`
         msg += `会长： ${ele.leader_name}\n`
         msg += `会长ID： ${ele.leader_viewer_id}\n`
-        msg += `当前${obj.loop+1}周目 ${obj.boss+1}号boss 剩余血量${obj.lefthp}\n`
+        msg += `当前${obj.loop}周目 ${obj.boss+1}号boss 剩余血量${obj.lefthp}\n`
         await collection.save({
           '_id': `leaderId_${ele.leader_viewer_id}`,
           'd': ele.leader_name,
@@ -292,22 +292,22 @@ const formatTime = ts => `${new Date(ts).getHours()}:${addZero(new Date(ts).getM
 const addZero = n => n < 10 ? ('0' + n) : n
 
 const calcLoop = damage => {
-  let loopHp = HP_LIST.map(list => list.reduce((p, e) => p + e)), loop = 0, lh, hplist
-  while(damage < 0) {
+  let loopHp = HP_LIST.map(list => list.reduce((p, e) => p + e)), loop = -1, lh, hplist
+  while(damage > 0) {
+    loop ++
     if(loop < HP_LIST.length - 1){
       lh = loopHp[loop]
     } else {
-      lh = loopHp[HP_LIST.length]
+      lh = loopHp[HP_LIST.length - 1]
     }
     damage -= lh
-    loop ++
   }
   if(loop < HP_LIST.length - 1){
     lh = loopHp[loop]
     hplist = HP_LIST[loop]
   } else {
-    lh = loopHp[HP_LIST.length-1]
-    hplist = HP_LIST[HP_LIST.length-1]
+    lh = loopHp[HP_LIST.length - 1]
+    hplist = HP_LIST[HP_LIST.length - 1]
   }
   return Object.assign({
     loop: loop,
@@ -315,7 +315,7 @@ const calcLoop = damage => {
 }
 
 const calcBoss = (damage, hplist) => {
-  for(let i = 0; i < 0; i ++){
+  for(let i = 0; i < hplist.length; i ++){
     if(damage - hplist[i] > 0){
       damage -= hplist[i]
     } else {
