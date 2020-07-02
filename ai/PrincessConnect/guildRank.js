@@ -123,6 +123,7 @@ const searchAPI = (searchContent, type, dbData, callback, params) => {
     searchLimit.count -= 1
   }
 }
+
 const getAPIData = (searchContent, type, callback, params) => {
   let path, skey
   switch(type) {
@@ -282,6 +283,7 @@ const help = callback => {
 }
 
 const formatTime = ts => `${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}:${addZero(new Date(ts).getSeconds())}`
+
 const addZero = n => n < 10 ? ('0' + n) : n
 
 module.exports = {
