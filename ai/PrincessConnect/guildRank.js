@@ -79,6 +79,15 @@ const guildRankSearch = async (content, qq, group, callback, params) => {
       'd': content
     })
   }
+  if(content.startsWith('定时')){
+    content = content.substr(2).trim()
+    if(/^\d+$/.test(content)) {
+      setTimeout(() => {
+        guildRankSearch('', qq, group, callback, params)
+      }, content * 60 ^ 1000)
+    }
+    return
+  }
   let ci = content.indexOf('#')
   if(ci == 2) {
     switch(content.substr(0, 2)) {
