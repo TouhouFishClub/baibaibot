@@ -306,8 +306,8 @@ const calcLoop = damage => {
     lh = loopHp[loop]
     hplist = HP_LIST[loop]
   } else {
-    lh = loopHp[HP_LIST.length]
-    hplist = HP_LIST[HP_LIST.length]
+    lh = loopHp[HP_LIST.length-1]
+    hplist = HP_LIST[HP_LIST.length-1]
   }
   return Object.assign({
     loop: loop,
