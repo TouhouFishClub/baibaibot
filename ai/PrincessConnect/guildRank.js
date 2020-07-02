@@ -276,7 +276,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
         msg += `会长： ${s1.leader_name}\n`
         msg += `会长ID： ${s1.leader_viewer_id}\n`
         msg += `上次更新时间： ${formatTime(s2.updateTs)}\n`
-        msg += `当前为 ${obj.loop+1} 周目 ${obj.boss+1} 号boss\n 剩余血量：${obj.lefthp}\n`
+        msg += `当前为 ${obj.loop+1} 周目 ${obj.boss+1} 号boss\n剩余血量：${obj.lefthp}\n`
         await collection.save({
           '_id': `leaderId_${ele.leader_viewer_id}`,
           'd': ele.leader_name,
@@ -290,7 +290,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
         msg += `分数： ${ele.damage}\n`
         msg += `会长： ${ele.leader_name}\n`
         msg += `会长ID： ${ele.leader_viewer_id}\n`
-        msg += `当前为 ${obj.loop+1} 周目 ${obj.boss+1} 号boss\n 剩余血量：${obj.lefthp}\n`
+        msg += `当前为 ${obj.loop+1} 周目 ${obj.boss+1} 号boss\n剩余血量：${obj.lefthp}\n`
         await collection.save({
           '_id': `leaderId_${ele.leader_viewer_id}`,
           'd': ele.leader_name,
