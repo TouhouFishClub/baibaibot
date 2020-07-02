@@ -19,7 +19,7 @@ let client, collection
 })()
 
 let searchLimit = {
-  expireTs : 9999999999999,
+  expireTs : 0,
   count: GLOBAL_COUNT_LIMIT,
 }
 
