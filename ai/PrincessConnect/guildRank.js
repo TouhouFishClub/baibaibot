@@ -5,6 +5,7 @@ const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
 // const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
 const https = require('https')
+const HP_LIST = [[6000000, 8000000, 10000000, 12000000, 20000000]]
 var qs = require('querystring');
 
 /* init db */
@@ -236,6 +237,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
       if(dataList.length > 1){
         let s1 = dataList[dataList.length - 1]
         let s2 = dataList[dataList.length - 2]
+        let obj = calcLoop(s1.damage)
         msg += `==============\n`
         msg += `排名： ${s1.rank} ${s1.rank - s2.rank <= 0 ? '↑': '↓'}${Math.abs(s1.rank - s2.rank)}\n`
         msg += `公会： ${s1.clan_name}\n`
@@ -243,18 +245,21 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
         msg += `会长： ${s1.leader_name}\n`
         msg += `会长ID： ${s1.leader_viewer_id}\n`
         msg += `上次更新时间： ${formatTime(s2.updateTs)}\n`
+        msg += `当前${obj.loop+1}周目 ${obj.boss+1}号boss 剩余血量${obj.lefthp}\n`
         await collection.save({
           '_id': `leaderId_${ele.leader_viewer_id}`,
           'd': ele.leader_name,
         })
         count ++
       } else {
+        let obj = calcLoop(ele.damage)
         msg += `==============\n`
         msg += `排名： ${ele.rank}\n`
         msg += `公会： ${ele.clan_name}\n`
         msg += `分数： ${ele.damage}\n`
         msg += `会长： ${ele.leader_name}\n`
         msg += `会长ID： ${ele.leader_viewer_id}\n`
+        msg += `当前${obj.loop+1}周目 ${obj.boss+1}号boss 剩余血量${obj.lefthp}\n`
         await collection.save({
           '_id': `leaderId_${ele.leader_viewer_id}`,
           'd': ele.leader_name,
@@ -285,6 +290,43 @@ const help = callback => {
 const formatTime = ts => `${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}:${addZero(new Date(ts).getSeconds())}`
 
 const addZero = n => n < 10 ? ('0' + n) : n
+
+const calcLoop = damage => {
+  let loopHp = HP_LIST.map(list => list.reduce((p, e) => p + e)), loop = 0, lh, hplist
+  while(damage < 0) {
+    if(loop < HP_LIST.length - 1){
+      lh = loopHp[loop]
+    } else {
+      lh = loopHp[HP_LIST.length]
+    }
+    damage -= lh
+    loop ++
+  }
+  if(loop < HP_LIST.length - 1){
+    lh = loopHp[loop]
+    hplist = HP_LIST[loop]
+  } else {
+    lh = loopHp[HP_LIST.length]
+    hplist = HP_LIST[HP_LIST.length]
+  }
+  return Object.assign({
+    loop: loop,
+  }, calcBoss(damage + lh, hplist))
+}
+
+const calcBoss = (damage, hplist) => {
+  for(let i = 0; i < 0; i ++){
+    if(damage - hplist[i] > 0){
+      damage -= hplist[i]
+    } else {
+      return {
+        boss: i,
+        lefthp: damage
+      }
+    }
+  }
+
+}
 
 module.exports = {
   guildRankSearch
