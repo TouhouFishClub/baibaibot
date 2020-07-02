@@ -237,7 +237,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
       if(dataList.length > 1){
         let s1 = dataList[dataList.length - 1]
         let s2 = dataList[dataList.length - 2]
-        let obj = calcLoop(s1.damage)
+        let obj = calcLoop(parseInt(s1.damage))
         msg += `==============\n`
         msg += `排名： ${s1.rank} ${s1.rank - s2.rank <= 0 ? '↑': '↓'}${Math.abs(s1.rank - s2.rank)}\n`
         msg += `公会： ${s1.clan_name}\n`
@@ -252,7 +252,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
         })
         count ++
       } else {
-        let obj = calcLoop(ele.damage)
+        let obj = calcLoop(parseInt(ele.damage))
         msg += `==============\n`
         msg += `排名： ${ele.rank}\n`
         msg += `公会： ${ele.clan_name}\n`
