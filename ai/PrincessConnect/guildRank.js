@@ -1,4 +1,4 @@
-const DB_EXPIRE_TIME = 60 * 60 * 1000
+const DB_EXPIRE_TIME = 30 * 60 * 1000
 const GLOBAL_EXPIRE_TIME = 60 * 60 * 1000
 const GLOBAL_COUNT_LIMIT = 20
 const MongoClient = require('mongodb').MongoClient
