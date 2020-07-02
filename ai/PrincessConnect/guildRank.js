@@ -23,13 +23,25 @@ let searchLimit = {
   count: GLOBAL_COUNT_LIMIT,
 }
 
-const guildRankSearch = (content, qq, group, callback, params) => {
+const guildRankSearch = async (content, qq, group, callback, params) => {
   if(!client)
     return
   collection = client.collection('cl_pcr_guild_rank')
   if(content == ''){
-    help(callback)
-    return
+    let query = await findDb(`query_${group}`)
+    if(query) {
+      content = query.d
+    } else {
+      help(callback)
+      return
+    }
+  }
+  if(content.startsWith('设置')){
+    content = content.substr(3)
+    await collection.save({
+      '_id': `query_${group}`,
+      'd': content
+    })
   }
   let ci = content.indexOf('#')
   if(ci == 2) {
@@ -57,6 +69,20 @@ const guildRankSearch = (content, qq, group, callback, params) => {
           callback('请输入正确的信息')
         }
         break
+      case 'ID':
+      case 'id':
+        ci = content.substr(3)
+        if(/^\d+$/.test(ci)){
+          let leaderName = await findDb(`leaderId_${ci}`)
+          if(leaderName){
+            searchDb(leaderName.d, 'leader', callback, Object.assign({leaderId: ci}, params))
+          } else {
+            callback('未缓存过会长id')
+          }
+        } else {
+          callback('请输入正确的信息')
+        }
+        break
       default:
         searchDb(content, 'clan', callback, params)
     }
@@ -69,7 +95,7 @@ const searchDb = async (searchContent, type, callback, params) => {
   let searchKey = `${type}_${searchContent}`
   let data = await findDb(searchKey)
   if(data && data.expire > Date.now() && !params.forceApi){
-    renderMsg(data.d, 'db', callback)
+    renderMsg(data.d, 'db', callback, '', params)
   } else {
     searchAPI(searchContent, type, data ? data.d : {}, callback, params)
   }
@@ -79,21 +105,21 @@ const searchAPI = (searchContent, type, dbData, callback, params) => {
   if(searchLimit.expireTs > Date.now()){
     if(searchLimit.count > 0 || (params && params.ignoreLimit)){
       searchLimit.count -= 1
-      getAPIData(searchContent, type, callback)
+      getAPIData(searchContent, type, callback, params)
     } else {
       if(dbData) {
-        renderMsg(dbData, 'db', callback, 'API查询超过限制，目前为数据库缓存')
+        renderMsg(dbData, 'db', callback, 'API查询超过限制，目前为数据库缓存', params)
       } else {
         callback(`API查询超过限制，请${formatTime(searchLimit)}后再次查询`)
       }
     }
   } else {
     initLimit()
-    getAPIData(searchContent, type, callback)
+    getAPIData(searchContent, type, callback, params)
     searchLimit.count -= 1
   }
 }
-const getAPIData = (searchContent, type, callback) => {
+const getAPIData = (searchContent, type, callback, params) => {
   let path, skey
   switch(type) {
     case 'clan':
@@ -143,7 +169,7 @@ const getAPIData = (searchContent, type, callback) => {
     });
     res.on('end', () => {
       if(JSON.parse(data).data.length){
-        renderMsg(JSON.parse(data), 'api', callback)
+        renderMsg(JSON.parse(data), 'api', callback, '', params)
         collection.save({
           '_id': `${type}_${searchContent}`,
           'd': JSON.parse(data),
@@ -164,7 +190,7 @@ const getAPIData = (searchContent, type, callback) => {
 
 }
 
-const renderMsg = async (data, source, callback, otherMsg = '') => {
+const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => {
   // console.log(data)
   let msg = ''
   msg += `>>> 工会战查询 <<<\n`
@@ -180,6 +206,7 @@ const renderMsg = async (data, source, callback, otherMsg = '') => {
     msg += `${otherMsg}\n`
   }
   msg += `更新时间: ${formatTime(data.ts * 1000)}\n`
+  let count = 0
   for(var i = 0; i < data.data.length; i++){
     let ele = Object.assign({'updateTs': data.ts * 1000}, data.data[i])
     let tmp = await findDb(ele.clan_name)
@@ -200,24 +227,38 @@ const renderMsg = async (data, source, callback, otherMsg = '') => {
         'd': dataList,
       })
     }
-    if(dataList.length > 1){
-      let s1 = dataList[dataList.length - 1]
-      let s2 = dataList[dataList.length - 2]
-      msg += `==============\n`
-      msg += `排名： ${s1.rank} ${s1.rank - s2.rank <= 0 ? '↑': '↓'}${Math.abs(s1.rank - s2.rank)}\n`
-      msg += `公会： ${s1.clan_name}\n`
-      msg += `分数： ${s1.damage} ${s2.damage - s1.damage < 0 ? '↑': '↓'}${Math.abs(s1.damage - s2.damage)}\n`
-      msg += `会长： ${s1.leader_name}\n`
-      msg += `上次更新时间： ${formatTime(s2.updateTs)}\n`
-    } else {
-      msg += `==============\n`
-      msg += `排名： ${ele.rank}\n`
-      msg += `公会： ${ele.clan_name}\n`
-      msg += `分数： ${ele.damage}\n`
-      msg += `会长： ${ele.leader_name}\n`
+    if(!params.leaderId || params.leaderId == ele.leader_viewer_id){
+      if(dataList.length > 1){
+        let s1 = dataList[dataList.length - 1]
+        let s2 = dataList[dataList.length - 2]
+        msg += `==============\n`
+        msg += `排名： ${s1.rank} ${s1.rank - s2.rank <= 0 ? '↑': '↓'}${Math.abs(s1.rank - s2.rank)}\n`
+        msg += `公会： ${s1.clan_name}\n`
+        msg += `分数： ${s1.damage} ${s2.damage - s1.damage < 0 ? '↑': '↓'}${Math.abs(s1.damage - s2.damage)}\n`
+        msg += `会长： ${s1.leader_name}\n`
+        msg += `会长ID： ${s1.leader_viewer_id}\n`
+        msg += `上次更新时间： ${formatTime(s2.updateTs)}\n`
+        await collection.save({
+          '_id': `leaderId_${ele.leader_viewer_id}`,
+          'd': ele.leader_name,
+        })
+        count ++
+      } else {
+        msg += `==============\n`
+        msg += `排名： ${ele.rank}\n`
+        msg += `公会： ${ele.clan_name}\n`
+        msg += `分数： ${ele.damage}\n`
+        msg += `会长： ${ele.leader_name}\n`
+        msg += `会长ID： ${ele.leader_viewer_id}\n`
+        await collection.save({
+          '_id': `leaderId_${ele.leader_viewer_id}`,
+          'd': ele.leader_name,
+        })
+        count ++
+      }
     }
   }
-
+  msg += `count: ${count}`
   callback(msg)
 }
 
@@ -233,7 +274,7 @@ const findDb = _id => {
 }
 
 const help = callback => {
-  callback(`===== 公会战查询 =====\n可使用【bcs 公会名】或者【bcs [类型]#[名称/数值]】查询，类型可为公会、会长、排名、分数，例如：【bcs 会长#ALG】。\n其中，排名与分数必须为数值，公会和会长可使用字符模式（支持正则表达式）`)
+  callback(`===== 公会战查询 =====\n可使用【bcs 公会名】或者【bcs [类型]#[名称/数值]】查询，类型可为公会、会长、排名、分数、ID（会长id，必须模糊查询过以获取会长id），例如：【bcs 会长#ALG】。\n其中，排名与分数必须为数值，公会和会长可使用字符模式（支持正则表达式）`)
 }
 
 const formatTime = ts => `${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}:${addZero(new Date(ts).getSeconds())}`
