@@ -5,7 +5,38 @@ const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
 // const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
 const https = require('https')
-const HP_LIST = [[6000000, 8000000, 10000000, 12000000, 20000000]]
+const HP_LIST = [
+  [
+    6000000,
+    8000000,
+    10000000 * 1.1,
+    12000000 * 1.1,
+    20000000 * 1.2
+  ],
+  [
+    6000000 * 1.2,
+    8000000 * 1.2,
+    10000000 * 1.5,
+    12000000 * 1.7,
+    20000000 * 2
+  ]
+]
+const POWER = [
+  [
+    1,
+    1,
+    1.1,
+    1.1,
+    1.2
+  ],
+  [
+    1.2,
+    1.2,
+    1.5,
+    1.7,
+    1.2
+  ]
+]
 var qs = require('querystring');
 
 /* init db */
@@ -245,7 +276,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
         msg += `会长： ${s1.leader_name}\n`
         msg += `会长ID： ${s1.leader_viewer_id}\n`
         msg += `上次更新时间： ${formatTime(s2.updateTs)}\n`
-        msg += `当前为 ${obj.loop} 周目 ${obj.boss+1} 号boss\n 剩余血量：${obj.lefthp}\n`
+        msg += `当前为 ${obj.loop+1} 周目 ${obj.boss+1} 号boss\n 剩余血量：${obj.lefthp}\n`
         await collection.save({
           '_id': `leaderId_${ele.leader_viewer_id}`,
           'd': ele.leader_name,
@@ -259,7 +290,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
         msg += `分数： ${ele.damage}\n`
         msg += `会长： ${ele.leader_name}\n`
         msg += `会长ID： ${ele.leader_viewer_id}\n`
-        msg += `当前为 ${obj.loop} 周目 ${obj.boss+1} 号boss\n 剩余血量：${obj.lefthp}\n`
+        msg += `当前为 ${obj.loop+1} 周目 ${obj.boss+1} 号boss\n 剩余血量：${obj.lefthp}\n`
         await collection.save({
           '_id': `leaderId_${ele.leader_viewer_id}`,
           'd': ele.leader_name,
@@ -292,8 +323,8 @@ const formatTime = ts => `${new Date(ts).getHours()}:${addZero(new Date(ts).getM
 const addZero = n => n < 10 ? ('0' + n) : n
 
 const calcLoop = damage => {
-  let loopHp = HP_LIST.map(list => list.reduce((p, e) => p + e)), loop = -1, lh, hplist
-  while(damage > 0) {
+  let loopHp = HP_LIST.map(list => list.reduce((p, e) => p + e)), loop = -1, lh, hplist, powerList
+  while(damage >= 0) {
     loop ++
     if(loop < HP_LIST.length - 1){
       lh = loopHp[loop]
@@ -305,23 +336,25 @@ const calcLoop = damage => {
   if(loop < HP_LIST.length - 1){
     lh = loopHp[loop]
     hplist = HP_LIST[loop]
+    powerList = POWER[loop]
   } else {
     lh = loopHp[HP_LIST.length - 1]
     hplist = HP_LIST[HP_LIST.length - 1]
+    powerList = POWER[POWER.length - 1]
   }
   return Object.assign({
     loop: loop,
-  }, calcBoss(damage + lh, hplist))
+  }, calcBoss(damage + lh, hplist, powerList))
 }
 
-const calcBoss = (damage, hplist) => {
+const calcBoss = (damage, hplist, powerList) => {
   for(let i = 0; i < hplist.length; i ++){
     if(damage - hplist[i] > 0){
       damage -= hplist[i]
     } else {
       return {
         boss: i,
-        lefthp: damage
+        lefthp: damage / powerList[i]
       }
     }
   }
