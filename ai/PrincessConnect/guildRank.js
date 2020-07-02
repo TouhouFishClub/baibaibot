@@ -34,7 +34,7 @@ const POWER = [
     1.2,
     1.5,
     1.7,
-    1.2
+    2
   ]
 ]
 var qs = require('querystring');
@@ -354,7 +354,7 @@ const calcBoss = (damage, hplist, powerList) => {
     } else {
       return {
         boss: i,
-        lefthp: damage / powerList[i]
+        lefthp: (hplist[i] - damage) / powerList[i]
       }
     }
   }
