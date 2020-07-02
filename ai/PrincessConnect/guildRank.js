@@ -82,9 +82,10 @@ const guildRankSearch = async (content, qq, group, callback, params) => {
   if(content.startsWith('定时')){
     content = content.substr(2).trim()
     if(/^\d+$/.test(content)) {
+      callback(`定时成功，${~~(content/60)} 小时 ${content%60} 分钟后自动查询`)
       setTimeout(() => {
         guildRankSearch('', qq, group, callback, params)
-      }, content * 60 ^ 1000)
+      }, content * 60 * 1000)
     }
     return
   }
