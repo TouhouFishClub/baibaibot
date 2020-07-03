@@ -5,6 +5,7 @@ const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
 // const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
 const https = require('https')
+const { drawTxtImage } = require('../../cq/drawImageBytxt')
 const HP_LIST = [
   [
     6000000,
@@ -322,7 +323,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
   if(count == 1) {
     msg += await getRank(rankTmp, scoreTmp)
   }
-  callback(msg)
+  drawTxtImage('', msg, callback, {color: 'black', font: 'STXihei'})
 }
 
 const getRank = async (rank, score) => {

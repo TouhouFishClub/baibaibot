@@ -5,7 +5,7 @@ var {sendGmImage} = require('./sendImage');
 
 
 
-function drawTxtImage(words,txt,callback){
+function drawTxtImage(words,txt,callback,options){
   var wa = txt.split('\n');
   var maxwd = 0;
   var uwd = 29;
@@ -34,8 +34,8 @@ function drawTxtImage(words,txt,callback){
   img1.resize(maxwd*19+29, len*21+29,'!') //加('!')强行把图片缩放成对应尺寸150*150！
     .autoOrient()
     .fontSize(20)
-    .fill('blue')
-    .font('./static/dfgw.ttf')
+    .fill(options.color || 'blue')
+    .font(`./static/${options.font || 'dfgw.ttf'}`)
     .drawText(0,0,uw,'NorthWest');
   sendGmImage(img1,words,callback);
 }
