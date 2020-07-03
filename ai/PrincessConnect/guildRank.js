@@ -37,6 +37,7 @@ const POWER = [
     2
   ]
 ]
+const RANK_LIST = [20000, 10000, 5000, 2800, 1200, 600, 1]
 var qs = require('querystring');
 
 /* init db */
@@ -238,6 +239,10 @@ const getAPIData = (searchContent, type, callback, params) => {
 }
 
 const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => {
+  if(params.getData) {
+    callback(data)
+    return
+  }
   // console.log(data)
   let msg = ''
   msg += `>>> 工会战查询 <<<\n`
@@ -253,7 +258,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
     msg += `${otherMsg}\n`
   }
   msg += `更新时间: ${formatTime(data.ts * 1000)}\n`
-  let count = 0
+  let count = 0, rankTmp, scoreTmp
   for(var i = 0; i < data.data.length; i++){
     let ele = Object.assign({'updateTs': data.ts * 1000}, data.data[i])
     let tmp = await findDb(ele.clan_name)
@@ -292,6 +297,8 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
           'd': ele.leader_name,
         })
         count ++
+        rankTmp = ele.rank
+        scoreTmp = ele.damage
       } else {
         let obj = calcLoop(parseInt(ele.damage))
         msg += `==============\n`
@@ -306,11 +313,55 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
           'd': ele.leader_name,
         })
         count ++
+        rankTmp = ele.rank
+        scoreTmp = ele.damage
       }
     }
   }
-  msg += `count: ${count}`
+  // msg += `count: ${count}`
+  if(count == 1) {
+    msg += await getRank(rankTmp, scoreTmp)
+  }
   callback(msg)
+}
+
+const getRank = async (rank, score) => {
+  let r1, r2
+  for(let i = 0; i < RANK_LIST.length; i ++){
+    if(rank >= RANK_LIST[i]) {
+      if(rank == RANK_LIST[i] && i != RANK_LIST.length - 1) {
+        r1 = RANK_LIST[i + 1]
+      } else {
+        r1 = RANK_LIST[i]
+      }
+      if(i != 0) {
+        r2 = RANK_LIST[i - 1]
+      } else {
+        r2 = RANK_LIST[i]
+      }
+      break
+    }
+  }
+  let r1Data = await getRankData(r1)
+  let r2Data = await getRankData(r2)
+  let msg = ''
+  msg += '==============\n'
+  msg += `更新时间：${formatTime(r1Data.ts * 1000)}`
+  let r1score = r1Data.data[0].damage
+  msg += `${r1}位：${r1score} (+${r1score - score})`
+  msg += '==============\n'
+  msg += `更新时间：${formatTime(r2Data.ts * 1000)}`
+  let r2score = r2Data.data[0].damage
+  msg += `${r2}位：${r2score} (${r2score - score})`
+  return msg
+}
+
+const getRankData = rank => {
+  return new Promise(resolve => {
+    searchDb(rank, 'rank', data => {
+      resolve(data)
+    }, {getData: true})
+  })
 }
 
 const initLimit = () => {
