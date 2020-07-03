@@ -349,10 +349,14 @@ const getRank = async (rank, score) => {
   msg += `更新时间：${formatTime(r1Data.ts * 1000)}\n`
   let r1score = r1Data.data[0].damage
   msg += `${r1}位：${r1score} (+${r1score - score})\n`
+  let obj1 = calcLoop(r1score)
+  msg += `当前为 ${obj1.loop+1} 周目 ${obj1.boss+1} 号boss\n剩余血量：${~~obj1.lefthp}\n`
   msg += '==============\n'
   msg += `更新时间：${formatTime(r2Data.ts * 1000)}\n`
   let r2score = r2Data.data[0].damage
   msg += `${r2}位：${r2score} (${r2score - score})\n`
+  let obj2 = calcLoop(r2score)
+  msg += `当前为 ${obj2.loop+1} 周目 ${obj2.boss+1} 号boss\n剩余血量：${~~obj2.lefthp}\n`
   return msg
 }
 
