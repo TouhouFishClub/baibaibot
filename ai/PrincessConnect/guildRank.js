@@ -346,13 +346,13 @@ const getRank = async (rank, score) => {
   let r2Data = await getRankData(r2)
   let msg = ''
   msg += '==============\n'
-  msg += `更新时间：${formatTime(r1Data.ts * 1000)}`
+  msg += `更新时间：${formatTime(r1Data.ts * 1000)}\n`
   let r1score = r1Data.data[0].damage
-  msg += `${r1}位：${r1score} (+${r1score - score})`
+  msg += `${r1}位：${r1score} (+${r1score - score})\n`
   msg += '==============\n'
-  msg += `更新时间：${formatTime(r2Data.ts * 1000)}`
+  msg += `更新时间：${formatTime(r2Data.ts * 1000)}\n`
   let r2score = r2Data.data[0].damage
-  msg += `${r2}位：${r2score} (${r2score - score})`
+  msg += `${r2}位：${r2score} (${r2score - score})\n`
   return msg
 }
 
