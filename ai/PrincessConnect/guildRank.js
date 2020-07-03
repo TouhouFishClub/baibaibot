@@ -323,7 +323,7 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
   if(count == 1) {
     msg += await getRank(rankTmp, scoreTmp)
   }
-  drawTxtImage('', msg, callback, {color: 'black', font: 'STXihei'})
+  drawTxtImage('', msg, callback, {color: 'black'})
 }
 
 const getRank = async (rank, score) => {
