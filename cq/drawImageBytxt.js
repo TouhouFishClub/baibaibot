@@ -35,7 +35,7 @@ function drawTxtImage(words,txt,callback,options){
     .autoOrient()
     .fontSize(20)
     .fill(options.color || 'blue')
-    .font(`./static/${options.font || 'dfgw.ttf'}`)
+    .font(`${options.font || './static/dfgw.ttf'}`)
     .drawText(0,0,uw,'NorthWest');
   sendGmImage(img1,words,callback);
 }
