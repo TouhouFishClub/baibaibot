@@ -240,7 +240,7 @@ const getAPIData = (searchContent, type, callback, params) => {
 }
 
 const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => {
-  if(new Data().getHours() == 5) {
+  if(new Date().getHours() == 5) {
     params.forceApi = true
   }
   if(params.getData) {
@@ -365,7 +365,7 @@ const getRank = async (rank, score) => {
 }
 
 const getRankData = rank => {
-  let h = new Data().getHours(), option = {getData: true}
+  let h = new Date().getHours(), option = {getData: true}
   if(h === 5) {
     option.forceApi = true
   }
