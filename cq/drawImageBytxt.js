@@ -35,7 +35,11 @@ function drawTxtImage(words,txt,callback,options){
     .autoOrient()
     .fontSize(20)
     .fill(options.color || 'blue')
-    .font(`${options.font || './static/dfgw.ttf'}`)
+    /*
+    dfgw.ttf 默认 华康少女字体
+    STXIHEI.TTF 华文细黑
+    */
+    .font(`./static/${options.font || 'dfgw.ttf'}`)
     .drawText(0,0,uw,'NorthWest');
   sendGmImage(img1,words,callback);
 }
