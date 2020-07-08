@@ -39,6 +39,7 @@ const POWER = [
   ]
 ]
 const RANK_LIST = [20000, 10000, 5000, 2800, 1200, 600, 1]
+let globalCount = 10
 var qs = require('querystring');
 
 /* init db */
@@ -58,6 +59,7 @@ let searchLimit = {
 }
 
 const guildRankSearch = async (content, qq, group, callback, params) => {
+  globalCount = 10
   if(!client)
     return
   collection = client.collection('cl_pcr_guild_rank')
@@ -143,7 +145,7 @@ const searchDb = async (searchContent, type, callback, params) => {
   let searchKey = `${type}_${searchContent}`
   let data = await findDb(searchKey)
   if(data && data.expire > Date.now() && !params.forceApi){
-    renderMsg(data.d, 'db', callback, '', params)
+    formatData(data.d, type, 'db', callback, '', params)
   } else {
     searchAPI(searchContent, type, data ? data.d : {}, callback, params)
   }
@@ -156,7 +158,7 @@ const searchAPI = (searchContent, type, dbData, callback, params) => {
       getAPIData(searchContent, type, callback, params)
     } else {
       if(dbData) {
-        renderMsg(dbData, 'db', callback, 'API查询超过限制，目前为数据库缓存', params)
+        formatData(dbData, type, 'db', callback, 'API查询超过限制，目前为数据库缓存', params)
       } else {
         callback(`API查询超过限制，请${formatTime(searchLimit)}后再次查询`)
       }
@@ -218,7 +220,7 @@ const getAPIData = (searchContent, type, callback, params) => {
     });
     res.on('end', () => {
       if(JSON.parse(data).data.length){
-        renderMsg(JSON.parse(data), 'api', callback, '', params)
+        formatData(JSON.parse(data), type, 'api', callback, '', params)
         collection.save({
           '_id': `${type}_${searchContent}`,
           'd': JSON.parse(data),
@@ -239,15 +241,112 @@ const getAPIData = (searchContent, type, callback, params) => {
 
 }
 
-const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => {
-  if(new Date().getHours() == 5) {
-    params.forceApi = true
-  }
-  if(params.getData) {
-    callback(data)
+const formatData = async (data, type, source, callback, otherMsg = '', params = {}) => {
+  if(globalCount -- < 0) {
+    callback('出现死循环，请排查问题')
     return
   }
-  // console.log(data)
+  /* 循环更新缓存 */
+  console.log('>>>> format')
+  let outData = []
+  for(var i = 0; i < data.data.length; i++){
+    let ele = Object.assign({'updateTs': data.ts * 1000}, data.data[i])
+    //TODO: 旧版无 leader_id 会造成公会历史存储混淆
+    let key = `${ele.clan_name}`
+    // let key = `${ele.clan_name}_${ele.leader_viewer_id}`
+    let tmp = await findDb(key)
+    let dataList = [ele]
+    if(tmp) {
+      if(tmp.d[tmp.d.length - 1].updateTs != data.ts * 1000){
+        dataList = tmp.d.concat([ele])
+        await collection.save({
+          '_id': key,
+          'd': dataList,
+        })
+      } else {
+        dataList = tmp.d
+      }
+    } else {
+      await collection.save({
+        '_id': key,
+        'd': dataList,
+      })
+    }
+    await collection.save({
+      '_id': `leaderId_${ele.leader_viewer_id}`,
+      'd': ele.leader_name,
+    })
+    /*
+    * clan_name: string
+    * damage: number
+    * leader_name: string
+    * leader_viewer_id: number
+    * member_num: number
+    * rank: number
+    * history: []
+    * loopInfo: {
+    *   loop: number
+    *   boss: number
+    *   lefthp: number
+    * }
+    * */
+    outData.push(
+      Object.assign(
+        ele,
+        {
+          history: dataList,
+          loopInfo: calcLoop(parseInt(ele.damage))
+        }
+      )
+    )
+  }
+  if(params.leaderId) {
+    let filter = outData.filter(x => x.leader_viewer_id == params.leaderId)
+    if(filter.length == 1) {
+      outData = filter
+    }
+  }
+  if(outData.length == 1 && !params.getData) {
+    outData[0].nearbyRank = await getRank(outData[0].rank, params)
+  }
+
+  if(params.getData) {
+    if(type == 'rank'){
+      let rData = Object.assign({
+        'updateTs': data.ts * 1000,
+        loopInfo: calcLoop(parseInt(data.data[0].damage))
+      }, data.data[0]), rTmp = [rData]
+      let rSave = await findDb(`r_${rData.rank}`)
+      if(rSave) {
+        if(rSave.d[rSave.d.length - 1].updateTs != data.ts * 1000) {
+          rTmp = rSave.d.concat([rData])
+          await collection.save({
+            '_id': `r_${rData.rank}`,
+            'd': rTmp,
+          })
+        } else {
+          rTmp = rSave.d
+        }
+      } else {
+        await collection.save({
+          '_id': `r_${rData.rank}`,
+          'd': rTmp,
+        })
+      }
+      callback(rTmp)
+    } else {
+      callback(outData)
+    }
+    return
+  }
+
+  // console.log('=============')
+  console.log(JSON.stringify(outData, 2))
+  // console.log(outData)
+  renderMsg(outData, source, callback, otherMsg,)
+}
+
+const renderMsg = (data, source, callback, otherMsg = '', params = {}) => {
   let msg = ''
   msg += `>>> 工会战查询 <<<\n`
   switch(source){
@@ -261,75 +360,40 @@ const renderMsg = async (data, source, callback, otherMsg = '', params = {}) => 
   if(otherMsg) {
     msg += `${otherMsg}\n`
   }
-  msg += `更新时间: ${formatTime(data.ts * 1000)}\n`
-  let count = 0, rankTmp, scoreTmp
-  for(var i = 0; i < data.data.length; i++){
-    let ele = Object.assign({'updateTs': data.ts * 1000}, data.data[i])
-    let tmp = await findDb(ele.clan_name)
-    let dataList = [ele]
-    if(tmp) {
-      if(tmp.d[tmp.d.length - 1].updateTs != data.ts * 1000){
-        dataList = tmp.d.concat([ele])
-        await collection.save({
-          '_id': ele.clan_name,
-          'd': dataList,
-        })
-      } else {
-        dataList = tmp.d
-      }
-    } else {
-      await collection.save({
-        '_id': ele.clan_name,
-        'd': dataList,
-      })
+  data.forEach(d => {
+    msg += `==============\n`
+    let his = d.history.slice(-2), hisLength = his.length
+    msg += `排名： ${d.rank}`
+    msg += hisLength == 2 ? `(${his[1].rank - his[0].rank <= 0 ? '↑': '↓'}${Math.abs(his[1].rank - his[0].rank)})\n` : '\n'
+    msg += `公会： ${d.clan_name}\n`
+    msg += `分数： ${d.damage}`
+    msg += hisLength == 2 ? `(${his[0].damage - his[1].damage <= 0 ? '↑': '↓'}${Math.abs(his[1].damage - his[0].damage)})\n` : '\n'
+    msg += `会长： ${d.leader_name}\n`
+    msg += `会长ID： ${d.leader_viewer_id}\n`
+    msg += `更新时间： ${formatTime(his[hisLength - 1].updateTs)}\n`
+    if(hisLength == 2) {
+      msg += `上次更新： ${formatTime(his[0].updateTs)}\n`
     }
-    if(!params.leaderId || params.leaderId == ele.leader_viewer_id){
-      if(dataList.length > 1){
-        let s1 = dataList[dataList.length - 1]
-        let s2 = dataList[dataList.length - 2]
-        let obj = calcLoop(parseInt(s1.damage))
-        msg += `==============\n`
-        msg += `排名： ${s1.rank} ${s1.rank - s2.rank <= 0 ? '↑': '↓'}${Math.abs(s1.rank - s2.rank)}\n`
-        msg += `公会： ${s1.clan_name}\n`
-        msg += `分数： ${s1.damage} ${s2.damage - s1.damage < 0 ? '↑': '↓'}${Math.abs(s1.damage - s2.damage)}\n`
-        msg += `会长： ${s1.leader_name}\n`
-        msg += `会长ID： ${s1.leader_viewer_id}\n`
-        msg += `上次更新时间： ${formatTime(s2.updateTs)}\n`
-        msg += `当前为 ${obj.loop+1} 周目 ${obj.boss+1} 号boss\n剩余血量：${~~obj.lefthp}\n`
-        await collection.save({
-          '_id': `leaderId_${ele.leader_viewer_id}`,
-          'd': ele.leader_name,
-        })
-        count ++
-        rankTmp = ele.rank
-        scoreTmp = ele.damage
-      } else {
-        let obj = calcLoop(parseInt(ele.damage))
-        msg += `==============\n`
-        msg += `排名： ${ele.rank}\n`
-        msg += `公会： ${ele.clan_name}\n`
-        msg += `分数： ${ele.damage}\n`
-        msg += `会长： ${ele.leader_name}\n`
-        msg += `会长ID： ${ele.leader_viewer_id}\n`
-        msg += `当前为 ${obj.loop+1} 周目 ${obj.boss+1} 号boss\n剩余血量：${~~obj.lefthp}\n`
-        await collection.save({
-          '_id': `leaderId_${ele.leader_viewer_id}`,
-          'd': ele.leader_name,
-        })
-        count ++
-        rankTmp = ele.rank
-        scoreTmp = ele.damage
-      }
+    msg += `当前为 ${d.loopInfo.loop+1} 周目 ${d.loopInfo.boss+1} 号boss\n剩余血量：${~~d.loopInfo.lefthp}\n`
+    if(d.nearbyRank) {
+      let { upper, below } = d.nearbyRank, u = upper.slice(-2), b = below.slice(-2)
+      msg += '==============\n'
+      msg += `更新时间：${formatTime(u[u.length - 1].updateTs)}\n`
+      let r1score = u[u.length - 1].damage
+      msg += `【${u[u.length - 1].rank}位】 ${r1score} (+${r1score - d.damage})\n`
+      msg += `当前为 ${u[u.length - 1].loopInfo.loop+1} 周目 ${u[u.length - 1].loopInfo.boss+1} 号boss\n剩余血量：${~~u[u.length - 1].loopInfo.lefthp}\n`
+      msg += '==============\n'
+      msg += `更新时间：${formatTime(b[b.length - 1].updateTs)}\n`
+      let r2score = b[b.length - 1].damage
+      msg += `【${b[b.length - 1].rank}位】 ${r2score} (${r2score - d.damage})\n`
+      msg += `当前为 ${b[b.length - 1].loopInfo.loop+1} 周目 ${b[b.length - 1].loopInfo.boss+1} 号boss\n剩余血量：${~~b[b.length - 1].loopInfo.lefthp}\n`
     }
-  }
-  // msg += `count: ${count}`
-  if(count == 1) {
-    msg += await getRank(rankTmp, scoreTmp)
-  }
+  })
+  // callback(msg)
   drawTxtImage('', msg, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
-const getRank = async (rank, score) => {
+const getRank = async (rank, params) => {
   let r1, r2
   for(let i = 0; i < RANK_LIST.length; i ++){
     if(rank >= RANK_LIST[i]) {
@@ -346,28 +410,38 @@ const getRank = async (rank, score) => {
       break
     }
   }
-  let r1Data = await getRankData(r1)
-  let r2Data = await getRankData(r2)
-  let msg = ''
-  msg += '==============\n'
-  msg += `更新时间：${formatTime(r1Data.ts * 1000)}\n`
-  let r1score = r1Data.data[0].damage
-  msg += `【${r1}位】 ${r1score} (+${r1score - score})\n`
-  let obj1 = calcLoop(r1score)
-  msg += `当前为 ${obj1.loop+1} 周目 ${obj1.boss+1} 号boss\n剩余血量：${~~obj1.lefthp}\n`
-  msg += '==============\n'
-  msg += `更新时间：${formatTime(r2Data.ts * 1000)}\n`
-  let r2score = r2Data.data[0].damage
-  msg += `【${r2}位】 ${r2score} (${r2score - score})\n`
-  let obj2 = calcLoop(r2score)
-  msg += `当前为 ${obj2.loop+1} 周目 ${obj2.boss+1} 号boss\n剩余血量：${~~obj2.lefthp}\n`
-  return msg
+  let r1Data = await getRankData(r1, params)
+  let r2Data = await getRankData(r2, params)
+  return new Promise(resolve => {
+    resolve({
+      upper: r1Data,
+      below: r2Data
+    })
+  })
+  // let msg = ''
+  // msg += '==============\n'
+  // msg += `更新时间：${formatTime(r1Data.ts * 1000)}\n`
+  // let r1score = r1Data.data[0].damage
+  // msg += `【${r1}位】 ${r1score} (+${r1score - score})\n`
+  // let obj1 = calcLoop(r1score)
+  // msg += `当前为 ${obj1.loop+1} 周目 ${obj1.boss+1} 号boss\n剩余血量：${~~obj1.lefthp}\n`
+  // msg += '==============\n'
+  // msg += `更新时间：${formatTime(r2Data.ts * 1000)}\n`
+  // let r2score = r2Data.data[0].damage
+  // msg += `【${r2}位】 ${r2score} (${r2score - score})\n`
+  // let obj2 = calcLoop(r2score)
+  // msg += `当前为 ${obj2.loop+1} 周目 ${obj2.boss+1} 号boss\n剩余血量：${~~obj2.lefthp}\n`
+  // return msg
 }
 
-const getRankData = rank => {
+const getRankData = (rank, params) => {
   let h = new Date().getHours(), option = {getData: true}
   if(h === 5) {
     option.forceApi = true
+  }
+  if(params.forceApi) {
+    option.forceApi = true
+    option.ignoreLimit = true
   }
   return new Promise(resolve => {
     searchDb(rank, 'rank', data => {

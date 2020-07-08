@@ -1,10 +1,10 @@
 // const ak = require('./arkNightsRecruit')
 // const akc = require('./arkNightsCalc')
-// const aks = require('./arkNightsCharacter')
+const aks = require('./arkNightsCharacter')
 // const akk = require('./arkNightsSkill')
 // const akl = require('./arkNightsRecruitLimit')
 // const {baiduocr} = require('../image/baiduocr');
-const {numberOcr} = require('../image/baiduNumOcr');
+// const {numberOcr} = require('../image/baiduNumOcr');
 // const akb = require('./arkNightsBuildingTheme')
 // const akc = require('./arkNightChallenge')
 // const akcc = require('./arkNightsCharacterCompare')
@@ -22,7 +22,7 @@ const c = m => {
 // console.log(akk('skchr_plosis_2', '3'))
 // akc('123456', '5 1-1 1-80   ', c)
 // aks('123456', '初雪', c)
-// aks('123456', '伊芙 8', c)
+aks('123456', '苏苏洛', c, true)
 // aks('123456', '安洁 8', c)
 // aks('123456', '空爆 8', c)
 // aks('123456', '黑角 8', c)
