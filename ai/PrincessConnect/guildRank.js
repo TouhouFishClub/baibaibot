@@ -247,7 +247,7 @@ const formatData = async (data, type, source, callback, otherMsg = '', params = 
     return
   }
   /* 循环更新缓存 */
-  console.log('>>>> format')
+  // console.log('>>>> format')
   let outData = []
   for(var i = 0; i < data.data.length; i++){
     let ele = Object.assign({'updateTs': data.ts * 1000}, data.data[i])
@@ -341,7 +341,7 @@ const formatData = async (data, type, source, callback, otherMsg = '', params = 
   }
 
   // console.log('=============')
-  console.log(JSON.stringify(outData, 2))
+  // console.log(JSON.stringify(outData, 2))
   // console.log(outData)
   renderMsg(outData, source, callback, otherMsg,)
 }
