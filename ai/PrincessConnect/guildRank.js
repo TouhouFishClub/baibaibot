@@ -2,7 +2,8 @@ const DB_EXPIRE_TIME = 30 * 60 * 1000
 const GLOBAL_EXPIRE_TIME = 60 * 60 * 1000
 const GLOBAL_COUNT_LIMIT = 20
 const MongoClient = require('mongodb').MongoClient
-const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
+// const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
+const MONGO_URL = 'mongodb://192.168.1.19:27017/db_bot'
 // const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
 const https = require('https')
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
@@ -343,7 +344,15 @@ const formatData = async (data, type, source, callback, otherMsg = '', params = 
   // console.log('=============')
   // console.log(JSON.stringify(outData, 2))
   // console.log(outData)
-  renderMsg(outData, source, callback, otherMsg, params)
+  if(params.drawImage) {
+    renderImage(outData, source, callback, otherMsg, params)
+  } else {
+    renderMsg(outData, source, callback, otherMsg, params)
+  }
+}
+
+const renderImage = (data, source, callback, otherMsg = '', params = {}) => {
+
 }
 
 const renderMsg = (data, source, callback, otherMsg = '', params = {}) => {
