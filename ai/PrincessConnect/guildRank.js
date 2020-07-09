@@ -38,7 +38,7 @@ const POWER = [
     2
   ]
 ]
-const RANK_LIST = [20000, 10000, 5000, 2800, 1200, 600, 1]
+const RANK_LIST = [60000, 40000, 25000, 15000, 10000, 5000, 2800, 1200, 600, 200, 50, 20, 10, 4, 1]
 let globalCount = 10
 var qs = require('querystring');
 
@@ -343,7 +343,7 @@ const formatData = async (data, type, source, callback, otherMsg = '', params = 
   // console.log('=============')
   // console.log(JSON.stringify(outData, 2))
   // console.log(outData)
-  renderMsg(outData, source, callback, otherMsg,)
+  renderMsg(outData, source, callback, otherMsg, params)
 }
 
 const renderMsg = (data, source, callback, otherMsg = '', params = {}) => {
