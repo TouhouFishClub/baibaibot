@@ -13,7 +13,7 @@ const mkdirsSync = require('./lib/mkdirsSync')
 const multer = require('multer')
 const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
 const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
-
+const PORT = 24334
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
@@ -264,7 +264,7 @@ app.get('/send_group_msg',(reqp, resp) => {
     if(res.trim().length>0){
       var options = {
         host: '192.168.17.52',
-        port: 23334,
+        port: PORT,
         path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
         method: 'GET',
         headers: {
@@ -343,11 +343,12 @@ app.get('/get_group_member_info',function(req,res){
 
 function groupm(req,res,path){
   res.set("Access-Control-Allow-Origin", "*");
-  var url = 'http://192.168.17.52:23334/'+path;
+  var url = `http://192.168.17.52:${PORT}/`+path;
   let query = qs.stringify(req.query)
   if(query) {
     url = `${url}?${query}`
   }
+  request({
   request({
     url: url,
     method: "GET"
@@ -407,7 +408,7 @@ app.get('/blive',function(req,res){
     var replyData = username+":"+message;
     var options = {
       host: '192.168.17.52',
-      port: 23334,
+      port: PORT,
       path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(replyData),
       method: 'GET',
       headers: {}
