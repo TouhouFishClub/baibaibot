@@ -349,7 +349,6 @@ function groupm(req,res,path){
     url = `${url}?${query}`
   }
   request({
-  request({
     url: url,
     method: "GET"
   }, function(error, response, body){
