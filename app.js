@@ -407,7 +407,7 @@ app.get('/blive',function(req,res){
     var replyData = username+":"+message;
     var options = {
       host: '192.168.17.52',
-      port: PORT,
+      port: 25334,
       path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(replyData),
       method: 'GET',
       headers: {}
