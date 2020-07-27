@@ -1,8 +1,8 @@
-const http = require('http');
+const https = require('https');
 const _ = require('lodash')
 
 module.exports = function (callback) {
-  http.get('http://weather.erinn.biz/smuggler.php', res => {
+  https.get('https://weather.erinn.biz/smuggler.php', res => {
     res.setEncoding('utf8');
     let rawData = '';
     res.on('data', chunk => {
