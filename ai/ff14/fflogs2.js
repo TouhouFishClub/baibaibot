@@ -67,7 +67,7 @@ function fflogs2Reply(content,userName,callback,cn){
   var cid = 3;
   if(cn==1) {
     host = "cn.fflogs.com";
-    cid = 5;
+    cid = 3;
   }
   var hid = 100;
   if(zid==29){
