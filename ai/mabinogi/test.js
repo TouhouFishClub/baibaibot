@@ -1,17 +1,25 @@
-const os = require('./optionset')
-const app = require('express')()
-// os('aaa', '猎狮', 'image', c => {console.log(c)})
-const https = require('https')
-const querystring =  require('querystring')
+// const os = require('./optionset')
+// const app = require('express')()
+// // os('aaa', '猎狮', 'image', c => {console.log(c)})
+// const https = require('https')
+// const querystring =  require('querystring')
 
-const ow = require('./tools/optionsetWhere')
+const smu = require('./smuggler')
 
-const rua = require('./ruawork')
-// rua(data => console.log(data))
-
-os('aa', '铁瓮城', 'normal', d => {
+smu(d => {
+  console.log('=========')
   console.log(d)
 })
+
+
+// const ow = require('./tools/optionsetWhere')
+//
+// const rua = require('./ruawork')
+// rua(data => console.log(data))
+
+// os('aa', '铁瓮城', 'normal', d => {
+//   console.log(d)
+// })
 
 // const draw = require('./tools/optionsetImage')
 // draw({ ID: '21527',

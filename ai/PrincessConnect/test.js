@@ -17,7 +17,7 @@ const wait = async time => {
     }, time)
   })
 }
-let con = 'bcs 圣米卡艾尔学院 -- forceApi', from = 799018865, groupid=111;
+let con = 'bcs 圣米卡艾尔学院 -- drawImage', from = 799018865, groupid=111;
 (async () => {
   await wait(1000)
 

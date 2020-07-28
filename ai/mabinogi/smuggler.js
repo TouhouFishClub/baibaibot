@@ -1,8 +1,9 @@
-const http = require('http');
+const https = require('https');
 const _ = require('lodash')
+const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
 module.exports = function (callback) {
-  http.get('http://weather.erinn.biz/smuggler.php', res => {
+  https.get('https://weather.erinn.biz/smuggler.php', res => {
     res.setEncoding('utf8');
     let rawData = '';
     res.on('data', chunk => {
@@ -126,7 +127,9 @@ module.exports = function (callback) {
             callbackStr += `\n下次出现时间：${formatTime(nextObj.startTime)} - ${formatTime(nextObj.endTime)}\n【交易物品】：${nextObj.product}\n【交易地点】：${nextObj.area}`
           }
         }
-        callback(callbackStr)
+
+        drawTxtImage('', callbackStr, callback, {color: 'black', font: 'STXIHEI.TTF'})
+        // callback(callbackStr)
       } catch (e) {
         console.error(e);
       }
