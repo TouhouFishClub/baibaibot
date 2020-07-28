@@ -67,16 +67,16 @@ function fflogs2Reply(content,userName,callback,cn){
   var cid = 3;
   if(cn==1) {
     host = "cn.fflogs.com";
-    cid = 5;
+    cid = 3;
   }
   var hid = 100;
-  if(zid==29){
+  if(zid==29||zid==33){
     hid=101
   }
 
   var url = 'https://'+host+'/zone/statistics/table/'+zid;
   url = url +'/dps/'+bossid+'/'+hid+'/8/'+cid+'/100/1/14/0/Global/'+job;
-  url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=rdps';
+  url = url +'/All/0/normalized/single/0/-1/?keystone=15&dpstype=pdps';
 
 
   if(job=="Any"){
@@ -89,7 +89,8 @@ function fflogs2Reply(content,userName,callback,cn){
   request({
     headers:{
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
-      'Referer': 'https://'+host+'/zone/statistics/'+zid+'/'
+      'Referer': 'https://'+host+'/zone/statistics/'+zid+'/',
+
     },
     url: url,
   }, function(error, response, body) {
@@ -121,14 +122,14 @@ function fflogs2Reply(content,userName,callback,cn){
         }
         console.log(dpslist);
         if(job=="Any"){
-          var ret = ba[0].cn+"\n";
+          var ret = ba[0].cn+" \n";
           for(var i=1;i<keylist.length;i++){
             ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
           }
           ret = ret + "min:" + "  \t"+dpslist[0].toFixed(1)+"\n";
           callback(ret.trim());
         }else{
-          var ret = ba[0].cn + " " + job_cn[a[0]]+"\n";
+          var ret = ba[0].cn + " " + job_cn[a[0]]+" adps:\n";
           for(var i=0;i<keylist.length;i++){
             ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
           }
