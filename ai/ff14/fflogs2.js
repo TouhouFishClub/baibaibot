@@ -122,14 +122,14 @@ function fflogs2Reply(content,userName,callback,cn){
         }
         console.log(dpslist);
         if(job=="Any"){
-          var ret = ba[0].cn+" adps:\n";
+          var ret = ba[0].cn+" \n";
           for(var i=1;i<keylist.length;i++){
             ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
           }
           ret = ret + "min:" + "  \t"+dpslist[0].toFixed(1)+"\n";
           callback(ret.trim());
         }else{
-          var ret = ba[0].cn + " " + job_cn[a[0]]+"\n";
+          var ret = ba[0].cn + " " + job_cn[a[0]]+" adps:\n";
           for(var i=0;i<keylist.length;i++){
             ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
           }
