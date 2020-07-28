@@ -70,7 +70,7 @@ function fflogs2Reply(content,userName,callback,cn){
     cid = 3;
   }
   var hid = 100;
-  if(zid==29){
+  if(zid==29||zid==33){
     hid=101
   }
 
@@ -89,7 +89,8 @@ function fflogs2Reply(content,userName,callback,cn){
   request({
     headers:{
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
-      'Referer': 'https://'+host+'/zone/statistics/'+zid+'/'
+      'Referer': 'https://'+host+'/zone/statistics/'+zid+'/',
+
     },
     url: url,
   }, function(error, response, body) {
