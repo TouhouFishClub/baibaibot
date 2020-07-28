@@ -122,7 +122,7 @@ function fflogs2Reply(content,userName,callback,cn){
         }
         console.log(dpslist);
         if(job=="Any"){
-          var ret = ba[0].cn+"\n";
+          var ret = ba[0].cn+" adps:\n";
           for(var i=1;i<keylist.length;i++){
             ret = ret + keylist[i]+"%:"+" \t"+dpslist[i].toFixed(1)+"\n";
           }
