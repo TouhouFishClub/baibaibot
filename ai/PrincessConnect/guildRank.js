@@ -198,7 +198,8 @@ const getAPIData = (searchContent, type, callback, params) => {
     method: 'POST',
     headers: {
       "Content-Type": "application/json",
-      "Referer": "https://kengxxiao.github.io/Kyouka/"
+      "Referer": "https://kengxxiao.github.io/Kyouka/",
+      "Custom-Source": "https://kengxxiao.github.io/Kyouka/"
     }
   }
 
@@ -234,6 +235,7 @@ const getAPIData = (searchContent, type, callback, params) => {
   });
 
   req.on('error', (e) => {
+    console.log('>>>>>>>>>>>>>>>')
     console.error(`problem with request: ${e.message}`);
   });
 
