@@ -199,7 +199,7 @@ const getAPIData = (searchContent, type, callback, params) => {
     headers: {
       "Content-Type": "application/json",
       "Referer": "https://kengxxiao.github.io/Kyouka/",
-      "Custom-Source": "https://kengxxiao.github.io/Kyouka/"
+      "Custom-Source": "baibaibot"
     }
   }
 
