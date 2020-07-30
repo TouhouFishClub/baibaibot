@@ -199,7 +199,7 @@ const getAPIData = (searchContent, type, callback, params) => {
     headers: {
       "Content-Type": "application/json",
       "Referer": "https://kengxxiao.github.io/Kyouka/",
-      "Custom-Source": "baibaibot"
+      // "Custom-Source": "baibaibot"
     }
   }
 
@@ -232,10 +232,14 @@ const getAPIData = (searchContent, type, callback, params) => {
         callback('未找到相关数据')
       }
     });
+    res.on('error', e => {
+      console.log('=== pcr request res error ===')
+      console.log(e.message)
+    })
   });
 
   req.on('error', (e) => {
-    console.log('>>>>>>>>>>>>>>>')
+    console.log('=== pcr request req error ===')
     console.error(`problem with request: ${e.message}`);
   });
 
