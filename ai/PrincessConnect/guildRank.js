@@ -199,7 +199,7 @@ const getAPIData = (searchContent, type, callback, params) => {
     headers: {
       "Content-Type": "application/json",
       "Referer": "https://kengxxiao.github.io/Kyouka/",
-      // "Custom-Source": "baibaibot"
+      "Custom-Source": "baibaibot"
     }
   }
 
@@ -223,15 +223,18 @@ const getAPIData = (searchContent, type, callback, params) => {
     res.on('end', () => {
       // console.log('=== request data ===')
       // console.log(data)
-      if(JSON.parse(data).data.length){
-        formatData(JSON.parse(data), type, 'api', callback, '', params)
+      let pd = JSON.parse(data)
+      if(pd.data && pd.data.length){
+        formatData(pd, type, 'api', callback, '', params)
         collection.save({
           '_id': `${type}_${searchContent}`,
-          'd': JSON.parse(data),
+          'd': pd,
           'expire': Date.now() + DB_EXPIRE_TIME
         })
       } else {
-        callback('未找到相关数据')
+        callback(`未找到相关数据`)
+        console.log('=== pcr request empty ===')
+        console.log(data)
       }
     });
     res.on('error', e => {
