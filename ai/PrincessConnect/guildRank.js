@@ -221,8 +221,8 @@ const getAPIData = (searchContent, type, callback, params) => {
       data += chunk
     });
     res.on('end', () => {
-      console.log('=== request data ===')
-      console.log(data)
+      // console.log('=== request data ===')
+      // console.log(data)
       if(JSON.parse(data).data.length){
         formatData(JSON.parse(data), type, 'api', callback, '', params)
         collection.save({
