@@ -549,7 +549,7 @@ function doSend1(thread){
               },
               method: "POST",
               url: '192.168.17.52/send_group_msg',
-              body: JSON.stringify(bdy);
+              body: JSON.stringify(bdy)
           }, function(error, response, body) {
               if (error && error.code) {
                   console.log('pipe error catched!')
