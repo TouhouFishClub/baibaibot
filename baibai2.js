@@ -475,7 +475,7 @@ function doSend(thread){
                   console.log('ok1');
               }
               setTimeout(function () {
-                  doSend1(thread);
+                  doSend(thread);
               }, Math.floor(Math.random() * 3500 + 2500));
           });
 
