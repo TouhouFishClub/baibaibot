@@ -548,7 +548,7 @@ function doSend1(thread){
                   "Content-Type":"application/json"
               },
               method: "POST",
-              url: '192.168.17.52/send_group_msg',
+              url: 'http://192.168.17.52:'+port+'/send_group_msg',
               body: JSON.stringify(bdy)
           }, function(error, response, body) {
               if (error && error.code) {
