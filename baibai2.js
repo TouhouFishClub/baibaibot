@@ -438,6 +438,7 @@ function addSendQueue(groupid,msg,botqq){
 
 
 function doSend(thread){
+  console.log('will send3:'+xqueue.length);
   if(queue.length>0) {
     var msgData = queue.shift();
     var groupid = msgData.gid;
