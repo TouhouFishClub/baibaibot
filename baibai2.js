@@ -444,34 +444,74 @@ function doSend(thread){
     var groupid = msgData.gid;
     var msgd = msgData.msg;
     var port = msgData.port;
-    var options = {
-      host: '192.168.17.52',
-      port: port,
-      path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(msgd),
-      method: 'GET',
-      headers: {}
-    };
-    console.log("send:"+msgd);
-    var req = http.request(options,function(res){
-      var resdata = '';
-      res.on('data', function (chunk) {
-        resdata = resdata + chunk;
-      });
-      res.on('end', function () {
-        setTimeout(function(){
-          doSend(thread);
-        },Math.floor(Math.random()*3500+500));
-      });
-    });
-    saveChat(groupid, 2375373419, '百百', msgd,port);
-    req.on('error', function (err) {
-      console.log('req err:');
-      console.log(err);
-      setTimeout(function(){
-        doSend(thread);
-      },Math.floor(Math.random()*3500+500));
-    });
-    req.end();
+      console.log("port:"+port);
+      if (port == 24334) {
+          var options = {
+              host: '192.168.17.52',
+              port: port,
+              path: '/send_group_msg',
+              method: 'POST',
+              headers: {}
+          };
+          console.log("111111:"+msgd);
+          msgd = msgd.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/cool-data/wcq/data/images/sen")
+          console.log("222222:"+msgd)
+          var body = {"group_id": groupid, message: msgd};
+          console.log("send:" + msgd);
+          var req = http.request(options, function (res) {
+              var resdata = '';
+              res.on('data', function (chunk) {
+                  resdata = resdata + chunk;
+              });
+              res.on('end', function () {
+                  setTimeout(function () {
+                      doSend1(thread);
+                  }, Math.floor(Math.random() * 3500 + 2500));
+              });
+          });
+          saveChat(groupid, 2375373419, '百百', msgd, port);
+          req.on('error', function (err) {
+              console.log('req err:');
+              console.log(err);
+              setTimeout(function () {
+                  doSend1(thread);
+              }, Math.floor(Math.random() * 3500 + 2500));
+          });
+          req.send(JSON.stringify(body))
+          req.end();
+      } else {
+
+
+          var options = {
+              host: '192.168.17.52',
+              port: port,
+              path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(msgd),
+              method: 'GET',
+              headers: {}
+          };
+          console.log("send:" + msgd);
+          var req = http.request(options, function (res) {
+              var resdata = '';
+              res.on('data', function (chunk) {
+                  resdata = resdata + chunk;
+              });
+              res.on('end', function () {
+                  setTimeout(function () {
+                      doSend(thread);
+                  }, Math.floor(Math.random() * 3500 + 500));
+              });
+          });
+          saveChat(groupid, 2375373419, '百百', msgd, port);
+          req.on('error', function (err) {
+              console.log('req err:');
+              console.log(err);
+              setTimeout(function () {
+                  doSend(thread);
+              }, Math.floor(Math.random() * 3500 + 500));
+          });
+          req.end();
+
+      }
   }else{
     setTimeout(function(){
       doSend(thread);
@@ -482,7 +522,6 @@ function doSend(thread){
 
 
 function doSend1(thread){
-  console.log('will send2:'+xqueue.length);
   if(xqueue.length>0) {
       var msgData = xqueue.shift();
       var groupid = msgData.gid;
