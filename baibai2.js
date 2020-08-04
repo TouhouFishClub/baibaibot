@@ -455,7 +455,7 @@ function doSend(thread){
               headers: {}
           };
           console.log("111111:"+msgd);
-          msgd = msgd.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/cool-data/wcq/data/image/sen")
+          msgd = msgd.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/cool-data/cq/data/image/sen")
           console.log("222222:"+msgd)
           var bdy = {"group_id": groupid, message: msgd};
           saveChat(groupid, 2375373419, '百百', msgd, port);
