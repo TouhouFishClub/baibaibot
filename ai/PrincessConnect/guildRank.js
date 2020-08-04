@@ -198,7 +198,8 @@ const getAPIData = (searchContent, type, callback, params) => {
     method: 'POST',
     headers: {
       "Content-Type": "application/json",
-      "Referer": "https://kengxxiao.github.io/Kyouka/"
+      "Referer": "https://kengxxiao.github.io/Kyouka/",
+      "Custom-Source": "baibaibot"
     }
   }
 
@@ -220,20 +221,30 @@ const getAPIData = (searchContent, type, callback, params) => {
       data += chunk
     });
     res.on('end', () => {
-      if(JSON.parse(data).data.length){
-        formatData(JSON.parse(data), type, 'api', callback, '', params)
+      // console.log('=== request data ===')
+      // console.log(data)
+      let pd = JSON.parse(data)
+      if(pd.data && pd.data.length){
+        formatData(pd, type, 'api', callback, '', params)
         collection.save({
           '_id': `${type}_${searchContent}`,
-          'd': JSON.parse(data),
+          'd': pd,
           'expire': Date.now() + DB_EXPIRE_TIME
         })
       } else {
-        callback('未找到相关数据')
+        callback(`未找到相关数据`)
+        console.log('=== pcr request empty ===')
+        console.log(data)
       }
     });
+    res.on('error', e => {
+      console.log('=== pcr request res error ===')
+      console.log(e.message)
+    })
   });
 
   req.on('error', (e) => {
+    console.log('=== pcr request req error ===')
     console.error(`problem with request: ${e.message}`);
   });
 
