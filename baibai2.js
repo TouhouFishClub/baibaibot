@@ -457,29 +457,29 @@ function doSend(thread){
           console.log("111111:"+msgd);
           msgd = msgd.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/cool-data/wcq/data/images/sen")
           console.log("222222:"+msgd)
-          var body = {"group_id": groupid, message: msgd};
-          console.log("send:" + msgd);
-          var req = http.request(options, function (res) {
-              var resdata = '';
-              res.on('data', function (chunk) {
-                  resdata = resdata + chunk;
-              });
-              res.on('end', function () {
-                  setTimeout(function () {
-                      doSend1(thread);
-                  }, Math.floor(Math.random() * 3500 + 2500));
-              });
-          });
+          var bdy = {"group_id": groupid, message: msgd};
           saveChat(groupid, 2375373419, '百百', msgd, port);
-          req.on('error', function (err) {
-              console.log('req err:');
-              console.log(err);
+
+          request({
+              headers:{
+                  "Content-Type":"application/json"
+              },
+              method: "POST",
+              url: 'http://192.168.17.52:'+port+'/send_group_msg',
+              body: JSON.stringify(bdy)
+          }, function(error, response, body) {
+              if (error && error.code) {
+                  console.log('pipe error catched!')
+                  console.log(error);
+              } else {
+                  console.log('ok1');
+              }
               setTimeout(function () {
                   doSend1(thread);
               }, Math.floor(Math.random() * 3500 + 2500));
           });
-          req.write(JSON.stringify(body))
-          req.end();
+
+
       } else {
 
 
