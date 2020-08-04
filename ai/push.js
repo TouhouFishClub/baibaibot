@@ -135,17 +135,27 @@ function pushToGroup(type) {
 
 
       if (res.trim().length > 0) {
-        setTimeout(function () {
-          var options = {
-            host: '192.168.17.52',
-            port: 24334,
-            path: '/send_group_msg?group_id=' + groupid + '&message=' + encodeURIComponent(res),
-            method: 'GET',
-            headers: {}
-          };
-          var req = http.request(options);
-          req.end();
-        }, 1000);
+          res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")        
+          var bdy = {"group_id": groupid, message: res};
+          console.log("send:" + msgd);
+          request({
+              headers:{
+                  "Content-Type":"application/json"
+              },
+              method: "POST",
+              url: 'http://192.168.17.52:'+24334+'/send_group_msg',
+              body: JSON.stringify(bdy)
+          }, function(error, response, body) {
+              if (error && error.code) {
+                  console.log('pipe error catched!')
+                  console.log(error);
+              } else {
+                  console.log('ok1');
+              }
+              setTimeout(function () {
+                  doSend1(thread);
+              }, Math.floor(Math.random() * 3500 + 2500));
+          });
       }
     }
     var now = new Date();
