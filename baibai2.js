@@ -438,7 +438,6 @@ function addSendQueue(groupid,msg,botqq){
 
 
 function doSend(thread){
-  console.log('will send:'+queue.length+":"+thread);
   if(queue.length>0) {
     var msgData = queue.shift();
     var groupid = msgData.gid;
@@ -482,7 +481,7 @@ function doSend(thread){
 
 
 function doSend1(thread){
-  console.log('will send1:'+xqueue.length+":"+thread);
+  console.log('will send2:'+xqueue.length);
   if(xqueue.length>0) {
       var msgData = xqueue.shift();
       var groupid = msgData.gid;
