@@ -477,7 +477,7 @@ function doSend(thread){
                   doSend1(thread);
               }, Math.floor(Math.random() * 3500 + 2500));
           });
-          req.send(JSON.stringify(body))
+          req.write(JSON.stringify(body))
           req.end();
       } else {
 
@@ -560,7 +560,7 @@ function doSend1(thread){
                   doSend1(thread);
               }, Math.floor(Math.random() * 3500 + 2500));
           });
-          req.send(JSON.stringify(body))
+          req.write(JSON.stringify(body))
           req.end();
       } else {
           var options = {
