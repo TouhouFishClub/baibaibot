@@ -496,7 +496,7 @@ function doSend1(thread){
             method: 'POST',
             headers: {}
         };
-        msgd=msgd.replace(/[CQ:image,file=sen]/g,"[CQ:image,file=file:/home/hduser/upload/tk/cool-data/wcq/data/images/sen]");
+        msgd=msgd.replace(/CQ:image,file=sen/i,"CQ:image,file=file:/home/hduser/upload/tk/cool-data/wcq/data/images/sen")
         var body = {"group_id":groupid,message:msgd};
         console.log("send:"+msgd);
         var req = http.request(options,function(res){
