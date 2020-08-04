@@ -488,6 +488,7 @@ function doSend1(thread){
       var groupid = msgData.gid;
       var msgd = msgData.msg;
       var port = msgData.port;
+      console.log("port:"+port);
       if (port == 24334) {
           var options = {
               host: '192.168.17.52',
