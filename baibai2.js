@@ -496,7 +496,9 @@ function doSend1(thread){
               method: 'POST',
               headers: {}
           };
+          console.log("111111:"+msgd);
           msgd = msgd.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/cool-data/wcq/data/images/sen")
+          console.log("222222:"+msgd)
           var body = {"group_id": groupid, message: msgd};
           console.log("send:" + msgd);
           var req = http.request(options, function (res) {
