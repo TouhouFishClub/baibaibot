@@ -135,7 +135,7 @@ function pushToGroup(type) {
 
 
       if (res.trim().length > 0) {
-          res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")        
+          res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/wcq/data/image/sen")        
           var bdy = {"group_id": groupid, message: res};
           console.log("send:" + msgd);
           request({
