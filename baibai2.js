@@ -534,7 +534,7 @@ function doSend1(thread){
               port: port,
               path: '/send_group_msg',
               method: 'POST',
-              headers: {}
+              headers: {"Content-Type":"application/json"}
           };
           console.log("111111:"+msgd);
           msgd = msgd.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/cool-data/wcq/data/images/sen")
