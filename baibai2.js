@@ -438,9 +438,6 @@ function addSendQueue(groupid,msg,botqq){
         } else {
             console.log('ok1');
         }
-        setTimeout(function () {
-            doSend(thread);
-        }, Math.floor(Math.random() * 3500 + 2500));
     });
 }
 
