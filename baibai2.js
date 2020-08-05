@@ -416,7 +416,12 @@ function addSendQueue(groupid,msg,botqq){
     }
   }
 
+  if(port==24334){
+      msg = msg.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
+  }
 
+
+    var bdy = {"group_id": groupid, message: msg};
     request({
         headers:{
             "Content-Type":"application/json"
@@ -431,11 +436,10 @@ function addSendQueue(groupid,msg,botqq){
         } else {
             console.log('ok1');
         }
+        setTimeout(function () {
+            doSend(thread);
+        }, Math.floor(Math.random() * 3500 + 2500));
     });
-
-
-
-
 
 }
 
