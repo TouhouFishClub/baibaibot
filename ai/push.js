@@ -94,9 +94,6 @@ function pushToGroup(type) {
               } else {
                   console.log('ok1');
               }
-              setTimeout(function () {
-                  doSend1(thread);
-              }, Math.floor(Math.random() * 3500 + 2500));
           });
       }
     }
