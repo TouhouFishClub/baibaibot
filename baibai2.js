@@ -85,7 +85,7 @@ const { calendar } = require('./ai/arknights/arkNightsCalendar')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 const {runsetu} = require('./ai/games/card/setu');
-const { wfp } = require('./ai/worldflipper/BossBattlePushing')
+//const { wfp } = require('./ai/worldflipper/BossBattlePushing')
 const {calAttr} = require('./ai/ff14/attr');
 require('./ai/ff14/activity')
 
@@ -899,15 +899,6 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     // console.log(con.substring(3))
     discord(con.substring(4), from, groupid, callback);
     return;
-  }
-
-  let fie = con.substring(0, 3)
-  if(fie.toLowerCase() == 'flp'){
-    // console.log('================>>>>>>')
-    // console.log(con)
-    // console.log(con.substring(3), from, callback)
-    wfp(con.substring(3), from, callback)
-    return
   }
 
   if(fie.toLowerCase() === 'bcs') {
