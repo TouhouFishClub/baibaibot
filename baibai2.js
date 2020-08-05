@@ -417,21 +417,24 @@ function addSendQueue(groupid,msg,botqq){
   }
 
 
+    request({
+        headers:{
+            "Content-Type":"application/json"
+        },
+        method: "POST",
+        url: 'http://192.168.17.52:'+port+'/send_group_msg',
+        body: JSON.stringify(bdy)
+    }, function(error, response, body) {
+        if (error && error.code) {
+            console.log('pipe error catched!')
+            console.log(error);
+        } else {
+            console.log('ok1');
+        }
+    });
 
 
 
-  setTimeout(function(){
-    if(vip>0){
-      if(vip>1){
-        queue.unshift({gid:groupid,msg:msg,port:port});
-      }else{
-        queue.push({gid:groupid,msg:msg,port:port})
-      }
-
-    }else{
-      xqueue.push({gid:groupid,msg:msg,port:port});
-    }
-  },666)
 
 
 }
