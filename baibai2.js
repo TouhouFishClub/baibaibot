@@ -438,6 +438,7 @@ function addSendQueue(groupid,msg,botqq){
         } else {
             console.log('ok1');
         }
+        saveChat(groupid, 981069482, "百百", msg,port);
     });
 }
 
