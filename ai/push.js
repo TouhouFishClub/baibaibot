@@ -76,68 +76,10 @@ function pushToGroup(type) {
 
       var msg = res.trim();
       var port = 24334;
-      var n = msg.indexOf('CQ:image')
-      if(n>=0&&port!=23334){
-        var npath;
-        if(port == 24334){
-          npath="wcq";
-        }else if(port == 25334){
-          npath="ecq";
-        }else{
-          npath="wcq";
-        }
-        var s1 = msg.substring(n+3);
-        var n1 = s1.indexOf('file=');
-        var s2 = s1.substring(n1+5);
-        var n2 = s2.indexOf(']');
-        var s3 = s2.substring(0,n2);
-        var pa = s3.split('/');
-        var ohead = '../coolq-data/cq/data/image/'
-
-        var head = '../coolq-data/'+npath+'/data/image/'
-        var fpath = head;
-        for(var i=0;i<pa.length;i++){
-          if(i==0){
-            fpath=fpath+pa[i];
-          }else{
-            fpath=fpath+"/"+pa[i];
-          }
-          if(i!=pa.length-1){
-            if(!fs.existsSync(fpath)){
-              fs.mkdirSync(fpath);
-            }
-          }
-        }
-
-        console.log("copy:"+ohead+s3+"  -->  "+head+s3);
-        try{
-          let readStream = fs.createReadStream(ohead+s3);
-          readStream.pipe(fs.createWriteStream(head+s3));
-        }catch(e){
-          console.log(e);
-        }
-      }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       if (res.trim().length > 0) {
-          res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/wcq/data/image/sen")        
+          res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
           var bdy = {"group_id": groupid, message: res};
-          console.log("send:" + msgd);
+          console.log("send:" + res);
           request({
               headers:{
                   "Content-Type":"application/json"
