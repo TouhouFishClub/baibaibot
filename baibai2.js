@@ -901,6 +901,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
+  let fie = con.substring(0, 3)
   if(fie.toLowerCase() === 'bcs') {
     // callback('活动结束已关闭此功能')
     // return
