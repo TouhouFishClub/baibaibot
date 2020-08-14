@@ -506,7 +506,7 @@ function handleMsg_D(msgObj,botqq) {
     
   var gidstr= groupid+"";
   var force=0;
-  if(content.trim().startWith("!force"){
+  if(content.trim().startWith("!force")){
      force=1;
   }
   if(!force){
