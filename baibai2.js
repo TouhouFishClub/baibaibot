@@ -531,6 +531,8 @@ function handleMsg_D(msgObj,botqq) {
       )&&port==25334){
       return;
     }
+  }else{
+    content = content.substring(6).trim();
   }
 
   if(getMsgCount(port)>1700){
