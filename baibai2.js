@@ -505,27 +505,34 @@ function handleMsg_D(msgObj,botqq) {
   }
     
   var gidstr= groupid+"";
-  if((
-      gidstr.startsWith("20570")||
-      gidstr.startsWith("22169")||
-      gidstr.startsWith("74633")||
-      gidstr.startsWith("22169")||
-      gidstr.startsWith("67096")||
-      gidstr.startsWith("77670")||
-      gidstr.startsWith("69738")||
-      gidstr.startsWith("61614")||
-      gidstr.startsWith("xxxxx")
-    )&&port==23334){
-    return;
+  var force=0;
+  if(content.trim().startWith("!force"){
+     force=1;
   }
-  if((
-      gidstr.startsWith("20570")||
-      gidstr.startsWith("22169")||
-      gidstr.startsWith("xxxxx")
+  if(!force){
+    if((
+        gidstr.startsWith("20570")||
+        gidstr.startsWith("22169")||
+        gidstr.startsWith("74633")||
+        gidstr.startsWith("22169")||
+        gidstr.startsWith("67096")||
+        gidstr.startsWith("77670")||
+        gidstr.startsWith("69738")||
+        gidstr.startsWith("61614")||
+        gidstr.startsWith("xxxxx")
+      )&&port==23334){
+      return;
+    }
+    if((
+        gidstr.startsWith("20570")||
+        gidstr.startsWith("22169")||
+        gidstr.startsWith("xxxxx")
 
-    )&&port==25334){
-    return;
+      )&&port==25334){
+      return;
+    }
   }
+
   if(getMsgCount(port)>1700){
     return;
   }
