@@ -509,7 +509,7 @@ function handleMsg_D(msgObj,botqq) {
     
   var gidstr= groupid+"";
   var force=0;
-  if(content.trim().substring(0,6)=="!force"){
+  if(content.length>6&&content.trim().substring(0,6)=="!force"){
      force=1;
   }
   if(!force){
