@@ -905,8 +905,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     morse(con.substring(2).trim(), true, callback)
   }
 
-  if(con.substring(0, 3) == 'mct') {
-    morse(con.substring(3).trim(), false, callback)
+  if(con.substring(0, 2) == 'mt') {
+    morse(con.substring(2).trim(), false, callback)
   }
 
   let fie4 = con.substring(0, 4)
