@@ -6,9 +6,9 @@ var fs = require('fs');
 
 function ff14MarketReply(content,qq,callback){
   if(parseInt(content)>1000){
-    itemMarket(parseInt(content),callback);
+    itemMarket(parseInt(content),parseInt(content),callback);
   }else{
-    searchID(content,parseInt(content),callback);
+    searchID(content,callback);
   }
 }
 
