@@ -8,7 +8,7 @@ function ff14MarketReply(content,qq,callback){
   if(parseInt(content)>1000){
     itemMarket(parseInt(content),callback);
   }else{
-    searchID(content,callback);
+    searchID(content,parseInt(content),callback);
   }
 }
 
