@@ -31,7 +31,8 @@ function searchID(str,callback){
           var results = data.Results;
           if(results.length==1){
             var itemid = results[0].ID;
-            itemMarket(itemid,callback);
+            var itemname = results[0].Name;
+            itemMarket(itemid,itemname,callback);
           }else{
             var ret = "请选择：\n";
             for(var i=0;i<results.length;i++){
@@ -45,7 +46,7 @@ function searchID(str,callback){
 
 
 
-function itemMarket(itemid,callback){
+function itemMarket(itemid,itemname,callback){
   if(!itemid){
     itemid=29495;
   }
@@ -128,7 +129,7 @@ function itemMarket(itemid,callback){
             s3 = s3.substring(n0+1);
             n0 = s3.indexOf('</tr>')
           }
-          var ret = '';
+          var ret = itemname+":\n";
           for(var i=0;i<pricelist.length;i++){
             var pd = pricelist[i];
             ret = ret + pd.p+"*"+pd.n+" \t "+pd.s+" \t "+pd.m+"\n";
