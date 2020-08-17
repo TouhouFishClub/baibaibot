@@ -101,6 +101,7 @@ const { cherugo } = require('./ai/PrincessConnect/cherugo')
 const { guildRankSearch } = require('./ai/PrincessConnect/guildRank')
 const { schedule } = require('./ai/PrincessConnect/schedule')
 const { chishenme } = require('./ai/chishenme')
+const {ff14MarketReply} = require('./ai/ff14/itemmarket');
 
 
 initWS();
@@ -821,6 +822,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     searchQuest(con.substring(4),name,callback);
     return;
   }
+  if(fi == 'ffid'){
+    ff14MarketReply(con.substring(4),from,callback);
+    return;
+  }
+
   if(con.startsWith("/")){
     calAttr(content.substring(1),from,callback);
     return;
