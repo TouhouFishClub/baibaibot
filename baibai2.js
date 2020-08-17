@@ -92,6 +92,7 @@ require('./ai/ff14/activity')
 // const cov = require('./ai/CoV2020')
 const { cov } = require('./ai/CoV2019ByTianApi')
 const chp = require('./ai/chp')
+const morse = require('./ai/MorseCode')
 
 const {actp} = require('./ai/AnimalCrossing/TurnipProphet')
 const { saveDTCPrice } = require('./ai/AnimalCrossing/priceRecord');
@@ -898,6 +899,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(con == 'chp' || con == '彩虹屁') {
     chp(callback)
+  }
+
+  if(con.substring(0, 2) == 'mc') {
+    morse(con.substring(2).trim(), true, callback)
+  }
+
+  if(con.substring(0, 3) == 'mct') {
+    morse(con.substring(3).trim(), false, callback)
   }
 
   let fie4 = con.substring(0, 4)
