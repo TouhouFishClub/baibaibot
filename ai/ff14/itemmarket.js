@@ -35,7 +35,7 @@ function searchID(str,callback){
           }else{
             var ret = "请选择：\n";
             for(var i=0;i<results.length;i++){
-              ret = ret + "ffid "+results[i].ID+"\t:\t"+results[i].name+"\n";
+              ret = ret + "ffid "+results[i].ID+"\t:\t"+results[i].Name+"\n";
             }
             callback(ret.trim())
           }
