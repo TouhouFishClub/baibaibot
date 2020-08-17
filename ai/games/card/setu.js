@@ -24,9 +24,6 @@ function initDB(){
 
 var cache = {};
 function runsetu(content,gid,qq,callback,port){
-  if(new Date().getTime()<1583748796928&&port==26334){
-    return;
-  }
   var cooldown = 60000 * 10;
   var maxtimes = 2;
   if(port!=23334){
