@@ -92,6 +92,7 @@ require('./ai/ff14/activity')
 // const cov = require('./ai/CoV2020')
 const { cov } = require('./ai/CoV2019ByTianApi')
 const chp = require('./ai/chp')
+const morse = require('./ai/MorseCode')
 
 const {actp} = require('./ai/AnimalCrossing/TurnipProphet')
 const { saveDTCPrice } = require('./ai/AnimalCrossing/priceRecord');
@@ -523,7 +524,6 @@ function handleMsg_D(msgObj,botqq) {
         gidstr.startsWith("22169")||
         gidstr.startsWith("67096")||
         gidstr.startsWith("77670")||
-        gidstr.startsWith("69738")||
         gidstr.startsWith("61614")||
         gidstr.startsWith("xxxxx")
       )&&port==23334){
@@ -532,6 +532,7 @@ function handleMsg_D(msgObj,botqq) {
     if((
         gidstr.startsWith("20570")||
         gidstr.startsWith("22169")||
+        gidstr.startsWith("69738")||
         gidstr.startsWith("xxxxx")
 
       )&&port==25334){
@@ -898,6 +899,17 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(con == 'chp' || con == '彩虹屁') {
     chp(callback)
+  }
+
+
+  if(con.substring(0, 3) == 'mct') {
+    morse(con.substring(3).trim(), false, callback)
+    return
+  }
+
+  if(con.substring(0, 2) == 'mc') {
+    morse(con.substring(2).trim(), true, callback)
+    return
   }
 
   let fie4 = con.substring(0, 4)

@@ -1,6 +1,6 @@
 // const akc = require('./CoV2020')
-const {cov} = require('./CoV2019ByTianApi')
-// const chp = require('./chp')
+// const {cov} = require('./CoV2019ByTianApi')
+const mc = require('./MorseCode')
 const c = m => {
   console.log('===== output =====')
   console.log(m)
@@ -8,5 +8,5 @@ const c = m => {
 
 // chp(c)
 setTimeout(() => {
-  cov('外国', c)
+  mc('adfadfasd/.-./.-./-.-/.-/.../--./.-/--./.-', false, c)
 }, 1)
