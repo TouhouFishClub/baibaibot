@@ -234,7 +234,9 @@ function itemMarket(itemid,itemname,callback){
             nn0 = ss3.indexOf('</tr>')
         }
 
+            console.log("nq:"+nq)
         if(nq){
+
             var nn22 = ssq.indexOf('<tbody>');
             var ss22 = ssq.substring(nn22+1);
             var nne = ss22.indexOf('</table>');
@@ -288,7 +290,7 @@ function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,
     var img1 = new imageMagick("static/blank.png");
     var height = 600;
     if(nq){
-        height = 1200;
+        height = 1100;
     }
     img1.resize(1250,height,'!') //加('!')强行把图片缩放成对应尺寸150*150！
         .autoOrient()
@@ -325,17 +327,18 @@ function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,
     }
     img1.drawText(25,635,'当前价格','NorthWest');
     img1.drawText(25+550,635,'成交记录','NorthWest');
-    for(var i=0;i<pricelist.length;i++){
+    for(var i=0;i<pricelistnq.length;i++){
         img1.drawText(25,680+40*i,pricelistnq[i].p+"*"+pricelistnq[i].n,'NorthWest');
         img1.drawText(200,680+40*i,pricelistnq[i].s,'NorthWest');
         img1.drawText(350,680+40*i,pricelistnq[i].m,'NorthWest');
     }
 
-    for(var i=0;i<his.length;i++){
+    for(var i=0;i<hisnq.length;i++){
         img1.drawText(25+550,680+40*i,hisnq[i].p+"*"+hisnq[i].n,'NorthWest');
         img1.drawText(200+550,680+40*i,hisnq[i].s,'NorthWest');
         img1.drawText(350+550,680+40*i,hisnq[i].t,'NorthWest');
     }
+    //img1.write("1.png",function(err){})
 
     sendGmImage(img1,itemname,callback);
 }
