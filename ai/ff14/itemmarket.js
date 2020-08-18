@@ -141,7 +141,7 @@ function itemMarket(itemid,itemname,callback){
             n0 = s3.indexOf('</tr>')
           }
 
-          var m1 = sq.indexOf('<h6>NQ');
+          var m1 = sq.indexOf('<h6>NQ 价格');
           if(m1>0){
               nq = true;
               var n1 = sq.indexOf('<td class="price-num tac');
