@@ -3,6 +3,7 @@ const phantom = require('phantom');
 const {baiduocr} = require('../image/baiduocr');
 var gm = require('gm')
 var imageMagick = gm.subClass({ imageMagick : true });
+var {sendGmImage} = require('../../cq/sendImage');
 var fs = require('fs');
 
 
