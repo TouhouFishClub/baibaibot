@@ -96,14 +96,19 @@ function itemMarket(itemid,itemname,callback){
               updatelist.push({s:server,t:updatetime});
             }
           }
+          var nq=false;
+          var pricelist = [];
+          var pricelistnq = [];
+
 
           var n1 = body.indexOf('<td class="price-num tac');
           var s1 = body.substring(n1+1);
           var ne = s1.indexOf('</table>');
+          var sq = s1.substring(ne+1);
           var s2 = s1.substring(0,ne);
           var s3 = s2;
           var n0 = s3.indexOf('</tr>');
-          var pricelist = [];
+
           while(n0>0){
             var s4 = s3.substring(0,n0);
             var n5 = s4.indexOf('class="price-server"');
@@ -136,15 +141,64 @@ function itemMarket(itemid,itemname,callback){
             n0 = s3.indexOf('</tr>')
           }
 
+          var m1 = sq.indexOf('<h6>NQ');
+          if(m1>0){
+              nq = true;
+              var n1 = sq.indexOf('<td class="price-num tac');
+              var s1 = sq.substring(n1+1);
+              var ne = s1.indexOf('</table>');
+              var s2 = s1.substring(0,ne);
+              var s3 = s2;
+              var n0 = s3.indexOf('</tr>');
+
+              while(n0>0){
+                  var s4 = s3.substring(0,n0);
+                  var n5 = s4.indexOf('class="price-server"');
+                  var s5 = s4.substring(n5+1);
+                  var n6 = s5.indexOf('<strong>');
+                  var s6 = s5.substring(n6+1);
+                  var n7 = s6.indexOf('<');
+                  var server = s6.substring(7,n7);
+                  var s7 = s6.substring(n7+1);
+                  var n8 = s7.indexOf('class="price-current"');
+                  var s8 = s7.substring(n8+1);
+                  var n9 = s8.indexOf('data-sort-value="');
+                  var s9 = s8.substring(n9+17);
+                  var n10 = s9.indexOf('"');
+                  var price = s9.substring(0,n10);
+                  var s10 = s9.substring(n10+1);
+                  var n11 = s10.indexOf('class="price-qty"');
+                  var s11 = s10.substring(n11+1);
+                  var n12 = s11.indexOf('data-sort-value="');
+                  var s12 = s11.substring(n12+17);
+                  var n13 = s12.indexOf('"');
+                  var num = s12.substring(0,n13);
+                  var s13 = s12.substring(n13+1);
+                  var n14 = s13.indexOf('class="price-retainer">');
+                  var s14 = s13.substring(n14+23);
+                  var n15 = s14.indexOf('<');
+                  var name = s14.substring(0,n15).trim();
+                  pricelistnq.push({s:server,p:price,n:num,m:name,q:"NQ"});
+                  s3 = s3.substring(n0+1);
+                  n0 = s3.indexOf('</tr>')
+              }
+          }
+
+
+
+
           var ss1 = s1.substring(ne);
           var nn1 = ss1.indexOf('交易历史');
           var ss2 = ss1.substring(nn1+1);
           var nn22 = ss2.indexOf('<tbody>');
           var ss22 = ss2.substring(nn22+1);
           var nne = ss22.indexOf('</table>');
+          var ssq = ss22.substring(nne+1);
           var ss3 = ss22.substring(0,nne);
           var nn0 = ss3.indexOf('</tr>');
-          var his = []
+          var his = [];
+          var hisnq = [];
+
 
         while(nn0>0){
             var s4 = ss3.substring(0,nn0);
@@ -180,10 +234,48 @@ function itemMarket(itemid,itemname,callback){
             nn0 = ss3.indexOf('</tr>')
         }
 
-        console.log(updatelist);
-        console.log(pricelist);
-        console.log(his)
-            drawMarketImage(updatelist,pricelist,his,itemname,callback);
+        if(nq){
+            var nn22 = ssq.indexOf('<tbody>');
+            var ss22 = ssq.substring(nn22+1);
+            var nne = ss22.indexOf('</table>');
+            var ss3 = ss22.substring(0,nne);
+            var nn0 = ss3.indexOf('</tr>');
+            while(nn0>0){
+                var s4 = ss3.substring(0,nn0);
+                var n5 = s4.indexOf('class="price-server"');
+                var s5 = s4.substring(n5+1);
+                var n6 = s5.indexOf('<strong>');
+                var s6 = s5.substring(n6+1);
+                var n7 = s6.indexOf('<');
+                var server = s6.substring(7,n7);
+                var s7 = s6.substring(n7+1);
+                var n8 = s7.indexOf('class="price-current"');
+                var s8 = s7.substring(n8+1);
+                var n9 = s8.indexOf('data-sort-value="');
+                var s9 = s8.substring(n9+17);
+                var n10 = s9.indexOf('"');
+                var price = s9.substring(0,n10);
+                var s10 = s9.substring(n10+1);
+                var n11 = s10.indexOf('class="price-qty"');
+                var s11 = s10.substring(n11+1);
+                var n12 = s11.indexOf('data-sort-value="');
+                var s12 = s11.substring(n12+17);
+                var n13 = s12.indexOf('"');
+                var num = s12.substring(0,n13);
+                var s13 = s12.substring(n13+1);
+                var n14 = s13.indexOf('class="price-date"');
+                var s14 = s13.substring(n14+17);
+                var n15 = s14.indexOf('>');
+                var s15 = s14.substring(n15+1);
+                var n16 = s15.indexOf('<')
+                var time = s15.substring(0,n16).trim();
+                hisnq.push({s:server,p:price,n:num,t:time,q:"NQ"});
+                ss3 = ss3.substring(nn0+1);
+                nn0 = ss3.indexOf('</tr>')
+            }
+        }
+
+            drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,hisnq,nq);
 
 
         }
@@ -192,9 +284,13 @@ function itemMarket(itemid,itemname,callback){
 
 
 
-function drawMarketImage(updatelist,pricelist,his,itemname,callback){
+function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,hisnq,nq){
     var img1 = new imageMagick("static/blank.png");
-    img1.resize(1250,600,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+    var height = 600;
+    if(nq){
+        height = 1200;
+    }
+    img1.resize(1250,height,'!') //加('!')强行把图片缩放成对应尺寸150*150！
         .autoOrient()
         .fontSize(20)
         .fill('blue')
@@ -224,6 +320,23 @@ function drawMarketImage(updatelist,pricelist,his,itemname,callback){
         img1.drawText(200+550,180+40*i,his[i].s,'NorthWest');
         img1.drawText(350+550,180+40*i,his[i].t,'NorthWest');
     }
+    if(nq){
+        img1.drawText(25,600,itemname+"NQ",'NorthWest');
+    }
+    img1.drawText(25,635,'当前价格','NorthWest');
+    img1.drawText(25+550,635,'成交记录','NorthWest');
+    for(var i=0;i<pricelist.length;i++){
+        img1.drawText(25,680+40*i,pricelistnq[i].p+"*"+pricelistnq[i].n,'NorthWest');
+        img1.drawText(200,680+40*i,pricelistnq[i].s,'NorthWest');
+        img1.drawText(350,680+40*i,pricelistnq[i].m,'NorthWest');
+    }
+
+    for(var i=0;i<his.length;i++){
+        img1.drawText(25+550,680+40*i,hisnq[i].p+"*"+hisnq[i].n,'NorthWest');
+        img1.drawText(200+550,680+40*i,hisnq[i].s,'NorthWest');
+        img1.drawText(350+550,680+40*i,hisnq[i].t,'NorthWest');
+    }
+
     sendGmImage(img1,itemname,callback);
 }
 
