@@ -13,13 +13,13 @@ var cookiecat = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; PHPSESSID
 
 function ff14MarketReply(content,qq,callback) {
     var cookie;
-    if (content.startsWith("1")){
+    if (content.startsWith("1 ")){
         cookie = cookiechocobo;
         content = content.substring(1);
-    }else if (content.startsWith("2")){
+    }else if (content.startsWith("2 ")){
         cookie = cookiemog;
         content = content.substring(1);
-    }else if (content.startsWith("3")){
+    }else if (content.startsWith("3 ")){
         cookie = cookiecat;
         content = content.substring(1);
     }else{
