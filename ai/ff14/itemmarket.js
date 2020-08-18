@@ -309,8 +309,15 @@ function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,
     for(var i=0;i<updatelist.length;i++){
         img1.drawText(180*i+25,95,updatelist[i].t,'NorthWest');
     }
-    img1.drawText(25,135,'当前价格','NorthWest');
-    img1.drawText(25+550,135,'成交记录','NorthWest');
+    if(nq){
+        img1.drawText(25,135,'当前价格HQ','NorthWest');
+        img1.drawText(25+550,135,'成交记录HQ','NorthWest');
+    }else{
+        img1.drawText(25,135,'当前价格','NorthWest');
+        img1.drawText(25+550,135,'成交记录','NorthWest');
+    }
+
+
     for(var i=0;i<pricelist.length;i++){
         img1.drawText(25,180+40*i,pricelist[i].p+"*"+pricelist[i].n,'NorthWest');
         img1.drawText(200,180+40*i,pricelist[i].s,'NorthWest');
@@ -324,19 +331,19 @@ function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,
     }
     if(nq){
         img1.drawText(25,600,itemname+"NQ",'NorthWest');
-    }
-    img1.drawText(25,635,'当前价格','NorthWest');
-    img1.drawText(25+550,635,'成交记录','NorthWest');
-    for(var i=0;i<pricelistnq.length;i++){
-        img1.drawText(25,680+40*i,pricelistnq[i].p+"*"+pricelistnq[i].n,'NorthWest');
-        img1.drawText(200,680+40*i,pricelistnq[i].s,'NorthWest');
-        img1.drawText(350,680+40*i,pricelistnq[i].m,'NorthWest');
-    }
+        img1.drawText(25,635,'当前价格NQ','NorthWest');
+        img1.drawText(25+550,635,'成交记录NQ','NorthWest');
+        for(var i=0;i<pricelistnq.length;i++){
+            img1.drawText(25,680+40*i,pricelistnq[i].p+"*"+pricelistnq[i].n,'NorthWest');
+            img1.drawText(200,680+40*i,pricelistnq[i].s,'NorthWest');
+            img1.drawText(350,680+40*i,pricelistnq[i].m,'NorthWest');
+        }
 
-    for(var i=0;i<hisnq.length;i++){
-        img1.drawText(25+550,680+40*i,hisnq[i].p+"*"+hisnq[i].n,'NorthWest');
-        img1.drawText(200+550,680+40*i,hisnq[i].s,'NorthWest');
-        img1.drawText(350+550,680+40*i,hisnq[i].t,'NorthWest');
+        for(var i=0;i<hisnq.length;i++){
+            img1.drawText(25+550,680+40*i,hisnq[i].p+"*"+hisnq[i].n,'NorthWest');
+            img1.drawText(200+550,680+40*i,hisnq[i].s,'NorthWest');
+            img1.drawText(350+550,680+40*i,hisnq[i].t,'NorthWest');
+        }
     }
     //img1.write("1.png",function(err){})
 
