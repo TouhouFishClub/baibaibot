@@ -15,8 +15,10 @@ function ff14MarketReply(content,qq,callback){
     var cookie;
     if(content.trim().endsWith("鸟")){
         cookie = cookiechocobo;
+        content = content.trim().substring(0,content.trim().length-2)
     }else if(content.trim().endsWith("猪")){
         cookie = cookiemog;
+        content = content.trim().substring(0,content.trim().length-2)
     }else{
         cookie = cookiecat;
     }
