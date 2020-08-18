@@ -11,17 +11,51 @@ var cookiechocobo = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; mogbo
 var cookiemog = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong; PHPSESSID=q4ljhu81j84gh5f13sen25eo6t; mogboard_server=BaiYinXiang';
 var cookiecat = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; PHPSESSID=ct7bavo5162m76ighdia55d5hd; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; _gat_gtag_UA_147847104_1=1; mogboard_server=JingYuZhuangYuan; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong';
 
-function ff14MarketReply(content,qq,callback){
+function ff14MarketReply(content,qq,callback) {
     var cookie;
-    if(content.trim().endsWith("鸟")){
+    if (content.trim().endsWith("鸟")) {
         cookie = cookiechocobo;
-        content = content.trim().substring(0,content.trim().length-2)
-    }else if(content.trim().endsWith("猪")){
+        content = content.trim().substring(0, content.trim().length - 2)
+    } else if (content.trim().endsWith("猪")) {
         cookie = cookiemog;
-        content = content.trim().substring(0,content.trim().length-2)
-    }else{
+        content = content.trim().substring(0, content.trim().length - 2)
+    } else if (content.trim().endsWith("猫")) {
+        cookie = cookiecat;
+        content = content.trim().substring(0, content.trim().length - 2)
+    } else {
         cookie = cookiecat;
     }
+
+
+    var n = content.indexOf('[CQ:image');
+    if (n >= 0) {
+        var s1 = content.substring(n + 1);
+        var n1 = s1.indexOf('https://');
+        var s2 = s1.substring(n1 + 8);
+        if (n1 < 0) {
+            n1 = s1.indexOf('http://');
+            s2 = s1.substring(n1 + 7);
+        }
+        var n2 = s2.indexOf('?');
+        var url = 'http://' + s2.substring(0, n2);
+        var cb = function (ret) {
+            var rn = ret.split('\n');
+            if (rn.length == 1) {
+                var wd = rn[0];
+                ff14MarketReply1(wd.trim(), qq, callback, cookie);
+            } else {
+                var wd = rn[0];
+                ff14MarketReply1(wd.trim(), qq, callback, cookie);
+            }
+        }
+        baiduocr(url, cb);
+    } else {
+        ff14MarketReply1(content, qq, callback, cookie);
+    }
+}
+
+
+function ff14MarketReply1(content,qq,callback,cookie){
   if(parseInt(content)>1000){
     itemMarket(parseInt(content),parseInt(content),callback,cookie);
   }else{

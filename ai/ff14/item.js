@@ -31,7 +31,9 @@ function searchFF14Item(content,UserName,callback){
     ret = ret + "支持图片文字识别,如【ffiv+图片】\n";
     ret = ret + "最新一周时尚品鉴【时尚品鉴】\n";
     ret = ret + "logs查询【fflog】【cnlog】\n";
-    ret = ret + "优雷卡天气查询【常风天气】【恒冰天气】【涌火天气】【丰水天气】";
+    ret = ret + "物价查询【ffid】【物品名称/ID】【鸟/猪/猫】\n";
+
+      ret = ret + "优雷卡天气查询【常风天气】【恒冰天气】【涌火天气】【丰水天气】";
 
     callback(ret);
     return;
@@ -41,6 +43,11 @@ function searchFF14Item(content,UserName,callback){
     var s1 = content.substring(n+1);
     var n1 = s1.indexOf('https://');
     var s2 = s1.substring(n1+8);
+    if(n1<0){
+      n1 = s1.indexOf('http7://');
+      s2 = s1.substring(n1+7);
+    }
+
     var n2 = s2.indexOf('?');
     var url = 'http://'+s2.substring(0,n2);
     var cb = function(ret){
