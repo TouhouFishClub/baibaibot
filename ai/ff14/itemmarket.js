@@ -183,21 +183,16 @@ function itemMarket(itemid,itemname,callback){
         console.log(updatelist);
         console.log(pricelist);
         console.log(his)
-            drawMarketImage(updatelist,pricelist,his,itemname);
+            drawMarketImage(updatelist,pricelist,his,itemname,callback);
 
-          var ret = itemname+":\n";
-          for(var i=0;i<pricelist.length;i++){
-            var pd = pricelist[i];
-            ret = ret + pd.p+"*"+pd.n+" \t "+pd.s+" \t "+pd.m+"\n";
-          }
-          callback(ret.trim());
+
         }
     })
 }
 
 
 
-function drawMarketImage(updatelist,pricelist,his,itemname){
+function drawMarketImage(updatelist,pricelist,his,itemname,callback){
     var img1 = new imageMagick("static/blank.png");
     img1.resize(1250,600,'!') //加('!')强行把图片缩放成对应尺寸150*150！
         .autoOrient()
