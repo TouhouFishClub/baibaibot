@@ -25,6 +25,7 @@ function ff14MarketReply(content,qq,callback) {
     }else{
         cookie = cookiecat;
     }
+    content = content.trim();
 /*
     if (content.trim().endsWith("鸟")) {
         cookie = cookiechocobo;
