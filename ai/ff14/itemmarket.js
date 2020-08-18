@@ -1,6 +1,8 @@
 var request=require('request');
 const phantom = require('phantom');
 const {baiduocr} = require('../image/baiduocr');
+var gm = require('gm')
+var imageMagick = gm.subClass({ imageMagick : true });
 var fs = require('fs');
 
 
@@ -64,6 +66,13 @@ function itemMarket(itemid,itemname,callback){
             console.log('pipe error catched!')
             console.log(error);
         }else{
+          var x1 = body.indexOf('<title>');
+          var y1 = body.substring(x1+1);
+          var x2 = y1.indexOf('>');
+          var y2 = y1.substring(x2+1);
+          var x3 = y2.indexOf(' ');
+          itemname = y2.substring(0,x3).trim();
+
           var m1 = body.indexOf('class="market_update_times"');
           var f1 = body.substring(m1+1);
           var m2 = f1.indexOf('<h4>');
@@ -102,7 +111,6 @@ function itemMarket(itemid,itemname,callback){
             var s6 = s5.substring(n6+1);
             var n7 = s6.indexOf('<');
             var server = s6.substring(7,n7);
-            console.log(server);
             var s7 = s6.substring(n7+1);
             var n8 = s7.indexOf('class="price-current"');
             var s8 = s7.substring(n8+1);
@@ -111,7 +119,6 @@ function itemMarket(itemid,itemname,callback){
             var n10 = s9.indexOf('"');
             var price = s9.substring(0,n10);
             var s10 = s9.substring(n10+1);
-            console.log(price);
             var n11 = s10.indexOf('class="price-qty"');
             var s11 = s10.substring(n11+1);
             var n12 = s11.indexOf('data-sort-value="');
@@ -119,16 +126,64 @@ function itemMarket(itemid,itemname,callback){
             var n13 = s12.indexOf('"');
             var num = s12.substring(0,n13);
             var s13 = s12.substring(n13+1);
-            console.log(num);
             var n14 = s13.indexOf('class="price-retainer">');
             var s14 = s13.substring(n14+23);
             var n15 = s14.indexOf('<');
             var name = s14.substring(0,n15).trim();
-            console.log(name);
             pricelist.push({s:server,p:price,n:num,m:name});
             s3 = s3.substring(n0+1);
             n0 = s3.indexOf('</tr>')
           }
+
+          var ss1 = s1.substring(ne);
+          var nn1 = ss1.indexOf('交易历史');
+          var ss2 = ss1.substring(nn1+1);
+          var nn22 = ss2.indexOf('<tbody>');
+          var ss22 = ss2.substring(nn22+1);
+          var nne = ss22.indexOf('</table>');
+          var ss3 = ss22.substring(0,nne);
+          var nn0 = ss3.indexOf('</tr>');
+          var his = []
+
+        while(nn0>0){
+            var s4 = ss3.substring(0,nn0);
+            var n5 = s4.indexOf('class="price-server"');
+            var s5 = s4.substring(n5+1);
+            var n6 = s5.indexOf('<strong>');
+            var s6 = s5.substring(n6+1);
+            var n7 = s6.indexOf('<');
+            var server = s6.substring(7,n7);
+            var s7 = s6.substring(n7+1);
+            var n8 = s7.indexOf('class="price-current"');
+            var s8 = s7.substring(n8+1);
+            var n9 = s8.indexOf('data-sort-value="');
+            var s9 = s8.substring(n9+17);
+            var n10 = s9.indexOf('"');
+            var price = s9.substring(0,n10);
+            var s10 = s9.substring(n10+1);
+            var n11 = s10.indexOf('class="price-qty"');
+            var s11 = s10.substring(n11+1);
+            var n12 = s11.indexOf('data-sort-value="');
+            var s12 = s11.substring(n12+17);
+            var n13 = s12.indexOf('"');
+            var num = s12.substring(0,n13);
+            var s13 = s12.substring(n13+1);
+            var n14 = s13.indexOf('class="price-date"');
+            var s14 = s13.substring(n14+17);
+            var n15 = s14.indexOf('>');
+            var s15 = s14.substring(n15+1);
+            var n16 = s15.indexOf('<')
+            var time = s15.substring(0,n16).trim();
+            his.push({s:server,p:price,n:num,t:time});
+            ss3 = ss3.substring(nn0+1);
+            nn0 = ss3.indexOf('</tr>')
+        }
+
+        console.log(updatelist);
+        console.log(pricelist);
+        console.log(his)
+            drawMarketImage(updatelist,pricelist,his,itemname);
+
           var ret = itemname+":\n";
           for(var i=0;i<pricelist.length;i++){
             var pd = pricelist[i];
@@ -138,6 +193,45 @@ function itemMarket(itemid,itemname,callback){
         }
     })
 }
+
+
+
+function drawMarketImage(updatelist,pricelist,his,itemname){
+    var img1 = new imageMagick("static/blank.png");
+    img1.resize(1250,600,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+        .autoOrient()
+        .fontSize(20)
+        .fill('blue')
+        /*
+         dfgw.ttf 默认 华康少女字体
+         STXIHEI.TTF 华文细黑
+         */
+        .font('./static/dfgw.ttf')
+     //   .drawText(0,0,"aaaa",'NorthWest');
+    img1.drawText(25,15,itemname+"      更新时间",'NorthWest');
+    for(var i=0;i<updatelist.length;i++){
+            img1.drawText(180*i+25,60,updatelist[i].s,'NorthWest');
+    }
+    for(var i=0;i<updatelist.length;i++){
+        img1.drawText(180*i+25,95,updatelist[i].t,'NorthWest');
+    }
+    img1.drawText(25,135,'当前价格','NorthWest');
+    img1.drawText(25+550,135,'成交记录','NorthWest');
+    for(var i=0;i<pricelist.length;i++){
+        img1.drawText(25,180+40*i,pricelist[i].p+"*"+pricelist[i].n,'NorthWest');
+        img1.drawText(200,180+40*i,pricelist[i].s,'NorthWest');
+        img1.drawText(350,180+40*i,pricelist[i].m,'NorthWest');
+    }
+
+    for(var i=0;i<his.length;i++){
+        img1.drawText(25+550,180+40*i,his[i].p+"*"+his[i].n,'NorthWest');
+        img1.drawText(200+550,180+40*i,his[i].s,'NorthWest');
+        img1.drawText(350+550,180+40*i,his[i].t,'NorthWest');
+    }
+    sendGmImage(img1,itemname,callback);
+}
+
+
 
 
 let getPic = async ( itemid ,callback) => {
@@ -182,5 +276,6 @@ let getPic = async ( itemid ,callback) => {
 
 
 module.exports={
-    ff14MarketReply
+    ff14MarketReply,
+    itemMarket
 }
