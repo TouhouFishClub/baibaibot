@@ -7,15 +7,27 @@ var {sendGmImage} = require('../../cq/sendImage');
 var fs = require('fs');
 
 
+var cookiechocobo = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong; PHPSESSID=q4ljhu81j84gh5f13sen25eo6t; mogboard_server=LaNuoXiYa; _gat_gtag_UA_147847104_1=1';
+var cookiemog = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong; PHPSESSID=q4ljhu81j84gh5f13sen25eo6t; mogboard_server=BaiYinXiang';
+var cookiecat = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; PHPSESSID=ct7bavo5162m76ighdia55d5hd; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; _gat_gtag_UA_147847104_1=1; mogboard_server=JingYuZhuangYuan; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong';
+
 function ff14MarketReply(content,qq,callback){
+    var cookie;
+    if(content.trim().endsWith("鸟")){
+        cookie = cookiechocobo;
+    }else if(content.trim().endsWith("猪")){
+        cookie = cookiemog;
+    }else{
+        cookie = cookiecat;
+    }
   if(parseInt(content)>1000){
-    itemMarket(parseInt(content),parseInt(content),callback);
+    itemMarket(parseInt(content),parseInt(content),callback,cookie);
   }else{
-    searchID(content,callback);
+    searchID(content,callback,cookie);
   }
 }
 
-function searchID(str,callback){
+function searchID(str,callback,cookie){
   var url = 'https://cafemaker.wakingsands.com/search?indexes=item&string='+encodeURIComponent(str)+'&limit=20'
     request({
         url: url,
@@ -23,7 +35,7 @@ function searchID(str,callback){
         headers:{
             'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
             'referer':'https://universalis.app/',
-            'Cookie':'__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; PHPSESSID=ct7bavo5162m76ighdia55d5hd; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; _gat_gtag_UA_147847104_1=1; mogboard_server=JingYuZhuangYuan; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong'
+            'Cookie':cookie
         }
     }, function(error, response, body) {
         if (error && error.code) {
@@ -35,7 +47,7 @@ function searchID(str,callback){
           if(results.length==1){
             var itemid = results[0].ID;
             var itemname = results[0].Name;
-            itemMarket(itemid,itemname,callback);
+            itemMarket(itemid,itemname,callback,cookie);
           }else{
             var ret = "请选择：\n";
             for(var i=0;i<results.length;i++){
@@ -49,7 +61,7 @@ function searchID(str,callback){
 
 
 
-function itemMarket(itemid,itemname,callback){
+function itemMarket(itemid,itemname,callback,cookie){
   if(!itemid){
     itemid=29495;
   }
@@ -60,7 +72,7 @@ function itemMarket(itemid,itemname,callback){
         headers:{
           'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
             'referer':'https://universalis.app/',
-            'Cookie':'__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; PHPSESSID=ct7bavo5162m76ighdia55d5hd; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; _gat_gtag_UA_147847104_1=1; mogboard_server=JingYuZhuangYuan; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong'
+            'Cookie': cookie
         }
     }, function(error, response, body){
         if(error&&error.code){
@@ -287,6 +299,13 @@ function itemMarket(itemid,itemname,callback){
 
 
 function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,hisnq,nq){
+
+    console.log(updatelist);
+    console.log(pricelist);
+    console.log(his);
+    console.log(pricelistnq);
+    console.log(hisnq)
+
     var img1 = new imageMagick("static/blank.png");
     var height = 600;
     if(nq){
