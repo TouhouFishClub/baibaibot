@@ -78,7 +78,7 @@ function ff14MarketReply1(content,qq,callback,cookie){
 }
 
 function searchID(str,callback,cookie){
-  var url = 'https://cafemaker.wakingsands.com/search?indexes=item&string='+encodeURIComponent(str)+'&limit=20'
+  var url = 'https://cafemaker.wakingsands.com/search?indexes=item&string='+encodeURIComponent(str)+'&limit=15'
     request({
         url: url,
         method: "GET",
