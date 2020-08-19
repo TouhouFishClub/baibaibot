@@ -1,5 +1,5 @@
-const { PerfectCactpot } = require('./cactpot')
-const { fflogs2Reply } = require('./fflogs2')
+const { ff14MarketReply } = require('./itemmarket')
+// const { fflogs2Reply } = require('./fflogs2')
 const c = m => {
   console.log('===== output =====')
   console.log(m)
@@ -10,4 +10,5 @@ const c = m => {
 // 8xx
 // 49x
 // 7xx`, c)
-fflogs2Reply('肥宅 黑魔', '111', c, 1)
+// ff14MarketReply('伞盖', '111', c)
+ff14MarketReply('28766', '111', c)

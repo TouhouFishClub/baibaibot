@@ -4,7 +4,17 @@ const {baiduocr} = require('../image/baiduocr');
 var gm = require('gm')
 var imageMagick = gm.subClass({ imageMagick : true });
 var {sendGmImage} = require('../../cq/sendImage');
-var fs = require('fs');
+const fs = require('fs'),
+  path = require('path'),
+  {createCanvas, loadImage} = require('canvas'),
+  { sendImageMsgBuffer } = require('../../cq/sendImage')
+
+const GLOBAL_MARGIN = 20
+const TABLE_WIDTH = [200, 200, 200]
+const TABLE_HEIGHT = 30
+const fontFamily = 'STXIHEI'
+const titleHeight = 250
+const chartHeight = 300
 
 
 var cookiechocobo = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong; PHPSESSID=q4ljhu81j84gh5f13sen25eo6t; mogboard_server=LaNuoXiYa; _gat_gtag_UA_147847104_1=1';
@@ -324,12 +334,55 @@ function itemMarket(itemid,itemname,callback,cookie){
                 nn0 = ss3.indexOf('</tr>')
             }
         }
-
+          renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, nq, callback)
+          return
             drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,hisnq,nq);
 
 
         }
     })
+}
+
+function renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, hasnq, callback) {
+  let width = GLOBAL_MARGIN * 3 + TABLE_WIDTH.reduce((p, c) => p + c) * 2
+  let height = GLOBAL_MARGIN * 2
+    + (Math.max(pricelist.length, his.length) + Math.max(pricelistnq.length, hisnq.length)) * TABLE_HEIGHT
+    + (hasnq ? GLOBAL_MARGIN : 0)
+  
+  console.log('=========================')
+  console.log(pricelist)
+  console.log(his)
+  console.log(pricelistnq)
+  console.log(hisnq)
+  console.log(Math.max(pricelist.length, his.length) + Math.max(pricelistnq.length, hisnq.length))
+  console.log(width)
+  console.log(height)
+
+  let canvas = createCanvas(width, height)
+    , ctx = canvas.getContext('2d')
+  ctx.fillStyle = 'rgba(255,255,255,1)'
+  ctx.fillRect(0, 0, width, height)
+  let offsetTop = GLOBAL_MARGIN
+
+
+
+
+  let imgData = canvas.toDataURL()
+  let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
+  let dataBuffer = new Buffer(base64Data, 'base64')
+
+  // sendImageMsgBuffer(dataBuffer, `${itemname}`, 'other', msg => {
+  //   callback(msg)
+  // })
+
+  fs.writeFile(path.join(__dirname, `${itemname}.png`), dataBuffer, function(err) {
+    if(err){
+      console.log(err)
+    }else{
+      console.log("保存成功！");
+    }
+  });
+
 }
 
 
