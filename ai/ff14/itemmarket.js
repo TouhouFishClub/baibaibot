@@ -10,8 +10,12 @@ const fs = require('fs'),
   { sendImageMsgBuffer } = require('../../cq/sendImage')
 
 const GLOBAL_MARGIN = 20
-const TABLE_WIDTH = [200, 200, 200]
+const TABLE_WIDTH = [100, 100, 50, 150]
 const TABLE_HEIGHT = 30
+const ITEM_TITLE = 40
+const TABLE_LABEL = 28
+const SERVER_LIST = 25
+const SERVER_PER_ROW = 3
 const fontFamily = 'STXIHEI'
 const titleHeight = 250
 const chartHeight = 300
@@ -359,24 +363,239 @@ function itemMarket(itemid,itemname,callback,cookie){
 
 function renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, hasnq, callback) {
   let width = GLOBAL_MARGIN * 3 + TABLE_WIDTH.reduce((p, c) => p + c) * 2
-  let height = GLOBAL_MARGIN * 2
-    + (Math.max(pricelist.length, his.length) + Math.max(pricelistnq.length, hisnq.length)) * TABLE_HEIGHT
-    + (hasnq ? GLOBAL_MARGIN : 0)
+  let height =
+    GLOBAL_MARGIN * 2 +
+    ITEM_TITLE + GLOBAL_MARGIN +
+    Math.ceil(updatelist.length / SERVER_PER_ROW) * SERVER_LIST + GLOBAL_MARGIN +
+    TABLE_HEIGHT + TABLE_LABEL +
+    (hasnq ? (TABLE_HEIGHT + TABLE_LABEL) : 0) +
+    (Math.max(pricelist.length, his.length) + Math.max(pricelistnq.length, hisnq.length)) * TABLE_HEIGHT +
+    (hasnq ? GLOBAL_MARGIN : 0)
   
-  console.log('=========================')
-  console.log(pricelist)
-  console.log(his)
-  console.log(pricelistnq)
-  console.log(hisnq)
-  console.log(Math.max(pricelist.length, his.length) + Math.max(pricelistnq.length, hisnq.length))
-  console.log(width)
-  console.log(height)
+  // console.log('=========================')
+  // console.log(updatelist)
+  // console.log(pricelist)
+  // console.log(his)
+  // console.log(pricelistnq)
+  // console.log(hisnq)
+  // console.log(Math.max(pricelist.length, his.length) + Math.max(pricelistnq.length, hisnq.length))
+  // console.log(width)
+  // console.log(height)
 
   let canvas = createCanvas(width, height)
     , ctx = canvas.getContext('2d')
-  ctx.fillStyle = 'rgba(255,255,255,1)'
+  ctx.fillStyle = 'rgb(28,28,28)'
   ctx.fillRect(0, 0, width, height)
   let offsetTop = GLOBAL_MARGIN
+  /* TITLE */
+  fillText(ctx, itemname, 30, ITEM_TITLE, GLOBAL_MARGIN, offsetTop, '#eee')
+  fillText(ctx, '更新时间', 20, ITEM_TITLE, GLOBAL_MARGIN + ctx.measureText(itemname).width + GLOBAL_MARGIN, offsetTop, '#e6e6e6', 3)
+  offsetTop += ITEM_TITLE
+  offsetTop += GLOBAL_MARGIN
+  updatelist.forEach((server, index) => {
+    let left = GLOBAL_MARGIN + (width - 2 * GLOBAL_MARGIN) / SERVER_PER_ROW * (index % SERVER_PER_ROW)
+    fillText(
+      ctx,
+      server.s,
+      20,
+      SERVER_LIST,
+      left,
+      offsetTop + parseInt(index / SERVER_PER_ROW) * SERVER_LIST,
+      '#555'
+    )
+    left += ctx.measureText(server.s).width + GLOBAL_MARGIN
+    fillText(
+      ctx,
+      server.t,
+      20,
+      SERVER_LIST,
+      left,
+      offsetTop + parseInt(index / SERVER_PER_ROW) * SERVER_LIST,
+      '#fff'
+    )
+  })
+  offsetTop += (Math.ceil(updatelist.length / SERVER_PER_ROW) * SERVER_LIST + GLOBAL_MARGIN)
+  renderTable(
+    ctx,
+    `${hasnq ? 'HQ ': ''}当前价格`,
+    [
+      {
+        text: '服务器',
+      },
+      {
+        text: '价格'
+      },
+      {
+        text: '数量'
+      },
+      {
+        text: '出售者'
+      },
+    ],
+    pricelist.map(item => {
+      return [
+        {
+          text: `${item.s}`
+        },
+        {
+          text: `${item.p}`,
+          option: {
+            color: '#dddc87'
+          }
+        },
+        {
+          text: `${item.n}`,
+          option: {
+            color: '#aaa'
+          }
+        },
+        {
+          text: `${item.m}`
+        }
+      ]
+    }),
+    GLOBAL_MARGIN,
+    offsetTop
+  )
+  renderTable(
+    ctx,
+    `${hasnq ? 'HQ ': ''}交易历史`,
+    [
+      {
+        text: '服务器'
+      },
+      {
+        text: '价格'
+      },
+      {
+        text: '数量'
+      },
+      {
+        text: '日期'
+      },
+    ],
+    his.map(item => {
+      return [
+        {
+          text: `${item.s}`
+        },
+        {
+          text: `${item.p}`,
+          option: {
+            color: '#dddc87'
+          }
+        },
+        {
+          text: `${item.n}`,
+          option: {
+            color: '#aaa'
+          }
+        },
+        {
+          text: `${item.t}`
+        }
+      ]
+    }),
+    GLOBAL_MARGIN * 2 + TABLE_WIDTH.reduce((p, e) => p + e),
+    offsetTop
+  )
+  offsetTop += GLOBAL_MARGIN + TABLE_LABEL
+  if(hasnq){
+    offsetTop += (Math.max(pricelist.length, his.length) + 1) * TABLE_HEIGHT
+
+    renderTable(
+      ctx,
+      `NQ 当前价格`,
+      [
+        {
+          text: '服务器'
+        },
+        {
+          text: '价格'
+        },
+        {
+          text: '数量'
+        },
+        {
+          text: '出售者'
+        },
+      ],
+      pricelist.map(item => {
+        return [
+          {
+            text: `${item.s}`
+          },
+          {
+            text: `${item.p}`,
+            option: {
+              color: '#dddc87'
+            }
+          },
+          {
+            text: `${item.n}`,
+            option: {
+              color: '#aaa'
+            }
+          },
+          {
+            text: `${item.m}`
+          }
+        ]
+      }),
+      GLOBAL_MARGIN,
+      offsetTop
+    )
+    renderTable(
+      ctx,
+      `NQ 交易历史`,
+      [
+        {
+          text: '服务器'
+        },
+        {
+          text: '价格'
+        },
+        {
+          text: '数量'
+        },
+        {
+          text: '日期'
+        },
+      ],
+      his.map(item => {
+        return [
+          {
+            text: `${item.s}`
+          },
+          {
+            text: `${item.p}`,
+            option: {
+              color: '#dddc87'
+            }
+          },
+          {
+            text: `${item.n}`,
+            option: {
+              color: '#aaa'
+            }
+          },
+          {
+            text: `${item.t}`
+          }
+        ]
+      }),
+      GLOBAL_MARGIN * 2 + TABLE_WIDTH.reduce((p, e) => p + e),
+      offsetTop
+    )
+  }
+
+
+
+
+
+
+
+
 
 
 
@@ -385,20 +604,108 @@ function renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, h
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
 
-  // sendImageMsgBuffer(dataBuffer, `${itemname}`, 'other', msg => {
-  //   callback(msg)
-  // })
+  sendImageMsgBuffer(dataBuffer, `${itemname}`, 'other', msg => {
+    callback(msg)
+  })
 
-  fs.writeFile(path.join(__dirname, `${itemname}.png`), dataBuffer, function(err) {
-    if(err){
-      console.log(err)
-    }else{
-      console.log("保存成功！");
-    }
-  });
+  // fs.writeFile(path.join(__dirname, `${itemname}.png`), dataBuffer, function(err) {
+  //   if(err){
+  //     console.log(err)
+  //   }else{
+  //     console.log("保存成功！");
+  //   }
+  // });
 
 }
 
+const fillText = (ctx, text, fontSize, lineHeight, offsetLeft, offsetTop, color = '#000', lineDown = 0) => {
+  ctx.font = `${fontSize}px ${fontFamily}`
+  ctx.fillStyle = color
+  // ctx.strokeStyle = '#f00'
+  // ctx.strokeRect(offsetLeft, offsetTop, ctx.measureText(text).width, lineHeight)
+  ctx.fillText(text, offsetLeft, offsetTop + lineHeight - (lineHeight - fontSize) / 2 + lineDown)
+}
+
+const renderTable = (ctx, label, thead, tbody, offsetLeft, offsetTop) => {
+  fillText(
+    ctx,
+    label,
+    20,
+    TABLE_LABEL,
+    offsetLeft,
+    offsetTop,
+    '#666d81',
+    -10
+  )
+  let rowDown = 0
+  if(thead.length) {
+    thead.forEach((th, index) => {
+      let option = th.option || {}, defaultOption = Object.assign({
+        bgColor: '#434857'
+      }, option)
+      renderTd(
+        ctx,
+        offsetLeft + TABLE_WIDTH.slice(0, index).reduce((p, e) => p + e, 0),
+        offsetTop + TABLE_LABEL,
+        TABLE_WIDTH[index],
+        th.text,
+        defaultOption
+      )
+    })
+    rowDown = 1
+  }
+  tbody.forEach((tr, row) => {
+    tr.forEach((td, col) => {
+      renderTd(
+        ctx,
+        offsetLeft + TABLE_WIDTH.slice(0, col).reduce((p, e) => p + e, 0),
+        offsetTop + (row + rowDown) * TABLE_HEIGHT + TABLE_LABEL,
+        TABLE_WIDTH[col],
+        td.text,
+        td.option || {}
+      )
+    })
+  })
+
+}
+
+const renderTd = (ctx, offsetLeft, offsetTop, twidth, msg, options) => {
+  let option = Object.assign({
+    bold: false,
+    size: 16,
+    color: '#fff',
+    bgColor: '#21242c',
+    borderColor: '#393e4a',
+    ignoreBorder: false,
+    colspan: 0,
+    textAlign: 'left'
+  }, options)
+  ctx.fillStyle = option.bgColor
+  ctx.fillRect(offsetLeft, offsetTop, twidth, TABLE_HEIGHT)
+  ctx.font = `${option.bold ? 'normal' : 'bold'} ${option.size}px ${fontFamily}`
+  ctx.fillStyle = option.color
+  let tw = ctx.measureText(msg).width
+  switch (option.textAlign) {
+    case 'center':
+      ctx.fillText(msg, offsetLeft + (twidth - tw) / 2, offsetTop + (TABLE_HEIGHT - option.size) / 2 + option.size)
+      break;
+    case 'left':
+      ctx.fillText(msg, offsetLeft + 10, offsetTop + (TABLE_HEIGHT - option.size) / 2 + option.size)
+      break;
+    case 'right':
+      ctx.fillText(msg, offsetLeft + twidth - tw - 10, offsetTop + (TABLE_HEIGHT - option.size) / 2 + option.size)
+      break;
+  }
+  if(!option.ignoreBorder) {
+    ctx.beginPath()
+    ctx.strokeStyle = option.borderColor
+    // console.log('=====')
+    // console.log(offsetLeft)
+    ctx.moveTo(offsetLeft, offsetTop + TABLE_HEIGHT)
+    ctx.lineTo(offsetLeft + twidth, offsetTop + TABLE_HEIGHT)
+    ctx.stroke()
+  }
+}
 
 
 function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,hisnq,nq){
