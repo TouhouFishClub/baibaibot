@@ -607,7 +607,7 @@ function renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, h
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
 
-  sendImageMsgBuffer(dataBuffer, `${itemname}`, 'other', msg => {
+  sendImageMsgBuffer(dataBuffer, `${new Date().getTime()}_${itemname}`+, 'ff14/market', msg => {
     callback(msg)
   })
 
