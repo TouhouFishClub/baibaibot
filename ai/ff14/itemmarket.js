@@ -385,10 +385,10 @@ function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,
 
     if(nq){
         img1.drawText(25,75+updateheight,'当前价格HQ','NorthWest');
-        img1.drawText(25+550,75+updateheight,'成交记录HQ','NorthWest');
+        img1.drawText(25+500,75+updateheight,'成交记录HQ','NorthWest');
     }else{
         img1.drawText(25,75+updateheight,'当前价格','NorthWest');
-        img1.drawText(25+550,75+updateheight,'成交记录','NorthWest');
+        img1.drawText(25+500,75+updateheight,'成交记录','NorthWest');
     }
 
 
@@ -399,24 +399,23 @@ function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,
     }
 
     for(var i=0;i<his.length;i++){
-        img1.drawText(25+550,120+updateheight+40*i,his[i].p+"*"+his[i].n,'NorthWest');
-        img1.drawText(200+550,120+updateheight+40*i,his[i].s,'NorthWest');
-        img1.drawText(350+550,120+updateheight+40*i,his[i].t,'NorthWest');
+        img1.drawText(25+500,120+updateheight+40*i,his[i].p+"*"+his[i].n,'NorthWest');
+        img1.drawText(200+500,120+updateheight+40*i,his[i].s,'NorthWest');
+        img1.drawText(350+500,120+updateheight+40*i,his[i].t,'NorthWest');
     }
     if(nq){
-        img1.drawText(25,675,itemname+"NQ",'NorthWest');
-        img1.drawText(25,710,'当前价格NQ','NorthWest');
-        img1.drawText(25+550,710,'成交记录NQ','NorthWest');
+        img1.drawText(25,580+updateheight,'当前价格NQ','NorthWest');
+        img1.drawText(25+500,580+updateheight,'成交记录NQ','NorthWest');
         for(var i=0;i<pricelistnq.length;i++){
-            img1.drawText(25,755+40*i,pricelistnq[i].p+"*"+pricelistnq[i].n,'NorthWest');
-            img1.drawText(200,755+40*i,pricelistnq[i].s,'NorthWest');
-            img1.drawText(350,755+40*i,pricelistnq[i].m,'NorthWest');
+            img1.drawText(25,720+updateheight+40*i,pricelistnq[i].p+"*"+pricelistnq[i].n,'NorthWest');
+            img1.drawText(200,720+updateheight+40*i,pricelistnq[i].s,'NorthWest');
+            img1.drawText(350,720+updateheight+40*i,pricelistnq[i].m,'NorthWest');
         }
 
         for(var i=0;i<hisnq.length;i++){
-            img1.drawText(25+550,755+40*i,hisnq[i].p+"*"+hisnq[i].n,'NorthWest');
-            img1.drawText(200+550,755+40*i,hisnq[i].s,'NorthWest');
-            img1.drawText(350+550,755+40*i,hisnq[i].t,'NorthWest');
+            img1.drawText(25+500,720+updateheight+40*i,hisnq[i].p+"*"+hisnq[i].n,'NorthWest');
+            img1.drawText(200+500,720+updateheight+40*i,hisnq[i].s,'NorthWest');
+            img1.drawText(350+500,720+updateheight+40*i,hisnq[i].t,'NorthWest');
         }
     }
     //img1.write("1.png",function(err){})
