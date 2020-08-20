@@ -352,7 +352,10 @@ function itemMarket(itemid,itemname,callback,cookie){
                 nn0 = ss3.indexOf('</tr>')
             }
         }
-          renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, nq, callback)
+
+
+
+          renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, nq, function(r){callback(itemname+"\n"+r)})
           return
             drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,hisnq,nq);
 
