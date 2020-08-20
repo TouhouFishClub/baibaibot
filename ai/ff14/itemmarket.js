@@ -352,11 +352,9 @@ function itemMarket(itemid,itemname,callback,cookie){
                 nn0 = ss3.indexOf('</tr>')
             }
         }
-        var cb = function(r){
-            callback(itemname+"\n"+r);
-        }
-          renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, nq, cb)
-            //drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,hisnq,nq);
+          renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, nq, callback)
+          return
+            drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,hisnq,nq);
 
 
         }
@@ -522,7 +520,7 @@ function renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, h
           text: '出售者'
         },
       ],
-      pricelist.map(item => {
+      pricelistnq.map(item => {
         return [
           {
             text: `${item.s}`
@@ -564,7 +562,7 @@ function renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, h
           text: '日期'
         },
       ],
-      his.map(item => {
+      hisnq.map(item => {
         return [
           {
             text: `${item.s}`
