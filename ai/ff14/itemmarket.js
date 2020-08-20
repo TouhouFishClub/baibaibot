@@ -375,9 +375,11 @@ function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,
     for(var i=0;i<updatelist.length;i++){
             img1.drawText(25,60+70*i,updatelist[i].s,'NorthWest');
             img1.drawText(205,60+70*i,updatelist[i].t,'NorthWest');
-            i=i+1;
-            img1.drawText(425,60+70*(i-1),updatelist[i].s,'NorthWest');
-            img1.drawText(605,60+70*(i-1),updatelist[i].t,'NorthWest');
+            if(i<updatelist.length){
+                i=i+1;
+                img1.drawText(425,60+70*(i-1),updatelist[i].s,'NorthWest');
+                img1.drawText(605,60+70*(i-1),updatelist[i].t,'NorthWest');
+            }
     }
     var updateheight = Math.ceil(updatelist.length/2)*40;
 
