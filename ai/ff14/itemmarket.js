@@ -361,7 +361,7 @@ function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,
     if(nq){
         height = 1100;
     }
-    img1.resize(1250,height,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+    img1.resize(1000,height,'!') //加('!')强行把图片缩放成对应尺寸150*150！
         .autoOrient()
         .fontSize(20)
         .fill('blue')
@@ -404,18 +404,17 @@ function drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,
         img1.drawText(350+500,120+updateheight+40*i,his[i].t,'NorthWest');
     }
     if(nq){
-        img1.drawText(25,580+updateheight,'当前价格NQ','NorthWest');
-        img1.drawText(25+500,580+updateheight,'成交记录NQ','NorthWest');
+        img1.drawText(25,520+updateheight,'当前价格NQ','NorthWest');
+        img1.drawText(25+500,520+updateheight,'成交记录NQ','NorthWest');
         for(var i=0;i<pricelistnq.length;i++){
-            img1.drawText(25,720+updateheight+40*i,pricelistnq[i].p+"*"+pricelistnq[i].n,'NorthWest');
-            img1.drawText(200,720+updateheight+40*i,pricelistnq[i].s,'NorthWest');
-            img1.drawText(350,720+updateheight+40*i,pricelistnq[i].m,'NorthWest');
+            img1.drawText(25,550+updateheight+40*i,pricelistnq[i].p+"*"+pricelistnq[i].n,'NorthWest');
+            img1.drawText(200,550+updateheight+40*i,pricelistnq[i].s,'NorthWest');
+            img1.drawText(350,550+updateheight+40*i,pricelistnq[i].m,'NorthWest');
         }
-
         for(var i=0;i<hisnq.length;i++){
-            img1.drawText(25+500,720+updateheight+40*i,hisnq[i].p+"*"+hisnq[i].n,'NorthWest');
-            img1.drawText(200+500,720+updateheight+40*i,hisnq[i].s,'NorthWest');
-            img1.drawText(350+500,720+updateheight+40*i,hisnq[i].t,'NorthWest');
+            img1.drawText(25+500,550+updateheight+40*i,hisnq[i].p+"*"+hisnq[i].n,'NorthWest');
+            img1.drawText(200+500,550+updateheight+40*i,hisnq[i].s,'NorthWest');
+            img1.drawText(350+500,550+updateheight+40*i,hisnq[i].t,'NorthWest');
         }
     }
     //img1.write("1.png",function(err){})
