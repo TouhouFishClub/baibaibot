@@ -13,7 +13,7 @@ const mkdirsSync = require('./lib/mkdirsSync')
 const multer = require('multer')
 const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
 const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
-const PORT = 24334
+const PORT = 25334
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
