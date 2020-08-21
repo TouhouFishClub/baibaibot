@@ -58,19 +58,8 @@ function runsetu(content,gid,qq,callback,port){
   }
 
 
-  if(true){
-    fs.readdir('../coolq-data/cq/data/image/send/setu/',function(err,files){
-      var len = files.length;
-      var rdfile = files[Math.floor(Math.random()*len)];
-      var ret = '【】\n'+'[CQ:image,file=send/setu/' + rdfile + ']';
-      callback(ret);
-    })
-    return;
-  }
 
-
-
-  var url = 'https://api.lolicon.app/setu/';
+  var url = 'http://api.lolicon.app/setu/?apikey=283179575f3f8f3adf3600';
   request({
     headers:{
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
