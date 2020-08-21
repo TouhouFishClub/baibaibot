@@ -97,10 +97,11 @@ function ff14MarketReply(content,qq,callback) {
             if (server==1) {
                 cookie = cookiechocobo;
                 ff14MarketReply0(content,qq,callback,cookie)
-            } else if (server==1) {
+            } else if (server==2) {
                 cookie = cookiemog;
                 ff14MarketReply0(content,qq,callback,cookie)
             } else {
+                cookie = cookiecat;
                 ff14MarketReply0(content, qq, callback, cookie)
             }
         })
