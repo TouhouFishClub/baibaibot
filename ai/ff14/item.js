@@ -31,7 +31,7 @@ function searchFF14Item(content,UserName,callback){
     ret = ret + "支持图片文字识别,如【ffiv+图片】\n";
     ret = ret + "最新一周时尚品鉴【时尚品鉴】\n";
     ret = ret + "logs查询【fflog】【cnlog】\n";
-    ret = ret + "物价查询【ffid】【物品名称/ID】【鸟/猪/猫】\n";
+    ret = ret + "物价查询【ffid】\n";
 
       ret = ret + "优雷卡天气查询【常风天气】【恒冰天气】【涌火天气】【丰水天气】";
 

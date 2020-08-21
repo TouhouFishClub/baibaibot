@@ -67,12 +67,15 @@ function ff14MarketReply(content,qq,callback) {
     }
     if (content.trim() == "1s") {
         saveUserServer(qq, 1);
+        callback('已设定为1区');
         return;
     } else if (content.trim() == "2s") {
         saveUserServer(qq, 2);
+        callback('已设定为2区');
         return;
     } else if (content.trim() == "3s") {
         saveUserServer(qq, 3);
+        callback('已设定为3区');
         return;
     }
 
