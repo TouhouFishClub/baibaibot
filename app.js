@@ -13,7 +13,7 @@ const mkdirsSync = require('./lib/mkdirsSync')
 const multer = require('multer')
 const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
 const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
-const PORT = 24334
+const PORT = 25334
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
@@ -134,9 +134,9 @@ app.get('/image',function(req,res){
   var imgpath = querydata.d;
   var bface = querydata.bface;
   if(imgpath){
-    var head = '../coolq-data/cq/data/image';
-    var realpath = path.join(__dirname,head,imgpath);
-    res.sendFile(realpath);
+    // var head = '../coolq-data/cq/data/image';
+    // var realpath = path.join(__dirname,head,imgpath);
+    res.sendFile(imgpath.slice(5));
   }else if(bface){
     var head = '../coolq-data/cq/data/bface';
     var facepath = path.join(__dirname,head,bface);
