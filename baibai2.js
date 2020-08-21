@@ -1048,7 +1048,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
 
-  if(port!=23334){
+  if(port!=22222){
     if(rcontent.startsWith("炼铜1")){
       copperReply(rcontent,groupid,from,callback);
       return;
