@@ -124,6 +124,7 @@ function ff14MarketReply(content,qq,callback) {
 */
 
 function ff14MarketReply0(content,qq,callback,cookie) {
+    console.log(cookie);
     var n = content.indexOf('[CQ:image');
     if (n >= 0) {
         var s1 = content.substring(n + 1);
