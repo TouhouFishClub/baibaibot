@@ -25,21 +25,89 @@ var cookiechocobo = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; mogbo
 var cookiemog = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong; PHPSESSID=q4ljhu81j84gh5f13sen25eo6t; mogboard_server=BaiYinXiang';
 var cookiecat = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; PHPSESSID=ct7bavo5162m76ighdia55d5hd; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; _gat_gtag_UA_147847104_1=1; mogboard_server=JingYuZhuangYuan; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong';
 
+
+var MongoClient = require('mongodb').MongoClient;
+var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
+var udb;
+initDB();
+function initDB(){
+    MongoClient.connect(mongourl, function(err, db) {
+        udb=db;
+    });
+}
+
+function getUserServer(qq,callback){
+    var cl_ff14_server = udb.collection('cl_ff14_server');
+    cl_ff14_server.findOne({'_id':qq}, function(err, data) {
+        if(err){
+            callback(3)
+        }else {
+            if (data) {
+                callback(data.d);
+            } else {
+                callback(3);
+            }
+        }
+    });
+}
+
+function saveUserServer(qq,server){
+    var cl_ff14_server = udb.collection('cl_ff14_server');
+    cl_ff14_server.save({'_id':qq,d:server})
+}
+
+
 function ff14MarketReply(content,qq,callback) {
+    if (content.trim() == "") {
+        var ret = "ff14物价查询器\n";
+        ret = ret + "输入格式：【ffid】+【物品名/物品ID】\n【ffid】+【没有空格】+【1/2/3】+【空格】+【物品名/物品ID】\n"
+        ret = ret + "输入【ffid1s/ffid2s/ffid3s】存储默认区服\n请注意数据并非实时，存在一定延迟\n";
+        callback(ret.trim());
+        return;
+    }
+    if (content.trim() == "1s") {
+        saveUserServer(qq, 1);
+        return;
+    } else if (content.trim() == "2s") {
+        saveUserServer(qq, 2);
+        return;
+    } else if (content.trim() == "3s") {
+        saveUserServer(qq, 3);
+        return;
+    }
+
     var cookie;
-    if (content.startsWith("1 ")){
+    if (content.startsWith("1 ")) {
         cookie = cookiechocobo;
         content = content.substring(1);
-    }else if (content.startsWith("2 ")){
+        content = content.trim();
+        ff14MarketReply0(content,qq,callback,cookie)
+    } else if (content.startsWith("2 ")) {
         cookie = cookiemog;
         content = content.substring(1);
-    }else if (content.startsWith("3 ")){
+        content = content.trim();
+        ff14MarketReply0(content,qq,callback,cookie)
+    } else if (content.startsWith("3 ")) {
         cookie = cookiecat;
         content = content.substring(1);
-    }else{
-        cookie = cookiecat;
+        content = content.trim();
+        ff14MarketReply0(content,qq,callback,cookie)
+    } else {
+        getUserServer(qq,function(server){
+            if (server==1) {
+                cookie = cookiechocobo;
+                ff14MarketReply0(content,qq,callback,cookie)
+            } else if (server==1) {
+                cookie = cookiemog;
+                ff14MarketReply0(content,qq,callback,cookie)
+            } else {
+                ff14MarketReply0(content, qq, callback, cookie)
+            }
+        })
     }
-    content = content.trim();
+
+
+}
 /*
     if (content.trim().endsWith("鸟")) {
         cookie = cookiechocobo;
@@ -55,6 +123,7 @@ function ff14MarketReply(content,qq,callback) {
     }
 */
 
+function ff14MarketReply0(content,qq,callback,cookie) {
     var n = content.indexOf('[CQ:image');
     if (n >= 0) {
         var s1 = content.substring(n + 1);
