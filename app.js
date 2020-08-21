@@ -136,7 +136,7 @@ app.get('/image',function(req,res){
   if(imgpath){
     // var head = '../coolq-data/cq/data/image';
     // var realpath = path.join(__dirname,head,imgpath);
-    res.sendFile(imgpath);
+    res.sendFile(imgpath.slice(5));
   }else if(bface){
     var head = '../coolq-data/cq/data/bface';
     var facepath = path.join(__dirname,head,bface);
