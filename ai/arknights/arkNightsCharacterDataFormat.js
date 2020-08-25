@@ -26,11 +26,15 @@ const formatCharacter = () => {
   if(!akc_init){
     Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'character_table.json'))).forEach(ch => {
       if(!hasTarget(ignore, ch.name) && (ch.potentialItemId || ch.name == '暴行' || ch.name == '断罪者')){
-        // console.log(ch.name)
         let pubId = ch.phases[0].characterPrefabKey
         // console.log(pubId)
-        let storyText = anch(pubId).storyTextAudio[0].stories[0].storyText
-        let sex = storyText.substr(storyText.indexOf('性别】') + 3, 1)
+        let sex
+        if(anch(pubId)) {
+          let storyText = anch(pubId).storyTextAudio[0].stories[0].storyText
+          sex = storyText.substr(storyText.indexOf('性别】') + 3, 1)
+        } else {
+          sex = '男'
+        }
         let data = {
           name: ch.name,
           pid: ch.potentialItemId,
