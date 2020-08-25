@@ -346,9 +346,11 @@ const renderImage = async (chInfo, level, callback) => {
     let baseTop = offsetTop + 50 * parseInt(index / 3), baseLeft = offsetLeft + 15 + 190 * (index % 3)
     ctx.fillText(`${index + 1} > ${index + 2}`, baseLeft, baseTop + 30)
     let skillItem = skillUp.lvlUpCost
-    for(let idx = 0; idx < skillItem.length; idx ++){
-      let co = skillItem[idx]
-      await renderItem(ctx, baseLeft + 40 + 45 * idx, baseTop + 5, 40, co.id, co.count)
+    if(skillItem) {
+      for(let idx = 0; idx < skillItem.length; idx ++){
+        let co = skillItem[idx]
+        await renderItem(ctx, baseLeft + 40 + 45 * idx, baseTop + 5, 40, co.id, co.count)
+      }
     }
   }
   ctx.strokeRect(offsetLeft, offsetTop, TAB_WIDTH, 100)
@@ -389,9 +391,11 @@ const renderImage = async (chInfo, level, callback) => {
 
       let baseTop = offsetTop + 40 * idx, baseLeft = offsetLeft + 20
       let skillItem = masterMat[idx].levelUpCost
-      for(let idxc = 0; idxc < skillItem.length; idxc ++){
-        let co = skillItem[idxc]
-        await renderItem(ctx, baseLeft + 40 * idxc, baseTop + 5, 35, co.id, co.count)
+      if(skillItem) {
+        for(let idxc = 0; idxc < skillItem.length; idxc ++){
+          let co = skillItem[idxc]
+          await renderItem(ctx, baseLeft + 40 * idxc, baseTop + 5, 35, co.id, co.count)
+        }
       }
     }
     ctx.strokeRect(offsetLeft, offsetTop, skillMaster, skillHeight)
@@ -428,7 +432,7 @@ const renderImage = async (chInfo, level, callback) => {
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
 
-  // fs.writeFile(path.join(__dirname, '/test/char.png'), dataBuffer, function(err) {
+  // fs.writeFile(path.join(__dirname, '/char.png'), dataBuffer, function(err) {
   //   if(err){
   //     console.log(err)
   //   }else{

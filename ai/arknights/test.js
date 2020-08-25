@@ -22,7 +22,7 @@ const c = m => {
 // console.log(akk('skchr_plosis_2', '3'))
 // akc('123456', '5 1-1 1-80   ', c)
 // aks('123456', '初雪', c)
-aks('123456', '苏苏洛', c, true)
+aks('123456', 'Stormeye', c, false)
 // aks('123456', '安洁 8', c)
 // aks('123456', '空爆 8', c)
 // aks('123456', '黑角 8', c)
@@ -51,28 +51,28 @@ const wait = async time => {
   })
 }
 
-(async () => {
-
-// console.log(typeof actp)
-
-// tpa('92 102-122 92', '10000', 1, c)
-// tpa('109 152-134 127-142', '10000', 1, c)
-  await wait(1000)
-
-  numberOcr('https://gchat.qpic.cn/gchatpic_new/799018865/2195700800-3126896560-AEBC24C464C58FA1360E418F43A13065/0?term=2', d => {
-    console.log(d)
-  })
-  await wait(1000)
-  numberOcr('https://gchat.qpic.cn/gchatpic_new/799018865/2195700800-2483394515-E798C264919D57F6B6F48716D759D182/0?term=2', d => {
-    console.log(d)
-  })
-  await wait(1000)
-  numberOcr('https://gchat.qpic.cn/gchatpic_new/705886109/2195700800-3007063783-1FFD4B07E386B580FB112EE5A7645F1E/0?term=2', d => {
-    console.log(d)
-  })
-  await wait(1000)
-  numberOcr('https://gchat.qpic.cn/gchatpic_new/799018865/2195700800-2290885552-1A3D25D8E37885A6F0588BAB7253AF04/0?term=2', d => {
-    console.log(d)
-  })
-})()
+// (async () => {
+//
+// // console.log(typeof actp)
+//
+// // tpa('92 102-122 92', '10000', 1, c)
+// // tpa('109 152-134 127-142', '10000', 1, c)
+//   await wait(1000)
+//
+//   numberOcr('https://gchat.qpic.cn/gchatpic_new/799018865/2195700800-3126896560-AEBC24C464C58FA1360E418F43A13065/0?term=2', d => {
+//     console.log(d)
+//   })
+//   await wait(1000)
+//   numberOcr('https://gchat.qpic.cn/gchatpic_new/799018865/2195700800-2483394515-E798C264919D57F6B6F48716D759D182/0?term=2', d => {
+//     console.log(d)
+//   })
+//   await wait(1000)
+//   numberOcr('https://gchat.qpic.cn/gchatpic_new/705886109/2195700800-3007063783-1FFD4B07E386B580FB112EE5A7645F1E/0?term=2', d => {
+//     console.log(d)
+//   })
+//   await wait(1000)
+//   numberOcr('https://gchat.qpic.cn/gchatpic_new/799018865/2195700800-2290885552-1A3D25D8E37885A6F0588BAB7253AF04/0?term=2', d => {
+//     console.log(d)
+//   })
+// })()
 
