@@ -417,18 +417,11 @@ function addSendQueue(groupid,msg,botqq){
       console.log(e);
     }
   }
-    if(port==23334){
-        msg = msg.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
-    }
-  if(port==24334){
-      msg = msg.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
-  }
-    if(port==25334){
-      msg = msg.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
-  }
-      if(port==26334){
-      msg = msg.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
-  }
+
+
+    msg = msg.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
+    msg = msg.replace(/CQ:record,file=sen/i, "CQ:record,file=file:/home/hduser/upload/tk/coolq-data/cq/data/record/sen")
+
 
 
     var bdy = {"group_id": groupid, message: msg};
