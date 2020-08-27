@@ -2,10 +2,7 @@ var request = require('request');
 var fs = require('fs');
 
 function catreply(content,qq,callback){
-    var url = 'https://api.thecatapi.com/v1/images/search';
-    if(Math.random()<0.5){
-        url = url + '?mime_types=gif';
-    }
+    var url = 'https://api.thecatapi.com/v1/images/search?mime_types=jpg';
     request({
         headers:{
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
