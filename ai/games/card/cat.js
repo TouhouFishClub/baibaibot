@@ -3,6 +3,9 @@ var fs = require('fs');
 
 function catreply(content,qq,callback){
     var url = 'https://api.thecatapi.com/v1/images/search?mime_types=jpg';
+    if(content.startWith("2")){
+        url = https://api.thecatapi.com/v1/images/search?mime_types=gif;
+    }
     request({
         headers:{
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
