@@ -27,7 +27,7 @@ function catreply(content,qq,callback){
                 }
             }).pipe(fs.createWriteStream(filename));
             imgreq.on('close',function(){
-                callback('[CQ:image,file=send/cat/'+now.jpg+']')
+                callback('[CQ:image,file=send/cat/'+now+'.jpg+']')
             });
         }
     });
