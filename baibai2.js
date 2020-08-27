@@ -336,6 +336,7 @@ function addSendQueue(groupid,msg,botqq){
 
 
     var bdy = {"group_id": groupid, message: msg};
+    console.log("send:"+groupid+":"+msg);
     request({
         headers:{
             "Content-Type":"application/json"
