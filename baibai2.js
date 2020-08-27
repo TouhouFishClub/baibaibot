@@ -953,7 +953,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
   if(rcontent.startsWith("猫图")||rcontent.startsWith("吸猫")){
-    catreply(rcontent.substring(2),grom,callback);
+    catreply(rcontent.substring(2),from,callback);
   }
 
   if(port!=22222){
