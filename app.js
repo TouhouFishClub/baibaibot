@@ -13,7 +13,8 @@ const mkdirsSync = require('./lib/mkdirsSync')
 const multer = require('multer')
 const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
 const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
-const PORT = 23334
+const ports = new Set([23334, 24334, 25334])
+let PORT = 23334
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
@@ -320,6 +321,23 @@ app.post('/send_group_multipart_data', upload.any(), (req, res, next) => {
       }
     })
   })
+})
+
+app.get('/set_port', (req, res) => {
+  let { p } = req.query
+  if(ports.has(p)) {
+    PORT = p
+    res.send('{"result":"ok"}')
+    return
+  }
+  res.send('{"result":"error"}')
+})
+
+app.get('/get_ports', (req, res) => {
+  res.send(JSON.stringify({
+    ports: Array.from(ports),
+    port: PORT
+  }))
 })
 
 
