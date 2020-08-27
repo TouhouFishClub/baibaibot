@@ -26,30 +26,31 @@ const formatCharacter = () => {
   if(!akc_init){
     Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'character_table.json'))).forEach(ch => {
       if(!hasTarget(ignore, ch.name) && (ch.potentialItemId || ch.name == '暴行' || ch.name == '断罪者')){
-        // console.log(ch.name)
         let pubId = ch.phases[0].characterPrefabKey
         // console.log(pubId)
-        let storyText = anch(pubId).storyTextAudio[0].stories[0].storyText
-        let sex = storyText.substr(storyText.indexOf('性别】') + 3, 1)
-        let data = {
-          name: ch.name,
-          pid: ch.potentialItemId,
-          pubId: pubId,
-          sex: sex,
-          tag: ([type[ch.profession], ch.position == 'RANGED' ? '远程位' : '近战位', sex == '男' ? '男性干员' : '女性干员']).concat(ch.rarity == 4 ? ['资深干员']: ch.rarity == 5 ? ['高级资深干员'] : []).concat(ch.tagList || []),
-          rare: ch.rarity + 1,
-          canRecruit: hasTarget(canRecruit, ch.name),
-          onlyRecruit: hasTarget(onlyRecruit, ch.name),
-          skills: ch.skills.map(x => x.skillId),
-          appellation: ch.appellation,
-          displayLogo: ch.displayLogo,
-          profession: ch.profession,
-          source: ch,
-        }
-        if(ch.rarity >= 2){
-          akc_data.push(data)
-        } else {
-          akc_other_data.push(data)
+        if(anch(pubId)) {
+          let storyText = anch(pubId).storyTextAudio[0].stories[0].storyText
+          let sex = storyText.substr(storyText.indexOf('性别】') + 3, 1)
+          let data = {
+            name: ch.name,
+            pid: ch.potentialItemId,
+            pubId: pubId,
+            sex: sex,
+            tag: ([type[ch.profession], ch.position == 'RANGED' ? '远程位' : '近战位', sex == '男' ? '男性干员' : '女性干员']).concat(ch.rarity == 4 ? ['资深干员']: ch.rarity == 5 ? ['高级资深干员'] : []).concat(ch.tagList || []),
+            rare: ch.rarity + 1,
+            canRecruit: hasTarget(canRecruit, ch.name),
+            onlyRecruit: hasTarget(onlyRecruit, ch.name),
+            skills: ch.skills.map(x => x.skillId),
+            appellation: ch.appellation,
+            displayLogo: ch.displayLogo,
+            profession: ch.profession,
+            source: ch,
+          }
+          if(ch.rarity >= 2){
+            akc_data.push(data)
+          } else {
+            akc_other_data.push(data)
+          }
         }
       }
     })
