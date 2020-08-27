@@ -103,7 +103,7 @@ const { guildRankSearch } = require('./ai/PrincessConnect/guildRank')
 const { schedule } = require('./ai/PrincessConnect/schedule')
 const { chishenme } = require('./ai/chishenme')
 const {ff14MarketReply} = require('./ai/ff14/itemmarket');
-
+const {catreply} = require('./ai/games/card/cat');
 
 initWS();
 initWS2();
@@ -951,6 +951,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
+
+  if(rcontent.startsWith("猫图")||rcontent.startsWith("吸猫")){
+    catreply(rcontent.substring(2),grom,callback);
+  }
 
   if(port!=22222){
     if(rcontent.startsWith("炼铜1")){
