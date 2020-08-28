@@ -121,7 +121,7 @@ app.get('/chathistory',function(req,res){
     res.set("Access-Control-Allow-Origin", "*");
     res.send(JSON.stringify(ret));
   }
-  if(gid){
+  if(gid && gid != 0){
     getChat(gid,ts,callback,order,qq,keyword);
   }else{
     res.send('[]');
