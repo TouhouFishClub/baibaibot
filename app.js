@@ -326,8 +326,8 @@ app.post('/send_group_multipart_data', upload.any(), (req, res, next) => {
 app.get('/set_port', (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
   let { p } = req.query
-  if(ports.has(p)) {
-    PORT = p
+  if(ports.has(parseInt(p))) {
+    PORT = parseInt(p)
     res.send('{"result":"ok"}')
     return
   }
