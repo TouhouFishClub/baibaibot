@@ -17,11 +17,11 @@ cov(
       type: 'other',
     },
     {
-      confirmedCount: [0, 0],
-      curedCount: [114514, 0],
-      currentConfirmedCount: [0, 0],
-      deadCount: [0, 0],
-      suspectedCount: [0, 0]
+      confirmedCount: [1, 0],
+      curedCount: [2, 0],
+      currentConfirmedCount: [3, 0],
+      deadCount: [4, 0],
+      suspectedCount: [5, 0]
     },
     '硝局的花园',
   )
