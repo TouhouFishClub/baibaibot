@@ -16,7 +16,7 @@ let lastUpdateTime = 0
 let AllArea = []
 let AllData = {}
 
-const cov = async (content, callback) => {
+const cov = async (content, callback, custom = false, ...customSettings) => {
   if (AllArea.length == 0) {
     await init(callback)
   }
@@ -180,6 +180,12 @@ const cov = async (content, callback) => {
     )
     return
   }
+
+  if(custom && customSettings) {
+    renderImage(...customSettings, callback)
+    return
+  }
+
   if(content == '国外' || content == '外国' || content == '非中国') {
     let sa = AllArea.filter(x => x.type == 'abroad' && x.name != '中国')
     let confirmedCount = [], curedCount = [], currentConfirmedCount = [], deadCount = []
