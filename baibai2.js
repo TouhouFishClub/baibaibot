@@ -1028,7 +1028,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content == '硝局的花园') {
     cov(
       '硝局的花园',
-      c,
+      callback,
       true,
       ['现有女友', '今日新增女友', '确诊女友', '疑似女友', '境外女友'],
       {
