@@ -1036,11 +1036,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         type: 'other',
       },
       {
-        confirmedCount: [0, 0],
-        curedCount: [~~(200000 * Math.random()), 0],
-        currentConfirmedCount: [0, 0],
-        deadCount: [0, 0],
-        suspectedCount: [0, 0]
+        confirmedCount: [~~(200000 * Math.random()), ~~(100000 * Math.random())],
+        curedCount: [~~(200000 * Math.random()), ~~(100000 * Math.random())],
+        currentConfirmedCount: [~~(200000 * Math.random()), ~~(100000 * Math.random())],
+        deadCount: [~~(200000 * Math.random()), ~~(100000 * Math.random())],
+        suspectedCount: [~~(200000 * Math.random()), ~~(100000 * Math.random())]
       },
       '硝局的花园',
     )
