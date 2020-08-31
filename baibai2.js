@@ -1037,7 +1037,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       },
       {
         confirmedCount: [0, 0],
-        curedCount: [114514, 0],
+        curedCount: [~~(200000 * Math.random()), 0],
         currentConfirmedCount: [0, 0],
         deadCount: [0, 0],
         suspectedCount: [0, 0]
