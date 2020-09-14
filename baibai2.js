@@ -330,8 +330,8 @@ function addSendQueue(groupid,msg,botqq){
   }
 
 
-    msg = msg.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
-    msg = msg.replace(/CQ:record,file=sen/i, "CQ:record,file=file:/home/hduser/upload/tk/coolq-data/cq/data/record/sen")
+    msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
+    msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/hduser/upload/tk/coolq-data/cq/data/record/sen")
 
 
 
@@ -1023,6 +1023,28 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   let co = content.indexOf('疫情')
   if(co >= 0 && co <= 6 && content.length - co == 2) {
     cov(content.substring(0, co), callback)
+    return
+  }
+  if(content == '硝局的花园') {
+    cov(
+      '硝局的花园',
+      callback,
+      true,
+      ['现有女友', '今日新增女友', '确诊女友', '疑似女友', '境外女友'],
+      {
+        name: '硝局的花园',
+        type: 'other',
+      },
+      {
+        confirmedCount: [~~(8 * Math.random()), ~~(4 * Math.random())],
+        curedCount: [~~(200 * Math.random()), ~~(100 * Math.random())],
+        currentConfirmedCount: [~~(4 * Math.random()), ~~(2 * Math.random())],
+        deadCount: [~~(4 * Math.random()), ~~(2 * Math.random())],
+        suspectedCount: [~~(200 * Math.random()), ~~(100 * Math.random())]
+      },
+      '硝局的花园',
+    )
+    return
   }
 
   if(n>1&&n<10&&rcontent.length==n+2){
