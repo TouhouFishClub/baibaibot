@@ -114,13 +114,15 @@ function handleFlyindReply(content,qq,gid,callback){
         ret = ret + "加入游戏：【flya】\n";
         ret = ret + "移动x号机：【fly】+x\n";
         ret = ret + "出击：【fly9】"
+        users={};
+        playing=gid;
         setTimeout(function(){
             willstart(callback);
         },60000)
         callback(ret.trim());
     }
     if(content=="flya"){
-        var len = Object.keys(users);
+        var len = Object.keys(users).length;
         if(len>=4){
             callback("人数已满，无法加入游戏");
         }else{
