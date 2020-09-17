@@ -151,7 +151,7 @@ function willstart(callback){
         img=[];
         nowcolor=0;
         init();
-        nextgo(nowcolor,callback);
+        nextgo(callback);
     }else{
         callback("飞行棋人数不足，游戏结束")
     }
