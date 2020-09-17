@@ -105,6 +105,8 @@ const { chishenme } = require('./ai/chishenme')
 const {ff14MarketReply} = require('./ai/ff14/itemmarket');
 const {catreply} = require('./ai/games/card/cat');
 
+const {handleFlyindReply} = require('./ai/games/flying/flight_chess');
+
 initWS();
 initWS2();
 initWS3();
@@ -712,6 +714,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(content.trim()=='时尚品鉴'){
     beautyReply(content,groupid,callback);
+    return;
+  }
+
+  if(content=="飞行棋"||content.startsWith("fly")){
+    handleFlyindReply(content,from,groupid,callback)
     return;
   }
 
