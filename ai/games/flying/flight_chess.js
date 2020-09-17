@@ -140,6 +140,7 @@ function handleFlyindReply(content,qq,gid,callback){
 var nowcolor = 0;
 var lastrd = 0;
 var nowtimer;
+var count =0;
 function willstart(callback){
     var len = Object.keys(users).length;
     if(len>=2&&len<=4){
@@ -154,6 +155,11 @@ function willstart(callback){
 }
 
 function nextgo(callback){
+    count++;
+    if(count>100){
+        callback('游戏回合数超过100，强制结束');
+        return;
+    }
     clearTimeout(nowtimer);
     var len = Object.keys(users).length;
     nowcolor = (nowcolor+1)%len;
