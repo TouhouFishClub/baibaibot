@@ -104,8 +104,6 @@ function printimg(){
     console.log(r)
 }
 
-init();
-
 
 
 var playing = 0;
