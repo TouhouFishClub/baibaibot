@@ -139,6 +139,7 @@ function handleFlyindReply(content,qq,gid,callback){
 
 var nowcolor = 0;
 var lastrd = 0;
+var nowtimer;
 function willstart(callback){
     var len = Object.keys(users).length;
     if(len>=2&&len<=4){
@@ -153,6 +154,7 @@ function willstart(callback){
 }
 
 function nextgo(callback){
+    clearTimeout(nowtimer);
     var len = Object.keys(users).length;
     nowcolor = (nowcolor+1)%len;
     var rd = 1+Math.floor(Math.random()*6);
@@ -163,7 +165,7 @@ function nextgo(callback){
     }
     generateImage(callback,ret);
     var thencolor = nowcolor;
-    setTimeout(function(){
+    nowtimer = setTimeout(function(){
         usertimeout(thencolor,callback)
     },20000);
 }
