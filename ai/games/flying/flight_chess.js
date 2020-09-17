@@ -153,6 +153,8 @@ function willstart(callback){
 }
 
 function nextgo(callback){
+    var len = Object.keys(users).length;
+    nowcolor = (nowcolor+1)%len;
     var rd = 1+Math.floor(Math.random()*6);
     lastrd = rd;
     var ret = nowcolor+"色掷了"+rd+"点,输入【fly】+X选择移动X号机\n";
@@ -160,12 +162,10 @@ function nextgo(callback){
         ret = ret + "输入【fly9】出动新机\n"
     }
     generateImage(callback,ret);
-    var len = Object.keys(users).length;
     var thencolor = nowcolor;
     setTimeout(function(){
         usertimeout(thencolor,callback)
     },20000);
-    nowcolor = (nowcolor+1)%len;
 }
 
 function select(qq,num,callback){
