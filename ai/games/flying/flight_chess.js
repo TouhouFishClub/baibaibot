@@ -188,34 +188,36 @@ function select(qq,num,callback){
                     user.pos[user.out]=1000+color;
                     map[1000+color].d={color:color,num:user.out};
                 }else{
-                    ret = '你的机库已经没有飞机了';
+                    ret = color+'色的机库已经没有飞机了';
                     callback(ret);
                 }
             }else{
-                ret = '你上次骰子为'+lastrd+',无法出动';
+                ret = color+'色上次骰子为'+lastrd+',无法出动';
                 callback(ret);
             }
         }else{
             if(num>=1&&num<=4){
                 var pos = user.pos[num];
-                var lastpos = pos;
-                for(var i=0;i<lastrd;i++){
-                    posObj = map[pos].next;
-                    if(posObj[color]){
-                        pos = posObj[color];
-                    }else{
-                        pos = posObj.all;
+                if(pos!=0){
+                    var lastpos = pos;
+                    for(var i=0;i<lastrd;i++){
+                        posObj = map[pos].next;
+                        if(posObj[color]){
+                            pos = posObj[color];
+                        }else{
+                            pos = posObj.all;
+                        }
                     }
+                    var finalpos = map[pos].jump[color]?map[pos].jump[color]:pos;
+                    var fp = map[finalpos];
+                    if(fp.d){
+                        //kick
+                    }
+                    fp.d={color:color,num:num};
+                    map[lastpos].d=0;
+                }else{
+                    ret = color+'色的'+num+'号飞机还未出动';
                 }
-                var finalpos = map[pos].jump[color]?map[pos].jump[color]:pos;
-                var fp = map[finalpos];
-                if(fp.d){
-                    //kick
-                }
-                fp.d={color:color,num:num};
-                map[lastpos].d=0;
-
-
             }else{
 
             }
