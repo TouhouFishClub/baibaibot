@@ -156,8 +156,8 @@ function willstart(callback){
 
 function nextgo(callback){
     count++;
-    if(count>100){
-        callback('游戏回合数超过100，强制结束');
+    if(count>10){
+        callback('游戏回合数超过'+count+'，强制结束');
         return;
     }
     clearTimeout(nowtimer);
