@@ -112,7 +112,7 @@ function handleFlyindReply(content,qq,gid,callback){
         playing=gid;
         setTimeout(function(){
             willstart(callback);
-        },60000)
+        },20000)
         callback(ret.trim());
     }
     if(content=="flya"){
@@ -165,8 +165,6 @@ function nextgo(callback){
         usertimeout(thencolor,callback)
     },20000);
     nowcolor = (nowcolor+1)%len;
-
-
 }
 
 function select(qq,num,callback){
@@ -205,12 +203,12 @@ function select(qq,num,callback){
                     //kick
                 }
                 fp.d={color:color,num:num};
-                nextgo(callback);
 
             }else{
 
             }
         }
+        nextgo(callback);
     }else{
 
     }
