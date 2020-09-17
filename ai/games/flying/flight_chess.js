@@ -192,6 +192,7 @@ function select(qq,num,callback){
         }else{
             if(num>=1&&num<=4){
                 var pos = user.pos[num];
+                var lastpos = pos;
                 for(var i=0;i<lastrd;i++){
                     posObj = map[pos].next;
                     if(posObj[color]){
@@ -206,6 +207,8 @@ function select(qq,num,callback){
                     //kick
                 }
                 fp.d={color:color,num:num};
+                map[lastpos].d=0;
+
 
             }else{
 
