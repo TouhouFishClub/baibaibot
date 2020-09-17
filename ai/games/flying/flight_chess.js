@@ -145,7 +145,7 @@ function handleFlyindReply(content,qq,gid,callback){
 var nowcolor = 0;
 var lastrd = 0;
 function willstart(callback){
-    var len = Object.keys(users);
+    var len = Object.keys(users).length;
     if(len>=2&&len<=4){
         map=[];
         img=[];
@@ -165,7 +165,7 @@ function nextgo(callback){
         ret = ret + "输入【fly9】出动新机\n"
     }
     generateImage(callback,ret);
-    var len = Object.keys(users);
+    var len = Object.keys(users).length;
     var thencolor = nowcolor;
     setTimeout(function(){
         usertimeout(thencolor,callback)
