@@ -126,6 +126,7 @@ function handleFlyindReply(content,qq,gid,callback){
     }
     if(content.startsWith("fly")&&content.length==4){
         var num = parseInt(content.substring(3));
+        console.log('num:'+num)
         if(num>=1&&num<=4){
             select(qq,num,callback)
         }else if(num==9){
@@ -217,6 +218,7 @@ function select(qq,num,callback){
 
 function usertimeout(color,callback){
     callback(color+'色玩家超时');
+    nextgo(callback);
 }
 
 
