@@ -1,8 +1,8 @@
 const _ = require('lodash')
 const path = require('path')
 const formatOptionset = require(path.join(__dirname, '/tools/formatOptionset'))
-const optionsetWhere = require(path.join(__dirname, '/tools/optionsetWhere'))
-const optionsetImage = require(path.join(__dirname, '/tools/optionsetImage'))
+const { optionsetWhere } = require(path.join(__dirname, '/tools/optionsetWhere'))
+// const optionsetImage = require(path.join(__dirname, '/tools/optionsetImage'))
 let optionSetObj = []
 
 module.exports = function(userId, context, type = 'normal', callback) {
@@ -151,28 +151,26 @@ module.exports = function(userId, context, type = 'normal', callback) {
     })
     renderMsg(finalArr)
   }
-  const renderMsg = finalArr => {
+  const renderMsg = async finalArr => {
     let str = ''
     if(finalArr.length == 0){
       str = '没有找到释放卷轴'
       callback(str)
     }
     if(finalArr.length == 1){
+    	console.log(finalArr[0])
+			let wheres = await optionsetWhere(finalArr[0].Name, finalArr[0].ID)
       if(type == 'image'){
-        optionsetWhere(finalArr[0].Name, finalArr[0].ID, wheres => {
-          optionsetImage(finalArr[0], wheres, 'mabi', str => {
-            callback(str)
-          })
-        })
+				optionsetImage(finalArr[0], wheres, 'mabi', str => {
+					callback(str)
+				})
       } else {
-        optionsetWhere(finalArr[0].Name, finalArr[0].ID, wheres => {
-          str = `${finalArr[0].LocalName}(Rank ${finalArr[0].Level})\n[${finalArr[0].Usage}]\n${finalArr[0].Buff.length ? (finalArr[0].Buff.join('\n') + '\n') : ''}${finalArr[0].Debuff.join('\n')}`
-          if(wheres.length){
-            console.log(wheres)
-            str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
-          }
-          callback(str)
-        })
+				str = `${finalArr[0].LocalName.trim()}(Rank ${finalArr[0].Level})\n[${finalArr[0].Usage}]\n${finalArr[0].Buff.length ? (finalArr[0].Buff.join('\n') + '\n') : ''}${finalArr[0].Debuff.join('\n')}`
+				if(wheres.length){
+					// console.log(wheres)
+					str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
+				}
+				callback(str)
       }
     }
     if(finalArr.length > 1){

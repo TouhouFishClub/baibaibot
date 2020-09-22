@@ -1,15 +1,34 @@
-// const os = require('./optionset')
+const os = require('./optionset')
+const iconv = require('iconv-lite')
+const {getPageData} = require('./tools/optionsetWhere')
+
+
+
+let e = iconv.encode('麦当劳', 'gbk')
+let e2 = iconv.encode('麦当劳', 'gb2312')
+let f = Array.from(e)
+let f2 = Array.from(e2)
+console.log(Object.prototype.toString.call(f))
+console.log(f)
+console.log(f2)
+for (let s of e) {
+	console.log(s.toString(16))
+}
+// ~(async () => {
+// 	let c = await getPageData()
+// 	console.log(c)
+// })()
 // const app = require('express')()
-// // os('aaa', '猎狮', 'image', c => {console.log(c)})
+// os('aaa', '小丑', 'normal', c => {console.log(c)})
 // const https = require('https')
 // const querystring =  require('querystring')
 
-const smu = require('./smuggler')
-
-smu(d => {
-  console.log('=========')
-  console.log(d)
-})
+// const smu = require('./smuggler')
+//
+// smu(d => {
+//   console.log('=========')
+//   console.log(d)
+// })
 
 
 // const ow = require('./tools/optionsetWhere')
