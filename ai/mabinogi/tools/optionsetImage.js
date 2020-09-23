@@ -124,7 +124,7 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
   renderBuffText(ctx, objArr, 117, 25, 25)
 
   if(wheres.length){
-    renderTextBox(ctx, 12, 77 + buffHeight + 70, 376 , whereHeight + 20, 10, '卷轴出处')
+    renderTextBox(ctx, 12, 77 + buffHeight + 70, 376 , whereHeight + 20, 10, `卷轴出处[${obj.where == 'CN' ? '国服' : '台服'}]`)
     ctx.fillStyle = 'rgba(255,255,255,1)';
     renderText(ctx, whereArr, 77 + buffHeight + 80, 25, 25)
   }

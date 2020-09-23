@@ -8,17 +8,6 @@ const MongoClient = require('mongodb').MongoClient
 // const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
 const MONGO_URL = 'mongodb://192.168.1.19:27017/db_bot'
 
-/* init db */
-let client, collection
-(async () => {
-  try {
-    client = await MongoClient.connect(MONGO_URL)
-  } catch (e) {
-    console.log('MONGO ERROR FOR PCR GUILD RANK MODULE!!')
-    console.log(e)
-  }
-})()
-
 const optionsetWhere = (optsName, optsId, callback) => {
   return new Promise((resolve, reject) => {
 
@@ -84,9 +73,20 @@ const optionsetWhere = (optsName, optsId, callback) => {
   })
 }
 const optionsetWhereCn = async ( optsNameCN ) => {
+  // console.log(optsNameCN)
+  let client, collection
+  if(!client) {
+    try {
+      client = await MongoClient.connect(MONGO_URL)
+    } catch (e) {
+      console.log('MONGO ERROR FOR MABINOGI MODULE!!')
+      console.log(e)
+    }
+  }
   collection = client.collection('cl_mabinogi_optionset')
   let find = await collection.findOne({'_id': optsNameCN})
-  return find.length > 0 ? find[0].where.length : []
+  // console.log(find)
+  return find ? find.where : []
 }
 const encode = (str, encode) => Array.from(iconv.encode(str, encode)).map(x => `%${x.toString(16).toUpperCase()}`).join('')
 

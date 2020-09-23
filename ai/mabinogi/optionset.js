@@ -161,6 +161,8 @@ module.exports = function(userId, context, type = 'normal', callback) {
     	// console.log(finalArr[0])
       let wheres, optionsetInfo = finalArr[0]
       wheres = await optionsetWhereCn(finalArr[0].LocalName)
+      // console.log('=======')
+      // console.log(wheres)
       if(wheres.length > 0) {
         optionsetInfo = Object.assign({where: 'CN'}, optionsetInfo)
       } else {
