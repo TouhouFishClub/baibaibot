@@ -8,6 +8,8 @@ const MongoClient = require('mongodb').MongoClient
 // const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
 const MONGO_URL = 'mongodb://192.168.1.19:27017/db_bot'
 
+let client, collection
+
 const optionsetWhere = (optsName, optsId, callback) => {
   return new Promise((resolve, reject) => {
 
@@ -74,7 +76,6 @@ const optionsetWhere = (optsName, optsId, callback) => {
 }
 const optionsetWhereCn = async ( optsNameCN ) => {
   // console.log(optsNameCN)
-  let client, collection
   if(!client) {
     try {
       client = await MongoClient.connect(MONGO_URL)
