@@ -1,8 +1,8 @@
 const _ = require('lodash')
 const path = require('path')
 const formatOptionset = require(path.join(__dirname, '/tools/formatOptionset'))
-const { optionsetWhere } = require(path.join(__dirname, '/tools/optionsetWhere'))
-// const optionsetImage = require(path.join(__dirname, '/tools/optionsetImage'))
+const { optionsetWhere, optionsetWhereCn } = require(path.join(__dirname, '/tools/optionsetWhere'))
+const optionsetImage = require(path.join(__dirname, '/tools/optionsetImage'))
 let optionSetObj = []
 
 module.exports = function(userId, context, type = 'normal', callback) {
@@ -158,10 +158,17 @@ module.exports = function(userId, context, type = 'normal', callback) {
       callback(str)
     }
     if(finalArr.length == 1){
-    	console.log(finalArr[0])
-			let wheres = await optionsetWhere(finalArr[0].Name, finalArr[0].ID)
+    	// console.log(finalArr[0])
+      let wheres, optionsetInfo = finalArr[0]
+      wheres = await optionsetWhereCn(finalArr[0].LocalName)
+      if(wheres.length > 0) {
+        optionsetInfo = Object.assign({where: 'CN'}, optionsetInfo)
+      } else {
+        wheres = await optionsetWhere(finalArr[0].Name, finalArr[0].ID)
+        optionsetInfo = Object.assign({where: 'TW'}, optionsetInfo)
+      }
       if(type == 'image'){
-				optionsetImage(finalArr[0], wheres, 'mabi', str => {
+				optionsetImage(optionsetInfo, wheres, 'mabi', str => {
 					callback(str)
 				})
       } else {

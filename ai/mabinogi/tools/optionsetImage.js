@@ -80,7 +80,12 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
   let whereHeight
   if(wheres.length){
     wheres.forEach(where => {
-      let whereText = `${where.article} → ${where.where}`
+      let whereText
+      if(obj.where == 'CN') {
+        whereText = where
+      } else {
+        whereText = `${where.article} → ${where.where}`
+      }
       if(ctxTmp.measureText(whereText).width < MAX_WIDTH) {
         whereArr.push(whereText)
       } else {
