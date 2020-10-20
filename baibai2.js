@@ -41,7 +41,7 @@ const {replayReply} = require('./ai/replay');
 const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,getGroupMemberNum,banUserRandom} = require('./cq/cache');
 const {lottoryReply} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
-const {drawNameCard} = require('./ai/games/card/draw');
+// const {drawNameCard} = require('./ai/games/card/draw');
 const op = require('./ai/mabinogi/optionset')
 const {googleImageSearch} = require('./ai/image/google');
 const rua = require('./ai/mabinogi/ruawork')
@@ -955,10 +955,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(rcontent.startsWith("抽卡")){
-    drawNameCard(name,from,callback,groupid);
-    return;
-  }
+  // if(rcontent.startsWith("抽卡")){
+  //   drawNameCard(name,from,callback,groupid);
+  //   return;
+  // }
 
 
   if(rcontent.startsWith("猫图")||rcontent.startsWith("吸猫")){
