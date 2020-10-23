@@ -394,19 +394,19 @@ const renderMsg = (data, source, callback, otherMsg = '', params = {}) => {
     if(hisLength == 2) {
       msg += `上次更新： ${formatTime(his[0].updateTs)}\n`
     }
-    msg += `当前为 ${d.loopInfo.loop+1} 周目 ${d.loopInfo.boss+1} 号boss\n剩余血量：${~~d.loopInfo.lefthp}\n`
+    msg += `当前为 ${d.loopInfo.loop+1} 周目 ${d.loopInfo.boss+1} 号boss\n剩余血量：${~~d.loopInfo.lefthp}(${~~d.loopInfo.lefthpPer.toFixed(2)}%)\n`
     if(d.nearbyRank) {
       let { upper, below } = d.nearbyRank, u = upper.slice(-2), b = below.slice(-2)
       msg += '==============\n'
       msg += `更新时间：${formatTime(u[u.length - 1].updateTs)}\n`
       let r1score = u[u.length - 1].damage
       msg += `【${u[u.length - 1].rank}位】 ${r1score} (+${r1score - d.damage})\n`
-      msg += `当前为 ${u[u.length - 1].loopInfo.loop+1} 周目 ${u[u.length - 1].loopInfo.boss+1} 号boss\n剩余血量：${~~u[u.length - 1].loopInfo.lefthp}\n`
+      msg += `当前为 ${u[u.length - 1].loopInfo.loop+1} 周目 ${u[u.length - 1].loopInfo.boss+1} 号boss\n剩余血量：${~~u[u.length - 1].loopInfo.lefthp}(${~~u[u.length - 1].loopInfo.lefthpPer.toFixed(2)}%)\n`
       msg += '==============\n'
       msg += `更新时间：${formatTime(b[b.length - 1].updateTs)}\n`
       let r2score = b[b.length - 1].damage
       msg += `【${b[b.length - 1].rank}位】 ${r2score} (${r2score - d.damage})\n`
-      msg += `当前为 ${b[b.length - 1].loopInfo.loop+1} 周目 ${b[b.length - 1].loopInfo.boss+1} 号boss\n剩余血量：${~~b[b.length - 1].loopInfo.lefthp}\n`
+      msg += `当前为 ${b[b.length - 1].loopInfo.loop+1} 周目 ${b[b.length - 1].loopInfo.boss+1} 号boss\n剩余血量：${~~b[b.length - 1].loopInfo.lefthp}(${~~b[b.length - 1].loopInfo.lefthpPer.toFixed(2)}%)\n`
     }
   })
   // callback(msg)
@@ -507,7 +507,8 @@ const calcBoss = (damage, hplist, powerList) => {
     } else {
       return {
         boss: i,
-        lefthp: (hplist[i] - damage) / powerList[i]
+        lefthp: (hplist[i] - damage) / powerList[i],
+        lefthpPer: ((hplist[i] - damage) / powerList[i]) / (hplist[i] / powerList[i]) * 100,
       }
     }
   }
