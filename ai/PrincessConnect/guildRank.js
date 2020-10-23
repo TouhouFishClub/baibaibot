@@ -221,8 +221,8 @@ const getAPIData = (searchContent, type, callback, params) => {
       data += chunk
     });
     res.on('end', () => {
-      // console.log('=== request data ===')
-      // console.log(data)
+      console.log('=== request data ===')
+      console.log(data)
       let pd = JSON.parse(data)
       if(pd.data && pd.data.length){
         formatData(pd, type, 'api', callback, '', params)
@@ -508,7 +508,7 @@ const calcBoss = (damage, hplist, powerList) => {
       return {
         boss: i,
         lefthp: (hplist[i] - damage) / powerList[i],
-        lefthpPer: ((hplist[i] - damage) / powerList[i]) / (hplist[i] / powerList[i]) * 100,
+        lefthpPer: ((hplist[i] - damage) / hplist[i]) * 100,
       }
     }
   }
