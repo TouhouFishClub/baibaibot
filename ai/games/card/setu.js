@@ -70,75 +70,84 @@ function runsetu(content,gid,qq,callback,port){
       console.log('pipe error catched!')
       console.log(error);
     } else {
-      var data = eval('('+body+')');
-      console.log(data);
-      var imgdata = data.data[0];
-      imgdata._id = imgdata.pid;
-      var cl_setu = udb.collection('cl_setu');
-      var query = {'_id':imgdata.pid};
-      cl_setu.findOne(query, function(err, data) {
-        if (err) {
-          console.log('mongo error2:!!!!!!!!!');
-          console.log(err);
-        } else {
-          var filename = "../coolq-data/cq/data/image/send/setu/"+imgdata.pid;
-          if (data) {
-            if(fs.existsSync(filename)){
-              var ret = '[CQ:image,file=send/setu/'+imgdata.pid+']';
-              callback(ret);
-            }else{
-              var imgurl = imgdata.url;
-              var imgreq = request({
-                url: imgurl,
-                method: "GET"
-              }, function(error, response, body){
-                if(error&&error.code){
-                  console.log('pipe error catched!')
-                  console.log(error);
-                }
-              }).pipe(fs.createWriteStream(filename));
-              imgreq.on('close',function(){
-                if(fs.existsSync(filename)) {
-                  var ret = '[CQ:image,file=send/setu/' + imgdata.pid + ']';
-                  callback(ret);
-                }else{
-                  fs.readdir('../coolq-data/cq/data/image/send/setu/',function(err,files){
-                    var len = files.length;
-                    var rdfile = files[Math.floor(Math.random()*len)];
-                    var ret = ''+'[CQ:image,file=send/setu/' + rdfile + ']';
-                    callback(ret);
-                  })
-                }
-              });
-            }
-          }else{
-            var imgurl = imgdata.url;
-            var imgreq = request({
-              url: imgurl,
-              method: "GET"
-            }, function(error, response, body){
-              if(error&&error.code){
-                console.log('pipe error catched!')
-                console.log(error);
-              }
-            }).pipe(fs.createWriteStream(filename));
-            imgreq.on('close',function(){
-              if(fs.existsSync(filename)) {
-                cl_setu.save(imgdata);
-                var ret = ''+'[CQ:image,file=send/setu/' + imgdata.pid + ']';
+        var data = eval('(' + body + ')');
+        console.log(data);
+        if (data.code == 429) {
+            fs.readdir('../coolq-data/cq/data/image/send/setu/', function (err, files) {
+                var len = files.length;
+                var rdfile = files[Math.floor(Math.random() * len)];
+                var ret = '\\' + '[CQ:image,file=send/setu/' + rdfile + ']';
                 callback(ret);
-              }else{
-                fs.readdir('../coolq-data/cq/data/image/send/setu/',function(err,files){
-                  var len = files.length;
-                  var rdfile = files[Math.floor(Math.random()*len)];
-                  var ret = ''+'[CQ:image,file=send/setu/' + rdfile + ']';
-                  callback(ret);
-                })
-              }
+            })
+        } else {
+            var imgdata = data.data[0];
+            imgdata._id = imgdata.pid;
+            var cl_setu = udb.collection('cl_setu');
+            var query = {'_id': imgdata.pid};
+            cl_setu.findOne(query, function (err, data) {
+                if (err) {
+                    console.log('mongo error2:!!!!!!!!!');
+                    console.log(err);
+                } else {
+                    var filename = "../coolq-data/cq/data/image/send/setu/" + imgdata.pid;
+                    if (data) {
+                        if (fs.existsSync(filename)) {
+                            var ret = '[CQ:image,file=send/setu/' + imgdata.pid + ']';
+                            callback(ret);
+                        } else {
+                            var imgurl = imgdata.url;
+                            var imgreq = request({
+                                url: imgurl,
+                                method: "GET"
+                            }, function (error, response, body) {
+                                if (error && error.code) {
+                                    console.log('pipe error catched!')
+                                    console.log(error);
+                                }
+                            }).pipe(fs.createWriteStream(filename));
+                            imgreq.on('close', function () {
+                                if (fs.existsSync(filename)) {
+                                    var ret = '[CQ:image,file=send/setu/' + imgdata.pid + ']';
+                                    callback(ret);
+                                } else {
+                                    fs.readdir('../coolq-data/cq/data/image/send/setu/', function (err, files) {
+                                        var len = files.length;
+                                        var rdfile = files[Math.floor(Math.random() * len)];
+                                        var ret = '' + '[CQ:image,file=send/setu/' + rdfile + ']';
+                                        callback(ret);
+                                    })
+                                }
+                            });
+                        }
+                    } else {
+                        var imgurl = imgdata.url;
+                        var imgreq = request({
+                            url: imgurl,
+                            method: "GET"
+                        }, function (error, response, body) {
+                            if (error && error.code) {
+                                console.log('pipe error catched!')
+                                console.log(error);
+                            }
+                        }).pipe(fs.createWriteStream(filename));
+                        imgreq.on('close', function () {
+                            if (fs.existsSync(filename)) {
+                                cl_setu.save(imgdata);
+                                var ret = '' + '[CQ:image,file=send/setu/' + imgdata.pid + ']';
+                                callback(ret);
+                            } else {
+                                fs.readdir('../coolq-data/cq/data/image/send/setu/', function (err, files) {
+                                    var len = files.length;
+                                    var rdfile = files[Math.floor(Math.random() * len)];
+                                    var ret = '' + '[CQ:image,file=send/setu/' + rdfile + ']';
+                                    callback(ret);
+                                })
+                            }
+                        });
+                    }
+                }
             });
-          }
         }
-      });
     }
   });
 }
