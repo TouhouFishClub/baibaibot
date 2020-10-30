@@ -52,8 +52,12 @@ function getUserNameInGroup(qq,gid,port){
         }
       });
     });
-    req.end();
   }
+  req.on('error', function(err) {
+      console.log('req err:');
+      console.log(err);
+  });
+  req.end();
 }
 
 

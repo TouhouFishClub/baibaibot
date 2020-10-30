@@ -11,15 +11,15 @@ const HP_LIST = [
   [
     6000000,
     8000000,
-    10000000 * 1.1,
-    12000000 * 1.1,
-    20000000 * 1.2
+    10000000 * 1.3,
+    12000000 * 1.3,
+    20000000 * 1.5
   ],
   [
-    6000000 * 1.2,
-    8000000 * 1.2,
-    10000000 * 1.5,
-    12000000 * 1.7,
+    6000000 * 1.3,
+    8000000 * 1.3,
+    10000000 * 1.8,
+    12000000 * 1.8,
     20000000 * 2
   ]
 ]
@@ -27,15 +27,15 @@ const POWER = [
   [
     1,
     1,
-    1.1,
-    1.1,
-    1.2
+    1.3,
+    1.3,
+    1.5
   ],
   [
-    1.2,
-    1.2,
-    1.5,
-    1.7,
+    1.3,
+    1.3,
+    1.8,
+    1.8,
     2
   ]
 ]
@@ -221,8 +221,8 @@ const getAPIData = (searchContent, type, callback, params) => {
       data += chunk
     });
     res.on('end', () => {
-      // console.log('=== request data ===')
-      // console.log(data)
+      console.log('=== request data ===')
+      console.log(data)
       let pd = JSON.parse(data)
       if(pd.data && pd.data.length){
         formatData(pd, type, 'api', callback, '', params)
@@ -394,19 +394,19 @@ const renderMsg = (data, source, callback, otherMsg = '', params = {}) => {
     if(hisLength == 2) {
       msg += `上次更新： ${formatTime(his[0].updateTs)}\n`
     }
-    msg += `当前为 ${d.loopInfo.loop+1} 周目 ${d.loopInfo.boss+1} 号boss\n剩余血量：${~~d.loopInfo.lefthp}\n`
+    msg += `当前为 ${d.loopInfo.loop+1} 周目 ${d.loopInfo.boss+1} 号boss\n剩余血量：${~~d.loopInfo.lefthp}(${~~d.loopInfo.lefthpPer.toFixed(2)}%)\n`
     if(d.nearbyRank) {
       let { upper, below } = d.nearbyRank, u = upper.slice(-2), b = below.slice(-2)
       msg += '==============\n'
       msg += `更新时间：${formatTime(u[u.length - 1].updateTs)}\n`
       let r1score = u[u.length - 1].damage
       msg += `【${u[u.length - 1].rank}位】 ${r1score} (+${r1score - d.damage})\n`
-      msg += `当前为 ${u[u.length - 1].loopInfo.loop+1} 周目 ${u[u.length - 1].loopInfo.boss+1} 号boss\n剩余血量：${~~u[u.length - 1].loopInfo.lefthp}\n`
+      msg += `当前为 ${u[u.length - 1].loopInfo.loop+1} 周目 ${u[u.length - 1].loopInfo.boss+1} 号boss\n剩余血量：${~~u[u.length - 1].loopInfo.lefthp}(${~~u[u.length - 1].loopInfo.lefthpPer.toFixed(2)}%)\n`
       msg += '==============\n'
       msg += `更新时间：${formatTime(b[b.length - 1].updateTs)}\n`
       let r2score = b[b.length - 1].damage
       msg += `【${b[b.length - 1].rank}位】 ${r2score} (${r2score - d.damage})\n`
-      msg += `当前为 ${b[b.length - 1].loopInfo.loop+1} 周目 ${b[b.length - 1].loopInfo.boss+1} 号boss\n剩余血量：${~~b[b.length - 1].loopInfo.lefthp}\n`
+      msg += `当前为 ${b[b.length - 1].loopInfo.loop+1} 周目 ${b[b.length - 1].loopInfo.boss+1} 号boss\n剩余血量：${~~b[b.length - 1].loopInfo.lefthp}(${~~b[b.length - 1].loopInfo.lefthpPer.toFixed(2)}%)\n`
     }
   })
   // callback(msg)
@@ -471,7 +471,7 @@ const help = callback => {
   callback(`===== 公会战查询 =====\n可使用【bcs 公会名】或者【bcs [类型]#[名称/数值]】查询，类型可为公会、会长、排名、分数、ID（会长id，必须模糊查询过以获取会长id），例如：【bcs 会长#ALG】。\n其中，排名与分数必须为数值，公会和会长可使用字符模式（支持正则表达式）`)
 }
 
-const formatTime = ts => `${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}:${addZero(new Date(ts).getSeconds())}`
+const formatTime = ts => `${new Date(ts).getMonth() + 1}-${new Date(ts).getDate()} ${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}:${addZero(new Date(ts).getSeconds())}`
 
 const addZero = n => n < 10 ? ('0' + n) : n
 
@@ -507,7 +507,8 @@ const calcBoss = (damage, hplist, powerList) => {
     } else {
       return {
         boss: i,
-        lefthp: (hplist[i] - damage) / powerList[i]
+        lefthp: (hplist[i] - damage) / powerList[i],
+        lefthpPer: ((hplist[i] - damage) / hplist[i]) * 100,
       }
     }
   }
