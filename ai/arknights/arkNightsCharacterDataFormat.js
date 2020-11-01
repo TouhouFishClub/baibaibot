@@ -55,7 +55,8 @@ const formatCharacter = () => {
         }
       }
     })
-    Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'char_patch_table.json')).patchChars).forEach(ch => {
+    let {patchChars ,patchDetailInfoList} = fs.readJsonSync(path.join(__dirname, 'data', 'char_patch_table.json')
+    Object.values(patchChars).forEach(ch => {
       if(!hasTarget(ignore, ch.name) && (ch.potentialItemId || ch.name == '暴行' || ch.name == '断罪者')){
         let pubId = ch.potentialItemId ? ch.potentialItemId.substring(2) : ch.phases[0].characterPrefabKey
         // console.log(pubId)
@@ -63,7 +64,7 @@ const formatCharacter = () => {
           let storyText = anch(pubId).storyTextAudio[0].stories[0].storyText
           let sex = storyText.substr(storyText.indexOf('性别】') + 3, 1)
           let data = {
-            name: `${ch.name}/升变`,
+            name: `${ch.name}/${patchDetailInfoList[ch.phases[0].characterPrefabKey].infoParam}`,
             pid: ch.potentialItemId,
             pubId: pubId,
             sex: sex,
