@@ -7,7 +7,7 @@ const fs = require('fs'),
 const aks = require('./arkNightsSkill')
 const TAB_MARGIN = 20
 const TAB_WIDTH = 600
-let TAB_HEIGHT = 1380
+let TAB_HEIGHT = 1455
 const INSET_MARGIN = 10
 const AVATAR_WIDTH = 150
 const fontFamily = 'STXIHEI'
@@ -20,9 +20,9 @@ const rangeMap = AllRangeData()
 const renderImage = async (chInfo, level, callback) => {
   // console.log('=======')
   // console.log(chInfo)
-  TAB_HEIGHT = 1380
+  TAB_HEIGHT = 1455
 
-  TAB_HEIGHT = TAB_HEIGHT - 130 * (3 - chInfo.info.source.skills.length)
+  TAB_HEIGHT = TAB_HEIGHT - 155 * (3 - chInfo.info.source.skills.length)
 
   let canvasWidth = TAB_WIDTH + 2 * TAB_MARGIN, canvasHeight = TAB_HEIGHT + 2 * TAB_MARGIN
 
@@ -357,7 +357,7 @@ const renderImage = async (chInfo, level, callback) => {
   offsetTop += 100
 
   /* skill master */
-  let skillRange = 160, skillMaster = 150, skillWidth = TAB_WIDTH - skillRange - skillMaster, skillHeight = 130
+  let skillRange = 160, skillMaster = 150, skillWidth = TAB_WIDTH - skillRange - skillMaster, skillHeight = 155
   let skills = chInfo.info.source.skills
 
   for(let i = 0; i < skills.length; i++){
