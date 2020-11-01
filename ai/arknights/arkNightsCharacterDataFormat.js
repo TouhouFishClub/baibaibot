@@ -55,7 +55,7 @@ const formatCharacter = () => {
         }
       }
     })
-    let {patchChars ,patchDetailInfoList} = fs.readJsonSync(path.join(__dirname, 'data', 'char_patch_table.json')
+    let {patchChars ,patchDetailInfoList} = fs.readJsonSync(path.join(__dirname, 'data', 'char_patch_table.json'))
     Object.values(patchChars).forEach(ch => {
       if(!hasTarget(ignore, ch.name) && (ch.potentialItemId || ch.name == '暴行' || ch.name == '断罪者')){
         let pubId = ch.potentialItemId ? ch.potentialItemId.substring(2) : ch.phases[0].characterPrefabKey
