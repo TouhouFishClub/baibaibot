@@ -55,9 +55,9 @@ const formatCharacter = () => {
         }
       }
     })
-    Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'char_patch_table.json'))).forEach(ch => {
+    Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'char_patch_table.json')).patchChars).forEach(ch => {
       if(!hasTarget(ignore, ch.name) && (ch.potentialItemId || ch.name == '暴行' || ch.name == '断罪者')){
-        let pubId = ch.phases[0].characterPrefabKey
+        let pubId = ch.potentialItemId ? ch.potentialItemId.substring(2) : ch.phases[0].characterPrefabKey
         // console.log(pubId)
         if(anch(pubId)) {
           let storyText = anch(pubId).storyTextAudio[0].stories[0].storyText
@@ -86,6 +86,7 @@ const formatCharacter = () => {
         }
       }
     })
+    console.log(akc_patch_data)
     akc_init = true
     // console.log(akc_data)
   }

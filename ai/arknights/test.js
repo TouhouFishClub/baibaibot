@@ -22,7 +22,7 @@ const c = m => {
 // console.log(akk('skchr_plosis_2', '3'))
 // akc('123456', '5 1-1 1-80   ', c)
 // aks('123456', '初雪', c)
-aks('123456', 'Stormeye', c, false)
+aks('111', '阿米娅/升变', c, true)
 // aks('123456', '安洁 8', c)
 // aks('123456', '空爆 8', c)
 // aks('123456', '黑角 8', c)
