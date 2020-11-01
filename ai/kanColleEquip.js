@@ -70,27 +70,28 @@ const wait = time => new Promise(resolve => setTimeout(() => resolve(), time))
 // const Axios = require('axios')
 let Data = fs.readJsonSync(path.join('assets', 'kanColleEquipData.json'));
 let checkItemType = Array.from(new Set(_.map(Data, 'type')))
-http.get({
-  host: 'kcwikizh.github.io',
-  port: 80,
-  path: '/kcdata/slotitem/poi_improve.json',
-  method: 'GET',
-  headers: {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
-  },
-}, res => {
-  console.log('read start')
-  let chunk = ''
-  res.on('data', data => chunk += data)
-  res.on('end', () => {
-    console.log('read data from wiki');
-    Data = JSON.parse(chunk)
-    checkItemType = Array.from(new Set(_.map(Data, 'type')))
-    // console.log(Data)
-  })
-}).on('error', e => {
-  console.log(e)
-})
+//TODO: 自动下载代码出错（非标准json）
+// http.get({
+//   host: 'kcwikizh.github.io',
+//   port: 80,
+//   path: '/kcdata/slotitem/poi_improve.json',
+//   method: 'GET',
+//   headers: {
+//     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
+//   },
+// }, res => {
+//   console.log('read start')
+//   let chunk = ''
+//   res.on('data', data => chunk += data)
+//   res.on('end', () => {
+//     console.log('read data from wiki');
+//     Data = JSON.parse(chunk)
+//     checkItemType = Array.from(new Set(_.map(Data, 'type')))
+//     // console.log(Data)
+//   })
+// }).on('error', e => {
+//   console.log(e)
+// })
 
 // Axios.get('http://kcwikizh.github.io/kcdata/slotitem/poi_improve.json', {
 //   timeout: 6000
