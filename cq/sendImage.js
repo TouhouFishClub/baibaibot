@@ -29,12 +29,13 @@ function sendGmImage(gmObj,words='',callback,order){
 }
 
 const sendImageMsgBuffer = (imgBuffer, imgName, dir, callback, msg = '', order = 'IF') => {
-  fs.writeFile(path.join(IMAGE_DATA, dir, `${imgName}.png`), imgBuffer, err => {
+  let imageName = imgName.split('/').join('_')
+  fs.writeFile(path.join(IMAGE_DATA, dir, `${imageName}.png`), imgBuffer, err => {
     if(err){
       console.log(err)
     }else{
-      console.log(`保存${imgName}.png成功！`)
-      let imgMsg = `[CQ:image,file=${path.join('send', dir, `${imgName}.png`)}]`, mixMsg = ''
+      console.log(`保存${imageName}.png成功！`)
+      let imgMsg = `[CQ:image,file=${path.join('send', dir, `${imageName}.png`)}]`, mixMsg = ''
       switch(order){
         case 'IF':
           mixMsg = `${imgMsg}${msg.length ? `\n${msg}` : ''}`
