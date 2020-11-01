@@ -144,11 +144,11 @@ module.exports = function(qq, content, callback, getData = false){
     ])
     return
   }
-  let { akc_data, akc_other_data } = formatCharacter()
+  let { akc_data, akc_other_data, akc_patch_data } = formatCharacter()
 
   // console.log('====')
   // console.log(Date.now())
-  let sp = content.trim().replace(/ +/g, ' ').split(' '), flag = true, all_data = akc_data.concat(akc_other_data)
+  let sp = content.trim().replace(/ +/g, ' ').split(' '), flag = true, all_data = akc_data.concat(akc_other_data).concat(akc_patch_data)
   let chTmp = [], skillLevel = parseInt(sp[1]) || 1
   for(var i = 0; i < all_data.length; i++){
     let akc = all_data[i]
