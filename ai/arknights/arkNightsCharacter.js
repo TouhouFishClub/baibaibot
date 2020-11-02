@@ -1,6 +1,6 @@
 const { formatCharacter } = require('./arkNightsCharacterDataFormat')
 const {drawTxtImage} = require('../../cq/drawImageBytxt')
-const { renderImage } = require('./characterImage')
+// const { renderImage } = require('./characterImage')
 const fs = require('fs-extra')
 const path = require('path-extra')
 
@@ -189,7 +189,8 @@ module.exports = function(qq, content, callback, getData = false){
         // })
         drawTxtImage('',str,callback);
       } else {
-        renderImage(chTmp[0], skillLevel - 1, callback)
+				drawTxtImage('',`${chTmp[0]}`,callback);
+        // renderImage(chTmp[0], skillLevel - 1, callback)
       }
       // console.log(str)
     }
