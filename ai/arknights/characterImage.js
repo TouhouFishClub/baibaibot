@@ -22,7 +22,7 @@ const renderImage = async (chInfo, level, callback) => {
   // console.log(chInfo)
   TAB_HEIGHT = 1455
 
-  TAB_HEIGHT = TAB_HEIGHT - 155 * (3 - chInfo.info.source.skills.length)
+  TAB_HEIGHT = TAB_HEIGHT - 175 * (3 - chInfo.info.source.skills.length)
 
   let canvasWidth = TAB_WIDTH + 2 * TAB_MARGIN, canvasHeight = TAB_HEIGHT + 2 * TAB_MARGIN
 
@@ -357,7 +357,7 @@ const renderImage = async (chInfo, level, callback) => {
   offsetTop += 100
 
   /* skill master */
-  let skillRange = 160, skillMaster = 150, skillWidth = TAB_WIDTH - skillRange - skillMaster, skillHeight = 155
+  let skillRange = 160, skillMaster = 150, skillWidth = TAB_WIDTH - skillRange - skillMaster, skillHeight = 175
   let skills = chInfo.info.source.skills
 
   for(let i = 0; i < skills.length; i++){
@@ -389,7 +389,7 @@ const renderImage = async (chInfo, level, callback) => {
     let masterMat = skills[i].levelUpCostCond
     for(let idx = 0; idx < masterMat.length; idx ++) {
 
-      let baseTop = offsetTop + 40 * idx, baseLeft = offsetLeft + 20
+      let baseTop = offsetTop + 23 + 40 * idx, baseLeft = offsetLeft + 20
       let skillItem = masterMat[idx].levelUpCost
       if(skillItem) {
         for(let idxc = 0; idxc < skillItem.length; idxc ++){
