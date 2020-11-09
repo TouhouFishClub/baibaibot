@@ -89,6 +89,8 @@ const {runsetu} = require('./ai/games/card/setu');
 const {calAttr} = require('./ai/ff14/attr');
 require('./ai/ff14/activity')
 
+const { raffle } = require('./ai/spinach/RedBlueBall')
+
 // const cov = require('./ai/CoV2020')
 const { cov } = require('./ai/CoV2019ByTianApi')
 const chp = require('./ai/chp')
@@ -801,6 +803,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(con == '方舟老黄历') {
     calendar(callback)
+  }
+  if(con == '打开财富密码') {
+		raffle(content, from, groupid, callback)
   }
   if(con == '中午吃什么') {
     chishenme(callback)
