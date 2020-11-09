@@ -807,6 +807,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)
   }
+  if(/^打开\d+次财富密码$/.test(con)) {
+  	let pt = parseInt(con.split('次')[0].substring(2))
+		if(pt <=5)  {
+			raffle(content, from, groupid, callback, pt)
+		}
+  }
   if(con == '中午吃什么') {
     chishenme(callback)
   }
