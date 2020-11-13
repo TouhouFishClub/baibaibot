@@ -517,13 +517,33 @@ function go(content,qq,callback) {
           }
         }
       }else{
-        if(Math.random()<1.4){
+        if(Math.random()<0.3){
           ret = ret + "【"+user.name+"】向"+cndir+"迈了一步,然而一头撞到了墙上倒下了\n";
           map[pos[0]][pos[1]]=0;
           userDeath(user.qq,runninggroup);
         }else{
           map[pos[0]][pos[1]]=0;
+          var teleportx = Math.floor(Math.random()*maplen);
+          var teleporty = Math.floor(Math.random()*maplen);
           ret = ret + "【"+user.name+"】向"+cndir+"迈了一步,然而墙上出现了一个传送魔法阵\n";
+          if(map[teleportx][teleporty]==0){
+              map[teleportx][teleporty]=user;
+              ret = ret + "【"+user.name+"】传送了过去";
+          }else{
+              userDeath(user.qq,runninggroup);
+              if(Math.random()<0.3){
+                  ret = ret + "然而【"+user.name+"】传送到了火山中被烧死了";
+              }else if(Math.random()<0.5){
+                  ret = ret + "然而【"+user.name+"】传送到了冰河中被冻死了";
+              }else if(Math.random()<0.8){
+                  ret = ret + "然而【"+user.name+"】传送到了真空中被憋死了";
+              }else if(Math.random()<1){
+                  ret = ret + "然而【"+user.name+"】传送到了天空中然后摔死了";
+              }
+
+          }
+
+
 
         }
       }
