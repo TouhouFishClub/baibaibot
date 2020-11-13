@@ -528,17 +528,37 @@ function go(content,qq,callback) {
           ret = ret + "【"+user.name+"】向"+cndir+"迈了一步,然而墙上出现了一个传送魔法阵\n";
           if(map[teleportx][teleporty]==0){
               map[teleportx][teleporty]=user;
-              ret = ret + "【"+user.name+"】传送了过去";
+              ret = ret + "【"+user.name+"】传送了过去\n";
+              if(Math.random()<0.25){
+                  ret = ret + "【"+user.name+"】获得了超魔法能量,发动了全屏攻击\n";
+                  for(var i=0;i<maplen;i++){
+                    for(var j=0;j<maplen;j++){
+                      if(map[i][j]!=0){
+                        var uu = map[i][j];
+                        if(uu.qq!=user.qq){
+                          if(Math.random()<0.5){
+                            map[i][j]=0;
+                            ret = ret + "【"+uu.name+"】受到超魔法攻击，到下了\n";
+                          }else{
+                            ret = ret + "【"+uu.name+"】受到超魔法攻击，但忍受住了！\n";
+                          }
+                        }
+                      }
+                    }
+                  }
+              }
           }else{
               userDeath(user.qq,runninggroup);
-              if(Math.random()<0.3){
-                  ret = ret + "然而【"+user.name+"】传送到了火山中被烧死了";
-              }else if(Math.random()<0.5){
-                  ret = ret + "然而【"+user.name+"】传送到了冰河中被冻死了";
+              if(Math.random()<0.2){
+                  ret = ret + "然而【"+user.name+"】传送到了火山中被烧死了\n";
+              }else if(Math.random()<0.4){
+                  ret = ret + "然而【"+user.name+"】传送到了冰箱中被冻死了\n";
+              }else if(Math.random()<0.6){
+                  ret = ret + "然而【"+user.name+"】传送到了大海中被淹死了\n";
               }else if(Math.random()<0.8){
-                  ret = ret + "然而【"+user.name+"】传送到了真空中被憋死了";
+                  ret = ret + "然而【"+user.name+"】传送到了真空中被憋死了\n";
               }else if(Math.random()<1){
-                  ret = ret + "然而【"+user.name+"】传送到了天空中然后摔死了";
+                  ret = ret + "然而【"+user.name+"】传送到了天空中然后摔死了\n";
               }
 
           }
