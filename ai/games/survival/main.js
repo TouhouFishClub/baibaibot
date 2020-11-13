@@ -517,7 +517,7 @@ function go(content,qq,callback) {
           }
         }
       }else{
-        if(Math.random()<0.4){
+        if(Math.random()<1.4){
           ret = ret + "【"+user.name+"】向"+cndir+"迈了一步,然而一头撞到了墙上倒下了\n";
           map[pos[0]][pos[1]]=0;
           userDeath(user.qq,runninggroup);
