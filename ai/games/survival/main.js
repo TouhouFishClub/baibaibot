@@ -538,6 +538,7 @@ function go(content,qq,callback) {
                         if(uu.qq!=user.qq){
                           if(Math.random()<0.5){
                             map[i][j]=0;
+                            userDeath(uu.qq,runninggroup);
                             ret = ret + "【"+uu.name+"】受到超魔法攻击，到下了\n";
                           }else{
                             ret = ret + "【"+uu.name+"】受到超魔法攻击，但忍受住了！\n";
