@@ -84,10 +84,10 @@ function addplayer(qq,username,groupid,callback){
     var code = Object.keys(players).length;
     if(code<13){
       if(death[groupid+"_"+qq]){
-        // if(death[groupid+"_"+qq]>new Date().getTime()){
-        //   callback("【"+username+"】已经死亡，无法加入游戏\n复活时间："+new Date(death[groupid+"_"+qq]).toLocaleString());
-        //   return;
-        // }
+         if(death[groupid+"_"+qq]>new Date().getTime()){
+           callback("【"+username+"】已经死亡，无法加入游戏\n复活时间："+new Date(death[groupid+"_"+qq]).toLocaleString());
+           return;
+         }
       }
       var obj = {qq:qq,name:username,code:code,ts:now};
       players[qq]=obj;
@@ -516,11 +516,16 @@ function go(content,qq,callback) {
             userDeath(user.qq,runninggroup);
           }
         }
-
       }else{
-        ret = ret + "【"+user.name+"】向"+cndir+"迈了一步,然而一头撞到了墙上倒下了\n";
-        map[pos[0]][pos[1]]=0;
-        userDeath(user.qq,runninggroup);
+        if(Math.random()<0.4){
+          ret = ret + "【"+user.name+"】向"+cndir+"迈了一步,然而一头撞到了墙上倒下了\n";
+          map[pos[0]][pos[1]]=0;
+          userDeath(user.qq,runninggroup);
+        }else{
+          map[pos[0]][pos[1]]=0;
+          ret = ret + "【"+user.name+"】向"+cndir+"迈了一步,然而墙上出现了一个传送魔法阵\n";
+
+        }
       }
     }
   }
