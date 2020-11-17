@@ -35,7 +35,7 @@ const loadSkillFile = () => {
               res = res.substr(0, res.indexOf(':')) + '}'
             }
             res = res.toLowerCase()
-            res = res.replace('-{', '{')
+            // res = res.replace('-{', '{')
             res = res.replace('{-', '{')
             res = res.replace('{', '`${blackboardMap["')
             res = res.replace('}', '"]}`')
@@ -43,7 +43,7 @@ const loadSkillFile = () => {
             // console.log(res)
             // console.log(out)
             if(p){
-              out = out.replace(re, `${parseInt(parseFloat(eval(res)) * 100)}%`)
+              out = out.replace(re, `${Math.round(parseFloat(eval(res)) * 100)}%`)
 
             } else {
               out = out.replace(re, eval(res))
