@@ -21,6 +21,8 @@ function initDB(){
   });
 }
 
+var loliconapikey = "206321345fb37f224bcf77";
+var loliconapikey2 = "283179575f3f8f3adf3600";
 
 var cache = {};
 function runsetu(content,gid,qq,callback,port){
@@ -63,8 +65,15 @@ function runsetu(content,gid,qq,callback,port){
 
 
 
-  var url = 'http://api.lolicon.app/setu/?apikey=283179575f3f8f3adf3600';
-  request({
+  var apikey;
+  if(Math.random()<0.5){
+      apikey = loliconapikey;
+  }else{
+      apikey = loliconapikey2;
+  }
+  var url = 'http://api.lolicon.app/setu/?apikey='+apikey;
+
+    request({
     headers:{
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
     },
