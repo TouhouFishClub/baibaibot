@@ -33,14 +33,9 @@ function runsetu(content,gid,qq,callback,port){
     maxtimes = 10;
   }
   var imgtype='image';
-  if(port==24334){
-      if(content.substring(2)=="3"){
-          imgtype='cardimage'
-      }
-  }else if(port==25334){
-      if(content.substring(2)=="3"){
-          imgtype='cardimage'
-      }  }
+    if(content.substring(2)=="3"){
+        imgtype='cardimage'
+    }
   var now = new Date().getTime();
   if (cache[qq]) {
     var then = cache[qq].ts;
