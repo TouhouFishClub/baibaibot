@@ -35,6 +35,8 @@ function runsetu(content,gid,qq,callback,port){
   var imgtype='image';
   if(port==24334){
       imgtype='cardimage'
+  }else if(port==23335){
+      imgtype='cardimage'
   }
   var now = new Date().getTime();
   if (cache[qq]) {
