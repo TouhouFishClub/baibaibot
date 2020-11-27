@@ -382,6 +382,9 @@ function handleMsg_D0(msgObj,botqq){
     if (content.indexOf('[CQ:at,qq=2375373419]') > -1) {
       content = content.replace(/\[CQ:at,qq=2375373419\]/g, '百百');
     }
+    if (content.indexOf('[CQ:at,qq=981069482]') > -1) {
+        content = content.replace(/\[CQ:at,qq=981069482\]/g, '百百');
+    }
     if (content.indexOf('[CQ:at,qq=3291864216]') > -1) {
       content = content.replace(/\[CQ:at,qq=3291864216\]/g, '百百');
     }
