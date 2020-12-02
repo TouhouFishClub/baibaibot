@@ -40,7 +40,11 @@ function handleGun(content,qq,username,groupid,callback){
   }else if(runninggroup==groupid){
     if(content.indexOf("开枪")>-1){
       if(content.startsWith("开枪")){
-        content="开枪"+content.substring(2).trim();
+        if(content.substring(2).trim().startsWith("+")){
+          content = "开枪"+content.substring(2).trim().substring(1);
+        }else{
+          content="开枪"+content.substring(2).trim();
+        }
       }
       if(content.startsWith("开枪")&&content.length==3){
         go(content,qq,callback);
@@ -52,7 +56,11 @@ function handleGun(content,qq,username,groupid,callback){
       }
     }else if(content.indexOf("移动")>-1){
       if(content.startsWith("移动")){
-        content="移动"+content.substring(2).trim();
+        if(content.substring(2).trim().startsWith("+")){
+            content = "移动"+content.substring(2).trim().substring(1);
+        }else{
+            content="移动"+content.substring(2).trim();
+        }
       }
       if(content.startsWith("移动")&&content.length==3){
         go(content,qq,callback);
