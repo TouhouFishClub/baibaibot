@@ -26,7 +26,7 @@ var loliconapikey2 = "283179575f3f8f3adf3600";
 
 var cache = {};
 function runsetu(content,gid,qq,callback,port){
-  var cooldown = 60000 * 10;
+  var cooldown = 60000 * 15;
   var maxtimes = 2;
   if(port!=23334){
     cooldown = 60000 * 10;

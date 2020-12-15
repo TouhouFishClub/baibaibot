@@ -1,6 +1,38 @@
 var fs = require('fs');
 
-function copperReply(content,gid,qq,callback,nextfolder){
+var cache = {};
+
+function copperReply(content,gid,qq,callback,nextfolder,port){
+
+    if(port==23334){
+        var cooldown = 60000 * 30;
+        var maxtimes = 5;
+        var imgtype='image';
+        if(content.substring(2)=="3"){
+            imgtype='cardimage'
+        }
+        var now = new Date().getTime();
+        if (cache[qq]) {
+            var then = cache[qq].ts;
+            var cc = cache[qq].c;
+            if (now - then < cooldown) {
+                if (cc >= maxtimes) {
+                    callback('【' + '[CQ:at,qq='+qq+']' + '】的炼铜技能CD中!恢复时间：' + new Date(then + cooldown).toLocaleString());
+                    return;
+                } else {
+                    cache[qq] = {ts: now, c: cc + 1};
+                }
+            } else {
+                cache[qq] = {ts: now, c: 1};
+            }
+        } else {
+            cache[qq] = {ts: now, c: 1};
+        }
+    }
+
+
+
+
   if(!nextfolder){
     nextfolder='/';
   }
