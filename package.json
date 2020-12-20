@@ -20,6 +20,7 @@
     "body-parser": "",
     "bosonnlp": "",
     "canvas": "",
+    "cheerio": "^1.0.0-rc.3",
     "express": "",
     "express-ws": "^4.0.0",
     "formidable": "^1.2.2",
