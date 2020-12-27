@@ -168,7 +168,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     console.log('req err:');
     console.log(err);
     failed = failed + 1;
-    if(failed>2){
+    if(failed>3){
       if(isInterface){
         callback([])
       }else{
@@ -178,7 +178,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
       getCoinMarket(callback,false,isInterface);
     }
   });
-  req.setTimeout(5000,function(){
+  req.setTimeout(8000,function(){
     failed = failed + 1;
     if(failed>2){
       callback('CoinMarket BOOM!');
