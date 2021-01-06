@@ -191,7 +191,7 @@ module.exports = function(qq, content, callback, getData = false){
 				if(index > -1) {
 					str += `\n已为您定位到${sp[0]}\n`
 					// drawTxtImage('',str,callback);
-					renderImage(chTmp[0], skillLevel - 1, callback, str)
+					renderImage(chTmp[index], skillLevel - 1, callback, str)
 				} else {
 					drawTxtImage('',str,callback);
 				}
