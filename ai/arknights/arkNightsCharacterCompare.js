@@ -13,7 +13,7 @@ module.exports = function(qq, content, callback) {
   let sp = content.split('-').splice(0, 2), charaArr = []
   for(let i = 0; i < sp.length; i++) {
     let tmp
-    searchCharacter(1, sp[i].trim(), d => tmp = d, true)
+    searchCharacter(1, sp[i].trim(), d => tmp = d.concat([]), true)
     if(typeof tmp == 'string') {
       callback(`${sp[i]} : 未找到此干员`)
       return
@@ -21,7 +21,7 @@ module.exports = function(qq, content, callback) {
     if(tmp.length > 1) {
 			// console.log('======')
 			// console.log(tmp.map(ch => infoText(ch, 'cost')).sort((a, b) => a - b))
-    	let ind = tmp.findIndex(c => c.name == sp[i])
+    	let ind = tmp.findIndex(c => c.name == sp[i].trim())
 			if(ind > -1){
 				charaArr.push(tmp[ind])
 			} else {
