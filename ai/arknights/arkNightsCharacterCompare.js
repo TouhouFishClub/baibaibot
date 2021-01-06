@@ -19,12 +19,18 @@ module.exports = function(qq, content, callback) {
       return
     }
     if(tmp.length > 1) {
-      // console.log('======')
-      // console.log(tmp.map(ch => infoText(ch, 'cost')).sort((a, b) => a - b))
-      callback(`${sp[i]} : 查询到${tmp.length}位干员，请输入具体干员名称\n${tmp.map(x => x.name).join(' / ')}\n若精确查找干员，请使用正则表达式搜索：如arks ^红$`)
-      return
-    }
-    charaArr.push(tmp[0])
+			// console.log('======')
+			// console.log(tmp.map(ch => infoText(ch, 'cost')).sort((a, b) => a - b))
+    	let ind = tmp.findIndex(c => c.name == sp[i])
+			if(ind > -1){
+				charaArr.push(tmp[ind])
+			} else {
+				callback(`${sp[i]} : 查询到${tmp.length}位干员，请输入具体干员名称\n${tmp.map(x => x.name).join(' / ')}\n若精确查找干员，请使用正则表达式搜索：如arks ^红$`)
+				return
+			}
+    } else {
+    	charaArr.push(tmp[0])
+		}
   }
   renderImage(content, charaArr, callback)
 }
