@@ -442,7 +442,7 @@ const renderImage = async (chInfo, level, callback, otherMsg = '') => {
 
   sendImageMsgBuffer(dataBuffer, chInfo.name, 'arknights', msg => {
     callback(msg)
-  }, otherMsg)
+  }, otherMsg, 'MF')
 }
 
 const renderItem = async (ctx, offsetLeft, offsetTop, width, itemId, itemCount) => {
