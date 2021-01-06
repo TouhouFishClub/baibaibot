@@ -187,7 +187,14 @@ module.exports = function(qq, content, callback, getData = false){
         //     console.log(ch.info.source.appellation)
         //   }
         // })
-        drawTxtImage('',str,callback);
+				let index = chTmp.findIndex(x => x.name == sp[0])
+				if(index > -1) {
+					str += `\n已为您定位到${sp[0]}\n`
+					// drawTxtImage('',str,callback);
+					renderImage(chTmp[0], skillLevel - 1, callback, str)
+				} else {
+					drawTxtImage('',str,callback);
+				}
       } else {
         renderImage(chTmp[0], skillLevel - 1, callback)
       }

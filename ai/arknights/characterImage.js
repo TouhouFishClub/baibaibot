@@ -17,7 +17,7 @@ const TAG_HEIGHT = 32
 const rangeMap = AllRangeData()
 
 
-const renderImage = async (chInfo, level, callback) => {
+const renderImage = async (chInfo, level, callback, otherMsg = '') => {
   // console.log('=======')
   // console.log(chInfo)
   TAB_HEIGHT = 1542
@@ -442,7 +442,7 @@ const renderImage = async (chInfo, level, callback) => {
 
   sendImageMsgBuffer(dataBuffer, chInfo.name, 'arknights', msg => {
     callback(msg)
-  })
+  }, otherMsg)
 }
 
 const renderItem = async (ctx, offsetLeft, offsetTop, width, itemId, itemCount) => {
