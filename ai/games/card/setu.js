@@ -25,6 +25,7 @@ var loliconapikey = "206321345fb37f224bcf77";
 var loliconapikey2 = "283179575f3f8f3adf3600";
 
 var cache = {};
+var cacheg = {};
 function runsetu(content,gid,qq,callback,port){
   var cooldown = 60000 * 120;
   var maxtimes = 2;
@@ -55,12 +56,17 @@ function runsetu(content,gid,qq,callback,port){
   }
 
   if(!cache[gid]){
-    cache[gid]=1;
+    cache[gid]={num:1,ts:now};
   }else{
-    cache[gid]=cache[gid]+1;
+    cache[gid].num=cache[gid].num+1;
   }
-  if(cache[gid]==10||(cache[gid]%100)==99){
-    callback('炼铜引擎1:【炼铜】\n炼铜引擎2:【炼铜2】\n炼铜引擎3:【炼铜3】\n');
+  if(cache[gid].num>5){
+      if(now-cache[gid].ts>cooldown){
+          cache[gid]={num:1,ts:now};
+      }else{
+          callback('【' + '[CQ:at,qq='+qq+']' + '】的炼铜技能CD中!恢复时间：' + new Date(then + cooldown).toLocaleString());
+          return;
+      }
   }
 
 
