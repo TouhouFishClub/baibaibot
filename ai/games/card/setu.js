@@ -67,7 +67,7 @@ function runsetu(content,gid,qq,callback,port){
       if(now-cache[gid].ts>cooldown){
           cache[gid]={num:1,ts:now};
       }else{
-          callback('【' + '[CQ:at,qq='+qq+']' + '】的炼铜技能CD中!恢复时间：' + new Date(then + cooldown).toLocaleString());
+          callback('【' + '[CQ:at,qq='+qq+']' + '】的炼铜技能CD中!恢复时间：' + new Date(cache[gid].ts + cooldown).toLocaleString());
           return;
       }
   }
