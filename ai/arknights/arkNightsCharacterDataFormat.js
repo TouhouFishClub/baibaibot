@@ -87,7 +87,7 @@ const formatCharacter = () => {
         }
       }
     })
-    console.log(akc_patch_data)
+    // console.log(akc_patch_data)
     akc_init = true
     // console.log(akc_data)
   }

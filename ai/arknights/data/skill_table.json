@@ -9709,6 +9709,660 @@
       }
     ]
   },
+  "skchr_pinecn_1": {
+    "skillId": "skchr_pinecn_1",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "RMA长钉",
+        "rangeId": null,
+        "description": "立即以<@ba.vup>{atk_scale:0%}</>的攻击力进行一次攻击，无视敌人<@ba.vup>{def_penetrate_fixed}</>的防御力\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 12,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.5
+          },
+          {
+            "key": "def_penetrate_fixed",
+            "value": 150.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "RMA长钉",
+        "rangeId": null,
+        "description": "立即以<@ba.vup>{atk_scale:0%}</>的攻击力进行一次攻击，无视敌人<@ba.vup>{def_penetrate_fixed}</>的防御力\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 12,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.55
+          },
+          {
+            "key": "def_penetrate_fixed",
+            "value": 160.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "RMA长钉",
+        "rangeId": null,
+        "description": "立即以<@ba.vup>{atk_scale:0%}</>的攻击力进行一次攻击，无视敌人<@ba.vup>{def_penetrate_fixed}</>的防御力\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 12,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.6
+          },
+          {
+            "key": "def_penetrate_fixed",
+            "value": 170.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "RMA长钉",
+        "rangeId": null,
+        "description": "立即以<@ba.vup>{atk_scale:0%}</>的攻击力进行一次攻击，无视敌人<@ba.vup>{def_penetrate_fixed}</>的防御力\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 2,
+          "spCost": 11,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.65
+          },
+          {
+            "key": "def_penetrate_fixed",
+            "value": 180.0
+          },
+          {
+            "key": "cnt",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "RMA长钉",
+        "rangeId": null,
+        "description": "立即以<@ba.vup>{atk_scale:0%}</>的攻击力进行一次攻击，无视敌人<@ba.vup>{def_penetrate_fixed}</>的防御力\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 2,
+          "spCost": 11,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.7
+          },
+          {
+            "key": "def_penetrate_fixed",
+            "value": 190.0
+          },
+          {
+            "key": "cnt",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "RMA长钉",
+        "rangeId": null,
+        "description": "立即以<@ba.vup>{atk_scale:0%}</>的攻击力进行一次攻击，无视敌人<@ba.vup>{def_penetrate_fixed}</>的防御力\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 2,
+          "spCost": 11,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.75
+          },
+          {
+            "key": "def_penetrate_fixed",
+            "value": 200.0
+          },
+          {
+            "key": "cnt",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "RMA长钉",
+        "rangeId": null,
+        "description": "立即以<@ba.vup>{atk_scale:0%}</>的攻击力进行一次攻击，无视敌人<@ba.vup>{def_penetrate_fixed}</>的防御力\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 3,
+          "spCost": 10,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.8
+          },
+          {
+            "key": "def_penetrate_fixed",
+            "value": 210.0
+          },
+          {
+            "key": "cnt",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "RMA长钉",
+        "rangeId": null,
+        "description": "立即以<@ba.vup>{atk_scale:0%}</>的攻击力进行一次攻击，无视敌人<@ba.vup>{def_penetrate_fixed}</>的防御力\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 3,
+          "spCost": 10,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.85
+          },
+          {
+            "key": "def_penetrate_fixed",
+            "value": 220.0
+          },
+          {
+            "key": "cnt",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "RMA长钉",
+        "rangeId": null,
+        "description": "立即以<@ba.vup>{atk_scale:0%}</>的攻击力进行一次攻击，无视敌人<@ba.vup>{def_penetrate_fixed}</>的防御力\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 3,
+          "spCost": 10,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.9
+          },
+          {
+            "key": "def_penetrate_fixed",
+            "value": 230.0
+          },
+          {
+            "key": "cnt",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "RMA长钉",
+        "rangeId": null,
+        "description": "立即以<@ba.vup>{atk_scale:0%}</>的攻击力进行一次攻击，无视敌人<@ba.vup>{def_penetrate_fixed}</>的防御力\\n<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 3,
+          "spCost": 9,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.0
+          },
+          {
+            "key": "def_penetrate_fixed",
+            "value": 250.0
+          },
+          {
+            "key": "cnt",
+            "value": 3.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_pinecn_2": {
+    "skillId": "skchr_pinecn_2",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "电能过载",
+        "rangeId": "1-3",
+        "description": "攻击力<@ba.vup>+{pinecn_s_2[a].atk:0%}</>，攻击范围<@ba.vdown>缩短</>；每使用过一次技能额外追加攻击力<@ba.vup>+20%</>的效果（最多+60%）",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_2",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "pinecn_s_2[a].atk",
+            "value": 0.1
+          },
+          {
+            "key": "pinecn_s_2[b].atk",
+            "value": 0.3
+          },
+          {
+            "key": "pinecn_s_2[c].atk",
+            "value": 0.5
+          },
+          {
+            "key": "pinecn_s_2[d].atk",
+            "value": 0.7
+          }
+        ]
+      },
+      {
+        "name": "电能过载",
+        "rangeId": "1-3",
+        "description": "攻击力<@ba.vup>+{pinecn_s_2[a].atk:0%}</>，攻击范围<@ba.vdown>缩短</>；每使用过一次技能额外追加攻击力<@ba.vup>+20%</>的效果（最多+60%）",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_2",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "pinecn_s_2[a].atk",
+            "value": 0.15
+          },
+          {
+            "key": "pinecn_s_2[b].atk",
+            "value": 0.35
+          },
+          {
+            "key": "pinecn_s_2[c].atk",
+            "value": 0.55
+          },
+          {
+            "key": "pinecn_s_2[d].atk",
+            "value": 0.75
+          }
+        ]
+      },
+      {
+        "name": "电能过载",
+        "rangeId": "1-3",
+        "description": "攻击力<@ba.vup>+{pinecn_s_2[a].atk:0%}</>，攻击范围<@ba.vdown>缩短</>；每使用过一次技能额外追加攻击力<@ba.vup>+20%</>的效果（最多+60%）",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_2",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "pinecn_s_2[a].atk",
+            "value": 0.2
+          },
+          {
+            "key": "pinecn_s_2[b].atk",
+            "value": 0.4
+          },
+          {
+            "key": "pinecn_s_2[c].atk",
+            "value": 0.6
+          },
+          {
+            "key": "pinecn_s_2[d].atk",
+            "value": 0.8
+          }
+        ]
+      },
+      {
+        "name": "电能过载",
+        "rangeId": "1-3",
+        "description": "攻击力<@ba.vup>+{pinecn_s_2[a].atk:0%}</>，攻击范围<@ba.vdown>缩短</>；每使用过一次技能额外追加攻击力<@ba.vup>+20%</>的效果（最多+60%）",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_2",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "pinecn_s_2[a].atk",
+            "value": 0.25
+          },
+          {
+            "key": "pinecn_s_2[b].atk",
+            "value": 0.45
+          },
+          {
+            "key": "pinecn_s_2[c].atk",
+            "value": 0.65
+          },
+          {
+            "key": "pinecn_s_2[d].atk",
+            "value": 0.85
+          }
+        ]
+      },
+      {
+        "name": "电能过载",
+        "rangeId": "1-3",
+        "description": "攻击力<@ba.vup>+{pinecn_s_2[a].atk:0%}</>，攻击范围<@ba.vdown>缩短</>；每使用过一次技能额外追加攻击力<@ba.vup>+20%</>的效果（最多+60%）",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_2",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "pinecn_s_2[a].atk",
+            "value": 0.3
+          },
+          {
+            "key": "pinecn_s_2[b].atk",
+            "value": 0.5
+          },
+          {
+            "key": "pinecn_s_2[c].atk",
+            "value": 0.7
+          },
+          {
+            "key": "pinecn_s_2[d].atk",
+            "value": 0.9
+          }
+        ]
+      },
+      {
+        "name": "电能过载",
+        "rangeId": "1-3",
+        "description": "攻击力<@ba.vup>+{pinecn_s_2[a].atk:0%}</>，攻击范围<@ba.vdown>缩短</>；每使用过一次技能额外追加攻击力<@ba.vup>+20%</>的效果（最多+60%）",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_2",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "pinecn_s_2[a].atk",
+            "value": 0.35
+          },
+          {
+            "key": "pinecn_s_2[b].atk",
+            "value": 0.55
+          },
+          {
+            "key": "pinecn_s_2[c].atk",
+            "value": 0.75
+          },
+          {
+            "key": "pinecn_s_2[d].atk",
+            "value": 0.95
+          }
+        ]
+      },
+      {
+        "name": "电能过载",
+        "rangeId": "1-3",
+        "description": "攻击力<@ba.vup>+{pinecn_s_2[a].atk:0%}</>，攻击范围<@ba.vdown>缩短</>；每使用过一次技能额外追加攻击力<@ba.vup>+20%</>的效果（最多+60%）",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_2",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "pinecn_s_2[a].atk",
+            "value": 0.4
+          },
+          {
+            "key": "pinecn_s_2[b].atk",
+            "value": 0.6
+          },
+          {
+            "key": "pinecn_s_2[c].atk",
+            "value": 0.8
+          },
+          {
+            "key": "pinecn_s_2[d].atk",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "电能过载",
+        "rangeId": "1-3",
+        "description": "攻击力<@ba.vup>+{pinecn_s_2[a].atk:0%}</>，攻击范围<@ba.vdown>缩短</>；每使用过一次技能额外追加攻击力<@ba.vup>+20%</>的效果（最多+60%）",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_2",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "pinecn_s_2[a].atk",
+            "value": 0.45
+          },
+          {
+            "key": "pinecn_s_2[b].atk",
+            "value": 0.65
+          },
+          {
+            "key": "pinecn_s_2[c].atk",
+            "value": 0.85
+          },
+          {
+            "key": "pinecn_s_2[d].atk",
+            "value": 1.05
+          }
+        ]
+      },
+      {
+        "name": "电能过载",
+        "rangeId": "1-3",
+        "description": "攻击力<@ba.vup>+{pinecn_s_2[a].atk:0%}</>，攻击范围<@ba.vdown>缩短</>；每使用过一次技能额外追加攻击力<@ba.vup>+20%</>的效果（最多+60%）",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_2",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "pinecn_s_2[a].atk",
+            "value": 0.5
+          },
+          {
+            "key": "pinecn_s_2[b].atk",
+            "value": 0.7
+          },
+          {
+            "key": "pinecn_s_2[c].atk",
+            "value": 0.9
+          },
+          {
+            "key": "pinecn_s_2[d].atk",
+            "value": 1.1
+          }
+        ]
+      },
+      {
+        "name": "电能过载",
+        "rangeId": "1-3",
+        "description": "攻击力<@ba.vup>+{pinecn_s_2[a].atk:0%}</>，攻击范围<@ba.vdown>缩短</>；每使用过一次技能额外追加攻击力<@ba.vup>+20%</>的效果（最多+60%）",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_pinecn_2",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "pinecn_s_2[a].atk",
+            "value": 0.6
+          },
+          {
+            "key": "pinecn_s_2[b].atk",
+            "value": 0.8
+          },
+          {
+            "key": "pinecn_s_2[c].atk",
+            "value": 1.0
+          },
+          {
+            "key": "pinecn_s_2[d].atk",
+            "value": 1.2
+          }
+        ]
+      }
+    ]
+  },
   "skchr_glaze_1": {
     "skillId": "skchr_glaze_1",
     "iconId": null,
@@ -12183,6 +12837,620 @@
           {
             "key": "value",
             "value": 16.0
+          },
+          {
+            "key": "cost",
+            "value": 1.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_bstalk_1": {
+    "skillId": "skchr_bstalk_1",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "定点指令",
+        "rangeId": null,
+        "description": "立即获得<@ba.vup>{cost}</>点部署费用，并立刻刷新援军（如已存在则恢复其所有生命值）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 40,
+          "initSp": 9,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cost",
+            "value": 8.0
+          }
+        ]
+      },
+      {
+        "name": "定点指令",
+        "rangeId": null,
+        "description": "立即获得<@ba.vup>{cost}</>点部署费用，并立刻刷新援军（如已存在则恢复其所有生命值）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 39,
+          "initSp": 9,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cost",
+            "value": 8.0
+          }
+        ]
+      },
+      {
+        "name": "定点指令",
+        "rangeId": null,
+        "description": "立即获得<@ba.vup>{cost}</>点部署费用，并立刻刷新援军（如已存在则恢复其所有生命值）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 38,
+          "initSp": 9,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cost",
+            "value": 8.0
+          }
+        ]
+      },
+      {
+        "name": "定点指令",
+        "rangeId": null,
+        "description": "立即获得<@ba.vup>{cost}</>点部署费用，并立刻刷新援军（如已存在则恢复其所有生命值）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 37,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cost",
+            "value": 8.0
+          }
+        ]
+      },
+      {
+        "name": "定点指令",
+        "rangeId": null,
+        "description": "立即获得<@ba.vup>{cost}</>点部署费用，并立刻刷新援军（如已存在则恢复其所有生命值）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 36,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cost",
+            "value": 8.0
+          }
+        ]
+      },
+      {
+        "name": "定点指令",
+        "rangeId": null,
+        "description": "立即获得<@ba.vup>{cost}</>点部署费用，并立刻刷新援军（如已存在则恢复其所有生命值）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 35,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cost",
+            "value": 8.0
+          }
+        ]
+      },
+      {
+        "name": "定点指令",
+        "rangeId": null,
+        "description": "立即获得<@ba.vup>{cost}</>点部署费用，并立刻刷新援军（如已存在则恢复其所有生命值）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 34,
+          "initSp": 11,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cost",
+            "value": 8.0
+          }
+        ]
+      },
+      {
+        "name": "定点指令",
+        "rangeId": null,
+        "description": "立即获得<@ba.vup>{cost}</>点部署费用，并立刻刷新援军（如已存在则恢复其所有生命值）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 33,
+          "initSp": 12,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cost",
+            "value": 8.0
+          }
+        ]
+      },
+      {
+        "name": "定点指令",
+        "rangeId": null,
+        "description": "立即获得<@ba.vup>{cost}</>点部署费用，并立刻刷新援军（如已存在则恢复其所有生命值）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 32,
+          "initSp": 13,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cost",
+            "value": 8.0
+          }
+        ]
+      },
+      {
+        "name": "定点指令",
+        "rangeId": null,
+        "description": "立即获得<@ba.vup>{cost}</>点部署费用，并立刻刷新援军（如已存在则恢复其所有生命值）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cost",
+            "value": 8.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_bstalk_2": {
+    "skillId": "skchr_bstalk_2",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "“大家一起上”",
+        "rangeId": null,
+        "description": "立即在战术点周围四格的所有近战位临时召唤磐蟹（不包括战术点本身）；技能持续时间内回复总共<@ba.vup>{value}</>点部署费用，所有磐蟹的防御力<@ba.vup>+{attack@def:0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 50,
+          "initSp": 12,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_2",
+        "duration": 15.0,
+        "blackboard": [
+          {
+            "key": "value",
+            "value": 12.0
+          },
+          {
+            "key": "attack@def",
+            "value": 0.2
+          },
+          {
+            "key": "attack@atk",
+            "value": 0.0
+          },
+          {
+            "key": "interval",
+            "value": 1.25
+          },
+          {
+            "key": "cost",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“大家一起上”",
+        "rangeId": null,
+        "description": "立即在战术点周围四格的所有近战位临时召唤磐蟹（不包括战术点本身）；技能持续时间内回复总共<@ba.vup>{value}</>点部署费用，所有磐蟹的防御力<@ba.vup>+{attack@def:0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 49,
+          "initSp": 12,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_2",
+        "duration": 15.0,
+        "blackboard": [
+          {
+            "key": "value",
+            "value": 12.0
+          },
+          {
+            "key": "attack@def",
+            "value": 0.25
+          },
+          {
+            "key": "attack@atk",
+            "value": 0.0
+          },
+          {
+            "key": "interval",
+            "value": 1.25
+          },
+          {
+            "key": "cost",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“大家一起上”",
+        "rangeId": null,
+        "description": "立即在战术点周围四格的所有近战位临时召唤磐蟹（不包括战术点本身）；技能持续时间内回复总共<@ba.vup>{value}</>点部署费用，所有磐蟹的防御力<@ba.vup>+{attack@def:0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 48,
+          "initSp": 12,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_2",
+        "duration": 15.0,
+        "blackboard": [
+          {
+            "key": "value",
+            "value": 12.0
+          },
+          {
+            "key": "attack@def",
+            "value": 0.3
+          },
+          {
+            "key": "attack@atk",
+            "value": 0.0
+          },
+          {
+            "key": "interval",
+            "value": 1.25
+          },
+          {
+            "key": "cost",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“大家一起上”",
+        "rangeId": null,
+        "description": "立即在战术点周围四格的所有近战位临时召唤磐蟹（不包括战术点本身）；技能持续时间内回复总共<@ba.vup>{value}</>点部署费用，所有磐蟹的防御力<@ba.vup>+{attack@def:0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 47,
+          "initSp": 13,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_2",
+        "duration": 15.0,
+        "blackboard": [
+          {
+            "key": "value",
+            "value": 12.0
+          },
+          {
+            "key": "attack@def",
+            "value": 0.35
+          },
+          {
+            "key": "attack@atk",
+            "value": 0.0
+          },
+          {
+            "key": "interval",
+            "value": 1.25
+          },
+          {
+            "key": "cost",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“大家一起上”",
+        "rangeId": null,
+        "description": "立即在战术点周围四格的所有近战位临时召唤磐蟹（不包括战术点本身）；技能持续时间内回复总共<@ba.vup>{value}</>点部署费用，所有磐蟹的防御力<@ba.vup>+{attack@def:0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 46,
+          "initSp": 13,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_2",
+        "duration": 15.0,
+        "blackboard": [
+          {
+            "key": "value",
+            "value": 12.0
+          },
+          {
+            "key": "attack@def",
+            "value": 0.4
+          },
+          {
+            "key": "attack@atk",
+            "value": 0.0
+          },
+          {
+            "key": "interval",
+            "value": 1.25
+          },
+          {
+            "key": "cost",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“大家一起上”",
+        "rangeId": null,
+        "description": "立即在战术点周围四格的所有近战位临时召唤磐蟹（不包括战术点本身）；技能持续时间内回复总共<@ba.vup>{value}</>点部署费用，所有磐蟹的防御力<@ba.vup>+{attack@def:0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 45,
+          "initSp": 13,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_2",
+        "duration": 15.0,
+        "blackboard": [
+          {
+            "key": "value",
+            "value": 12.0
+          },
+          {
+            "key": "attack@def",
+            "value": 0.45
+          },
+          {
+            "key": "attack@atk",
+            "value": 0.0
+          },
+          {
+            "key": "interval",
+            "value": 1.25
+          },
+          {
+            "key": "cost",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“大家一起上”",
+        "rangeId": null,
+        "description": "立即在战术点周围四格的所有近战位临时召唤磐蟹（不包括战术点本身）；技能持续时间内回复总共<@ba.vup>{value}</>点部署费用，所有磐蟹的防御力<@ba.vup>+{attack@def:0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 44,
+          "initSp": 14,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_2",
+        "duration": 15.0,
+        "blackboard": [
+          {
+            "key": "value",
+            "value": 12.0
+          },
+          {
+            "key": "attack@def",
+            "value": 0.5
+          },
+          {
+            "key": "attack@atk",
+            "value": 0.0
+          },
+          {
+            "key": "interval",
+            "value": 1.25
+          },
+          {
+            "key": "cost",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“大家一起上”",
+        "rangeId": null,
+        "description": "立即在战术点周围四格的所有近战位临时召唤磐蟹（不包括战术点本身）；技能持续时间内回复总共<@ba.vup>{value}</>点部署费用，所有磐蟹的防御力<@ba.vup>+{attack@def:0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 43,
+          "initSp": 16,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_2",
+        "duration": 15.0,
+        "blackboard": [
+          {
+            "key": "value",
+            "value": 12.0
+          },
+          {
+            "key": "attack@def",
+            "value": 0.55
+          },
+          {
+            "key": "attack@atk",
+            "value": 0.0
+          },
+          {
+            "key": "interval",
+            "value": 1.25
+          },
+          {
+            "key": "cost",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“大家一起上”",
+        "rangeId": null,
+        "description": "立即在战术点周围四格的所有近战位临时召唤磐蟹（不包括战术点本身）；技能持续时间内回复总共<@ba.vup>{value}</>点部署费用，所有磐蟹的防御力<@ba.vup>+{attack@def:0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 42,
+          "initSp": 18,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_2",
+        "duration": 15.0,
+        "blackboard": [
+          {
+            "key": "value",
+            "value": 12.0
+          },
+          {
+            "key": "attack@def",
+            "value": 0.6
+          },
+          {
+            "key": "attack@atk",
+            "value": 0.0
+          },
+          {
+            "key": "interval",
+            "value": 1.25
+          },
+          {
+            "key": "cost",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "“大家一起上”",
+        "rangeId": null,
+        "description": "立即在战术点周围四格的所有近战位临时召唤磐蟹（不包括战术点本身）；技能持续时间内回复总共<@ba.vup>{value}</>点部署费用，所有磐蟹的防御力<@ba.vup>+{attack@def:0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 40,
+          "initSp": 20,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_bstalk_2",
+        "duration": 15.0,
+        "blackboard": [
+          {
+            "key": "value",
+            "value": 12.0
+          },
+          {
+            "key": "attack@def",
+            "value": 0.7
+          },
+          {
+            "key": "attack@atk",
+            "value": 0.0
+          },
+          {
+            "key": "interval",
+            "value": 1.25
           },
           {
             "key": "cost",
@@ -42668,6 +43936,580 @@
       }
     ]
   },
+  "skchr_iris_1": {
+    "skillId": "skchr_iris_1",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "童话守卫者",
+        "rangeId": "4-1",
+        "description": "攻击范围<@ba.vup>改变</>，攻击间隔<@ba.vup>大幅度缩短</>，每次攻击造成相当于攻击力<@ba.vup>{attack@atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 25,
+          "initSp": 5,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_1",
+        "duration": 5.0,
+        "blackboard": [
+          {
+            "key": "attack@atk_scale",
+            "value": 0.3
+          },
+          {
+            "key": "base_attack_time",
+            "value": 0.2
+          }
+        ]
+      },
+      {
+        "name": "童话守卫者",
+        "rangeId": "4-1",
+        "description": "攻击范围<@ba.vup>改变</>，攻击间隔<@ba.vup>大幅度缩短</>，每次攻击造成相当于攻击力<@ba.vup>{attack@atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 24,
+          "initSp": 5,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_1",
+        "duration": 5.0,
+        "blackboard": [
+          {
+            "key": "attack@atk_scale",
+            "value": 0.31
+          },
+          {
+            "key": "base_attack_time",
+            "value": 0.2
+          }
+        ]
+      },
+      {
+        "name": "童话守卫者",
+        "rangeId": "4-1",
+        "description": "攻击范围<@ba.vup>改变</>，攻击间隔<@ba.vup>大幅度缩短</>，每次攻击造成相当于攻击力<@ba.vup>{attack@atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 23,
+          "initSp": 5,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_1",
+        "duration": 5.0,
+        "blackboard": [
+          {
+            "key": "attack@atk_scale",
+            "value": 0.32
+          },
+          {
+            "key": "base_attack_time",
+            "value": 0.2
+          }
+        ]
+      },
+      {
+        "name": "童话守卫者",
+        "rangeId": "4-1",
+        "description": "攻击范围<@ba.vup>改变</>，攻击间隔<@ba.vup>大幅度缩短</>，每次攻击造成相当于攻击力<@ba.vup>{attack@atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 22,
+          "initSp": 5,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_1",
+        "duration": 5.0,
+        "blackboard": [
+          {
+            "key": "attack@atk_scale",
+            "value": 0.35
+          },
+          {
+            "key": "base_attack_time",
+            "value": 0.2
+          }
+        ]
+      },
+      {
+        "name": "童话守卫者",
+        "rangeId": "4-1",
+        "description": "攻击范围<@ba.vup>改变</>，攻击间隔<@ba.vup>大幅度缩短</>，每次攻击造成相当于攻击力<@ba.vup>{attack@atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 21,
+          "initSp": 5,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_1",
+        "duration": 5.0,
+        "blackboard": [
+          {
+            "key": "attack@atk_scale",
+            "value": 0.36
+          },
+          {
+            "key": "base_attack_time",
+            "value": 0.2
+          }
+        ]
+      },
+      {
+        "name": "童话守卫者",
+        "rangeId": "4-1",
+        "description": "攻击范围<@ba.vup>改变</>，攻击间隔<@ba.vup>大幅度缩短</>，每次攻击造成相当于攻击力<@ba.vup>{attack@atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 20,
+          "initSp": 5,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_1",
+        "duration": 5.0,
+        "blackboard": [
+          {
+            "key": "attack@atk_scale",
+            "value": 0.37
+          },
+          {
+            "key": "base_attack_time",
+            "value": 0.2
+          }
+        ]
+      },
+      {
+        "name": "童话守卫者",
+        "rangeId": "4-1",
+        "description": "攻击范围<@ba.vup>改变</>，攻击间隔<@ba.vup>大幅度缩短</>，每次攻击造成相当于攻击力<@ba.vup>{attack@atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 19,
+          "initSp": 5,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_1",
+        "duration": 5.0,
+        "blackboard": [
+          {
+            "key": "attack@atk_scale",
+            "value": 0.4
+          },
+          {
+            "key": "base_attack_time",
+            "value": 0.2
+          }
+        ]
+      },
+      {
+        "name": "童话守卫者",
+        "rangeId": "4-1",
+        "description": "攻击范围<@ba.vup>改变</>，攻击间隔<@ba.vup>大幅度缩短</>，每次攻击造成相当于攻击力<@ba.vup>{attack@atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 18,
+          "initSp": 5,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_1",
+        "duration": 5.0,
+        "blackboard": [
+          {
+            "key": "attack@atk_scale",
+            "value": 0.43
+          },
+          {
+            "key": "base_attack_time",
+            "value": 0.2
+          }
+        ]
+      },
+      {
+        "name": "童话守卫者",
+        "rangeId": "4-1",
+        "description": "攻击范围<@ba.vup>改变</>，攻击间隔<@ba.vup>大幅度缩短</>，每次攻击造成相当于攻击力<@ba.vup>{attack@atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 17,
+          "initSp": 5,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_1",
+        "duration": 5.0,
+        "blackboard": [
+          {
+            "key": "attack@atk_scale",
+            "value": 0.46
+          },
+          {
+            "key": "base_attack_time",
+            "value": 0.2
+          }
+        ]
+      },
+      {
+        "name": "童话守卫者",
+        "rangeId": "4-1",
+        "description": "攻击范围<@ba.vup>改变</>，攻击间隔<@ba.vup>大幅度缩短</>，每次攻击造成相当于攻击力<@ba.vup>{attack@atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 15,
+          "initSp": 5,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_1",
+        "duration": 5.0,
+        "blackboard": [
+          {
+            "key": "attack@atk_scale",
+            "value": 0.5
+          },
+          {
+            "key": "base_attack_time",
+            "value": 0.2
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_iris_2": {
+    "skillId": "skchr_iris_2",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "梦乡摇篮",
+        "rangeId": null,
+        "description": "立即使攻击范围内的至多<@ba.vup>{max_target}</>个敌人陷入沉睡<@ba.vup>{sleep}</>秒，在其醒来时会对周围小范围内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 40,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "max_target",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 1.7
+          },
+          {
+            "key": "sleep",
+            "value": 7.0
+          }
+        ]
+      },
+      {
+        "name": "梦乡摇篮",
+        "rangeId": null,
+        "description": "立即使攻击范围内的至多<@ba.vup>{max_target}</>个敌人陷入沉睡<@ba.vup>{sleep}</>秒，在其醒来时会对周围小范围内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 39,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "max_target",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 1.8
+          },
+          {
+            "key": "sleep",
+            "value": 7.0
+          }
+        ]
+      },
+      {
+        "name": "梦乡摇篮",
+        "rangeId": null,
+        "description": "立即使攻击范围内的至多<@ba.vup>{max_target}</>个敌人陷入沉睡<@ba.vup>{sleep}</>秒，在其醒来时会对周围小范围内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 38,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "max_target",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 1.9
+          },
+          {
+            "key": "sleep",
+            "value": 7.0
+          }
+        ]
+      },
+      {
+        "name": "梦乡摇篮",
+        "rangeId": null,
+        "description": "立即使攻击范围内的至多<@ba.vup>{max_target}</>个敌人陷入沉睡<@ba.vup>{sleep}</>秒，在其醒来时会对周围小范围内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 37,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "max_target",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.0
+          },
+          {
+            "key": "sleep",
+            "value": 7.0
+          }
+        ]
+      },
+      {
+        "name": "梦乡摇篮",
+        "rangeId": null,
+        "description": "立即使攻击范围内的至多<@ba.vup>{max_target}</>个敌人陷入沉睡<@ba.vup>{sleep}</>秒，在其醒来时会对周围小范围内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 36,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "max_target",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.1
+          },
+          {
+            "key": "sleep",
+            "value": 7.0
+          }
+        ]
+      },
+      {
+        "name": "梦乡摇篮",
+        "rangeId": null,
+        "description": "立即使攻击范围内的至多<@ba.vup>{max_target}</>个敌人陷入沉睡<@ba.vup>{sleep}</>秒，在其醒来时会对周围小范围内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 35,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "max_target",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.2
+          },
+          {
+            "key": "sleep",
+            "value": 7.0
+          }
+        ]
+      },
+      {
+        "name": "梦乡摇篮",
+        "rangeId": null,
+        "description": "立即使攻击范围内的至多<@ba.vup>{max_target}</>个敌人陷入沉睡<@ba.vup>{sleep}</>秒，在其醒来时会对周围小范围内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 34,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "max_target",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.3
+          },
+          {
+            "key": "sleep",
+            "value": 7.0
+          }
+        ]
+      },
+      {
+        "name": "梦乡摇篮",
+        "rangeId": null,
+        "description": "立即使攻击范围内的至多<@ba.vup>{max_target}</>个敌人陷入沉睡<@ba.vup>{sleep}</>秒，在其醒来时会对周围小范围内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 33,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "max_target",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.5
+          },
+          {
+            "key": "sleep",
+            "value": 7.0
+          }
+        ]
+      },
+      {
+        "name": "梦乡摇篮",
+        "rangeId": null,
+        "description": "立即使攻击范围内的至多<@ba.vup>{max_target}</>个敌人陷入沉睡<@ba.vup>{sleep}</>秒，在其醒来时会对周围小范围内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 32,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "max_target",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.7
+          },
+          {
+            "key": "sleep",
+            "value": 7.0
+          }
+        ]
+      },
+      {
+        "name": "梦乡摇篮",
+        "rangeId": null,
+        "description": "立即使攻击范围内的至多<@ba.vup>{max_target}</>个敌人陷入沉睡<@ba.vup>{sleep}</>秒，在其醒来时会对周围小范围内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 10,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_iris_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "max_target",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.0
+          },
+          {
+            "key": "sleep",
+            "value": 7.0
+          }
+        ]
+      }
+    ]
+  },
   "skchr_lionhd_2": {
     "skillId": "skchr_lionhd_2",
     "iconId": null,
@@ -52448,6 +54290,540 @@
           {
             "key": "silence",
             "value": 8.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_kafka_1": {
+    "skillId": "skchr_kafka_1",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "怪异魔方",
+        "rangeId": "x-5",
+        "description": "部署后<@ba.vup>{duration}</>秒内停止攻击，立即使周围地面敌人全部陷入<@ba.vup>沉睡</><@ba.rem>（无敌+无法行动）</>，并在技能结束时对周围所有地面敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.5
+          },
+          {
+            "key": "duration",
+            "value": 5.0
+          }
+        ]
+      },
+      {
+        "name": "怪异魔方",
+        "rangeId": "x-5",
+        "description": "部署后<@ba.vup>{duration}</>秒内停止攻击，立即使周围地面敌人全部陷入<@ba.vup>沉睡</><@ba.rem>（无敌+无法行动）</>，并在技能结束时对周围所有地面敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.6
+          },
+          {
+            "key": "duration",
+            "value": 5.0
+          }
+        ]
+      },
+      {
+        "name": "怪异魔方",
+        "rangeId": "x-5",
+        "description": "部署后<@ba.vup>{duration}</>秒内停止攻击，立即使周围地面敌人全部陷入<@ba.vup>沉睡</><@ba.rem>（无敌+无法行动）</>，并在技能结束时对周围所有地面敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.7
+          },
+          {
+            "key": "duration",
+            "value": 5.0
+          }
+        ]
+      },
+      {
+        "name": "怪异魔方",
+        "rangeId": "x-5",
+        "description": "部署后<@ba.vup>{duration}</>秒内停止攻击，立即使周围地面敌人全部陷入<@ba.vup>沉睡</><@ba.rem>（无敌+无法行动）</>，并在技能结束时对周围所有地面敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 3.0
+          },
+          {
+            "key": "duration",
+            "value": 5.0
+          }
+        ]
+      },
+      {
+        "name": "怪异魔方",
+        "rangeId": "x-5",
+        "description": "部署后<@ba.vup>{duration}</>秒内停止攻击，立即使周围地面敌人全部陷入<@ba.vup>沉睡</><@ba.rem>（无敌+无法行动）</>，并在技能结束时对周围所有地面敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 3.1
+          },
+          {
+            "key": "duration",
+            "value": 5.0
+          }
+        ]
+      },
+      {
+        "name": "怪异魔方",
+        "rangeId": "x-5",
+        "description": "部署后<@ba.vup>{duration}</>秒内停止攻击，立即使周围地面敌人全部陷入<@ba.vup>沉睡</><@ba.rem>（无敌+无法行动）</>，并在技能结束时对周围所有地面敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 3.2
+          },
+          {
+            "key": "duration",
+            "value": 5.0
+          }
+        ]
+      },
+      {
+        "name": "怪异魔方",
+        "rangeId": "x-5",
+        "description": "部署后<@ba.vup>{duration}</>秒内停止攻击，立即使周围地面敌人全部陷入<@ba.vup>沉睡</><@ba.rem>（无敌+无法行动）</>，并在技能结束时对周围所有地面敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 3.5
+          },
+          {
+            "key": "duration",
+            "value": 5.0
+          }
+        ]
+      },
+      {
+        "name": "怪异魔方",
+        "rangeId": "x-5",
+        "description": "部署后<@ba.vup>{duration}</>秒内停止攻击，立即使周围地面敌人全部陷入<@ba.vup>沉睡</><@ba.rem>（无敌+无法行动）</>，并在技能结束时对周围所有地面敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 3.8
+          },
+          {
+            "key": "duration",
+            "value": 5.0
+          }
+        ]
+      },
+      {
+        "name": "怪异魔方",
+        "rangeId": "x-5",
+        "description": "部署后<@ba.vup>{duration}</>秒内停止攻击，立即使周围地面敌人全部陷入<@ba.vup>沉睡</><@ba.rem>（无敌+无法行动）</>，并在技能结束时对周围所有地面敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 4.1
+          },
+          {
+            "key": "duration",
+            "value": 5.0
+          }
+        ]
+      },
+      {
+        "name": "怪异魔方",
+        "rangeId": "x-5",
+        "description": "部署后<@ba.vup>{duration}</>秒内停止攻击，立即使周围地面敌人全部陷入<@ba.vup>沉睡</><@ba.rem>（无敌+无法行动）</>，并在技能结束时对周围所有地面敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_1",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 4.5
+          },
+          {
+            "key": "duration",
+            "value": 5.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_kafka_2": {
+    "skillId": "skchr_kafka_2",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "诡异剪刀",
+        "rangeId": "3-16",
+        "description": "部署后立即对前方<@ba.rem>目标格</>内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，并在之后<@ba.vup>{duration}</>秒内对<@ba.rem>目标格</>持续进行地面单体<@ba.vup>法术</>攻击",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_2",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.0
+          },
+          {
+            "key": "duration",
+            "value": 10.0
+          }
+        ]
+      },
+      {
+        "name": "诡异剪刀",
+        "rangeId": "3-16",
+        "description": "部署后立即对前方<@ba.rem>目标格</>内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，并在之后<@ba.vup>{duration}</>秒内对<@ba.rem>目标格</>持续进行地面单体<@ba.vup>法术</>攻击",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_2",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.1
+          },
+          {
+            "key": "duration",
+            "value": 10.0
+          }
+        ]
+      },
+      {
+        "name": "诡异剪刀",
+        "rangeId": "3-16",
+        "description": "部署后立即对前方<@ba.rem>目标格</>内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，并在之后<@ba.vup>{duration}</>秒内对<@ba.rem>目标格</>持续进行地面单体<@ba.vup>法术</>攻击",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_2",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.2
+          },
+          {
+            "key": "duration",
+            "value": 10.0
+          }
+        ]
+      },
+      {
+        "name": "诡异剪刀",
+        "rangeId": "3-16",
+        "description": "部署后立即对前方<@ba.rem>目标格</>内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，并在之后<@ba.vup>{duration}</>秒内对<@ba.rem>目标格</>持续进行地面单体<@ba.vup>法术</>攻击",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_2",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.5
+          },
+          {
+            "key": "duration",
+            "value": 11.0
+          }
+        ]
+      },
+      {
+        "name": "诡异剪刀",
+        "rangeId": "3-16",
+        "description": "部署后立即对前方<@ba.rem>目标格</>内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，并在之后<@ba.vup>{duration}</>秒内对<@ba.rem>目标格</>持续进行地面单体<@ba.vup>法术</>攻击",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_2",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.6
+          },
+          {
+            "key": "duration",
+            "value": 11.0
+          }
+        ]
+      },
+      {
+        "name": "诡异剪刀",
+        "rangeId": "3-16",
+        "description": "部署后立即对前方<@ba.rem>目标格</>内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，并在之后<@ba.vup>{duration}</>秒内对<@ba.rem>目标格</>持续进行地面单体<@ba.vup>法术</>攻击",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_2",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.7
+          },
+          {
+            "key": "duration",
+            "value": 11.0
+          }
+        ]
+      },
+      {
+        "name": "诡异剪刀",
+        "rangeId": "3-16",
+        "description": "部署后立即对前方<@ba.rem>目标格</>内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，并在之后<@ba.vup>{duration}</>秒内对<@ba.rem>目标格</>持续进行地面单体<@ba.vup>法术</>攻击",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_2",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 3.0
+          },
+          {
+            "key": "duration",
+            "value": 12.0
+          }
+        ]
+      },
+      {
+        "name": "诡异剪刀",
+        "rangeId": "3-16",
+        "description": "部署后立即对前方<@ba.rem>目标格</>内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，并在之后<@ba.vup>{duration}</>秒内对<@ba.rem>目标格</>持续进行地面单体<@ba.vup>法术</>攻击",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_2",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 3.3
+          },
+          {
+            "key": "duration",
+            "value": 13.0
+          }
+        ]
+      },
+      {
+        "name": "诡异剪刀",
+        "rangeId": "3-16",
+        "description": "部署后立即对前方<@ba.rem>目标格</>内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，并在之后<@ba.vup>{duration}</>秒内对<@ba.rem>目标格</>持续进行地面单体<@ba.vup>法术</>攻击",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_2",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 3.6
+          },
+          {
+            "key": "duration",
+            "value": 14.0
+          }
+        ]
+      },
+      {
+        "name": "诡异剪刀",
+        "rangeId": "3-16",
+        "description": "部署后立即对前方<@ba.rem>目标格</>内所有敌人造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的法术伤害，并在之后<@ba.vup>{duration}</>秒内对<@ba.rem>目标格</>持续进行地面单体<@ba.vup>法术</>攻击",
+        "skillType": 0,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 0,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 0.0
+        },
+        "prefabId": "skchr_kafka_2",
+        "duration": -1.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 4.0
+          },
+          {
+            "key": "duration",
+            "value": 15.0
           }
         ]
       }
@@ -62438,6 +64814,1234 @@
       }
     ]
   },
+  "skchr_robin_1": {
+    "skillId": "skchr_robin_1",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 22,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.0
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 21,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.1
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 20,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.2
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 19,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.4
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 18,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.5
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 17,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.6
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 16,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.8
+          },
+          {
+            "key": "constraint",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 15,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.0
+          },
+          {
+            "key": "constraint",
+            "value": 2.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 14,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.2
+          },
+          {
+            "key": "constraint",
+            "value": 2.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 12,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.5
+          },
+          {
+            "key": "constraint",
+            "value": 3.0
+          }
+        ]
+      }
+    ]
+  },
+  "sktok_robin_1": {
+    "skillId": "sktok_robin_1",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.0
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.1
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.2
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.4
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.5
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.6
+          },
+          {
+            "key": "constraint",
+            "value": 1.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.8
+          },
+          {
+            "key": "constraint",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.0
+          },
+          {
+            "key": "constraint",
+            "value": 2.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.2
+          },
+          {
+            "key": "constraint",
+            "value": 2.5
+          }
+        ]
+      },
+      {
+        "name": "束缚“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并使其束缚<@ba.vup>{constraint}</>秒",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.5
+          },
+          {
+            "key": "constraint",
+            "value": 3.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_robin_2": {
+    "skillId": "skchr_robin_2",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 22,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.3
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 21,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.4
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 20,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.5
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 19,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.7
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 18,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.8
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 17,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.9
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>中等力度地</>推动\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 16,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.1
+          },
+          {
+            "key": "force",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>中等力度地</>推动\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 15,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.3
+          },
+          {
+            "key": "force",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>中等力度地</>推动\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 14,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.5
+          },
+          {
+            "key": "force",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "被动效果：陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>较大力地</>推动\\n主动效果：立即获得一个陷阱",
+        "skillType": 2,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 12,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.8
+          },
+          {
+            "key": "force",
+            "value": 2.0
+          }
+        ]
+      }
+    ]
+  },
+  "sktok_robin_2": {
+    "skillId": "sktok_robin_2",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.3
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.4
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.5
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.7
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.8
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>小力地</>推动",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 2.9
+          },
+          {
+            "key": "force",
+            "value": 0.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.1
+          },
+          {
+            "key": "force",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.3
+          },
+          {
+            "key": "force",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.5
+          },
+          {
+            "key": "force",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "弹射“夹子”",
+        "rangeId": null,
+        "description": "陷阱触发时对目标造成相当于攻击力的<@ba.vup>{atk_scale:0%}</>的物理伤害，并将其<@ba.vup>较大力地</>推动",
+        "skillType": 2,
+        "spData": {
+          "spType": 8,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 0,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_robin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "cnt",
+            "value": 1.0
+          },
+          {
+            "key": "atk_scale",
+            "value": 3.8
+          },
+          {
+            "key": "force",
+            "value": 2.0
+          }
+        ]
+      }
+    ]
+  },
   "skchr_angel_1": {
     "skillId": "skchr_angel_1",
     "iconId": null,
@@ -63274,6 +66878,1007 @@
           {
             "key": "base_attack_time",
             "value": -0.11
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_archet_1": {
+    "skillId": "skchr_archet_1",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "箭矢·散逸",
+        "rangeId": null,
+        "description": "下次攻击造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的物理伤害，并额外选择目标周围最多<@ba.vup>{show_max_target}</>名其他敌人造成攻击力<@ba.vup>{atk_scale_2:0%}</>的物理伤害",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 5,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.7
+          },
+          {
+            "key": "atk_scale_2",
+            "value": 1.2
+          },
+          {
+            "key": "max_target",
+            "value": 4.0
+          },
+          {
+            "key": "show_max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·散逸",
+        "rangeId": null,
+        "description": "下次攻击造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的物理伤害，并额外选择目标周围最多<@ba.vup>{show_max_target}</>名其他敌人造成攻击力<@ba.vup>{atk_scale_2:0%}</>的物理伤害",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 5,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.75
+          },
+          {
+            "key": "atk_scale_2",
+            "value": 1.25
+          },
+          {
+            "key": "max_target",
+            "value": 4.0
+          },
+          {
+            "key": "show_max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·散逸",
+        "rangeId": null,
+        "description": "下次攻击造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的物理伤害，并额外选择目标周围最多<@ba.vup>{show_max_target}</>名其他敌人造成攻击力<@ba.vup>{atk_scale_2:0%}</>的物理伤害",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 5,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.8
+          },
+          {
+            "key": "atk_scale_2",
+            "value": 1.3
+          },
+          {
+            "key": "max_target",
+            "value": 4.0
+          },
+          {
+            "key": "show_max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·散逸",
+        "rangeId": null,
+        "description": "下次攻击造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的物理伤害，并额外选择目标周围最多<@ba.vup>{show_max_target}</>名其他敌人造成攻击力<@ba.vup>{atk_scale_2:0%}</>的物理伤害",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.85
+          },
+          {
+            "key": "atk_scale_2",
+            "value": 1.35
+          },
+          {
+            "key": "max_target",
+            "value": 4.0
+          },
+          {
+            "key": "show_max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·散逸",
+        "rangeId": null,
+        "description": "下次攻击造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的物理伤害，并额外选择目标周围最多<@ba.vup>{show_max_target}</>名其他敌人造成攻击力<@ba.vup>{atk_scale_2:0%}</>的物理伤害",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.9
+          },
+          {
+            "key": "atk_scale_2",
+            "value": 1.4
+          },
+          {
+            "key": "max_target",
+            "value": 4.0
+          },
+          {
+            "key": "show_max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·散逸",
+        "rangeId": null,
+        "description": "下次攻击造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的物理伤害，并额外选择目标周围最多<@ba.vup>{show_max_target}</>名其他敌人造成攻击力<@ba.vup>{atk_scale_2:0%}</>的物理伤害",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.95
+          },
+          {
+            "key": "atk_scale_2",
+            "value": 1.45
+          },
+          {
+            "key": "max_target",
+            "value": 4.0
+          },
+          {
+            "key": "show_max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·散逸",
+        "rangeId": null,
+        "description": "下次攻击造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的物理伤害，并额外选择目标周围最多<@ba.vup>{show_max_target}</>名其他敌人造成攻击力<@ba.vup>{atk_scale_2:0%}</>的物理伤害",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.0
+          },
+          {
+            "key": "atk_scale_2",
+            "value": 1.5
+          },
+          {
+            "key": "max_target",
+            "value": 4.0
+          },
+          {
+            "key": "show_max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·散逸",
+        "rangeId": null,
+        "description": "下次攻击造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的物理伤害，并额外选择目标周围最多<@ba.vup>{show_max_target}</>名其他敌人造成攻击力<@ba.vup>{atk_scale_2:0%}</>的物理伤害",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.1
+          },
+          {
+            "key": "atk_scale_2",
+            "value": 1.6
+          },
+          {
+            "key": "max_target",
+            "value": 4.0
+          },
+          {
+            "key": "show_max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·散逸",
+        "rangeId": null,
+        "description": "下次攻击造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的物理伤害，并额外选择目标周围最多<@ba.vup>{show_max_target}</>名其他敌人造成攻击力<@ba.vup>{atk_scale_2:0%}</>的物理伤害",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.2
+          },
+          {
+            "key": "atk_scale_2",
+            "value": 1.7
+          },
+          {
+            "key": "max_target",
+            "value": 4.0
+          },
+          {
+            "key": "show_max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·散逸",
+        "rangeId": null,
+        "description": "下次攻击造成相当于攻击力<@ba.vup>{atk_scale:0%}</>的物理伤害，并额外选择目标周围最多<@ba.vup>{show_max_target}</>名其他敌人造成攻击力<@ba.vup>{atk_scale_2:0%}</>的物理伤害",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 3,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.3
+          },
+          {
+            "key": "atk_scale_2",
+            "value": 1.8
+          },
+          {
+            "key": "max_target",
+            "value": 4.0
+          },
+          {
+            "key": "show_max_target",
+            "value": 3.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_archet_2": {
+    "skillId": "skchr_archet_2",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "箭矢·追猎",
+        "rangeId": null,
+        "description": "立即发射箭矢对目标进行攻击力<@ba.vup>{atk_scale:0%}</>的<@ba.vup>{times}</>次攻击，可弹射至目标周围的下一个未选择过的敌人（每次弹射减少1次攻击次数）；<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 14,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.08
+          },
+          {
+            "key": "times",
+            "value": 5.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·追猎",
+        "rangeId": null,
+        "description": "立即发射箭矢对目标进行攻击力<@ba.vup>{atk_scale:0%}</>的<@ba.vup>{times}</>次攻击，可弹射至目标周围的下一个未选择过的敌人（每次弹射减少1次攻击次数）；<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 14,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.1
+          },
+          {
+            "key": "times",
+            "value": 5.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·追猎",
+        "rangeId": null,
+        "description": "立即发射箭矢对目标进行攻击力<@ba.vup>{atk_scale:0%}</>的<@ba.vup>{times}</>次攻击，可弹射至目标周围的下一个未选择过的敌人（每次弹射减少1次攻击次数）；<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 14,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.12
+          },
+          {
+            "key": "times",
+            "value": 5.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·追猎",
+        "rangeId": null,
+        "description": "立即发射箭矢对目标进行攻击力<@ba.vup>{atk_scale:0%}</>的<@ba.vup>{times}</>次攻击，可弹射至目标周围的下一个未选择过的敌人（每次弹射减少1次攻击次数）；<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 13,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.14
+          },
+          {
+            "key": "times",
+            "value": 5.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·追猎",
+        "rangeId": null,
+        "description": "立即发射箭矢对目标进行攻击力<@ba.vup>{atk_scale:0%}</>的<@ba.vup>{times}</>次攻击，可弹射至目标周围的下一个未选择过的敌人（每次弹射减少1次攻击次数）；<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 13,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.16
+          },
+          {
+            "key": "times",
+            "value": 5.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·追猎",
+        "rangeId": null,
+        "description": "立即发射箭矢对目标进行攻击力<@ba.vup>{atk_scale:0%}</>的<@ba.vup>{times}</>次攻击，可弹射至目标周围的下一个未选择过的敌人（每次弹射减少1次攻击次数）；<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 13,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.18
+          },
+          {
+            "key": "times",
+            "value": 5.0
+          },
+          {
+            "key": "cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·追猎",
+        "rangeId": null,
+        "description": "立即发射箭矢对目标进行攻击力<@ba.vup>{atk_scale:0%}</>的<@ba.vup>{times}</>次攻击，可弹射至目标周围的下一个未选择过的敌人（每次弹射减少1次攻击次数）；<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 2,
+          "spCost": 12,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.2
+          },
+          {
+            "key": "times",
+            "value": 5.0
+          },
+          {
+            "key": "cnt",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·追猎",
+        "rangeId": null,
+        "description": "立即发射箭矢对目标进行攻击力<@ba.vup>{atk_scale:0%}</>的<@ba.vup>{times}</>次攻击，可弹射至目标周围的下一个未选择过的敌人（每次弹射减少1次攻击次数）；<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 2,
+          "spCost": 11,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.25
+          },
+          {
+            "key": "times",
+            "value": 5.0
+          },
+          {
+            "key": "cnt",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·追猎",
+        "rangeId": null,
+        "description": "立即发射箭矢对目标进行攻击力<@ba.vup>{atk_scale:0%}</>的<@ba.vup>{times}</>次攻击，可弹射至目标周围的下一个未选择过的敌人（每次弹射减少1次攻击次数）；<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 3,
+          "spCost": 10,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.3
+          },
+          {
+            "key": "times",
+            "value": 5.0
+          },
+          {
+            "key": "cnt",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·追猎",
+        "rangeId": null,
+        "description": "立即发射箭矢对目标进行攻击力<@ba.vup>{atk_scale:0%}</>的<@ba.vup>{times}</>次攻击，可弹射至目标周围的下一个未选择过的敌人（每次弹射减少1次攻击次数）；<@ba.rem>可充能{cnt}次</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 3,
+          "spCost": 9,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.4
+          },
+          {
+            "key": "times",
+            "value": 5.0
+          },
+          {
+            "key": "cnt",
+            "value": 3.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_archet_3": {
+    "skillId": "skchr_archet_3",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "箭矢·暴风",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击距离<@ba.vup>+{ability_range_forward_extend}</>，攻击变为<@ba.vup>{attack@times}</>连击，每次可以攻击<@ba.vup>{attack@max_target}</>个敌人",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 40,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.05
+          },
+          {
+            "key": "ability_range_forward_extend",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 2.0
+          },
+          {
+            "key": "attack@times",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·暴风",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击距离<@ba.vup>+{ability_range_forward_extend}</>，攻击变为<@ba.vup>{attack@times}</>连击，每次可以攻击<@ba.vup>{attack@max_target}</>个敌人",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 39,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.05
+          },
+          {
+            "key": "ability_range_forward_extend",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 2.0
+          },
+          {
+            "key": "attack@times",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·暴风",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击距离<@ba.vup>+{ability_range_forward_extend}</>，攻击变为<@ba.vup>{attack@times}</>连击，每次可以攻击<@ba.vup>{attack@max_target}</>个敌人",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 38,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.05
+          },
+          {
+            "key": "ability_range_forward_extend",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 2.0
+          },
+          {
+            "key": "attack@times",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·暴风",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击距离<@ba.vup>+{ability_range_forward_extend}</>，攻击变为<@ba.vup>{attack@times}</>连击，每次可以攻击<@ba.vup>{attack@max_target}</>个敌人",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 37,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.1
+          },
+          {
+            "key": "ability_range_forward_extend",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 2.0
+          },
+          {
+            "key": "attack@times",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·暴风",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击距离<@ba.vup>+{ability_range_forward_extend}</>，攻击变为<@ba.vup>{attack@times}</>连击，每次可以攻击<@ba.vup>{attack@max_target}</>个敌人",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 36,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.1
+          },
+          {
+            "key": "ability_range_forward_extend",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 2.0
+          },
+          {
+            "key": "attack@times",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·暴风",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击距离<@ba.vup>+{ability_range_forward_extend}</>，攻击变为<@ba.vup>{attack@times}</>连击，每次可以攻击<@ba.vup>{attack@max_target}</>个敌人",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 35,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.1
+          },
+          {
+            "key": "ability_range_forward_extend",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 2.0
+          },
+          {
+            "key": "attack@times",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·暴风",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击距离<@ba.vup>+{ability_range_forward_extend}</>，攻击变为<@ba.vup>{attack@times}</>连击，每次可以攻击<@ba.vup>{attack@max_target}</>个敌人",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 34,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.15
+          },
+          {
+            "key": "ability_range_forward_extend",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 2.0
+          },
+          {
+            "key": "attack@times",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·暴风",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击距离<@ba.vup>+{ability_range_forward_extend}</>，攻击变为<@ba.vup>{attack@times}</>连击，每次可以攻击<@ba.vup>{attack@max_target}</>个敌人",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 33,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.2
+          },
+          {
+            "key": "ability_range_forward_extend",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 2.0
+          },
+          {
+            "key": "attack@times",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·暴风",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击距离<@ba.vup>+{ability_range_forward_extend}</>，攻击变为<@ba.vup>{attack@times}</>连击，每次可以攻击<@ba.vup>{attack@max_target}</>个敌人",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 32,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.25
+          },
+          {
+            "key": "ability_range_forward_extend",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 2.0
+          },
+          {
+            "key": "attack@times",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "箭矢·暴风",
+        "rangeId": null,
+        "description": "攻击力<@ba.vup>+{atk:0%}</>，攻击距离<@ba.vup>+{ability_range_forward_extend}</>，攻击变为<@ba.vup>{attack@times}</>连击，每次可以攻击<@ba.vup>{attack@max_target}</>个敌人",
+        "skillType": 1,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 30,
+          "initSp": 15,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_archet_3",
+        "duration": 20.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.3
+          },
+          {
+            "key": "ability_range_forward_extend",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 2.0
+          },
+          {
+            "key": "attack@times",
+            "value": 3.0
           }
         ]
       }
@@ -86648,6 +91253,1007 @@
       }
     ]
   },
+  "skchr_f12yin_1": {
+    "skillId": "skchr_f12yin_1",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "左勾扫拳",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，额外攻击一个目标",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 5,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.4
+          },
+          {
+            "key": "max_target",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "左勾扫拳",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，额外攻击一个目标",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 5,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.5
+          },
+          {
+            "key": "max_target",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "左勾扫拳",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，额外攻击一个目标",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 5,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.6
+          },
+          {
+            "key": "max_target",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "左勾扫拳",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，额外攻击一个目标",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.7
+          },
+          {
+            "key": "max_target",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "左勾扫拳",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，额外攻击一个目标",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.8
+          },
+          {
+            "key": "max_target",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "左勾扫拳",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，额外攻击一个目标",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 1.9
+          },
+          {
+            "key": "max_target",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "左勾扫拳",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，额外攻击一个目标",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.0
+          },
+          {
+            "key": "max_target",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "左勾扫拳",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，额外攻击一个目标",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.1
+          },
+          {
+            "key": "max_target",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "左勾扫拳",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，额外攻击一个目标",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 4,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.2
+          },
+          {
+            "key": "max_target",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "name": "左勾扫拳",
+        "rangeId": null,
+        "description": "下次攻击的攻击力提升至<@ba.vup>{atk_scale:0%}</>，额外攻击一个目标",
+        "skillType": 2,
+        "spData": {
+          "spType": 2,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 3,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_1",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk_scale",
+            "value": 2.3
+          },
+          {
+            "key": "max_target",
+            "value": 2.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_f12yin_2": {
+    "skillId": "skchr_f12yin_2",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "横扫架势",
+        "rangeId": "0-1",
+        "description": "<@ba.rem>可以在下列状态和初始状态间切换：</>\\n防御力<@ba.vdown>-{-def:0%}</>，攻击距离<@ba.vdown>缩短</>，攻击力<@ba.vup>+{atk:0%}</>，阻挡数<@ba.vup>+{block_cnt}</>，同时攻击阻挡的所有敌人，每秒恢复最大生命的<@ba.vup>{HP_RECOVERY_PER_SEC_BY_MAX_HP_RATIO:0.0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 10,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.2
+          },
+          {
+            "key": "def",
+            "value": -0.3
+          },
+          {
+            "key": "hp_recovery_per_sec_by_max_hp_ratio",
+            "value": 0.03
+          },
+          {
+            "key": "block_cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "横扫架势",
+        "rangeId": "0-1",
+        "description": "<@ba.rem>可以在下列状态和初始状态间切换：</>\\n防御力<@ba.vdown>-{-def:0%}</>，攻击距离<@ba.vdown>缩短</>，攻击力<@ba.vup>+{atk:0%}</>，阻挡数<@ba.vup>+{block_cnt}</>，同时攻击阻挡的所有敌人，每秒恢复最大生命的<@ba.vup>{HP_RECOVERY_PER_SEC_BY_MAX_HP_RATIO:0.0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 10,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.25
+          },
+          {
+            "key": "def",
+            "value": -0.3
+          },
+          {
+            "key": "hp_recovery_per_sec_by_max_hp_ratio",
+            "value": 0.03
+          },
+          {
+            "key": "block_cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "横扫架势",
+        "rangeId": "0-1",
+        "description": "<@ba.rem>可以在下列状态和初始状态间切换：</>\\n防御力<@ba.vdown>-{-def:0%}</>，攻击距离<@ba.vdown>缩短</>，攻击力<@ba.vup>+{atk:0%}</>，阻挡数<@ba.vup>+{block_cnt}</>，同时攻击阻挡的所有敌人，每秒恢复最大生命的<@ba.vup>{HP_RECOVERY_PER_SEC_BY_MAX_HP_RATIO:0.0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 10,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.3
+          },
+          {
+            "key": "def",
+            "value": -0.3
+          },
+          {
+            "key": "hp_recovery_per_sec_by_max_hp_ratio",
+            "value": 0.03
+          },
+          {
+            "key": "block_cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "横扫架势",
+        "rangeId": "0-1",
+        "description": "<@ba.rem>可以在下列状态和初始状态间切换：</>\\n防御力<@ba.vdown>-{-def:0%}</>，攻击距离<@ba.vdown>缩短</>，攻击力<@ba.vup>+{atk:0%}</>，阻挡数<@ba.vup>+{block_cnt}</>，同时攻击阻挡的所有敌人，每秒恢复最大生命的<@ba.vup>{HP_RECOVERY_PER_SEC_BY_MAX_HP_RATIO:0.0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 9,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.35
+          },
+          {
+            "key": "def",
+            "value": -0.3
+          },
+          {
+            "key": "hp_recovery_per_sec_by_max_hp_ratio",
+            "value": 0.04
+          },
+          {
+            "key": "block_cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "横扫架势",
+        "rangeId": "0-1",
+        "description": "<@ba.rem>可以在下列状态和初始状态间切换：</>\\n防御力<@ba.vdown>-{-def:0%}</>，攻击距离<@ba.vdown>缩短</>，攻击力<@ba.vup>+{atk:0%}</>，阻挡数<@ba.vup>+{block_cnt}</>，同时攻击阻挡的所有敌人，每秒恢复最大生命的<@ba.vup>{HP_RECOVERY_PER_SEC_BY_MAX_HP_RATIO:0.0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 9,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.4
+          },
+          {
+            "key": "def",
+            "value": -0.3
+          },
+          {
+            "key": "hp_recovery_per_sec_by_max_hp_ratio",
+            "value": 0.04
+          },
+          {
+            "key": "block_cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "横扫架势",
+        "rangeId": "0-1",
+        "description": "<@ba.rem>可以在下列状态和初始状态间切换：</>\\n防御力<@ba.vdown>-{-def:0%}</>，攻击距离<@ba.vdown>缩短</>，攻击力<@ba.vup>+{atk:0%}</>，阻挡数<@ba.vup>+{block_cnt}</>，同时攻击阻挡的所有敌人，每秒恢复最大生命的<@ba.vup>{HP_RECOVERY_PER_SEC_BY_MAX_HP_RATIO:0.0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 9,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.45
+          },
+          {
+            "key": "def",
+            "value": -0.3
+          },
+          {
+            "key": "hp_recovery_per_sec_by_max_hp_ratio",
+            "value": 0.04
+          },
+          {
+            "key": "block_cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "横扫架势",
+        "rangeId": "0-1",
+        "description": "<@ba.rem>可以在下列状态和初始状态间切换：</>\\n防御力<@ba.vdown>-{-def:0%}</>，攻击距离<@ba.vdown>缩短</>，攻击力<@ba.vup>+{atk:0%}</>，阻挡数<@ba.vup>+{block_cnt}</>，同时攻击阻挡的所有敌人，每秒恢复最大生命的<@ba.vup>{HP_RECOVERY_PER_SEC_BY_MAX_HP_RATIO:0.0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 8,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.5
+          },
+          {
+            "key": "def",
+            "value": -0.25
+          },
+          {
+            "key": "hp_recovery_per_sec_by_max_hp_ratio",
+            "value": 0.05
+          },
+          {
+            "key": "block_cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "横扫架势",
+        "rangeId": "0-1",
+        "description": "<@ba.rem>可以在下列状态和初始状态间切换：</>\\n防御力<@ba.vdown>-{-def:0%}</>，攻击距离<@ba.vdown>缩短</>，攻击力<@ba.vup>+{atk:0%}</>，阻挡数<@ba.vup>+{block_cnt}</>，同时攻击阻挡的所有敌人，每秒恢复最大生命的<@ba.vup>{HP_RECOVERY_PER_SEC_BY_MAX_HP_RATIO:0.0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 7,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.6
+          },
+          {
+            "key": "def",
+            "value": -0.25
+          },
+          {
+            "key": "hp_recovery_per_sec_by_max_hp_ratio",
+            "value": 0.055
+          },
+          {
+            "key": "block_cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "横扫架势",
+        "rangeId": "0-1",
+        "description": "<@ba.rem>可以在下列状态和初始状态间切换：</>\\n防御力<@ba.vdown>-{-def:0%}</>，攻击距离<@ba.vdown>缩短</>，攻击力<@ba.vup>+{atk:0%}</>，阻挡数<@ba.vup>+{block_cnt}</>，同时攻击阻挡的所有敌人，每秒恢复最大生命的<@ba.vup>{HP_RECOVERY_PER_SEC_BY_MAX_HP_RATIO:0.0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 6,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.7
+          },
+          {
+            "key": "def",
+            "value": -0.25
+          },
+          {
+            "key": "hp_recovery_per_sec_by_max_hp_ratio",
+            "value": 0.06
+          },
+          {
+            "key": "block_cnt",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "name": "横扫架势",
+        "rangeId": "0-1",
+        "description": "<@ba.rem>可以在下列状态和初始状态间切换：</>\\n防御力<@ba.vdown>-{-def:0%}</>，攻击距离<@ba.vdown>缩短</>，攻击力<@ba.vup>+{atk:0%}</>，阻挡数<@ba.vup>+{block_cnt}</>，同时攻击阻挡的所有敌人，每秒恢复最大生命的<@ba.vup>{HP_RECOVERY_PER_SEC_BY_MAX_HP_RATIO:0.0%}</>",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 5,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_2",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "atk",
+            "value": 0.8
+          },
+          {
+            "key": "def",
+            "value": -0.2
+          },
+          {
+            "key": "hp_recovery_per_sec_by_max_hp_ratio",
+            "value": 0.07
+          },
+          {
+            "key": "block_cnt",
+            "value": 1.0
+          }
+        ]
+      }
+    ]
+  },
+  "skchr_f12yin_3": {
+    "skillId": "skchr_f12yin_3",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "震地碎岩击",
+        "rangeId": "x-5",
+        "description": "攻击间隔<@ba.vdown>增大</>，攻击力<@ba.vup>+{atk:0%}</>，攻击变为<@ba.vup>2</>连击，第一天赋的发动几率提升至<@ba.vup>{talent@prob:0%}</>，每次攻击周围最多<@ba.vup>{attack@max_target}</>个敌人并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 50,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_3",
+        "duration": 25.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          },
+          {
+            "key": "atk",
+            "value": 0.4
+          },
+          {
+            "key": "talent@prob",
+            "value": 0.4
+          },
+          {
+            "key": "attack@force",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "震地碎岩击",
+        "rangeId": "x-5",
+        "description": "攻击间隔<@ba.vdown>增大</>，攻击力<@ba.vup>+{atk:0%}</>，攻击变为<@ba.vup>2</>连击，第一天赋的发动几率提升至<@ba.vup>{talent@prob:0%}</>，每次攻击周围最多<@ba.vup>{attack@max_target}</>个敌人并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 49,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_3",
+        "duration": 25.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          },
+          {
+            "key": "atk",
+            "value": 0.45
+          },
+          {
+            "key": "talent@prob",
+            "value": 0.42
+          },
+          {
+            "key": "attack@force",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "震地碎岩击",
+        "rangeId": "x-5",
+        "description": "攻击间隔<@ba.vdown>增大</>，攻击力<@ba.vup>+{atk:0%}</>，攻击变为<@ba.vup>2</>连击，第一天赋的发动几率提升至<@ba.vup>{talent@prob:0%}</>，每次攻击周围最多<@ba.vup>{attack@max_target}</>个敌人并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 48,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_3",
+        "duration": 25.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          },
+          {
+            "key": "atk",
+            "value": 0.5
+          },
+          {
+            "key": "talent@prob",
+            "value": 0.44
+          },
+          {
+            "key": "attack@force",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "震地碎岩击",
+        "rangeId": "x-5",
+        "description": "攻击间隔<@ba.vdown>增大</>，攻击力<@ba.vup>+{atk:0%}</>，攻击变为<@ba.vup>2</>连击，第一天赋的发动几率提升至<@ba.vup>{talent@prob:0%}</>，每次攻击周围最多<@ba.vup>{attack@max_target}</>个敌人并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 47,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_3",
+        "duration": 26.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          },
+          {
+            "key": "atk",
+            "value": 0.55
+          },
+          {
+            "key": "talent@prob",
+            "value": 0.48
+          },
+          {
+            "key": "attack@force",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "震地碎岩击",
+        "rangeId": "x-5",
+        "description": "攻击间隔<@ba.vdown>增大</>，攻击力<@ba.vup>+{atk:0%}</>，攻击变为<@ba.vup>2</>连击，第一天赋的发动几率提升至<@ba.vup>{talent@prob:0%}</>，每次攻击周围最多<@ba.vup>{attack@max_target}</>个敌人并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 46,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_3",
+        "duration": 26.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          },
+          {
+            "key": "atk",
+            "value": 0.6
+          },
+          {
+            "key": "talent@prob",
+            "value": 0.5
+          },
+          {
+            "key": "attack@force",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "震地碎岩击",
+        "rangeId": "x-5",
+        "description": "攻击间隔<@ba.vdown>增大</>，攻击力<@ba.vup>+{atk:0%}</>，攻击变为<@ba.vup>2</>连击，第一天赋的发动几率提升至<@ba.vup>{talent@prob:0%}</>，每次攻击周围最多<@ba.vup>{attack@max_target}</>个敌人并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 45,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_3",
+        "duration": 26.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          },
+          {
+            "key": "atk",
+            "value": 0.65
+          },
+          {
+            "key": "talent@prob",
+            "value": 0.52
+          },
+          {
+            "key": "attack@force",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "震地碎岩击",
+        "rangeId": "x-5",
+        "description": "攻击间隔<@ba.vdown>增大</>，攻击力<@ba.vup>+{atk:0%}</>，攻击变为<@ba.vup>2</>连击，第一天赋的发动几率提升至<@ba.vup>{talent@prob:0%}</>，每次攻击周围最多<@ba.vup>{attack@max_target}</>个敌人并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 44,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_3",
+        "duration": 27.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          },
+          {
+            "key": "atk",
+            "value": 0.7
+          },
+          {
+            "key": "talent@prob",
+            "value": 0.55
+          },
+          {
+            "key": "attack@force",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "name": "震地碎岩击",
+        "rangeId": "x-5",
+        "description": "攻击间隔<@ba.vdown>增大</>，攻击力<@ba.vup>+{atk:0%}</>，攻击变为<@ba.vup>2</>连击，第一天赋的发动几率提升至<@ba.vup>{talent@prob:0%}</>，每次攻击周围最多<@ba.vup>{attack@max_target}</>个敌人并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 43,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_3",
+        "duration": 28.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          },
+          {
+            "key": "atk",
+            "value": 0.8
+          },
+          {
+            "key": "talent@prob",
+            "value": 0.6
+          },
+          {
+            "key": "attack@force",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 4.0
+          }
+        ]
+      },
+      {
+        "name": "震地碎岩击",
+        "rangeId": "x-5",
+        "description": "攻击间隔<@ba.vdown>增大</>，攻击力<@ba.vup>+{atk:0%}</>，攻击变为<@ba.vup>2</>连击，第一天赋的发动几率提升至<@ba.vup>{talent@prob:0%}</>，每次攻击周围最多<@ba.vup>{attack@max_target}</>个敌人并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 42,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_3",
+        "duration": 29.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          },
+          {
+            "key": "atk",
+            "value": 0.9
+          },
+          {
+            "key": "talent@prob",
+            "value": 0.65
+          },
+          {
+            "key": "attack@force",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 4.0
+          }
+        ]
+      },
+      {
+        "name": "震地碎岩击",
+        "rangeId": "x-5",
+        "description": "攻击间隔<@ba.vdown>增大</>，攻击力<@ba.vup>+{atk:0%}</>，攻击变为<@ba.vup>2</>连击，第一天赋的发动几率提升至<@ba.vup>{talent@prob:0%}</>，每次攻击周围最多<@ba.vup>{attack@max_target}</>个敌人并将其<@ba.vup>中等力度地</>推动",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 40,
+          "initSp": 25,
+          "increment": 1.0
+        },
+        "prefabId": "skchr_f12yin_3",
+        "duration": 30.0,
+        "blackboard": [
+          {
+            "key": "base_attack_time",
+            "value": 0.7
+          },
+          {
+            "key": "atk",
+            "value": 1.0
+          },
+          {
+            "key": "talent@prob",
+            "value": 0.75
+          },
+          {
+            "key": "attack@force",
+            "value": 1.0
+          },
+          {
+            "key": "attack@max_target",
+            "value": 4.0
+          }
+        ]
+      }
+    ]
+  },
   "skchr_svrash_1": {
     "skillId": "skchr_svrash_1",
     "iconId": "skcom_powerstrike[3]",
@@ -92507,6 +98113,39 @@
           {
             "key": "taunt_level",
             "value": 1.0
+          }
+        ]
+      }
+    ]
+  },
+  "sktok_prison": {
+    "skillId": "sktok_prison",
+    "iconId": null,
+    "hidden": false,
+    "levels": [
+      {
+        "name": "启动禁锢！",
+        "rangeId": "3-15",
+        "description": "消耗<@ba.vup>{cost}</>点部署费用，使范围内目标晕眩<@ba.vup>{stun}</>秒，并立即进入禁锢状态（不会重置禁锢状态敌人的攻击计数）",
+        "skillType": 1,
+        "spData": {
+          "spType": 1,
+          "levelUpCost": null,
+          "maxChargeTime": 1,
+          "spCost": 25,
+          "initSp": 0,
+          "increment": 1.0
+        },
+        "prefabId": "sktok_prison",
+        "duration": 0.0,
+        "blackboard": [
+          {
+            "key": "stun",
+            "value": 2.0
+          },
+          {
+            "key": "cost",
+            "value": 5.0
           }
         ]
       }

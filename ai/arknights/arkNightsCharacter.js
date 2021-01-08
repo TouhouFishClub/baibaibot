@@ -178,7 +178,6 @@ module.exports = function(qq, content, callback, getData = false){
       var words;
       var str;
       if(chTmp.length > 1){
-        str = `查询到${chTmp.length}位干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}\n若精确查找干员，请使用正则表达式搜索：如arks ^红$`
         //TODO: 测试缺少的头像
         // chTmp.forEach(ch => {
         //   try{
@@ -187,7 +186,15 @@ module.exports = function(qq, content, callback, getData = false){
         //     console.log(ch.info.source.appellation)
         //   }
         // })
-        drawTxtImage('',str,callback);
+				let index = chTmp.findIndex(x => x.name == sp[0])
+				if(index > -1) {
+					str = `查询到${chTmp.length}位干员：${chTmp.map(x => x.name).join(' / ')}\n已为您定位到${sp[0]}`
+					// drawTxtImage('',str,callback);
+					renderImage(chTmp[index], skillLevel - 1, callback, str)
+				} else {
+					str = `查询到${chTmp.length}位干员，请输入具体干员名称\n${chTmp.map(x => x.name).join(' / ')}\n若精确查找干员，请使用正则表达式搜索：如arks ^红$`
+					drawTxtImage('',str,callback);
+				}
       } else {
         renderImage(chTmp[0], skillLevel - 1, callback)
       }
