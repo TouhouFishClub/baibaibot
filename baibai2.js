@@ -592,7 +592,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if((content=='百百')||(content.indexOf('百百')>=0&&content.indexOf('菜单')>=0)){
     var ret = "";
     ret = ret + "欢迎使用百百型机器人\n";
-    ret = ret + "通用功能导航：【`】【·】【ˋ】【'】【‘】【，】任选其一\n";
+    ret = ret + "通用功能导航：【`】【·】【ˋ】【'】【‘】【，】【’】任选其一\n";
     ret = ret + "游戏导航：【玩游戏】\n";
     ret = ret + "最终幻想XIV导航【ffxiv】\n";
     ret = ret + "明日方舟导航【ark】\n";
@@ -1016,7 +1016,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
 
-  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
+  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"||first=="’"){
 
     var c1 = content.substring(1);
     if(c1==""){
@@ -1107,7 +1107,7 @@ function reply(content,userName,callback,groupid,from,groupName,nickname,port){
   var first = content.substring(0,1);
   if(content.substring(0, 2) == 'gf'){
     gf(content.substring(2), callback)
-  } else if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"){
+  } else if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"||first=="’"){
     tulingMsg(userName,content.substring(1),callback,groupid);
   }else if(first==2){
     translateMsg(content.substring(1),'ja',callback);
