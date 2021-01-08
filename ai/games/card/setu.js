@@ -29,7 +29,10 @@ var cacheg = {};
 function runsetu(content,gid,qq,callback,port){
   var cooldown = 60000 * 120;
   var maxtimes = 2;
+  var groupmax = 5;
   if(port!=23334){
+
+      groupmax = 20;
     cooldown = 60000 * 10;
     maxtimes = 10;
   }
@@ -60,7 +63,7 @@ function runsetu(content,gid,qq,callback,port){
   }else{
     cache[gid].num=cache[gid].num+1;
   }
-  if(cache[gid].num>5){
+  if(cache[gid].num>groupmax){
       if(now-cache[gid].ts>cooldown){
           cache[gid]={num:1,ts:now};
       }else{
