@@ -1,2 +1,2 @@
 const { drawBubble } = require('./drawBubble')
-drawBubble('内鬼')
+drawBubble('氨基-123-123-123')

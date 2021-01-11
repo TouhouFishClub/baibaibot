@@ -109,6 +109,8 @@ const {catreply} = require('./ai/games/card/cat');
 
 const {handleFlyindReply} = require('./ai/games/flying/flight_chess');
 
+const { drawBubble } = require('./ai/chat/drawBubble')
+
 initWS();
 initWS2();
 initWS3();
@@ -827,6 +829,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(con == 'chp' || con == '彩虹屁') {
     chp(callback)
+  }
+  if(con.endsWith('.jpg')) {
+    let tar = con.substring(0, con.length - 4)
+    if(tar.length <= 3 && tar.trim()) {
+      drawBubble(tar, callback)
+    }
   }
 
 
