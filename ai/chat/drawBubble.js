@@ -7,8 +7,11 @@ const MAX_WIDTH = 800
 const fontFamily = 'STXIHEI'
 
 const analysisContent = content => {
-  if(content.length == 2) {
+  if(content.length <= 3) {
     return [content, content, content, content]
+  }
+  if(content.split('-').length == 2) {
+    return [content.split('-')[0], content.split('-')[0], content.split('-')[0], content.split('-')[1]]
   }
   if(content.split('-').length == 4) {
     return content.split('-')
@@ -105,6 +108,9 @@ const drawBubble = (content, callback) => {
   ctx.fillRect(0, 0, canvasWidth, canvasHeight)
 
   /* avatar */
+  if(alc[0].length > 3) {
+    alc[0] = alc[0].substring(0, 3)
+  }
   renderRadiusRect(ctx, 20, 20 , 100, 100, 50, '#e1e1e1', true)
   let fontsize = 40
   if(alc[0].length == 3) {
