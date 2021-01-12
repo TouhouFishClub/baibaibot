@@ -3,6 +3,9 @@ const path = require('path')
 const { sendImageMsgBuffer } = require('../../cq/sendImage')
 const {createCanvas, loadImage} = require('canvas')
 
+
+// http://q1.qlogo.cn/g?b=qq&nk=${msg.uid}&s=100
+
 const MAX_WIDTH = 800
 const fontFamily = 'STXIHEI'
 
