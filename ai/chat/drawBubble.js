@@ -13,7 +13,7 @@ const analysisContent = content => {
   if(content.length <= 3) {
     return [content, content, content, content]
   }
-  let sp = content.split('-').map(x => x.trim())
+  let sp = content.split('#').map(x => x.trim())
   if(sp.length == 2) {
     return [sp[0], sp[0], sp[0], sp[1]]
   }
@@ -82,7 +82,50 @@ const checkMaxWidth = (ctx, str, maxWidth) => {
 
 
 const drawBubble = async (content, callback) => {
-  let alc = analysisContent(content)
+
+  let cnt, cntNew = [], imgHash = {}, count = 0
+  cnt = content.split('[CQ:image,')
+  cnt.forEach(cn => {
+    let index = cn.indexOf('url=')
+    if(index > -1) {
+      let tmp = cn.substring(index + 4).split(']')
+      imgHash[`Image__Tmp__${count}`] = {
+        source : tmp[0],
+        width: 0,
+        height: 0,
+      }
+      tmp[0] = `Image__Tmp__${count}`
+      count ++
+      cntNew = cntNew.concat(tmp)
+    } else {
+      cntNew.push(cn)
+    }
+  })
+
+  // 处理图片
+  let key = Object.keys(imgHash), mw = 0, hc = 0
+  for(let i = 0; i < key.length; i++){
+    let img = await loadImage(imgHash[key[i]].source)
+    imgHash[key[i]].img = img
+    let w = img.width, h = img.height
+    if(Math.max(w, h) > 400){
+      if(w > h) {
+        h = h * 400 / w
+        w = 400
+      } else {
+        w = w * 400 / h
+        h = 400
+      }
+    }
+    imgHash[key[i]].width = w
+    imgHash[key[i]].height = h
+    mw = Math.max(mw, w)
+    hc += h
+  }
+
+  // console.log(imgHash)
+
+  let alc = analysisContent(cntNew.join('\n'))
   if(alc.length == 0){
     return
   }
@@ -93,18 +136,28 @@ const drawBubble = async (content, callback) => {
 
   let msg = alc[3]
   let msgSp = msg.split('\n')
-  let maxLengthMsg = msgSp.concat([]).sort((a, b) => b.length - a.length)[0]
+  let maxLengthMsg = msgSp.concat([]).filter(x => !x.startsWith('Image__Tmp__')).sort((a, b) => b.length - a.length)[0]
 
   if(ctxTmp.measureText(maxLengthMsg).width < MAX_WIDTH - 270) {
     canvasWidth = 270 + ctxTmp.measureText(maxLengthMsg).width
   } else {
     canvasWidth = MAX_WIDTH
   }
+
+  canvasWidth = Math.max(canvasWidth, mw)
+
   let newMsg = []
+  canvasHeight = 190
   msgSp.forEach(msg => {
-    newMsg = newMsg.concat(checkMaxWidth(ctxTmp, msg, canvasWidth - 270))
+    if(msg.startsWith('Image__Tmp__')){
+      newMsg = newMsg.concat([msg])
+      canvasHeight += imgHash[msg].height
+    } else {
+      let check = checkMaxWidth(ctxTmp, msg, canvasWidth - 270)
+      newMsg = newMsg.concat(check)
+      canvasHeight += check.length * 52
+    }
   })
-  canvasHeight = newMsg.length * 52 + 190
 
   let canvas = createCanvas(canvasWidth, canvasHeight)
     , ctx = canvas.getContext('2d')
@@ -116,6 +169,11 @@ const drawBubble = async (content, callback) => {
     ctx.fill()
     try {
       let img = await loadImage(`http://q1.qlogo.cn/g?b=qq&nk=${alc[0]}&s=100`)
+
+      // console.log('=====')
+      // console.log(img.width)
+      // console.log(img.height)
+
       ctx.globalCompositeOperation = 'source-in'
       ctx.drawImage(img, 20, 20, 100, 100)
       ctx.globalCompositeOperation = 'source-over'
@@ -154,9 +212,17 @@ const drawBubble = async (content, callback) => {
   /* content */
   renderRadiusRect(ctx, 170, 90, canvasWidth - 190, canvasHeight - 110, 40, '#fff', true)
   let offsetTop = 130
+
+
   newMsg.forEach(msg => {
-    renderText(ctx, msg, offsetTop, 210, canvasWidth - 270, 40, 52, '#000', 'left')
-    offsetTop += 52
+    if(msg.startsWith('Image__Tmp__')) {
+      let tmp = imgHash[msg]
+      ctx.drawImage(tmp.img, 210, offsetTop, tmp.width, tmp.height)
+      offsetTop += tmp.height
+    } else {
+      renderText(ctx, msg, offsetTop, 210, canvasWidth - 270, 40, 52, '#000', 'left')
+      offsetTop += 52
+    }
   })
 
 
@@ -177,17 +243,17 @@ const drawBubble = async (content, callback) => {
 
 
 
-  sendImageMsgBuffer(dataBuffer, 'output', 'other', msg => {
-    callback(msg)
-  })
+  // sendImageMsgBuffer(dataBuffer, 'output', 'other', msg => {
+  //   callback(msg)
+  // })
 
-  // fs.writeFile(path.join(__dirname, `${"output" || content}.png`), dataBuffer, function(err) {
-  //   if(err){
-  //     console.log(err)
-  //   }else{
-  //     console.log("保存成功！");
-  //   }
-  // });
+  fs.writeFile(path.join(__dirname, `${"output" || content}.png`), dataBuffer, function(err) {
+    if(err){
+      console.log(err)
+    }else{
+      console.log("保存成功！");
+    }
+  });
 }
 
 
