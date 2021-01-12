@@ -243,17 +243,17 @@ const drawBubble = async (content, callback) => {
 
 
 
-  // sendImageMsgBuffer(dataBuffer, 'output', 'other', msg => {
-  //   callback(msg)
-  // })
+  sendImageMsgBuffer(dataBuffer, 'output', 'other', msg => {
+    callback(msg)
+  })
 
-  fs.writeFile(path.join(__dirname, `${"output" || content}.png`), dataBuffer, function(err) {
-    if(err){
-      console.log(err)
-    }else{
-      console.log("保存成功！");
-    }
-  });
+  // fs.writeFile(path.join(__dirname, `${"output" || content}.png`), dataBuffer, function(err) {
+  //   if(err){
+  //     console.log(err)
+  //   }else{
+  //     console.log("保存成功！");
+  //   }
+  // });
 }
 
 
