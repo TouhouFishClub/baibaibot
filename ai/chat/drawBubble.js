@@ -201,9 +201,36 @@ const drawBubble = async (content, callback) => {
 
   /* badge */
   ctxTmp.font = `32px ${fontFamily}`
-  let badgeWidth = ctxTmp.measureText(alc[1]).width + 30
-  renderRadiusRect(ctx, 145, 20, badgeWidth, 45, 8, 'rgb(111,216,160)', true)
-  renderText(ctx, alc[1], 20, 145, badgeWidth, 32, 45, '#fff', 'center')
+  let badgeMsg = alc[1], badgeColor = 'rgb(172,183,201)', tag = 1
+  // 255， 219， 46
+  // 111,216,160
+  // 249，129，215
+  // 172.183.201
+
+  if(/^[01234]/.test(badgeMsg) && badgeMsg.length > 1){
+    tag = badgeMsg[0]
+    badgeMsg = badgeMsg.substring(1)
+  }
+  switch(tag) {
+    case '1':
+      badgeColor = 'rgb(172, 183, 201)'
+      break
+    case '2':
+      badgeColor = 'rgb(249, 129, 215)'
+      break
+    case '3':
+      badgeColor = 'rgb(111, 216, 160)'
+      break
+    case '4':
+      badgeColor = 'rgb(255, 219, 46)'
+      break
+  }
+  let badgeWidth = 0
+  if(tag != 0) {
+    badgeWidth = ctxTmp.measureText(badgeMsg).width + 30
+    renderRadiusRect(ctx, 145, 20, badgeWidth, 45, 8, badgeColor, true)
+    renderText(ctx, badgeMsg, 20, 145, badgeWidth, 32, 45, '#fff', 'center')
+  }
 
   /* nick */
   renderText(ctx, alc[2], 20, 145 + badgeWidth + 10, 300, 32, 45, '#838383')
