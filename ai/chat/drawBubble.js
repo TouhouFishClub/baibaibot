@@ -88,7 +88,7 @@ const drawBubble = async (content, callback) => {
   cnt.forEach(cn => {
     let index = cn.indexOf('url=')
     if(index > -1) {
-      let tmp = cn.substring(index + 4).split(']').map(x => x.trim())
+      let tmp = cn.substring(index + 4).split(']').map(x => x.trim()).filter(x => x)
       imgHash[`Image__Tmp__${count}`] = {
         source : tmp[0],
         width: 0,
@@ -107,7 +107,7 @@ const drawBubble = async (content, callback) => {
   for(let i = 0; i < key.length; i++){
     let img = await loadImage(imgHash[key[i]].source)
     imgHash[key[i]].img = img
-    let w = img.width, h = img.height
+    let w = img.width * 2, h = img.height * 2
     if(Math.max(w, h) > 400){
       if(w > h) {
         h = h * 400 / w
@@ -135,7 +135,7 @@ const drawBubble = async (content, callback) => {
   ctxTmp.font = `40px ${fontFamily}`
 
   let msg = alc[3]
-  let msgSp = msg.split('\n')
+  let msgSp = msg.split('\n').filter(x => x)
   let maxLengthMsg = msgSp.concat([]).filter(x => !x.startsWith('Image__Tmp__')).sort((a, b) => b.length - a.length)[0]
 
   if(ctxTmp.measureText(maxLengthMsg).width < MAX_WIDTH - 270) {
