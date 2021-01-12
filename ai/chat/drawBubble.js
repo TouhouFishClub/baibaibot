@@ -163,6 +163,12 @@ const drawBubble = async (content, callback) => {
     , ctx = canvas.getContext('2d')
 
   /* avatar */
+
+  //[CQ:at,qq=395338563]
+  if(alc[0].startsWith('[CQ:at')){
+    alc[0] = alc[0].substring(alc[0].indexOf('qq=') + 3, alc[0].indexOf(']'))
+  }
+
   if(/^\d+$/.test(alc[0]) && alc[0].length > 4) {
     ctx.arc(70, 70, 50, 0, Math.PI * 2, false)
     ctx.fillStyle = '#e1e1e1'
