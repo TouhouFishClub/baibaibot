@@ -144,7 +144,7 @@ const drawBubble = async (content, callback) => {
     canvasWidth = MAX_WIDTH
   }
 
-  canvasWidth = Math.max(canvasWidth, mw)
+  canvasWidth = Math.max(canvasWidth, mw + 270)
 
   let newMsg = []
   canvasHeight = 190
