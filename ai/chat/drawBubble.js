@@ -88,7 +88,7 @@ const drawBubble = async (content, callback) => {
   cnt.forEach(cn => {
     let index = cn.indexOf('url=')
     if(index > -1) {
-      let tmp = cn.substring(index + 4).split(']')
+      let tmp = cn.substring(index + 4).split(']').map(x => x.trim())
       imgHash[`Image__Tmp__${count}`] = {
         source : tmp[0],
         width: 0,
@@ -218,10 +218,10 @@ const drawBubble = async (content, callback) => {
     if(msg.startsWith('Image__Tmp__')) {
       let tmp = imgHash[msg]
       ctx.drawImage(tmp.img, 210, offsetTop, tmp.width, tmp.height)
-      ctx.strokeStyle = '#000'
-      ctx.lineWidth = 3
-      ctx.strokeRect(210, offsetTop, tmp.width, tmp.height)
-      renderText(ctx, `w: ${tmp.width} h:${tmp.height}`, offsetTop, 210, canvasWidth - 270, 20, 32, '#000', 'left')
+      // ctx.strokeStyle = '#000'
+      // ctx.lineWidth = 3
+      // ctx.strokeRect(210, offsetTop, tmp.width, tmp.height)
+      // renderText(ctx, `w: ${tmp.width} h:${tmp.height}`, offsetTop, 210, canvasWidth - 270, 20, 32, '#000', 'left')
       offsetTop += tmp.height
     } else {
       renderText(ctx, msg, offsetTop, 210, canvasWidth - 270, 40, 52, '#000', 'left')
