@@ -13,11 +13,12 @@ const analysisContent = content => {
   if(content.length <= 3) {
     return [content, content, content, content]
   }
-  if(content.split('-').length == 2) {
-    return [content.split('-')[0], content.split('-')[0], content.split('-')[0], content.split('-')[1]]
+  let sp = content.split('-').map(x => x.trim())
+  if(sp.length == 2) {
+    return [sp[0], sp[0], sp[0], sp[1]]
   }
-  if(content.split('-').length == 4) {
-    return content.split('-')
+  if(sp.length == 4) {
+    return sp
   }
   return []
 }
@@ -80,7 +81,7 @@ const checkMaxWidth = (ctx, str, maxWidth) => {
 }
 
 
-const drawBubble = (content, callback) => {
+const drawBubble = async (content, callback) => {
   let alc = analysisContent(content)
   if(alc.length == 0){
     return
@@ -107,19 +108,38 @@ const drawBubble = (content, callback) => {
 
   let canvas = createCanvas(canvasWidth, canvasHeight)
     , ctx = canvas.getContext('2d')
-  ctx.fillStyle = 'rgba(245,245,245,1)'
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight)
 
   /* avatar */
-  if(alc[0].length > 3) {
-    alc[0] = alc[0].substring(0, 3)
+  if(/^\d+$/.test(alc[0]) && alc[0].length > 4) {
+    ctx.arc(70, 70, 50, 0, Math.PI * 2, false)
+    ctx.fillStyle = '#e1e1e1'
+    ctx.fill()
+    try {
+      let img = await loadImage(`http://q1.qlogo.cn/g?b=qq&nk=${alc[0]}&s=100`)
+      ctx.globalCompositeOperation = 'source-in'
+      ctx.drawImage(img, 20, 20, 100, 100)
+      ctx.globalCompositeOperation = 'source-over'
+    } catch (e) {
+      console.log('==== load image error ====')
+    }
+  } else {
+    let avtMsg = alc[0]
+    if(alc[0].length > 3) {
+      avtMsg = alc[0].substring(0, 3)
+    }
+    renderRadiusRect(ctx, 20, 20 , 100, 100, 50, '#e1e1e1', true)
+    let fontsize = 40
+    if(avtMsg.length == 3) {
+      fontsize = 30
+    }
+    renderText(ctx, avtMsg, 50, 20, 100, fontsize, 40, '#000', 'center')
   }
-  renderRadiusRect(ctx, 20, 20 , 100, 100, 50, '#e1e1e1', true)
-  let fontsize = 40
-  if(alc[0].length == 3) {
-    fontsize = 30
-  }
-  renderText(ctx, alc[0], 50, 20, 100, fontsize, 40, '#000', 'center')
+
+  /* bg */
+  ctx.globalCompositeOperation = 'destination-over'
+  ctx.fillStyle = 'rgba(245,245,245,1)'
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight)
+  ctx.globalCompositeOperation = 'source-over'
 
   /* badge */
   ctxTmp.font = `32px ${fontFamily}`
