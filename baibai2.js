@@ -425,7 +425,7 @@ function handleMsg_D(msgObj,botqq) {
   var gidstr= groupid+"";
   var force=0;
   if(content&&content.length>6){
-    if(content.trim().substring(0,6)=="!force"){
+    if((content.trim().substring(0,6)=="!force")||(content.trim().substring(0,6)=="！force")){
       force=1;
     }
   }
@@ -456,7 +456,7 @@ function handleMsg_D(msgObj,botqq) {
     content = content.substring(6).trim();
   }
 
-  if(getMsgCount(port)>1700){
+  if(getMsgCount(port)>1500){
     return;
   }
 
