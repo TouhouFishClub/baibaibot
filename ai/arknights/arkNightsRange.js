@@ -12,7 +12,4 @@ const AllRangeData = () => {
 
 module.exports = {
   AllRangeData,
-
-
-
 }
