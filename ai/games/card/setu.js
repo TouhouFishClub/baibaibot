@@ -28,13 +28,12 @@ var cache = {};
 var cacheg = {};
 function runsetu(content,gid,qq,callback,port){
   var cooldown = 60000 * 120;
-  var maxtimes = 2;
-  var groupmax = 5;
+  var maxtimes = 1;
+  var groupmax = 3;
   if(port!=23334){
-
       groupmax = 20;
-    cooldown = 60000 * 10;
-    maxtimes = 10;
+      cooldown = 60000 * 10;
+      maxtimes = 10;
   }
   var imgtype='image';
     if(content.substring(2)=="3"){
