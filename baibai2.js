@@ -111,6 +111,9 @@ const {handleFlyindReply} = require('./ai/games/flying/flight_chess');
 
 const { drawBubble } = require('./ai/chat/drawBubble')
 
+
+const { testGif } = require('./gif/test')
+
 initWS();
 initWS2();
 initWS3();
@@ -729,6 +732,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
+
+  if(content == 'testgif' && from == 799018865) {
+    console.log('==== test gif module ====')
+    testGif(callback)
+  }
 
 
   let con =content.trim(), fi = con.substring(0,4)
