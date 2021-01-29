@@ -7,7 +7,7 @@ const { IMAGE_DATA } = require(path.join(__dirname, '../baibaiConfigs.js'))
 const mkdirsSync = require('../lib/mkdirsSync')
 
 const testGif = callback => {
-  const encoder = new GIFEncoder(320, 240);
+  const encoder = new GIFEncoder(200, 200);
 // stream the results as they are available into myanimated.gif
 
   let output = path.join(IMAGE_DATA, 'out'), imgName = 'myanimated'
