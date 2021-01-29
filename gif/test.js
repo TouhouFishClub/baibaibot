@@ -43,9 +43,11 @@ const testGif = callback => {
 
   encoder.finish();
 
-  console.log(`保存${imgName}.gif成功！`)
-  let imgMsg = `[CQ:image,file=${path.join('send', 'out', `${imgName}`)}]`
-  callback(imgMsg)
+  setTimeout(() => {
+		console.log(`保存${imgName}.gif成功！`)
+		let imgMsg = `[CQ:image,file=${path.join('send', 'out', `${imgName}`)}]123123`
+		callback(imgMsg)
+	}, 2000)
 }
 
 // testGif()
