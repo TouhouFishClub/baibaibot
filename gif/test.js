@@ -10,7 +10,7 @@ const testGif = callback => {
   const encoder = new GIFEncoder(320, 240);
 // stream the results as they are available into myanimated.gif
 
-  let output = path.join(IMAGE_DATA, 'out')
+  let output = path.join(IMAGE_DATA, 'out'), imgName = 'myanimated'
   // let output = path.join('./', 'out'), imgName = 'myanimated'
   if (!fs.existsSync(output)) {
     mkdirsSync(output);
