@@ -252,8 +252,8 @@ app.get('/chat', (req, res) => {
 
 app.get('/send_group_msg',(reqp, resp) => {
   var user = basicAuth(reqp);
-  // var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
-  var check = false
+  var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
+  // var check = false
   if (check) {
     resp.set('WWW-Authenticate', 'Basic realm=Authorization Required');
     resp.send(401);
