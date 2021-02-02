@@ -256,7 +256,7 @@ function initWS5(){
         });
         connection.on('message', function(message) {
             if (message.type === 'utf8') {
-                handleMsg(JSON.parse(message.utf8Data),4)
+                handleMsg(JSON.parse(message.utf8Data),5)
             }
         });
     });
