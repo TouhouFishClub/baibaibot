@@ -367,6 +367,10 @@ app.get('/get_group_member_info',function(req,res){
   groupm(req,res,'get_group_member_info')
 });
 
+app.get(`/api/*`, (req, res) => {
+	groupm(req, res, req.path)
+})
+
 function groupm(req,res,path){
   res.set("Access-Control-Allow-Origin", "*");
   var url = `http://192.168.17.52:${PORT}/`+path;
