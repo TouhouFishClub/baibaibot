@@ -374,7 +374,7 @@ app.get(`/api/*`, (req, res) => {
 	console.log(req.path)
 	console.log('================')
 
-	groupm(req, res, req.path)
+	groupm(req, res, req.path.substring(5))
 })
 
 function groupm(req,res,path){
