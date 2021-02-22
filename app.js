@@ -368,6 +368,12 @@ app.get('/get_group_member_info',function(req,res){
 });
 
 app.get(`/api/*`, (req, res) => {
+	console.log('==============')
+	console.log(req)
+	console.log(res)
+	console.log(req.path)
+	console.log('================')
+
 	groupm(req, res, req.path)
 })
 
