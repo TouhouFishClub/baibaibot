@@ -12,6 +12,9 @@ var fs = require('fs');
 var udb;
 var cl_user;
 var cl_chat;
+
+const ignoreSet = new Set([93117357])
+
 initDB();
 function initDB(){
   MongoClient.connect(mongourl, function(err, db) {
@@ -27,6 +30,9 @@ var loliconapikey2 = "283179575f3f8f3adf3600";
 var cache = {};
 var cacheg = {};
 function runsetu(content,gid,qq,callback,port){
+	if(ignoreSet.has(gid)) {
+		return
+	}
   var cooldown = 60000 * 120;
   var maxtimes = 1;
   var groupmax = 3;
