@@ -29,51 +29,51 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
       let now = new Date()
       let date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
       let dateStr = `${date.getFullYear()}-${addZero(date.getMonth() + 1)}-${addZero(date.getDate())}`
-      let res1 = await requestPromise(`http://api.tianapi.com/txapi/ncovcity/index?key=${API_KEY}&date=${dateStr}`)
-      // console.log(dateStr)
-      let body1 = JSON.parse(res1.body)
-      if(body1.code == 200) {
-        let list = body1.newslist
-        /* 添加省份 */
-        list.forEach(li => {
-          if(AllData[li.locationId]) {
-            AllData[li.locationId].confirmedCount.push(li.confirmedCount)
-            AllData[li.locationId].curedCount.push(li.curedCount)
-            AllData[li.locationId].currentConfirmedCount.push(li.currentConfirmedCount)
-            AllData[li.locationId].deadCount.push(li.deadCount)
-            AllData[li.locationId].suspectedCount.push(li.suspectedCount)
-          } else {
-            AllData[li.locationId] = {
-              confirmedCount: [li.confirmedCount],
-              curedCount: [li.curedCount],
-              currentConfirmedCount: [li.currentConfirmedCount],
-              deadCount:[li.deadCount],
-              suspectedCount: [li.suspectedCount]
-            }
-          }
-          let city = li.cities
-          city.forEach(ci => {
-            if(AllData[ci.locationId]) {
-              AllData[ci.locationId].confirmedCount.push(ci.confirmedCount)
-              AllData[ci.locationId].curedCount.push(ci.curedCount)
-              AllData[ci.locationId].currentConfirmedCount.push(ci.currentConfirmedCount)
-              AllData[ci.locationId].deadCount.push(ci.deadCount)
-              AllData[ci.locationId].suspectedCount.push(ci.suspectedCount)
-            } else {
-              AllData[ci.locationId] = {
-                confirmedCount: [ci.confirmedCount],
-                curedCount: [ci.curedCount],
-                currentConfirmedCount: [ci.currentConfirmedCount],
-                deadCount:[ci.deadCount],
-                suspectedCount: [ci.suspectedCount]
-              }
-            }
-          })
-        })
-      } else {
-        bindError(body1.code, callback)
-        return
-      }
+      // let res1 = await requestPromise(`http://api.tianapi.com/txapi/ncovcity/index?key=${API_KEY}&date=${dateStr}`)
+      // // console.log(dateStr)
+      // let body1 = JSON.parse(res1.body)
+      // if(body1.code == 200) {
+      //   let list = body1.newslist
+      //   /* 添加省份 */
+      //   list.forEach(li => {
+      //     if(AllData[li.locationId]) {
+      //       AllData[li.locationId].confirmedCount.push(li.confirmedCount)
+      //       AllData[li.locationId].curedCount.push(li.curedCount)
+      //       AllData[li.locationId].currentConfirmedCount.push(li.currentConfirmedCount)
+      //       AllData[li.locationId].deadCount.push(li.deadCount)
+      //       AllData[li.locationId].suspectedCount.push(li.suspectedCount)
+      //     } else {
+      //       AllData[li.locationId] = {
+      //         confirmedCount: [li.confirmedCount],
+      //         curedCount: [li.curedCount],
+      //         currentConfirmedCount: [li.currentConfirmedCount],
+      //         deadCount:[li.deadCount],
+      //         suspectedCount: [li.suspectedCount]
+      //       }
+      //     }
+      //     let city = li.cities
+      //     city.forEach(ci => {
+      //       if(AllData[ci.locationId]) {
+      //         AllData[ci.locationId].confirmedCount.push(ci.confirmedCount)
+      //         AllData[ci.locationId].curedCount.push(ci.curedCount)
+      //         AllData[ci.locationId].currentConfirmedCount.push(ci.currentConfirmedCount)
+      //         AllData[ci.locationId].deadCount.push(ci.deadCount)
+      //         AllData[ci.locationId].suspectedCount.push(ci.suspectedCount)
+      //       } else {
+      //         AllData[ci.locationId] = {
+      //           confirmedCount: [ci.confirmedCount],
+      //           curedCount: [ci.curedCount],
+      //           currentConfirmedCount: [ci.currentConfirmedCount],
+      //           deadCount:[ci.deadCount],
+      //           suspectedCount: [ci.suspectedCount]
+      //         }
+      //       }
+      //     })
+      //   })
+      // } else {
+      //   bindError(body1.code, callback)
+      //   return
+      // }
       let res2 = await requestPromise(`http://api.tianapi.com/txapi/ncovabroad/index?key=${API_KEY}&date=${dateStr}`)
       let body2 = JSON.parse(res2.body)
       if(date.getTime() < 1584144000000) {
@@ -110,34 +110,34 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
 
   if(checkUpdate()) {
     console.log('更新当天数据')
-    let res1 = await requestPromise(`http://api.tianapi.com/txapi/ncovcity/index?key=${API_KEY}`)
-    let body1 = JSON.parse(res1.body)
-    if(body1.code == 200) {
-      let list = body1.newslist
-      /* 添加省份 */
-      list.forEach(li => {
-        if(AllData[li.locationId]) {
-          AllData[li.locationId].confirmedCount[0] = li.confirmedCount
-          AllData[li.locationId].curedCount[0] = li.curedCount
-          AllData[li.locationId].currentConfirmedCount[0] = li.currentConfirmedCount
-          AllData[li.locationId].deadCount[0] = li.deadCount
-          AllData[li.locationId].suspectedCount[0] = li.suspectedCount
-        }
-        let city = li.cities
-        city.forEach(ci => {
-          if(AllData[ci.locationId]) {
-            AllData[ci.locationId].confirmedCount[0] = ci.confirmedCount
-            AllData[ci.locationId].curedCount[0] = ci.curedCount
-            AllData[ci.locationId].currentConfirmedCount[0] = ci.currentConfirmedCount
-            AllData[ci.locationId].deadCount[0] = ci.deadCount
-            AllData[ci.locationId].suspectedCount[0] = ci.suspectedCount
-          }
-        })
-      })
-    } else {
-      bindError(body1.code, callback)
-      return
-    }
+    // let res1 = await requestPromise(`http://api.tianapi.com/txapi/ncovcity/index?key=${API_KEY}`)
+    // let body1 = JSON.parse(res1.body)
+    // if(body1.code == 200) {
+    //   let list = body1.newslist
+    //   /* 添加省份 */
+    //   list.forEach(li => {
+    //     if(AllData[li.locationId]) {
+    //       AllData[li.locationId].confirmedCount[0] = li.confirmedCount
+    //       AllData[li.locationId].curedCount[0] = li.curedCount
+    //       AllData[li.locationId].currentConfirmedCount[0] = li.currentConfirmedCount
+    //       AllData[li.locationId].deadCount[0] = li.deadCount
+    //       AllData[li.locationId].suspectedCount[0] = li.suspectedCount
+    //     }
+    //     let city = li.cities
+    //     city.forEach(ci => {
+    //       if(AllData[ci.locationId]) {
+    //         AllData[ci.locationId].confirmedCount[0] = ci.confirmedCount
+    //         AllData[ci.locationId].curedCount[0] = ci.curedCount
+    //         AllData[ci.locationId].currentConfirmedCount[0] = ci.currentConfirmedCount
+    //         AllData[ci.locationId].deadCount[0] = ci.deadCount
+    //         AllData[ci.locationId].suspectedCount[0] = ci.suspectedCount
+    //       }
+    //     })
+    //   })
+    // } else {
+    //   bindError(body1.code, callback)
+    //   return
+    // }
     let res2 = await requestPromise(`http://api.tianapi.com/txapi/ncovabroad/index?key=${API_KEY}`)
     let body2 = JSON.parse(res2.body)
     if(body2.code == 200) {
