@@ -420,38 +420,38 @@ const renderItem = (typeName, ctx, offsetX, offsetY, type, value, yesterday, ign
 const init = async callback => {
   console.log('=== 初始化数据, 整理地区编码 ===')
   console.log('省市地区')
-  let res1 = await requestPromise(`http://api.tianapi.com/txapi/ncovcity/index?key=${API_KEY}`)
-  let body1 = JSON.parse(res1.body)
-  if(body1.code == 200) {
-    let list = body1.newslist
-    /* 添加省份 */
-    let prov = list.map(li => {
-      return {
-        name: li.provinceName,
-        type: 'prov',
-        locationId: li.locationId
-      }
-    })
-    AllArea = AllArea.concat(prov)
-
-    /* 添加城市 */
-    list.forEach(li => {
-      let city = li.cities.map(ci => {
-        return {
-          name: ci.cityName,
-          locationId: ci.locationId,
-          type: 'city',
-          parentName: li.provinceName,
-          parentLocationId: li.locationId
-        }
-      })
-      AllArea = AllArea.concat(city)
-    })
-    AllArea = Array.from(new Set(AllArea))
-  } else {
-    bindError(body1.code, callback)
-    return
-  }
+  // let res1 = await requestPromise(`http://api.tianapi.com/txapi/ncovcity/index?key=${API_KEY}`)
+  // let body1 = JSON.parse(res1.body)
+  // if(body1.code == 200) {
+  //   let list = body1.newslist
+  //   /* 添加省份 */
+  //   let prov = list.map(li => {
+  //     return {
+  //       name: li.provinceName,
+  //       type: 'prov',
+  //       locationId: li.locationId
+  //     }
+  //   })
+  //   AllArea = AllArea.concat(prov)
+	//
+  //   /* 添加城市 */
+  //   list.forEach(li => {
+  //     let city = li.cities.map(ci => {
+  //       return {
+  //         name: ci.cityName,
+  //         locationId: ci.locationId,
+  //         type: 'city',
+  //         parentName: li.provinceName,
+  //         parentLocationId: li.locationId
+  //       }
+  //     })
+  //     AllArea = AllArea.concat(city)
+  //   })
+  //   AllArea = Array.from(new Set(AllArea))
+  // } else {
+  //   bindError(body1.code, callback)
+  //   return
+  // }
   let res2 = await requestPromise(`http://api.tianapi.com/txapi/ncovabroad/index?key=${API_KEY}`)
   console.log('国家')
   let body2 = JSON.parse(res2.body)
