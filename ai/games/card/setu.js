@@ -13,7 +13,7 @@ var udb;
 var cl_user;
 var cl_chat;
 
-const ignoreSet = new Set([93117357])
+const ignoreSet = new Set([93117357, 7469496])
 
 initDB();
 function initDB(){
