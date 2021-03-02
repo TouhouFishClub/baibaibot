@@ -502,16 +502,20 @@ function handleMsg_D(msgObj,botqq) {
     return;
   }
 
+
+
+  console.log('\n\n\n\n\n=======================')
+
+  console.log(msgObj)
+  console.log(msgObj.user_id)
+  console.log(typeof msgObj.user_id)
+
+
+  console.log('=======================\n\n\n\n\n')
+
+
+
   if(msgObj.notice_type == 'group_increase') {
-
-    console.log('\n\n\n\n\n=======================')
-
-    console.log(msgObj)
-    console.log(msgObj.user_id)
-    console.log(typeof msgObj.user_id)
-
-
-    console.log('=======================\n\n\n\n\n')
 
     if(new Set([
       2375373419, 3291864216, 1840239061, 981069482, 914853856, 2771362647,
