@@ -437,10 +437,10 @@ function handleMsg_D0(msgObj,botqq){
 
 
 function handleMsg_D(msgObj,botqq) {
-  // console.log('\n======================')
-  // console.log(msgObj)
-  // console.log(botqq)
-  // console.log('======================\n')
+  console.log('\n\n\n\n\n======================')
+  console.log(msgObj)
+  console.log(botqq)
+  console.log('======================\n\n\n\n\n')
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
@@ -502,21 +502,7 @@ function handleMsg_D(msgObj,botqq) {
     return;
   }
 
-
-
-  console.log('\n\n\n\n\n=======================')
-
-  console.log(msgObj)
-  console.log(msgObj.user_id)
-  console.log(typeof msgObj.user_id)
-
-
-  console.log('=======================\n\n\n\n\n')
-
-
-
   if(msgObj.notice_type == 'group_increase') {
-
     if(new Set([
       2375373419, 3291864216, 1840239061, 981069482, 914853856, 2771362647,
       '2375373419', '3291864216', '1840239061', '981069482', '914853856', '2771362647',
