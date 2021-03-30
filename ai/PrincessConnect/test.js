@@ -7,39 +7,44 @@ const c = m => {
 
 // const { discord } = require('./discord')
 // const { cherugo } = require('./cherugo')
-// const { schedule } = require('./schedule')
+const { schedule } = require('./schedule')
 const { guildRankSearch } = require('./guildRank')
 
-const wait = async time => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve()
-    }, time)
-  })
-}
-let con = 'bcs 圣米卡艾尔学院 -- drawImage', from = 799018865, groupid=111;
-(async () => {
-  await wait(1000)
 
-  let grs = con.substring(3).trim(), sp = grs.split(' -- '), option = {}
-  if(sp.length == 2) {
-    grs = sp[0]
-    if(from == 799018865) {
-      let params = sp[1]
-      params.split('&').forEach(p => {
-        let s = p.split('=')
-        if(s.length == 2) {
-          option[s[0]] = s[1]
-        } else {
-          option[s[0]] = true
-        }
-      })
-    }
-  }
-  console.log('search: ', grs)
-  guildRankSearch(grs, from, groupid, c, option)
-  // guildRankSearch('会长#幻天', 111, 111111, c)
-})()
+schedule('cn', d =>{
+	console.log(d)
+}, true)
+
+// const wait = async time => {
+//   return new Promise(resolve => {
+//     setTimeout(() => {
+//       resolve()
+//     }, time)
+//   })
+// }
+// let con = 'bcs 圣米卡艾尔学院 -- drawImage', from = 799018865, groupid=111;
+// (async () => {
+//   await wait(1000)
+//
+//   let grs = con.substring(3).trim(), sp = grs.split(' -- '), option = {}
+//   if(sp.length == 2) {
+//     grs = sp[0]
+//     if(from == 799018865) {
+//       let params = sp[1]
+//       params.split('&').forEach(p => {
+//         let s = p.split('=')
+//         if(s.length == 2) {
+//           option[s[0]] = s[1]
+//         } else {
+//           option[s[0]] = true
+//         }
+//       })
+//     }
+//   }
+//   console.log('search: ', grs)
+//   guildRankSearch(grs, from, groupid, c, option)
+//   // guildRankSearch('会长#幻天', 111, 111111, c)
+// })()
 // cherugo('', true, c)
 //
 // cherugo('啊打发打发的', true, c)
