@@ -8,9 +8,9 @@ const schedule = (server = 'cn', callback) => {
     renderCalendar(now.getFullYear(), now.getMonth() + 1, callback, JSON.parse(tmp[server]), '_pcr')
   } else {
     https.get({
-      host: 'tools.yobot.win',
+      host: 'pcrbot.github.io/',
       port: 443,
-      path: `/calender/${server}.json`,
+      path: `/calendar-updater-action/${server}.json`,
       method: 'GET',
       rejectUnauthorized: false,
       headers: {
