@@ -1132,6 +1132,27 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     )
     return
   }
+  if(content == '迷路的花园') {
+    cov(
+      '迷路的花园',
+      callback,
+      true,
+      ['现有女友', '今日新增女友', '确诊女友', '疑似女友', '境外女友'],
+      {
+        name: '迷路的花园',
+        type: 'other',
+      },
+      {
+        confirmedCount: [~~(8 * Math.random()), ~~(4 * Math.random())],
+        curedCount: [~~(200 * Math.random()), ~~(100 * Math.random())],
+        currentConfirmedCount: [~~(4 * Math.random()), ~~(2 * Math.random())],
+        deadCount: [~~(4 * Math.random()), ~~(2 * Math.random())],
+        suspectedCount: [~~(200 * Math.random()), ~~(100 * Math.random())]
+      },
+      '迷路的花园',
+    )
+    return
+  }
 
   if(n>1&&n<10&&rcontent.length==n+2){
     var city = content.substring(0,n).trim();
