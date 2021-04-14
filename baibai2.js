@@ -445,7 +445,7 @@ function handleMsg_D0(msgObj,botqq){
 function handleMsg_D(msgObj,botqq) {
 
 
-  
+
   // console.log('\n\n\n\n\n======================')
   // console.log(msgObj)
   // console.log(botqq)
@@ -466,7 +466,7 @@ function handleMsg_D(msgObj,botqq) {
   }else{
     port = 23334;
   }
-    
+
   var gidstr= groupid+"";
   var force=0;
   if(content&&content.length>6){
@@ -875,8 +875,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 			raffle(content, from, groupid, callback, pt)
 		}
   }
-  if(con == '中午吃什么') {
-    chishenme(callback)
+  if(con.endsWith('吃什么')) {
+    chishenme(con.substring(0, con.length - 2), callback)
   }
   if(con == 'bcr日程') {
     schedule('cn', callback)

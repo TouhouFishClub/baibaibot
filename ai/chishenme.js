@@ -35,10 +35,11 @@ const list = [
   "蟹黄包",
   "煎饼果子",
   "生煎",
-  "炒年糕"
+  "炒年糕",
+  "我两拳"
 ]
-const chishenme = callback => {
-  callback(`中午吃${list[parseInt(Math.random() * list.length)]}`)
+const chishenme = (st, callback) => {
+  callback(`${st}${list[parseInt(Math.random() * list.length)]}`)
 }
 
 module.exports = {
