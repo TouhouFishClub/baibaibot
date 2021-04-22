@@ -668,7 +668,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(content.match(/CQ:image,type=flash,file=/)) {
   	// console.log('====================>', FLASH_RESEND)
-  	let targetFile = content.substring(content.match(/CQ:image,type=flash,file=/).index + 25, content.length - 7).toUpperCase()
+  	let targetFile = content.substring(content.match(/CQ:image,type=flash,file=/).index + 25, content.length - 7)
 		flashHandler(from, groupid, targetFile, port, globalConfig.FLASH_RESEND, callback)
 		return
 	}
