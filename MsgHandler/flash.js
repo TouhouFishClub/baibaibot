@@ -1,4 +1,8 @@
 const http = require('http')
+const fs = require('fs-extra')
+const path = require('path-extra')
+const basicPath = '/home/hduser/upload/tk/mb'
+
 const flashHandler = (cacheFile, port, isResend, callback) => {
 	var options = {
 		host: '192.168.17.52',
@@ -13,8 +17,19 @@ const flashHandler = (cacheFile, port, isResend, callback) => {
 			resdata = resdata + chunk
 		})
 		res.on('end', () => {
-			if(resdata.length>0){
-				callback(`port: ${port}\ndata: ${resdata}`);
+			if(resdata.length > 0){
+				try {
+					let d = JSON.parse(resdata)
+					let filePath = d.data.file
+					if(isResend) {
+						callback(`检测到闪照：[CQ:image,file=file:${basicPath}/${port}/${filePath}]`)
+					} else {
+						callback(`检测到闪照，我自己偷偷存下了`)
+					}
+				} catch {
+					console.log('ERROR: 【闪照】转换JSON错误')
+				}
+				// callback(`port: ${port}\ndata: ${resdata}`);
 			}
 		})
 	})
