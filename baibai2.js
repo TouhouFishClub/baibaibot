@@ -113,6 +113,10 @@ const { drawBubble } = require('./ai/chat/drawBubble')
 const { flashHandler } = require('./MsgHandler/flash')
 const { testGif } = require('./gif/test')
 
+let globalConfig = {
+	FLASH_RESEND : false
+}
+
 initWS();
 initWS2();
 initWS3();
@@ -641,8 +645,6 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
     return;
   }
-
-  let FLASH_RESEND = false
 	// console.log(from)
 
   if(content.startsWith('/') && from == 799018865) {
@@ -653,11 +655,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		switch(codes[0]) {
 			case 'flash_resend':
 				if(codes[1] == 'true'){
-					FLASH_RESEND = true
+					globalConfig.FLASH_RESEND = true
 					callback('闪照跟踪已开启')
 				}
 				if(codes[1] == 'false'){
-					FLASH_RESEND = false
+					globalConfig.FLASH_RESEND = false
 					callback('闪照跟踪已关闭')
 				}
 				break
@@ -665,8 +667,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	}
 
   if(content.match(/CQ:image,type=flash,file=/)) {
+  	// console.log('====================>', FLASH_RESEND)
   	let targetFile = content.substring(content.match(/CQ:image,type=flash,file=/).index + 25, content.length - 1)
-		flashHandler(targetFile, port, FLASH_RESEND, callback)
+		flashHandler(targetFile, port, globalConfig.FLASH_RESEND, callback)
 		return
 	}
 
