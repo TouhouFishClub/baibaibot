@@ -702,7 +702,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		}
 		return
 	}
-	
+
   if(content.startsWith('/') && configAdminSet.has(from)) {
   	console.log('=============================')
 		console.log('entry console')
@@ -731,7 +731,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 			groupid,
 			targetFile,
 			port,
-			globalConfig.FLASH_RESEND || groupConfig[groupid].FLASH_RESEND || groupConfig[groupid].FLASH_RESEND_USER.has(from),
+			globalConfig.FLASH_RESEND || groupConfig[groupid].FLASH_RESEND || groupConfig[groupid].FLASH_RESEND_USER.has(`${from}`),
 			callback
 		)
 		return
