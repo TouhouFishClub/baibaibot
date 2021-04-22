@@ -117,6 +117,15 @@ let globalConfig = {
 	FLASH_RESEND : false
 }
 
+let groupConfig = {
+
+}
+
+const configAdminSet = new Set([
+	799018865,
+	357474405
+])
+
 initWS();
 initWS2();
 initWS3();
@@ -647,7 +656,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 	// console.log(from)
 
-  if(content.startsWith('/') && from == 799018865) {
+  if(content.startsWith('/') && configAdminSet.has(from)) {
   	console.log('=============================')
 		console.log('entry console')
   	//控制台
@@ -664,12 +673,66 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 				}
 				break
 		}
+		return
+	}
+	if(!groupConfig[groupid]) {
+		groupConfig[groupid] = {
+			FLASH_RESEND : false,
+			FLASH_RESEND_USER: new Set()
+		}
+	}
+  if(content.startsWith('/groupset') && configAdminSet.has(from)) {
+		//控制台
+		let codes = content.substring(10).split(' ')
+		switch(codes[0]) {
+			case 'flash_resend':
+				if(codes[1] == 'true'){
+					groupConfig[groupid].FLASH_RESEND = true
+					callback('此群闪照跟踪已开启')
+				}
+				if(codes[1] == 'false'){
+					groupConfig[groupid].FLASH_RESEND = false
+					callback('此群闪照跟踪已关闭')
+				}
+				break
+			case 'check_flash_type':
+				callback(`此群闪照跟踪功能${groupConfig[groupid].FLASH_RESEND ? '开启': '关闭'}中`)
+				break
+			case 'force_resend':
+				groupConfig[groupid].FLASH_RESEND_USER.add(codes[1])
+				callback(`${codes[1]}已强制闪照跟踪`)
+				break
+			case 'remove_force_resend':
+				if(groupConfig[groupid].FLASH_RESEND_USER.has(codes[1])) {
+					groupConfig[groupid].FLASH_RESEND_USER.add(codes[1])
+					callback(`${codes[1]}已移除强制闪照跟踪`)
+				} else {
+					callback(`${codes[1]}未被强制闪照跟踪`)
+				}
+				break
+			case 'force_resend_list':
+				let arr = Array.from(groupConfig[groupid].FLASH_RESEND_USER)
+				if(arr.length) {
+					callback(`此群${arr.join(',')}被强制闪照跟踪`)
+				} else {
+					callback(`此群无人被强制闪照跟踪`)
+				}
+				break
+		}
+		return
 	}
 
   if(content.match(/CQ:image,type=flash,file=/)) {
   	// console.log('====================>', FLASH_RESEND)
   	let targetFile = content.substring(content.match(/CQ:image,type=flash,file=/).index + 25, content.length - 7)
-		flashHandler(from, groupid, targetFile, port, globalConfig.FLASH_RESEND, callback)
+		flashHandler(
+			from,
+			groupid,
+			targetFile,
+			port,
+			globalConfig.FLASH_RESEND || groupConfig[groupid].FLASH_RESEND || groupConfig[groupid].FLASH_RESEND_USER.has(from),
+			callback
+		)
 		return
 	}
 
