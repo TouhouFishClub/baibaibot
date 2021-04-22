@@ -643,6 +643,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   let FLASH_RESEND = false
+	console.log(from)
 
   if(content.startsWith == '/' && from == 799018865) {
   	console.log('=============================')
