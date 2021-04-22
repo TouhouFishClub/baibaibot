@@ -110,8 +110,7 @@ const {catreply} = require('./ai/games/card/cat');
 const {handleFlyindReply} = require('./ai/games/flying/flight_chess');
 
 const { drawBubble } = require('./ai/chat/drawBubble')
-
-
+const { flashHandler } = require('./MsgHandler/flash')
 const { testGif } = require('./gif/test')
 
 initWS();
@@ -642,6 +641,32 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
     return;
   }
+
+  let FLASH_RESEND = false
+
+  if(content.startsWith == '/' && from == 799018865) {
+  	//控制台
+		let codes = content.substring(1).split(' ')
+		switch(codes[0]) {
+			case 'flash_resend':
+				if(codes[1] == 'true'){
+					FLASH_RESEND = true
+					callback('闪照跟踪已开启')
+				}
+				if(codes[1] == 'false'){
+					FLASH_RESEND = false
+					callback('闪照跟踪已关闭')
+				}
+				break
+		}
+	}
+
+  if(content.match(/CQ:image,type=flash,file=/)) {
+  	let targetFile = content.substring(content.match(/CQ:image,type=flash,file=/).index + 25, content.length - 1)
+		flashHandler(targetFile, port, FLASH_RESEND, callback)
+		return
+	}
+
 
   if((content=='百百')||(content.indexOf('百百')>=0&&content.indexOf('菜单')>=0)){
     var ret = "";
