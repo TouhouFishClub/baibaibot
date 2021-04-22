@@ -3,7 +3,7 @@ const flashHandler = (cacheFile, port, isResend, callback) => {
 	var options = {
 		host: '192.168.17.52',
 		port: port,
-		path: `get_image?file=${cacheFile}`,
+		path: `/get_image?file=${cacheFile}`,
 		method: 'GET',
 		headers: {}
 	};
