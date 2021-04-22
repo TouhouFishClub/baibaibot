@@ -644,7 +644,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   let FLASH_RESEND = false
 
-  if(content.startsWith == '/' && from == 799018865) {
+  if(content.startsWith == '~' && from == 799018865) {
   	//控制台
 		let codes = content.substring(1).split(' ')
 		switch(codes[0]) {
