@@ -7,7 +7,7 @@ const flashHandler = (qq, groupid, cacheFile, port, isResend, callback) => {
 
 
 	if(isResend) {
-		callback(`检测到闪照：[CQ:image,file=http://gchat.qpic.cn/gchatpic_new/${qq}/${groupid}-${~~(Math.random() * 10000000000)}-${cacheFile}/0?term=3`)
+		callback(`检测到闪照：[CQ:image,file=http://gchat.qpic.cn/gchatpic_new/${qq}/${groupid}-${~~(Math.random() * 10000000000)}-${cacheFile}/0?term=3]`)
 	} else {
 		// callback(`检测到闪照，我自己偷偷存下了`)
 	}
