@@ -656,32 +656,13 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 	// console.log(from)
 
-  if(content.startsWith('/') && configAdminSet.has(from)) {
-  	console.log('=============================')
-		console.log('entry console')
-  	//控制台
-		let codes = content.substring(1).split(' ')
-		switch(codes[0]) {
-			case 'flash_resend':
-				if(codes[1] == 'true'){
-					globalConfig.FLASH_RESEND = true
-					callback('闪照跟踪已开启')
-				}
-				if(codes[1] == 'false'){
-					globalConfig.FLASH_RESEND = false
-					callback('闪照跟踪已关闭')
-				}
-				break
-		}
-		return
-	}
 	if(!groupConfig[groupid]) {
 		groupConfig[groupid] = {
 			FLASH_RESEND : false,
 			FLASH_RESEND_USER: new Set()
 		}
 	}
-  if(content.startsWith('/groupset') && configAdminSet.has(from)) {
+	if(content.startsWith('/groupset') && configAdminSet.has(from)) {
 		//控制台
 		let codes = content.substring(10).split(' ')
 		switch(codes[0]) {
@@ -716,6 +697,26 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 					callback(`此群${arr.join(',')}被强制闪照跟踪`)
 				} else {
 					callback(`此群无人被强制闪照跟踪`)
+				}
+				break
+		}
+		return
+	}
+	
+  if(content.startsWith('/') && configAdminSet.has(from)) {
+  	console.log('=============================')
+		console.log('entry console')
+  	//控制台
+		let codes = content.substring(1).split(' ')
+		switch(codes[0]) {
+			case 'flash_resend':
+				if(codes[1] == 'true'){
+					globalConfig.FLASH_RESEND = true
+					callback('闪照跟踪已开启')
+				}
+				if(codes[1] == 'false'){
+					globalConfig.FLASH_RESEND = false
+					callback('闪照跟踪已关闭')
 				}
 				break
 		}
