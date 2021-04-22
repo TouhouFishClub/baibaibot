@@ -685,7 +685,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 				break
 			case 'remove_force_resend':
 				if(groupConfig[groupid].FLASH_RESEND_USER.has(codes[1])) {
-					groupConfig[groupid].FLASH_RESEND_USER.remove(codes[1])
+					groupConfig[groupid].FLASH_RESEND_USER.delete(codes[1])
 					callback(`${codes[1]}已移除强制闪照跟踪`)
 				} else {
 					callback(`${codes[1]}未被强制闪照跟踪`)
