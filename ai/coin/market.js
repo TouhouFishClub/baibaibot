@@ -162,7 +162,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
           if(n[symbol.toLowerCase()]){
             var pdd = data[i].quote.USD
             var price_usd=parseFloat(pdd.price);
-            var price_cny=parseFloat(pdd.price)*6.48;
+            var price_cny=parseFloat(pdd.price)*USD2CNY;
             USDCNYRATE = price_cny/price_usd;
             if(isInterface){
               ret.push({
