@@ -79,8 +79,29 @@ module.exports={
 }
 
 
+var USD2CNY = 6.5;
+function getFixer(){
+  var url = 'http://data.fixer.io/api/latest?access_key=01a69c4322e94ee4533267a407dea588';
+  request({
+      headers:{
+          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
+      },
+      url: url,
+  }, function(error, response, body) {
+      if (error && error.code) {
+          console.log('pipe error catched!')
+          console.log(error);
+      } else {
+          var data = eval('('+body+')');
+          var rates = data.rates;
+          var usd = rates.USD;
+          var cny = rates.CNY;
+          USD2CNY = usd/cny;
+      }
+  });
+}
 
-
+getFixer();
 
 
 
@@ -141,7 +162,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
           if(n[symbol.toLowerCase()]){
             var pdd = data[i].quote.USD
             var price_usd=parseFloat(pdd.price);
-            var price_cny=parseFloat(pdd.price)*6.56;
+            var price_cny=parseFloat(pdd.price)*6.48;
             USDCNYRATE = price_cny/price_usd;
             if(isInterface){
               ret.push({
