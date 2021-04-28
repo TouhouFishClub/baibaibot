@@ -96,7 +96,7 @@ function getFixer(){
           var rates = data.rates;
           var usd = rates.USD;
           var cny = rates.CNY;
-          USD2CNY = usd/cny;
+          USD2CNY = cny/usd;
       }
   });
 }
