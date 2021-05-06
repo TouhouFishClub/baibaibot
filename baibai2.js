@@ -987,9 +987,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     let tar = con.substring(0, con.length - 4)
 		if(tar.split('#').length == 2) {
 			fiveThousandTrillionYen(tar, callback)
+			return
 		}
     if((tar.length <= 3 && tar.trim()) || (tar.split('#').length <= 4 && tar.split('#').length >= 2)) {
       drawBubble(tar, callback)
+			return
     }
     return
   }
