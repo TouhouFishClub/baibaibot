@@ -209,7 +209,7 @@ const fiveThousandTrillionYen = (content, callback) => {
 	let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
 	let dataBuffer = new Buffer(base64Data, 'base64')
 
-	sendImageMsgBuffer(dataBuffer, content, 'other', msg => {
+	sendImageMsgBuffer(dataBuffer, 'output', 'other', msg => {
 		callback(msg)
 	})
 
