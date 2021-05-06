@@ -2,7 +2,7 @@
 const fs = require('fs-extra')
 const path = require('path-extra')
 const { sendImageMsgBuffer } = require('../../cq/sendImage')
-const {createCanvas, loadImage} = require('canvas')
+const {createCanvas, registerFont} = require('canvas')
 const MAX_SIZE = 30
 const GLOBAL_MARGIN = 40
 const FONT_INIT = ['notobk', 'notoserifbk']
@@ -172,6 +172,9 @@ const fiveThousandTrillionYen = (content, callback) => {
 		return
 	if(sp[0].lastIndexOf('[CQ:') > -1 || sp[1].lastIndexOf('[CQ:') > -1)
 		return
+
+	registerFont('./font/mnjcch.ttf', { family: FONT_INIT[0] })
+	registerFont('./font/mnjtcs.ttf', { family: FONT_INIT[1] })
 
 	let canvasTmp = createCanvas(2000, 400), ctxTmp = canvasTmp.getContext('2d')
 	ctxTmp.setTransform(1, 0, -0.45, 1, 0, 0)
