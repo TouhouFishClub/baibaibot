@@ -1,4 +1,6 @@
 // source https://github.com/yurafuca/5000choyen
+const fs = require('fs-extra')
+const path = require('path-extra')
 const { sendImageMsgBuffer } = require('../../cq/sendImage')
 const {createCanvas, loadImage} = require('canvas')
 const MAX_SIZE = 30
