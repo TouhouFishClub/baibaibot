@@ -180,8 +180,8 @@ const fiveThousandTrillionYen = (content, callback) => {
 	if(sp[0].lastIndexOf('[CQ:') > -1 || sp[1].lastIndexOf('[CQ:') > -1)
 		return
 
-	registerFont('./font/mnjcch.ttf', { family: FONT_INIT[0] })
-	registerFont('./font/mnjtcs.ttf', { family: FONT_INIT[1] })
+	registerFont('./font/NotoSansCJK-Black.otf', { family: FONT_INIT[0] })
+	registerFont('./font/NotoSansSC-heavy.otf', { family: FONT_INIT[1] })
 
 	let canvasTmp = createCanvas(2000, 400), ctxTmp = canvasTmp.getContext('2d')
 	ctxTmp.setTransform(1, 0, -0.45, 1, 0, 0)
