@@ -110,6 +110,7 @@ const {catreply} = require('./ai/games/card/cat');
 const {handleFlyindReply} = require('./ai/games/flying/flight_chess');
 
 const { drawBubble } = require('./ai/chat/drawBubble')
+const { fiveThousandTrillionYen } = require('./ai/chat/5000choyen')
 const { flashHandler } = require('./MsgHandler/flash')
 const { testGif } = require('./gif/test')
 
@@ -984,9 +985,13 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(con.endsWith('.jpg')) {
     let tar = con.substring(0, con.length - 4)
+		if(tar.split('#').length == 2) {
+			fiveThousandTrillionYen(tar, callback)
+		}
     if((tar.length <= 3 && tar.trim()) || (tar.split('#').length <= 4 && tar.split('#').length >= 2)) {
       drawBubble(tar, callback)
     }
+    return
   }
 
 

@@ -209,17 +209,17 @@ const fiveThousandTrillionYen = (content, callback) => {
 	let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
 	let dataBuffer = new Buffer(base64Data, 'base64')
 
-	// sendImageMsgBuffer(dataBuffer, `大头菜_${qq}`, 'other', msg => {
-	// 	callback(msg)
-	// })
+	sendImageMsgBuffer(dataBuffer, content, 'other', msg => {
+		callback(msg)
+	})
 
-	fs.writeFile(path.join(__dirname, `test.png`), dataBuffer, (err) => {
-	  if(err){
-	    console.log(err)
-	  }else{
-	    console.log("保存成功！");
-	  }
-	});
+	// fs.writeFile(path.join(__dirname, `test.png`), dataBuffer, (err) => {
+	//   if(err){
+	//     console.log(err)
+	//   }else{
+	//     console.log("保存成功！");
+	//   }
+	// });
 
 
 
