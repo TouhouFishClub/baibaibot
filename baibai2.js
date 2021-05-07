@@ -973,6 +973,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(con.endsWith('吃什么')) {
     chishenme(con.substring(0, con.length - 2), callback)
+		return
   }
   if(con == 'bcr日程') {
     schedule('cn', callback)
