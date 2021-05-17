@@ -193,16 +193,19 @@ const fiveThousandTrillionYen = (content, callback) => {
 	let line2w = ctxTmp.measureText(sp[1]).width + LINE_INDENT
 
 	let canvasWidth = (line2w > line1w ? line2w : line1w) + GLOBAL_MARGIN * 2
-	let cavasHeight = 200 + GLOBAL_MARGIN * 2 + 20
+	let cavasHeight = 200 + GLOBAL_MARGIN * 2 + 30
 
 	let canvas = createCanvas(canvasWidth, cavasHeight)
 		, ctx = canvas.getContext('2d')
 
 	ctx.fillStyle = `white`
+	ctx.lineJoin = 'round';
+	ctx.lineCap = 'round';
+	ctx.fillStyle = 'white';
 	ctx.fillRect(0, 0, canvasWidth, cavasHeight)
 
 	renderRedText(ctx, sp[0], GLOBAL_MARGIN + 50, GLOBAL_MARGIN + 100 - 20)
-	renderWhiteText(ctx, sp[1], GLOBAL_MARGIN + LINE_INDENT + 50, GLOBAL_MARGIN + 100 + 100 - 20 + 20)
+	renderWhiteText(ctx, sp[1], GLOBAL_MARGIN + LINE_INDENT + 50, GLOBAL_MARGIN + 100 + 100 - 20 + 30)
 
 
 	let imgData = canvas.toDataURL()
