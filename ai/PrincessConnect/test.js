@@ -6,14 +6,14 @@ const c = m => {
 }
 
 // const { discord } = require('./discord')
-// const { cherugo } = require('./cherugo')
-const { schedule } = require('./schedule')
-const { guildRankSearch } = require('./guildRank')
+const { cherugo } = require('./cherugo')
+// const { schedule } = require('./schedule')
+// const { guildRankSearch } = require('./guildRank')
 
 
-schedule('cn', d =>{
-	console.log(d)
-}, true)
+// schedule('cn', d =>{
+// 	console.log(d)
+// }, true)
 
 // const wait = async time => {
 //   return new Promise(resolve => {
@@ -49,7 +49,7 @@ schedule('cn', d =>{
 //
 // cherugo('啊打发打发的', true, c)
 //
-// cherugo('切噜～♪切切噼卟噜哔噼叮铃啰噼叮噜哔噼叮铃啰噼叮噜唎噼哔巴', false, c)
+cherugo('切噜～♪切啵啪哔啰哔啰切啰咧啰://切啰啰啰啰啰啰.切叮啪嘭啪巴啪嘭啪叮啪嘭啪巴啪嘭啪.切咧啪铃啪拉啪/切啪啰嘭啪哔啪唎啪铃啪/切叮哔啪唎卟咧啰哔噜哔哔咧卟咧卟咧啵啰啰咧啵啪啰咧?切啪啪叮啰铃啪拉啪=切咧啰唎啪卟啪叮啰咧啪啵啪&切咧啰唎啪嘭啪哔啪=切卟咧哔咧咧咧叮咧切咧啰咧卟咧嘭咧卟咧啵咧叮咧哔咧啰咧咧咧叮咧嘭咧嘭咧切咧咧咧叮咧', false, c)
 
 // (async () => {
 //

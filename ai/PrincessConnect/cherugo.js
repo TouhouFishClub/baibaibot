@@ -22,14 +22,33 @@ const cherugo = (content, encode, callback) => {
   } else {
     if (!content) return
     content = content.replace(baseStr, '')
-    let res = []
-    group(Array.from(content).slice(1), '切').forEach(item => {
-      let x = CHERU_DIC[item[1]] || 0
-      x = x << 4 | CHERU_DIC[item[0]]
-      res.push(x)
-    })
-    callback(iconv.decode(Buffer.from(res), 'gbk'))
+		let out = '', chatTmp = '', charSet = new Set(CHERU_SET.split(''))
+		content.split('').forEach(ch => {
+			if(charSet.has(ch)) {
+				chatTmp += ch
+			} else {
+				if(chatTmp.length) {
+					out += decodeTmp(chatTmp)
+					chatTmp = ''
+				}
+				out += ch
+			}
+		})
+		if(chatTmp.length) {
+			out += decodeTmp(chatTmp)
+		}
+		callback(out)
   }
+}
+
+const decodeTmp = content => {
+	let res = []
+	group(Array.from(content).slice(1), '切').forEach(item => {
+		let x = CHERU_DIC[item[1]] || 0
+		x = x << 4 | CHERU_DIC[item[0]]
+		res.push(x)
+	})
+	return iconv.decode(Buffer.from(res), 'gbk')
 }
 
 const group = (arr, fill = '') => {
