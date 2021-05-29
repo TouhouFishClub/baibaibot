@@ -119,7 +119,7 @@ const splitText = (str, start, end = '', ignore = false) => {
 	collection = client.collection('cl_mabinogi_optionset')
 
 	for(let i = 0; i < allData.length; i ++) {
-		await collection.save(Object.assign({'_id': allData[i].name}, allData[i]))
+		await collection.save(Object.assign({'_id': `${allData[i].name.trim()}_${allData[i].level.trim().toUpperCase()}`}, allData[i]))
 	}
 	console.log('save success!!')
 })()
