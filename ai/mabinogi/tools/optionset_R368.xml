@@ -1401,16 +1401,5 @@
     <OptionSet ID="80126" Name="artisan_marionette_critical3" LocalName="_LT[xml.optionset.11244]" LocalName2="_LT[xml.optionset.11264]" OptionList=": : SetParamOnEquip(marionette_control_critical, +(5~10));" OptionDesc="_LT[xml.optionset.11284]" AllowItem="*/equip/*" BlockItem="" Rarity="0" Usage="8" Probability="0" Level="0" IsAlwaysSuccess="true" IsIgnoreLevel="true" RepairCostRate="0" ScrollId="" Generation="23" Season="1" SubSeason="0" />
     <OptionSet ID="80127" Name="artisan_will6" LocalName="_LT[xml.optionset.11245]" LocalName2="_LT[xml.optionset.11265]" OptionList=": : SetParamOnEquip(will, +(50~100));" OptionDesc="_LT[xml.optionset.11285]" AllowItem="*/equip/*" BlockItem="" Rarity="0" Usage="8" Probability="0" Level="0" IsAlwaysSuccess="true" IsIgnoreLevel="true" RepairCostRate="0" ScrollId="" Generation="23" Season="1" SubSeason="0" />
     <OptionSet ID="80128" Name="artisan_life8" LocalName="_LT[xml.optionset.11246]" LocalName2="_LT[xml.optionset.11266]" OptionList=": : SetParamOnEquip(lifemax, +(50~100));" OptionDesc="_LT[xml.optionset.11286]" AllowItem="*/equip/*" BlockItem="" Rarity="0" Usage="8" Probability="0" Level="0" IsAlwaysSuccess="true" IsIgnoreLevel="true" RepairCostRate="0" ScrollId="" Generation="23" Season="1" SubSeason="0" />
-    
-    <OptionSet ID="100001" Name="custom_01" LocalName="_LT[xml.optionset.11524]" LocalName2="_LT[xml.optionset.11528]" OptionDesc="_LT[xml.optionset.11532]"/>
-    <OptionSet ID="100002" Name="custom_02" LocalName="_LT[xml.optionset.11525]" LocalName2="_LT[xml.optionset.11529]" OptionDesc="_LT[xml.optionset.11533]"/>
-    <OptionSet ID="100003" Name="custom_03" LocalName="_LT[xml.optionset.11526]" LocalName2="_LT[xml.optionset.11530]" OptionDesc="_LT[xml.optionset.11534]"/>
-    <OptionSet ID="100004" Name="custom_04" LocalName="_LT[xml.optionset.11527]" LocalName2="_LT[xml.optionset.11531]" OptionDesc="_LT[xml.optionset.11535]"/>
-
-    <OptionSet ID="100005" Name="custom_05" LocalName="_LT[xml.optionset.11638]" LocalName2="_LT[xml.optionset.11643]" OptionDesc="_LT[xml.optionset.11648]"/>
-    <OptionSet ID="100005" Name="custom_06" LocalName="_LT[xml.optionset.11639]" LocalName2="_LT[xml.optionset.11644]" OptionDesc="_LT[xml.optionset.11649]"/>
-    <OptionSet ID="100005" Name="custom_07" LocalName="_LT[xml.optionset.11640]" LocalName2="_LT[xml.optionset.11645]" OptionDesc="_LT[xml.optionset.11650]"/>
-    <OptionSet ID="100005" Name="custom_08" LocalName="_LT[xml.optionset.11641]" LocalName2="_LT[xml.optionset.11646]" OptionDesc="_LT[xml.optionset.11651]"/>
-    <OptionSet ID="100005" Name="custom_09" LocalName="_LT[xml.optionset.11642]" LocalName2="_LT[xml.optionset.11647]" OptionDesc="_LT[xml.optionset.11652]"/>
   </OptionSetList>
 </OptionSet>

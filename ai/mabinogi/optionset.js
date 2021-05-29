@@ -160,7 +160,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
     if(finalArr.length == 1){
     	// console.log(finalArr[0])
       let wheres, optionsetInfo = finalArr[0]
-      wheres = await optionsetWhereCn(finalArr[0].LocalName)
+      wheres = await optionsetWhereCn(finalArr[0].LocalName, finalArr[0].Level)
       // console.log('=======')
       // console.log(wheres)
       if(wheres.length > 0) {
