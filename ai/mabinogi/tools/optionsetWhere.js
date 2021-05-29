@@ -85,7 +85,7 @@ const optionsetWhereCn = async ( optsNameCN, level ) => {
     }
   }
   collection = client.collection('cl_mabinogi_optionset')
-  let find = await collection.findOne({'_id': optsNameCN, 'level': level})
+  let find = await collection.findOne({'_id': `${optsNameCN}_${level}`})
   // console.log(find)
   return find ? find.where : []
 }
