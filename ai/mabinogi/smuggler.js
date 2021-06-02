@@ -4,7 +4,7 @@ const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
 module.exports = function (callback) {
   let now = new Date()
-  https.get(`https://weather.erinn.biz/smuggler.php?target_ymd=${now.getFullYear()}-${addZero(now.getMonth())}-${now.getDate()}`, res => {
+  https.get(`https://weather.erinn.biz/smuggler.php`, res => {
     res.setEncoding('utf8');
     let rawData = '';
     res.on('data', chunk => {
