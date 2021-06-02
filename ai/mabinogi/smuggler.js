@@ -167,7 +167,7 @@ module.exports = async function (callback) {
     let other = ''
     if(nowObj && nowObj.areaImg) {
       let dir = path.join(__dirname, 'smugglerImg/area', nowObj.areaImg)
-      console.log(`\n\n\n\n\n\n\n\n${dir}\n\n\n\n\n\n\n`)
+      // console.log(`\n\n\n\n\n\n\n\n${dir}\n\n\n\n\n\n\n`)
       other = `[CQ:image,file=file:${dir}]`
     }
     drawTxtImage(other, callbackStr, callback, {color: 'black', font: 'STXIHEI.TTF'})
