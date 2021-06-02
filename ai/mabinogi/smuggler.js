@@ -96,8 +96,8 @@ const getData = dateTs => new Promise(resolve => {
               time: time,
               timeStamp: timestamp,
               timeObj: new Date(timestamp),
-              startTime: timestamp + 300000,
-              endTime: timestamp + 1020000,
+              startTime: timestamp,
+              endTime: timestamp + 720000,
               area: fixArea[area] ? fixArea[area].name : area,
               product: fixProduct[product] ? fixProduct[product].name : product
             })
