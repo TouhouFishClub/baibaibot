@@ -3,7 +3,7 @@ const _ = require('lodash')
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
 module.exports = function (callback) {
-  // let now = new Date()
+  let FixDay = new Date(Date.now() + 60 * 60 * 1000)
   https.get(`https://weather.erinn.biz/smuggler.php`, res => {
     res.setEncoding('utf8');
     let rawData = '';
@@ -86,7 +86,7 @@ module.exports = function (callback) {
             let thumbStr = str.substring(0, str.indexOf('</TR>'))
               , time = thumbStr.substring(32, 40)
               , now = new Date()
-              , timestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...(time.split(':'))).getTime()
+              , timestamp = new Date(FixDay.getFullYear(), FixDay.getMonth(), FixDay.getDate(), ...(time.split(':'))).getTime()
               , area = thumbStr.substring(thumbStr.indexOf('target="_blank">') + 16, thumbStr.indexOf('</a></TD>')).trim()
               , product = thumbStr.substring(thumbStr.indexOf('<TD bgcolor="#ffffff"><font style="') + 51, thumbStr.indexOf('</font>')).trim()
             str = str.substr(str.indexOf('</TR>'))

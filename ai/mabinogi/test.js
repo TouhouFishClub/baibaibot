@@ -1,6 +1,6 @@
-const os = require('./optionset')
-const iconv = require('iconv-lite')
-const {getPageData} = require('./tools/optionsetWhere')
+// const os = require('./optionset')
+// const iconv = require('iconv-lite')
+// const {getPageData} = require('./tools/optionsetWhere')
 
 
 
@@ -19,16 +19,16 @@ const {getPageData} = require('./tools/optionsetWhere')
 // 	console.log(c)
 // })()
 // const app = require('express')()
-os('aaa', '骰子对决', 'normal', c => {console.log(c)})
+// os('aaa', '骰子对决', 'normal', c => {console.log(c)})
 // const https = require('https')
 // const querystring =  require('querystring')
 
-// const smu = require('./smuggler')
+const smu = require('./smuggler')
 //
-// smu(d => {
-//   console.log('=========')
-//   console.log(d)
-// })
+smu(d => {
+  console.log('=========')
+  console.log(d)
+})
 
 
 // const ow = require('./tools/optionsetWhere')
