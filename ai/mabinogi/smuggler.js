@@ -97,8 +97,8 @@ const getData = dateTs => new Promise(resolve => {
               time: time,
               timeStamp: timestamp,
               timeObj: new Date(timestamp),
-              startTime: timestamp,
-              endTime: timestamp + 720000,
+              startTime: timestamp + 4 * 60 * 1000,
+              endTime: timestamp + 4 * 60 * 1000 + 12 * 60 * 1000,
               area: fixArea[area] ? fixArea[area].name : area,
               areaImg: fixArea[area] ? fixArea[area].img : '',
               product: fixProduct[product] ? fixProduct[product].name : product
