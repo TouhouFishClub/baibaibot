@@ -889,6 +889,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	  return
   }
 
+  if(content == '来块低保回音石' || content == '来个低保回音石') {
+	  createEchoStone(callback, true)
+	  return
+  }
+
   let con =content.trim(), fi = con.substring(0,4)
   if(fi === '释放查询' || fi === 'opts'){
     op(name, con.substring(4).trim(), 'normal', callback);

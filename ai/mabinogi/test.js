@@ -50,7 +50,7 @@ console.log('====')
 
 	createEchoStone(d => {
 		console.log(d)
-	})
+	}, true)
 
 // const ow = require('./tools/optionsetWhere')
 //

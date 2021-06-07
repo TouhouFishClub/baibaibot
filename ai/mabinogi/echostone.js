@@ -31,13 +31,20 @@ const infos = [
 	{ level: 29, updateRare: [0.2,0.24,0.3], increase : [5,6,7,8,9], drop : true },
 ]
 
-const createEchoStone = callback => {
-	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0]
+const createEchoStone = (callback, refine = false) => {
+	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0
 	const rare = 2
 	while (list.length < 30 && count < 30000) {
 		let target = infos[list.length - 1]
 		if(target.updateRare[rare] > Math.random()) {
-			list.push(target.increase[~~(target.increase.length * Math.random())])
+			let inc = target.increase[~~(target.increase.length * Math.random())]
+			if(refine && !target.drop) {
+				while (inc !== target.increase[target.increase.length - 1]) {
+					inc = target.increase[~~(target.increase.length * Math.random())]
+					refineStone ++
+				}
+			}
+			list.push(inc)
 			success ++
 			if(dropTmp) {
 				drops[dropTmp] ++
@@ -61,9 +68,10 @@ const createEchoStone = callback => {
 		drops,
 		list
 	}
+	// console.log(list)
 	// callback(tmpObj)
-	let str = `=== 回音石属性 ===\n你刷了${count}次回音石，成功${success}次，失败${fail}次${drops.map((x, i) => { return {txt: '\n连续掉' + i + '级有' + x + '次', x}}).filter(x => x.x > 0).map(x => x.txt).join('')}\n回音石属性：${list.reduce((p, e) => p + e)}`
-
+	let str = `=== 回音石属性 ===\n你刷了${count}次回音石，成功${success}次，失败${fail}次${drops.map((x, i) => { return {txt: '\n连续掉' + i + '级有' + x + '次', x}}).filter(x => x.x > 0).map(x => x.txt).join('')}\n回音石属性：${list.reduce((p, e) => p + e)}(24级属性：${list.slice(0, 24).reduce((p, e) => p + e)})${refine ? ('\n消耗精炼石头' + refineStone + '块') : ''}`
+	// callback(str)
 	drawTxtImage('', str, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
