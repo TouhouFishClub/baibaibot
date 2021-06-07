@@ -41,6 +41,7 @@ const {replayReply} = require('./ai/replay');
 const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,getGroupMemberNum,banUserRandom} = require('./cq/cache');
 const {lottoryReply} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
+const { createEchoStone } = require('./ai/mabinogi/echostone')
 const {drawNameCard} = require('./ai/games/card/draw');
 const op = require('./ai/mabinogi/optionset')
 const {googleImageSearch} = require('./ai/image/google');
@@ -883,6 +884,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     testGif(callback)
   }
 
+  if(content == '来块回音石' || content == '来个回音石') {
+	  createEchoStone(callback)
+	  return
+  }
 
   let con =content.trim(), fi = con.substring(0,4)
   if(fi === '释放查询' || fi === 'opts'){

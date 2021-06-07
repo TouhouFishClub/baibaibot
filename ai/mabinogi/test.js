@@ -23,13 +23,34 @@
 // const https = require('https')
 // const querystring =  require('querystring')
 
-const smu = require('./smuggler')
-//
-smu(d => {
-  console.log('=========')
-  console.log(d)
-})
+// const smu = require('./smuggler')
+// //
+// smu(d => {
+//   console.log('=========')
+//   console.log(d)
+// })
 
+const { createEchoStone } = require('./echostone')
+
+// let count = 0, max = 0, min = 10000
+// for(let i = 0; i < 100000; i++) {
+// 	console.log(i)
+// 	createEchoStone(d => {
+// 		// console.log('=========')
+// 		// console.log(d)
+// 		count += d.count
+// 		max = Math.max(d.count , max)
+// 		min = Math.min(d.count , min)
+// 	})
+// }
+console.log('====')
+// console.log(count / 100000)
+// console.log(max)
+// console.log(min)
+
+	createEchoStone(d => {
+		console.log(d)
+	})
 
 // const ow = require('./tools/optionsetWhere')
 //
