@@ -1,4 +1,15 @@
-const { drawTxtImage } = require('../../cq/drawImageBytxt')
+// const { drawTxtImage } = require('../../cq/drawImageBytxt')
+const fs = require('fs-extra')
+const path = require('path-extra')
+const { sendImageMsgBuffer } = require('../../cq/sendImage')
+const {createCanvas, registerFont} = require('canvas')
+const GLOBAL_MARGIN = 20
+const TEXT_LINE_HEIGHT = 20
+const TEXT_FONT_SIZE = 16
+const CHART_WIDTH = 700
+const CHART_HEIGHT = 100
+const fontFamily = 'STXIHEI'
+
 const infos = [
 	{ level: 1, updateRare: [1,1,1], increase : [1], drop : false},
 	{ level: 2, updateRare: [0.8,0.96,1], increase : [1], drop : false },
@@ -33,6 +44,7 @@ const infos = [
 
 const createEchoStone = (callback, refine = false) => {
 	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0, rsArr = new Array(24).fill(0)
+	let levelArr = [1]
 	const rare = 2
 	while (list.length < 30 && count < 30000) {
 		let target = infos[list.length - 1]
@@ -64,21 +76,34 @@ const createEchoStone = (callback, refine = false) => {
 			fail ++
 		}
 		count ++
+		levelArr.push(list.length)
 	}
-	let tmpObj = {
-		count,
-		success,
-		fail,
-		drop,
-		drops,
-		list
-	}
+
+	let txts = ['这是第一行文字', '这是第二行文字', '这是第三行文字']
+
+	let canvasWidth = GLOBAL_MARGIN * 2 + CHART_WIDTH
+	let cavasHeight = GLOBAL_MARGIN * 2 + CHART_HEIGHT + txts.length * TEXT_LINE_HEIGHT
+
+	let canvas = createCanvas(canvasWidth, cavasHeight)
+		, ctx = canvas.getContext('2d')
+
+
+
+	// let tmpObj = {
+	// 	count,
+	// 	success,
+	// 	fail,
+	// 	drop,
+	// 	drops,
+	// 	list,
+	// 	levelArr,
+	// }
 	// console.log(list)
 	// callback(tmpObj)
 	// console.log(rsArr)
-	let str = `=== 回音石属性 ===\n你刷了${count}次回音石，成功${success}次，失败${fail}次${drops.map((x, i) => { return {txt: '\n连续掉' + i + '级有' + x + '次', x}}).filter(x => x.x > 0).map(x => x.txt).join('')}\n回音石属性：${list.reduce((p, e) => p + e)}(24级属性：${list.slice(0, 24).reduce((p, e) => p + e)})${refine ? ('\n消耗精炼石' + refineStone + '块') : ''}`
+	// let str = `=== 回音石属性 ===\n你刷了${count}次回音石，成功${success}次，失败${fail}次${drops.map((x, i) => { return {txt: '\n连续掉' + i + '级有' + x + '次', x}}).filter(x => x.x > 0).map(x => x.txt).join('')}\n回音石属性：${list.reduce((p, e) => p + e)}(24级属性：${list.slice(0, 24).reduce((p, e) => p + e)})${refine ? ('\n消耗精炼石' + refineStone + '块') : ''}`
 	// callback(str)
-	drawTxtImage('', str, callback, {color: 'black', font: 'STXIHEI.TTF'})
+	// drawTxtImage('', str, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
 module.exports = {
