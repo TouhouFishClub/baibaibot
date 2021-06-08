@@ -88,16 +88,16 @@ const createEchoStone = (callback, refine = false) => {
 
 	let canvas = createCanvas(canvasWidth, cavasHeight)
 		, ctx = canvas.getContext('2d')
-	ctx.fillStyle = 'rgb(28,28,28)'
+	ctx.fillStyle = '#fff'
 	ctx.fillRect(0, 0, canvasWidth, cavasHeight)
 	ctx.font = `${TEXT_FONT_SIZE}px ${fontFamily}`
-	ctx.fillStyle = '#fff'
+	ctx.fillStyle = '#111'
 	txts.forEach((txt, line) => {
 		// ctx.strokeStyle = '#f00'
 		// ctx.strokeRect(GLOBAL_MARGIN, GLOBAL_MARGIN + line * TEXT_LINE_HEIGHT, CHART_WIDTH, TEXT_LINE_HEIGHT)
 		ctx.fillText(txt, GLOBAL_MARGIN, GLOBAL_MARGIN + line * TEXT_LINE_HEIGHT + TEXT_LINE_HEIGHT - 4)
 	})
-	ctx.fillStyle = '#555'
+	ctx.fillStyle = '#ddd'
 	ctx.fillRect(GLOBAL_MARGIN, GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT, CHART_WIDTH, CHART_HEIGHT)
 	ctx.strokeStyle = '#0AB5CD'
 	ctx.beginPath()
