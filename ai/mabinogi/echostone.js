@@ -79,14 +79,60 @@ const createEchoStone = (callback, refine = false) => {
 		levelArr.push(list.length)
 	}
 
-	let txts = ['这是第一行文字', '这是第二行文字', '这是第三行文字']
+
+	let str = `=== 回音石属性 ===\n你刷了${count}次回音石，成功${success}次，失败${fail}次${drops.map((x, i) => { return {txt: '\n连续掉' + i + '级有' + x + '次', x}}).filter(x => x.x > 0).map(x => x.txt).join('')}\n回音石属性：${list.reduce((p, e) => p + e)}(24级属性：${list.slice(0, 24).reduce((p, e) => p + e)})${refine ? ('\n消耗精炼石' + refineStone + '块') : ''}`
+	let txts = str.split('\n')
 
 	let canvasWidth = GLOBAL_MARGIN * 2 + CHART_WIDTH
-	let cavasHeight = GLOBAL_MARGIN * 2 + CHART_HEIGHT + txts.length * TEXT_LINE_HEIGHT
+	let cavasHeight = GLOBAL_MARGIN * 3 + CHART_HEIGHT + txts.length * TEXT_LINE_HEIGHT
 
 	let canvas = createCanvas(canvasWidth, cavasHeight)
 		, ctx = canvas.getContext('2d')
+	ctx.fillStyle = 'rgb(28,28,28)'
+	ctx.fillRect(0, 0, canvasWidth, cavasHeight)
+	ctx.font = `${TEXT_FONT_SIZE}px ${fontFamily}`
+	ctx.fillStyle = '#fff'
+	txts.forEach((txt, line) => {
+		// ctx.strokeStyle = '#f00'
+		// ctx.strokeRect(GLOBAL_MARGIN, GLOBAL_MARGIN + line * TEXT_LINE_HEIGHT, CHART_WIDTH, TEXT_LINE_HEIGHT)
+		ctx.fillText(txt, GLOBAL_MARGIN, GLOBAL_MARGIN + line * TEXT_LINE_HEIGHT + TEXT_LINE_HEIGHT - 4)
+	})
+	ctx.fillStyle = '#555'
+	ctx.fillRect(GLOBAL_MARGIN, GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT, CHART_WIDTH, CHART_HEIGHT)
+	ctx.strokeStyle = '#0AB5CD'
+	ctx.beginPath()
+	let xs = GLOBAL_MARGIN, ys = GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT + CHART_HEIGHT
+	ctx.moveTo(xs, ys)
+	let stepWidth = CHART_WIDTH / levelArr.length, stepHeight = CHART_HEIGHT / 30
+	levelArr.forEach((l, i) => {
+		let x = xs + stepWidth * i, y = ys - l * stepHeight
+		ctx.lineTo(x, y)
+	})
+	ctx.stroke()
 
+
+
+
+
+
+
+
+
+	let imgData = canvas.toDataURL()
+	let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
+	let dataBuffer = new Buffer(base64Data, 'base64')
+
+	sendImageMsgBuffer(dataBuffer, 'output', 'other', msg => {
+		callback(msg)
+	})
+
+	// fs.writeFile(path.join(__dirname, `test.png`), dataBuffer, (err) => {
+	//   if(err){
+	//     console.log(err)
+	//   }else{
+	//     console.log("保存成功！");
+	//   }
+	// });
 
 
 	// let tmpObj = {
