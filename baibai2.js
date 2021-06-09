@@ -41,7 +41,7 @@ const {replayReply} = require('./ai/replay');
 const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,getGroupMemberNum,banUserRandom} = require('./cq/cache');
 const {lottoryReply} = require('./ai/lottory');
 const smuggler = require('./ai/mabinogi/smuggler')
-const { createEchoStone } = require('./ai/mabinogi/echostone')
+const { createEchoStone, echoStoneEventSwitch } = require('./ai/mabinogi/echostone')
 const {drawNameCard} = require('./ai/games/card/draw');
 const op = require('./ai/mabinogi/optionset')
 const {googleImageSearch} = require('./ai/image/google');
@@ -885,12 +885,22 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(content == '来块回音石' || content == '来个回音石') {
-	  createEchoStone(callback)
+	  createEchoStone(groupid, callback)
 	  return
   }
 
   if(content == '来块低保回音石' || content == '来个低保回音石') {
-	  createEchoStone(callback, true)
+	  createEchoStone(groupid, callback, true)
+	  return
+  }
+
+  if(content == '开启回音石活动') {
+	  echoStoneEventSwitch(groupid, callback, true)
+	  return
+  }
+
+  if(content == '关闭回音石活动') {
+	  echoStoneEventSwitch(groupid, callback, false)
 	  return
   }
 

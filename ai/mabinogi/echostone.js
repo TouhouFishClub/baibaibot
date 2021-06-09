@@ -10,6 +10,8 @@ const CHART_WIDTH = 700
 const CHART_HEIGHT = 100
 const fontFamily = 'STXIHEI'
 
+let eventSet = new Set()
+
 const infos = [
 	{ level: 1, updateRare: [1,1,1], increase : [1], drop : false},
 	{ level: 2, updateRare: [0.8,0.96,1], increase : [1], drop : false },
@@ -42,13 +44,26 @@ const infos = [
 	{ level: 29, updateRare: [0.2,0.24,0.3], increase : [5,6,7,8,9], drop : true },
 ]
 
-const createEchoStone = (callback, refine = false) => {
+const echoStoneEventSwitch = (group, callback, isOpen) => {
+	if(isOpen) {
+		eventSet.add(group)
+		callback('活动已开启')
+	} else {
+		eventSet.delete(group)
+		callback('活动已关闭')
+	}
+}
+
+const createEchoStone = (group, callback, refine = false) => {
 	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0, rsArr = new Array(24).fill(0)
 	let levelArr = [1]
 	const rare = 2
 	while (list.length < 30 && count < 30000) {
-		let target = infos[list.length - 1]
-		if(target.updateRare[rare] > Math.random()) {
+		let target = infos[list.length - 1], ur = target.updateRare[rare]
+		if(eventSet.has(group)) {
+			ur += 0.1
+		}
+		if(ur > Math.random()) {
 			let inc = target.increase[~~(target.increase.length * Math.random())]
 			if(refine && (infos[list.length] && !infos[list.length].drop)) {
 				let tmp = 0
@@ -145,5 +160,6 @@ const createEchoStone = (callback, refine = false) => {
 }
 
 module.exports = {
-	createEchoStone
+	createEchoStone,
+	echoStoneEventSwitch
 }
