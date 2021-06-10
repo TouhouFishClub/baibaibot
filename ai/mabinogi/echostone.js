@@ -116,6 +116,7 @@ const createEchoStone = (group, callback, refine = false) => {
 	ctx.fillRect(GLOBAL_MARGIN, GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT, CHART_WIDTH, CHART_HEIGHT)
 	ctx.strokeStyle = '#0AB5CD'
 	let xs = GLOBAL_MARGIN, ys = GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT + CHART_HEIGHT
+	let xt = xs, yt = ys
 	let stepWidth = CHART_WIDTH / levelArr.length, stepHeight = CHART_HEIGHT / 30, tmpS = 0
 	levelArr.forEach((l, i) => {
 		if(tmpS == l) {
@@ -128,14 +129,14 @@ const createEchoStone = (group, callback, refine = false) => {
 			}
 		}
 		ctx.beginPath()
-		ctx.moveTo(xs, ys)
+		ctx.moveTo(xt, yt)
 		let x = xs + stepWidth * i, y = ys - l * stepHeight
 		tmpS = l
 		ctx.lineTo(x, y)
 		ctx.stroke()
-		
-		xs = x
-		ys = y
+
+		xt = x
+		yt = y
 	})
 
 	let imgData = canvas.toDataURL()
