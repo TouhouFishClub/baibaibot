@@ -39,7 +39,7 @@ const list = [
   "我两拳"
 ]
 const chishenme = (st, callback) => {
-	if(st.match('嘉然') && Math.random() > 0.8) {
+	if(st.match('嘉然') && Math.random() > 0.4) {
 		callback(`${st}我两拳`)
 		return
 	}
