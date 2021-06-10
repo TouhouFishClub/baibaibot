@@ -118,19 +118,19 @@ const createEchoStone = (group, callback, refine = false) => {
 	ctx.beginPath()
 	let xs = GLOBAL_MARGIN, ys = GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT + CHART_HEIGHT
 	ctx.moveTo(xs, ys)
-	let stepWidth = CHART_WIDTH / levelArr.length, stepHeight = CHART_HEIGHT / 30, tmp = 0
+	let stepWidth = CHART_WIDTH / levelArr.length, stepHeight = CHART_HEIGHT / 30, tmpS = 0
 	levelArr.forEach((l, i) => {
-		if(tmp == l) {
+		if(tmpS == l) {
 			ctx.strokeStyle = '#555'
 		} else {
-			if(tmp > l) {
+			if(tmpS > l) {
 				ctx.strokeStyle = '#0f0'
 			} else {
 				ctx.strokeStyle = '#f00'
 			}
 		}
 		let x = xs + stepWidth * i, y = ys - l * stepHeight
-		tmp = l
+		tmpS = l
 		ctx.lineTo(x, y)
 	})
 	ctx.stroke()
