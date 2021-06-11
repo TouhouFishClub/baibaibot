@@ -115,7 +115,7 @@ const createEchoStone = (group, callback, refine = false) => {
 	ctx.fillStyle = '#efefef'
 	ctx.fillRect(GLOBAL_MARGIN, GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT, CHART_WIDTH, CHART_HEIGHT)
 	ctx.strokeStyle = '#0AB5CD'
-	ctx.lineWidth = 3;
+	ctx.lineWidth = 2;
 	let xs = GLOBAL_MARGIN, ys = GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT + CHART_HEIGHT
 	let xt = xs, yt = ys
 	let stepWidth = CHART_WIDTH / levelArr.length, stepHeight = CHART_HEIGHT / 30, tmpS = 0
