@@ -54,10 +54,9 @@ const echoStoneEventSwitch = (group, callback, isOpen) => {
 	}
 }
 
-const createEchoStone = (group, callback, refine = false) => {
+const createEchoStone = (group, callback, refine = false, rare = 2) => {
 	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0, rsArr = new Array(24).fill(0)
 	let levelArr = [1]
-	const rare = 2
 	while (list.length < 30 && count < 30000) {
 		let target = infos[list.length - 1], ur = target.updateRare[rare]
 		if(eventSet.has(group)) {

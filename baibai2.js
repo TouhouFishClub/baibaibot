@@ -889,10 +889,20 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	  return
   }
 
+  if(content == '来块简单模式回音石' || content == '来个简单模式回音石') {
+	  createEchoStone(groupid, callback, false, 0)
+	  return
+  }
+
   if(content == '来块低保回音石' || content == '来个低保回音石') {
 	  createEchoStone(groupid, callback, true)
 	  return
   }
+
+	if(content == '来块简单模式低保回音石' || content == '来个简单模式低保回音石') {
+		createEchoStone(groupid, callback, true, 0)
+		return
+	}
 
   if(content == '开启回音石活动') {
 	  echoStoneEventSwitch(groupid, callback, true)
