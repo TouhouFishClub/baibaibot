@@ -112,20 +112,21 @@ const createEchoStone = (group, callback, refine = false) => {
 		// ctx.strokeRect(GLOBAL_MARGIN, GLOBAL_MARGIN + line * TEXT_LINE_HEIGHT, CHART_WIDTH, TEXT_LINE_HEIGHT)
 		ctx.fillText(txt, GLOBAL_MARGIN, GLOBAL_MARGIN + line * TEXT_LINE_HEIGHT + TEXT_LINE_HEIGHT - 4)
 	})
-	ctx.fillStyle = '#ddd'
+	ctx.fillStyle = '#efefef'
 	ctx.fillRect(GLOBAL_MARGIN, GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT, CHART_WIDTH, CHART_HEIGHT)
 	ctx.strokeStyle = '#0AB5CD'
+	ctx.lineWidth = 3;
 	let xs = GLOBAL_MARGIN, ys = GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT + CHART_HEIGHT
 	let xt = xs, yt = ys
 	let stepWidth = CHART_WIDTH / levelArr.length, stepHeight = CHART_HEIGHT / 30, tmpS = 0
 	levelArr.forEach((l, i) => {
 		if(tmpS == l) {
-			ctx.strokeStyle = '#555'
+			ctx.strokeStyle = '#6f6f6f'
 		} else {
 			if(tmpS > l) {
-				ctx.strokeStyle = '#0f0'
+				ctx.strokeStyle = '#076d07'
 			} else {
-				ctx.strokeStyle = '#f00'
+				ctx.strokeStyle = '#d40000'
 			}
 		}
 		ctx.beginPath()
