@@ -124,8 +124,13 @@ module.exports = function(userId, context, type = 'normal', callback) {
               	if(debuff.split('>').length > 1) {
               		let sp = debuff.split('>').map(x => x.trim())
 		              if(/\d+/.test(sp[1])) {
-		              	let match = Debuff.match(/\d+/g)
-			              if(Debuff.match(sp[0]).length && match.length > 0 && match.filter(x => parseInt(x) > parseInt(sp[1])).length) {
+		              	let match = Debuff.match(/\d+/g) || []
+			              if(
+			              	Debuff.match(sp[0]) &&
+				              Debuff.match(sp[0]).length &&
+				              match.length > 0 &&
+				              match.filter(x => parseInt(x) > parseInt(sp[1])).length
+			              ) {
 			              	optCheck = true
 			              }
 		              } else {
@@ -136,8 +141,13 @@ module.exports = function(userId, context, type = 'normal', callback) {
 	              } else if (debuff.split('<').length > 1) {
 		              let sp = debuff.split('<').map(x => x.trim())
 		              if(/\d+/.test(sp[1])) {
-			              let match = Debuff.match(/\d+/g)
-			              if(Debuff.match(sp[0]).length && match.length > 0 && match.filter(x => parseInt(x) > parseInt(sp[1])).length) {
+			              let match = Debuff.match(/\d+/g) || []
+			              if(
+			              	Debuff.match(sp[0]) &&
+				              Debuff.match(sp[0]).length &&
+				              match.length > 0 &&
+				              match.filter(x => parseInt(x) > parseInt(sp[1])).length
+			              ) {
 				              optCheck = true
 			              }
 		              } else {
@@ -163,8 +173,13 @@ module.exports = function(userId, context, type = 'normal', callback) {
 	              if(buff.split('>').length > 1) {
 		              let sp = buff.split('>').map(x => x.trim())
 		              if(/\d+/.test(sp[1])) {
-			              let match = Buff.match(/\d+/g)
-			              if(Buff.match(sp[0]).length && match.length > 0 && match.filter(x => parseInt(x) > parseInt(sp[1])).length) {
+			              let match = Buff.match(/\d+/g) || []
+			              if(
+			              	Buff.match(sp[0]) &&
+				              Buff.match(sp[0]).length &&
+				              match.length > 0 &&
+				              match.filter(x => parseInt(x) > parseInt(sp[1])).length
+			              ) {
 				              optCheck = true
 			              }
 		              } else {
@@ -175,8 +190,13 @@ module.exports = function(userId, context, type = 'normal', callback) {
 	              } else if (buff.split('<').length > 1) {
 		              let sp = buff.split('<').map(x => x.trim())
 		              if(/\d+/.test(sp[1])) {
-			              let match = Buff.match(/\d+/g)
-			              if(Buff.match(sp[0]).length && match.length > 0 && match.filter(x => parseInt(x) > parseInt(sp[1])).length) {
+			              let match = Buff.match(/\d+/g) || []
+			              if(
+			              	Buff.match(sp[0]) &&
+				              Buff.match(sp[0]).length &&
+				              match.length > 0 &&
+				              match.filter(x => parseInt(x) > parseInt(sp[1])).length
+			              ) {
 				              optCheck = true
 			              }
 		              } else {
