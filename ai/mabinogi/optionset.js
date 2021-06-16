@@ -13,7 +13,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
       let searchArr = ctx.replace(/[， ]/g, ',').split(',')
       if(searchArr.length > 0){
         if(searchArr.length < maxKeywords){
-          if(searchArr.length === 1){
+          if(searchArr.length === 1 && searchArr[0].indexOf('>') == -1 && searchArr[0].indexOf('<') == -1){
             if(/^\d+$/.test(ctx)){
               searchId(ctx)
             } else {
@@ -129,7 +129,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
 			              	Debuff.match(sp[0]) &&
 				              Debuff.match(sp[0]).length &&
 				              match.length > 0 &&
-				              match.filter(x => parseInt(x) > parseInt(sp[1])).length
+				              parseInt(match[match.length - 1]) > parseInt(sp[1])
 			              ) {
 			              	optCheck = true
 			              }
@@ -146,7 +146,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
 			              	Debuff.match(sp[0]) &&
 				              Debuff.match(sp[0]).length &&
 				              match.length > 0 &&
-				              match.filter(x => parseInt(x) > parseInt(sp[1])).length
+				              parseInt(match[0]) < parseInt(sp[1])
 			              ) {
 				              optCheck = true
 			              }
@@ -178,7 +178,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
 			              	Buff.match(sp[0]) &&
 				              Buff.match(sp[0]).length &&
 				              match.length > 0 &&
-				              match.filter(x => parseInt(x) > parseInt(sp[1])).length
+				              parseInt(match[match.length - 1]) > parseInt(sp[1])
 			              ) {
 				              optCheck = true
 			              }
@@ -195,7 +195,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
 			              	Buff.match(sp[0]) &&
 				              Buff.match(sp[0]).length &&
 				              match.length > 0 &&
-				              match.filter(x => parseInt(x) > parseInt(sp[1])).length
+				              parseInt(match[0]) < parseInt(sp[1])
 			              ) {
 				              optCheck = true
 			              }
