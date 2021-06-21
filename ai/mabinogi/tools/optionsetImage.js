@@ -4,6 +4,15 @@ const fs = require('fs'),
   { sendImageMsgBuffer } = require('../../../cq/sendImage.js')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
+const theme = {
+	bg: 'rgba(0,0,20,0.9)',
+	buff: 'rgba(16,131,255,1)',
+	debuff: 'rgba(251,0,7,1)',
+	border: 'rgba(204,204,204,1)',
+	tagbg: 'rgba(0,0,0,1)',
+	tag: 'rgba(238,78,7,1)',
+	text: 'rgba(255,255,255,1)',
+}
 
 const checkMaxWidth = (ctx, str, maxWidth) => {
   let start = 0, splitArr = []
@@ -24,16 +33,16 @@ const renderText = (ctx, textArr, topMargin, leftMargin, lineHeight) => {
 const renderBuffText = (ctx, textArr, topMargin, leftMargin, lineHeight) => {
   textArr.forEach((text, index) => {
     if(text.buff){
-      ctx.fillStyle = 'rgba(16,131,255,1)'
+      ctx.fillStyle = theme.buff
     } else {
-      ctx.fillStyle = 'rgba(251,0,7,1)'
+      ctx.fillStyle = theme.debuff
     }
     ctx.fillText(text.text, leftMargin, topMargin + lineHeight * (index + 1))
   })
 }
 const renderTextBox = (ctx, left, top, width, height, radius, title) => {
   ctx.beginPath()
-  ctx.strokeStyle = 'rgba(204,204,204,1)'
+  ctx.strokeStyle = theme.border
   ctx.lineWidth = 1
   ctx.moveTo(left + radius, top)
   ctx.lineTo(left + width - radius, top)
@@ -47,9 +56,9 @@ const renderTextBox = (ctx, left, top, width, height, radius, title) => {
 
   ctx.stroke()
   let titleWidth = ctx.measureText(title).width
-  ctx.fillStyle = 'rgba(0,0,0,1)'
+  ctx.fillStyle = theme.tagbg
   ctx.fillRect(left + radius + 5, top - 14, titleWidth + 8, 28)
-  ctx.fillStyle = 'rgba(238,78,7,1)'
+  ctx.fillStyle = theme.tag
   ctx.fillText(title, left + radius + 9, top + 6)
 }
 
@@ -102,10 +111,10 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
     , ctx = canvas.getContext('2d')
 
   ctx.font = `20px ${fontFamily}`
-  ctx.fillStyle = 'rgba(0,0,20,0.9)'
+  ctx.fillStyle = theme.bg
   ctx.fillRect(0, 0, 400, cavasHeight)
 
-  ctx.fillStyle = 'rgba(255,255,255,1)'
+  ctx.fillStyle = theme.text
   ctx.strokeStyle = 'rgba(0,0,0,0.5)'
   let title = '魔法释放卷轴'
   ctx.fillText(title, (400 - ctx.measureText(title).width)/2, 30)
@@ -118,14 +127,14 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
 
   renderTextBox(ctx, 12, 77, 376, buffHeight + 50, 10, '道具属性')
 
-  ctx.fillStyle = 'rgba(255,255,255,1)';
+  ctx.fillStyle = theme.text;
   ctx.fillText(`${obj.LocalName}(${obj.Usage}:等级${obj.Level})`, 25, 117)
 
   renderBuffText(ctx, objArr, 117, 25, 25)
 
   if(wheres.length){
     renderTextBox(ctx, 12, 77 + buffHeight + 70, 376 , whereHeight + 20, 10, `卷轴出处[${obj.where == 'CN' ? '国服' : '台服'}]`)
-    ctx.fillStyle = 'rgba(255,255,255,1)';
+    ctx.fillStyle = theme.text;
     renderText(ctx, whereArr, 77 + buffHeight + 80, 25, 25)
   }
 
