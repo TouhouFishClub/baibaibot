@@ -4,8 +4,18 @@ const fs = require('fs'),
   { sendImageMsgBuffer } = require('../../../cq/sendImage.js')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
+// const theme = {
+// 	bg: 'rgba(0,0,20,0.9)',
+// 	buff: 'rgba(16,131,255,1)',
+// 	debuff: 'rgba(251,0,7,1)',
+// 	border: 'rgba(204,204,204,1)',
+// 	tagbg: 'rgba(0,0,0,1)',
+// 	tag: 'rgba(238,78,7,1)',
+// 	text: 'rgba(255,255,255,1)',
+// }
+
 const theme = {
-	bg: 'rgba(0,0,20,0.9)',
+	bg: '#ff96ae',
 	buff: 'rgba(16,131,255,1)',
 	debuff: 'rgba(251,0,7,1)',
 	border: 'rgba(204,204,204,1)',
