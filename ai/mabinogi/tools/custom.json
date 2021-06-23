@@ -3,7 +3,7 @@
     "ID": "000001",
     "Name": "TEST",
     "LocalName": "测试",
-    "OptionDesc": "测试\n[测试]\n测试\n[测试]",
+    "OptionDesc": "测试\\n[测试]\\n测试\\n[测试]",
     "Level": 0,
     "Usage": "0"
   }
