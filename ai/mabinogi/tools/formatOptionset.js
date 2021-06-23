@@ -21,7 +21,16 @@ module.exports = function(callback) {
 		  options = options.concat(custom)
 	  }
     options.forEach(val => {
-      if(transform[val.LocalName] && transform[val.LocalName2] && transform[val.OptionDesc] && (val.Usage === '1' || val.Usage === '0')){
+      if(
+      	(
+      		transform[val.LocalName] &&
+		      transform[val.LocalName2] &&
+		      transform[val.OptionDesc] &&
+		      (val.Usage === '1' || val.Usage === '0')
+	      )
+	      ||
+	      val.custom
+      ){
         let obj = {}
         obj.ID = val.ID
         obj.Name = val.Name
