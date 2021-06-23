@@ -32,7 +32,7 @@ module.exports = function(callback) {
 	      val.custom
       ){
         let obj = {}
-        obj.ID = val.ID
+        obj.ID = val.custom ? `cu${val.ID}` : val.ID
         obj.Name = val.Name
         obj.LocalName = val.custom ? val.LocalName : transform[val.LocalName]
         obj.OptionDesc = val.custom ? val.OptionDesc : transform[val.OptionDesc]
