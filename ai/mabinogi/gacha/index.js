@@ -1,4 +1,5 @@
 const https = require('https');
+const iconv = require('iconv-lite')
 const path = require('path-extra')
 const _ = require('lodash')
 
@@ -19,17 +20,39 @@ const loadGachaGroup = async () => {
 	let urls = splitStr(article, '<ul class="newsList">', '</ul>', true).split('</li>').map(x => {
 		return splitStr(x, '//', '"', true)
 	}).map(x => x.trim()).filter(x => x.startsWith('luoqi.tiancity.com')).map(x => `https://${x}`)
-	console.log(urls)
-
+	// console.log(urls)
+	if(urls.length) {
+		let target = []
+		for(let i = 0; i < urls.length; i ++) {
+			// 遍历url
+			console.log(`=== fetch ${urls[i]} ===`)
+			let data = await fetchData(urls[i])
+			data = splitStr(data, 'id="newscontent"', '</dd>')
+			let tar = data.split('\n').filter(x => x.indexOf('查看概率') > -1)[0]
+			console.log('=========')
+			console.log(tar)
+			if(tar) {
+				let obj = {}
+				obj.name = splitStr(tar, '-', '<a', true).trim()
+				obj.link = splitStr(tar, '<a href="', '"', true)
+				target.push(obj)
+			}
+		}
+		for(let j = 0; j < target.length; j++) {
+			let t = target[j]
+			let data = await fetchData(t.link)
+			splitStr(data, '<table', '</table>')
+		}
+	}
 }
 
 const fetchData = async url => {
 	return new Promise(resolve => {
 		https.get(url, res => {
-			res.setEncoding('utf8');
+			res.setEncoding('utf16le');
 			let rawData = '';
 			res.on('data', chunk => {
-				rawData += chunk;
+				rawData += iconv.decode(iconv.encode(chunk, 'utf16'), 'gbk');
 			});
 			res.on('end', () => {
 				resolve(rawData)
