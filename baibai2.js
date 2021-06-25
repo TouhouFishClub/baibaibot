@@ -884,6 +884,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     testGif(callback)
   }
 
+  if(content == '今日专家' || content == '今日专家地下城') {
+  	callback(`今天的专家地下城是${['皮卡','伊比','赛尔','拉比','玛斯','菲奥娜','巴里','克里尔','伦达'][~~((new Date().getTime()+28800000)/60/60/24/1000)%9]}地下城`)
+	  return
+  }
+
   if(content == '来块回音石' || content == '来个回音石') {
 	  createEchoStone(groupid, callback)
 	  return
