@@ -37,10 +37,10 @@ const Reliquary = (content, callback) => {
 }
 
 const analysis = arr => {
-	let out = '【圣遗物评价】'
-	out += '============='
+	let out = '【圣遗物评价】\n'
+	out += '=============\n'
 	out += `${arr.join('\n')}\n`
-	out += '============='
+	out += '=============\n'
 	for(let i = 0; i < arr.length; i ++) {
 		let info = arr[i], sp = info.split('+')
 		if(info.indexOf('击率') > -1) {
