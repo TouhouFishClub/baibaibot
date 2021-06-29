@@ -1091,6 +1091,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(fie.toLowerCase() == 'ysr') {
 	  Reliquary(con.substring(3), callback)
+	  return
   }
   if(fie.toLowerCase() == 'ark'){
     let sa, si
