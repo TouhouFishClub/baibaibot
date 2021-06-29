@@ -1,4 +1,5 @@
 const { baiduocr } = require('../image/baiduocr');
+const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
 /*
 *
@@ -26,7 +27,7 @@ const Reliquary = (content, callback) => {
 				// console.log(sp[1])
 				baiduocr(sp[1], d => {
 					let filter = d.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0])
-					callback(analysis(filter))
+					drawTxtImage('', analysis(filter), callback, {color: 'black', font: 'STXIHEI.TTF'})
 				})
 			}
 		})
@@ -36,8 +37,10 @@ const Reliquary = (content, callback) => {
 }
 
 const analysis = arr => {
-	let out = ''
-	out += `【${arr.join(', ')}】\n`
+	let out = '【圣遗物评价】'
+	out += '============='
+	out += `${arr.join('\n')}\n`
+	out += '============='
 	for(let i = 0; i < arr.length; i ++) {
 		let info = arr[i], sp = info.split('+')
 		if(info.indexOf('击率') > -1) {
