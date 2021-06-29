@@ -40,7 +40,7 @@ const analysis = arr => {
 	out += `【${arr.join(', ')}】\n`
 	for(let i = 0; i < arr.length; i ++) {
 		let info = arr[i], sp = info.split('+')
-		if(info.indexOf('率') > -1) {
+		if(info.indexOf('击率') > -1) {
 			out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1].split('%')[0], [2.7,3.1,3.5,3.9], 10))}\n`
 			continue
 		}
