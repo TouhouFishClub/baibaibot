@@ -23,7 +23,7 @@ let str = [
 
 baiduocr(str[3], d => {
 	console.log('=========')
-	console.log(d.split('\n').filter(x => /^\s+\+\d+(\.\d+)?/.test(x)))
+	console.log(d.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0]))
 	console.log('=========')
 })
 

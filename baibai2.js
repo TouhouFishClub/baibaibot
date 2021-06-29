@@ -115,6 +115,8 @@ const { fiveThousandTrillionYen } = require('./ai/chat/5000choyen')
 const { flashHandler } = require('./MsgHandler/flash')
 const { testGif } = require('./gif/test')
 
+const { Reliquary } = require('./ai/GenshinImpact/Reliquary')
+
 let globalConfig = {
 	FLASH_RESEND : false
 }
@@ -1086,6 +1088,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     }
     guildRankSearch(grs, from, groupid, callback, option)
     return
+  }
+  if(fie.toLowerCase() == 'ysr') {
+	  Reliquary(con.substring(3), callback)
   }
   if(fie.toLowerCase() == 'ark'){
     let sa, si
