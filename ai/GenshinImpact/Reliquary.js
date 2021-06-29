@@ -87,7 +87,7 @@ const analysis = arr => {
 	}
 	return out
 }
-const renderRank = arr => arr.length ? arr.map(x => x.index.split('').map(x => ['D','B','C','A'][parseInt(x)]).join('')).join(', ') : '无法分析'
+const renderRank = arr => arr.length ? arr.map(x => x.index.split('').map(x => ['D','C','B','A'][parseInt(x)]).join('')).join(', ') : '无法分析'
 
 const uniAnalysis = (tar, arr, precision) => createRange(arr).filter(range => ignoreError(tar, range.val, precision))
 
