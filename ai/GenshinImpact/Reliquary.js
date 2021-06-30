@@ -19,7 +19,7 @@ const { drawTxtImage } = require('../../cq/drawImageBytxt')
 *
 * */
 
-const Reliquary = (content, qq, callback, type = 'baiduAip') => {
+const Reliquary = (content, qq, callback, type = 'cq-http') => {
 	let n = -1
 	switch (type) {
 		case 'baiduAip':
