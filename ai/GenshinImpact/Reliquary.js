@@ -93,8 +93,8 @@ const analysis = arr => {
 			continue
 		}
 		if(info.indexOf('充') > -1 || info.indexOf('能') > -1) {
-			let src = sp[1]
-			let res = uniAnalysis(src.split('%')[0], [4.5,5.2,5.8,6.5], 10)
+			let src = sp[1].split('%')[0]
+			let res = uniAnalysis(src, [4.5,5.2,5.8,6.5], 10)
 			sortData(res, src)
 			res = simplifyData(res, src)
 			out += `${sp[0]}: ${renderRank(res)}\n`
@@ -103,7 +103,7 @@ const analysis = arr => {
 		}
 		if(info.indexOf('伤') > -1 || info.indexOf('害') > -1) {
 			let src = sp[1]
-			let res = uniAnalysis(src.split('%')[0], [5.4,6.2,7.0,7.8], 10)
+			let res = uniAnalysis(src, [5.4,6.2,7.0,7.8], 10)
 			sortData(res, src)
 			res = simplifyData(res, src)
 			out += `${sp[0]}: ${renderRank(res)}\n`
