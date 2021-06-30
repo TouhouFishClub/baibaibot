@@ -17,11 +17,11 @@ const ocr = (imageId, port, callback) => {
 				let d = {}
 				try {
 					d = JSON.parse(resdata)
+					callback(d)
 				} catch(err) {
 					console.log('ERROR: 【COOLQ HTTP OCR】转换JSON错误')
 					console.log(err)
 				}
-				callback(d)
 			}
 		})
 	})
