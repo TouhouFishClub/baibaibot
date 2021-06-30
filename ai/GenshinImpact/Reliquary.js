@@ -187,6 +187,7 @@ const simplifyData = (arr, source) => {
 
 const calcScore = (arr, type) => {
 	let sum = arr.reduce((p, e) => p + e.index.split('').reduce((a, b) => a + [2.5, 3, 3.5, 4][b], 0), 0) / arr.length
+	sum *= 2
 	switch(type) {
 		case 'CRIT-RATE':
 			sum *= 1.5
