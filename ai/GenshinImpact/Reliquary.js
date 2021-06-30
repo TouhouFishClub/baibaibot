@@ -49,7 +49,11 @@ const Reliquary = (content, qq, port, callback, type = 'cq-http') => {
 						ocr(sp[1], port, d => {
 							if(d.data) {
 								let texts = d.data.texts.map(x => x.text)
+								console.log('=====')
+								console.log(texts)
 								let filter = texts.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0])
+								console.log('=========')
+								console.log(filter)
 								drawTxtImage('', analysis(filter), callback, {color: 'black', font: 'STXIHEI.TTF'})
 							} else {
 								callback(d.msg)
