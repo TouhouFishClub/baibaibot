@@ -102,7 +102,7 @@ const analysis = arr => {
 			continue
 		}
 		if(info.indexOf('伤') > -1 || info.indexOf('害') > -1) {
-			let src = sp[1]
+			let src = sp[1].split('%')[0]
 			let res = uniAnalysis(src, [5.4,6.2,7.0,7.8], 10)
 			sortData(res, src)
 			res = simplifyData(res, src)
