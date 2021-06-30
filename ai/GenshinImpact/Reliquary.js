@@ -77,7 +77,7 @@ const analysis = arr => {
 		if(info.indexOf('击率') > -1) {
 			let src = sp[1].split('%')[0]
 			let res = uniAnalysis(src, [2.7,3.1,3.5,3.9], 10)
-			res = sortData(res, src)
+			sortData(res, src)
 			res = simplifyData(res, src)
 			out += `${sp[0]}: ${renderRank(res)}\n`
 			score += calcScore(res, 'CRIT-RATE')
@@ -86,7 +86,7 @@ const analysis = arr => {
 		if(info.indexOf('精') > -1 || info.indexOf('通') > -1) {
 			let src = sp[1]
 			let res = uniAnalysis(src, [16,19,21,23], 2)
-			res = sortData(res, src)
+			sortData(res, src)
 			res = simplifyData(res, src)
 			out += `${sp[0]}: ${renderRank(res)}\n`
 			score += calcScore(res, 'Elemental-mastery')
@@ -95,7 +95,7 @@ const analysis = arr => {
 		if(info.indexOf('充') > -1 || info.indexOf('能') > -1) {
 			let src = sp[1]
 			let res = uniAnalysis(src.split('%')[0], [4.5,5.2,5.8,6.5], 10)
-			res = sortData(res, src)
+			sortData(res, src)
 			res = simplifyData(res, src)
 			out += `${sp[0]}: ${renderRank(res)}\n`
 			score += calcScore(res, 'Energy-Recharge')
@@ -104,7 +104,7 @@ const analysis = arr => {
 		if(info.indexOf('伤') > -1 || info.indexOf('害') > -1) {
 			let src = sp[1]
 			let res = uniAnalysis(src.split('%')[0], [5.4,6.2,7.0,7.8], 10)
-			res = sortData(res, src)
+			sortData(res, src)
 			res = simplifyData(res, src)
 			out += `${sp[0]}: ${renderRank(res)}\n`
 			score += calcScore(res, 'CRIT-DMG')
@@ -114,7 +114,7 @@ const analysis = arr => {
 			if(info.indexOf('%') > -1 || info.indexOf('.') > -1) {
 				let src = sp[1].split('%')[0]
 				let res = uniAnalysis(src, [4.1,4.7,5.3,5.8], 10)
-				res = sortData(res, src)
+				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}(%): ${renderRank(res)}\n`
 				score += calcScore(res, 'HP-per')
@@ -122,7 +122,7 @@ const analysis = arr => {
 			} else {
 				let src = sp[1]
 				let res = uniAnalysis(src, [209,239,269,299], 2)
-				res = sortData(res, src)
+				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}: ${renderRank(res)}\n`
 				score += calcScore(res, 'HP')
@@ -133,7 +133,7 @@ const analysis = arr => {
 			if(info.indexOf('%') > -1 || info.indexOf('.') > -1) {
 				let src = sp[1].split('%')[0]
 				let res = uniAnalysis(src, [4.1,4.7,5.3,5.8], 10)
-				res = sortData(res, src)
+				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}(%): ${renderRank(res)}\n`
 				score += calcScore(res, 'ATK-per')
@@ -141,7 +141,7 @@ const analysis = arr => {
 			} else {
 				let src = sp[1]
 				let res = uniAnalysis(src, [14,16,18,19], 2)
-				res = sortData(res, src)
+				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}: ${renderRank(res)}\n`
 				score += calcScore(res, 'ATK')
@@ -152,7 +152,7 @@ const analysis = arr => {
 			if(info.indexOf('%') > -1 || info.indexOf('.') > -1) {
 				let src = sp[1].split('%')[0]
 				let res = uniAnalysis(src, [5.1,5.8,6.6,7.3], 10)
-				res = sortData(res, src)
+				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}(%): ${renderRank(res)}\n`
 				score += calcScore(res, 'DEF-per')
@@ -160,7 +160,7 @@ const analysis = arr => {
 			} else {
 				let src = sp[1]
 				let res = uniAnalysis(src, [16,19,21,23], 2)
-				res = sortData(res, src)
+				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}: ${renderRank(res)}\n`
 				score += calcScore(res, 'DEF')
