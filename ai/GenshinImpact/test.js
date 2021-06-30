@@ -10,14 +10,15 @@
 const {createRange, uniAnalysis, Reliquary} = require('./Reliquary')
 const { F } = require('./compair')
 let ts = Date.now()
-let area = new F(10, 20, 30, 40).execute()
+let area = new F(10, 20, 30, 40).execute().getResult()
+console.log(area)
 // console.log(area.totalArr.map(x => Array.from(new Set(x))).reduce((p, e) => p.concat(e), []))
 console.log(`Done : ${Date.now() - ts}`)
 
-ts = Date.now()
-let area2 = createRange([10, 20, 30, 40])
-// console.log(area2)
-console.log(`Done : ${Date.now() - ts}`)
+// ts = Date.now()
+// let area2 = createRange([10, 20, 30, 40])
+// // console.log(area2)
+// console.log(`Done : ${Date.now() - ts}`)
 
 
 

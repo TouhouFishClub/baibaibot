@@ -71,55 +71,157 @@ const analysis = arr => {
 	out += '=============\n'
 	out += `${arr.join('\n')}\n`
 	out += '=============\n'
+	let score = 0
 	for(let i = 0; i < arr.length; i ++) {
 		let info = arr[i], sp = info.split('+')
 		if(info.indexOf('击率') > -1) {
-			out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1].split('%')[0], [2.7,3.1,3.5,3.9], 10))}\n`
+			let src = sp[1].split('%')[0]
+			let res = uniAnalysis(src, [2.7,3.1,3.5,3.9], 10)
+			res = sortData(res, src)
+			res = simplifyData(res, src)
+			out += `${sp[0]}: ${renderRank(res)}\n`
+			score += calcScore(res, 'CRIT-RATE')
 			continue
 		}
 		if(info.indexOf('精') > -1 || info.indexOf('通') > -1) {
-			out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1], [16,19,21,23], 2))}\n`
+			let src = sp[1]
+			let res = uniAnalysis(src, [16,19,21,23], 2)
+			res = sortData(res, src)
+			res = simplifyData(res, src)
+			out += `${sp[0]}: ${renderRank(res)}\n`
+			score += calcScore(res, 'Elemental-mastery')
 			continue
 		}
 		if(info.indexOf('充') > -1 || info.indexOf('能') > -1) {
-			out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1].split('%')[0], [4.5,5.2,5.8,6.5], 10))}\n`
+			let src = sp[1]
+			let res = uniAnalysis(src.split('%')[0], [4.5,5.2,5.8,6.5], 10)
+			res = sortData(res, src)
+			res = simplifyData(res, src)
+			out += `${sp[0]}: ${renderRank(res)}\n`
+			score += calcScore(res, 'Energy-Recharge')
 			continue
 		}
 		if(info.indexOf('伤') > -1 || info.indexOf('害') > -1) {
-			out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1].split('%')[0], [5.4,6.2,7.0,7.8], 10))}\n`
+			let src = sp[1]
+			let res = uniAnalysis(src.split('%')[0], [5.4,6.2,7.0,7.8], 10)
+			res = sortData(res, src)
+			res = simplifyData(res, src)
+			out += `${sp[0]}: ${renderRank(res)}\n`
+			score += calcScore(res, 'CRIT-DMG')
 			continue
 		}
 		if(info.indexOf('生') > -1 || info.indexOf('值') > -1) {
 			if(info.indexOf('%') > -1 || info.indexOf('.') > -1) {
-				out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1].split('%')[0], [4.1,4.7,5.3,5.8], 10))}\n`
+				let src = sp[1].split('%')[0]
+				let res = uniAnalysis(src, [4.1,4.7,5.3,5.8], 10)
+				res = sortData(res, src)
+				res = simplifyData(res, src)
+				out += `${sp[0]}(%): ${renderRank(res)}\n`
+				score += calcScore(res, 'HP-per')
 				continue
 			} else {
-				out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1], [209,239,269,299], 2))}\n`
+				let src = sp[1]
+				let res = uniAnalysis(src, [209,239,269,299], 2)
+				res = sortData(res, src)
+				res = simplifyData(res, src)
+				out += `${sp[0]}: ${renderRank(res)}\n`
+				score += calcScore(res, 'HP')
 				continue
 			}
 		}
 		if(info.indexOf('攻') > -1 || info.indexOf('击') > -1) {
 			if(info.indexOf('%') > -1 || info.indexOf('.') > -1) {
-				out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1].split('%')[0], [4.1,4.7,5.3,5.8], 10))}\n`
+				let src = sp[1].split('%')[0]
+				let res = uniAnalysis(src, [4.1,4.7,5.3,5.8], 10)
+				res = sortData(res, src)
+				res = simplifyData(res, src)
+				out += `${sp[0]}(%): ${renderRank(res)}\n`
+				score += calcScore(res, 'ATK-per')
 				continue
 			} else {
-				out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1], [14,16,18,19], 2))}\n`
+				let src = sp[1]
+				let res = uniAnalysis(src, [14,16,18,19], 2)
+				res = sortData(res, src)
+				res = simplifyData(res, src)
+				out += `${sp[0]}: ${renderRank(res)}\n`
+				score += calcScore(res, 'ATK')
 				continue
 			}
 		}
 		if(info.indexOf('防') > -1 || info.indexOf('御') > -1) {
 			if(info.indexOf('%') > -1 || info.indexOf('.') > -1) {
-				out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1].split('%')[0], [5.1,5.8,6.6,7.3], 10))}\n`
+				let src = sp[1].split('%')[0]
+				let res = uniAnalysis(src, [5.1,5.8,6.6,7.3], 10)
+				res = sortData(res, src)
+				res = simplifyData(res, src)
+				out += `${sp[0]}(%): ${renderRank(res)}\n`
+				score += calcScore(res, 'DEF-per')
 				continue
 			} else {
-				out += `${sp[0]}: ${renderRank(uniAnalysis(sp[1], [16,19,21,23], 2))}\n`
+				let src = sp[1]
+				let res = uniAnalysis(src, [16,19,21,23], 2)
+				res = sortData(res, src)
+				res = simplifyData(res, src)
+				out += `${sp[0]}: ${renderRank(res)}\n`
+				score += calcScore(res, 'DEF')
 				continue
 			}
 		}
 		out += `${sp[0]}: 无法分析\n`
 	}
+	out += `========\n评分（实验性质）：${score}`
 	return out
 }
+
+const sortData = (arr, source) => {
+	arr.sort((a, b) => Math.abs(a.val - source) - Math.abs(b.val - source))
+}
+
+const simplifyData = (arr, source) => {
+	let out = arr.filter(x => x.index.length == Math.min(...arr.map(x => x.index.length)))
+	if(out.length && out[0].index.length == 1) {
+		out = out.filter(x => x.val == source)
+	}
+	return out
+}
+
+const calcScore = (arr, type) => {
+	let sum = arr.reduce((p, e) => p + e.index.split('').reduce((a, b) => a + [2.5, 3, 3.5, 4][b], 0), 0) / arr.length
+	switch(type) {
+		case 'CRIT-RATE':
+			sum *= 1.5
+			break
+		case 'CRIT-DMG':
+			sum *= 2
+			break
+		case 'Elemental-mastery':
+			sum *= 0.7
+			break
+		case 'Energy-Recharge':
+			sum *= 0.7
+			break
+		case 'HP-per':
+			sum *= 0.5
+			break
+		case 'HP':
+			sum *= 0.35
+			break
+		case 'ATK-per':
+			sum *= 1.2
+			break
+		case 'ATK':
+			sum *= 0.7
+			break
+		case 'DEF-per':
+			sum *= 0.5
+			break
+		case 'DEF':
+			sum *= 0.35
+			break
+	}
+	return sum
+}
+
 const renderRank = arr => arr.length ? arr.map(x => x.index.split('').map(x => ['D','C','B','A'][parseInt(x)]).join('')).join(', ') : '无法分析'
 
 const uniAnalysis = (tar, arr, precision) => createRange(arr).filter(range => ignoreError(tar, range.val, precision))
