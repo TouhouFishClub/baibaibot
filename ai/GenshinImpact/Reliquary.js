@@ -1,4 +1,5 @@
 const { baiduocr } = require('../image/baiduocr');
+const { ocr } = require('../image/cqhttp-ocr')
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
 /*
@@ -18,21 +19,50 @@ const { drawTxtImage } = require('../../cq/drawImageBytxt')
 *
 * */
 
-const Reliquary = (content, callback) => {
-	let n = content.indexOf('[CQ:image,')
-	if(n > -1){
-		content.substr(n).split(',').forEach(p => {
-			let sp = p.split('=')
-			if(sp[0] == 'url'){
-				// console.log(sp[1])
-				baiduocr(sp[1], d => {
-					let filter = d.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0])
-					drawTxtImage('', analysis(filter), callback, {color: 'black', font: 'STXIHEI.TTF'})
+const Reliquary = (content, qq, callback, type = 'baiduAip') => {
+	let n = -1
+	switch (type) {
+		case 'baiduAip':
+			n = content.indexOf('[CQ:image,')
+			if(n > -1){
+				content.substr(n).split(',').forEach(p => {
+					let sp = p.split('=')
+					if(sp[0] == 'url'){
+						// console.log(sp[1])
+						baiduocr(sp[1], d => {
+							let filter = d.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0])
+							drawTxtImage(`[CQ:at,qq=${qq}]`, analysis(filter), callback, {color: 'black', font: 'STXIHEI.TTF'})
+						})
+					}
 				})
+			} else {
+				callback('没有识别到图片')
 			}
-		})
-	} else {
-		callback('没有识别到图片')
+			break
+		case 'cq-http':
+			n = content.indexOf('[CQ:image')
+			if(n > -1){
+				content.substr(n).split(',').forEach(p => {
+					let sp = p.split('=')
+					if(sp[0] == 'file'){
+						// console.log(sp[1])
+						ocr(sp[1], d => {
+							if(d.data) {
+								let texts = d.data.texts.map(x => x.text)
+								let filter = texts.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0])
+								drawTxtImage('', analysis(filter), callback, {color: 'black', font: 'STXIHEI.TTF'})
+							} else {
+								callback(d.msg)
+							}
+						})
+					}
+				})
+			} else {
+				callback('没有识别到图片')
+			}
+			break
+		default:
+			callback('没有识别到图片')
 	}
 }
 
