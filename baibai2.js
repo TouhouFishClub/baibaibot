@@ -1090,11 +1090,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
   if(fie.toLowerCase() == 'ysr') {
-	  Reliquary(con.substring(3), from, callback)
+	  Reliquary(con.substring(3), from, port, callback)
 	  return
   }
   if(fie.toLowerCase() == 'ysb') {
-	  Reliquary(con.substring(3), from, callback, 'baiduAip')
+	  Reliquary(con.substring(3), from, port, callback, 'baiduAip')
 	  return
   }
   if(fie.toLowerCase() == 'ark'){

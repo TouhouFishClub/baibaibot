@@ -1,5 +1,5 @@
 const http = require('http')
-const ocr = (imageId, callback) => {
+const ocr = (imageId, port, callback) => {
 	var options = {
 		host: '192.168.17.52',
 		port: port,

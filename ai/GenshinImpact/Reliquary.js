@@ -19,7 +19,7 @@ const { drawTxtImage } = require('../../cq/drawImageBytxt')
 *
 * */
 
-const Reliquary = (content, qq, callback, type = 'cq-http') => {
+const Reliquary = (content, qq, port, callback, type = 'cq-http') => {
 	let n = -1
 	switch (type) {
 		case 'baiduAip':
@@ -46,7 +46,7 @@ const Reliquary = (content, qq, callback, type = 'cq-http') => {
 					let sp = p.split('=')
 					if(sp[0] == 'file'){
 						// console.log(sp[1])
-						ocr(sp[1], d => {
+						ocr(sp[1], port, d => {
 							if(d.data) {
 								let texts = d.data.texts.map(x => x.text)
 								let filter = texts.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0])
