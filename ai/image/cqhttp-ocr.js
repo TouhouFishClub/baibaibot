@@ -15,12 +15,7 @@ const ocr = (imageId, port, callback) => {
 		res.on('end', () => {
 			if(resdata.length > 0){
 				try {
-					console.log(typeof resdata)
 					let d = JSON.parse(resdata)
-					console.log('=====')
-					console.log(d)
-					console.log('=====')
-					console.log(typeof d)
 					callback(d)
 				} catch {
 					console.log('ERROR: 【COOLQ HTTP OCR】转换JSON错误')
