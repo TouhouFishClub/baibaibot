@@ -15,7 +15,7 @@ const ocr = (imageId, port, callback) => {
 		res.on('end', () => {
 			if(resdata.length > 0){
 				try {
-					let d = JSON.parse(resdata)
+					let d = eval(resdata)
 					console.log('=====')
 					console.log(d)
 					console.log('=====')
