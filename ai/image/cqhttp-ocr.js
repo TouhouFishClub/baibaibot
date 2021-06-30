@@ -14,12 +14,14 @@ const ocr = (imageId, port, callback) => {
 		})
 		res.on('end', () => {
 			if(resdata.length > 0){
+				let d = {}
 				try {
-					let d = JSON.parse(resdata)
-					callback(d)
-				} catch {
+					d = JSON.parse(resdata)
+				} catch(err) {
 					console.log('ERROR: 【COOLQ HTTP OCR】转换JSON错误')
+					console.log(err)
 				}
+				callback(d)
 			}
 		})
 	})
