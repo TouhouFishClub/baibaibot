@@ -30,7 +30,7 @@ const Reliquary = (content, qq, port, callback, type = 'cq-http') => {
 					if(sp[0] == 'url'){
 						// console.log(sp[1])
 						baiduocr(sp[1], d => {
-							let filter = d.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0])
+							let filter = d.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+(\d+,)?\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0])
 							drawTxtImage(`[CQ:at,qq=${qq}]`, analysis(filter), callback, {color: 'black', font: 'STXIHEI.TTF'})
 						})
 					}
@@ -48,8 +48,8 @@ const Reliquary = (content, qq, port, callback, type = 'cq-http') => {
 						// console.log(sp[1])
 						ocr(sp[1], port, d => {
 							if(d.data) {
-								let texts = d.data.texts.map(x => x.text.replace(/ /g, ''))
-								let filter = texts.map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0])
+								let texts = d.data.texts.map(x => x.text.replace(/[ ,，]/g, ''))
+								let filter = texts.map(x => x.match(/[\u4e00-\u9fa5]+\+(\d+,)?\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0])
 								drawTxtImage(`[CQ:at,qq=${qq}]`, analysis(filter), callback, {color: 'black', font: 'STXIHEI.TTF'})
 							} else {
 								callback(d.msg)
