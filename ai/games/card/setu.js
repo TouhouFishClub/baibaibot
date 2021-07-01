@@ -85,7 +85,7 @@ function runsetu(content,gid,qq,callback,port){
   }else{
       apikey = loliconapikey2;
   }
-  var url = 'https://api.lolicon.app/setu/v2?tag=%E8%90%9D%E8%8E%89%7C%E5%B0%91%E5%A5%B3&tag=%E7%99%BD%E4%B8%9D%7C%E9%BB%91%E4%B8%9D';
+  var url = 'https://api.lolicon.app/setu/v2?tag=%E8%90%9D%E8%8E%89%7C%E5%B0%91%E5%A5%B3';
 
     request({
     headers:{
