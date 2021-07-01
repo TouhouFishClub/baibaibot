@@ -74,7 +74,10 @@ const analysis = arr => {
 	out += '=============\n'
 	out += `${arr.join('\n')}\n`
 	out += '=============\n'
-	let score = 0
+	let score = {
+		normal: 0,
+		atkFirst: 0
+	}
 	for(let i = 0; i < arr.length; i ++) {
 		let info = arr[i], sp = info.split('+')
 		if(info.indexOf('击率') > -1) {
@@ -83,7 +86,7 @@ const analysis = arr => {
 			sortData(res, src)
 			res = simplifyData(res, src)
 			out += `${sp[0]}: ${renderRank(res)}\n`
-			score += calcScore(res, 'CRIT-RATE')
+			score = addObject(score, calcScore(res, 'CRIT-RATE'))
 			continue
 		}
 		if(info.indexOf('精') > -1 || info.indexOf('通') > -1) {
@@ -92,7 +95,7 @@ const analysis = arr => {
 			sortData(res, src)
 			res = simplifyData(res, src)
 			out += `${sp[0]}: ${renderRank(res)}\n`
-			score += calcScore(res, 'Elemental-mastery')
+			score = addObject(score, calcScore(res, 'Elemental-mastery'))
 			continue
 		}
 		if(info.indexOf('充') > -1 || info.indexOf('能') > -1) {
@@ -101,7 +104,7 @@ const analysis = arr => {
 			sortData(res, src)
 			res = simplifyData(res, src)
 			out += `${sp[0]}: ${renderRank(res)}\n`
-			score += calcScore(res, 'Energy-Recharge')
+			score = addObject(score, calcScore(res, 'Energy-Recharge'))
 			continue
 		}
 		if(info.indexOf('伤') > -1 || info.indexOf('害') > -1) {
@@ -110,7 +113,7 @@ const analysis = arr => {
 			sortData(res, src)
 			res = simplifyData(res, src)
 			out += `${sp[0]}: ${renderRank(res)}\n`
-			score += calcScore(res, 'CRIT-DMG')
+			score = addObject(score, calcScore(res, 'CRIT-DMG'))
 			continue
 		}
 		if(info.indexOf('生') > -1 || info.indexOf('值') > -1) {
@@ -120,7 +123,7 @@ const analysis = arr => {
 				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}(%): ${renderRank(res)}\n`
-				score += calcScore(res, 'HP-per')
+				score = addObject(score, calcScore(res, 'HP-per'))
 				continue
 			} else {
 				let src = sp[1]
@@ -128,7 +131,7 @@ const analysis = arr => {
 				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}: ${renderRank(res)}\n`
-				score += calcScore(res, 'HP')
+				score = addObject(score, calcScore(res, 'HP'))
 				continue
 			}
 		}
@@ -139,7 +142,7 @@ const analysis = arr => {
 				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}(%): ${renderRank(res)}\n`
-				score += calcScore(res, 'ATK-per')
+				score = addObject(score, calcScore(res, 'ATK-per'))
 				continue
 			} else {
 				let src = sp[1]
@@ -147,7 +150,7 @@ const analysis = arr => {
 				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}: ${renderRank(res)}\n`
-				score += calcScore(res, 'ATK')
+				score = addObject(score, calcScore(res, 'ATK'))
 				continue
 			}
 		}
@@ -158,7 +161,7 @@ const analysis = arr => {
 				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}(%): ${renderRank(res)}\n`
-				score += calcScore(res, 'DEF-per')
+				score = addObject(score, calcScore(res, 'DEF-per'))
 				continue
 			} else {
 				let src = sp[1]
@@ -166,13 +169,21 @@ const analysis = arr => {
 				sortData(res, src)
 				res = simplifyData(res, src)
 				out += `${sp[0]}: ${renderRank(res)}\n`
-				score += calcScore(res, 'DEF')
+				score = addObject(score, calcScore(res, 'DEF'))
 				continue
 			}
 		}
 		out += `${sp[0]}: 无法分析\n`
 	}
-	out += `========\n评分（实验性质）：${score}`
+	out += `=============\n评分（实验性质）：\n双爆优先：${score.normal}\n攻击优先：${score.atkFirst}`
+	return out
+}
+
+const addObject = (old, val) => {
+	let out = { }
+	Object.keys(old).forEach(key => {
+		out[key] = old[key] + (val[key] || 0)
+	})
 	return out
 }
 
@@ -194,39 +205,53 @@ const calcScore = (arr, type) => {
 	}
 	let sum = arr.reduce((p, e) => p + e.index.split('').reduce((a, b) => a + [2.5, 3, 3.5, 4][b], 0), 0) / arr.length
 	sum *= 2
+	let atk = sum
 	switch(type) {
 		case 'CRIT-RATE':
 			sum *= 1.5
+			atk *= 2
 			break
 		case 'CRIT-DMG':
 			sum *= 2.5
+			atk *= 1.8
 			break
 		case 'Elemental-mastery':
 			sum *= 0.7
+			atk *= 0.7
 			break
 		case 'Energy-Recharge':
 			sum *= 0.65
+			atk *= 0.65
 			break
 		case 'HP-per':
 			sum *= 0.4
+			atk *= 0.4
 			break
 		case 'HP':
 			sum *= 0.25
+			atk *= 0.25
 			break
 		case 'ATK-per':
 			sum *= 1.2
+			atk *= 2
 			break
 		case 'ATK':
 			sum *= 0.7
+			atk *= 1.2
 			break
 		case 'DEF-per':
 			sum *= 0.4
+			atk *= 0.4
 			break
 		case 'DEF':
 			sum *= 0.25
+			atk *= 0.25
 			break
 	}
-	return sum
+	return {
+		normal: sum,
+		atkFirst: atk
+	}
 }
 
 const renderRank = arr => arr.length ? arr.map(x => x.index.split('').map(x => ['D','C','B','A'][parseInt(x)]).join('')).join(', ') : '无法分析'
