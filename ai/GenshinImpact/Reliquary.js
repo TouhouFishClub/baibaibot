@@ -199,19 +199,19 @@ const calcScore = (arr, type) => {
 			sum *= 1.5
 			break
 		case 'CRIT-DMG':
-			sum *= 2
+			sum *= 2.5
 			break
 		case 'Elemental-mastery':
 			sum *= 0.7
 			break
 		case 'Energy-Recharge':
-			sum *= 0.7
+			sum *= 0.65
 			break
 		case 'HP-per':
-			sum *= 0.5
+			sum *= 0.4
 			break
 		case 'HP':
-			sum *= 0.35
+			sum *= 0.25
 			break
 		case 'ATK-per':
 			sum *= 1.2
@@ -220,10 +220,10 @@ const calcScore = (arr, type) => {
 			sum *= 0.7
 			break
 		case 'DEF-per':
-			sum *= 0.5
+			sum *= 0.4
 			break
 		case 'DEF':
-			sum *= 0.35
+			sum *= 0.25
 			break
 	}
 	return sum
