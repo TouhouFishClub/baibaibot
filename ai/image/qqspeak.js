@@ -7,6 +7,15 @@ function descryptReply(content,callback){
   var n3 = content.indexOf('[CQ:image')
   if(n3>=0){
     var n1 = content.indexOf('https://gchat.qpic');
+    var n11 = content.indexOf('http://gchat.qpic');
+    var n=-1;
+    if(n1>=0){
+      n=n1;
+    }else if(n1>0){
+      n=n11;
+    }else{
+      return;
+    }
     var s1 = content.substring(n1);
     var n2 = s1.indexOf('?');
     var url = s1.substring(0,n2);
