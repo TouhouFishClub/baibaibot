@@ -240,9 +240,12 @@ const getYQLData = code =>
       })
   })
 
+var apikey = '01a69c4322e94ee4533267a407dea588';
+var apikey6 = 'a47b4f46f93d6e7e83b1fc45572e39e4';
+
 const getFixerData = code =>
   new Promise((resolve, reject) => {
-    Axios.get('http://data.fixer.io/api/latest?access_key=01a69c4322e94ee4533267a407dea588', {
+    Axios.get('http://data.fixer.io/api/latest?access_key='+apikey6, {
       timeout: TIME_OUT,
       headers: {
         'User-Agent': USER_AGENT
