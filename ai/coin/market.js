@@ -94,9 +94,11 @@ function getFixer(){
       } else {
           var data = eval('('+body+')');
           var rates = data.rates;
-          var usd = rates.USD;
-          var cny = rates.CNY;
-          USD2CNY = cny/usd;
+          if(rates){
+            var usd = rates.USD;
+            var cny = rates.CNY;
+            USD2CNY = cny/usd;
+          }
       }
   });
 }
