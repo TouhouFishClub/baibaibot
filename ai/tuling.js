@@ -376,6 +376,7 @@ getTulingDemoResponse('123','你好鸭',function(r){console.log(r)},'234');
 function getTAI(userid,content,callback,groupid) {
   var url = 'http://api.tianapi.com/txapi/robot/index';
   var param = 'key=58ba9240b897f255e2464848e2d92716&question=' + encodeURIComponent(content);
+  url = url + '?' + param;
   request({
     url: url
   }, function (error, response, body) {
