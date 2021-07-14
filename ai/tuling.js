@@ -11,6 +11,7 @@ const {baiduVoice} = require('../ai/voice/baiduvoice')
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var limit = {};
+var request = require('request');
 
 var crypto = require('crypto');
 var appid = 1107054322;
@@ -132,10 +133,13 @@ function tulingMsg(userid,content,callback,groupid){
   // if(groupid == 1098831698)
   //   return
 
-  getQAIresponse(userid,content,callback,groupid);
+  getTAI(userid,content,callback,groupid);
 
   // tulingMsg0(userid,content,callback,groupid);
 }
+
+
+
 
 
 
@@ -302,11 +306,89 @@ function getLike(qq,name,callback){
 
 
 
+function getTulingDemoResponse(userid,content,callback,groupid){
+  var then=limit[groupid];
+  if(then){
+    if(new Date().getTime()-then<3000){
+      callback('啊呜，百百好像反应不过来了哇哇哇哇哇！');
+      return;
+    }
+  }
+  if(content.indexOf('禁言')>=0){
+    return;
+  }
+  limit[groupid]=new Date().getTime();
+
+  if(content.toUpperCase().indexOf('CQ:')>=0){
+    return;
+  }
+
+  var body = {"perception":{"inputText":{"text":"？"}},"userInfo":{"userId":"demo"}}
+  body.perception.inputText.text=content;
+  var url = 'http://www.tuling123.com/robot-chat/robot/chat/626226/sy8O';
+
+  var options = {
+    hostname: 'www.tuling123.com',
+    port: 80,
+    path: '/robot-chat/robot/chat/626226/sy8O',
+    method: 'POST',
+    headers:{
+      'Content-Type':'application/json;charset=UTF-8',
+      'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+      'Referer':'http://www.tuling123.com/member/robot/2002741/center/frame.jhtml?page=0&child=0'
+    }
+  };
+  var req = http.request(options, function (res) {
+    res.setEncoding('utf8');
+    var resdata = '';
+    res.on('data', function (chunk) {
+      resdata = resdata + chunk;
+    });
+    res.on('end', function () {
+      var dd = JSON.stringify(resdata);
+      console.log(dd);
+      try{
+        var ret = dd.data.results[0].values.text;
+        if(ret){
+          callback(ret);
+        }
+      }catch(e){
+        console.log(e);
+
+      }
+    });
+  });
+  req.on('error', function(err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.write(JSON.stringify(body));
+  req.end();
+
+}
+
+
+getTulingDemoResponse('123','你好鸭',function(r){console.log(r)},'234');
 
 
 
 
-
+function getTAI(userid,content,callback,groupid){
+  var url = 'http://api.tianapi.com/txapi/robot/index';
+  var param = 'key=58ba9240b897f255e2464848e2d92716&question='+encodeURIComponent(content);
+  request({
+    url:url
+  },function(error,response,body){
+    if(error&&error.code){
+      console.log("req error")
+    }else{
+      var data = eval('('+body+')');
+      if(data.code==200){
+        var reply = data.newslist[0].reply;
+        callback(reply);
+      }
+    }
+  });
 
 
 
