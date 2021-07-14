@@ -373,22 +373,23 @@ getTulingDemoResponse('123','你好鸭',function(r){console.log(r)},'234');
 
 
 
-function getTAI(userid,content,callback,groupid){
+function getTAI(userid,content,callback,groupid) {
   var url = 'http://api.tianapi.com/txapi/robot/index';
-  var param = 'key=58ba9240b897f255e2464848e2d92716&question='+encodeURIComponent(content);
+  var param = 'key=58ba9240b897f255e2464848e2d92716&question=' + encodeURIComponent(content);
   request({
-    url:url
-  },function(error,response,body){
-    if(error&&error.code){
+    url: url
+  }, function (error, response, body) {
+    if (error && error.code) {
       console.log("req error")
-    }else{
-      var data = eval('('+body+')');
-      if(data.code==200){
+    } else {
+      var data = eval('(' + body + ')');
+      if (data.code == 200) {
         var reply = data.newslist[0].reply;
         callback(reply);
       }
     }
   });
+}
 
 
 
