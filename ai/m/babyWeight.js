@@ -20,12 +20,18 @@ function saveBabyData(weight,height,head,backup,callback){
 
 function getBabyData(callback){
   var cl_baby_info=udb.collection("cl_baby_info");
-  cl_baby_info.find().toArray(function(error,list){
+  cl_baby_info.find({del:{$exists:false}}).toArray(function(error,list){
     callback(list);
   })
 }
 
+function delBabyData(id,callback){
+  var cl_baby_info=udb.collection("cl_baby_info");
+  cl_baby_info.updateOne({'_id':id},{'$set':{del:1}})
+}
+
 module.exports={
   saveBabyData,
-  getBabyData
+  getBabyData,
+  delBabyData
 }
