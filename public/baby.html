@@ -15,17 +15,17 @@
     <div class="col-xs-2">
       <input class="form-control" id="weight" placeholder="体重（kg）">
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-2">
       <input class="form-control" id="height" placeholder="身高（cm）">
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-2">
       <input class="form-control" id="head" placeholder="头围（cm）">
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-4">
       <input class="form-control" id="backup" placeholder="备注">
     </div>
     <div class="col-xs-2">
-      <button class="btn btn-default" onclick="submit();">提交</button>
+      <button class="btn btn-primary" onclick="submit();">提交</button>
     </div>
   </div>
   <div id="main">
@@ -45,7 +45,7 @@
           var data = eval('('+response+')');
           var list = data.d;
           var h = '    <table class="table table-bordered table-striped table-hover">';
-          h = h + '<thead><tr><td>时间</td><td>体重</td><td>身高</td><td>头围</td><td>备注</td></tr></thead>';
+          h = h + '<thead><tr><td>时间</td><td>体重</td><td>身高</td><td>头围</td><td>备注</td><td>操作</td></tr></thead>';
           h = h + '<tbody>';
 
           for(var i=0;i<list.length;i++){
@@ -56,12 +56,40 @@
             h=h+'<td>'+dd.height+' cm</td>';
             h=h+'<td>'+dd.head+' cm</td>';
             h=h+'<td>'+dd.backup+'</td>';
+            h=h+'<td>'+'<button class="btn btn-primary" id="'+dd._id+'" onclick="delData(this.id)">删除</button>'+'</td>';
             h=h+'</tr>';
           }
           h = h + '</tbody></table>';
           $('#main').html(h);
         }
       })
+    }
+
+    function submit(){
+      var weight = parseFloat($('#weight')[0].value);
+      if(!weight){
+        weight=0;
+      }
+      var height = parseFloat($('#height')[0].value);
+      if(!height){
+        height=0;
+      }
+      var head = parseFloat($('#head')[0].value);
+      if(!head){
+        head=0;
+      }
+      var backup = $('#backup')[0].value;
+      if(!backup){
+        backup="";
+      }
+      if(weight&&height&&head&&backup){
+        var url = '/saveBabyData?weight='+weight+'&height='+height+'&head='+head+'&backup='+backup;
+        $.get(url,function(response,status){
+          if(status=='success'){
+            getData();
+          }
+        })
+      }
     }
 
   </script>
