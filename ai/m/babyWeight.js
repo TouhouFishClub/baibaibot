@@ -11,7 +11,7 @@ function initDB(){
 
 function saveBabyData(weight,height,head,backup,callback){
   var cl_baby_info=udb.collection("cl_baby_info");
-  var now = new Date().getTime();
+  var now = new Date();
   var data = {'_id':now.getTime(),weight:weight,height:height,head:head,backup:backup,ts:now};
   cl_baby_info.save(data,function(){
     callback('ok');
