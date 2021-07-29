@@ -458,7 +458,7 @@ app.get('/blive',function(req,res){
 })
 
 
-const {saveBabyData,getBabyData} = require("./ai/m/babyWeight");
+const {saveBabyData,getBabyData,delBabyData} = require("./ai/m/babyWeight");
 app.get('/saveBabyData',function(req,res) {
   var querydata = req.query;
   var weight = parseFloat(querydata.weight);
