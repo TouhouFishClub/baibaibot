@@ -458,3 +458,23 @@ app.get('/blive',function(req,res){
 })
 
 
+const {saveBabyData,getBabyData} = require("./ai/m/babyWeight");
+app.get('/saveBabyData',function(req,res) {
+  var querydata = req.query;
+  var weight = parseFloat(querydata.weight);
+  var height = parseFloat(querydata.height);
+  var head = parseFloat(querydata.height);
+  var backup = querydata.backup;
+  saveBabyData(weight,height,head,backup,function(ret){
+    res.send(ret);
+  })
+});
+
+app.get('/getBabyData',function(req,res) {
+  getBabyData(function(data){
+    var ret = {d:data};
+    res.send(JSON.stringify(ret));
+  })
+})
+
+
