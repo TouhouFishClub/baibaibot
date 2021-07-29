@@ -463,7 +463,7 @@ app.get('/saveBabyData',function(req,res) {
   var querydata = req.query;
   var weight = parseFloat(querydata.weight);
   var height = parseFloat(querydata.height);
-  var head = parseFloat(querydata.height);
+  var head = parseFloat(querydata.head);
   var backup = querydata.backup;
   saveBabyData(weight,height,head,backup,function(ret){
     res.send(ret);
