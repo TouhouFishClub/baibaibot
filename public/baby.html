@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link href="index.css" rel="stylesheet">
+  <title>好宝宝</title>
+  <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="row actions">
+    <div class="col-xs-2">
+      <input class="form-control" id="weight" placeholder="体重（kg）">
+    </div>
+    <div class="col-xs-3">
+      <input class="form-control" id="height" placeholder="身高（cm）">
+    </div>
+    <div class="col-xs-3">
+      <input class="form-control" id="head" placeholder="头围（cm）">
+    </div>
+    <div class="col-xs-3">
+      <input class="form-control" id="backup" placeholder="备注">
+    </div>
+    <div class="col-xs-2">
+      <button class="btn btn-default" onclick="submit();">提交</button>
+    </div>
+  </div>
+  <div id="main">
+    <table class="table table-bordered table-striped table-hover">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      getData();
+    });
+    function getData(){
+      var url = '/getBabyData';
+      $.get(url,function(response,status){
+        if(status=='success'){
+          var data = eval('('+response+')');
+          var list = data.d;
+          var h = '    <table class="table table-bordered table-striped table-hover">';
+          h = h + '<thead><tr><td>时间</td><td>体重</td><td>身高</td><td>头围</td><td>备注</td></tr></thead>';
+          h = h + '<tbody>';
+
+          for(var i=0;i<list.length;i++){
+            var dd = list[i];
+            var h= h + '<tr>';
+            h=h+'<td>'+new Date(dd._id).toLocaleString()+'</td>';
+            h=h+'<td>'+dd.weight+' kg</td>';
+            h=h+'<td>'+dd.height+' cm</td>';
+            h=h+'<td>'+dd.head+' cm</td>';
+            h=h+'<td>'+dd.backup+'</td>';
+            h=h+'</tr>';
+          }
+          h = h + '</tbody></table>';
+          $('#main').html(h);
+        }
+      })
+    }
+
+  </script>
+
+</div>
+
+</body>
+</html>
