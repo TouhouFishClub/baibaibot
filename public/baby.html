@@ -94,6 +94,15 @@
       }
     }
 
+    function delData(id){
+      var url= '/delBabyData?id='+id;
+      $.get(url,function(response,status){
+        if(status=='success'){
+          getData();
+        }
+      })
+    }
+
   </script>
 
 </div>
