@@ -27,7 +27,9 @@ function getBabyData(callback){
 
 function delBabyData(id,callback){
   var cl_baby_info=udb.collection("cl_baby_info");
-  cl_baby_info.updateOne({'_id':id},{'$set':{del:1}})
+  cl_baby_info.updateOne({'_id':id},{'$set':{del:1}},function(){
+    callback('ok');
+  })
 }
 
 module.exports={
