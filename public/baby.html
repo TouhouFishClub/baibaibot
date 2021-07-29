@@ -66,6 +66,7 @@
     }
 
     function submit(){
+
       var weight = parseFloat($('#weight')[0].value);
       if(!weight){
         weight=0;
@@ -82,7 +83,7 @@
       if(!backup){
         backup="";
       }
-      if(weight&&height&&head&&backup){
+      if(weight||height||head||backup){
         var url = '/saveBabyData?weight='+weight+'&height='+height+'&head='+head+'&backup='+backup;
         console.log(url);
         $.get(url,function(response,status){
