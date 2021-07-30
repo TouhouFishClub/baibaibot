@@ -479,7 +479,7 @@ app.get('/getBabyData',function(req,res) {
 
 app.get('/delBabyData',function(req,res) {
   var querydata = req.query;
-  var id = querydata.id;
+  var id = parseInt(querydata.id);
   delBabyData(id,function(ret){
     res.send(ret);
   })
