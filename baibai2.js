@@ -663,7 +663,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	if(!groupConfig[groupid]) {
 		groupConfig[groupid] = {
 			FLASH_RESEND : false,
-			FLASH_RESEND_USER: new Set()
+			FLASH_RESEND_USER: new Set(),
+      FLASH_RESEND_BAN: new Set()
 		}
 	}
 	if(content.startsWith('/groupset') && configAdminSet.has(from)) {
@@ -674,6 +675,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 				if(codes[1] == 'true'){
 					groupConfig[groupid].FLASH_RESEND = true
 					callback('此群闪照跟踪已开启')
+          if(codes[2] == '--banid') {
+            codes[3].split(',').forEach(id => {
+              groupConfig[groupid].FLASH_RESEND_BAN.add(id)
+            })
+          }
 				}
 				if(codes[1] == 'false'){
 					groupConfig[groupid].FLASH_RESEND = false
@@ -729,6 +735,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(content.match(/CQ:image,type=flash,file=/)) {
   	// console.log('====================>', FLASH_RESEND)
+    if((globalConfig.FLASH_RESEND || groupConfig[groupid].FLASH_RESEND) && groupConfig[groupid].FLASH_RESEND_BAN.has(`${from}`)) {
+      callback(`有人发了一张闪照，但是只被我偷偷记下了`)
+      return
+    }
   	let targetFile = content.substring(content.match(/CQ:image,type=flash,file=/).index + 25, content.length - 7)
 		flashHandler(
 			from,
