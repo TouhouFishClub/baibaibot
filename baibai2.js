@@ -979,7 +979,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
-  if(con === 'jrrp' || con == '今日运势'){
+  if(con.startsWith('jrrp') || con.startsWith('今日运势')){
+    let s = con.substring(4).trim()
+    //[CQ:at,qq=395338563]
+    if(s.startsWith('[CQ:at')){
+      s = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
+      rp(from, callback, s)
+      return
+    }
     rp(from, callback)
     return
   }
