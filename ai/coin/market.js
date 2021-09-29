@@ -122,8 +122,8 @@ function getCoinMarket(callback,withproxy, isInterface = false){
   var now = new Date();
   console.log('will get conmarket:'+withproxy);
   var options = {
-    hostname: "http://13.113.185.34:6660/",
-    port: 80,
+    hostname: "13.113.185.34",
+    port: 6660,
     path: '/url1?url=https%3A%2F%2Fpro-api.coinmarketcap.com%2Fv1%2Fcryptocurrency%2Flistings%2Flatest%3Fstart%3D1%26limit%3D30%26convert%3DUSD',
     headers: {
       'X-CMC_PRO_API_KEY': 'c49890a2-7390-4c64-8c92-54872366b94e',
