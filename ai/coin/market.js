@@ -122,9 +122,9 @@ function getCoinMarket(callback,withproxy, isInterface = false){
   var now = new Date();
   console.log('will get conmarket:'+withproxy);
   var options = {
-    hostname: "pro-api.coinmarketcap.com",
-    port: 443,
-    path: '/v1/cryptocurrency/listings/latest?start=1&limit=30&convert=USD',
+    hostname: "http://13.113.185.34:6660/",
+    port: 80,
+    path: '/url1?url=https%3A%2F%2Fpro-api.coinmarketcap.com%2Fv1%2Fcryptocurrency%2Flistings%2Flatest%3Fstart%3D1%26limit%3D30%26convert%3DUSD',
     headers: {
       'X-CMC_PRO_API_KEY': 'c49890a2-7390-4c64-8c92-54872366b94e',
       'Accept':'application/json',
@@ -138,7 +138,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     options.agent=agent;
   }
   //options.agent=agent;
-  var req = https.request(options, function(res) {
+  var req = http.request(options, function(res) {
     res.setEncoding('utf8');
     var code = res.statusCode;
     console.log(code);
