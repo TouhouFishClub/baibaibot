@@ -89,9 +89,29 @@ const optionsetWhereCn = async ( optsNameCN, level ) => {
   // console.log(find)
   return find ? find.where : []
 }
+const optionsetWhereCnHandler = async ( optsNameCN, level, context, callback) => {
+  if(!client) {
+    try {
+      client = await MongoClient.connect(MONGO_URL)
+    } catch (e) {
+      console.log('MONGO ERROR FOR MABINOGI MODULE!!')
+      console.log(e)
+    }
+  }
+  collection = client.collection('cl_mabinogi_optionset')
+  let find = await collection.findOne({'_id': `${optsNameCN}_${level}`})
+  if(find){
+    find = Object.assign(find, {customWhere: context.split('\n').filter(x => x.trim())})
+  } else {
+    find = {'_id': `${optsNameCN}_${level}`, customWhere: context.split('\n').filter(x => x.trim())}
+  }
+  await collection.save(find)
+  callback(`${optsNameCN} 设置成功`)
+}
 const encode = (str, encode) => Array.from(iconv.encode(str, encode)).map(x => `%${x.toString(16).toUpperCase()}`).join('')
 
 module.exports = {
   optionsetWhere,
-  optionsetWhereCn
+  optionsetWhereCn,
+  optionsetWhereCnHandler
 }

@@ -101,7 +101,7 @@ const splitText = (str, start, end = '', ignore = false) => {
 	try {
 		client = await MongoClient.connect(MONGO_URL)
 	} catch (e) {
-		console.log('MONGO ERROR FOR PCR GUILD RANK MODULE!!')
+		console.log('MONGO ERROR FOR MABINOGI OPTIONSET MODULE!!')
 		console.log(e)
 	}
 

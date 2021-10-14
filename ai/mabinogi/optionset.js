@@ -1,14 +1,40 @@
 const _ = require('lodash')
 const path = require('path')
 const formatOptionset = require(path.join(__dirname, '/tools/formatOptionset'))
-const { optionsetWhere, optionsetWhereCn } = require(path.join(__dirname, '/tools/optionsetWhere'))
+const { optionsetWhere, optionsetWhereCn, optionsetWhereCnHandler } = require(path.join(__dirname, '/tools/optionsetWhere'))
 const optionsetImage = require(path.join(__dirname, '/tools/optionsetImage'))
 let optionSetObj = []
+const adminUser = new Set([
+  799018865
+])
+let saveTmpMap = {
+
+}
+
+const setOptionsetWhere = (userId, context, callback) => {
+  let { LocalName, Level } = saveTmpMap[userId]
+  optionsetWhereCnHandler(LocalName, Level, context, callback)
+}
+const delOptionsetWhere = (userId, callback) => {
+  let { LocalName, Level } = saveTmpMap[userId]
+  optionsetWhereCnHandler(LocalName, Level, '', callback)
+}
 
 module.exports = function(userId, context, type = 'normal', callback) {
   const _initSearch = () => {
     const maxKeywords = 6, maxSearch = 10
     let ctx = context.trim()
+    if(adminUser.has(userId) && saveTmpMap[userId]) {
+      if(ctx.startsWith('set')) {
+        setOptionsetWhere(userId, context.substr(3).trim(), callback)
+        return
+      }
+      if(ctx.startsWith('del')) {
+        delOptionsetWhere(userId, callback)
+        return
+      }
+    }
+
     if(ctx){
       let searchArr = ctx.replace(/[， ]/g, ',').split(',')
       if(searchArr.length > 0){
@@ -233,6 +259,9 @@ module.exports = function(userId, context, type = 'normal', callback) {
       callback(str)
     }
     if(finalArr.length == 1){
+      if(adminUser.has(userId)) {
+        saveTmpMap[userId] = finalArr[0]
+      }
     	// console.log(finalArr[0])
       let wheres = [], optionsetInfo = finalArr[0]
 	    if(finalArr[0].custom) {
