@@ -1195,7 +1195,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie == 'opt' && fi != 'opts'){
-    op(name, con.substring(3).trim(), 'image', callback);
+    op(from, con.substring(3).trim(), 'image', callback);
     return;
   }
   if(rcontent=='好感度'){
