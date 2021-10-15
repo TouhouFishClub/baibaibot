@@ -19,7 +19,7 @@ const composition = async (context, callback) => {
     let s = context.substring(1, context.length - 2).trim()
     if(s.startsWith('[CQ:at')){
       let _id = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
-      let composition = s.substring(s.indexOf(']') + 1)
+      let composition = s.substring(s.indexOf(']') + 1).trim()
       if(composition) {
         if(composition.length > 15) {
           callback(`成分太大无法查询`)
