@@ -44,7 +44,7 @@ const composition = async (context, callback) => {
         }
       }
     } else {
-      help(callback)
+      // help(callback)
     }
   }
 }
