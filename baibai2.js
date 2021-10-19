@@ -1063,15 +1063,15 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
 
-  if(con.substring(0, 3) == 'mct') {
-    morse(con.substring(3).trim(), false, callback)
-    return
-  }
-
-  if(con.substring(0, 2) == 'mc') {
-    morse(con.substring(2).trim(), true, callback)
-    return
-  }
+  // if(con.substring(0, 3) == 'mct') {
+  //   morse(con.substring(3).trim(), false, callback)
+  //   return
+  // }
+  //
+  // if(con.substring(0, 2) == 'mc') {
+  //   morse(con.substring(2).trim(), true, callback)
+  //   return
+  // }
 
   let fie4 = con.substring(0, 4)
   if(fie4 == '切噜～♪') {
