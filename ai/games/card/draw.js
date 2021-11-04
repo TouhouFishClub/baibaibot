@@ -102,21 +102,6 @@ function drawNameCard_1(username,qq,callback,groupid){
     }
   }
 
-  if(Math.random()<0.02){
-    var rd = Math.floor(Math.random()*432100)+12345;
-    fetchYande(rd,function(r){
-      var ri = parseInt(r);
-      if(ri>12345){
-        callback('【'+username+'】抽到了:【*** yande id:'+ri+'  ***】,重抽');
-        drawNameCard_1(username,qq,callback,groupid)
-      }else if(ri==0){
-        drawNameCard_1(username,qq,callback,groupid)
-      }else{
-        callback('【'+username+'】抽到了:\n'+r);
-      }
-    })
-    return;
-  }
   if(Math.random()<0.13){
     var pr = drawPixiv(username);
     if(pr.length>20){
@@ -125,11 +110,6 @@ function drawNameCard_1(username,qq,callback,groupid){
     }
   }
 
-
-  if(Math.random()<0.1){
-    drawBangumi(qq,username,callback);
-    return;
-  }
   if(Math.random()<1.0){
     draw2df(qq,username,callback);
     return;

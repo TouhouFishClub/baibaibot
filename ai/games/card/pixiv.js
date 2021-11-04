@@ -2,7 +2,7 @@ var http=require('http');
 var https = require('https');
 var fs = require('fs')
 var HttpsProxyAgent = require('https-proxy-agent')
-var proxy = 'http://192.168.17.62:3128';
+var proxy = 'http://192.168.17.52:2346';
 var agent = new HttpsProxyAgent(proxy);
 var request = require('request');
 
