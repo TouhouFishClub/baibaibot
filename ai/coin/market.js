@@ -127,7 +127,7 @@ function getCoinMarket(callback,withproxy, isInterface = false){
     port: 6660,
     path: '/url1?url=https%3A%2F%2Fpro-api.coinmarketcap.com%2Fv1%2Fcryptocurrency%2Flistings%2Flatest%3Fstart%3D1%26limit%3D30%26convert%3DUSD',
     headers: {
-      'X-CMC_PRO_API_KEY': 'c49890a2-7390-4c64-8c92-54872366b94e',
+      'X-CMC_PRO_API_KEY': '',
       'Accept':'application/json',
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
     },
