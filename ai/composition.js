@@ -25,6 +25,11 @@ const composition = async (context, callback) => {
           callback(`成分太大无法查询`)
           return
         }
+        let userComposition = await searchComposition(_id)
+        if(userComposition[composition] > -1) {
+          callback(`[CQ:at,qq=${_id}]${composition}浓度为${userComposition[composition]}%`)
+          return
+        }
         let level = createComposition(_id, composition)
         await saveComposition(_id, composition, level)
         callback(`[CQ:at,qq=${_id}]${composition}浓度为${level}%`)
@@ -110,5 +115,6 @@ const help = callback => {
 }
 
 module.exports = {
-  composition
+  composition,
+  createComposition
 }
