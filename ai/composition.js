@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient
-const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
+const MONGO_URL = 'mongodb://192.168.17.52:27050'
+const http = require('http')
 const md5 = require("md5")
 
 let client
@@ -54,6 +55,45 @@ const composition = async (context, callback) => {
   }
 }
 
+const fetchGroupUsers = (groupid, port) =>
+  new Promise(resolve => {
+    let url = `http://192.168.17.52:${port}/get_group_member_list?group_id=${groupid}`
+    http.get(url, (res) => {
+      res.setEncoding('utf8');
+      let rawData = '';
+      res.on('data', (chunk) => { rawData += chunk; });
+      res.on('end', () => {
+        try {
+          const parsedData = JSON.parse(rawData);
+          const groupUsers = parsedData.data.map(x => x.user_id)
+          console.log('===============')
+          console.log(groupUsers)
+          console.log('===============')
+          resolve(groupUsers);
+        } catch (e) {
+          console.error(e.message);
+          resolve([])
+        }
+      });
+    }).on('error', (e) => {
+      console.error(`Got error: ${e.message}`);
+      resolve([])
+    })
+  })
+
+const groupCompositionRank = async (group, port, composition, callback) => {
+  let users = await fetchGroupUsers(group, port)
+  users.map(x => `${x}`)
+  let search = await client.db('db_bot').collection('cl_composition').find({
+    _id: {
+      $in: users
+    }
+  })
+  console.log('===============')
+  console.log(search)
+  console.log('===============')
+}
+
 const createComposition = (_id, composition) => {
   let str = `${_id}_${composition}`
   let md = md5(str)
@@ -84,7 +124,7 @@ const createComposition = (_id, composition) => {
 }
 
 const searchComposition = async (_id) => {
-  let col = client.collection('cl_composition')
+  let col = client.db('db_bot').collection('cl_composition')
   let user = await col.findOne({_id})
   if(user) {
     delete user._id
@@ -95,7 +135,7 @@ const searchComposition = async (_id) => {
 }
 
 const saveComposition = async (_id, composition, level) => {
-  let col = client.collection('cl_composition')
+  let col = client.db('db_bot').collection('cl_composition')
   let user = await col.findOne({_id})
   let data = {}
   data[composition] = level
@@ -116,5 +156,6 @@ const help = callback => {
 
 module.exports = {
   composition,
+  groupCompositionRank,
   createComposition
 }

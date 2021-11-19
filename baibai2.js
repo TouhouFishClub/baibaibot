@@ -117,7 +117,7 @@ const { testGif } = require('./gif/test')
 
 const { Reliquary } = require('./ai/GenshinImpact/Reliquary')
 
-const { composition } = require('./ai/composition')
+const { composition, groupCompositionRank } = require('./ai/composition')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -993,8 +993,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
-  if(con.startsWith('查') && con.endsWith('成分')) {
+  if(con.startsWith('查') && (con.endsWith('成分') | con.endsWith('浓度'))) {
     composition(con, callback)
+    return
+  }
+
+  if(con.startsWith('查') && (con.endsWith('成分排名') | con.endsWith('浓度排名'))) {
+    let s = con.substring(1, con.length - 4).trim()
+    groupCompositionRank(groupid, port, s, callback)
     return
   }
 
