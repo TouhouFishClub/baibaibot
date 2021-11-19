@@ -84,11 +84,15 @@ const fetchGroupUsers = (groupid, port) =>
 const groupCompositionRank = async (group, port, composition, callback) => {
   let users = await fetchGroupUsers(group, port)
   users = users.map(x => `${x}`)
-  let search = await client.db('db_bot').collection('cl_composition').find({
+  let searchQuery = {
     _id: {
       $in: users
     }
-  }).toArray()
+  }
+  searchQuery[composition] = {
+    $exists: true
+  }
+  let search = await client.db('db_bot').collection('cl_composition').find().toArray()
   console.log('===============')
   console.log(search)
   console.log('===============')
