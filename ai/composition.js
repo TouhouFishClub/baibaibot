@@ -88,11 +88,11 @@ const fetchGroupUsers = (groupid, port) =>
 
 const groupCompositionRank = async (group, port, composition, callback) => {
   let users = await fetchGroupUsers(group, port)
-  users = users.map(x => `${x.uid}`)
-  userMap = {}
-  user.forEach(x => {
+  let userMap = {}
+  users.forEach(x => {
     userMap[x.uid] = userMap[x.nid]
   })
+  users = users.map(x => `${x.uid}`)
   let searchQuery = {
     _id: {
       $in: users
@@ -102,6 +102,9 @@ const groupCompositionRank = async (group, port, composition, callback) => {
     $gt: -1
   }
   let search = await client.db('db_bot').collection('cl_composition').find(searchQuery).toArray()
+  console.log('===============')
+  console.log(search)
+  console.log('===============')
   search.sort((a, b) => b[composition] - a[composition])
   search = search.slice(0, 5)
   callback(`本群${composition}前${search.length}\n${search.map(x => `${userMap[x._id]} : ${x[composition]}%`).join('\n')}`)
