@@ -65,7 +65,12 @@ const fetchGroupUsers = (groupid, port) =>
       res.on('end', () => {
         try {
           const parsedData = JSON.parse(rawData);
-          const groupUsers = parsedData.data.map(x => x.user_id)
+          const groupUsers = parsedData.data.map(x => {
+            return {
+              uid: x.user_id,
+              nid: x.nickname
+            }
+          })
           console.log('===============')
           console.log(groupUsers)
           console.log('===============')
@@ -83,7 +88,11 @@ const fetchGroupUsers = (groupid, port) =>
 
 const groupCompositionRank = async (group, port, composition, callback) => {
   let users = await fetchGroupUsers(group, port)
-  users = users.map(x => `${x}`)
+  users = users.map(x => `${x.uid}`)
+  userMap = {}
+  user.forEach(x => {
+    userMap[x.uid] = userMap[x.nid]
+  })
   let searchQuery = {
     _id: {
       $in: users
@@ -93,9 +102,9 @@ const groupCompositionRank = async (group, port, composition, callback) => {
     $gt: -1
   }
   let search = await client.db('db_bot').collection('cl_composition').find(searchQuery).toArray()
-  console.log('===============')
-  console.log(search)
-  console.log('===============')
+  search.sort((a, b) => b[composition] - a[composition])
+  search = search.slice(0, 5)
+  callback(`本群${composition}前${search.length}\n${search.map(x => `${userMap[x._id]} : ${x[composition]}%`).join('\n')}`)
 }
 
 const createComposition = (_id, composition) => {
