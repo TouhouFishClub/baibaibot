@@ -68,7 +68,7 @@ const fetchGroupUsers = (groupid, port) =>
           const groupUsers = parsedData.data.map(x => {
             return {
               uid: x.user_id,
-              nid: x.nickname
+              nid: x.card || x.nickname
             }
           })
           // console.log('===============')
