@@ -107,6 +107,7 @@ const groupCompositionRank = async (group, port, composition, callback) => {
   // console.log('===============')
   search.sort((a, b) => b[composition] - a[composition])
   search = search.slice(0, 5)
+  console.log(userMap)
   callback(`本群${composition}浓度前${search.length}\n${search.map(x => `${userMap[parseInt(x._id)]} : ${x[composition]}%`).join('\n')}`)
 }
 
