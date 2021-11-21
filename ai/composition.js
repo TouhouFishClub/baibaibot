@@ -90,7 +90,7 @@ const groupCompositionRank = async (group, port, composition, callback) => {
   let users = await fetchGroupUsers(group, port)
   let userMap = {}
   users.forEach(x => {
-    userMap[x.uid] = userMap[x.nid]
+    userMap[x.uid] = x.nid
   })
   users = users.map(x => `${x.uid}`)
   let searchQuery = {
@@ -107,8 +107,12 @@ const groupCompositionRank = async (group, port, composition, callback) => {
   // console.log('===============')
   search.sort((a, b) => b[composition] - a[composition])
   search = search.slice(0, 5)
-  console.log(userMap)
-  callback(`本群${composition}浓度前${search.length}\n${search.map(x => `${userMap[parseInt(x._id)]} : ${x[composition]}%`).join('\n')}`)
+  // console.log(userMap)
+  if(search.length > 0) {
+    callback(`本群${composition}浓度前${search.length}\n${search.map(x => `${userMap[parseInt(x._id)]} : ${x[composition]}%`).join('\n')}`)
+  } else {
+    callback(`本群没有含${composition}浓度的人`)
+  }
 }
 
 const createComposition = (_id, composition) => {
