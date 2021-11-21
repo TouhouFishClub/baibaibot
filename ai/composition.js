@@ -92,7 +92,7 @@ const groupCompositionRank = async (group, port, composition, callback) => {
   searchQuery[composition] = {
     $gt: -1
   }
-  let search = await client.db('db_bot').collection('cl_composition').find().toArray()
+  let search = await client.db('db_bot').collection('cl_composition').find(searchQuery).toArray()
   console.log('===============')
   console.log(search)
   console.log('===============')
