@@ -71,9 +71,9 @@ const fetchGroupUsers = (groupid, port) =>
               nid: x.nickname
             }
           })
-          console.log('===============')
-          console.log(groupUsers)
-          console.log('===============')
+          // console.log('===============')
+          // console.log(groupUsers)
+          // console.log('===============')
           resolve(groupUsers);
         } catch (e) {
           console.error(e.message);
@@ -102,12 +102,12 @@ const groupCompositionRank = async (group, port, composition, callback) => {
     $gt: -1
   }
   let search = await client.db('db_bot').collection('cl_composition').find(searchQuery).toArray()
-  console.log('===============')
-  console.log(search)
-  console.log('===============')
+  // console.log('===============')
+  // console.log(search)
+  // console.log('===============')
   search.sort((a, b) => b[composition] - a[composition])
   search = search.slice(0, 5)
-  callback(`本群${composition}前${search.length}\n${search.map(x => `${userMap[x._id]} : ${x[composition]}%`).join('\n')}`)
+  callback(`本群${composition}浓度前${search.length}\n${search.map(x => `${userMap[`${x._id}`]} : ${x[composition]}%`).join('\n')}`)
 }
 
 const createComposition = (_id, composition) => {
