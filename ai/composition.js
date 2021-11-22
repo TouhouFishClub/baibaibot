@@ -2,6 +2,7 @@ const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = 'mongodb://192.168.17.52:27050'
 const http = require('http')
 const md5 = require("md5")
+const { drawTxtImage } = require('../cq/drawImageBytxt')
 
 let client
 
@@ -44,7 +45,8 @@ const composition = async (context, callback) => {
         })
         format.sort((a, b) => b.level - a.value)
         if(format.length) {
-          callback(`[CQ:at,qq=${_id}]有以下成分:\n${format.map(x => `${x.key}浓度为${x.level}%`).join('\n')}`)
+          drawTxtImage(`[CQ:at,qq=${_id}]有以下成分:`, `${format.map(x => `${x.key}浓度为${x.level}%`).join('\n')}`, callback, {color: 'black', font: 'STXIHEI.TTF'})
+          // callback(`[CQ:at,qq=${_id}]有以下成分:\n${format.map(x => `${x.key}浓度为${x.level}%`).join('\n')}`)
         } else {
           callback(`[CQ:at,qq=${_id}]没有任何成分`)
         }
