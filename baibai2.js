@@ -118,6 +118,7 @@ const { testGif } = require('./gif/test')
 const { Reliquary } = require('./ai/GenshinImpact/Reliquary')
 
 const { composition, groupCompositionRank } = require('./ai/composition')
+const { tapFish } = require('./ai/tapfish')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -876,6 +877,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
+
+  if(content.trim() === '摸鱼日历'){
+    tapFish(callback)
+    return
+  }
 
   if(content.trim() === '走私查询'){
     smuggler(callback)
