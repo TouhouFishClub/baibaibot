@@ -5,7 +5,8 @@ const { optionsetWhere, optionsetWhereCn, optionsetWhereCnHandler } = require(pa
 const optionsetImage = require(path.join(__dirname, '/tools/optionsetImage'))
 let optionSetObj = []
 const adminUser = new Set([
-  799018865
+  799018865,
+  2810232496
 ])
 let saveTmpMap = {
 
