@@ -1295,8 +1295,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   let co = content.indexOf('疫情')
-  if(co >= 0 && co <= 6 && content.length - co == 2) {
-    cov(content.substring(0, co), callback)
+  if(content.endsWith('疫情') && content.length <= 10) {
+    cov(content.substring(0, content.length - 2), callback)
     return
   }
   if(content == '硝局的花园') {

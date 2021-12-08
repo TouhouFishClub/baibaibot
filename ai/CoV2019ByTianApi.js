@@ -6,6 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const { sendImageMsgBuffer } = require('../cq/sendImage')
 const {createCanvas, loadImage} = require('canvas')
+const { fetchTencentApi } = require('./CoV2019ByTencentApi')
 
 const fontFamily = 'STXIHEI'
 const maxGetDay = 7
@@ -17,6 +18,58 @@ let AllArea = []
 let AllData = {}
 
 const cov = async (content, callback, custom = false, ...customSettings) => {
+
+  let tencentApiData = await fetchTencentApi(content)
+  if(tencentApiData.length) {
+    let target, otherStr = ''
+    if(tencentApiData.length == 1) {
+      target = tencentApiData[0]
+    } else {
+      let qs = tencentApiData.map(x => x.queryName), f = tencentApiData.find(x => x.queryName == content)
+      otherStr = `查找到以下地区：${qs.join('、')}`
+      if(f) {
+        target = f
+        otherStr += `，已为您定位到${target.queryName}`
+      } else {
+        target = tencentApiData[0]
+        otherStr += `，默认显示${target.queryName}`
+      }
+    }
+    let data = {
+      currentConfirmedCount: [],
+      // suspectedCount: [],
+      confirmedCount: [],
+      curedCount: [],
+      deadCount: [],
+    }
+    data.currentConfirmedCount.push(target.total.nowConfirm)
+    data.currentConfirmedCount.push(target.total.nowConfirm - target.today.confirm)
+
+    data.confirmedCount.push(target.total.confirm)
+    data.confirmedCount.push(target.total.confirm - target.today.confirm)
+
+    data.curedCount.push(target.total.heal)
+    data.curedCount.push(target.total.heal)
+
+    data.deadCount.push(target.total.dead)
+    data.deadCount.push(target.total.dead)
+
+
+
+    renderImage(
+      ['现有确诊', '现有疑似', '累计确诊', '累计治愈', '累计死亡'],
+      {
+        name: `${target.prov ? `${target.prov} - `: ''}${target.name}`,
+        type: 'other',
+      },
+      data,
+      otherStr,
+      callback
+    )
+
+    return
+  }
+
   if (AllArea.length == 0) {
     await init(callback)
   }
