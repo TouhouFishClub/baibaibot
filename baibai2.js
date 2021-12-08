@@ -324,7 +324,7 @@ function msg0(msgObj){
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
-  if(type=='group'&&((groupid+"").substring(0,5)=="20570")){
+  if(type=='group'&&((groupid+"").substring(0,5)!="20570")){
     var options = {
       host: '192.168.17.52',
       port: 39314,
