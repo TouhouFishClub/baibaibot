@@ -132,7 +132,7 @@ const configAdminSet = new Set([
 	799018865,
 	357474405
 ])
-
+initWS0();
 initWS();
 initWS2();
 initWS3();
