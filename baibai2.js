@@ -325,7 +325,6 @@ function msg0(){
   var groupid = msgObj.group_id;
   var content = msgObj.message;
   if(type=='group'&&((groupid+"").substring(0,5)=="20570")){
-    var res =
     var options = {
       host: '192.168.17.52',
       port: port,
@@ -333,7 +332,6 @@ function msg0(){
       method: 'GET',
       headers: {}
     };
-    console.log("priv:" + userid + ":" + content + ":" + res);
     var req = http.request(options);
     req.on('error', function (err) {
       console.log('req err:');
