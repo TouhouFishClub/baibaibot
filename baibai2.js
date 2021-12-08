@@ -320,7 +320,7 @@ function reconnect(){
   }
 }
 
-function msg0(){
+function msg0(msgObj){
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
