@@ -28,7 +28,9 @@ const fetchTencentApi = async msg => {
       item = Object.assign(q, {queryName: query}, item)
       out.push(item)
     })
-    // console.log(out)
+
+    console.log(out)
+    
     return out
   } else {
     return []
