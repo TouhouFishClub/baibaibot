@@ -325,6 +325,31 @@ function msg0(msgObj){
   var groupid = msgObj.group_id;
   var content = msgObj.message;
   if(type=='group'&&((groupid+"").substring(0,5)!="20570")){
+    var callback = function(res){
+      var options = {
+        host: '192.168.17.52',
+        port: 39314,
+        path: '/send_group_msg?group_id=' + groupid + '&message='+res,
+        method: 'GET',
+        headers: {}
+      };
+      var req = http.request(options);
+      req.on('error', function (err) {
+        console.log('req err:');
+        console.log(err);
+      });
+      req.end();
+    }
+    var calret = cal(content);
+    if(calret){
+      callback(content+"="+calret);
+      return;
+    }
+    var first = content.substring(0,1);
+    if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"||first=="’"){
+
+    }
+
     var options = {
       host: '192.168.17.52',
       port: 39314,
