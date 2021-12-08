@@ -328,7 +328,7 @@ function msg0(){
     var options = {
       host: '192.168.17.52',
       port: port,
-      path: '/send_private_msg?user_id=' + 357474405 + '&message=%5BCQ%3Ashake%2Cid%3D1%5D'
+      path: '/send_private_msg?user_id=' + 357474405 + '&message=%5BCQ%3Ashake%2Cid%3D1%5D',
       method: 'GET',
       headers: {}
     };
