@@ -294,7 +294,7 @@ function initWS0(){
 
   client.on('connect', function(connection) {
     wsonline = true;
-    console.log('WebSocket Client Connected');
+    console.log('WebSocket Client Connected0');
     connection.on('error', function(error) {
       console.log("Connection Error: " + error.toString());
     });
@@ -308,7 +308,7 @@ function initWS0(){
       }
     });
   });
-  client.connect('ws://192.168.17.52:29315/event');
+  client.connect('ws://192.168.17.52:39315/event');
 }
 
 function reconnect(){
