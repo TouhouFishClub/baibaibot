@@ -327,7 +327,7 @@ function msg0(msgObj){
   if(type=='group'&&((groupid+"").substring(0,5)=="20570")){
     var options = {
       host: '192.168.17.52',
-      port: port,
+      port: 39314,
       path: '/send_private_msg?user_id=' + 357474405 + '&message=%5BCQ%3Ashake%2Cid%3D1%5D',
       method: 'GET',
       headers: {}
