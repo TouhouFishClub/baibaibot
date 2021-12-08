@@ -282,11 +282,64 @@ function initWS5(){
     client.connect('ws://192.168.17.52:27335/event');
 }
 
+
+function initWS0(){
+  var WebSocketClient = require('websocket').client;
+
+  var client = new WebSocketClient();
+
+  client.on('connectFailed', function(error) {
+    console.log('Connect Error: ' + error.toString());
+  });
+
+  client.on('connect', function(connection) {
+    wsonline = true;
+    console.log('WebSocket Client Connected');
+    connection.on('error', function(error) {
+      console.log("Connection Error: " + error.toString());
+    });
+    connection.on('close', function() {
+      wsonline=false;
+      console.log('echo-protocol Connection Closed');
+    });
+    connection.on('message', function(message) {
+      if (message.type === 'utf8') {
+        msg0(JSON.parse(message.utf8Data))
+      }
+    });
+  });
+  client.connect('ws://192.168.17.52:29315/event');
+}
+
 function reconnect(){
   if(!wsonline){
     initWS();
     initWS2()
     initWS3()
+    initWS0();
+  }
+}
+
+function msg0(){
+  var type = msgObj.message_type;
+  var groupid = msgObj.group_id;
+  var content = msgObj.message;
+  if(type=='group'&&((groupid+"").substring(0,5)=="20570")){
+    var res =
+    var options = {
+      host: '192.168.17.52',
+      port: port,
+      path: '/send_private_msg?user_id=' + 357474405 + '&message=%5BCQ%3Ashake%2Cid%3D1%5D'
+      method: 'GET',
+      headers: {}
+    };
+    console.log("priv:" + userid + ":" + content + ":" + res);
+    var req = http.request(options);
+    req.on('error', function (err) {
+      console.log('req err:');
+      console.log(err);
+    });
+    req.end();
   }
 }
 
