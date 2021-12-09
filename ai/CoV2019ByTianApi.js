@@ -51,7 +51,7 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
     data.currentConfirmedCount.push(target.data.total.nowConfirm - target.data.today.confirm)
 
     data.confirmedCount.push(target.data.total.confirm)
-    data.confirmedCount.push(target.data.total.confirm - target.today.confirm)
+    data.confirmedCount.push(target.data.total.confirm - target.data.today.confirm)
 
     data.curedCount.push(target.data.total.heal)
     data.curedCount.push(target.data.total.heal)
