@@ -37,7 +37,6 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
       }
     }
 
-    console.log(target)
     let data = {
       currentConfirmedCount: [],
       // suspectedCount: [],
@@ -56,9 +55,8 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
 
     data.deadCount.push(target.data.total.dead)
     data.deadCount.push(target.data.total.dead)
-    console.log('=========')
-    console.log(data)
 
+    // callback(otherStr)
     renderImage(
       ['现有确诊', '现有疑似', '累计确诊', '累计治愈', '累计死亡'],
       {
@@ -66,8 +64,9 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
         type: 'other',
       },
       data,
-      otherStr,
-      callback
+      content,
+      callback,
+      otherStr
     )
     return
   }
@@ -320,7 +319,7 @@ const arrAdd = (arr1, arr2) => {
   return arrTmp
 }
 
-const renderImage = (typeName, area, data, content, callback) => {
+const renderImage = (typeName, area, data, content, callback, otherMsg = '') => {
   // console.log(area)
   // console.log(data)
 
@@ -424,7 +423,7 @@ const renderImage = (typeName, area, data, content, callback) => {
 
   sendImageMsgBuffer(dataBuffer, content, 'other', msg => {
     callback(msg)
-  })
+  }, otherMsg)
 
   // fs.writeFile(path.join(__dirname, `${content}.png`), dataBuffer, function(err) {
   //   if(err){
