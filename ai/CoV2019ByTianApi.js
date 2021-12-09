@@ -20,6 +20,9 @@ let AllData = {}
 const cov = async (content, callback, custom = false, ...customSettings) => {
 
   let tencentApiData = await fetchTencentApi(content)
+
+  console.log(tencentApiData)
+  
   if(tencentApiData.length) {
     let target, otherStr = ''
     if(tencentApiData.length == 1) {
@@ -66,7 +69,6 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
       otherStr,
       callback
     )
-
     return
   }
 
