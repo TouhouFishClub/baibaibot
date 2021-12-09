@@ -58,7 +58,7 @@ const updateQuery = data => {
           if(new Set(['境外输入', '地区待确认']).has(city.name)) {
             areaQuery[`${city.name}-${prov.name}`] = { prov: prov.name, name: city.name }
           } else {
-            areaQuery[city.name] = { prov: prov.name }
+            areaQuery[city.name] = { prov: prov.name, name: city.name }
           }
         })
       }
