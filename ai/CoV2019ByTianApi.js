@@ -21,8 +21,6 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
 
   let tencentApiData = await fetchTencentApi(content)
 
-  console.log(tencentApiData)
-  
   if(tencentApiData.length) {
     let target, otherStr = ''
     if(tencentApiData.length == 1) {
@@ -38,6 +36,9 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
         otherStr += `，默认显示${target.queryName}`
       }
     }
+
+    console.log(target)
+
     let data = {
       currentConfirmedCount: [],
       // suspectedCount: [],
@@ -57,7 +58,8 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
     data.deadCount.push(target.total.dead)
     data.deadCount.push(target.total.dead)
 
-
+    console.log('=========')
+console.log(data)
 
     renderImage(
       ['现有确诊', '现有疑似', '累计确诊', '累计治愈', '累计死亡'],
