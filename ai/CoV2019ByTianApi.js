@@ -38,8 +38,6 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
     }
 
     console.log(target)
-
-    try {
     let data = {
       currentConfirmedCount: [],
       // suspectedCount: [],
@@ -58,12 +56,8 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
 
     data.deadCount.push(target.data.total.dead)
     data.deadCount.push(target.data.total.dead)
-    } catch (e) {
-      console.log('[ERROR]')
-      console.log(e)
-    }
     console.log('=========')
-console.log(data)
+    console.log(data)
 
     renderImage(
       ['现有确诊', '现有疑似', '累计确诊', '累计治愈', '累计死亡'],
