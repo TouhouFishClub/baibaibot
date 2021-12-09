@@ -55,6 +55,9 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
 
     data.deadCount.push(target.data.total.dead)
     data.deadCount.push(target.data.total.dead)
+    if(target.lastUpdateTime) {
+      data.tencentUpdateTime = target.lastUpdateTime
+    }
 
     // callback(otherStr)
     renderImage(
@@ -356,6 +359,9 @@ const renderImage = (typeName, area, data, content, callback, otherMsg = '') => 
   ctx.fillStyle = 'rgba(153, 153, 153, 1)'
   let update = new Date(lastUpdateTime)
   let updateStr = `数据更新时间: ${update.getFullYear()}-${addZero(update.getMonth() + 1)}-${addZero(update.getDate())} ${update.getHours()}:${addZero(update.getMinutes())}:${addZero(update.getSeconds())}`
+  if(data.tencentUpdateTime) {
+    updateStr = `数据更新时间（tencent API）：${data.tencentUpdateTime}`
+  }
   let width = ctx.measureText(updateStr).width
   ctx.fillText(updateStr, 800 - 25 - width, 66)
 
@@ -423,7 +429,7 @@ const renderImage = (typeName, area, data, content, callback, otherMsg = '') => 
 
   sendImageMsgBuffer(dataBuffer, content, 'other', msg => {
     callback(msg)
-  }, otherMsg)
+  }, otherMsg, 'MF')
 
   // fs.writeFile(path.join(__dirname, `${content}.png`), dataBuffer, function(err) {
   //   if(err){

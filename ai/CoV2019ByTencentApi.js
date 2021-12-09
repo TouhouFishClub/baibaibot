@@ -25,7 +25,7 @@ const fetchTencentApi = async msg => {
       }
       itemData = itemData.children.find(x => x.name == q.name)
       item.data = itemData
-      item = Object.assign(q, {queryName: query}, item)
+      item = Object.assign(q, {queryName: query, lastUpdateTime: data.lastUpdateTime}, item)
       out.push(item)
     })
     return out
