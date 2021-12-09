@@ -37,8 +37,6 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
       }
     }
 
-    console.log(target)
-
     let data = {
       currentConfirmedCount: [],
       // suspectedCount: [],
@@ -46,20 +44,17 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
       curedCount: [],
       deadCount: [],
     }
-    data.currentConfirmedCount.push(target.total.nowConfirm)
-    data.currentConfirmedCount.push(target.total.nowConfirm - target.today.confirm)
+    data.currentConfirmedCount.push(target.data.total.nowConfirm)
+    data.currentConfirmedCount.push(target.data.total.nowConfirm - target.data.today.confirm)
 
-    data.confirmedCount.push(target.total.confirm)
-    data.confirmedCount.push(target.total.confirm - target.today.confirm)
+    data.confirmedCount.push(target.data.total.confirm)
+    data.confirmedCount.push(target.data.total.confirm - target.today.confirm)
 
-    data.curedCount.push(target.total.heal)
-    data.curedCount.push(target.total.heal)
+    data.curedCount.push(target.data.total.heal)
+    data.curedCount.push(target.data.total.heal)
 
-    data.deadCount.push(target.total.dead)
-    data.deadCount.push(target.total.dead)
-
-    console.log('=========')
-console.log(data)
+    data.deadCount.push(target.data.total.dead)
+    data.deadCount.push(target.data.total.dead)
 
     renderImage(
       ['现有确诊', '现有疑似', '累计确诊', '累计治愈', '累计死亡'],
