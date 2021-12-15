@@ -3,6 +3,8 @@ const path = require('path')
 const formatOptionset = require(path.join(__dirname, '/tools/formatOptionset'))
 const { optionsetWhere, optionsetWhereCn, optionsetWhereCnHandler, searchWhereCn } = require(path.join(__dirname, '/tools/optionsetWhere'))
 const optionsetImage = require(path.join(__dirname, '/tools/optionsetImage'))
+const { drawTxtImage } = require('../../cq/drawImageBytxt')
+
 let optionSetObj = []
 const adminUser = new Set([
   799018865,
@@ -47,15 +49,20 @@ module.exports = function(userId, context, type = 'normal', callback) {
         callback('未找到相关释放卷轴')
         return
       }
+      searchData.sort((a, b) => (parseInt(`0x${a}`) > 9 ? 10 - parseInt(`0x${a}`) : (10 - (parseInt(`0x${a}`) || 20))) - (parseInt(`0x${b}`) > 9 ? 10 - parseInt(`0x${b}`) : (10 - (parseInt(`0x${b}`) || 20))))
       let outputStr = searchData.map(o => {
         let sp = o._id.split('_')
         if(sp.length > 1) {
-          return `（${sp[1]}）${sp[0]}`
+          return `(${o.Usage ? '接尾': '接头'} Rank: ${sp[1]})${sp[0]}`
         } else {
           return o._id
         }
-      }).join('，')
-      callback(`查找到以下卷轴：\n${outputStr}`)
+      })
+      if(outputStr.length <= 20) {
+        callback(`查找到以下卷轴：\n${outputStr.join('\n')}`)
+      } else {
+        drawTxtImage(`查找到以下卷轴：`, `${outputStr.join('\n')}`, callback, {color: 'black', font: 'STXIHEI.TTF'})
+      }
       return
     }
 
