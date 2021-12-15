@@ -1,12 +1,12 @@
-const http = require('http')
+const https = require('https')
 const iconv = require('iconv-lite')
 const MongoClient = require('mongodb').MongoClient
-const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
-// const MONGO_URL = 'mongodb://192.168.1.19:27017/db_bot'
+// const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
+const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
 
 const config = {
-	headUrl: '/wiki/forum.php?mod=forumdisplay&fid=3&sortid=2&filter=sortid&sortid=2&searchsort=1&enchantps=1&page=',
-	endUrl: '/wiki/forum.php?mod=forumdisplay&fid=3&filter=sortid&sortid=2&searchsort=1&enchantps=2&page=',
+	headUrl: '/forum.php?mod=forumdisplay&fid=3&sortid=2&filter=sortid&sortid=2&searchsort=1&enchantps=1&page=',
+	endUrl: '/forum.php?mod=forumdisplay&fid=3&sortid=2&filter=sortid&sortid=2&searchsort=1&enchantps=2&page=',
 	headMaxPage: 15,
 	endMaxPage: 16,
 }
@@ -14,16 +14,16 @@ const config = {
 const getPageData = url => {
 	return new Promise((resolve) => {
 		const options = {
-			hostname: 'www.mabinogi.club',
-			port: 80,
+			hostname: 'wiki.mabinogi.club',
+			port: 443,
 			path: url,
 			method: 'GET',
 			headers:{
-				'Referer': 'http://www.mabinogi.club/wiki/forum.php?mod=forumdisplay&fid=3&sortid=2&filter=sortid&sortid=2&searchsort=1&enchantps=1&page=1',
-				'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'
+				// 'Referer': 'http://wiki.mabinogi.club/forum.php?mod=forumdisplay&fid=3&sortid=2&filter=sortid&sortid=2&searchsort=1&enchantps=2&page=16',
+				'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1'
 			},
 		}
-		const req = http.request(options, (res) => {
+		const req = https.request(options, (res) => {
 			let chunks = [], size = 0
 			res.on('data', (chunk) => {
 				chunks.push(chunk)
@@ -42,7 +42,7 @@ const getPageData = url => {
 	})
 }
 
-const formatData = data => {
+const formatData = (data, Usage = '0') => {
 	let str = splitText(data, '<table class="enchantlist tac">', '</table>', true)
 	let sp = str.split('</tr>')
 	sp.shift()
@@ -51,6 +51,7 @@ const formatData = data => {
 	sp.forEach(ele => {
 		let obj = {}
 		let sd = ele.split('</td>')
+		obj.Usage = Usage
 		obj.level = splitText(sd[0], '<span class="pipe"></span>', '', true).trim()
 		obj.name = splitText(sd[0], '.html">', '</a>', true).split('-')[0].trim()
 		obj.site = splitText(sd[1], '<td>', '', true)
@@ -72,7 +73,7 @@ const formatData = data => {
 			.split('\n')
 			.map(x => x.trim())
 			.filter(x => x != '')
-		console.log(`===> ${obj.name}`)
+		// console.log(`===> ${obj.name}`)
 		out.push(obj)
 	})
 	return out
@@ -109,17 +110,26 @@ const splitText = (str, start, end = '', ignore = false) => {
 	for(let i = 1; i <= config.headMaxPage; i ++) {
 		console.log(`=== head page ${i} ===`)
 		let d = await getPageData(`${config.headUrl}${i}`)
-		allData = allData.concat(formatData(d))
+		allData = allData.concat(formatData(d, '0'))
 	}
 	for(let i = 1; i <= config.endMaxPage; i ++) {
 		console.log(`=== end page ${i} ===`)
 		let d = await getPageData(`${config.endUrl}${i}`)
-		allData = allData.concat(formatData(d))
+		allData = allData.concat(formatData(d, '1'))
 	}
 	collection = client.collection('cl_mabinogi_optionset')
 
 	for(let i = 0; i < allData.length; i ++) {
-		await collection.save(Object.assign({'_id': `${allData[i].name.trim()}_${allData[i].level.trim().toUpperCase()}`}, allData[i]))
+		let idQuery = `${allData[i].name.trim()}_${allData[i].level.trim().toUpperCase()}`
+		let target = await collection.findOne({ '_id': idQuery })
+		if(target) {
+			await collection.updateOne(
+				{ '_id': idQuery },
+				{ '$set': allData[i] }
+			)
+		} else {
+			await collection.save(Object.assign({'_id': idQuery}, allData[i]))
+		}
 	}
 	console.log('save success!!')
 })()
