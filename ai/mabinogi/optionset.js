@@ -53,7 +53,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
       let outputStr = searchData.map(o => {
         let sp = o._id.split('_')
         if(sp.length > 1) {
-          return `(${o.Usage ? '接尾': '接头'} Rank: ${sp[1]})${sp[0]}`
+          return `(${o.Usage == '1' ? '接尾': '接头'} Rank: ${sp[1]})${sp[0]}`
         } else {
           return o._id
         }
