@@ -49,7 +49,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
         callback('未找到相关释放卷轴')
         return
       }
-      searchData.sort((a, b) => (parseInt(`0x${a}`) > 9 ? 10 - parseInt(`0x${a}`) : (10 - (parseInt(`0x${a}`) || 20))) - (parseInt(`0x${b}`) > 9 ? 10 - parseInt(`0x${b}`) : (10 - (parseInt(`0x${b}`) || 20))))
+      searchData.sort((a, b) => (parseInt(`0x${a.level}`) > 9 ? 10 - parseInt(`0x${a.level}`) : (10 - (parseInt(`0x${a.level}`) || 20))) - (parseInt(`0x${b.level}`) > 9 ? 10 - parseInt(`0x${b.level}`) : (10 - (parseInt(`0x${b.level}`) || 20))))
       let outputStr = searchData.map(o => {
         let sp = o._id.split('_')
         if(sp.length > 1) {
