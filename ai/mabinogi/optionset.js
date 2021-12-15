@@ -164,7 +164,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
   const searchKeywords = keywords => {
     let finalArr = []
     optionSetObj.forEach(optionset => {
-      if(!keywords.Level || (keywords.Level && keywords.Level == optionset.LevelQuery)){
+      if(!(typeof keywords.Level == 'number') || (keywords.Level && keywords.Level == optionset.LevelQuery)){
         if(!keywords.usage || (keywords.usage && (keywords.usage - 1) == parseInt(optionset.UsageQuery))){
           let buffCheck = true
           if(keywords.debuff.length){
