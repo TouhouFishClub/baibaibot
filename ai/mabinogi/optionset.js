@@ -114,7 +114,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
         case 'F':
           if(!keywordObj.Level){
             if(keyword == '练习'){
-              keywordObj.Level = 0
+              keywordObj.Level = 16
             } else {
               keywordObj.Level = parseInt(`0x${keyword}`)
             }
