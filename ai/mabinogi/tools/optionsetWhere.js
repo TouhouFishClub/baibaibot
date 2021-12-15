@@ -6,7 +6,7 @@ const querystring =  require('querystring')
 const iconv = require('iconv-lite')
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
-// const MONGO_URL = 'mongodb://192.168.1.19:27017/db_bot'
+// const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
 
 let client, collection
 
@@ -122,10 +122,71 @@ const optionsetWhereCnHandler = async ( optsNameCN, level, context, callback) =>
   await collection.save(find)
   callback(`${optsNameCN} 设置成功`)
 }
+const searchWhereCn = async (...wheres) => {
+  if(!client) {
+    try {
+      client = await MongoClient.connect(MONGO_URL)
+    } catch (e) {
+      console.log('MONGO ERROR FOR MABINOGI MODULE!!')
+      console.log(e)
+    }
+  }
+  collection = client.collection('cl_mabinogi_optionset')
+
+  let out = await collection.find({
+    '$or': [
+      {
+        '$and': [
+          {
+            'customWhere': {
+              '$exists': true,
+            },
+            '$where': 'this.customWhere.length>0'
+          },
+          {
+            '$and': wheres.map(w => {
+              return {
+                'customWhere': new RegExp(w)
+              }
+            })
+          }
+        ]
+      },
+      {
+        '$and': [
+          {
+            '$or': [
+              {
+                'customWhere': {
+                  '$exists': false,
+                },
+              },
+              {
+                'customWhere': {
+                  '$exists': true,
+                },
+                '$where': 'this.customWhere.length==0'
+              }
+            ]
+          },
+          {
+            '$and': wheres.map(w => {
+              return {
+                'where': new RegExp(w)
+              }
+            })
+          }
+        ]
+      }
+    ]
+  }).toArray()
+  return out
+}
 const encode = (str, encode) => Array.from(iconv.encode(str, encode)).map(x => `%${x.toString(16).toUpperCase()}`).join('')
 
 module.exports = {
   optionsetWhere,
   optionsetWhereCn,
-  optionsetWhereCnHandler
+  optionsetWhereCnHandler,
+  searchWhereCn
 }

@@ -1,7 +1,7 @@
 const _ = require('lodash')
 const path = require('path')
 const formatOptionset = require(path.join(__dirname, '/tools/formatOptionset'))
-const { optionsetWhere, optionsetWhereCn, optionsetWhereCnHandler } = require(path.join(__dirname, '/tools/optionsetWhere'))
+const { optionsetWhere, optionsetWhereCn, optionsetWhereCnHandler, searchWhereCn } = require(path.join(__dirname, '/tools/optionsetWhere'))
 const optionsetImage = require(path.join(__dirname, '/tools/optionsetImage'))
 let optionSetObj = []
 const adminUser = new Set([
@@ -22,7 +22,7 @@ const delOptionsetWhere = (userId, callback) => {
 }
 
 module.exports = function(userId, context, type = 'normal', callback) {
-  const _initSearch = () => {
+  const _initSearch = async () => {
     const maxKeywords = 6, maxSearch = 10
     let ctx = context.trim()
     if(adminUser.has(userId) && saveTmpMap[userId]) {
@@ -34,6 +34,29 @@ module.exports = function(userId, context, type = 'normal', callback) {
         delOptionsetWhere(userId, callback)
         return
       }
+    }
+    if(ctx.startsWith('w')) {
+      ctx = ctx.substr(1).trim()
+      let searchArr = ctx.replace(/[， ]/g, ',').split(',')
+      if(searchArr.length == 0) {
+        callback('请输入关键字以查询')
+        return
+      }
+      let searchData = await searchWhereCn(...searchArr)
+      if(searchData.length == 0) {
+        callback('未找到相关释放卷轴')
+        return
+      }
+      let outputStr = searchData.map(o => {
+        let sp = o._id.split('_')
+        if(sp.length > 1) {
+          return `（${sp[0]}）${sp[1]}`
+        } else {
+          return o._id
+        }
+      }).join('，')
+      callback(`查找到以下卷轴：\n${outputStr}`)
+      return
     }
 
     if(ctx){
@@ -56,7 +79,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
         callback('请输入至少一个查询条件')
       }
     } else {
-      callback('【释放查询】\n可使用 opt 或 释放查询 + 关键词搜索\n单关键字为按ID或按名称查询\n多个关键词用逗号隔开，支持接头接尾，释放卷等级，释放属性（负面属性前加-）\n如： opt 4，接头，智力，-修理费')
+      callback('【释放查询】\n可使用 opt 或 释放查询 + 关键词搜索\n单关键字为按ID或按名称查询\n多个关键词用逗号隔开，支持接头接尾，释放卷等级，释放属性（负面属性前加-）\n如： opt 4，接头，智力，-修理费\n可使用optw + 关键词查找出处')
     }
   }
   const analysisKeywords = keywords => {
