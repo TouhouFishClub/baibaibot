@@ -50,7 +50,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
       let outputStr = searchData.map(o => {
         let sp = o._id.split('_')
         if(sp.length > 1) {
-          return `（${sp[0]}）${sp[1]}`
+          return `（${sp[1]}）${sp[0]}`
         } else {
           return o._id
         }
