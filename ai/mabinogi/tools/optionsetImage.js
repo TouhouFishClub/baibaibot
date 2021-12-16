@@ -40,7 +40,7 @@ const checkMaxWidth = (ctx, str, maxWidth) => {
 const renderText = (ctx, textArr, topMargin, leftMargin, lineHeight) => {
   textArr.forEach((text, index) => {
     if(text.startsWith('author')) {
-      ctx.font = `12px ${fontFamily}`
+      ctx.font = `14px ${fontFamily}`
     } else {
       ctx.font = `20px ${fontFamily}`
     }
