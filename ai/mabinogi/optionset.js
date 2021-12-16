@@ -45,7 +45,7 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
         return
       }
       if(ctx.startsWith('remove')) {
-        removeOptionsetWhere(userId, nickname, context.substr(3).trim(), callback)
+        removeOptionsetWhere(userId, nickname, context.substr(6).trim(), callback)
         return
       }
       if(ctx.startsWith('del')) {
