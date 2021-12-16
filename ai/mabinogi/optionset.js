@@ -39,7 +39,7 @@ module.exports = function(userId, context, type = 'normal', callback) {
     }
     if(ctx.startsWith('w')) {
       ctx = ctx.substr(1).trim()
-      let searchArr = ctx.replace(/[， ]/g, ',').split(',')
+      let searchArr = ctx.replace(/[， ]/g, ',').split(',').filter(x => x)
       if(searchArr.length == 0) {
         callback('请输入关键字以查询')
         return
