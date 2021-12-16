@@ -120,8 +120,10 @@ const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context
         await collection.updateOne(
           { '_id': `${optsNameCN}_${level}` },
           {
-            customWhere: context.split('\n').filter(x => x.trim()),
-            author
+            '$set': {
+              customWhere: context.split('\n').filter(x => x.trim()),
+              author
+            }
           }
         )
         callback(`${optsNameCN} 设置成功`)
@@ -132,21 +134,25 @@ const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context
         await collection.updateOne(
           { '_id': `${optsNameCN}_${level}` },
           {
-            customWhere,
-            author
+            '$set': {
+              customWhere,
+              author
+            }
           }
         )
         callback(`${optsNameCN} 设置成功`)
         break
       case 'remove':
         customWhere = find.customWhere || []
-        if(customWhere.indexOf(context.trim())) {
+        if(customWhere.indexOf(context.trim()) > -1) {
           customWhere = customWhere.filter(x => x !== context.trim())
           await collection.updateOne(
             { '_id': `${optsNameCN}_${level}` },
             {
-              customWhere,
-              author
+              '$set': {
+                customWhere,
+                author
+              }
             }
           )
           callback(`${optsNameCN} 设置成功`)
@@ -158,8 +164,10 @@ const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context
         await collection.updateOne(
           { '_id': `${optsNameCN}_${level}` },
           {
-            customWhere: [],
-            author
+            '$set': {
+              customWhere: [],
+              author
+            }
           }
         )
         callback(`${optsNameCN} 设置成功`)
