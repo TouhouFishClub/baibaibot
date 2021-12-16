@@ -14,6 +14,8 @@ const theme = {
 	text: 'rgba(255,255,255,1)',
 }
 
+let fontFamily = 'STXIHEI'
+
 // const theme = {
 // 	bg: '#ff96ae',
 // 	buff: 'rgb(16,131,255)',
@@ -37,6 +39,11 @@ const checkMaxWidth = (ctx, str, maxWidth) => {
 }
 const renderText = (ctx, textArr, topMargin, leftMargin, lineHeight) => {
   textArr.forEach((text, index) => {
+    if(text.startsWith('author')) {
+      ctx.font = `12px ${fontFamily}`
+    } else {
+      ctx.font = `20px ${fontFamily}`
+    }
     ctx.fillText(text, leftMargin, topMargin + lineHeight * (index + 1))
   })
 }
@@ -75,7 +82,6 @@ const renderTextBox = (ctx, left, top, width, height, radius, title) => {
 module.exports = function(obj, wheres, __dir = 'mabi', callback){
   let canvasTmp = createCanvas(400, 2000)
     , ctxTmp = canvasTmp.getContext('2d');
-  let fontFamily = 'STXIHEI'
   ctxTmp.font = `20px ${fontFamily}`
   /* 预处理属性 */
   let desc = obj.OptionDesc.split('\\n'), objArr = []
