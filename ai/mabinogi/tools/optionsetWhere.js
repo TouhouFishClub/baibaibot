@@ -92,7 +92,7 @@ const optionsetWhereCn = async ( optsNameCN, level ) => {
     (
       (find.customWhere && find.customWhere.length)
         ?
-        find.customWhere
+        find.customWhere.concat([`author: ${find.author}`])
         :
         find.where
           ?
@@ -103,7 +103,7 @@ const optionsetWhereCn = async ( optsNameCN, level ) => {
     :
     []
 }
-const optionsetWhereCnHandler = async ( optsNameCN, level, context, callback) => {
+const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context, callback) => {
   if(!client) {
     try {
       client = await MongoClient.connect(MONGO_URL)
@@ -113,14 +113,78 @@ const optionsetWhereCnHandler = async ( optsNameCN, level, context, callback) =>
     }
   }
   collection = client.collection('cl_mabinogi_optionset')
-  let find = await collection.findOne({'_id': `${optsNameCN}_${level}`})
-  if(find){
-    find = Object.assign(find, {customWhere: context.split('\n').filter(x => x.trim())})
+  let find = await collection.findOne({'_id': `${optsNameCN}_${level}`}), customWhere
+  if(find) {
+    switch(type) {
+      case 'set':
+        await collection.updateOne(
+          { '_id': `${optsNameCN}_${level}` },
+          {
+            customWhere: context.split('\n').filter(x => x.trim()),
+            author
+          }
+        )
+        callback(`${optsNameCN} 设置成功`)
+        break
+      case 'add':
+        customWhere = find.customWhere || []
+        customWhere = customWhere.concat(context.split('\n').filter(x => x.trim()))
+        await collection.updateOne(
+          { '_id': `${optsNameCN}_${level}` },
+          {
+            customWhere,
+            author
+          }
+        )
+        callback(`${optsNameCN} 设置成功`)
+        break
+      case 'remove':
+        customWhere = find.customWhere || []
+        if(customWhere.indexOf(context.trim())) {
+          customWhere = customWhere.filter(x => x !== context.trim())
+          await collection.updateOne(
+            { '_id': `${optsNameCN}_${level}` },
+            {
+              customWhere,
+              author
+            }
+          )
+          callback(`${optsNameCN} 设置成功`)
+        } else {
+          callback(`${optsNameCN} 没有相关记录`)
+        }
+        break
+      case 'del':
+        await collection.updateOne(
+          { '_id': `${optsNameCN}_${level}` },
+          {
+            customWhere: [],
+            author
+          }
+        )
+        callback(`${optsNameCN} 设置成功`)
+        break
+    }
   } else {
-    find = {'_id': `${optsNameCN}_${level}`, customWhere: context.split('\n').filter(x => x.trim())}
+    switch(type) {
+      case 'set':
+        find = {'_id': `${optsNameCN}_${level}`, customWhere: context.split('\n').filter(x => x.trim()), author}
+        await collection.save(find)
+        callback(`${optsNameCN} 设置成功`)
+        break
+      case 'add':
+        find = {'_id': `${optsNameCN}_${level}`, customWhere: context.split('\n').filter(x => x.trim()), author}
+        await collection.save(find)
+        callback(`${optsNameCN} 设置成功`)
+        break
+      case 'remove':
+        callback(`${optsNameCN} 没有相关记录`)
+        break
+      case 'del':
+        callback(`${optsNameCN} 没有相关记录`)
+        break
+    }
   }
-  await collection.save(find)
-  callback(`${optsNameCN} 设置成功`)
 }
 const searchWhereCn = async (...wheres) => {
   if(!client) {

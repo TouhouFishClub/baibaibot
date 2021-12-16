@@ -14,26 +14,42 @@ let saveTmpMap = {
 
 }
 
-const setOptionsetWhere = (userId, context, callback) => {
+const setOptionsetWhere = (userId, author, context, callback) => {
   let { LocalName, Level } = saveTmpMap[userId]
-  optionsetWhereCnHandler(LocalName, Level, context, callback)
+  optionsetWhereCnHandler('set', author, LocalName, Level, context, callback)
 }
-const delOptionsetWhere = (userId, callback) => {
+const addOptionsetWhere = (userId, author, context, callback) => {
   let { LocalName, Level } = saveTmpMap[userId]
-  optionsetWhereCnHandler(LocalName, Level, '', callback)
+  optionsetWhereCnHandler('add', author, LocalName, Level, context, callback)
+}
+const removeOptionsetWhere = (userId, author, context, callback) => {
+  let { LocalName, Level } = saveTmpMap[userId]
+  optionsetWhereCnHandler('remove', author, LocalName, Level, context, callback)
+}
+const delOptionsetWhere = (userId, author, callback) => {
+  let { LocalName, Level } = saveTmpMap[userId]
+  optionsetWhereCnHandler('del', author, LocalName, Level, '', callback)
 }
 
-module.exports = function(userId, context, type = 'normal', callback) {
+module.exports = function(userId, nickname, context, type = 'normal', callback) {
   const _initSearch = async () => {
     const maxKeywords = 6, maxSearch = 10
     let ctx = context.trim()
     if(adminUser.has(userId) && saveTmpMap[userId]) {
       if(ctx.startsWith('set')) {
-        setOptionsetWhere(userId, context.substr(3).trim(), callback)
+        setOptionsetWhere(userId, nickname, context.substr(3).trim(), callback)
+        return
+      }
+      if(ctx.startsWith('add')) {
+        addOptionsetWhere(userId, nickname, context.substr(3).trim(), callback)
+        return
+      }
+      if(ctx.startsWith('remove')) {
+        removeOptionsetWhere(userId, nickname, context.substr(3).trim(), callback)
         return
       }
       if(ctx.startsWith('del')) {
-        delOptionsetWhere(userId, callback)
+        delOptionsetWhere(userId, nickname, callback)
         return
       }
     }
