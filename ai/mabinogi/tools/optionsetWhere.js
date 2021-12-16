@@ -92,7 +92,7 @@ const optionsetWhereCn = async ( optsNameCN, level ) => {
     (
       (find.customWhere && find.customWhere.length)
         ?
-        find.customWhere.concat([`author: ${find.author}`])
+        find.customWhere.concat([`author: ${find.author || ''}`])
         :
         find.where
           ?
