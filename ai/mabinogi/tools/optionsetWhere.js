@@ -103,7 +103,7 @@ const optionsetWhereCn = async ( optsNameCN, level ) => {
     :
     []
 }
-const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context, callback) => {
+const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context, callback, options) => {
   if(!client) {
     try {
       client = await MongoClient.connect(MONGO_URL)
@@ -121,7 +121,9 @@ const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context
           { '_id': `${optsNameCN}_${level}` },
           {
             '$set': {
+              Usage: options.UsageQuery,
               customWhere: context.split('\n').filter(x => x.trim()),
+              level,
               author
             }
           }
@@ -135,7 +137,9 @@ const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context
           { '_id': `${optsNameCN}_${level}` },
           {
             '$set': {
+              Usage: options.UsageQuery,
               customWhere,
+              level,
               author
             }
           }
@@ -176,12 +180,24 @@ const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context
   } else {
     switch(type) {
       case 'set':
-        find = {'_id': `${optsNameCN}_${level}`, customWhere: context.split('\n').filter(x => x.trim()), author}
+        find = {
+          '_id': `${optsNameCN}_${level}`,
+          customWhere: context.split('\n').filter(x => x.trim()),
+          Usage: options.UsageQuery,
+          level,
+          author
+        }
         await collection.save(find)
         callback(`${optsNameCN} 设置成功`)
         break
       case 'add':
-        find = {'_id': `${optsNameCN}_${level}`, customWhere: context.split('\n').filter(x => x.trim()), author}
+        find = {
+          '_id': `${optsNameCN}_${level}`,
+          customWhere: context.split('\n').filter(x => x.trim()),
+          Usage: options.UsageQuery,
+          level,
+          author
+        }
         await collection.save(find)
         callback(`${optsNameCN} 设置成功`)
         break

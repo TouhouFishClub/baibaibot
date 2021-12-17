@@ -16,19 +16,19 @@ let saveTmpMap = {
 
 const setOptionsetWhere = (userId, author, context, callback) => {
   let { LocalName, Level } = saveTmpMap[userId]
-  optionsetWhereCnHandler('set', author, LocalName, Level, context, callback)
+  optionsetWhereCnHandler('set', author, LocalName, Level, context, callback, saveTmpMap[userId])
 }
 const addOptionsetWhere = (userId, author, context, callback) => {
   let { LocalName, Level } = saveTmpMap[userId]
-  optionsetWhereCnHandler('add', author, LocalName, Level, context, callback)
+  optionsetWhereCnHandler('add', author, LocalName, Level, context, callback, saveTmpMap[userId])
 }
 const removeOptionsetWhere = (userId, author, context, callback) => {
   let { LocalName, Level } = saveTmpMap[userId]
-  optionsetWhereCnHandler('remove', author, LocalName, Level, context, callback)
+  optionsetWhereCnHandler('remove', author, LocalName, Level, context, callback, saveTmpMap[userId])
 }
 const delOptionsetWhere = (userId, author, callback) => {
   let { LocalName, Level } = saveTmpMap[userId]
-  optionsetWhereCnHandler('del', author, LocalName, Level, '', callback)
+  optionsetWhereCnHandler('del', author, LocalName, Level, '', callback, saveTmpMap[userId])
 }
 
 module.exports = function(userId, nickname, context, type = 'normal', callback) {
