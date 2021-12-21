@@ -17,7 +17,7 @@ function handleSweepReply(content,qq,username,groupid,callback) {
       nowplaying=groupid;
       var ret = '群扫雷将于60秒后开启，输入【扫雷】加入游戏';
       setTimeout(function(){
-        initgame();
+        initgame(callback);
       },60000);
       callback(ret);
     }else if(nowplaying==groupid){
@@ -39,14 +39,15 @@ function handleSweepReply(content,qq,username,groupid,callback) {
 
 }
 
-function initgame(){
+function initgame(callback){
   nowplaying=1;
   var qqlist = [];
   for(var qq in user){
-    qqlist.add(qq);
-    queue.add(qq);
+    qqlist.push(qq);
+    queue.push(qq);
   }
-  generateMap(50,qqlist);
+  var ret = '扫雷开始，下一个【'+user[queue[0]].n+'】';
+  generateImage(ret,callback);
 }
 
 function test(){
