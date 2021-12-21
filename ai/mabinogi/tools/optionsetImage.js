@@ -4,27 +4,27 @@ const fs = require('fs'),
   { sendImageMsgBuffer } = require('../../../cq/sendImage.js')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
-// const theme = {
-// 	bg: 'rgba(0,0,20,0.9)',
-// 	buff: 'rgba(16,131,255,1)',
-// 	debuff: 'rgba(251,0,7,1)',
-// 	border: 'rgba(204,204,204,1)',
-// 	tagbg: 'rgba(0,0,0,1)',
-// 	tag: 'rgba(238,78,7,1)',
-// 	text: 'rgba(255,255,255,1)',
-// }
-
-let fontFamily = 'STXIHEI'
-
 const theme = {
-	bg: '#ff96ae',
-	buff: 'rgb(16,131,255)',
+	bg: 'rgba(0,0,20,0.9)',
+	buff: 'rgba(16,131,255,1)',
 	debuff: 'rgba(251,0,7,1)',
 	border: 'rgba(204,204,204,1)',
 	tagbg: 'rgba(0,0,0,1)',
 	tag: 'rgba(238,78,7,1)',
 	text: 'rgba(255,255,255,1)',
 }
+
+let fontFamily = 'STXIHEI'
+
+// const theme = {
+// 	bg: '#ff96ae',
+// 	buff: 'rgb(16,131,255)',
+// 	debuff: 'rgba(251,0,7,1)',
+// 	border: 'rgba(204,204,204,1)',
+// 	tagbg: 'rgba(0,0,0,1)',
+// 	tag: 'rgba(238,78,7,1)',
+// 	text: 'rgba(255,255,255,1)',
+// }
 
 const checkMaxWidth = (ctx, str, maxWidth) => {
   let start = 0, splitArr = []
