@@ -786,6 +786,17 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
 
+  if(content=='扫雷'||content=='群扫雷'){
+    handleSweepReply(content.trim(),from,name,groupid,callback);
+    return;
+  }
+  if(content.trim().substring(0,1)=='s'){
+    var left = content.trim().substring(1).trim();
+    if(left.length==2){
+      handleSweepReply(left.trim(),from,name,groupid,callback);
+      return;
+    }
+  }
 
 
 
