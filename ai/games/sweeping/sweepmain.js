@@ -51,7 +51,7 @@ function initgame(callback){
     qqlist.push(qq);
     queue.push(qq);
   }
-  generateMap(50,qqlist);
+  generateMap(25,qqlist);
   var ret = '扫雷开始，下一个【'+user[queue[0]].n+'】';
   generateImage(ret,callback);
 }
@@ -313,8 +313,9 @@ function generateImage(wd,callback){
           var r = map[i][j].c+'';
           img1.fill('blue').fontSize(18)
         }else{
-          img1.fill('aqua').fontSize(18)
-          var r = map[i][j].d.substring(0,1);
+          img1.fill('aqua').fontSize(9)
+          var un = user[map[i][j].d];
+          var r = un.substring(0,3);
 
         }
       }
