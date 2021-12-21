@@ -4,27 +4,27 @@ const fs = require('fs'),
   { sendImageMsgBuffer } = require('../../../cq/sendImage.js')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
-const theme = {
-	bg: 'rgba(0,0,20,0.9)',
-	buff: 'rgba(16,131,255,1)',
-	debuff: 'rgba(251,0,7,1)',
-	border: 'rgba(204,204,204,1)',
-	tagbg: 'rgba(0,0,0,1)',
-	tag: 'rgba(238,78,7,1)',
-	text: 'rgba(255,255,255,1)',
-}
-
-let fontFamily = 'STXIHEI'
-
 // const theme = {
-// 	bg: '#ff96ae',
-// 	buff: 'rgb(16,131,255)',
+// 	bg: 'rgba(0,0,20,0.9)',
+// 	buff: 'rgba(16,131,255,1)',
 // 	debuff: 'rgba(251,0,7,1)',
 // 	border: 'rgba(204,204,204,1)',
 // 	tagbg: 'rgba(0,0,0,1)',
 // 	tag: 'rgba(238,78,7,1)',
 // 	text: 'rgba(255,255,255,1)',
 // }
+
+let fontFamily = 'STXIHEI'
+
+const theme = {
+	bg: '#ff96ae',
+	buff: 'rgb(16,131,255)',
+	debuff: 'rgba(251,0,7,1)',
+	border: 'rgba(204,204,204,1)',
+	tagbg: 'rgba(0,0,0,1)',
+	tag: 'rgba(238,78,7,1)',
+	text: 'rgba(255,255,255,1)',
+}
 
 const checkMaxWidth = (ctx, str, maxWidth) => {
   let start = 0, splitArr = []
@@ -102,6 +102,7 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
   let buffHeight = objArr.length * 25
   let cavasHeight = 77 + buffHeight + 70
   let whereArr = []
+  let isPersonal = objArr.filter(x => x.text.match(/专用/) && !x.buff).length
   let whereHeight
   if(wheres.length){
     wheres.forEach(where => {
@@ -132,10 +133,10 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
 
   ctx.fillStyle = theme.text
   ctx.strokeStyle = 'rgba(0,0,0,0.5)'
-  let title = '魔法释放卷轴'
+  let title = isPersonal ? '专用魔法释放卷' : '魔法释放卷轴'
   ctx.fillText(title, (400 - ctx.measureText(title).width)/2, 30)
 
-  let titleDesc = 'Enchant Scroll'
+  let titleDesc = isPersonal ? 'Personal Enchant Scroll' : 'Enchant Scroll'
   ctx.font = `12px ${fontFamily}`
   ctx.fillText(titleDesc, (400 - ctx.measureText(titleDesc).width)/2, 45)
 
