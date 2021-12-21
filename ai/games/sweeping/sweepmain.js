@@ -265,6 +265,7 @@ function sweep(qq,username,x,y,callback){
         for(var qq in user){
           if(user[qq].hp>0){
             ret = ret + "\n游戏结束，幸存者【"+user[qq].n+"】";
+            nowplaying=0;
           }
         }
       }
