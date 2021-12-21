@@ -15,7 +15,12 @@ function handleSweepReply(content,qq,username,groupid,callback) {
       user = {};
       queue=[];
       nowplaying=groupid;
-      var ret = '群扫雷将于60秒后开启，输入【扫雷】加入游戏';
+      var ret = '群扫雷将于60秒后开启，输入【扫雷】加入游戏\n';
+      ret = ret +  '指令：\n';
+      ret = ret +'【s+数字+字母】如【s6f】扫位置为【6f】的空地\n';
+      ret = ret +'游戏规则：\n';
+      ret = ret + '扫到空地-10HP，扫到雷-100HP，扫到自己+100HP\n';
+      ret = ret + '扫到群友自己+100HP，群友-50HP\n';
       setTimeout(function(){
         initgame(callback);
       },60000);
