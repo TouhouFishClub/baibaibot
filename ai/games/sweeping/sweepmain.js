@@ -46,6 +46,7 @@ function initgame(callback){
     qqlist.push(qq);
     queue.push(qq);
   }
+  generateMap(50,qqlist);
   var ret = '扫雷开始，下一个【'+user[queue[0]].n+'】';
   generateImage(ret,callback);
 }
