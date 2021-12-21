@@ -49,7 +49,6 @@ function initgame(){
   generateMap(50,qqlist);
 }
 
-test();
 function test(){
   user['m']={qq:'m',n:'mmmm',hp:100};
   user['n']={qq:'n',n:'nnnn',hp:100};
