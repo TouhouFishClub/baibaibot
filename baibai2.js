@@ -119,6 +119,7 @@ const { Reliquary } = require('./ai/GenshinImpact/Reliquary')
 
 const { composition, groupCompositionRank } = require('./ai/composition')
 const { tapFish } = require('./ai/tapfish')
+const {handleSweepReply} = require('./ai/games/sweeping/sweepmain');
 
 let globalConfig = {
 	FLASH_RESEND : false
