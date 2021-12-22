@@ -20,7 +20,6 @@ const loadGachaGroup = async () => {
 	let urls = splitStr(article, '<ul class="newsList">', '</ul>', true).split('</li>').map(x => {
 		return splitStr(x, '//', '"', true)
 	}).map(x => x.trim()).filter(x => x.startsWith('luoqi.tiancity.com')).map(x => `https://${x}`)
-	// console.log(urls)
 	if(urls.length) {
 		let target = []
 		for(let i = 0; i < urls.length; i ++) {
@@ -38,6 +37,8 @@ const loadGachaGroup = async () => {
 				target.push(obj)
 			}
 		}
+		target = target.filter(x => x.link.startsWith('https://') || x.link.startsWith('http://'))
+		console.log(target)
 		for(let j = 0; j < target.length; j++) {
 			let t = target[j]
 			let data = await fetchData(t.link)
