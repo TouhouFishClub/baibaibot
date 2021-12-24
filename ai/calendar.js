@@ -18,7 +18,7 @@ const calendar = async (content, author, groupId, callback, type = 'insert') => 
   let sp = content.split('\n').map(x => x.trim()).filter(x => x)
   switch(type) {
     case "search":
-      searchCalendar(content)
+      searchCalendar(content, groupId, callback)
       break
     case "insert":
       if(sp.length >= 4) {
