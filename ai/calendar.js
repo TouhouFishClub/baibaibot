@@ -18,7 +18,11 @@ const calendar = async (content, author, groupId, callback, type = 'insert') => 
   let sp = content.split('\n').map(x => x.trim()).filter(x => x)
   switch(type) {
     case "search":
-      searchCalendar(content, groupId, callback)
+      if(content.trim()) {
+        searchCalendar(content, groupId, callback)
+      } else {
+        help(content)
+      }
       break
     case "insert":
       if(sp.length >= 4) {
@@ -71,7 +75,8 @@ const setCalendar = async (project, activity, st, et, author, groupId, callback)
             activity,
             startTime,
             endTime,
-            author
+            author,
+            groupId
           }
         }
       )
@@ -83,7 +88,8 @@ const setCalendar = async (project, activity, st, et, author, groupId, callback)
       activity,
       startTime,
       endTime,
-      author
+      author,
+      groupId
     })
     callback('设置成功')
   }
