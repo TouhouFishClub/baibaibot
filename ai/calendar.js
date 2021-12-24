@@ -39,7 +39,7 @@ const calendar = async (content, author, groupId, callback, type = 'insert') => 
 const searchCalendar = async (project, groupId, callback) => {
   let data = await client.db('db_bot').collection('cl_calendar').find({ project, groupId }).toArray()
   if(data.length > 0) {
-    callback(`${project}: \n${data.map(x => `${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.startTime)}`).join('\n')}`)
+    callback(`${project}: \n${data.map(x => `${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.endTime)}`).join('\n')}`)
   } else {
     callback(`${project}: 没有数据`)
   }
@@ -65,7 +65,7 @@ const setCalendar = async (project, activity, st, et, author, groupId, callback)
       userHash[author] = {
         search
       }
-      callback(`选择需要设置的位置:\n${search.map((x, i) => `选择日历${i} | ${x.project}-${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.startTime)}`).join('\n')}`)
+      callback(`选择需要设置的位置:\n${search.map((x, i) => `选择日历${i} | ${x.project}-${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.endTime)}`).join('\n')}`)
     } else {
       await client.db('db_bot').collection('cl_calendar').updateOne(
         { '_id': search[0]._id },
