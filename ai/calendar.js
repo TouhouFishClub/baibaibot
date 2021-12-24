@@ -106,10 +106,10 @@ const help = callback => {
 const strToTs = str => {
   let s = str.trim()
   s = s.replace(/：/g, ':')
-  if(s.split('-') === 2) {
+  if(s.split('-').length === 2) {
     s = `${new Date().getFullYear()}-${s}`
   }
-  if(s.split(':') === 1) {
+  if(s.split(':').length === 1) {
     s = `${s} 6:0:0`
   }
   return new Date(s).getTime()
