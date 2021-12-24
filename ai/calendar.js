@@ -21,7 +21,7 @@ const calendar = async (content, author, groupId, callback, type = 'insert') => 
       searchCalendar(content)
       break
     case "insert":
-      if(sp.length > 4) {
+      if(sp.length >= 4) {
         setCalendar(...sp.slice(0, 4), author, groupId, callback)
       } else {
         help(callback)
@@ -94,7 +94,7 @@ const setCalendarByOid = async (oid, callback) => {
 }
 
 const help = callback => {
-  callback(`使用如下格式设置日历：\n\n设置日历\n【日历名称】\n【日历项目】\n【开始时间】\n【结束时间】\n\n*注：时间使用YYYY-MM-DD HH:MM:SS格式，不输入年份默认当年，不输入时间默认6点`)
+  callback(`使用如下格式设置日历：\n\n日历设置\n【日历名称】\n【日历项目】\n【开始时间】\n【结束时间】\n\n*注：时间使用YYYY-MM-DD HH:MM:SS格式，不输入年份默认当年，不输入时间默认6点`)
 }
 
 const strToTs = str => {
