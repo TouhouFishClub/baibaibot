@@ -1333,14 +1333,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     )
     return
   }
-  if(content == '迷路的花园') {
+  if(content == '离子血糖') {
     cov(
-      '迷路的花园',
+      '离子血糖',
       callback,
       true,
-      ['现有女友', '今日新增女友', '确诊女友', '疑似女友', '境外女友'],
+      ['现在浓度', '今日新增浓度', '饭后浓度', '疑似浓度', '饭中浓度'],
       {
-        name: '迷路的花园',
+        name: '离子血糖',
         type: 'other',
       },
       {
@@ -1350,7 +1350,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         deadCount: [~~(4 * Math.random()), ~~(2 * Math.random())],
         suspectedCount: [~~(200 * Math.random()), ~~(100 * Math.random())]
       },
-      '迷路的花园',
+      '离子血糖',
     )
     return
   }
