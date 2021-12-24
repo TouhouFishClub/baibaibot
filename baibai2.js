@@ -82,7 +82,7 @@ const anc = require('./ai/arknights/arkNightsCalc')
 const and = require('./ai/arknights/arkNightsBuildingTheme')
 const anchan = require('./ai/arknights/arkNightsChallenge')
 const anp = require('./ai/arknights/arkNightsCharacterCompare')
-const { calendar } = require('./ai/arknights/arkNightsCalendar')
+const { arkCalendar } = require('./ai/arknights/arkNightsCalendar')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 const {runsetu} = require('./ai/games/card/setu');
@@ -120,6 +120,7 @@ const { Reliquary } = require('./ai/GenshinImpact/Reliquary')
 const { composition, groupCompositionRank } = require('./ai/composition')
 const { tapFish } = require('./ai/tapfish')
 const {handleSweepReply} = require('./ai/games/sweeping/sweepmain');
+const { calendar } = require('./ai/calendar')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -195,8 +196,6 @@ function initWS2(){
   });
   client.connect('ws://192.168.17.52:24335/event');
 }
-
-
 
 function initWS3(){
   var WebSocketClient = require('websocket').client;
@@ -282,7 +281,6 @@ function initWS5(){
     client.connect('ws://192.168.17.52:27335/event');
 }
 
-
 function reconnect(){
   if(!wsonline){
     initWS();
@@ -290,8 +288,6 @@ function reconnect(){
     initWS3()
   }
 }
-
-
 
 var queue = []
 var xqueue = []
@@ -415,8 +411,6 @@ function addSendQueue(groupid,msg,botqq){
     });
 }
 
-
-
 function handleMsg(msgObj,botqq){
   try{
     handleMsg_D0(msgObj,botqq);
@@ -460,8 +454,6 @@ function handleMsg_D0(msgObj,botqq){
   }
   handleMsg_D(msgObj,botqq);
 }
-
-
 
 function handleMsg_D(msgObj,botqq) {
 
@@ -1023,6 +1015,16 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
+  // 日历系统
+  if(content.startsWith('日历设置')) {
+    calendar(content.substr(4))
+    return
+  }
+  if(content.endsWith('日历')) {
+    calendar(content.substr(0, content.length - 2))
+    return
+  }
+
   if(con.indexOf('座运势') + 1 && con.length == 5){
     zodiac(con, callback)
     return
@@ -1046,7 +1048,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
   if(con == '方舟老黄历') {
-    calendar(callback)
+    arkCalendar(callback)
   }
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)
@@ -1200,7 +1202,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         break;
       case 'l':
       case 'L':
-        calendar(callback)
+        arkCalendar(callback)
         break;
       default:
         sa = con.substring(3)

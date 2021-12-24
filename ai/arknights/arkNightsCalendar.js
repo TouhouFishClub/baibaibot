@@ -408,5 +408,5 @@ function getStarString(iday) {
 }
 
 module.exports = {
-  calendar
+  arkCalendar : calendar
 }
