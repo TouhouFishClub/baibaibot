@@ -1017,11 +1017,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   // 日历系统
   if(content.startsWith('日历设置')) {
-    calendar(content.substr(4))
+    calendar(content.substr(4), from, groupid, callback)
     return
   }
   if(content.endsWith('日历')) {
-    calendar(content.substr(0, content.length - 2))
+    calendar(content.substr(0, content.length - 2), from, groupid, callback, 'search')
     return
   }
 
