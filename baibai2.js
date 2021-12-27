@@ -1028,7 +1028,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     calendar(content.substr(4), from, groupid, callback, 'insert-select')
     return
   }
-  if(content.startsWith('删除日历')) {
+  if(content.startsWith('日历删除')) {
     calendar(content.substr(4), from, groupid, callback, 'delete')
     return
   }

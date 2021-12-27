@@ -76,7 +76,7 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
   }
 }
 
-const deleteCalendar = async (project, activity, groupId, author, callback) => {
+const deleteCalendar = async (project, activity, author, groupId, callback) => {
   let search = await client.db('db_bot').collection('cl_calendar').find({ project, activity, groupId }).toArray()
 
   if(search.length) {
