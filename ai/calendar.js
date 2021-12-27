@@ -107,13 +107,13 @@ const searchCalendar = async (project, groupId, callback) => {
   if(data.length > 0) {
 
     let now = new Date()
-    renderCalendar(now.getFullYear(), now.getMonth() + 1, callback, JSON.parse(data.map(x => {
+    renderCalendar(now.getFullYear(), now.getMonth() + 1, callback, data.map(x => {
       return {
         name: x.activity,
         start_time: formatTime(x.startTime),
         end_time: formatTime(x.end_time)
       }
-    })), `${project}_${groupId}`)
+    }), `${project}_${groupId}`)
 
     // callback(`${project}: \n${data.map(x => `${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.endTime)}`).join('\n')}`)
   } else {
