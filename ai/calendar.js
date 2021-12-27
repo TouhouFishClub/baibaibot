@@ -9,7 +9,7 @@ let userDelHash = {
 }
 let client
 
-const calendar = async (content, author, groupId, callback, type = 'insert') => {
+const calendar = async (content, author, groupId, callback, type = 'add') => {
   if(!client) {
     try {
       client = await MongoClient.connect(MONGO_URL)
@@ -23,6 +23,16 @@ const calendar = async (content, author, groupId, callback, type = 'insert') => 
     case "search":
       if(content.trim()) {
         searchCalendar(content, groupId, callback)
+      } else {
+        help(callback)
+      }
+      break
+    case "add":
+      if(userHash[author]) {
+        delete userHash[author]
+      }
+      if(sp.length >= 4) {
+        addCalendar(...sp.slice(0, 4), author, groupId, callback)
       } else {
         help(callback)
       }
@@ -82,7 +92,7 @@ const deleteCalendar = async (project, activity, groupId, author, callback) => {
       callback('删除成功')
     }
   } else {
-    callback('没有此条记录')
+    callback('没有相关的记录')
   }
 }
 
@@ -98,6 +108,31 @@ const searchCalendar = async (project, groupId, callback) => {
   } else {
     callback(`${project}: 没有数据`)
   }
+}
+
+const addCalendar = async (project, activity, st, et, author, groupId, callback) => {
+  if(project.length > 6) {
+    callback('标题过长')
+    return
+  }
+  let startTime = strToTs(st), endTime = strToTs(et)
+  if(isNaN(startTime)) {
+    callback('开始时间错误')
+    return
+  }
+  if(isNaN(endTime)) {
+    callback('结束时间错误')
+    return
+  }
+  await client.db('db_bot').collection('cl_calendar').save({
+    project,
+    activity,
+    startTime,
+    endTime,
+    author,
+    groupId
+  })
+  callback('设置成功')
 }
 
 const setCalendar = async (project, activity, st, et, author, groupId, callback) => {
@@ -129,19 +164,24 @@ const setCalendar = async (project, activity, st, et, author, groupId, callback)
         }
       }
       callback(`选择需要设置的位置:\n${search.map((x, i) => `选择日历${i} | ${x.project}-${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.endTime)}`).join('\n')}`)
-      return
+    } else {
+    await client.db('db_bot').collection('cl_calendar').updateOne(
+      { '_id': search[0]._id },
+      {
+        '$set': {
+          project,
+          activity,
+          startTime,
+          endTime,
+          author,
+          groupId
+        }
+      })
+      callback('设置成功')
     }
+  } else {
+    callback('没有相关的记录')
   }
-
-  await client.db('db_bot').collection('cl_calendar').save({
-    project,
-    activity,
-    startTime,
-    endTime,
-    author,
-    groupId
-  })
-  callback('设置成功')
 }
 
 const setCalendarByOid = async (_id, infos, callback) => {
