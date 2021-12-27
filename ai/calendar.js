@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = 'mongodb://192.168.17.52:27050'
+const { renderCalendar } = require('./calendar/index')
 
 let userHash = {
 
@@ -104,7 +105,17 @@ const deleteCalendarByOid = async (_id, callback) => {
 const searchCalendar = async (project, groupId, callback) => {
   let data = await client.db('db_bot').collection('cl_calendar').find({ project, groupId }).toArray()
   if(data.length > 0) {
-    callback(`${project}: \n${data.map(x => `${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.endTime)}`).join('\n')}`)
+
+    let now = new Date()
+    renderCalendar(now.getFullYear(), now.getMonth() + 1, callback, JSON.parse(data.map(x => {
+      return {
+        name: x.activity,
+        start_time: formatTime(x.startTime),
+        end_time: formatTime(x.end_time)
+      }
+    })), `${project}_${groupId}`)
+
+    // callback(`${project}: \n${data.map(x => `${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.endTime)}`).join('\n')}`)
   } else {
     callback(`${project}: 没有数据`)
   }
