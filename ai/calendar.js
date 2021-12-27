@@ -129,33 +129,19 @@ const setCalendar = async (project, activity, st, et, author, groupId, callback)
         }
       }
       callback(`选择需要设置的位置:\n${search.map((x, i) => `选择日历${i} | ${x.project}-${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.endTime)}`).join('\n')}`)
-    } else {
-      await client.db('db_bot').collection('cl_calendar').updateOne(
-        { '_id': search[0]._id },
-        {
-          '$set': {
-            project,
-            activity,
-            startTime,
-            endTime,
-            author,
-            groupId
-          }
-        }
-      )
-      callback('设置成功')
+      return
     }
-  } else {
-    await client.db('db_bot').collection('cl_calendar').save({
-      project,
-      activity,
-      startTime,
-      endTime,
-      author,
-      groupId
-    })
-    callback('设置成功')
   }
+
+  await client.db('db_bot').collection('cl_calendar').save({
+    project,
+    activity,
+    startTime,
+    endTime,
+    author,
+    groupId
+  })
+  callback('设置成功')
 }
 
 const setCalendarByOid = async (_id, infos, callback) => {
