@@ -111,7 +111,7 @@ const searchCalendar = async (project, groupId, callback) => {
       return {
         name: x.activity,
         start_time: formatTime(x.startTime),
-        end_time: formatTime(x.end_time)
+        end_time: formatTime(x.endTime)
       }
     }), `${project}_${groupId}`)
 
