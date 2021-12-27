@@ -195,7 +195,7 @@ const setCalendarByOid = async (_id, infos, callback) => {
 }
 
 const help = callback => {
-  callback(`使用如下格式设置日历：\n\n日历设置\n【日历名称】\n【日历项目】\n【开始时间】\n【结束时间】\n\n*注：时间使用YYYY-MM-DD HH:MM:SS格式，不输入年份默认当年，不输入时间默认6点，各个参数之间使用换行分隔`)
+  callback(`使用如下格式设置日历：\n\n日历设置\n【日历名称】\n【日历项目】\n【开始时间】\n【结束时间】\n\n*注：时间使用YYYY-MM-DD HH:MM:SS格式，不输入年份默认当年，不输入时间默认6点，各个参数之间使用换行分隔\n*可使用【日历修改】修改已存在的日历，可使用【日历删除】删除已设置的日历，日历修改参数与日历设置相同，日历删除不需要开始时间与结束时间。`)
 }
 
 const strToTs = str => {
