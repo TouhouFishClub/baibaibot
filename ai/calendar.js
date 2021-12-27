@@ -19,6 +19,8 @@ const calendar = async (content, author, groupId, callback, type = 'insert') => 
   switch(type) {
     case "search":
       if(content.trim()) {
+        console.log('=============')
+        console.log('content', content.trim())
         searchCalendar(content, groupId, callback)
       } else {
         help(content)
@@ -27,6 +29,14 @@ const calendar = async (content, author, groupId, callback, type = 'insert') => 
     case "insert":
       if(sp.length >= 4) {
         setCalendar(...sp.slice(0, 4), author, groupId, callback)
+      } else {
+        help(callback)
+      }
+      break
+    case "insert-select":
+      if(userHash[author] && userHash[author].search[content]) {
+        await setCalendarByOid(userHash[author].search[content]._id, userHash[author].infos, callback)
+        delete userHash[author]
       } else {
         help(callback)
       }
@@ -63,7 +73,15 @@ const setCalendar = async (project, activity, st, et, author, groupId, callback)
   if(search.length) {
     if(search.length > 1) {
       userHash[author] = {
-        search
+        search,
+        infos: {
+          project,
+          activity,
+          startTime,
+          endTime,
+          author,
+          groupId
+        }
       }
       callback(`选择需要设置的位置:\n${search.map((x, i) => `选择日历${i} | ${x.project}-${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.endTime)}`).join('\n')}`)
     } else {
@@ -95,8 +113,14 @@ const setCalendar = async (project, activity, st, et, author, groupId, callback)
   }
 }
 
-const setCalendarByOid = async (oid, callback) => {
-
+const setCalendarByOid = async (_id, infos, callback) => {
+  await client.db('db_bot').collection('cl_calendar').updateOne(
+    { _id },
+    {
+      '$set': infos
+    }
+  )
+  callback('设置成功')
 }
 
 const help = callback => {

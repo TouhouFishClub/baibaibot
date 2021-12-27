@@ -1020,6 +1020,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     calendar(content.substr(4), from, groupid, callback)
     return
   }
+  if(content.startsWith('选择日历')) {
+    calendar(content.substr(4), from, groupid, callback, 'insert-select')
+    return
+  }
   if(content.endsWith('日历')) {
     calendar(content.substr(0, content.length - 2), from, groupid, callback, 'search')
     return
