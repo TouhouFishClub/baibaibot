@@ -4,6 +4,9 @@ const MONGO_URL = 'mongodb://192.168.17.52:27050'
 let userHash = {
 
 }
+let userDelHash = {
+
+}
 let client
 
 const calendar = async (content, author, groupId, callback, type = 'insert') => {
@@ -19,14 +22,15 @@ const calendar = async (content, author, groupId, callback, type = 'insert') => 
   switch(type) {
     case "search":
       if(content.trim()) {
-        console.log('=============')
-        console.log('content', content.trim())
         searchCalendar(content, groupId, callback)
       } else {
-        help(content)
+        help(callback)
       }
       break
     case "insert":
+      if(userHash[author]) {
+        delete userHash[author]
+      }
       if(sp.length >= 4) {
         setCalendar(...sp.slice(0, 4), author, groupId, callback)
       } else {
@@ -42,8 +46,49 @@ const calendar = async (content, author, groupId, callback, type = 'insert') => 
       }
       break
     case "delete":
+      if(userDelHash[author]) {
+        delete userDelHash[author]
+      }
+      if(sp.length >= 2) {
+        deleteCalendar(...sp.slice(0, 2), author, groupId, callback)
+      } else {
+        help(callback)
+      }
+      break
+    case "delete-select":
+      if(userDelHash[author] && userDelHash[author].search[content]) {
+        await deleteCalendarByOid(userDelHash[author].search[content]._id, callback)
+        delete userDelHash[author]
+      } else {
+        help(callback)
+      }
       break
   }
+}
+
+const deleteCalendar = async (project, activity, groupId, author, callback) => {
+  let search = await client.db('db_bot').collection('cl_calendar').find({ project, activity, groupId }).toArray()
+
+  if(search.length) {
+    if(search.length > 1) {
+      userDelHash[author] = {
+        search
+      }
+      callback(`选择需要删除的位置:\n${search.map((x, i) => `选择删除${i} | ${x.project}-${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.endTime)}`).join('\n')}`)
+    } else {
+      await client.db('db_bot').collection('cl_calendar').remove(
+        { '_id': search[0]._id }
+      )
+      callback('删除成功')
+    }
+  } else {
+    callback('没有此条记录')
+  }
+}
+
+const deleteCalendarByOid = async (_id, callback) => {
+  await client.db('db_bot').collection('cl_calendar').remove({ _id })
+  callback('删除成功')
 }
 
 const searchCalendar = async (project, groupId, callback) => {
@@ -124,7 +169,7 @@ const setCalendarByOid = async (_id, infos, callback) => {
 }
 
 const help = callback => {
-  callback(`使用如下格式设置日历：\n\n日历设置\n【日历名称】\n【日历项目】\n【开始时间】\n【结束时间】\n\n*注：时间使用YYYY-MM-DD HH:MM:SS格式，不输入年份默认当年，不输入时间默认6点`)
+  callback(`使用如下格式设置日历：\n\n日历设置\n【日历名称】\n【日历项目】\n【开始时间】\n【结束时间】\n\n*注：时间使用YYYY-MM-DD HH:MM:SS格式，不输入年份默认当年，不输入时间默认6点，各个参数之间使用换行分隔`)
 }
 
 const strToTs = str => {
