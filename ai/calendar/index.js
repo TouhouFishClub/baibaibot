@@ -5,6 +5,7 @@ const TABLE_HEADER_HEIGHT = 30
 const TABLE_TITLE_HEIGHT = 30
 const TABLE_ITEM_HEIGHT = 20
 const TABLE_ITEM_MARGIN = 3
+const TABLE_ITEM_MARGIN_TOP = 10
 const TABLE_INSET_MARGIN = 5
 const fontFamily = 'STXIHEI'
 const COLOR_GROUP = [
@@ -101,7 +102,7 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
 
 
   let width = GLOBAL_MARGIN * 2 + (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) * 7
-  let height = GLOBAL_MARGIN * 2 + (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) * 6 + TITLE_HEIGHT + TABLE_HEADER_HEIGHT
+  let height = GLOBAL_MARGIN * 2 + (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) * 6 + TITLE_HEIGHT + TABLE_HEADER_HEIGHT
 
   let canvas = createCanvas(width, height)
     , ctx = canvas.getContext('2d')
@@ -136,9 +137,9 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
       ctx.fillStyle = (row + col) % 2 ? '#eee': '#fff'
       ctx.fillRect(
         GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2),
-        offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)),
+        offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)),
         TABLE_WIDTH + TABLE_INSET_MARGIN * 2,
-        TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)
+        TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)
       )
       let data = dateInfo[row * 7 + col], dateNow = new Date(data.startTs)
       ctx.fillStyle = dateNow.getMonth() == month - 1 ? '#000' : '#aaa'
@@ -146,14 +147,14 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
       ctx.fillText(
         `${dateNow.getFullYear()}-${addZero(dateNow.getMonth() + 1)}-${addZero(dateNow.getDate())}`,
         GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + TABLE_INSET_MARGIN,
-        offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) + (TABLE_TITLE_HEIGHT - 20) / 2 + 20
+        offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + (TABLE_TITLE_HEIGHT - 20) / 2 + 20
       )
       data.todos.forEach((todo, index) => {
         if(todo){
           ctx.fillStyle = COLOR_GROUP[todo.index % COLOR_GROUP.length]
           ctx.fillRect(
             GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + (todo.isStart ? TABLE_INSET_MARGIN : 0),
-            offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN,
+            offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN,
             TABLE_WIDTH + (todo.isStart ? 0 : TABLE_INSET_MARGIN) + (todo.isEnd ? 0 : TABLE_INSET_MARGIN),
             TABLE_ITEM_HEIGHT
           )
@@ -171,15 +172,15 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
         ctx.lineWidth = 3
         ctx.strokeRect(
           GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2),
-          offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)),
+          offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)),
           TABLE_WIDTH + TABLE_INSET_MARGIN * 2,
-          TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)
+          TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)
         )
         ctx.fillRect(
           GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2),
-          offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)),
+          offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)),
           TABLE_WIDTH + TABLE_INSET_MARGIN * 2,
-          TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)
+          TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)
         )
       }
 
@@ -195,12 +196,12 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
             ctx.strokeText(
               todo.name,
               GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + TABLE_INSET_MARGIN + 2,
-              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 5,
+              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN_TOP + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 5,
             )
             ctx.fillText(
               todo.name,
               GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + TABLE_INSET_MARGIN + 2,
-              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 5,
+              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN_TOP + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 5,
             )
           }
           if(todo.isEnd) {
@@ -214,12 +215,12 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
             ctx.strokeText(
               time,
               GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + TABLE_INSET_MARGIN + TABLE_WIDTH - widthFix - 2,
-              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 3,
+              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN_TOP + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 3,
             )
             ctx.fillText(
               time,
               GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + TABLE_INSET_MARGIN + TABLE_WIDTH - widthFix - 2,
-              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 3,
+              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN_TOP + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 3,
             )
 
           }
