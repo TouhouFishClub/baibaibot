@@ -9,17 +9,17 @@ const TABLE_ITEM_MARGIN_TOP = 20
 const TABLE_INSET_MARGIN = 5
 const fontFamily = 'STXIHEI'
 const COLOR_GROUP = [
-  '#F44336',
-  '#F46A36',
-  '#FBC063',
-  '#21828E',
-  '#10C99A',
-  '#0068B7',
-  '#03A9F4',
-  '#00BCD4',
-  '#9E9E9E',
-  '#616161',
-  '#424242'
+  'rgba(244,  67,  54, .3)',
+  'rgba(244, 106,  54, .3)',
+  'rgba(251, 192,  99, .3)',
+  'rgba( 33, 130, 142, .3)',
+  'rgba( 16, 201, 154, .3)',
+  'rgba(  0, 104, 183, .3)',
+  'rgba(  0, 169, 244, .3)',
+  'rgba(  0, 188, 212, .3)',
+  'rgba(158, 158, 158, .3)',
+  'rgba( 97,  97,  97, .3)',
+  'rgba( 66,  66,  66, .3)'
 ]
 const fs = require('fs'),
   path = require('path'),
