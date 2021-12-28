@@ -187,11 +187,11 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
       data.todos.forEach((todo, index) => {
         if(todo){
           if(todo.isStart) {
-            let fontsize = 16
+            let fontsize = 20
             ctx.font = `${fontsize}px ${fontFamily}`
             ctx.fillStyle = "#fff"
             ctx.strokeStyle = "#666"
-            ctx.lineWidth = 1
+            ctx.lineWidth = 2
             ctx.strokeText(
               todo.name,
               GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + TABLE_INSET_MARGIN + 2,
