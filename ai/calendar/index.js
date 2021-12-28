@@ -154,7 +154,7 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
           ctx.fillStyle = COLOR_GROUP[todo.index % COLOR_GROUP.length]
           ctx.fillRect(
             GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + (todo.isStart ? TABLE_INSET_MARGIN : 0),
-            offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN,
+            offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN_TOP,
             TABLE_WIDTH + (todo.isStart ? 0 : TABLE_INSET_MARGIN) + (todo.isEnd ? 0 : TABLE_INSET_MARGIN),
             TABLE_ITEM_HEIGHT
           )
