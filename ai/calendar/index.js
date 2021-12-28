@@ -5,7 +5,7 @@ const TABLE_HEADER_HEIGHT = 30
 const TABLE_TITLE_HEIGHT = 30
 const TABLE_ITEM_HEIGHT = 20
 const TABLE_ITEM_MARGIN = 3
-const TABLE_ITEM_MARGIN_TOP = 10
+const TABLE_ITEM_MARGIN_TOP = 20
 const TABLE_INSET_MARGIN = 5
 const fontFamily = 'STXIHEI'
 const COLOR_GROUP = [
@@ -193,15 +193,16 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
             ctx.fillStyle = "#fff"
             ctx.strokeStyle = "#333"
             ctx.lineWidth = 3
+            ctx.lineCap = 'round'
             ctx.strokeText(
               todo.name,
               GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + TABLE_INSET_MARGIN + 2,
-              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN_TOP + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 5,
+              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN_TOP + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 15,
             )
             ctx.fillText(
               todo.name,
               GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + TABLE_INSET_MARGIN + 2,
-              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN_TOP + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 5,
+              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN_TOP)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN_TOP + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 15,
             )
           }
           if(todo.isEnd) {
