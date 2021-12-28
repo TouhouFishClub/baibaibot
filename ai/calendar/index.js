@@ -187,20 +187,20 @@ const renderCalendar = (year, month, callback, todos = [], fileTip = '') => {
       data.todos.forEach((todo, index) => {
         if(todo){
           if(todo.isStart) {
-            let fontsize = 20
+            let fontsize = 22
             ctx.font = `${fontsize}px ${fontFamily}`
             ctx.fillStyle = "#fff"
-            ctx.strokeStyle = "#666"
-            ctx.lineWidth = 2
+            ctx.strokeStyle = "#333"
+            ctx.lineWidth = 3
             ctx.strokeText(
               todo.name,
               GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + TABLE_INSET_MARGIN + 2,
-              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 3,
+              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 5,
             )
             ctx.fillText(
               todo.name,
               GLOBAL_MARGIN + col * (TABLE_WIDTH + TABLE_INSET_MARGIN * 2) + TABLE_INSET_MARGIN + 2,
-              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 3,
+              offsetTop + row * (TABLE_TITLE_HEIGHT + TABLE_INSET_MARGIN * 2 + todoGroup.length * (TABLE_ITEM_HEIGHT + TABLE_ITEM_MARGIN)) + TABLE_TITLE_HEIGHT + index * TABLE_ITEM_HEIGHT + (index + 1) * TABLE_ITEM_MARGIN + (TABLE_ITEM_HEIGHT - fontsize) / 2 + fontsize - 5,
             )
           }
           if(todo.isEnd) {
