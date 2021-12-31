@@ -23,7 +23,7 @@ const calcDay = dateStrList => {
   for(let i = 0; i < dateStrList.length; i ++) {
     let tn = new Date(dateStrList[i])
     if(n < tn.getTime()) {
-      return ~~((tn.getTime() - n) / 86400000)
+      return ~~((tn.getTime() - n) / 86400000) + 1
     }
   }
   return '∞'
