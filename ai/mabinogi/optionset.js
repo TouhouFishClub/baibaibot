@@ -8,7 +8,8 @@ const { drawTxtImage } = require('../../cq/drawImageBytxt')
 let optionSetObj = []
 const adminUser = new Set([
   799018865,
-  2810232496
+  2810232496,
+  540540678,
 ])
 let saveTmpMap = {
 
