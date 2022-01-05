@@ -122,7 +122,7 @@ const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context
           {
             '$set': {
               Usage: options.UsageQuery,
-              customWhere: context.split('\n').filter(x => x.trim()),
+              customWhere: context.split('\n').map(x => x.replage(/\r/g, '')).filter(x => x.trim()),
               level,
               author
             }
@@ -132,7 +132,7 @@ const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context
         break
       case 'add':
         customWhere = find.customWhere || []
-        customWhere = customWhere.concat(context.split('\n').filter(x => x.trim()))
+        customWhere = customWhere.concat(context.split('\n').map(x => x.replage(/\r/g, '')).filter(x => x.trim()))
         await collection.updateOne(
           { '_id': `${optsNameCN}_${level}` },
           {
@@ -182,7 +182,7 @@ const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context
       case 'set':
         find = {
           '_id': `${optsNameCN}_${level}`,
-          customWhere: context.split('\n').filter(x => x.trim()),
+          customWhere: context.split('\n').map(x => x.replage(/\r/g, '')).filter(x => x.trim()),
           Usage: options.UsageQuery,
           level,
           author
@@ -193,7 +193,7 @@ const optionsetWhereCnHandler = async ( type, author, optsNameCN, level, context
       case 'add':
         find = {
           '_id': `${optsNameCN}_${level}`,
-          customWhere: context.split('\n').filter(x => x.trim()),
+          customWhere: context.split('\n').map(x => x.replage(/\r/g, '')).filter(x => x.trim()),
           Usage: options.UsageQuery,
           level,
           author
