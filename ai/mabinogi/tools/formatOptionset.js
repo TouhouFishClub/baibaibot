@@ -49,6 +49,7 @@ module.exports = function(callback) {
           }
         })
         obj.Buff = buffArr
+        obj.BuffStr = buffArr.join(',')
         obj.Debuff = debuffArr
         effectiveOptionset.push(obj)
       }

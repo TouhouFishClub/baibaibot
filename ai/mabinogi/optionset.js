@@ -109,7 +109,8 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
   const analysisKeywords = keywords => {
     let keywordObj = {
       debuff: [],
-      buff:[]
+      buff:[],
+      buffIgnore: []
     }
     keywords.forEach(keyword => {
       keyword = keyword.trim()
@@ -160,6 +161,8 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
           if(keyword){
             if(keyword.substr(0, 1) == '-'){
               keywordObj.debuff.push(keyword.substring(1))
+            } else if(keyword.startsWith('!') || keyword.startsWith('！') ) {
+              keywordObj.buffIgnore.push(keyword.substring(1))
             } else {
               keywordObj.buff.push(keyword)
             }
@@ -186,8 +189,14 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
     renderMsg(finalArr)
   }
   const searchKeywords = keywords => {
-    let finalArr = []
-    optionSetObj.forEach(optionset => {
+    let finalArr = [], optSetObjFilter = optionSetObj.concat([])
+    /* ignore buff */
+    if(keywords.buffIgnore.length) {
+      keywords.buffIgnore.forEach(ignore => {
+        optSetObjFilter = optSetObjFilter.filter(opt => !opt.BuffStr.match(ignore))
+      })
+    }
+    optSetObjFilter.forEach(optionset => {
       if(!(typeof keywords.Level == 'number') || (keywords.Level && keywords.Level == optionset.LevelQuery)){
         if(!keywords.usage || (keywords.usage && (keywords.usage - 1) == parseInt(optionset.UsageQuery))){
           let buffCheck = true
@@ -244,45 +253,45 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
             keywords.buff.forEach(buff => {
               let optCheck = false
               optionset.Buff.forEach(Buff => {
-	              if(buff.split('>').length > 1) {
-		              let sp = buff.split('>').map(x => x.trim())
-		              if(/\d+/.test(sp[1])) {
-			              let match = Buff.match(/\d+/g) || []
-			              if(
-			              	Buff.match(sp[0]) &&
-				              Buff.match(sp[0]).length &&
-				              match.length > 0 &&
-				              parseInt(match[match.length - 1]) > parseInt(sp[1])
-			              ) {
-				              optCheck = true
-			              }
-		              } else {
-			              if(new RegExp(buff).test(Buff)){
-				              optCheck = true
-			              }
-		              }
-	              } else if (buff.split('<').length > 1) {
-		              let sp = buff.split('<').map(x => x.trim())
-		              if(/\d+/.test(sp[1])) {
-			              let match = Buff.match(/\d+/g) || []
-			              if(
-			              	Buff.match(sp[0]) &&
-				              Buff.match(sp[0]).length &&
-				              match.length > 0 &&
-				              parseInt(match[0]) < parseInt(sp[1])
-			              ) {
-				              optCheck = true
-			              }
-		              } else {
-			              if(new RegExp(buff).test(Buff)){
-				              optCheck = true
-			              }
-		              }
-	              } else {
-		              if(new RegExp(buff).test(Buff)){
-			              optCheck = true
-		              }
-	              }
+                if(buff.split('>').length > 1) {
+                  let sp = buff.split('>').map(x => x.trim())
+                  if(/\d+/.test(sp[1])) {
+                    let match = Buff.match(/\d+/g) || []
+                    if(
+                      Buff.match(sp[0]) &&
+                      Buff.match(sp[0]).length &&
+                      match.length > 0 &&
+                      parseInt(match[match.length - 1]) > parseInt(sp[1])
+                    ) {
+                      optCheck = true
+                    }
+                  } else {
+                    if(new RegExp(buff).test(Buff)){
+                      optCheck = true
+                    }
+                  }
+                } else if (buff.split('<').length > 1) {
+                  let sp = buff.split('<').map(x => x.trim())
+                  if(/\d+/.test(sp[1])) {
+                    let match = Buff.match(/\d+/g) || []
+                    if(
+                      Buff.match(sp[0]) &&
+                      Buff.match(sp[0]).length &&
+                      match.length > 0 &&
+                      parseInt(match[0]) < parseInt(sp[1])
+                    ) {
+                      optCheck = true
+                    }
+                  } else {
+                    if(new RegExp(buff).test(Buff)){
+                      optCheck = true
+                    }
+                  }
+                } else {
+                  if(new RegExp(buff).test(Buff)){
+                    optCheck = true
+                  }
+                }
                 if(new RegExp(buff).test(Buff)){
                   optCheck = true
                 }
