@@ -122,6 +122,8 @@ const { tapFish } = require('./ai/tapfish')
 const {handleSweepReply} = require('./ai/games/sweeping/sweepmain');
 const { calendar } = require('./ai/calendar')
 
+const { renderColorBoard } = require('./ai/mabinogi/renderColor')
+
 let globalConfig = {
 	FLASH_RESEND : false
 }
@@ -1011,6 +1013,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       return
     }
     rp(from, callback)
+    return
+  }
+
+  if(con.endsWith('是什么颜色')) {
+    renderColorBoard(con.substring(0, con.length - 5).trim(), callback)
     return
   }
 
