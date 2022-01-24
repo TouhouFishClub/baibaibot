@@ -236,7 +236,7 @@ function initWS4(){
 
   client.on('connect', function(connection) {
     wsonline = true;
-    console.log('WebSocket Client Connected');
+    console.log('WebSocket Client Connected29335');
     connection.on('error', function(error) {
       console.log("Connection Error: " + error.toString());
     });
@@ -246,11 +246,11 @@ function initWS4(){
     });
     connection.on('message', function(message) {
       if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),4)
+        handleMsg(JSON.parse(message.utf8Data),11)
       }
     });
   });
-  client.connect('ws://192.168.17.52:26335/event');
+  client.connect('ws://192.168.17.52:29335/event');
 }
 
 function initWS5(){
@@ -376,6 +376,8 @@ function addSendQueue(groupid,msg,botqq){
     port = 26334;
   }else if(botqq==5){
     port = 27334;
+  }else if(botqq==11){
+    port = 29334;
   }else{
     port = 23334;
   }
@@ -466,6 +468,7 @@ function handleMsg_D(msgObj,botqq) {
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
+  var self= msgObj.self_id;
   var callback
   var port;
   if(botqq==2){
@@ -476,8 +479,15 @@ function handleMsg_D(msgObj,botqq) {
     port = 26334;
   }else if(botqq==5){
     port = 27334;
+  }else if(botqq==11){
+    port = 29334;
   }else{
-    port = 23334;
+    var sf = (self+"").substring(0,5);
+    if(sf=="38490"){
+      port = 29334;
+    }else{
+      port = 23334;
+    }
   }
 
   var gidstr= groupid+"";
