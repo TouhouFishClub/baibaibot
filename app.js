@@ -14,11 +14,12 @@ const multer = require('multer')
 const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
 const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
 const ports = new Set([
-	23334,
-	24334,
-	25334,
-	26334,
-	27334
+	// 23334,
+	24334, // 2号机 3291864216
+	25334, // 3号机 1840239061
+	// 26334,
+	27334, // 5号机 2771362647
+	29334  // 11号机 384901015
 ])
 let PORT = 24334
 
