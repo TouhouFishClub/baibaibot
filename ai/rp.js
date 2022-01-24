@@ -1,7 +1,7 @@
 const md5 = require("md5")
 const {horoscope} = require("./zodiac");
 
-module.exports = function(qq, callback, other){
+module.exports = function(type, qq, callback, other){
   let str = `${other || qq}${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
   let md = md5(str)
   let rp = parseInt(md.substring(0, 15), 16).toString().split('').reduce((p, c) => p + parseInt(c), 0)
@@ -25,6 +25,10 @@ module.exports = function(qq, callback, other){
     else {
       rp = 100
     }
+  }
+  if(type == 'ignoreDesc') {
+    callback(`[CQ:at,qq=${other}] 今天的运势指数是 ${rp}% ！\n${new Array(rp).fill('|').join('')}`)
+    return
   }
   if(other) {
     callback(`[CQ:at,qq=${other}] 今天的运势指数是 ${rp}% ！\n${new Array(rp).fill('|').join('')}`)

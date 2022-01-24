@@ -1007,12 +1007,21 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(con.startsWith('jrrp') || con.startsWith('今日运势')){
     let s = con.substring(4).trim()
     //[CQ:at,qq=395338563]
-    if(s.startsWith('[CQ:at')){
-      s = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
-      rp(from, callback, s)
+
+    let banJrrpSet = new Set([
+      1072617253
+    ])
+
+    if(banJrrpSet.has(groupid)) {
+      rp('ignoreDesc', from, callback, 'ignoreDesc')
       return
     }
-    rp(from, callback)
+    if(s.startsWith('[CQ:at')){
+      s = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
+      rp('normal', from, callback, s)
+      return
+    }
+    rp('normal', from, callback)
     return
   }
 
