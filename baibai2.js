@@ -466,6 +466,7 @@ function handleMsg_D(msgObj,botqq) {
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
+  var self= msgObj.self_id;
   var callback
   var port;
   if(botqq==2){
@@ -479,7 +480,12 @@ function handleMsg_D(msgObj,botqq) {
   }else if(botqq==11){
     port = 29334;
   }else{
-    port = 23334;
+    var sf = (self+"").substring(0,5);
+    if(sf=="38490"){
+      port = 29334;
+    }else{
+      port = 23334;
+    }
   }
 
   var gidstr= groupid+"";
