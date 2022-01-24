@@ -473,7 +473,7 @@ function handleMsg_D(msgObj,botqq) {
   }else if(botqq==3){
     port = 25334;
   }else if(botqq==4){
-    port = 26334;
+    port = 29334;
   }else if(botqq==5){
     port = 27334;
   }else{
