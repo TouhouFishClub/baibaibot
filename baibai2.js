@@ -246,7 +246,7 @@ function initWS4(){
     });
     connection.on('message', function(message) {
       if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),4)
+        handleMsg(JSON.parse(message.utf8Data),11)
       }
     });
   });
@@ -473,9 +473,11 @@ function handleMsg_D(msgObj,botqq) {
   }else if(botqq==3){
     port = 25334;
   }else if(botqq==4){
-    port = 29334;
+    port = 26334;
   }else if(botqq==5){
     port = 27334;
+  }else if(botqq==11){
+    port = 29334;
   }else{
     port = 23334;
   }
