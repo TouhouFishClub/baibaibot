@@ -27,7 +27,7 @@ module.exports = function(type, qq, callback, other){
     }
   }
   if(type == 'ignoreDesc') {
-    callback(`[CQ:at,qq=${other}] 今天的运势指数是 ${rp}% ！\n${new Array(rp).fill('|').join('')}`)
+    callback(`[CQ:at,qq=${qq}] 今天的运势指数是 ${rp}% ！\n${new Array(rp).fill('|').join('')}`)
     return
   }
   if(other) {
