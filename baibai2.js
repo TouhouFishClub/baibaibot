@@ -1008,26 +1008,17 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     let s = con.substring(4).trim()
     //[CQ:at,qq=395338563]
 
-    let banJrrpSet = new Set([
-      1072617253
-    ])
-
-    if(banJrrpSet.has(groupid)) {
-      rp('ignoreDesc', from, callback, 'ignoreDesc')
-      return
-    }
     if(s.startsWith('[CQ:at')){
       s = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
-      rp('normal', from, callback, s)
+      rp(from, callback, s)
       return
     }
-
-    let ignoreSet = new Set([
+    let ignoreJrrpDestSet = new Set([
       577587780,
       1072617253
     ])
 
-    if(ignoreSet.has(groupid)) {
+    if(ignoreJrrpDestSet.has(groupid)) {
       rp(from, callback, from)
       return
     }
