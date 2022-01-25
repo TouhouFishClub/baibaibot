@@ -1012,6 +1012,16 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       rp(from, callback, s)
       return
     }
+
+    let ignoreSet = new Set([
+      577587780,
+      1072617253
+    ])
+
+    if(ignoreSet.has(groupid)) {
+      rp(from, callback, from)
+      return
+    }
     rp(from, callback)
     return
   }
