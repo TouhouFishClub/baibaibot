@@ -426,7 +426,13 @@ function handleMsg(msgObj,botqq){
 function handleMsg_D0(msgObj,botqq){
 
   //TODO: 目前百百会接受自己的发言，暂时先这样处理
-  if(new Set([981069482, 3291864216, 1840239061, 2771362647]).has(msgObj.user_id)) {
+  if(new Set([
+    981069482,
+    3291864216,
+    1840239061,
+    2771362647,
+    384901015
+  ]).has(msgObj.user_id)) {
     return
   }
 
