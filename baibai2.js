@@ -580,9 +580,9 @@ function handleMsg_D(msgObj,botqq) {
   if (type == 'private') {
     var userid = msgObj.user_id;
     callback = function (res) {
-      if(port == 29334) {
-        return
-      }
+      // if(port == 29334) {
+      //   return
+      // }
       if (res.trim().length > 0) {
         setTimeout(function () {
           var options = {
