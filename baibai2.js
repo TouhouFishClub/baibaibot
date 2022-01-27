@@ -578,9 +578,9 @@ function handleMsg_D(msgObj,botqq) {
   if (type == 'private') {
     var userid = msgObj.user_id;
     callback = function (res) {
-      // if(port == 29334) {
-      //   return
-      // }
+      if(port == 29334) {
+        return
+      }
       if (res.trim().length > 0) {
         setTimeout(function () {
           var options = {
@@ -1307,7 +1307,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(port!=23334){
+  if(!new Set([23334, 29334]).has(port)){
 
     if(rcontent.startsWith("炼铜1")){
       copperReply(rcontent,groupid,from,callback,port);
