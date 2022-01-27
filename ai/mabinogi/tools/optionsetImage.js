@@ -145,7 +145,7 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
   renderTextBox(ctx, 12, 77, 376, buffHeight + 50, 10, '道具属性')
 
   ctx.fillStyle = theme.text;
-  ctx.fillText(`${obj.LocalName}(${obj.Usage}:等级${obj.Level})`, 25, 117)
+  ctx.fillText(`${obj.LocalName}${obj.LocalName2 == obj.LocalName ? '' : ` / ${obj.LocalName2}`}(${obj.Usage}:等级${obj.Level})`, 25, 117)
 
   renderBuffText(ctx, objArr, 117, 25, 25)
 
