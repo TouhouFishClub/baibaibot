@@ -507,7 +507,6 @@ function handleMsg_D(msgObj,botqq) {
   }
   if(!force){
     if((
-        gidstr.startsWith("20570")||
         gidstr.startsWith("22169")||
         gidstr.startsWith("74633")||
         gidstr.startsWith("22169")||
@@ -521,7 +520,6 @@ function handleMsg_D(msgObj,botqq) {
       return;
     }
     if((
-        gidstr.startsWith("20570")||
         gidstr.startsWith("22169")||
         gidstr.startsWith("xxxxx")
 
@@ -531,7 +529,7 @@ function handleMsg_D(msgObj,botqq) {
     if((
         gidstr.startsWith("20570")||
         gidstr.startsWith("xxxxx")
-        )&&port==27334){
+      )&&port!=24334){
       return;
     }
   }else{
