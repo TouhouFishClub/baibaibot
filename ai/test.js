@@ -196,20 +196,20 @@ const testItem = [
 
 const { createComposition } = require('./composition')
 
-console.log(`2534260833 小号浓度为 ${createComposition(2534260833, '小号')}%`)
+// console.log(`2534260833 小号浓度为 ${createComposition(2534260833, '小号')}%`)
 
-// let arr = [], count = 10000
-// for(let i = 0; i < count; i ++) {
-//   let id = ~~(Math.random() * 100000000),
-//     item = testItem[~~(testItem.length * Math.random())],
-//     c = createComposition(id, item)
-//   console.log(`${id} - ${item} = ${c}`)
-//   arr.push(c)
-// }
-//
-// console.log('=== count ===')
-// const cut = [10, 50, 90, 95, 99, 100]
-// console.log(cut.map((x, i, a) => i ? `${a[i - 1]} ~ ${x} : ${arr.filter(f => f >= a[i - 1] && f < x).length}（${arr.filter(f => f >= a[i - 1] && f < x).length / count * 100}%）` : `< ${x} : ${arr.filter(f => f < x).length}（${arr.filter(f => f < x).length / count * 100}%）`).concat([`>= ${cut[cut.length - 1]} : ${arr.filter(f => f >= cut[cut.length - 1]).length}（${arr.filter(f => f >= cut[cut.length - 1]).length / count * 100}%）`]).join('\n'))
+let arr = [], count = 1000000
+for(let i = 0; i < count; i ++) {
+  let id = ~~(Math.random() * 100000000),
+    item = testItem[~~(testItem.length * Math.random())],
+    c = createComposition(id, item)
+  // console.log(`${id} - ${item} = ${c}`)
+  arr.push(c)
+}
+
+console.log('=== count ===')
+const cut = [2, 10, 50, 90, 95, 99, 100]
+console.log(cut.map((x, i, a) => i ? `${a[i - 1]} ~ ${x} : ${arr.filter(f => f >= a[i - 1] && f < x).length}（${arr.filter(f => f >= a[i - 1] && f < x).length / count * 100}%）` : `< ${x} : ${arr.filter(f => f < x).length}（${arr.filter(f => f < x).length / count * 100}%）`).concat([`>= ${cut[cut.length - 1]} : ${arr.filter(f => f >= cut[cut.length - 1]).length}（${arr.filter(f => f >= cut[cut.length - 1]).length / count * 100}%）`]).join('\n'))
 
 // const { fetchTencentApi } = require('./CoV2019ByTencentApi');
 //

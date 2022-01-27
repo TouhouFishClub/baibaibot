@@ -1005,6 +1005,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(con.startsWith('jrrp') || con.startsWith('今日运势')){
+    if(port == 29334){
+      return
+    }
     let s = con.substring(4).trim()
     //[CQ:at,qq=395338563]
 
@@ -1281,17 +1284,26 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(rcontent.startsWith("抽卡")){
+    if(port == 29334){
+      return
+    }
     drawNameCard(name,from,callback,groupid);
     return;
   }
 
 
   if(rcontent.startsWith("猫图")||rcontent.startsWith("吸猫")){
+    if(port == 29334){
+      return
+    }
     catreply(rcontent.substring(2),from,callback);
     return;
   }
 
   if(port!=23334){
+    if(port == 29334){
+      return
+    }
     if(rcontent.startsWith("炼铜1")){
       copperReply(rcontent,groupid,from,callback,port);
       return;
@@ -1303,8 +1315,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     }
   }
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
-      runsetu(rcontent,groupid,from,callback,port);
-      return;
+    if(port == 29334){
+      return
+    }
+    runsetu(rcontent,groupid,from,callback,port);
+    return;
   }
 
 
@@ -1424,6 +1439,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   if(content.indexOf('百百')>-1){
+    if(port == 29334){
+      return
+    }
     tulingMsg(from,content.trim(),callback,groupid);
     return;
   }
