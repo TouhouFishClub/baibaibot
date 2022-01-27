@@ -35,6 +35,7 @@ module.exports = function(callback) {
         obj.ID = val.custom ? `cu${val.ID}` : val.ID
         obj.Name = val.Name
         obj.LocalName = val.custom ? val.LocalName : transform[val.LocalName]
+        obj.LocalName2 = val.custom ? val.LocalName : transform[val.LocalName2]
         obj.OptionDesc = val.custom ? val.OptionDesc : transform[val.OptionDesc]
         obj.LevelQuery = 16 - val.Level
         obj.Level = 16 - val.Level < 10 ? 16 - val.Level : ['A', 'B', 'C', 'D', 'E', 'F', '练习'][6 - val.Level]

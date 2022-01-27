@@ -182,7 +182,7 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
     let finalArr = []
     optionSetObj.forEach(optionset => {
       // console.log(optionset)
-      if(new RegExp(name).test(optionset.LocalName)){
+      if(new RegExp(name).test(optionset.LocalName) || new RegExp(name).test(optionset.LocalName2)){
         finalArr.push(optionset)
       }
     })
