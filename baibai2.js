@@ -974,6 +974,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	  return
   }
 
+  if(content == '123') {
+    callback('456')
+  }
+
   if(content == '查询红包活动') {
     mabinogi_red_packet(callback)
 	  return
