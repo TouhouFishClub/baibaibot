@@ -11,7 +11,7 @@ function handleGaReply(content,gid,qq,callback){
   }
 }
 
-function generateGaImage(utext){
+function generateGaImage(utext,callback){
   var img1 = new imageMagick("static/mali.jpg");
   img1.autoOrient()
     .fontSize(25)
