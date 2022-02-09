@@ -2,7 +2,7 @@ var gm = require('gm')
 var request = require("request");
 var fs = require("fs");
 var imageMagick = gm.subClass({ imageMagick : true });
-var {sendGmImage} = require('../../../cq/sendImage');
+var {sendGmImage} = require('../../cq/sendImage');
 
 function handleGaReply(content,gid,qq,callback){
   content = content.trim();
