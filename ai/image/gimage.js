@@ -24,7 +24,7 @@ function generateGaImage(utext,callback){
     console.log(222);
     console.log(err);
   })
-  sendGmImage(img1,callback,1);
+  sendGmImage(img1,'',callback,1);
 
 }
 
