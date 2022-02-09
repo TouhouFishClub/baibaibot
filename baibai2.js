@@ -121,6 +121,7 @@ const { composition, groupCompositionRank } = require('./ai/composition')
 const { tapFish } = require('./ai/tapfish')
 const {handleSweepReply} = require('./ai/games/sweeping/sweepmain');
 const { calendar } = require('./ai/calendar')
+const {handleGaReply} = require('./ai/image/gimage');
 
 const { renderColorBoard } = require('./ai/mabinogi/renderColor')
 const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
@@ -1350,6 +1351,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     }
     runsetu(rcontent,groupid,from,callback,port);
     return;
+  }
+  if(rcontent.startsWith("玛丽")){
+     handleGaReply(content,groupid,from,callback);
+     return;
   }
 
 
