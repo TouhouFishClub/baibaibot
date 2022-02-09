@@ -1353,7 +1353,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   if(rcontent.startsWith("玛丽")){
-     handleGaReply(content,groupid,from,callback);
+     handleGaReply(content.substring(2),groupid,from,callback);
      return;
   }
 
