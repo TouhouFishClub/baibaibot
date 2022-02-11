@@ -991,7 +991,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	  return
   }
 
-  if(content.match(/^尔格\d{1,2}强化\d{1,5}手$/)) {
+  if(content.match(/^尔格\d{1,2}突破\d{1,5}手$/)) {
     ergo(from, content, callback)
   }
 
