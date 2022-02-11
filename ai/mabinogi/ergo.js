@@ -45,7 +45,7 @@ const ergo = (qq, content, callback) => {
     }
   }
   if(!flag) {
-    callback(`[CQ:at,qq=${qq}] 你尔格${level}突破${tryCount}没成功${tryCount > 300 ? '，真非' : ''}`)
+    callback(`[CQ:at,qq=${qq}] 你尔格${level}突破${tryCount}手没成功${tryCount >= 300 ? '，真非' : ''}`)
   }
 }
 
