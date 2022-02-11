@@ -19,19 +19,19 @@ const ergo = (qq, content, callback) => {
       rare = .15
       break
     case '25':
-      rare = .5
+      rare = .05
       break
     case '30':
-      rare = .2
+      rare = .02
       break
     case '35':
-      rare = .1
+      rare = .01
       break
     case '40':
-      rare = .07
+      rare = .007
       break
     case '45':
-      rare = .03
+      rare = .003
       break
     default:
       callback(`${level}不是突破等级`)
