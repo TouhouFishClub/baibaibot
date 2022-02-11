@@ -38,14 +38,15 @@ const ergo = (qq, content, callback) => {
       return
   }
   for(let i = 0; i < tryCount; i ++) {
-    if(Math.random() < rare) {
+    let currentRare = 1 - Math.pow((1 - rare), i + 1)
+    if(Math.random() < currentRare) {
       flag = true
-      callback(`[CQ:at,qq=${qq}] 你第${i + 1}手突破${level}级（${(rare*100).toFixed(2)}%）`)
+      callback(`[CQ:at,qq=${qq}] 你第${i + 1}手突破${level}级（${(rare*100).toFixed(2)}%）, 当前概率（${(currentRare*100).toFixed(2)}%）`)
       break
     }
   }
   if(!flag) {
-    callback(`[CQ:at,qq=${qq}] 你尔格${level}突破（${(rare*100).toFixed(2)}%）${tryCount}手没成功${tryCount >= 300 ? '，真非' : ''}`)
+    callback(`[CQ:at,qq=${qq}] 你尔格${level}突破（${(rare*100).toFixed(2)}%）${tryCount}手没成功${tryCount >= 300 ? '，真非' : ''}, 当前概率（${(currentRare*100).toFixed(2)}%）`)
   }
 }
 
