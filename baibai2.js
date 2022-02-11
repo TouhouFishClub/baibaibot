@@ -126,6 +126,8 @@ const {handleGaReply} = require('./ai/image/gimage');
 const { renderColorBoard } = require('./ai/mabinogi/renderColor')
 const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
 
+const { ergo } = require('./ai/mabinogi/ergo')
+
 let globalConfig = {
 	FLASH_RESEND : false
 }
@@ -987,6 +989,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content == '查询自动发送') {
     mabinogi_red_packet_list(callback)
 	  return
+  }
+
+  if(content.match(/^尔格\d{1,2}强化\d{1,5}手$/)) {
+    ergo(from, content, callback)
   }
 
   let con =content.trim(), fi = con.substring(0,4)
