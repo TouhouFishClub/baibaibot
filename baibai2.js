@@ -83,6 +83,7 @@ const and = require('./ai/arknights/arkNightsBuildingTheme')
 const anchan = require('./ai/arknights/arkNightsChallenge')
 const anp = require('./ai/arknights/arkNightsCharacterCompare')
 const { arkCalendar } = require('./ai/arknights/arkNightsCalendar')
+const { mabiCalendar } = require('./ai/mabinogi/mabiCalendar')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 const {runsetu} = require('./ai/games/card/setu');
@@ -1134,6 +1135,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(con == '方舟老黄历') {
     arkCalendar(callback)
+  }
+  if(con == '洛奇老黄历') {
+    mabiCalendar(callback)
   }
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)
