@@ -4,27 +4,27 @@ const fs = require('fs'),
   { sendImageMsgBuffer } = require('../../../cq/sendImage.js')
 // const gm = require('gm')
 // let imageMagick = gm.subClass({ imageMagick : true });
-// const theme = {
-// 	bg: 'rgba(0,0,20,0.9)',
-// 	buff: 'rgba(16,131,255,1)',
-// 	debuff: 'rgba(251,0,7,1)',
-// 	border: 'rgba(204,204,204,1)',
-// 	tagbg: 'rgba(0,0,0,1)',
-// 	tag: 'rgba(238,78,7,1)',
-// 	text: 'rgba(255,255,255,1)',
-// }
+const theme = {
+	bg: 'rgba(0,0,20,0.9)',
+	buff: 'rgba(16,131,255,1)',
+	debuff: 'rgba(251,0,7,1)',
+	border: 'rgba(204,204,204,1)',
+	tagbg: 'rgba(0,0,0,1)',
+	tag: 'rgba(238,78,7,1)',
+	text: 'rgba(255,255,255,1)',
+}
 
 let fontFamily = 'STXIHEI'
 
-const theme = {
-	bg: 'rgba(255,255,255,1)',
-	buff: 'rgb(252,104,8)',
-	debuff: 'rgba(20,254,224,1)',
-	border: 'rgba(125,124,120,1)',
-	tagbg: 'rgba(255,255,255,1)',
-	tag: 'rgba(5,145,241,1)',
-	text: 'rgba(0,0,0,1)',
-}
+// const theme = {
+// 	bg: 'rgba(255,255,255,1)',
+// 	buff: 'rgb(252,104,8)',
+// 	debuff: 'rgba(20,254,224,1)',
+// 	border: 'rgba(125,124,120,1)',
+// 	tagbg: 'rgba(255,255,255,1)',
+// 	tag: 'rgba(5,145,241,1)',
+// 	text: 'rgba(0,0,0,1)',
+// }
 
 const checkMaxWidth = (ctx, str, maxWidth) => {
   let start = 0, splitArr = []
