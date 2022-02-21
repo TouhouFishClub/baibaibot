@@ -581,6 +581,7 @@ function handleMsg_D(msgObj,botqq) {
 
 
   if (type == 'private') {
+    return
     var userid = msgObj.user_id;
     callback = function (res) {
       if(port == 29334) {
