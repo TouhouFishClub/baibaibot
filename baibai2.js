@@ -581,7 +581,6 @@ function handleMsg_D(msgObj,botqq) {
 
 
   if (type == 'private') {
-    return
     var userid = msgObj.user_id;
     callback = function (res) {
       return;
