@@ -584,9 +584,8 @@ function handleMsg_D(msgObj,botqq) {
     return
     var userid = msgObj.user_id;
     callback = function (res) {
-      if(port == 29334) {
-        return
-      }
+      return;
+
       if (res.trim().length > 0) {
         setTimeout(function () {
           var options = {
