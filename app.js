@@ -85,35 +85,16 @@ app.listen('10086', () => {
   console.log('http://localhost:10086')
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const checkAuth = (req, res) => new Promise((resolve, reject) => {
+  const user = basicAuth(req)
+  if (!user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111') {
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required')
+    res.send(401)
+    reject('ERROR AUTH')
+  } else {
+    resolve('success')
+  }
+})
 
 
 app.get('/chathistory',function(req,res){
@@ -243,7 +224,7 @@ app.post('/textCheck',function(req,res){
 
 app.get('/chat', (req, res) => {
   var user = basicAuth(req);
-  // var check = !user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111';
+  // var check = !user || !user.name || !user.pass || user.name != 'aaa' || use r.pass != '111';
   var check = false
   if(!check){
     res.redirect("/baibai-group-logs/dist/index.html")
