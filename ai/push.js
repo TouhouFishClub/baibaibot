@@ -86,7 +86,7 @@ function pushToGroup(type) {
                   "Content-Type":"application/json"
               },
               method: "POST",
-              url: 'http://192.168.17.52:'+24334+'/send_group_msg',
+              url: 'http://'+require('../baibaiConfigs').myip+':'+24334+'/send_group_msg',
               body: JSON.stringify(bdy)
           }, function(error, response, body) {
               if (error && error.code) {

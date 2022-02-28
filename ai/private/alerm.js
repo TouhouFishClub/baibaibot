@@ -94,7 +94,7 @@ function alermUserShake(qq){
 
 function alermUser(qq,content){
   var options = {
-    host: '192.168.17.52',
+    host: require('../../baibaiConfigs').myip,
     port: 23334,
     path: '/send_private_msg?user_id='+qq+'&message='+encodeURIComponent(content),
     method: 'GET',
