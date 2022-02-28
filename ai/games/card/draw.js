@@ -270,6 +270,7 @@ function saveCard(qq,cardName){
       console.log('mongo errorj:!!!!!!!!!');
       console.log(err);
     }else {
+//      var cl_ucard = db.db("db_bot").collection('cl_ucard');
       var cl_ucard = db.collection('cl_ucard');
       var query = {'_id': qq};
       cl_ucard.findOne(query, function (err, data) {

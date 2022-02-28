@@ -4,7 +4,7 @@ var MongoClient = require('mongodb').MongoClient;
 var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
 var fs = require('fs');
 var request = require('request');
-
+const md5 = require("md5")
 
 function fetch0(id,gamename,gameimg){
   console.log(id,gamename,gameimg);
@@ -128,6 +128,12 @@ function fetchGame(id,lastret,page,gamename,gameimg){
 
 
 function handleGameDesp(gamename,desArr,id,gameimg){
+  try{
+    fs.mkdirSync("4df/"+id+"/");
+  }catch(e){
+
+  }
+
   var imgreq = request({
     url: gameimg,
     method: "GET",
@@ -140,7 +146,7 @@ function handleGameDesp(gamename,desArr,id,gameimg){
       console.log('pipe error catched!')
       console.log(error);
     }
-  }).pipe(fs.createWriteStream("2df/g_"+id+"_"+gamename));
+  }).pipe(fs.createWriteStream("4df/"+id+"/g_"+id));
   imgreq.on('error',function(err){
     console.log(err);
   });
@@ -195,12 +201,8 @@ function handleGameDesp(gamename,desArr,id,gameimg){
 
 function saveChar(gamename,char,charimg,chara,id,gameimg){
   var n1=char.indexOf('\n');
-  var imgname;
-  if(n1>0){
-    imgname = "2df/"+id+"_"+char.substring(0,n1);
-  }else{
-    imgname = "2df/"+id+"_"+char;
-  }
+  var imgname = "4df/"+id+"/"+md5(char).substring(0,6);
+
 
 
   MongoClient.connect(mongourl, function(err, db) {
@@ -216,7 +218,7 @@ function saveChar(gamename,char,charimg,chara,id,gameimg){
         console.log('pipe error catched!')
         console.log(error);
       }
-    }).pipe(fs.createWriteStream("2df/"+id+"_"+char));
+    }).pipe(fs.createWriteStream(imgname));
     imgreq.on('error',function(err){
       console.log(err);
     });
@@ -224,9 +226,9 @@ function saveChar(gamename,char,charimg,chara,id,gameimg){
 
 
     imgreq.on('close',function(){
-      var cl_card_2df = db.collection('cl_2df_card');
+      var cl_card_2df = db.collection('cl_sdf_card');
       var Obj =  {'_id':gamename+":"+char,imgurl:charimg,img:imgname,d:chara,ts:new Date(),
-        gameid:id,gimgurl:gameimg,gimg:id+"_"+gamename};
+        gameid:id,gimgurl:gameimg,gimg:id};
       cl_card_2df.save(Obj,function(){
         db.close();
       });
@@ -243,7 +245,7 @@ function saveGame(gamename,desa,id){
       console.log('mongo error2:!!!!!!!!!');
       console.log(err);
     }else {
-      var cl_game_2df = db.collection('cl_2df_game');
+      var cl_game_2df = db.collection('cl_sdf_game');
       var Obj = {'_id': gamename, id: id, d: desa, ts: new Date()};
       cl_game_2df.save(Obj, function () {
         db.close();
@@ -252,10 +254,10 @@ function saveGame(gamename,desa,id){
   });
 }
 
-var wid=3;
+var wid=1;
 function fetchRank(wid){
   if(!wid){
-    wid=3
+    wid=1
   }
   console.log('widddddddddddddddddddddd:'+wid);
   var url = 'https://www.2dfan.com/subjects/page/'+wid+'?order=comments_count';
@@ -317,14 +319,57 @@ function run(){
     run();
   },3000)
 }
-run()
+
+run();
+
+function fixPicName(){
+  MongoClient.connect(mongourl, function(err, db) {
+    if(err){
+      console.log('mongo error2:!!!!!!!!!');
+      console.log(err);
+    }else {
+      var cl_2df_card = db.collection('cl_2df_card');
+      var m = {};
+      cl_2df_card.find().toArray(function(err, cardArr) {
+        for(var i=0;i<cardArr.length;i++){
+          var card = cardArr[i];
+          var img = card.img;
+          var gameid = card.gameid;
+          var gimg = card.gimg;
+          if(!m[gameid]){
+            fs.mkdirSync("2fd/"+gameid);
+            m[gameid]=1;
+            try{
+              let readStream = fs.createReadStream("2df/g_"+gimg);
+              readStream.pipe(fs.createWriteStream("2fd/"+gameid+"/g_"+gameid));
+            }catch(e){
+              console.log(e);
+            }
+          }else{
+            m[gameid]=m[gameid]+1;
+          }
+          var fn = "2fd/"+gameid+"/"+gameid+"_"+(m[gameid]<10?("0"+m[gameid]):m[gameid]);
+          try{
+            let readStream = fs.createReadStream(img);
+            readStream.pipe(fs.createWriteStream(fn));
+          }catch(e){
+            console.log(e);
+          }
+          cl_2df_card.updateOne(card,{'$set':{img:fn,gimg:"2fd/"+gameid+"/g_"+gameid}})
+          console.log(card._id);
+        }
+      })
+    }
+  });
+}
 
 
 
 
 module.exports={
   fetchGame,
-  fetchRank
+  fetchRank,
+  fixPicName
 }
 
 

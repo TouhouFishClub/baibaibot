@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var mongourl = 'mongodb://192.168.17.52:27050/db_maze';
+var mongourl = require('../../baibaiConfigs').mongourl;
 
 var fs = require('fs');
 

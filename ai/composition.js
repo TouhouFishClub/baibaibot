@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
-const MONGO_URL = 'mongodb://192.168.17.52:27050'
+const MONGO_URL = require('../baibaiConfigs').mongourl;
 const http = require('http')
 const md5 = require("md5")
 const { drawTxtImage } = require('../cq/drawImageBytxt')

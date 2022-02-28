@@ -110,6 +110,66 @@ function googleTranslate(content,tolan,callback){
   req.end();
 }
 
+
+const crypto=require('crypto');
+var request = require('request');
+function translateYouDao(content,tolan,callback) {
+    var appKey = '312ed77111707e2b';
+    var key = 'fzJUxGaSwrwH69K0LHAYVEHagXHf6ZgQ';//注意：暴露appSecret，有被盗用造成损失的风险
+    var salt = new Date().getTime();
+    var curtime = Math.round(new Date().getTime()/1000);
+    var query = '您好，欢迎再次使用有道智云文本翻译API接口服务';
+    var from = 'auto';
+    var to = tolan;
+    var str1 = appKey + truncate(query) + salt + curtime + key;
+    var sign = crypto.createHash('sha256').update(str1).digest('hex');
+
+    var bdy = {
+        q: query,
+        appKey: appKey,
+        salt: salt,
+        from: from,
+        to: to,
+        sign: sign,
+        signType: "v3",
+        curtime: curtime,
+    }
+    console.log(bdy);
+    var url = 'http://openapi.youdao.com/api';
+    request({
+        url: url,
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify(bdy)
+
+    }, function(error, response, body) {
+        if (error && error.code) {
+            console.log('pipe error catched!')
+            console.log(error);
+        } else {
+          console.log(body);
+        }
+    });
+}
+translateYouDao('','en',function(){});
+
+
+
+function truncate(q){
+    var len = q.length;
+    if(len<=20) return q;
+    return q.substring(0, 10) + len + q.substring(len-10, len);
+}
+
+
+
+
+
+
+
+
 module.exports={
   translateMsg
 }

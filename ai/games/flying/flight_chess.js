@@ -7,7 +7,7 @@ var map=[];
 var img=[];
 
 
-
+init();
 function init(){
     for(var i=1;i<=52;i++){
         var color = i%4
@@ -258,8 +258,8 @@ function generateImage(callback,wd){
             }
         }
     }
-    //img1.write("1.png",function(err){})
-    sendGmImage(img1,wd,callback,1);
+    img1.write("1.png",function(err){})
+    //sendGmImage(img1,wd,callback,1);
 }
 
 
