@@ -171,7 +171,7 @@ function initWS(){
       }
     });
   });
-  client.connect('ws://192.168.17.52:23335/event');
+  client.connect('ws://192.168.17.236:23335/event');
 }
 
 function initWS2(){
@@ -199,7 +199,7 @@ function initWS2(){
       }
     });
   });
-  client.connect('ws://192.168.17.52:24335/event');
+  client.connect('ws://192.168.17.236:24335/event');
 }
 
 function initWS3(){
@@ -227,7 +227,7 @@ function initWS3(){
       }
     });
   });
-  client.connect('ws://192.168.17.52:25335/event');
+  client.connect('ws://192.168.17.236:25335/event');
 }
 
 function initWS4(){
@@ -255,7 +255,7 @@ function initWS4(){
       }
     });
   });
-  client.connect('ws://192.168.17.52:29335/event');
+  client.connect('ws://192.168.17.236:29335/event');
 }
 
 function initWS5(){
@@ -283,7 +283,7 @@ function initWS5(){
             }
         });
     });
-    client.connect('ws://192.168.17.52:27335/event');
+    client.connect('ws://192.168.17.236:27335/event');
 }
 
 function reconnect(){
@@ -405,7 +405,7 @@ function addSendQueue(groupid,msg,botqq){
             "Content-Type":"application/json"
         },
         method: "POST",
-        url: 'http://192.168.17.52:'+port+'/send_group_msg',
+        url: 'http://192.168.17.236:'+port+'/send_group_msg',
         body: JSON.stringify(bdy)
     }, function(error, response, body) {
         if (error && error.code) {
@@ -586,7 +586,7 @@ function handleMsg_D(msgObj,botqq) {
       if (res.trim().length > 0) {
         setTimeout(function () {
           var options = {
-            host: '192.168.17.52',
+            host: '192.168.17.236',
             port: port,
             path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(res),
             method: 'GET',
@@ -650,7 +650,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.startsWith("w")){
 
     var options = {
-      host: '192.168.17.52',
+      host: '192.168.17.236',
       port: 11005,
       path: '/c?d='+encodeURIComponent(content)+'&gid='+groupid+"&name="+encodeURIComponent(name)+"&qq="+from+"&port="+port,
       method: 'GET',
