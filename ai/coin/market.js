@@ -113,7 +113,7 @@ getFixer();
 
 var https = require('https');
 var HttpsProxyAgent = require('https-proxy-agent')
-var proxy = 'http://'+require('../baibaiConfigs').myip+':2346';
+var proxy = 'http://'+require('../../baibaiConfigs').myip+':2346';
 var agent = new HttpsProxyAgent(proxy);
 var failed = 0;
 var USDCNYRATE = 6.3;
