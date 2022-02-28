@@ -4,7 +4,7 @@ var request = require('request');
 var fs = require('fs');
 
 var MongoClient = require('mongodb').MongoClient;
-var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
+var mongourl = require('../../../baibaiConfigs').mongourl;
 var path = require('path');
 var fs = require('fs');
 

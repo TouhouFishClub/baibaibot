@@ -9,7 +9,7 @@ const tulingApiKey5 = "1e2460c2c13143b5becda32deab42742";
 
 const {baiduVoice} = require('../ai/voice/baiduvoice')
 var MongoClient = require('mongodb').MongoClient;
-var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
+var mongourl = require('../baibaiConfigs').mongourl;
 var limit = {};
 var request = require('request');
 

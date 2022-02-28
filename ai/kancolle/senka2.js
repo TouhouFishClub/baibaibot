@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var mongourl = 'mongodb://192.168.17.52:27050/db_senka';
+var mongourl = require('../../baibaiConfigs').mongourl;
 var request = require('request');
 var Axios = require('axios');
 var fs = require('fs');

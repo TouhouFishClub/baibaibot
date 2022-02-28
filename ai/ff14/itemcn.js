@@ -5,7 +5,7 @@ const phantom = require('phantom');
 const {baiduocr} = require('../image/baiduocr');
 
 var MongoClient = require('mongodb').MongoClient;
-var mongourl = 'mongodb://192.168.17.52:27050/db_ff14';
+var mongourl = require('../../baibaiConfigs').mongoff14url
 var path = require('path');
 var request = require("request");
 var fs = require('fs');

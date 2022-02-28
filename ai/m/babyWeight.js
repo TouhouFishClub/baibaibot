@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var mongourl = 'mongodb://192.168.17.52:27050/db_baby';
+var mongourl = require('../../baibaiConfigs').mongourl;
 var udb;
 initDB();
 function initDB(){

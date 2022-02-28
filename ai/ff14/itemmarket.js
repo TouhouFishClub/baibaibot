@@ -27,7 +27,7 @@ var cookiecat = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; PHPSESSID
 
 
 var MongoClient = require('mongodb').MongoClient;
-var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
+var mongourl = require('../../baibaiConfigs').mongourl;
 var udb;
 initDB();
 function initDB(){

@@ -5,7 +5,7 @@ const https = require('https')
 const querystring =  require('querystring')
 const iconv = require('iconv-lite')
 const MongoClient = require('mongodb').MongoClient
-const MONGO_URL = 'mongodb://192.168.17.52:27050/db_bot'
+const MONGO_URL = require('../../baibaiConfigs').mongourl;
 // const MONGO_URL = 'mongodb://127.0.0.1:27017/db_bot'
 
 let client, collection

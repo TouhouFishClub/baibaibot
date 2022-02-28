@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var mongourl = 'mongodb://192.168.17.52:27050/db_bot';
+var mongourl = require('../../baibaiConfigs').mongourl;
 var gm = require('gm')
 var request = require("request");
 var imageMagick = gm.subClass({ imageMagick : true });
