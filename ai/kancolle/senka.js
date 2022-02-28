@@ -152,7 +152,7 @@ function searchsenka2(server,userName,name,callback,qq){
   }else{
     console.log('will get');
     var options = {
-      hostname: "192.168.17.52",
+      hostname: require('../../baibaiConfigs').myip,
       port: 12450,
       path: "/api/ca2?server="+server,
       headers: {

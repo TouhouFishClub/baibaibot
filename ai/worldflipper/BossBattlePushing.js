@@ -154,7 +154,7 @@ const pusher = data => {
     formatStack()
     pushingList.forEach(groupId => {
       let options = {
-        host: '192.168.17.52',
+        host: require('../../baibaiConfigs').myip,
         port: 23334,
         path: `/send_group_msg?group_id=${groupId}&message=${encodeURIComponent(renderData)}`,
         method: 'GET',

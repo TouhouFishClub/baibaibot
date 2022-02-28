@@ -252,7 +252,7 @@ app.get('/send_group_msg',(reqp, resp) => {
     resp.set("Access-Control-Allow-Origin", "*");
     if(res.trim().length>0){
       var options = {
-        host: '192.168.17.52',
+        host: require('./baibaiConfigs').myip,
         port: PORT,
         path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
         method: 'GET',
@@ -423,7 +423,7 @@ app.get('/blive',function(req,res){
   if(userid){
     var replyData = username+":"+message;
     var options = {
-      host: '192.168.17.52',
+      host: require('./baibaiConfigs').myip,
       port: 25334,
       path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(replyData),
       method: 'GET',

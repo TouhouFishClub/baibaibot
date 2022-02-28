@@ -1,7 +1,7 @@
 const http = require('http')
 const ocr = (imageId, port, callback) => {
 	var options = {
-		host: '192.168.17.52',
+		host: require('../../baibaiConfigs').myip,
 		port: port,
 		path: `/ocr_image?image=${imageId}`,
 		method: 'GET',

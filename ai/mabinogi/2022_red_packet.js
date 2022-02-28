@@ -108,7 +108,7 @@ const startTimeout = () => {
         if(Object.values(AUTO_SEND_GROUPS).length) {
           Object.values(AUTO_SEND_GROUPS).forEach(info => {
             let options = {
-              host: '192.168.17.52',
+              host: require('../../baibaiConfigs').myip,
               port: info.port,
               path: `/send_group_msg?group_id=${info.groupId}&message=${encodeURIComponent(`G21BOSS自动报时\n\n${res}`)}`,
               method: 'GET',

@@ -36,7 +36,7 @@ function alarmBox(){
   var res = "提醒签到小助手,该去签到领暗影值啦\nhttp://act.ff.sdo.com/20191225Christmas/index.html#/index\n";
   var groupid = 697381070
   var options = {
-    host: '192.168.17.52',
+    host: require('../../baibaiConfigs').myip,
     port: 25334,
     path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
     method: 'GET',

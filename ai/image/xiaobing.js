@@ -15,7 +15,7 @@ function poemReply(content,userName,callback){
 
 function getPoemByImgurl(imgurl,callback){
   var options = {
-    host: '192.168.17.52',
+    host: require('../../baibaiConfigs').myip,
     port: 10088,
     path: '/py?type=poem&url='+encodeURIComponent(imgurl),
     method: 'GET',

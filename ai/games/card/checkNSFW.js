@@ -7,7 +7,7 @@ var request = require('request');
 
 function checknsfw(imgurl,callback){
   var option = {
-    host: '192.168.17.52',
+    host: require('../../../baibaiConfigs').myip,
     port: 11001,
     method: 'GET',
     headers:{
