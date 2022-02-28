@@ -1,21 +1,24 @@
 const chineseNewYear = [
   '2021-2-11',
   '2022-1-31',
+  '2023-1-21',
 ]
 //清明
 const tombSweepingDay = [
   '2021-4-3',
   '2022-4-3',
+  '2023-4-3',
 ]
 //端午
 const dragonBoatFestival = [
   '2021-6-12',
   '2022-6-3',
+  '2023-6-22',
 ]
 //中秋
 const midAutumnFestival = [
   '2021-9-19',
-  '2022-9-10',
+  '2022-9-29',
 ]
 
 const calcDay = dateStrList => {
