@@ -15,7 +15,7 @@ function getUserNameInGroup(qq,gid,port){
       port=23334;
     }
     var options = {
-      host: '192.168.17.52',
+      host: require('../baibaiConfigs').myip,
       port: port,
       path: '/get_group_member_list?group_id='+gid,
       method: 'GET',
@@ -114,7 +114,7 @@ function getGroupName(gid,port){
       port=23334;
     }
     var options = {
-      host: '192.168.17.52',
+      host: require('../baibaiConfigs').myip,
       port: port,
       path: '/get_group_list',
       method: 'GET',
@@ -153,7 +153,7 @@ function getGroupName(gid,port){
 
 function sendPrivateMsg(userid,msg){
   var options = {
-    host: '192.168.17.52',
+    host: require('../baibaiConfigs').myip,
     port: 23334,
     path: '/send_private_msg?user_id='+userid+'&message='+encodeURIComponent(msg),
     method: 'GET',
