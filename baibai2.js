@@ -22,12 +22,10 @@ const {route} = require('./ai/map');
 const {searchSongByName} = require('./ai/song');
 const kce = require('./ai/kanColleEquip')
 const kcq = require('./ai/kanColleQuest')
-const {searchsenka} = require('./ai/kancolle/senka');
 const {fight,useMagicOrItem} = require('./ai/favour/battle');
 const {handleUserOperation} = require('./ai/chess/road');
 
 const {pairReply}=require('./ai/pairAI');
-const {getKancollStaffTweet} = require('./ai/twitter');
 const {getShip} = require('./ai/kancolle/ship');
 const roulette = require('./ai/Roulette')
 const {copperReply} = require('./ai/games/card/copper');
@@ -394,9 +392,9 @@ function addSendQueue(groupid,msg,botqq){
   }
 
 
-    msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
-    msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/hduser/upload/tk/coolq-data/cq/data/image/sen")
-    msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/hduser/upload/tk/coolq-data/cq/data/record/sen")
+    msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+    msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+    msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/hduser/flan/baibai/coolq-data/cq/data/record/sen")
 
 
 
@@ -1532,8 +1530,6 @@ function reply(content,userName,callback,groupid,from,groupName,nickname,port){
     descryptReply(content.substring(1),callback);
   }else if(first=="k"||first=='K'){
     getShip(content.substring(1),callback);
-  }else if(first=="z"||first=='Z'){
-    searchsenka(userName,content.substring(1),callback,from);
   }else if(first=='s'||first=='S'){
     searchSongByName(userName,content.substring(1),callback);
   }else if(first=='r'||first=='R'){
