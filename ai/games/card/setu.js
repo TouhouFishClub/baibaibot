@@ -122,11 +122,9 @@ function runsetu(content,gid,qq,callback,port){
                             callback(ret);
                         } else {
                             var imgurl = imgdata.url;
-                            console.log(imgurl);
                             var imgreq = request({
                                 url: imgurl,
-                                method: "GET",
-                                proxy:'http:192.168.17.241:2346'
+                                method: "GET"
                             }, function (error, response, body) {
                                 if (error && error.code) {
                                     console.log('pipe error catched!')
@@ -149,9 +147,11 @@ function runsetu(content,gid,qq,callback,port){
                         }
                     } else {
                         var imgurl = imgdata.url;
+                        console.log(imgurl);
                         var imgreq = request({
                             url: imgurl,
-                            method: "GET"
+                            method: "GET",
+                            proxy:'http:192.168.17.241:2346'
                         }, function (error, response, body) {
                             if (error && error.code) {
                                 console.log('pipe error catched!')
