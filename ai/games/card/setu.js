@@ -125,7 +125,7 @@ function runsetu(content,gid,qq,callback,port){
                             var imgreq = request({
                                 url: imgurl,
                                 method: "GET",
-                                proxy:'socks5:192.168.17.241:2345'
+                                proxy:'http:192.168.17.241:2346'
                             }, function (error, response, body) {
                                 if (error && error.code) {
                                     console.log('pipe error catched!')
