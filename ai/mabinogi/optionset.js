@@ -364,10 +364,10 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
           }
           str += `opt ${finalArr[i].ID} | [${finalArr[i].Usage}]${finalArr[i].LocalName}(Rank ${finalArr[i].Level})\n`
         }
-        str += `超过搜索限制，请添加更多关键字\nsearch count : ${finalArr.length}`
+        str += `超过搜索限制，请添加更多关键字\nsearch count : ${finalArr.length}\n`
       }
       if(target) {
-        str += `\n已为您定位到${target.LocalName}\n`
+        str += `已为您定位到${target.LocalName}\n`
         if(adminUser.has(userId)) {
           saveTmpMap[userId] = target
         }
