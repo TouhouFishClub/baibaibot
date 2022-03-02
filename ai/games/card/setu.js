@@ -98,7 +98,6 @@ function runsetu(content,gid,qq,callback,port){
       console.log(error);
     } else {
         var data = eval('(' + body + ')');
-        console.log(data);
         if (data.code == 429) {
             fs.readdir('../coolq-data/cq/data/image/send/setu/', function (err, files) {
                 var len = files.length;
@@ -125,7 +124,8 @@ function runsetu(content,gid,qq,callback,port){
                             var imgurl = imgdata.url;
                             var imgreq = request({
                                 url: imgurl,
-                                method: "GET"
+                                method: "GET",
+                                proxy:'socks5:192.168.17.241:2345'
                             }, function (error, response, body) {
                                 if (error && error.code) {
                                     console.log('pipe error catched!')
