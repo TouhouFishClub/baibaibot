@@ -186,7 +186,7 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
         finalArr.push(optionset)
       }
     })
-    renderMsg(finalArr)
+    renderMsg(finalArr, name)
   }
   const searchKeywords = keywords => {
     let finalArr = [], optSetObjFilter = optionSetObj.concat([])
@@ -309,7 +309,7 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
     })
     renderMsg(finalArr)
   }
-  const renderMsg = async finalArr => {
+  const renderMsg = async (finalArr, targetName) => {
     let str = ''
     if(finalArr.length == 0){
       str = '没有找到释放卷轴'
@@ -349,17 +349,55 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
     }
     if(finalArr.length > 1){
       str = '查询到复数释放卷，请选择：\n'
+      let target
       if(finalArr.length <= 10){
         finalArr.forEach(os => {
+          if(targetName && os.LocalName == targetName) {
+            target = os
+          }
           str += `opt ${os.ID} | [${os.Usage}]${os.LocalName}(Rank ${os.Level})\n`
         })
       } else {
         for(let i = 0; i < 10; i ++){
+          if(targetName && finalArr[i].LocalName == targetName) {
+            target = finalArr[i]
+          }
           str += `opt ${finalArr[i].ID} | [${finalArr[i].Usage}]${finalArr[i].LocalName}(Rank ${finalArr[i].Level})\n`
         }
         str += `超过搜索限制，请添加更多关键字\nsearch count : ${finalArr.length}`
       }
-      callback(str)
+      if(target) {
+        str += `\n已为您定位到${target.LocalName}\n`
+        if(adminUser.has(userId)) {
+          saveTmpMap[userId] = target
+        }
+        let wheres = [], optionsetInfo = target
+        if(optionsetInfo.custom) {
+          wheres = []
+        } else {
+          wheres = await optionsetWhereCn(optionsetInfo.LocalName, optionsetInfo.Level)
+          if(wheres.length > 0) {
+            optionsetInfo = Object.assign({where: 'CN'}, optionsetInfo)
+          } else {
+            wheres = await optionsetWhere(optionsetInfo.Name, optionsetInfo.ID)
+            optionsetInfo = Object.assign({where: 'TW'}, optionsetInfo)
+          }
+        }
+        if(type == 'image'){
+          optionsetImage(optionsetInfo, wheres, 'mabi', callbackStr => {
+            callback(str + callbackStr)
+          })
+        } else {
+          str += `${finalArr[0].LocalName.trim()}(Rank ${optionsetInfo.Level})\n[${optionsetInfo.Usage}]\n${optionsetInfo.Buff.length ? (optionsetInfo.Buff.join('\n') + '\n') : ''}${optionsetInfo.Debuff.join('\n')}`
+          if(wheres.length){
+            // console.log(wheres)
+            str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
+          }
+          callback(str)
+        }
+      } else {
+        callback(str)
+      }
     }
   }
   if(!optionSetObj.length){
