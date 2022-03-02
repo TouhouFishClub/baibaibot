@@ -122,6 +122,7 @@ function runsetu(content,gid,qq,callback,port){
                             callback(ret);
                         } else {
                             var imgurl = imgdata.url;
+                            console.log(imgurl);
                             var imgreq = request({
                                 url: imgurl,
                                 method: "GET",
