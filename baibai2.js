@@ -395,7 +395,7 @@ function addSendQueue(groupid,msg,botqq){
 
     msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
     msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-    msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/hduser/flan/baibai/coolq-data/cq/data/record/sen")
+    msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
 
 
 
