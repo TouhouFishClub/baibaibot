@@ -695,7 +695,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         let f = parseInt(codes[1]), r = parseInt(codes[2])
         if(isNaN(f) || isNaN(r))
           return
-        groupConfig.RESEND_MSG.set(f, r)
+        groupConfig[groupid].RESEND_MSG.set(f, r)
         callback('设置成功')
         break
 			case 'flash_resend':
