@@ -359,7 +359,7 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
         })
       } else {
         for(let i = 0; i < 10; i ++){
-          if(targetName && finalArr[i].LocalName == targetName) {
+          if(targetName && (finalArr[i].LocalName == targetName || finalArr[i].LocalName2 == targetName )) {
             target = finalArr[i]
           }
           str += `opt ${finalArr[i].ID} | [${finalArr[i].Usage}]${finalArr[i].LocalName}(Rank ${finalArr[i].Level})\n`
