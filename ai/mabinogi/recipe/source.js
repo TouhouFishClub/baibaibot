@@ -6770,8 +6770,14 @@ function CheckImg() {
   }
 }
 
-setInterval('StartTime()', 110);
+// TODO: 移除定时器
+// setInterval('StartTime()', 110);
+
+const CreateSkillLists = () => {
+
+}
 
 module.exports = {
-  
+  // website entry
+  OnloadFunction
 }

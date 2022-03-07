@@ -683,13 +683,21 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		groupConfig[groupid] = {
 			FLASH_RESEND : false,
 			FLASH_RESEND_USER: new Set(),
-      FLASH_RESEND_BAN: new Set()
+      FLASH_RESEND_BAN: new Set(),
+      RESEND_MSG: new Map()
 		}
 	}
 	if(content.startsWith('/groupset') && configAdminSet.has(from)) {
 		//控制台
 		let codes = content.substring(10).split(' ')
 		switch(codes[0]) {
+      case 'send_msg':
+        let f = parseInt(codes[1]), r = parseInt(codes[2])
+        if(isNaN(f) || isNaN(r))
+          return
+        groupConfig.RESEND_MSG.set(f, r)
+        callback('设置成功')
+        break
 			case 'flash_resend':
 				if(codes[1] == 'true'){
 					groupConfig[groupid].FLASH_RESEND = true
@@ -751,6 +759,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		}
 		return
 	}
+
+  if(groupConfig[groupid].RESEND_MSG.has(from)) {
+    let r = Math.random() * 100, gr = groupConfig[groupid].RESEND_MSG.get(from)
+    if(r > gr) {
+      console.log(`==== MSG：[${from}] ${r} / ${gr} ====`)
+      return
+    }
+  }
 
   if(content.match(/CQ:image,type=flash,file=/)) {
   	// console.log('====================>', FLASH_RESEND)
