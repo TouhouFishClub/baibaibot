@@ -352,7 +352,7 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
       let target
       if(finalArr.length <= 10){
         finalArr.forEach(os => {
-          if(targetName && os.LocalName == targetName) {
+          if(targetName && (os.LocalName == targetName || os.LocalName2 == targetName)) {
             target = os
           }
           str += `opt ${os.ID} | [${os.Usage}]${os.LocalName}(Rank ${os.Level})\n`
