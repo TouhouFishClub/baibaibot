@@ -474,7 +474,7 @@ function draw2df(qq,username,callback){
             }
           }
           if (voice) {
-            baiduVoice(voice, callback);
+            //baiduVoice(voice, callback);
           }
           saveCard(qq, name);
           console.log(img,gameimg,dr);
