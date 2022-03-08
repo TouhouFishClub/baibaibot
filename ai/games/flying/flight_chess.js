@@ -81,7 +81,7 @@ function init(){
     img[3][0]=1002;
     img[0][11]=1003;
 
-    console.log(map);
+    //console.log(map);
     printimg()
 }
 
@@ -95,7 +95,7 @@ function printimg(){
         }
         r=r+s.trim()+"\n"
     }
-    console.log(r)
+    //console.log(r)
 }
 
 
