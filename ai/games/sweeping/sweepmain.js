@@ -140,7 +140,7 @@ function printmap(){
     }
     r = r+"\n";
   }
-  console.log(r+"\n\n");
+  //console.log(r+"\n\n");
 
   r="";
   for(var i=0;i<map.length;i++){
@@ -153,7 +153,7 @@ function printmap(){
     }
     r = r+"\n";
   }
-  console.log(r);
+  //console.log(r);
 
   r="";
   for(var i=0;i<map.length;i++){
@@ -172,7 +172,7 @@ function printmap(){
   }
   wr = r;
 
-  console.log(r);
+  //console.log(r);
   console.log('===========e=============');
 }
 
