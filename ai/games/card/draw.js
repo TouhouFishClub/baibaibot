@@ -102,7 +102,7 @@ function drawNameCard_1(username,qq,callback,groupid){
     }
   }
 
-  if(Math.random()<0.13){
+  if(Math.random()<0.0){
     var pr = drawPixiv(username);
     if(pr.length>20){
       callback(pr);
@@ -474,7 +474,7 @@ function draw2df(qq,username,callback){
             }
           }
           if (voice) {
-            baiduVoice(voice, callback);
+            //baiduVoice(voice, callback);
           }
           saveCard(qq, name);
           console.log(img,gameimg,dr);
