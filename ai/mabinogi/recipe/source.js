@@ -6773,11 +6773,520 @@ function CheckImg() {
 // TODO: 移除定时器
 // setInterval('StartTime()', 110);
 
-const CreateSkillLists = () => {
+const ItemNameToItemId = new Map()
+const ItemIdToItemDetail = new Map()
 
+const CreateSkillLists = () => {
+  SkillList.forEach(skillId => {
+    let skill = eval(`Skill${skillId}`)
+    console.log(`===== ${skill[0]} =====`)
+    let skillList = eval(`${skill[1]}List`)
+    FormatItems(skillList, skill[0], skill[1], skillId)
+  })
 }
+
+const FormatItems = (skillList, skillName, skillCode, skillId) => {
+  skillList.forEach(itemId => {
+    let item = eval(`Item${itemId}`)
+    // console.log(item)
+    ItemNameToItemId.set(item[0], itemId)
+    ItemIdToItemDetail.set(itemId, {
+      itemSource: item,
+      name: item[0],
+      skillName,
+      skillCode,
+      skillId,
+      html: MainBodyRebuild(itemId, skillId)
+    })
+  })
+}
+
+const getItems = () => {
+  if(!ItemNameToItemId.size){
+    CreateSkillLists()
+  }
+  return {
+    ItemNameToItemId,
+    ItemIdToItemDetail
+  }
+}
+
+
+// 重写方法
+const MainBodyRebuild = (Id, skillId) => {
+  let t = "";
+  let IdType = "";
+  if (skillId == 10030) t = ItemDissolution(Id);
+  TemporaryCuisine = [IdAmendJS(Id)];
+  if (ErgEnhanceList.includes(Id)) {
+    t += ErgEnhances(Id)
+  } else {
+    t += eval("ItemRebuild(" + Id + ",1)");
+    IdType = "Item"
+  }
+  if (eval(IdType + Id + "[0].indexOf('兼职')==-1")) {
+    for (let i = 1; i < TemporaryCuisine.length; i++) {
+      t += eval("ItemRebuild(" + TemporaryCuisine[i] + ")")
+    }
+  }
+  return t
+}
+
+
+function ItemRebuild(Id, a) {
+  let t = TdMain(Id, a);
+  let CheckT = t;
+  let tt;
+  let Length;
+  let RowsQuantity;
+  let LocaleLimit = "";
+  let EventLimit = "";
+  let TalentLimit = "";
+  let OtherSkill = "";
+  let AmendQuantity;
+  try {
+    let MillingItem = eval("MillingItem" + Id);
+    Length = MillingItem.length;
+    t += TableMiddle + TdSkill(10012);
+    t += "<td width='580'>" + CompleteTable(TdMaterial(MillingItem[0], "×" + MillingItem[1], 160), 560) + "</td>"
+  } catch (e) {
+    e
+  }
+  try {
+    let TailoringItem = eval("TailoringItem" + Id);
+    if (TalentTailoringList.includes(Id)) TalentLimit = TalentTailoringList[0];
+    if (SightOfOtherSideTailoringList.includes(Id)) OtherSkill = 58010;
+    t += TableMiddle + TdSkill(10001, LocaleLimit, EventLimit, TalentLimit, TailoringItem.length - 1, "", TailoringItem[0][0], OtherSkill, TailoringItem[0][1]);
+    for (var i = 1; i < TailoringItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      AmendQuantity = "N";
+      tt = TdMaterial(TailoringItem[i][0], "", 50, 2);
+      for (var j = 1; j < TailoringItem[i].length; j += 2) {
+        if (TailoringItem[i][j] == 0) {
+          tt += TableMiddle;
+          j++;
+          AmendQuantity = ""
+        }
+        tt += TdMaterial(TailoringItem[i][j], "×" + TailoringItem[i][j + 1] + AmendQuantity)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+    TalentLimit = "";
+    OtherSkill = ""
+  } catch (e) {
+    e
+  }
+  try {
+    let HandicraftItem = eval("HandicraftItem" + Id);
+    for (var i = 0; i < LocaleHandicraftList.length; i++) {
+      if (LocaleHandicraftList[i].includes(Id)) {
+        if (LocaleLimit != "") LocaleLimit += "、";
+        LocaleLimit += LocaleHandicraftList[i][0]
+      }
+    }
+    for (var i = 0; i < EventHandicraftList.length; i++) {
+      if (EventHandicraftList[i].includes(Id)) EventLimit += EventHandicraftList[i][0]
+    }
+    t += TableMiddle + TdSkill(10013, LocaleLimit, EventLimit, TalentLimit, HandicraftItem.length - 1, HandicraftItem[0][0], HandicraftItem[0][1]);
+    for (var i = 1; i < HandicraftItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < HandicraftItem[i].length; j += 2) {
+        tt += TdMaterial(HandicraftItem[i][j], "×" + HandicraftItem[i][j + 1], 560 / HandicraftItem[i].length)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+    LocaleLimit = "";
+    EventLimit = ""
+  } catch (e) {
+    e
+  }
+  try {
+    let WeavingItem = eval("WeavingItem" + Id);
+    if (TalentWeavingList.includes(Id)) TalentLimit = TalentWeavingList[0];
+    t += TableMiddle + TdSkill(10014, LocaleLimit, EventLimit, TalentLimit, WeavingItem.length - 1, WeavingItem[0]);
+    for (var i = 1; i < WeavingItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < WeavingItem[i].length; j += 2) {
+        tt += TdMaterial(WeavingItem[i][j], "×" + WeavingItem[i][j + 1], 160)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+    TalentLimit = ""
+  } catch (e) {
+    e
+  }
+  try {
+    let RefineItem = eval("RefineItem" + Id);
+    if (TalentRefineList.includes(Id)) TalentLimit = TalentRefineList[0];
+    t += TableMiddle + TdSkill(10015, LocaleLimit, EventLimit, TalentLimit, RefineItem.length - 1);
+    for (var i = 1; i < RefineItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < RefineItem[i].length; j += 2) {
+        tt += TdMaterial(RefineItem[i][j], "×" + RefineItem[i][j + 1], 160)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+    TalentLimit = ""
+  } catch (e) {
+    e
+  }
+  try {
+    let BlacksmithItem = eval("BlacksmithItem" + Id);
+    if (TalentBlacksmithList.includes(Id)) TalentLimit = TalentBlacksmithList[0];
+    if (SightOfOtherSideBlacksmithList.includes(Id)) OtherSkill = 58010;
+    t += TableMiddle + TdSkill(10016, LocaleLimit, EventLimit, TalentLimit, BlacksmithItem.length - 1, "", BlacksmithItem[0][0], OtherSkill, BlacksmithItem[0][1]);
+    for (var i = 1; i < BlacksmithItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      AmendQuantity = "N";
+      tt = TdMaterial(BlacksmithItem[i][0], "", 50, 2);
+      for (var j = 1; j < BlacksmithItem[i].length; j += 2) {
+        if (BlacksmithItem[i][j] == 0) {
+          tt += TableMiddle;
+          j++;
+          AmendQuantity = ""
+        }
+        tt += TdMaterial(BlacksmithItem[i][j], "×" + BlacksmithItem[i][j + 1] + AmendQuantity)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+    TalentLimit = "";
+    OtherSkill = ""
+  } catch (e) {
+    e
+  }
+  try {
+    let CookingItem = eval("CookingItem" + Id);
+    Length = CookingItem.length;
+    RowsQuantity = ((Length - 1) / 6);
+    for (var i = 0; i < LocaleCookingList.length; i++) {
+      if (LocaleCookingList[i].includes(Id)) {
+        if (LocaleLimit != "") LocaleLimit += "、";
+        LocaleLimit += LocaleCookingList[i][0]
+      }
+    }
+    for (var i = 0; i < EventCookingList.length; i++) {
+      if (EventCookingList[i].includes(Id)) EventLimit += EventCookingList[i][0]
+    }
+    t += TableMiddle + TdSkill(10020, LocaleLimit, EventLimit, TalentLimit, RowsQuantity, CookingItem[0]);
+    for (var i = 1; i < Length; i += 6) {
+      if (i != 1) t += TableMiddle;
+      t += "<td width='580'>" + CompleteTable(TdMaterial(CookingItem[i], CookingItem[i + 1] + "%", 160) + TdMaterial(CookingItem[i + 2], CookingItem[i + 3] + "%", 160) + TdMaterial(CookingItem[i + 4], CookingItem[i + 5] + "%", 160), 560) + "</td>"
+    }
+    LocaleLimit = "";
+    EventLimit = ""
+  } catch (e) {
+    e
+  }
+  try {
+    let HerbalismItem = eval("HerbalismItem" + Id);
+    t += TableMiddle + TdSkill(10021) + TdText(HerbalismItem[0])
+  } catch (e) {
+    e
+  }
+  try {
+    let PotionMakingItem = eval("PotionMakingItem" + Id);
+    Length = PotionMakingItem.length;
+    for (var i = 0; i < LocalePotionMakingList.length; i++) {
+      if (LocalePotionMakingList[i].includes(Id)) {
+        if (LocaleLimit != "") LocaleLimit += "、";
+        LocaleLimit += LocalePotionMakingList[i][0]
+      }
+    }
+    for (var i = 0; i < EventPotionMakingList.length; i++) {
+      if (EventPotionMakingList[i].includes(Id)) EventLimit += EventPotionMakingList[i][0]
+    }
+    if (SightOfOtherSidePotionMakingList.includes(Id)) OtherSkill = 58010;
+    tt = "";
+    t += TableMiddle + TdSkill(10022, LocaleLimit, EventLimit, TalentLimit, RowsQuantity, PotionMakingItem[0], "", OtherSkill);
+    for (var i = 1; i < Length; i += 2) {
+      tt += TdMaterial(PotionMakingItem[i], "×" + PotionMakingItem[i + 1], 560 / Length)
+    }
+    t += "<td valign='Bottom' width='580'>" + CompleteTable(tt, 560) + "</td>";
+    LocaleLimit = "";
+    EventLimit = "";
+    OtherSkill = ""
+  } catch (e) {
+    e
+  }
+  tt = "";
+  for (var i = 0; i < FishingItemList.length; i++) {
+    if (FishingItemList[i].includes(Id)) {
+      if (tt != "") tt += "、";
+      tt += FishingItemList[i][0]
+    }
+  }
+  for (var i = 0; i < EventFishingList.length; i++) {
+    if (EventFishingList[i].includes(Id)) EventLimit += EventFishingList[i][0]
+  }
+  if (tt != "") t += TableMiddle + TdSkill(10023, "", EventLimit) + TdText(tt);
+  EventLimit = "";
+  try {
+    let MetallurgyItem = eval("MetallurgyItem" + Id);
+    t += TableMiddle + TdSkill(10028) + TdText(MetallurgyItem[0])
+  } catch (e) {
+    e
+  }
+  try {
+    let DissolutionItem = eval("DissolutionItem" + Id);
+    t += TableMiddle + TdSkill(10030, LocaleLimit, EventLimit, TalentLimit, DissolutionItem.length - 1);
+    for (var i = 1; i < DissolutionItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < DissolutionItem[i].length; j += 2) {
+        tt += TdMaterial(DissolutionItem[i][j], "×" + DissolutionItem[i][j + 1], 160)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+  } catch (e) {
+    e
+  }
+  try {
+    let CarpentryItem = eval("CarpentryItem" + Id);
+    if (TalentCarpentryList.includes(Id)) TalentLimit = TalentCarpentryList[0];
+    t += TableMiddle + TdSkill(10033, LocaleLimit, EventLimit, TalentLimit, CarpentryItem.length - 1, CarpentryItem[0]);
+    for (var i = 1; i < CarpentryItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < CarpentryItem[i].length; j += 2) {
+        tt += TdMaterial(CarpentryItem[i][j], "×" + CarpentryItem[i][j + 1], 560 / (CarpentryItem[i].length))
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+    TalentLimit = ""
+  } catch (e) {
+    e
+  }
+  try {
+    let StageTicketMakingItem = eval("StageTicketMakingItem" + Id);
+    t += TableMiddle + TdSkill(10036, LocaleLimit, EventLimit, TalentLimit, StageTicketMakingItem.length - 1);
+    for (var i = 1; i < StageTicketMakingItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < StageTicketMakingItem[i].length; j += 2) {
+        tt += TdMaterial(StageTicketMakingItem[i][j], "×" + StageTicketMakingItem[i][j + 1], 560 / (StageTicketMakingItem[i].length))
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+  } catch (e) {
+    e
+  }
+  try {
+    let HeulwenEngineeringItem = eval("HeulwenEngineeringItem" + Id);
+    tt = "";
+    t += TableMiddle + TdSkill(10040, LocaleLimit, EventLimit, TalentLimit, HeulwenEngineeringItem.length - 1, HeulwenEngineeringItem[0]);
+    for (var i = 1; i < HeulwenEngineeringItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < HeulwenEngineeringItem[i].length; j += 2) {
+        tt += TdMaterial(HeulwenEngineeringItem[i][j], "×" + HeulwenEngineeringItem[i][j + 1], 560 / HeulwenEngineeringItem[i].length)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+  } catch (e) {
+    e
+  }
+  try {
+    let MagicCraftItem = eval("MagicCraftItem" + Id);
+    if (SightOfOtherSideMagicCraftList.includes(Id)) OtherSkill = 58010;
+    tt = "";
+    t += TableMiddle + TdSkill(10041, LocaleLimit, EventLimit, TalentLimit, MagicCraftItem.length - 1, MagicCraftItem[0], "", OtherSkill);
+    for (var i = 1; i < MagicCraftItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < MagicCraftItem[i].length; j += 2) {
+        tt += TdMaterial(MagicCraftItem[i][j], "×" + MagicCraftItem[i][j + 1], 560 / MagicCraftItem[i].length)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+    OtherSkill = ""
+  } catch (e) {
+    e
+  }
+  if (RareMineralogyList.includes(Id)) {
+    t += TableMiddle + TdSkill(10042) + TdText("希尔文矿山")
+  }
+  if (SulienEcologyList.includes(Id)) {
+    t += TableMiddle + TdSkill(10043) + TdText("希里安生态保护区")
+  }
+  if (FindMaterialList.includes(Id)) {
+    t += TableMiddle + TdSkill(10045) + TdText("击杀任意怪")
+  }
+  try {
+    let StationaryCraftItem = eval("StationaryCraftItem" + Id);
+    t += TableMiddle + TdSkill(10104, LocaleLimit, EventLimit, TalentLimit, StationaryCraftItem.length - 1, StationaryCraftItem[0]);
+    for (var i = 1; i < StationaryCraftItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < StationaryCraftItem[i].length; j += 2) {
+        tt += TdMaterial(StationaryCraftItem[i][j], "×" + StationaryCraftItem[i][j + 1], 560 / StationaryCraftItem[i].length)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+  } catch (e) {
+    e
+  }
+  try {
+    let FynnsCraftItem = eval("FynnsCraftItem" + Id);
+    t += TableMiddle + TdSkill(27103, LocaleLimit, EventLimit, TalentLimit, FynnsCraftItem.length - 1, FynnsCraftItem[0]);
+    for (var i = 1; i < FynnsCraftItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < FynnsCraftItem[i].length; j += 2) {
+        tt += TdMaterial(FynnsCraftItem[i][j], "×" + FynnsCraftItem[i][j + 1], 560 / FynnsCraftItem[i].length)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+  } catch (e) {
+    e
+  }
+  try {
+    let ManaFormingItem = eval("ManaFormingItem" + Id);
+    if (FireballManaFormingList.includes(Id)) {
+      OtherSkill = 30202
+    } else if (IceSpearManaFormingList.includes(Id)) {
+      OtherSkill = 30302
+    } else if (ThunderManaFormingList.includes(Id)) {
+      OtherSkill = 30102
+    }
+    tt = "";
+    t += TableMiddle + TdSkill(35001, LocaleLimit, EventLimit, TalentLimit, ManaFormingItem.length - 1, ManaFormingItem[0], "", OtherSkill);
+    for (var i = 1; i < ManaFormingItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = "";
+      for (var j = 0; j < ManaFormingItem[i].length; j += 2) {
+        tt += TdMaterial(ManaFormingItem[i][j], "×" + ManaFormingItem[i][j + 1], 560 / ManaFormingItem[i].length)
+      }
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+    OtherSkill = ""
+  } catch (e) {
+    e
+  }
+  try {
+    let MetalConversionItem = eval("MetalConversionItem" + Id);
+    t += TableMiddle + TdSkill(35012, LocaleLimit, EventLimit, TalentLimit, MetalConversionItem.length - 1, MetalConversionItem[0], "", OtherSkill);
+    for (var i = 1; i < MetalConversionItem.length; i++) {
+      if (i != 1) t += TableMiddle;
+      tt = TdMaterial(MetalConversionItem[i][0], "×" + MetalConversionItem[i][1] + "～" + MetalConversionItem[i][2], 560 / MetalConversionItem[i].length);
+      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+    }
+  } catch (e) {
+    e
+  }
+  try {
+    let MiningItem = eval("MiningItem" + Id);
+    t += TableMiddle + TdSkill(55002) + TdText(MiningItem[0])
+  } catch (e) {
+    e
+  }
+  try {
+    let GatherItem = eval("GatherItem" + Id);
+    let a = "";
+    if (["GetWater", 55005].includes(GatherItem[0])) {
+      a = TdMaterial(63020, "", 100)
+    }
+    let b = TdText(GatherItem[1]);
+    if (GatherItem[1] + 0 == GatherItem[1]) {
+      a = "";
+      b = "";
+      for (var i = 1; i < GatherItem.length; i += 2) {
+        b += TdMaterial(GatherItem[i], "×" + GatherItem[i + 1])
+      }
+    }
+    t += TableMiddle + TdSkill(GatherItem[0]) + "<td width='580'>" + CompleteTable(a + b, 560) + "</td>"
+  } catch (e) {
+    e
+  }
+  tt = "";
+  RowsQuantity = 0;
+  for (var i = 0; i < ExplorationList.length; i++) {
+    if (ExplorationList[i][1].includes(Id)) {
+      if (tt != "") tt += "<br>";
+      tt += ExplorationList[i][0];
+      RowsQuantity++;
+      if (i > 1) {
+        OtherSkill = 23104
+      }
+    }
+  }
+  if (tt != "") t += TableMiddle + TdSkill(50014, "", "", "", RowsQuantity, "", "", OtherSkill) + TdText(tt);
+  OtherSkill = "";
+  tt = "";
+  RowsQuantity = 0;
+  for (var i = 0; i < RelicInvestigationItemList.length; i++) {
+    if (RelicInvestigationItemList[i][1].includes(Id)) {
+      if (tt != "") tt += TableMiddle;
+      tt += "<td width='580'>" + CompleteTable(TdMaterial(RelicInvestigationItemList[i][0], "×1"), 300) + "</td>";
+      RowsQuantity++
+    }
+  }
+  if (tt != "") t += TableMiddle + TdSkill(57002, "", "", "", RowsQuantity) + tt;
+  for (var i = 0; i < GiftItemList.length; i++) {
+    tt = "";
+    RowsQuantity = 0;
+    for (var j = 1; j < GiftItemList[i].length; j++) {
+      if (GiftItemList[i][j][2].includes(Id)) {
+        if (tt != "") tt += TableMiddle;
+        tt += "<td width='580'>" + CompleteTable(TdMaterial(GiftItemList[i][j][1], "", 100) + TdText(GiftItemList[i][j][0]), 560) + "</td>";
+        RowsQuantity++
+      }
+    }
+    if (tt != "") t += TableMiddle + TdSkill(GiftItemList[i][0], "", "", "", RowsQuantity) + tt
+  }
+  for (var i = 0; i < QuestItemList.length; i++) {
+    tt = "";
+    for (var j = 1; j < QuestItemList[i].length; j++) {
+      if (QuestItemList[i][j].includes(Id)) {
+        if (tt != "") tt += "<br>";
+        tt += QuestItemList[i][j][0]
+      }
+    }
+    if (tt != "") t += TableMiddle + TdQuest(QuestItemList[i][0]) + TdText(tt)
+  }
+  try {
+    let QuestItem = eval("QuestItem" + Id);
+    for (var i = 0; i < QuestItem.length; i++) {
+      t += TableMiddle + TdQuest(QuestItem[i][0]) + TdText(QuestItem[i][1])
+    }
+  } catch (e) {
+    e
+  }
+  try {
+    let NPCSellItem = eval("NPCSellItem" + Id);
+    for (var i = 0; i < NPCSellItem.length; i++) {
+      t += TableMiddle + TdCurrency(NPCSellItem[i][0], NPCSellItem[i][1]) + TdText(NPCSellItem[i][2])
+    }
+  } catch (e) {
+    e
+  }
+  let UseItem = "";
+  tt = "";
+  RowsQuantity = 0;
+  for (var i = 0; i < UseList.length; i++) {
+    UseItem = eval("Item" + UseList[i]);
+    if (UseItem.includes(Id)) {
+      if (tt != "") tt += TableMiddle;
+      tt += "<td width='580'>" + CompleteTable(TdMaterial(UseList[i]), 560) + "</td>";
+      RowsQuantity++
+    }
+  }
+  if (tt != "") t += TableMiddle + TdSkill("使用", "", "", "", RowsQuantity) + tt;
+  if (CheckT == t) {
+    t += TableMiddle + TdText("？", 667)
+  }
+  return CompleteTable(t, 860, 1)
+}
+
+
 
 module.exports = {
   // website entry
-  OnloadFunction
+  // OnloadFunction,
+
+  // custom functions
+  // CreateSkillLists,
+  getItems
 }
