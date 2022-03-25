@@ -50,8 +50,8 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
     data.confirmedCount.push(target.data.total.confirm || 0)
     data.confirmedCount.push((target.data.total.confirm || 0) - (target.data.today.confirm || 0))
 
-    data.suspectedCount.push(target.data.total.wzz)
-    data.suspectedCount.push(target.data.total.wzz - target.data.today.wzz_add)
+    data.suspectedCount.push((target.data.total.wzz || 0))
+    data.suspectedCount.push((target.data.total.wzz || 0) - (target.data.today.wzz_add || 0))
 
     data.curedCount.push(target.data.total.heal)
     data.curedCount.push(target.data.total.heal)
