@@ -61,7 +61,7 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
     if(target.lastUpdateTime) {
       data.tencentUpdateTime = target.lastUpdateTime
     }
-    if(target.today.isUpdated) {
+    if(target.data.today.isUpdated) {
       data.isUpdated = true
     }
 
