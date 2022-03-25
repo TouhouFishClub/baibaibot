@@ -1,9 +1,244 @@
 const r = require('./source')
-const HTMLParser = require('node-html-parser');
+// const HTMLParser = require('node-html-parser');
+const fs = require('fs')
 
 let res = r.getItems()
 
 // test id = 51391
+// test id = 50221(蔬菜拼盘)
 
 // console.log(HTMLParser.parse(res.ItemIdToItemDetail.get(51391).html))
-console.log(JSON.parse(HTMLParser.parse(res.ItemIdToItemDetail.get(50221).html)))
+// console.log(res.ItemIdToItemDetail.get(50221).html)
+
+const nodeHtmlToImage = require('node-html-to-image')
+
+let imgHash = {}
+
+const analysisImgSrc = htmlData =>
+  htmlData.split("src='img/").map((domSplit, index) => {
+    if(index) {
+      let sp = domSplit.split("'")
+      let imageSrc = sp.shift()
+      if(!imgHash[imageSrc]) {
+        let image = fs.readFileSync(`./img/${imageSrc}`);
+        let base64Image = new Buffer.from(image).toString('base64');
+        imgHash[imageSrc] = 'data:image/jpeg;base64,' + base64Image
+      }
+      return `src='${imgHash[imageSrc]}'${sp.join("'")}`
+    } else {
+      return domSplit
+    }
+  }).join('')
+
+nodeHtmlToImage({
+  output: './image.png',
+  html: `<html>
+<head><title>爱琳配方百科</title>
+  <style type="text/css">
+@keyframes MainRun {
+0% {
+border: 5px solid gold
+}
+25% {
+border: 5px solid white
+}
+50% {
+border: 5px solid gold
+}
+75% {
+border: 5px solid #888
+}
+100% {
+border: 5px solid gold
+}
+}
+
+@-webkit-keyframes MainRun {
+0% {
+border: 5px solid gold
+}
+25% {
+border: 5px solid white
+}
+50% {
+border: 5px solid gold
+}
+75% {
+border: 5px solid #888
+}
+100% {
+border: 5px solid gold
+}
+}
+
+body {
+color: gold;
+scrollbar-face-color: #000;
+scrollbar-highlight-color: #000;
+scrollbar-arrow-color: gold;
+scrollbar-shadow-color: gold;
+scrollbar-3dlight-color: #FFF;
+scrollbar-base-color: gold;
+scrollbar-dark-shadow-color: gold;
+-moz-user-select: none;
+-webkit-user-select: none;
+-ms-user-select: none;
+-khtml-user-select: none;
+user-select: none
+}
+
+::-webkit-scrollbar {
+width: 10px;
+height: 10px
+}
+
+::-webkit-scrollbar-button {
+width: 0;
+height: 0;
+background-color: #000;
+border: 1px solid gold
+}
+
+::-webkit-scrollbar-track {
+display: none
+}
+
+::-webkit-scrollbar-track-piece {
+background-color: #000
+}
+
+::-webkit-scrollbar-thumb {
+background: #000;
+border-radius: 1px;
+border: 1px solid gold
+}
+
+::-webkit-scrollbar-corner {
+background: #000
+}
+
+::-webkit-scrollbar-resizer {
+background: #f00000
+}
+
+.Overall {
+width: 1300px;
+height: 580px;
+border: 5px solid gold;
+position: relative;
+margin：auto;
+text-align: center
+}
+
+.ItemList {
+position: absolute;
+width: 0;
+height: 9px;
+top: -5;
+right: 911;
+border: 1px solid gold;
+overflow: auto;
+background-color: #000
+}
+
+.MainBody {
+position: absolute;
+width: 899px;
+height: 568px;
+top: 1;
+right: 1;
+border: 5px solid gold;
+overflow: auto;
+font-size: 12px;
+text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
+-webkit-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
+-moz-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0
+}
+
+#List Table {
+border: 1px solid #000
+}
+
+.MainTd {
+background-color: #888;
+animation: MainRun 1s infinite;
+-webkit-animation: MainRun 1s infinite
+}
+
+.ListTd {
+border: 1px solid #000;
+color: black;
+background-color: gold;
+text-shadow: #FFF 1px 0 0, #FFF 0 1px 0, #FFF -1px 0 0, #FFF 0 -1px 0;
+-webkit-text-shadow: #FFF 1px 0 0, #FFF 0 1px 0, #FFF -1px 0 0, #FFF 0 -1px 0;
+-moz-text-shadow: #FFF 1px 0 0, #FFF 0 1px 0, #FFF -1px 0 0, #FFF 0 -1px 0
+}
+
+.EffectTd {
+text-shadow: #DDD 1px 0 0, #DDD 0 1px 0, #DDD -1px 0 0, #DDD 0 -1px 0;
+-webkit-text-shadow: #DDD 1px 0 0, #DDD 0 1px 0, #DDD -1px 0 0, #DDD 0 -1px 0;
+-moz-text-shadow: #DDD 1px 0 0, #DDD 0 1px 0, #DDD -1px 0 0, #DDD 0 -1px 0
+}
+
+#ItemLists td, #MaterialLists td, #Skill td {
+border: 1px solid #000
+}
+
+#ItemLists td:hover, #Skill td:hover {
+border: 1px solid gold
+}
+
+td {
+padding: 1px
+}
+
+.Skill {
+position: absolute;
+width: 378px;
+height: 574px;
+bottom: -5;
+left: 1;
+border: 5px solid gold;
+overflow: hidden;
+font-size: 15px;
+background-color: black;
+text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
+-webkit-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
+-moz-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0
+}
+
+.Time {
+position: absolute;
+width: 220px;
+height: 45px;
+top: -50;
+right: 0;
+border: 0 solid gold;
+overflow: hidden
+}
+
+.Copyright {
+position: absolute;
+width: 220px;
+height: 45px;
+text-align: left;
+top: -50;
+left: 0;
+border: 0 solid gold;
+overflow: hidden;
+}
+  </style>
+
+</head>
+<body background="img/星空.jpg" scroll="auto" style="text-align:center;" onload="OnloadFunction()"><h1>爱琳配方百科</h1><span
+  id="SpanSpan"></span>
+<center>
+  <div class="Overall">
+    <div class="MainBody" id="MainBody">${analysisImgSrc(res.ItemIdToItemDetail.get(51391).html)}</div>
+  </div>
+</center>
+<span id="Span"></span></body>
+</html>
+`
+})
+  .then(() => console.log('The image was created successfully!'))
