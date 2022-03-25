@@ -39,7 +39,7 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
 
     let data = {
       currentConfirmedCount: [],
-      // suspectedCount: [],
+      suspectedCount: [],
       confirmedCount: [],
       curedCount: [],
       deadCount: [],
