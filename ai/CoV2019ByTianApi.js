@@ -47,8 +47,8 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
     data.currentConfirmedCount.push(target.data.total.nowConfirm)
     data.currentConfirmedCount.push(target.data.total.nowConfirm - target.data.today.confirm)
 
-    data.confirmedCount.push(target.data.total.confirm)
-    data.confirmedCount.push(target.data.total.confirm - target.data.today.confirm)
+    data.confirmedCount.push(target.data.total.confirm || 0)
+    data.confirmedCount.push((target.data.total.confirm || 0) - (target.data.today.confirm || 0))
 
     data.suspectedCount.push(target.data.total.wzz)
     data.suspectedCount.push(target.data.total.wzz - target.data.today.wzz_add)
@@ -60,6 +60,9 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
     data.deadCount.push(target.data.total.dead)
     if(target.lastUpdateTime) {
       data.tencentUpdateTime = target.lastUpdateTime
+    }
+    if(target.today.isUpdated) {
+      data.isUpdated = true
     }
 
     // callback(otherStr)
@@ -363,7 +366,7 @@ const renderImage = (typeName, area, data, content, callback, otherMsg = '') => 
   let update = new Date(lastUpdateTime)
   let updateStr = `数据更新时间: ${update.getFullYear()}-${addZero(update.getMonth() + 1)}-${addZero(update.getDate())} ${update.getHours()}:${addZero(update.getMinutes())}:${addZero(update.getSeconds())}`
   if(data.tencentUpdateTime) {
-    updateStr = `数据更新时间（tencent API）：${data.tencentUpdateTime}`
+    updateStr = `数据更新时间（tencent API）：${data.tencentUpdateTime}（今日疫情数据${data.isUpdated ? '已' : '未'}更新）`
   }
   let width = ctx.measureText(updateStr).width
   ctx.fillText(updateStr, 800 - 25 - width, 66)
