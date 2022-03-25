@@ -50,6 +50,9 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
     data.confirmedCount.push(target.data.total.confirm)
     data.confirmedCount.push(target.data.total.confirm - target.data.today.confirm)
 
+    data.suspectedCount.push(target.data.total.wzz)
+    data.suspectedCount.push(target.data.total.wzz - target.data.today.wzz_add)
+
     data.curedCount.push(target.data.total.heal)
     data.curedCount.push(target.data.total.heal)
 
@@ -61,7 +64,7 @@ const cov = async (content, callback, custom = false, ...customSettings) => {
 
     // callback(otherStr)
     renderImage(
-      ['现有确诊', '现有疑似', '累计确诊', '累计治愈', '累计死亡'],
+      ['现有确诊', '现有无症状', '累计确诊', '累计治愈', '累计死亡'],
       {
         name: `${target.prov ? `${target.prov} - `: ''}${target.name}`,
         type: 'other',

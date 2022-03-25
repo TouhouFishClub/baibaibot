@@ -1,4 +1,4 @@
-const os = require('./optionset')
+// const os = require('./optionset')
 // const iconv = require('iconv-lite')
 // const {getPageData} = require('./tools/optionsetWhere')
 
@@ -19,7 +19,7 @@ const os = require('./optionset')
 // 	console.log(c)
 // })()
 // const app = require('express')()
-os('aaa', '测试', 'normal', c => {console.log(c)})
+// os('aaa', '测试', 'normal', c => {console.log(c)})
 // const https = require('https')
 // const querystring =  require('querystring')
 
@@ -30,7 +30,7 @@ os('aaa', '测试', 'normal', c => {console.log(c)})
 //   console.log(d)
 // })
 
-// const { createEchoStone } = require('./echostone')
+const { createEchoStone } = require('./echostone')
 
 // let count = 0, max = 0, min = 10000
 // for(let i = 0; i < 100000; i++) {
@@ -48,9 +48,9 @@ os('aaa', '测试', 'normal', c => {console.log(c)})
 // console.log(max)
 // console.log(min)
 
-	// createEchoStone(d => {
-	// 	console.log(d)
-	// }, true)
+	createEchoStone(d => {
+		console.log(d)
+	}, true)
 
 // const ow = require('./tools/optionsetWhere')
 //
