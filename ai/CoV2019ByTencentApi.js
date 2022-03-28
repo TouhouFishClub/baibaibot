@@ -57,6 +57,8 @@ const updateQuery = data => {
         prov.children.forEach(city => {
           if(new Set(['境外输入', '地区待确认']).has(city.name)) {
             areaQuery[`${city.name}-${prov.name}`] = { prov: prov.name, name: city.name }
+          } else if (city.name == '吉林') {
+            areaQuery['吉林市'] = { prov: prov.name, name: city.name }
           } else {
             areaQuery[city.name] = { prov: prov.name, name: city.name }
           }
