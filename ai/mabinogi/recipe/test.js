@@ -33,7 +33,7 @@ const analysisImgSrc = htmlData =>
 nodeHtmlToImage({
   output: './image.png',
   html: `<html>
-<head><title>爱琳配方百科</title>
+<head><title></title>
   <style type="text/css">
 @keyframes MainRun {
 0% {
@@ -84,7 +84,9 @@ scrollbar-dark-shadow-color: gold;
 -webkit-user-select: none;
 -ms-user-select: none;
 -khtml-user-select: none;
-user-select: none
+user-select: none;
+width: 921px;
+background-color: #000;
 }
 
 ::-webkit-scrollbar {
@@ -122,7 +124,7 @@ background: #f00000
 }
 
 .Overall {
-width: 1300px;
+width: 911px;
 height: 580px;
 border: 5px solid gold;
 position: relative;
@@ -146,7 +148,7 @@ position: absolute;
 width: 899px;
 height: 568px;
 top: 1;
-right: 1;
+left: 1;
 border: 5px solid gold;
 overflow: auto;
 font-size: 12px;
