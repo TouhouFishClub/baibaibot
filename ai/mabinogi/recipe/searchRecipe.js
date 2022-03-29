@@ -20,7 +20,7 @@ const searchMabiRecipe = (content, callback) => {
     if(targets.length == 1) {
       renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(targets[0])).html, targets[0], callback)
     } else {
-      callback(`找到${targets.length}\n${targets.slice(0, 10).map(x => `${ItemNameToItemId.get(x)} | ${x}`).join('\n')}`)
+      callback(`找到${targets.length}\n${targets.slice(0, 10).map(x => `mbi ${ItemNameToItemId.get(x)} | ${x}`).join('\n')}`)
     }
   } else {
     callback(`未找到${content}`)
