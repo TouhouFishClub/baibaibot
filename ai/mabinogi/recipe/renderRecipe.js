@@ -23,8 +23,8 @@ const analysisImgSrc = htmlData =>
 
 
 const renderRecipeImage = (html, name, callback, msg = '', order = 'IF') => {
-  // let output = path.join(IMAGE_DATA, 'mabi_recipe', `${name}.png`)
-  let output = path.join(`${name}.png`)
+  let output = path.join(IMAGE_DATA, 'mabi_recipe', `${name}.png`)
+  // let output = path.join(`${name}.png`)
   nodeHtmlToImage({
     output,
     html: `

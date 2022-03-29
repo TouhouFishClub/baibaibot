@@ -126,6 +126,9 @@ const {handleGaReply} = require('./ai/image/gimage');
 const { renderColorBoard } = require('./ai/mabinogi/renderColor')
 const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
 
+const { searchMabiRecipe } = require('./ai/mabinogi/recipe/searchRecipe')
+
+
 const { ergo } = require('./ai/mabinogi/ergo')
 
 let globalConfig = {
@@ -1335,6 +1338,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     op(from, name, con.substring(3).trim(), 'image', callback);
     return;
   }
+
+  if(fie == 'mbi' && from == 799018865){
+    searchMabiRecipe(con.substring(3).trim(), callback);
+    return;
+  }
+
   if(rcontent=='好感度'){
     getLike(from,name,callback);
     return;

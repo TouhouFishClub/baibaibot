@@ -9,8 +9,8 @@ const searchMabiRecipe = (content, callback) => {
       targets.push(ItemIdToItemDetail.get(content).name)
     }
   } else {
-    Object.keys(ItemNameToItemId).forEach(name => {
-      console.log(name)
+    ItemNameToItemId.forEach((id, name) => {
+      // console.log(name)
       if(name.match(new RegExp(content))) {
         targets.push(name)
       }
@@ -18,7 +18,7 @@ const searchMabiRecipe = (content, callback) => {
   }
   if(targets.length) {
     if(targets.length == 1) {
-      renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId(targets[0])), targets[0], )
+      renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(targets[0])).html, targets[0], callback)
     } else {
       callback(`找到${targets.length}\n${targets.slice(0, 10).map(x => `${ItemNameToItemId.get(x)} | ${x}`).join('\n')}`)
     }
