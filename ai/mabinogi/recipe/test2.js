@@ -1,5 +1,5 @@
 const { searchMabiRecipe } = require('./searchRecipe')
 
-searchMabiRecipe('炒蔬菜', (c) => {
+searchMabiRecipe('14160', (c) => {
   console.log(c)
 })

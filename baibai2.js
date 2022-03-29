@@ -1339,7 +1339,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(fie == 'mbi' && from == 799018865){
+  if(fie == 'mbi'){
     searchMabiRecipe(con.substring(3).trim(), callback);
     return;
   }

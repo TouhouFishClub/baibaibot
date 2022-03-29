@@ -5,8 +5,8 @@ const searchMabiRecipe = (content, callback) => {
   let { ItemNameToItemId, ItemIdToItemDetail } = getItems()
   let targets = []
   if(/^\d+$/.test(content)){
-    if(ItemIdToItemDetail.get(content)) {
-      targets.push(ItemIdToItemDetail.get(content).name)
+    if(ItemIdToItemDetail.get(parseInt(content))) {
+      targets.push(ItemIdToItemDetail.get(parseInt(content)).name)
     }
   } else {
     ItemNameToItemId.forEach((id, name) => {
