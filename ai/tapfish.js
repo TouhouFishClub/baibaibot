@@ -50,15 +50,30 @@ const timeInfo = Hour => {
 
 const tapFish = callback => {
   let n = new Date()
-  let weekendStr = n.getDay() > 0 && n.getDay() < 6 ? `距离周末还有${6 - n.getDay()}天\n` : ``
-  let newYearStr = `距离元旦还有${~~((new Date(`${n.getFullYear() + 1}-1-1`).getTime() - n.getTime()) / 86400000)}天\n`
-  let chineseNewYearStr = `距离春节还有${calcDay(chineseNewYear)}天\n`
-  let tombSweepingDayStr = `距离清明节还有${calcDay(tombSweepingDay)}天\n`
-  let labourDayStr = `距离劳动节还有${calcDay([`${n.getFullYear()}-5-1`,`${n.getFullYear()+1}-5-1`])}天\n`
-  let dragonBoatFestivalStr = `距离端午节还有${calcDay(dragonBoatFestival)}天\n`
-  let midAutumnFestivalStr = `距离中秋节还有${calcDay(midAutumnFestival)}天\n`
-  let nationalDayStr = `距离国庆节还有${calcDay([`${n.getFullYear()}-10-1`,`${n.getFullYear()+1}-10-1`])}天\n`
-  callback(`${n.getMonth()+1}月${n.getDate()}日${timeInfo(n.getHours())}，摸鱼人！工作再累，一定不要忘记摸鱼哦！有事没事起身去茶水间，去厕所，去廊道走走别老在工位上坐着，钱是老板的,但命是自己的\n${weekendStr}${newYearStr}${chineseNewYearStr}${tombSweepingDayStr}${labourDayStr}${dragonBoatFestivalStr}${midAutumnFestivalStr}${nationalDayStr}上班是帮老板赚钱，摸鱼是赚老板的钱！最后，祝愿天下所有摸鱼人，都能愉快的渡过每一天…`)
+  let weekendStr = n.getDay() > 0 && n.getDay() < 6 ? `距离周末还有${6 - n.getDay()}天` : ``
+  let newYearStr = `距离元旦还有${~~((new Date(`${n.getFullYear() + 1}-1-1`).getTime() - n.getTime()) / 86400000)}天`
+  let chineseNewYearStr = `距离春节还有${calcDay(chineseNewYear)}天`
+  let tombSweepingDayStr = `距离清明节还有${calcDay(tombSweepingDay)}天`
+  let labourDayStr = `距离劳动节还有${calcDay([`${n.getFullYear()}-5-1`,`${n.getFullYear()+1}-5-1`])}天`
+  let dragonBoatFestivalStr = `距离端午节还有${calcDay(dragonBoatFestival)}天`
+  let midAutumnFestivalStr = `距离中秋节还有${calcDay(midAutumnFestival)}天`
+  let nationalDayStr = `距离国庆节还有${calcDay([`${n.getFullYear()}-10-1`,`${n.getFullYear()+1}-10-1`])}天`
+
+  let arr = [
+    weekendStr,
+    newYearStr,
+    chineseNewYearStr,
+    tombSweepingDayStr,
+    labourDayStr,
+    dragonBoatFestivalStr,
+    midAutumnFestivalStr,
+    nationalDayStr
+  ]
+
+  arr.filter(x => x)
+  arr.sort((a, b) => (a.match(/\d+/) || 0) -  (b.match(/\d+/) || 0))
+
+  callback(`${n.getMonth()+1}月${n.getDate()}日${timeInfo(n.getHours())}，摸鱼人！工作再累，一定不要忘记摸鱼哦！有事没事起身去茶水间，去厕所，去廊道走走别老在工位上坐着，钱是老板的,但命是自己的\n${arr.join('\n')}\n上班是帮老板赚钱，摸鱼是赚老板的钱！最后，祝愿天下所有摸鱼人，都能愉快的渡过每一天…`)
 }
 
 module.exports = {
