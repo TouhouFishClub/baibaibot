@@ -20,7 +20,7 @@ const renderColorBoard = (context, callback) => {
       c = c.split('').map(x => `${x}${x}`).join('')
     }
     hex = `#${c.toUpperCase()}`
-    rgb = _.chunk(c.split(''), 2).map(x => `${parseInt(x.join(''), 16)}`.join(','))
+    rgb = _.chunk(c.split(''), 2).map(x => `${parseInt(x.join(''), 16)}`).join(',')
     c = `#${c}`
   }
   if(c) {
