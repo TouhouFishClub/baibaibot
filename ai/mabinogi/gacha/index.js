@@ -32,7 +32,8 @@ const loadGachaGroup = async () => {
 			console.log(tar)
 			if(tar) {
 				let obj = {}
-				obj.name = splitStr(tar, '-', '<a', true).trim()
+				console.log(splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/, '').split(' '))
+				obj.name = splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/, '').split(' ').filter(x => x && x.match(/礼包/))[0]
 				obj.link = splitStr(tar, '<a href="', '"', true)
 				target.push(obj)
 			}
