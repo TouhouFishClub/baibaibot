@@ -2,6 +2,7 @@ const https = require('https');
 const iconv = require('iconv-lite')
 const path = require('path-extra')
 const _ = require('lodash')
+const HTMLParser = require('node-html-parser');
 
 let gachaInfo = [
 
@@ -43,7 +44,9 @@ const loadGachaGroup = async () => {
 		for(let j = 0; j < target.length; j++) {
 			let t = target[j]
 			let data = await fetchData(t.link)
-			splitStr(data, '<table', '</table>')
+			let sp = splitStr(data, '<table', '</table>')
+			let root = HTMLParser.parse(sp)
+			console.log(root)
 		}
 	}
 }
