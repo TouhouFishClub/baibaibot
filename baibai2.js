@@ -422,6 +422,15 @@ function addSendQueue(groupid,msg,botqq){
     });
 }
 
+const formatSize = (byte) => {
+  let sizeOpt = ['byte', 'KB', 'MB', 'GB', 'TB'], i = 0, t = byte
+  while(i < sizeOpt.length && t > 1) {
+    t = t / 1024
+    i ++
+  }
+  return `${(t * 1024).toFixed(2)}${sizeOpt[i - 1]}`
+}
+
 function handleMsg(msgObj,botqq){
   try{
     handleMsg_D0(msgObj,botqq);
@@ -579,13 +588,10 @@ function handleMsg_D(msgObj,botqq) {
       return
     case 'group_upload':
       if(new Set([672926817, 577587780, '672926817', '577587780']).has(msgObj.group_id)) {
-        addSendQueue(groupid, `${msgObj.user_id}上传了${msgObj.file}` ,botqq);
+        addSendQueue(groupid, `[CQ:at,qq=${msgObj.user_id}]上传了${msgObj.file.name}(${formatSize(msgObj.file.size || 0)})` ,botqq);
         return
       }
       break
-  }
-
-  if(msgObj.notice_type == '') {
   }
 
 
