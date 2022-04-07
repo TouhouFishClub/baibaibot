@@ -588,7 +588,7 @@ function handleMsg_D(msgObj,botqq) {
       return
     case 'group_upload':
       if(new Set([672926817, 577587780, '672926817', '577587780']).has(msgObj.group_id)) {
-        addSendQueue(groupid, `[CQ:at,qq=${msgObj.user_id}]上传了${msgObj.file.name}(${formatSize(msgObj.file.size || 0)})` ,botqq);
+        addSendQueue(groupid, `[CQ:at,qq=${msgObj.user_id}] 倒了群垃圾！\n ${msgObj.file.name}(${formatSize(msgObj.file.size || 0)})` ,botqq);
         return
       }
       break
