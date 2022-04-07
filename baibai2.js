@@ -547,38 +547,45 @@ function handleMsg_D(msgObj,botqq) {
     return;
   }
 
-  if(msgObj.notice_type == 'group_increase') {
-    if(new Set([
-      2375373419, 3291864216, 1840239061, 981069482, 914853856, 2771362647,
-      '2375373419', '3291864216', '1840239061', '981069482', '914853856', '2771362647',
-    ]).has(msgObj.user_id)){
+  switch(msgObj.notice_type) {
+    case 'group_increase':
+      if(new Set([
+        2375373419, 3291864216, 1840239061, 981069482, 914853856, 2771362647,
+        '2375373419', '3291864216', '1840239061', '981069482', '914853856', '2771362647',
+      ]).has(msgObj.user_id)){
+        return
+      }
+      // 加群操作
+      let wellcome
+      switch(groupid){
+        case 96681597:
+          wellcome = `欢迎新人[CQ:at,qq=${msgObj.user_id}]，入服教程：https://bbs.gugu6.info/forum.php?mod=viewthread&tid=95#lastpost`
+          break
+        case 672926817:
+          wellcome = `看！新内鬼[CQ:at,qq=${msgObj.user_id}]`
+          break
+        default:
+          wellcome = `欢迎[CQ:at,qq=${msgObj.user_id}]加群`
+          break
+      }
+      addSendQueue(groupid,wellcome,botqq);
       return
-    }
-    // 加群操作
-    let wellcome
-    switch(groupid){
-      case 96681597:
-        wellcome = `欢迎新人[CQ:at,qq=${msgObj.user_id}]，入服教程：https://bbs.gugu6.info/forum.php?mod=viewthread&tid=95#lastpost`
-        break
-      case 672926817:
-        wellcome = `看！新内鬼[CQ:at,qq=${msgObj.user_id}]`
-        break
-      default:
-        wellcome = `欢迎[CQ:at,qq=${msgObj.user_id}]加群`
-        break
-    }
-    addSendQueue(groupid,wellcome,botqq);
-
-    return
+    case 'group_decrease':
+      if(msgObj.sub_type == 'kick') {
+        addSendQueue(groupid,`${msgObj.user_id}被踹走了`,botqq);
+      } else {
+        addSendQueue(groupid,`${msgObj.user_id}溜走了`,botqq);
+      }
+      return
+    case 'group_upload':
+      if(new Set([672926817, 577587780, '672926817', '577587780']).has(msgObj.group_id)) {
+        addSendQueue(groupid, `${msgObj.user_id}上传了${msgObj.file}` ,botqq);
+        return
+      }
+      break
   }
 
-  if(msgObj.notice_type == 'group_decrease') {
-    if(msgObj.sub_type == 'kick') {
-      addSendQueue(groupid,`${msgObj.user_id}被踹走了`,botqq);
-    } else {
-      addSendQueue(groupid,`${msgObj.user_id}溜走了`,botqq);
-    }
-    return
+  if(msgObj.notice_type == '') {
   }
 
 
