@@ -1,9 +1,9 @@
 // const ak = require('./arkNightsRecruit')
 // const akc = require('./arkNightsCalc')
-// const aks = require('./arkNightsCharacter')
+const aks = require('./arkNightsCharacter')
 // const akk = require('./arkNightsSkill')
 // const akl = require('./arkNightsRecruitLimit')
-const {baiduocr} = require('../image/baiduocr');
+// const {baiduocr} = require('../image/baiduocr');
 // const {numberOcr} = require('../image/baiduNumOcr');
 // const akb = require('./arkNightsBuildingTheme')
 // const akc = require('./arkNightChallenge')
@@ -13,19 +13,19 @@ const c = m => {
   console.log('===== output =====')
   console.log(m)
 }
-
-let str = [
-	'https://gchat.qpic.cn/gchatpic_new/799018865/4188919449-2224573346-91BE2AE2146336DD99470CCB0997CA6C/0?term=3',
-	'https://gchat.qpic.cn/gchatpic_new/1936049750/4188919449-2727410335-BCB4045FB92196E65E911F476196F05A/0?term=3',
-	'https://gchat.qpic.cn/gchatpic_new/993164709/4188919449-3179366049-38938239A0C02C8A2D91D29FFCDDDABA/0?term=3',
-	'https://gchat.qpic.cn/gchatpic_new/993164709/4188919449-3086194633-4FBD20E083C833C0C82439589CE00B19/0?term=3'
-]
-
-baiduocr(str[3], d => {
-	console.log('=========')
-	console.log(d.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0]))
-	console.log('=========')
-})
+//
+// let str = [
+// 	'https://gchat.qpic.cn/gchatpic_new/799018865/4188919449-2224573346-91BE2AE2146336DD99470CCB0997CA6C/0?term=3',
+// 	'https://gchat.qpic.cn/gchatpic_new/1936049750/4188919449-2727410335-BCB4045FB92196E65E911F476196F05A/0?term=3',
+// 	'https://gchat.qpic.cn/gchatpic_new/993164709/4188919449-3179366049-38938239A0C02C8A2D91D29FFCDDDABA/0?term=3',
+// 	'https://gchat.qpic.cn/gchatpic_new/993164709/4188919449-3086194633-4FBD20E083C833C0C82439589CE00B19/0?term=3'
+// ]
+//
+// baiduocr(str[3], d => {
+// 	console.log('=========')
+// 	console.log(d.split('\n').map(x => x.match(/[\u4e00-\u9fa5]+\+\d+(\.\d+)?%?/)).filter(x => x).map(x => x[0]))
+// 	console.log('=========')
+// })
 
 // numberOcr('https://gchat.qpic.cn/gchatpic_new/799018865/2195700800-2610016468-C0E1FEE88BFB514CE5E7A7953F2FBCAB/0?term=3', d => {
 // 	console.log(d)
@@ -40,7 +40,7 @@ baiduocr(str[3], d => {
 // akc('123456', '5 1-1 1-80   ', c)
 // aks('123456', '初雪', c)
 // aks('111', '阿米娅/升变', c, true)
-// aks('123456', '安洁 8', c)
+aks('123456', '安洁 8', c)
 // aks('123456', '空爆 8', c)
 // aks('123456', '黑角 8', c)
 // aks('123456', '-2 8', c)

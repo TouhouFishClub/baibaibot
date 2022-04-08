@@ -11,7 +11,7 @@ const loadSkillFile = () => {
     Object.keys(ark_skill).forEach(sk => {
       // console.log(ark_skill[sk].levels)
       ark_skill[sk].levels = ark_skill[sk].levels.map(lev => {
-        let out = lev.description, blackboardMap = {}
+        let out = lev.description || '', blackboardMap = {}
         lev.blackboard.forEach(bb => {
           blackboardMap[bb.key] = bb.value
         })
