@@ -977,7 +977,7 @@
   "commonPotentialLvlUpCount": 4,
   "weeklyOverrideDesc": "",
   "voucherDiv": 5,
-  "recruitPoolVersion": 6,
+  "recruitPoolVersion": 7,
   "v006RecruitTimeStep1Refresh": 1577172600,
   "v006RecruitTimeStep2Check": 1577154600,
   "v006RecruitTimeStep2Flush": 1577649600,
@@ -1048,7 +1048,7 @@
   "replicateShopStartTime": 1597132800,
   "TSO": 1608192000,
   "isDynIllustEnabled": true,
-  "isRoguelikeTopicFuncEnabled": false,
+  "isRoguelikeTopicFuncEnabled": true,
   "voucherSkinRedeem": 1,
   "voucherSkinDesc": "当某位干员的<color=#ffa633>首个</color>异格上线时，若曾使用<color=#ffa633>源石</color>购买过该干员的时装，则在该干员的<color=#ffa633>首个</color>异格上线后返还通过源石购买的该干员时装件数对应数量的道具<color=#33b5ff>【时装自选凭证】</color>。\n\n若有以下情况，则在异格干员上线后<color=#ffa633>不进行返还</color>：\n1.在某位干员的首个异格干员上线前，使用【时装自选凭证】兑换了原干员的时装。\n2.在某位干员的首个异格干员上线后，使用源石购买了原干员的时装。\n3.在某位干员的首个异格干员上线后，使用【时装自选凭证】兑换了原干员的时装。\n\n【时装自选凭证】仅可以兑换当期时装商店中售卖的时装，且<color=#ffa633>不可兑换</color>含有动态形象的时装。若已购买了时装商店中所有的服装或时装商店中无时装售卖时，则【时装自选凭证】<color=#ffa633>无法使用</color>。\n\n此外，若今后有其他<color=#ffa633>不可使用</color>【时装自选凭证】兑换的时装出现时，届时会告知博士，敬请注意。",
   "charmEquipCount": 5,
@@ -1181,12 +1181,12 @@
     "cc.bd_a1": {
       "termId": "cc.bd_a1",
       "termName": "感知信息",
-      "description": "可影响<$cc.bd_A><@cc.rem>思维链环</></>相关技能\n由以下干员提供\n迷迭香、夕、絮雨、爱丽丝"
+      "description": "可影响<$cc.bd_A><@cc.rem>思维链环</></>相关技能\n由以下干员提供\n迷迭香、夕、令、絮雨、爱丽丝"
     },
     "cc.bd_b1": {
       "termId": "cc.bd_b1",
       "termName": "人间烟火",
-      "description": "由以下干员提供\n夕、乌有、桑葚"
+      "description": "由以下干员提供\n夕、令、乌有、桑葚"
     },
     "cc.bd_ash": {
       "termId": "cc.bd_ash",
@@ -1225,8 +1225,8 @@
     },
     "cc.g.lda": {
       "termId": "cc.g.lda",
-      "termName": "鲤氏侦探所",
-      "description": "包含以下干员\n阿、吽、槐琥"
+      "termName": "鲤氏侦探事务所",
+      "description": "包含以下干员\n老鲤、阿、吽、槐琥"
     },
     "cc.g.ussg": {
       "termId": "cc.g.ussg",
@@ -1241,7 +1241,7 @@
     "cc.g.sp": {
       "termId": "cc.g.sp",
       "termName": "异格",
-      "description": "包含以下干员\n炎狱炎熔、浊心斯卡蒂、假日威龙陈、耀骑士临光"
+      "description": "包含以下干员\n炎狱炎熔、浊心斯卡蒂、假日威龙陈、耀骑士临光、寒芒克洛丝"
     },
     "cc.g.abyssal": {
       "termId": "cc.g.abyssal",
@@ -1257,6 +1257,11 @@
       "termId": "cc.g.karlan",
       "termName": "喀兰贸易",
       "description": "包含以下干员\n银灰、灵知、初雪、崖心、角峰、讯使、耶拉、极光"
+    },
+    "cc.g.sui": {
+      "termId": "cc.g.sui",
+      "termName": "岁",
+      "description": "包含以下干员\n年、夕、令"
     },
     "cc.c.abyssal2_1": {
       "termId": "cc.c.abyssal2_1",
@@ -1293,6 +1298,16 @@
       "termName": "赤金生产线",
       "description": "每有<@cc.kw>1</>间<@cc.kw>制造站</>生产<@cc.kw>赤金</>，则赤金生产线<@cc.kw>+1</>"
     },
+    "cc.w.ncdeer1": {
+      "termId": "cc.w.ncdeer1",
+      "termName": "因果",
+      "description": "每当加工心情消耗<@cc.kw>4</>以下的配方未产出副产品时，所消耗的每<@cc.kw>1</>点心情转化为<@cc.kw>1</>点<@cc.kw>因果</>"
+    },
+    "cc.w.ncdeer2": {
+      "termId": "cc.w.ncdeer2",
+      "termName": "业报",
+      "description": "每当加工心情消耗<@cc.kw>8</>的配方未产出副产品时，所消耗的每<@cc.kw>1</>点心情转化为<@cc.kw>1</>点<@cc.kw>业报</>"
+    },
     "cc.sk.manu1": {
       "termId": "cc.sk.manu1",
       "termName": "标准化类技能",
@@ -1310,5 +1325,6 @@
     }
   },
   "storyReviewUnlockItemLackTip": "事相碎片数量不足，请前往采购凭证区或活动期间商店获取",
-  "isVoiceLangSettingEnabled": true
+  "dataVersion": "26.7.0",
+  "resPrefVersion": "26d0d0"
 }
