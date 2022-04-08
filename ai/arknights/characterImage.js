@@ -82,7 +82,7 @@ const renderImage = async (chInfo, level, callback, otherMsg = '') => {
   /* avatar*/
   let hasAvatar = await drawImageSync(
     ctx,
-    path.join(__dirname, `chara/${chInfo.info.appellation}.png`),
+    path.join(__dirname, `chara/${chInfo.info.appellation.replace(/\"/g, '')}.png`),
     offsetLeft,
     offsetTop,
     AVATAR_WIDTH,
