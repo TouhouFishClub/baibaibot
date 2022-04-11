@@ -74,7 +74,7 @@ const renderRecipeImage = (html, name, callback, msg = '', order = 'IF') => {
       .MainBody {
         position: absolute;
         width: 899px;
-        /*height: 568px;*/
+        height: 2568px;
         top: 1;
         left: 1;
         border: 5px solid gold;
