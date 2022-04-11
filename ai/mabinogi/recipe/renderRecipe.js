@@ -54,35 +54,31 @@ const renderRecipeImage = (html, name, callback, msg = '', order = 'IF') => {
       }
       .Overall {
         width: 911px;
-        height: 2580px;
         border: 5px solid gold;
-        position: relative;
+        /*position: relative;*/
         margin：auto;
         text-align: center
       }
-      .ItemList {
-        position: absolute;
-        width: 0;
-        height: 9px;
-        top: -5;
-        right: 911;
-        border: 1px solid gold;
-        overflow: auto;
-        background-color: #000
-      }
+      /*.ItemList {*/
+      /*  position: absolute;*/
+      /*  width: 0;*/
+      /*  height: 9px;*/
+      /*  top: -5;*/
+      /*  right: 911;*/
+      /*  border: 1px solid gold;*/
+      /*  overflow: auto;*/
+      /*  background-color: #000*/
+      /*}*/
   
       .MainBody {
-        position: absolute;
+        /*position: absolute;*/
         width: 899px;
-        height: 568px;
-        top: 1;
-        left: 1;
+        /*height: 568px;*/
+        margin: 1px;
         border: 5px solid gold;
         overflow: hidden;
         font-size: 12px;
         text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
-        -webkit-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
-        -moz-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0
       }
   
       #List Table {
@@ -110,32 +106,32 @@ const renderRecipeImage = (html, name, callback, msg = '', order = 'IF') => {
         -moz-text-shadow: #DDD 1px 0 0, #DDD 0 1px 0, #DDD -1px 0 0, #DDD 0 -1px 0
       }
       
-      #ItemLists td, #MaterialLists td, #Skill td {
-        border: 1px solid #000
-      }
+      /*#ItemLists td, #MaterialLists td, #Skill td {*/
+      /*  border: 1px solid #000*/
+      /*}*/
       
-      #ItemLists td:hover, #Skill td:hover {
-        border: 1px solid gold
-      }
+      /*#ItemLists td:hover, #Skill td:hover {*/
+      /*  border: 1px solid gold*/
+      /*}*/
       
       td {
         padding: 1px
       }
       
-      .Skill {
-        position: absolute;
-        width: 378px;
-        height: 574px;
-        bottom: -5;
-        left: 1;
-        border: 5px solid gold;
-        overflow: hidden;
-        font-size: 15px;
-        background-color: black;
-        text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
-        -webkit-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
-        -moz-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0
-      }
+      /*.Skill {*/
+      /*  position: absolute;*/
+      /*  width: 378px;*/
+      /*  height: 574px;*/
+      /*  bottom: -5;*/
+      /*  left: 1;*/
+      /*  border: 5px solid gold;*/
+      /*  overflow: hidden;*/
+      /*  font-size: 15px;*/
+      /*  background-color: black;*/
+      /*  text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
+      /*  -webkit-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
+      /*  -moz-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0*/
+      /*}*/
     </style>
   </head>
   <body style="text-align:center;">
