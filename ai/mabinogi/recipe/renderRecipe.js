@@ -56,7 +56,7 @@ const renderRecipeImage = (html, name, showDesc = false, callback, msg = '', ord
       }
       .Overall {
         width: 911px;
-        ${showDesc ? '' : 'height: 500px;'}
+        ${showDesc ? '' : 'height: 500px;overflow:hidden;'}
         border: 5px solid gold;
         /*position: relative;*/
         margin：auto;
