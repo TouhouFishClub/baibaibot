@@ -27,7 +27,7 @@ const analysisImgSrc = htmlData =>
   }).join('')
 
 
-const renderRecipeImage = (html, name, callback, msg = '', order = 'IF') => {
+const renderRecipeImage = (html, name, showDesc = false, callback, msg = '', order = 'IF') => {
   let output = path.join(IMAGE_DATA, 'mabi_recipe', `${name}.png`)
   // let output = path.join(`${name}.png`)
   nodeHtmlToImage({
@@ -56,6 +56,7 @@ const renderRecipeImage = (html, name, callback, msg = '', order = 'IF') => {
       }
       .Overall {
         width: 911px;
+        ${showDesc ? '' : 'height: 500px;'}
         border: 5px solid gold;
         /*position: relative;*/
         margin：auto;

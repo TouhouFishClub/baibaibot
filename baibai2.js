@@ -1358,6 +1358,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
+  if(fie == 'mbd'){
+    searchMabiRecipe(con.substring(3).trim(), callback, true);
+    return;
+  }
+
   if(rcontent=='好感度'){
     getLike(from,name,callback);
     return;

@@ -1,7 +1,7 @@
 const { renderRecipeImage } = require('./renderRecipe')
 const { getItems } = require('./source')
 
-const searchMabiRecipe = (content, callback) => {
+const searchMabiRecipe = (content, callback, showDesc = false) => {
   let { ItemNameToItemId, ItemIdToItemDetail } = getItems()
   let targets = []
   if(/^\d+$/.test(content)){
@@ -18,7 +18,7 @@ const searchMabiRecipe = (content, callback) => {
   }
   if(targets.length) {
     if(targets.length == 1) {
-      renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(targets[0])).html, targets[0], callback)
+      renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(targets[0])).html, targets[0], showDesc, callback)
     } else {
       callback(`找到${targets.length}\n${targets.slice(0, 10).map(x => `mbi ${ItemNameToItemId.get(x)} | ${x}`).join('\n')}`)
     }
