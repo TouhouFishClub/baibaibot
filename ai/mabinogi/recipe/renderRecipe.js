@@ -10,10 +10,12 @@ const analysisImgSrc = htmlData =>
     if (index) {
       let sp = domSplit.split("'")
       let imageSrc = sp.shift()
-      if (!imgHash[imageSrc] && fs.existsSync(path.join(__dirname, 'img', imageSrc))) {
-        let image = fs.readFileSync(path.join(__dirname, 'img', imageSrc));
-        let base64Image = new Buffer.from(image).toString('base64');
-        imgHash[imageSrc] = 'data:image/jpeg;base64,' + base64Image
+      if(fs.existsSync(path.join(__dirname, 'img', imageSrc))) {
+        if (!imgHash[imageSrc]) {
+          let image = fs.readFileSync(path.join(__dirname, 'img', imageSrc));
+          let base64Image = new Buffer.from(image).toString('base64');
+          imgHash[imageSrc] = 'data:image/jpeg;base64,' + base64Image
+        }
       } else {
         console.log('== error image ==')
         imgHash[imageSrc] = ''
