@@ -78,7 +78,7 @@ const renderRecipeImage = (html, name, callback, msg = '', order = 'IF') => {
         top: 1;
         left: 1;
         border: 5px solid gold;
-        overflow: auto;
+        overflow: hidden;
         font-size: 12px;
         text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
         -webkit-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
