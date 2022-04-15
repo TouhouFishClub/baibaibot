@@ -29,8 +29,9 @@ const fetchData = ( page ) =>
       // token: '', //Mirai's 全数据
       content: '',
       page,
-      server: "潘妮",
-      start: '2022-03-30 11:30:00',
+      server: "伊文",
+      // start: '2022-03-30 11:30:00',
+      start: '2022-04-13 11:30:00',
       end: DateToStr(new Date())
     }
     const req = http.request(options, res => {
@@ -75,7 +76,7 @@ const statistics = async () => {
   let SRankMap = new Map(), count = 0, targetUser = []
   data.filter(x => new Date(x.createTime).getTime() > timeLeftTs).forEach((list, index) => {
     let { item, createTime, player } = list
-    if(item == '闪耀舞台小猫特效(面部装扮栏专用)'){
+    if(item == '特殊小熊爱豆服饰(女式)'){
       targetUser.push(list)
     }
     if(SRankMap.get(item)) {
@@ -120,7 +121,7 @@ const statistics = async () => {
   out.forEach(item => {
     console.log(`概率: ${item.rareStr}%\t次数: ${fixNumber(item.count)}\t最后电视: ${fixNumber(item.last)}次前(${item.lastTime} | ${item.lastUser})\t${item.name}`)
   })
-  console.log('==== 闪耀舞台小猫特效(面部装扮栏专用) ====')
+  console.log('==== 特殊小熊爱豆服饰(女式) ====')
   console.log(targetUser.map(x => `${x.createTime}\t${fixStrLength(12, x.player)}`).join('\n'))
 }
 
