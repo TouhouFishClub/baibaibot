@@ -339,7 +339,7 @@ function itemMarket(itemid,itemname,callback,cookie){
 
 
           var ss1 = s1.substring(ne);
-          var nn1 = ss1.indexOf('交易历史');
+          var nn1 = ss1.indexOf('交易记录');
           var ss2 = ss1.substring(nn1+1);
           var nn22 = ss2.indexOf('<tbody>');
           var ss22 = ss2.substring(nn22+1);
