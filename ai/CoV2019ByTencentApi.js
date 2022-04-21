@@ -44,6 +44,14 @@ const fetchData = async () => {
     console.log('=================\n\n\n\n\n')
     console.log(e)
     console.log('\n\n\n\n\n=================')
+
+    try {
+      res = JSON.parse(`${JSON.parse(res.body).data}}`)
+    } catch (e) {
+      console.log('=================\n\n')
+      console.log(e)
+      console.log('\n\n=================')
+    }
   }
   updateQuery(res)
   return res
