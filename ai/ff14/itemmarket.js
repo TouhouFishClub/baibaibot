@@ -169,6 +169,7 @@ function searchID(str,callback,cookie){
     request({
         url: url,
         method: "GET",
+      proxy:'http://192.168.17.241:2346',
         headers:{
             'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
             'referer':'https://universalis.app/',
@@ -206,6 +207,7 @@ function itemMarket(itemid,itemname,callback,cookie){
     request({
         url: url,
         method: "GET",
+        proxy:'http://192.168.17.241:2346',
         headers:{
           'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
             'referer':'https://universalis.app/',
@@ -337,7 +339,7 @@ function itemMarket(itemid,itemname,callback,cookie){
 
 
           var ss1 = s1.substring(ne);
-          var nn1 = ss1.indexOf('交易历史');
+          var nn1 = ss1.indexOf('交易记录');
           var ss2 = ss1.substring(nn1+1);
           var nn22 = ss2.indexOf('<tbody>');
           var ss22 = ss2.substring(nn22+1);
