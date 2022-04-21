@@ -38,7 +38,13 @@ const checkArea = area => Object.keys(areaQuery).filter(x => x.match(new RegExp(
 
 const fetchData = async () => {
   let res = await requestPromise('https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5')
-  res = JSON.parse(JSON.parse(res.body).data)
+  try {
+    res = JSON.parse(JSON.parse(res.body).data)
+  } catch (e) {
+    console.log('=================\n\n\n\n\n')
+    console.log(e)
+    console.log('\n\n\n\n\n=================')
+  }
   updateQuery(res)
   return res
 }

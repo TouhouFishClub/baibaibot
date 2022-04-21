@@ -72,11 +72,12 @@ const fixNumber = number => number < 100 ? ` ${number < 10 ? ` ${number}` : `${n
 
 const statistics = async () => {
   let timeLeftTs = new Date('2022-3-30 11:30:00').getTime()
+  let tar = '特殊闪耀舞台直播服饰(女式)'
   let data = await fetchAllData()
   let SRankMap = new Map(), count = 0, targetUser = []
   data.filter(x => new Date(x.createTime).getTime() > timeLeftTs).forEach((list, index) => {
     let { item, createTime, player } = list
-    if(item == '特殊小熊爱豆服饰(女式)'){
+    if(item == tar){
       targetUser.push(list)
     }
     if(SRankMap.get(item)) {
@@ -121,7 +122,7 @@ const statistics = async () => {
   out.forEach(item => {
     console.log(`概率: ${item.rareStr}%\t次数: ${fixNumber(item.count)}\t最后电视: ${fixNumber(item.last)}次前(${item.lastTime} | ${item.lastUser})\t${item.name}`)
   })
-  console.log('==== 特殊小熊爱豆服饰(女式) ====')
+  console.log(`==== ${tar} ====`)
   console.log(targetUser.map(x => `${x.createTime}\t${fixStrLength(12, x.player)}`).join('\n'))
 }
 
