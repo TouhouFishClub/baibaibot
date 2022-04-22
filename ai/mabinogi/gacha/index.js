@@ -3,16 +3,39 @@ const iconv = require('iconv-lite')
 const path = require('path-extra')
 const _ = require('lodash')
 const HTMLParser = require('node-html-parser');
+const { drawTxtImage } = require('../../../cq/drawImageBytxt')
 
 let gachaInfo = [
 
 ]
 
-const mabiGacha = async (user, gachaType, gachaGroup, callback) => {
+const mabiGacha = async (user, callback, gachaType, gachaGroup) => {
 	if(!gachaInfo.length) {
 		await loadGachaGroup()
 	}
+	let gachaCount = 60, gacha = gachaInfo[0]
+	let items = randomGacha(gacha, gachaCount)
+	let str =  `你抽了${gachaCount}次${gacha.name}，其中\nS级: ${items.filter(x => x.rare == 'S').length}次  A级: ${items.filter(x => x.rare == 'A').length}次  B级: ${items.filter(x => x.rare == 'B').length}次  C级: ${items.filter(x => x.rare == 'C').length}次  D级: ${items.filter(x => x.rare == 'D').length}次\n其中S级有：\n${items.filter(x => x.rare == 'S').map(x => x.item).join('\n')}`
+	drawTxtImage(`[CQ:at,qq=${user}]`, str, callback, {color: 'black', font: 'STXIHEI.TTF'})
+}
 
+const randomGacha = (gachaInfo, count) => {
+	let items = [], rareTag = _.concat(
+		new Array(~~(gachaInfo.rare['S'][1] * 100)).fill('S'),
+		new Array(~~(gachaInfo.rare['A'][1] * 100)).fill('A'),
+		new Array(~~(gachaInfo.rare['B'][1] * 100)).fill('B'),
+		new Array(~~(gachaInfo.rare['C'][1] * 100)).fill('C'),
+		new Array(~~(gachaInfo.rare['D'][1] * 100)).fill('D')
+	)
+	for(let i = 0; i < count; i++) {
+		let targetRare = rareTag[~~(Math.random() * rareTag.length)]
+		let target = gachaInfo.rare[targetRare][2][~~(Math.random() * gachaInfo.rare[targetRare][2].length)]
+		items.push({
+			rare: targetRare,
+			item: target
+		})
+	}
+	return items
 }
 
 const loadGachaGroup = async () => {
@@ -25,7 +48,7 @@ const loadGachaGroup = async () => {
 		let target = []
 		for(let i = 0; i < urls.length; i ++) {
 			// 遍历url
-			console.log(`=== fetch ${urls[i]} ===`)
+			// console.log(`=== fetch ${urls[i]} ===`)
 			let data = await fetchData(urls[i])
 			data = splitStr(data, 'id="newscontent"', '</dd>')
 			let tar = data.split('\n').filter(x => x.indexOf('查看概率') > -1)[0]
@@ -33,7 +56,7 @@ const loadGachaGroup = async () => {
 			console.log(tar)
 			if(tar) {
 				let obj = {}
-				console.log(splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/, '').split(' '))
+				// console.log(splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/, '').split(' '))
 				obj.name = splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/, '').split(' ').filter(x => x && x.match(/礼包/))[0]
 				obj.link = splitStr(tar, '<a href="', '"', true)
 				target.push(obj)
@@ -42,12 +65,37 @@ const loadGachaGroup = async () => {
 		target = target.filter(x => x.link.startsWith('https://') || x.link.startsWith('http://'))
 		console.log(target)
 		for(let j = 0; j < target.length; j++) {
+			let info = {}
 			let t = target[j]
+			info.name = t.name
 			let data = await fetchData(t.link)
-			let sp = splitStr(data, '<table', '</table>')
-			let root = HTMLParser.parse(sp)
-			console.log(root)
+			// let sp = splitStr(data, '<body', '</body>')
+			let pl = splitStr(splitStr(data, 'var pl', '}'), '{', '}')
+			// console.log('================\n\n\n\n')
+			// let root = HTMLParser.parse(sp).querySelectorAll('table').toString()
+			// console.log(root)
+			// console.log(pl)
+			// console.log(data)
+			// console.log('\n\n\n\n================')
+			// root.querySelectorAll('tr').forEach(tr => {
+			// 	console.log('=============')
+			// 	console.log(tr)
+			// 	tr.querySelectorAll('td').forEach(td => {
+			// 		console.log(td)
+			// 	})
+			// })
+			// console.log(root)
+			try {
+				let raremap
+				eval(`raremap = ${pl.trim()}`)
+				info.rare = raremap
+				gachaInfo.push(info)
+			} catch (e) {
+				console.log('====== MABINOGI GACHA ERROR ======')
+				console.log(e)
+			}
 		}
+		// console.log(gachaInfo)
 	}
 }
 
