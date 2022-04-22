@@ -49,6 +49,7 @@ const fetchData = async () => {
       d = d.split('}}]}')
       d.pop()
       d = `${d.join('}}]}')}}}]}]}`
+      console.log(d)
       res = JSON.parse(d)
     } catch (e) {
 
