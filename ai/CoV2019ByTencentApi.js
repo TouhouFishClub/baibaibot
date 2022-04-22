@@ -44,7 +44,18 @@ const fetchData = async () => {
     console.log('=================')
     console.log(e)
     console.log('=================')
-    res = {}
+    try {
+      let d = JSON.parse(res.body).data
+      d = d.split('}}]}')
+      d.pop()
+      d = `${d}]}`
+      res = JSON.parse(d)
+    } catch (e) {
+
+      console.log('=========FIX ERROR========')
+      console.log(e)
+      console.log('=================')
+    }
   }
   updateQuery(res)
   return res
