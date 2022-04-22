@@ -1027,7 +1027,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.match(/^尔格\d{1,2}突破\d{1,5}手$/)) {
     ergo(from, content, callback)
   }
-  if(content == '洛奇来一单', from == 799018865) {
+  if(content == '洛奇来一单') {
     mabiGacha(from, callback)
   }
 
