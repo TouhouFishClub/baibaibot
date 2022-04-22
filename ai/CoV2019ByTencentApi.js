@@ -48,7 +48,7 @@ const fetchData = async () => {
       let d = JSON.parse(res.body).data
       d = d.split('}}]}')
       d.pop()
-      d = `${d.join('}}]}')}}}]}]}`
+      d = `${d.join('}}]}')}}}]}`
       console.log(d.split('}').length)
       console.log(d.split('{').length)
       console.log(d.split(']').length)
