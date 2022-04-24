@@ -1,5 +1,5 @@
 const { mabiGacha } = require('./index')
-mabiGacha('111', '222', '333', d => {
+mabiGacha('111', d => {
 	console.log(d)
 })
 // var HTMLParser = require('node-html-parser');
