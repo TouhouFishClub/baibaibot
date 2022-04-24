@@ -5,9 +5,7 @@ const _ = require('lodash')
 const HTMLParser = require('node-html-parser');
 const { drawTxtImage } = require('../../../cq/drawImageBytxt')
 
-let userPointCount = {
-
-}
+let userPointCount = new Map()
 
 let gachaInfo = [
 
@@ -20,7 +18,7 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 	let gacha = gachaInfo[0]
 	let items = randomGacha(gacha, gachaCount)
 
-	let point
+	let point = 0
 
 	switch(gachaCount) {
 		case 1:
@@ -39,10 +37,13 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 			point = 0
 	}
 
-	if(userPointCount[user]) {
-		userPointCount[user] = point
+	console.log(point)
+
+
+	if(userPointCount.has(user)) {
+		userPointCount.set(user, userPointCount.get(user) + point)
 	} else {
-		userPointCount[user] += point
+		userPointCount.set(user, point)
 	}
 
 
@@ -60,10 +61,10 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 		str += `其中D级有：\n${items.filter(x => x.rare == 'D').map(x => x.item).sort().join('\n')}`
 	}
 
-	str += `\n你已经用了${userPointCount[user]}点`
+	str += `\n你已经用了${userPointCount.get(user)}点`
 
-	// console.log(str)
-	drawTxtImage(`[CQ:at,qq=${user}]`, str, callback, {color: 'black', font: 'STXIHEI.TTF'})
+	console.log(str)
+	// drawTxtImage(`[CQ:at,qq=${user}]`, str, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
 const randomGacha = (gachaInfo, count) => {
