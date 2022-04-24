@@ -15,8 +15,20 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 	}
 	let gacha = gachaInfo[0]
 	let items = randomGacha(gacha, gachaCount)
-	let str =  `你抽了${gachaCount}次${gacha.name}，其中（本次概率 / 官方概率）\nS级: ${items.filter(x => x.rare == 'S').length}次 (${(items.filter(x => x.rare == 'S').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['S'][1]}%)\nA级: ${items.filter(x => x.rare == 'A').length}次 (${(items.filter(x => x.rare == 'A').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['A'][1]}%)\nB级: ${items.filter(x => x.rare == 'B').length}次 (${(items.filter(x => x.rare == 'B').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['B'][1]}%)\nC级: ${items.filter(x => x.rare == 'C').length}次 (${(items.filter(x => x.rare == 'C').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['C'][1]}%)\nD级: ${items.filter(x => x.rare == 'D').length}次 (${(items.filter(x => x.rare == 'D').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['D'][1]}%)\n其中S级有：\n${items.filter(x => x.rare == 'S').map(x => x.item).join('\n')}`
+	let str =  `你抽了${gachaCount}次${gacha.name}，其中（本次概率 / 官方概率）\nS级: ${items.filter(x => x.rare == 'S').length}次 (${(items.filter(x => x.rare == 'S').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['S'][1]}%)\nA级: ${items.filter(x => x.rare == 'A').length}次 (${(items.filter(x => x.rare == 'A').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['A'][1]}%)\nB级: ${items.filter(x => x.rare == 'B').length}次 (${(items.filter(x => x.rare == 'B').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['B'][1]}%)\nC级: ${items.filter(x => x.rare == 'C').length}次 (${(items.filter(x => x.rare == 'C').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['C'][1]}%)\nD级: ${items.filter(x => x.rare == 'D').length}次 (${(items.filter(x => x.rare == 'D').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['D'][1]}%)\n`
 
+	if(items.filter(x => x.rare == 'S').length > 0) {
+		str += `其中S级有：\n${items.filter(x => x.rare == 'S').map(x => x.item).sort().join('\n')}`
+	} else if(items.filter(x => x.rare == 'A').length > 0) {
+		str += `其中A级有：\n${items.filter(x => x.rare == 'A').map(x => x.item).sort().join('\n')}`
+	} else if(items.filter(x => x.rare == 'B').length > 0) {
+		str += `其中B级有：\n${items.filter(x => x.rare == 'B').map(x => x.item).sort().join('\n')}`
+	} else if(items.filter(x => x.rare == 'C').length > 0) {
+		str += `其中C级有：\n${items.filter(x => x.rare == 'C').map(x => x.item).sort().join('\n')}`
+	} else if(items.filter(x => x.rare == 'D').length > 0) {
+		str += `其中D级有：\n${items.filter(x => x.rare == 'D').map(x => x.item).sort().join('\n')}`
+	}
+	
 	// console.log(str)
 	drawTxtImage(`[CQ:at,qq=${user}]`, str, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
