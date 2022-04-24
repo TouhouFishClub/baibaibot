@@ -1459,7 +1459,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   let co = content.indexOf('疫情')
-  if(content.endsWith('疫情') && content.length <= 10) {
+  if(content.endsWith('疫情') && content.length <= 10 && content.length > 2) {
     cov(content.substring(0, content.length - 2), callback)
     return
   }
