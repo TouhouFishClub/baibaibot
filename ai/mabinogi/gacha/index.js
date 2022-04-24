@@ -37,7 +37,7 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 			point = 0
 	}
 
-	console.log(point)
+	// console.log(point)
 
 
 	if(userPointCount.has(user)) {
@@ -63,8 +63,8 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 
 	str += `\n你已经用了${userPointCount.get(user)}点`
 
-	console.log(str)
-	// drawTxtImage(`[CQ:at,qq=${user}]`, str, callback, {color: 'black', font: 'STXIHEI.TTF'})
+	// console.log(str)
+	drawTxtImage(`[CQ:at,qq=${user}]`, str, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
 const randomGacha = (gachaInfo, count) => {
