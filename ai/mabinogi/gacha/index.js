@@ -5,6 +5,10 @@ const _ = require('lodash')
 const HTMLParser = require('node-html-parser');
 const { drawTxtImage } = require('../../../cq/drawImageBytxt')
 
+let userPointCount = {
+
+}
+
 let gachaInfo = [
 
 ]
@@ -15,7 +19,34 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 	}
 	let gacha = gachaInfo[0]
 	let items = randomGacha(gacha, gachaCount)
-	let str =  `你抽了${gachaCount}次${gacha.name}，其中（本次概率 / 官方概率）\nS级: ${items.filter(x => x.rare == 'S').length}次 (${(items.filter(x => x.rare == 'S').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['S'][1]}%)\nA级: ${items.filter(x => x.rare == 'A').length}次 (${(items.filter(x => x.rare == 'A').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['A'][1]}%)\nB级: ${items.filter(x => x.rare == 'B').length}次 (${(items.filter(x => x.rare == 'B').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['B'][1]}%)\nC级: ${items.filter(x => x.rare == 'C').length}次 (${(items.filter(x => x.rare == 'C').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['C'][1]}%)\nD级: ${items.filter(x => x.rare == 'D').length}次 (${(items.filter(x => x.rare == 'D').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['D'][1]}%)\n`
+
+	let point
+
+	switch(gachaCount) {
+		case 1:
+			point = 50
+			break
+		case 11:
+			point = 500
+			break
+		case 60:
+			point = 2640
+			break
+		case 600:
+			point = 26400
+			break
+		default:
+			point = 0
+	}
+
+	if(userPointCount[user]) {
+		userPointCount[user] = point
+	} else {
+		userPointCount[user] += point
+	}
+
+
+	let str =  `你抽了${gachaCount}次${gacha.name}，其中(本次概率 / 官方概率)\nS级: ${items.filter(x => x.rare == 'S').length}次 (${(items.filter(x => x.rare == 'S').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['S'][1]}%)\nA级: ${items.filter(x => x.rare == 'A').length}次 (${(items.filter(x => x.rare == 'A').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['A'][1]}%)\nB级: ${items.filter(x => x.rare == 'B').length}次 (${(items.filter(x => x.rare == 'B').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['B'][1]}%)\nC级: ${items.filter(x => x.rare == 'C').length}次 (${(items.filter(x => x.rare == 'C').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['C'][1]}%)\nD级: ${items.filter(x => x.rare == 'D').length}次 (${(items.filter(x => x.rare == 'D').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['D'][1]}%)\n`
 
 	if(items.filter(x => x.rare == 'S').length > 0) {
 		str += `其中S级有：\n${items.filter(x => x.rare == 'S').map(x => x.item).sort().join('\n')}`
@@ -28,7 +59,9 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 	} else if(items.filter(x => x.rare == 'D').length > 0) {
 		str += `其中D级有：\n${items.filter(x => x.rare == 'D').map(x => x.item).sort().join('\n')}`
 	}
-	
+
+	str += `\n你已经用了${userPointCount[user]}点`
+
 	// console.log(str)
 	drawTxtImage(`[CQ:at,qq=${user}]`, str, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
