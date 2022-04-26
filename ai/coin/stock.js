@@ -14,6 +14,10 @@ function getStock(callback){
     hostname: 'hq.sinajs.cn',
     port: 80,
     path: '/list=s_sh000001,s_sz399001,s_sz399300,int_hangseng,int_dji,int_nasdaq,int_sp500,int_nikkei',
+    headers:{
+      'Referer':'https://finance.sina.com.cn',
+      'User-Agent':'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Mobile Safari/537.36'
+    }
     method: 'GET',
   };
   options['Accept-Language']='zh-CN,zh;q=0.9';
