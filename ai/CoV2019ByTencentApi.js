@@ -58,8 +58,8 @@ const fetchData = async () => {
   //     console.log('=================')
   //   }
   // }
-  res = JSON.parse(res.body).data
-  // console.log(res)
+  res = JSON.parse(res.body).data.diseaseh5Shelf
+  console.log(res)
   updateQuery(res)
   return res
 }
