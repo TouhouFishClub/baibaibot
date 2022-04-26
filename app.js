@@ -360,7 +360,7 @@ app.get(`/api/*`, (req, res) => {
 
 function groupm(req,res,path){
   res.set("Access-Control-Allow-Origin", "*");
-  var url = `http://192.168.17.52:${PORT}/`+path;
+  var url = `http://192.168.17.236:${PORT}/`+path;
   let query = qs.stringify(req.query)
   if(query) {
     url = `${url}?${query}`
