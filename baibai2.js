@@ -6,7 +6,7 @@ var request = require('request');
 let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 
-const localip = "192.168.17.236";
+const { myip } = require('./baibaiConfigs')
 
 var path = require('path');
 //const { QQ, MsgHandler } = require('./qqlib');
@@ -176,7 +176,7 @@ function initWS(){
       }
     });
   });
-  client.connect('ws://'+localip+':23335/event');
+  client.connect('ws://'+myip+':23335/event');
 }
 
 function initWS2(){
@@ -204,7 +204,7 @@ function initWS2(){
       }
     });
   });
-  client.connect('ws://'+localip+':24335/event');
+  client.connect('ws://'+myip+':24335/event');
 }
 
 function initWS3(){
@@ -232,7 +232,7 @@ function initWS3(){
       }
     });
   });
-  client.connect('ws://'+localip+':25335/event');
+  client.connect('ws://'+myip+':25335/event');
 }
 
 function initWS4(){
@@ -260,7 +260,7 @@ function initWS4(){
       }
     });
   });
-  client.connect('ws://'+localip+':29335/event');
+  client.connect('ws://'+myip+':29335/event');
 }
 
 function initWS5(){
@@ -288,7 +288,7 @@ function initWS5(){
             }
         });
     });
-    client.connect('ws://'+localip+':27335/event');
+    client.connect('ws://'+myip+':27335/event');
 }
 
 function reconnect(){
@@ -410,7 +410,7 @@ function addSendQueue(groupid,msg,botqq){
             "Content-Type":"application/json"
         },
         method: "POST",
-        url: 'http://'+localip+':'+port+'/send_group_msg',
+        url: 'http://'+myip+':'+port+'/send_group_msg',
         body: JSON.stringify(bdy)
     }, function(error, response, body) {
         if (error && error.code) {
@@ -604,7 +604,7 @@ function handleMsg_D(msgObj,botqq) {
       if (res.trim().length > 0) {
         setTimeout(function () {
           var options = {
-            host: ''+localip+'',
+            host: ''+myip+'',
             port: port,
             path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(res),
             method: 'GET',
@@ -668,7 +668,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.startsWith("w")){
 
     var options = {
-      host: ''+localip+'',
+      host: ''+myip+'',
       port: 11005,
       path: '/c?d='+encodeURIComponent(content)+'&gid='+groupid+"&name="+encodeURIComponent(name)+"&qq="+from+"&port="+port,
       method: 'GET',

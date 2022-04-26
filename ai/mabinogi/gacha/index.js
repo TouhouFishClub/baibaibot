@@ -5,11 +5,16 @@ const _ = require('lodash')
 const HTMLParser = require('node-html-parser');
 const { drawTxtImage } = require('../../../cq/drawImageBytxt')
 
+const MongoClient = require('mongodb').MongoClient
+const MONGO_URL = require('../../../baibaiConfigs').mongourl;
+
 let userPointCount = new Map()
 
 let gachaInfo = [
 
 ]
+
+let client
 
 const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 	if(!gachaInfo.length) {
@@ -138,6 +143,17 @@ const loadGachaGroup = async () => {
 				eval(`raremap = ${pl.trim()}`)
 				info.rare = raremap
 				gachaInfo.push(info)
+
+				if(!client) {
+					try {
+						client = await MongoClient.connect(MONGO_URL)
+					} catch (e) {
+						console.log('MONGO ERROR FOR MABINOGI GACHA MODULE!!')
+						console.log(e)
+					}
+				}
+
+
 			} catch (e) {
 				console.log('====== MABINOGI GACHA ERROR ======')
 				console.log(e)

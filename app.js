@@ -13,6 +13,7 @@ const mkdirsSync = require('./lib/mkdirsSync')
 const multer = require('multer')
 const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
 const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
+const { myip } = require('./baibaiConfigs')
 const ports = new Set([
 	// 23334,
 	24334, // 2号机 3291864216
@@ -252,7 +253,7 @@ app.get('/send_group_msg',(reqp, resp) => {
     resp.set("Access-Control-Allow-Origin", "*");
     if(res.trim().length>0){
       var options = {
-        host: require('./baibaiConfigs').myip,
+        host: myip,
         port: PORT,
         path: '/send_group_msg?group_id='+groupid+'&message='+encodeURIComponent(res),
         method: 'GET',
@@ -360,7 +361,7 @@ app.get(`/api/*`, (req, res) => {
 
 function groupm(req,res,path){
   res.set("Access-Control-Allow-Origin", "*");
-  var url = `http://192.168.17.236:${PORT}/`+path;
+  var url = `http://${myip}:${PORT}/`+path;
   let query = qs.stringify(req.query)
   if(query) {
     url = `${url}?${query}`
@@ -423,7 +424,7 @@ app.get('/blive',function(req,res){
   if(userid){
     var replyData = username+":"+message;
     var options = {
-      host: require('./baibaiConfigs').myip,
+      host: myip,
       port: 25334,
       path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(replyData),
       method: 'GET',
