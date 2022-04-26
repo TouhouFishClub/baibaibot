@@ -3,16 +3,87 @@ const iconv = require('iconv-lite')
 const path = require('path-extra')
 const _ = require('lodash')
 const HTMLParser = require('node-html-parser');
+const { drawTxtImage } = require('../../../cq/drawImageBytxt')
+
+let userPointCount = new Map()
 
 let gachaInfo = [
 
 ]
 
-const mabiGacha = async (user, gachaType, gachaGroup, callback) => {
+const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 	if(!gachaInfo.length) {
 		await loadGachaGroup()
 	}
+	let gacha = gachaInfo[0]
+	let items = randomGacha(gacha, gachaCount)
 
+	let point = 0
+
+	switch(gachaCount) {
+		case 1:
+			point = 50
+			break
+		case 11:
+			point = 500
+			break
+		case 60:
+			point = 2640
+			break
+		case 600:
+			point = 26400
+			break
+		default:
+			point = 0
+	}
+
+	// console.log(point)
+
+
+	if(userPointCount.has(user)) {
+		userPointCount.set(user, userPointCount.get(user) + point)
+	} else {
+		userPointCount.set(user, point)
+	}
+
+
+	let str =  `你抽了${gachaCount}次${gacha.name}，其中(本次概率 / 官方概率)\nS级: ${items.filter(x => x.rare == 'S').length}次 (${(items.filter(x => x.rare == 'S').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['S'][1]}%)\nA级: ${items.filter(x => x.rare == 'A').length}次 (${(items.filter(x => x.rare == 'A').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['A'][1]}%)\nB级: ${items.filter(x => x.rare == 'B').length}次 (${(items.filter(x => x.rare == 'B').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['B'][1]}%)\nC级: ${items.filter(x => x.rare == 'C').length}次 (${(items.filter(x => x.rare == 'C').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['C'][1]}%)\nD级: ${items.filter(x => x.rare == 'D').length}次 (${(items.filter(x => x.rare == 'D').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['D'][1]}%)\n`
+
+	if(items.filter(x => x.rare == 'S').length > 0) {
+		str += `其中S级有：\n${items.filter(x => x.rare == 'S').map(x => x.item).sort().join('\n')}`
+	} else if(items.filter(x => x.rare == 'A').length > 0) {
+		str += `其中A级有：\n${items.filter(x => x.rare == 'A').map(x => x.item).sort().join('\n')}`
+	} else if(items.filter(x => x.rare == 'B').length > 0) {
+		str += `其中B级有：\n${items.filter(x => x.rare == 'B').map(x => x.item).sort().join('\n')}`
+	} else if(items.filter(x => x.rare == 'C').length > 0) {
+		str += `其中C级有：\n${items.filter(x => x.rare == 'C').map(x => x.item).sort().join('\n')}`
+	} else if(items.filter(x => x.rare == 'D').length > 0) {
+		str += `其中D级有：\n${items.filter(x => x.rare == 'D').map(x => x.item).sort().join('\n')}`
+	}
+
+	str += `\n你已经用了${userPointCount.get(user)}点`
+
+	// console.log(str)
+	drawTxtImage(`[CQ:at,qq=${user}]`, str, callback, {color: 'black', font: 'STXIHEI.TTF'})
+}
+
+const randomGacha = (gachaInfo, count) => {
+	let items = [], rareTag = _.concat(
+		new Array(~~(gachaInfo.rare['S'][1] * 100)).fill('S'),
+		new Array(~~(gachaInfo.rare['A'][1] * 100)).fill('A'),
+		new Array(~~(gachaInfo.rare['B'][1] * 100)).fill('B'),
+		new Array(~~(gachaInfo.rare['C'][1] * 100)).fill('C'),
+		new Array(~~(gachaInfo.rare['D'][1] * 100)).fill('D')
+	)
+	for(let i = 0; i < count; i++) {
+		let targetRare = rareTag[~~(Math.random() * rareTag.length)]
+		let target = gachaInfo.rare[targetRare][2][~~(Math.random() * gachaInfo.rare[targetRare][2].length)]
+		items.push({
+			rare: targetRare,
+			item: target
+		})
+	}
+	return items
 }
 
 const loadGachaGroup = async () => {
@@ -25,7 +96,7 @@ const loadGachaGroup = async () => {
 		let target = []
 		for(let i = 0; i < urls.length; i ++) {
 			// 遍历url
-			console.log(`=== fetch ${urls[i]} ===`)
+			// console.log(`=== fetch ${urls[i]} ===`)
 			let data = await fetchData(urls[i])
 			data = splitStr(data, 'id="newscontent"', '</dd>')
 			let tar = data.split('\n').filter(x => x.indexOf('查看概率') > -1)[0]
@@ -33,7 +104,7 @@ const loadGachaGroup = async () => {
 			console.log(tar)
 			if(tar) {
 				let obj = {}
-				console.log(splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/, '').split(' '))
+				// console.log(splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/, '').split(' '))
 				obj.name = splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/, '').split(' ').filter(x => x && x.match(/礼包/))[0]
 				obj.link = splitStr(tar, '<a href="', '"', true)
 				target.push(obj)
@@ -42,12 +113,37 @@ const loadGachaGroup = async () => {
 		target = target.filter(x => x.link.startsWith('https://') || x.link.startsWith('http://'))
 		console.log(target)
 		for(let j = 0; j < target.length; j++) {
+			let info = {}
 			let t = target[j]
+			info.name = t.name
 			let data = await fetchData(t.link)
-			let sp = splitStr(data, '<table', '</table>')
-			let root = HTMLParser.parse(sp)
-			console.log(root)
+			// let sp = splitStr(data, '<body', '</body>')
+			let pl = splitStr(splitStr(data, 'var pl', '}'), '{', '}')
+			// console.log('================\n\n\n\n')
+			// let root = HTMLParser.parse(sp).querySelectorAll('table').toString()
+			// console.log(root)
+			// console.log(pl)
+			// console.log(data)
+			// console.log('\n\n\n\n================')
+			// root.querySelectorAll('tr').forEach(tr => {
+			// 	console.log('=============')
+			// 	console.log(tr)
+			// 	tr.querySelectorAll('td').forEach(td => {
+			// 		console.log(td)
+			// 	})
+			// })
+			// console.log(root)
+			try {
+				let raremap
+				eval(`raremap = ${pl.trim()}`)
+				info.rare = raremap
+				gachaInfo.push(info)
+			} catch (e) {
+				console.log('====== MABINOGI GACHA ERROR ======')
+				console.log(e)
+			}
 		}
+		// console.log(gachaInfo)
 	}
 }
 

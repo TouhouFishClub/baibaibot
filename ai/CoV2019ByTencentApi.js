@@ -37,8 +37,29 @@ const fetchTencentApi = async msg => {
 const checkArea = area => Object.keys(areaQuery).filter(x => x.match(new RegExp(area, 'g')))
 
 const fetchData = async () => {
-  let res = await requestPromise('https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5')
-  res = JSON.parse(JSON.parse(res.body).data)
+  let res = await requestPromise('https://api.inews.qq.com/newsqa/v1/query/inner/publish/modules/list?modules=diseaseh5Shelf')
+  // try {
+  //   res = JSON.parse(JSON.parse(res.body).data)
+  // } catch (e) {
+  //   console.log('=================')
+  //   console.log(e)
+  //   console.log('=================')
+  //   try {
+  //     let d = JSON.parse(res.body).data
+  //     d = d.split('}}]}')
+  //     d.pop()
+  //     d = `${d.join('}}]}')}}}]}]}]}`
+  //     res = JSON.parse(d)
+  //   } catch (e) {
+  //
+  //     res = {}
+  //     console.log('=========FIX ERROR========')
+  //     console.log(e)
+  //     console.log('=================')
+  //   }
+  // }
+  res = JSON.parse(res.body).data.diseaseh5Shelf
+  console.log(res)
   updateQuery(res)
   return res
 }

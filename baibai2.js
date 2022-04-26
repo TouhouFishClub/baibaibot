@@ -130,6 +130,7 @@ const { searchMabiRecipe } = require('./ai/mabinogi/recipe/searchRecipe')
 
 
 const { ergo } = require('./ai/mabinogi/ergo')
+const { mabiGacha } = require('./ai/mabinogi/gacha/index')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -1026,6 +1027,18 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.match(/^尔格\d{1,2}突破\d{1,5}手$/)) {
     ergo(from, content, callback)
   }
+  if(content == '洛奇来一发') {
+    mabiGacha(from, callback, 1)
+  }
+  if(content == '洛奇来十连') {
+    mabiGacha(from, callback, 11)
+  }
+  if(content == '洛奇来一单') {
+    mabiGacha(from, callback, 60)
+  }
+  if(content == '洛奇来十单') {
+    mabiGacha(from, callback, 600)
+  }
 
   let con =content.trim(), fi = con.substring(0,4)
   // if(fi === '释放查询' || fi === 'opts'){
@@ -1455,7 +1468,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   let co = content.indexOf('疫情')
-  if(content.endsWith('疫情') && content.length <= 10) {
+  if(content.endsWith('疫情') && content.length <= 10 && content.length > 2) {
     cov(content.substring(0, content.length - 2), callback)
     return
   }
