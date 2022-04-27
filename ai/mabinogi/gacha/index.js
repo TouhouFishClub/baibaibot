@@ -115,7 +115,7 @@ const loadGachaGroup = async () => {
 				target.push(obj)
 			}
 		}
-		target.push({
+		target.unshift({
 			name: '2022年翅膀手帕礼包（含Bingo）',
 			link: 'http://luoqi.tiancity.com/homepage/event/2022/0427cbpl/'
 		})
