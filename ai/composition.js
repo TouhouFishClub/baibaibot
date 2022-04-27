@@ -3,6 +3,7 @@ const MONGO_URL = require('../baibaiConfigs').mongourl;
 const http = require('http')
 const md5 = require("md5")
 const { drawTxtImage } = require('../cq/drawImageBytxt')
+const { myip } = require('../baibaiConfigs')
 
 let client
 
@@ -59,7 +60,7 @@ const composition = async (context, callback) => {
 
 const fetchGroupUsers = (groupid, port) =>
   new Promise(resolve => {
-    let url = `http://192.168.17.52:${port}/get_group_member_list?group_id=${groupid}`
+    let url = `http://${myip}:${port}/get_group_member_list?group_id=${groupid}`
     http.get(url, (res) => {
       res.setEncoding('utf8');
       let rawData = '';
