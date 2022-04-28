@@ -7,6 +7,7 @@ const { drawTxtImage } = require('../../../cq/drawImageBytxt')
 
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../../baibaiConfigs').mongourl;
+// const MONGO_URL = 'mongodb://127.0.0.1:27017/db_mabinogi_gacha'
 
 let userPointCount = new Map()
 
@@ -143,7 +144,8 @@ const loadGachaGroup = async () => {
 			// })
 			// console.log(root)
 			try {
-				let raremap
+				let raremap = {}
+				// console.log(`raremap = ${pl.trim()}`)
 				eval(`raremap = ${pl.trim()}`)
 				info.rare = raremap
 				gachaInfo.push(info)
@@ -156,10 +158,46 @@ const loadGachaGroup = async () => {
 						console.log(e)
 					}
 				}
-
-
+				let col = client.collection('cl_mabinogi_gacha_info'), rareKeys = Object.keys(raremap)
+				for(let i = 0; i < rareKeys.length; i ++) {
+					let rareInfo = raremap[rareKeys[i]]
+					let [color, rare, rareList] = rareInfo
+					for(let j = 0; j < rareList.length; j ++) {
+						let target = await col.findOne({_id: rareList[j]})
+						if(target) {
+							if(target.info.findIndex(x => x.pool === info.name) > -1) {
+								await col.updateOne(
+									{ _id: rareList[j] },
+									{
+										'$set': {
+											info: target.info.concat([{
+												pool: info.name,
+												rare,
+												color,
+												rareTag: rareKeys[i]
+											}])
+										}
+									}
+								)
+							}
+						} else {
+							await col.save({
+								_id: rareList[j],
+								info: [
+									{
+										pool: info.name,
+										rare,
+										color,
+										rareTag: rareKeys[i]
+									}
+								]
+							})
+						}
+					}
+				}
 			} catch (e) {
-				console.log('====== MABINOGI GACHA ERROR ======')
+				console.log(`====== MABINOGI GACHA ERROR ======`)
+				console.log(t.name)
 				console.log(e)
 			}
 		}
