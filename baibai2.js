@@ -1041,10 +1041,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   let con =content.trim(), fi = con.substring(0,4)
-  // if(fi === '释放查询' || fi === 'opts'){
-  //   op(name,  con.substring(4).trim(), 'normal', callback);
-  //   return;
-  // }
+  if(fi === '释放查询'){
+    op(from, name, con.substring(4).trim(), 'image', callback);
+    return;
+  }
   if(fi == 'ffiv'){
     searchFF14Item(con.substring(4),name,callback);
     return;
