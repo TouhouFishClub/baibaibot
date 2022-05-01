@@ -28,7 +28,7 @@ const renderMenu = async (group, callback) => {
       border: 1px solid;
       border-collapse: collapse;
       width: 1000px;
-      margin: 20px;
+      padding: 20px;
     }
     .main-table tr td{
       border: 1px solid;
