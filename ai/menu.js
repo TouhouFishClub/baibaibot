@@ -21,8 +21,8 @@ const renderMenu = async (group, callback) => {
       margin: 0;
     }
     body {
-      width: 1400px;
-      min-height: 200px;
+      width: 1040px;
+      min-height: 20px;
     }
     .main-table{
       border: 1px solid;
