@@ -23,12 +23,13 @@ const renderMenu = async (group, callback) => {
     body {
       width: 1040px;
       min-height: 20px;
+      padding: 20px;
+      box-sizing: border-box;
     }
     .main-table{
       border: 1px solid;
       border-collapse: collapse;
       width: 1000px;
-      padding: 20px;
     }
     .main-table tr td{
       border: 1px solid;
