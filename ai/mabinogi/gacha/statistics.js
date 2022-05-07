@@ -71,7 +71,7 @@ const fetchAllData = async () => {
 const fixNumber = number => number < 100 ? ` ${number < 10 ? ` ${number}` : `${number}`}` : `${number}`
 
 const statistics = async () => {
-  let timeLeftTs = new Date('2022-3-30 11:30:00').getTime()
+  let timeLeftTs = new Date('2022-4-27 11:30:00').getTime()
   let tar = '特殊闪耀舞台直播服饰(女式)'
   let data = await fetchAllData()
   let SRankMap = new Map(), count = 0, targetUser = []
