@@ -132,6 +132,8 @@ const { searchMabiRecipe } = require('./ai/mabinogi/recipe/searchRecipe')
 const { ergo } = require('./ai/mabinogi/ergo')
 const { mabiGacha } = require('./ai/mabinogi/gacha/index')
 
+const { menu } = require('./ai/menu')
+
 let globalConfig = {
 	FLASH_RESEND : false
 }
@@ -1029,15 +1031,23 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(content == '洛奇来一发') {
     mabiGacha(from, callback, 1)
+    return;
   }
   if(content == '洛奇来十连') {
     mabiGacha(from, callback, 11)
+    return;
   }
   if(content == '洛奇来一单') {
     mabiGacha(from, callback, 60)
+    return;
   }
   if(content == '洛奇来十单') {
     mabiGacha(from, callback, 600)
+    return;
+  }
+
+  if(content.startsWith('menu') || content.startsWith('菜单')) {
+    menu(content, groupid, callback)
   }
 
   let con =content.trim(), fi = con.substring(0,4)
