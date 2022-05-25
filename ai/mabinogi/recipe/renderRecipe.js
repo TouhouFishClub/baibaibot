@@ -135,6 +135,10 @@ const renderRecipeImage = (html, name, showDesc = false, callback, msg = '', ord
       /*  -webkit-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
       /*  -moz-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0*/
       /*}*/
+      .chara-info {
+        color: gold;
+        font-size: 12px;
+      }
     </style>
   </head>
   <body style="text-align:center;">
