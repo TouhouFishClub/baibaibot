@@ -7273,11 +7273,11 @@ function InjectCharacterInfo(CharacterId, CharacterType) {
       if ([730201, 730202, 730206, 730207, 730208, 730209, 730210].includes(CharacterId)) {
         CharacterType = "伙伴"
       }
-      html += `<p class="chara-info">${CharacterType}</p>`
+      html += `<div class="chara-info">${CharacterType}</div>`
     }
-    html += `<p class="chara-info">${Character[0]}</p>`
+    html += `<div class="chara-info">${Character[0]}</div>`
     if (CharacterType == "NPC") {
-      html += `<p class="chara-info">${Character[1]}</p>`
+      html += `<div class="chara-info">${Character[1]}</div>`
     }
     return html
   }
