@@ -161,7 +161,7 @@ const loadGachaGroup = async () => {
 					for(let j = 0; j < rareList.length; j ++) {
 						let target = await col.findOne({_id: rareList[j]})
 						if(target) {
-							if(target.info.findIndex(x => x.pool === info.name) > -1) {
+							if(target.info.findIndex(x => x.pool === info.name) === -1) {
 								await col.updateOne(
 									{ _id: rareList[j] },
 									{
