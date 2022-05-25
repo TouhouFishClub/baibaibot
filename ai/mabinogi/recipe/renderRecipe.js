@@ -144,8 +144,9 @@ const renderRecipeImage = (html, name, showDesc = false, callback, msg = '', ord
       .chara-info {
         color: gold;
         font-size: 12px;
-        zoom: 0.5;
-        line-height: 1.2;
+        zoom: 0.65;
+        line-height: 1.3;
+        margin-top: 5px;
         white-space: nowrap;
       }
       .chara-img {
