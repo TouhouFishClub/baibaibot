@@ -137,6 +137,7 @@ const renderRecipeImage = (html, name, showDesc = false, callback, msg = '', ord
       /*}*/
       .custom-td {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
       }
