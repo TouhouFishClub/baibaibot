@@ -149,6 +149,7 @@ const renderRecipeImage = (html, name, showDesc = false, callback, msg = '', ord
       }
       .chara-img {
         display: block;
+        margin: 0 auto;
       }
     </style>
   </head>
