@@ -7258,8 +7258,29 @@ function TdMaterial(Id, Proportion = "", Width = 100, Rows = 1) {
 
 function TdCharacter(CharacterId, CharacterType) {
   let Character = eval(CharacterType + CharacterId);
-  let t = "<td onmouseover='ShowCharacterData(this," + CharacterId + ",&quot;" + CharacterType + "&quot;)' onmouseout='ShowCharacterData(this)'><img border='0' src='img/" + CharacterType + "/" + CharacterId + ".png'></td>";
+  let t = `<td onmouseover='ShowCharacterData(this," + CharacterId + ",&quot;" + CharacterType + "&quot;)' onmouseout='ShowCharacterData(this)'><img border='0' src='img/" + CharacterType + "/" + CharacterId + ".png'>${InjectCharacterInfo(CharacterId, CharacterType)}</td>`
   return t
+}
+
+function InjectCharacterInfo(CharacterId, CharacterType) {
+  if (typeof CharacterId != "number") {
+    return ""
+  } else {
+    let html = ``
+    let Character = eval(CharacterType + CharacterId);
+    if (CharacterType == "Pet") {
+      CharacterType = "宠物";
+      if ([730201, 730202, 730206, 730207, 730208, 730209, 730210].includes(CharacterId)) {
+        CharacterType = "伙伴"
+      }
+      html += `<p class="chara-info">${CharacterType}</p>`
+    }
+    html += `<p class="chara-info">${Character[0]}</p>`
+    if (CharacterType == "NPC") {
+      html += `<p class="chara-info">${Character[1]}</p>`
+    }
+    return html
+  }
 }
 
 function TdText(a, Width = "", Cols = 1) {
