@@ -135,7 +135,7 @@ const renderRecipeImage = (html, name, showDesc = false, callback, msg = '', ord
       /*  -webkit-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
       /*  -moz-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0*/
       /*}*/
-      .custom-td {
+      .custom-td-container{
         display: flex;
         flex-direction: column;
         align-items: center;

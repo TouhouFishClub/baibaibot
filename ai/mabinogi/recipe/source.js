@@ -7258,7 +7258,7 @@ function TdMaterial(Id, Proportion = "", Width = 100, Rows = 1) {
 
 function TdCharacter(CharacterId, CharacterType) {
   let Character = eval(CharacterType + CharacterId);
-  let t = `<td class="custom-td"><img class="chara-img" border='0' src='img/${CharacterType}/${CharacterId}.png'>${InjectCharacterInfo(CharacterId, CharacterType)}</td>`
+  let t = `<td><div class="custom-td-container"></div><img class="chara-img" border='0' src='img/${CharacterType}/${CharacterId}.png'>${InjectCharacterInfo(CharacterId, CharacterType)}</div></td>`
   return t
 }
 
