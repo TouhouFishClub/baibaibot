@@ -39,7 +39,10 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
   switch(type) {
     case "search":
       if(content.trim()) {
-        searchCalendar(content, alias || groupId, callback)
+        if(alias) {
+          groupId = parseInt(alias)
+        }
+        searchCalendar(content, groupId, callback)
       } else {
         help(callback)
       }
