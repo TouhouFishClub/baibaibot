@@ -53,7 +53,7 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
       }
       if(sp.length >= 4) {
         if(alias) {
-          callback(`${sp[0]}已引继，无法设置`)
+          callback(`${sp[0]}日历已引继，无法设置`)
           return
         }
         addCalendar(author, groupId, callback, ...sp.slice(0, 4))
