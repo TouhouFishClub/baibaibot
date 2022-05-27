@@ -10,7 +10,7 @@ let userDelHash = {
 }
 let client
 
-const checkAlias = async (target, groupId) => {
+const checkAlias = async (project, groupId) => {
   if(!client) {
     try {
       client = await MongoClient.connect(MONGO_URL)
