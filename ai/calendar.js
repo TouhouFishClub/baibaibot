@@ -56,14 +56,16 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
         delete userHash[author]
       }
       if(sp.length >= 4) {
-        addCalendar(...sp.slice(0, 4), author, groupId, callback)
+        addCalendar(author, groupId, callback, ...sp.slice(0, 4))
+      } else if(sp.length >= 2 && sp[1].indexOf('引继') > -1){
+        addCalendar(author, groupId, callback, ...sp)
       } else {
         help(callback)
       }
       break
     case "insert":
       if(alias) {
-        callback(`${sp[0]}已引继，无法设置`)
+        callback(`${sp[0]}日历已引继，无法设置`)
         return
       }
       if(userHash[author]) {
@@ -77,7 +79,7 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
       break
     case "insert-select":
       if(alias) {
-        callback(`${sp[0]}已引继，无法设置`)
+        callback(`${sp[0]}日历已引继，无法设置`)
         return
       }
       if(userHash[author] && userHash[author].search[content]) {
@@ -89,7 +91,7 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
       break
     case "delete":
       if(alias) {
-        callback(`${sp[0]}已引继，无法设置`)
+        callback(`${sp[0]}日历已引继，无法设置`)
         return
       }
       if(userDelHash[author]) {
@@ -103,7 +105,7 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
       break
     case "delete-select":
       if(alias) {
-        callback(`${sp[0]}已引继，无法设置`)
+        callback(`${sp[0]}日历已引继，无法设置`)
         return
       }
       if(userDelHash[author] && userDelHash[author].search[content]) {
@@ -160,12 +162,16 @@ const searchCalendar = async (project, groupId, callback) => {
   }
 }
 
-const addCalendar = async (project, activity, st, et, author, groupId, callback) => {
+const addCalendar = async (author, groupId, callback, project, activity, st) => {
   if(project.length > 6) {
     callback('标题过长')
     return
   }
   if(activity == '引继' && st.match(/^\d+$/)) {
+    if(!st) {
+      callback('未设置引继码')
+      return
+    }
     await client.db('db_bot').collection('cl_calendar_alias').save({
       _id: `${groupId}_${project}`,
       d: st
