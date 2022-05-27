@@ -172,6 +172,10 @@ const addCalendar = async (author, groupId, callback, project, activity, st) => 
       callback('未设置引继码')
       return
     }
+    if(st == groupId) {
+      callback('无法引继此引继码')
+      return
+    }
     await client.db('db_bot').collection('cl_calendar_alias').save({
       _id: `${groupId}_${project}`,
       d: st
