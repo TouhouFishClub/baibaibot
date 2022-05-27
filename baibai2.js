@@ -120,7 +120,7 @@ const { Reliquary } = require('./ai/GenshinImpact/Reliquary')
 const { composition, groupCompositionRank } = require('./ai/composition')
 const { tapFish } = require('./ai/tapfish')
 const {handleSweepReply} = require('./ai/games/sweeping/sweepmain');
-const { calendar } = require('./ai/calendar')
+const { calendar } = require('./ai/calendar.js')
 const {handleGaReply} = require('./ai/image/gimage');
 
 const { renderColorBoard } = require('./ai/mabinogi/renderColor')

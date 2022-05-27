@@ -10,6 +10,21 @@ let userDelHash = {
 }
 let client
 
+const checkAlias = async (target, groupId) => {
+  if(!client) {
+    try {
+      client = await MongoClient.connect(MONGO_URL)
+    } catch (e) {
+      console.log('MONGO ERROR FOR CALENDAR MODULE!!')
+      console.log(e)
+    }
+  }
+  let alias = await client.db('db_bot').collection('cl_calendar_alias').findOne({_id: `${groupId}_${project}`})
+  return alias && alias.d
+}
+
+
+
 const calendar = async (content, author, groupId, callback, type = 'add') => {
   if(!client) {
     try {
@@ -20,15 +35,20 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
     }
   }
   let sp = content.split('\n').map(x => x.trim()).filter(x => x)
+  let alias = await checkAlias(sp[0], groupId)
   switch(type) {
     case "search":
       if(content.trim()) {
-        searchCalendar(content, groupId, callback)
+        searchCalendar(content, alias || groupId, callback)
       } else {
         help(callback)
       }
       break
     case "add":
+      if(alias) {
+        callback(`${sp[0]}已引继，无法设置`)
+        return
+      }
       if(userHash[author]) {
         delete userHash[author]
       }
@@ -39,6 +59,10 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
       }
       break
     case "insert":
+      if(alias) {
+        callback(`${sp[0]}已引继，无法设置`)
+        return
+      }
       if(userHash[author]) {
         delete userHash[author]
       }
@@ -49,6 +73,10 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
       }
       break
     case "insert-select":
+      if(alias) {
+        callback(`${sp[0]}已引继，无法设置`)
+        return
+      }
       if(userHash[author] && userHash[author].search[content]) {
         await setCalendarByOid(userHash[author].search[content]._id, userHash[author].infos, callback)
         delete userHash[author]
@@ -57,6 +85,10 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
       }
       break
     case "delete":
+      if(alias) {
+        callback(`${sp[0]}已引继，无法设置`)
+        return
+      }
       if(userDelHash[author]) {
         delete userDelHash[author]
       }
@@ -67,6 +99,10 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
       }
       break
     case "delete-select":
+      if(alias) {
+        callback(`${sp[0]}已引继，无法设置`)
+        return
+      }
       if(userDelHash[author] && userDelHash[author].search[content]) {
         await deleteCalendarByOid(userDelHash[author].search[content]._id, callback)
         delete userDelHash[author]
@@ -124,6 +160,19 @@ const searchCalendar = async (project, groupId, callback) => {
 const addCalendar = async (project, activity, st, et, author, groupId, callback) => {
   if(project.length > 6) {
     callback('标题过长')
+    return
+  }
+  if(activity == '引继' && st.match(/^\d+$/)) {
+    await client.db('db_bot').collection('cl_calendar_alias').save({
+      _id: `${groupId}_${project}`,
+      d: st
+    })
+    callback('引继成功')
+    return
+  }
+  if(activity == '取消引继' && st.match(/^\d+$/)) {
+    await client.db('db_bot').collection('cl_calendar_alias').remove({_id: `${groupId}_${project}`})
+    callback('取消引继成功')
     return
   }
   let startTime = strToTs(st), endTime = strToTs(et)
