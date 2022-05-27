@@ -10,6 +10,7 @@ const adminUser = new Set([
   799018865,
   2810232496,
   540540678,
+  782804214,
 ])
 let saveTmpMap = {
 
