@@ -116,7 +116,7 @@ const loadGachaGroup = async () => {
 				target.push(obj)
 			}
 		}
-		target = target.filter(x => x.link.startsWith('https://') || x.link.startsWith('http://'))
+		target = target.filter(x => (x.link.startsWith('https://') || x.link.startsWith('http://')) && x.name)
 		console.log(target)
 		for(let j = 0; j < target.length; j++) {
 			let info = {}
