@@ -179,7 +179,7 @@ const addCalendar = async (author, groupId, callback, project, activity, st) => 
     callback('引继成功')
     return
   }
-  if(activity == '取消引继' && st.match(/^\d+$/)) {
+  if(activity == '取消引继') {
     await client.db('db_bot').collection('cl_calendar_alias').remove({_id: `${groupId}_${project}`})
     callback('取消引继成功')
     return
