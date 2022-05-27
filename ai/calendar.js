@@ -48,14 +48,14 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
       }
       break
     case "add":
-      if(alias) {
-        callback(`${sp[0]}已引继，无法设置`)
-        return
-      }
       if(userHash[author]) {
         delete userHash[author]
       }
       if(sp.length >= 4) {
+        if(alias) {
+          callback(`${sp[0]}已引继，无法设置`)
+          return
+        }
         addCalendar(author, groupId, callback, ...sp.slice(0, 4))
       } else if(sp.length >= 2 && sp[1].indexOf('引继') > -1){
         addCalendar(author, groupId, callback, ...sp)
