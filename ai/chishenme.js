@@ -68,12 +68,32 @@ const list = [
   "爆米花",
   "我两拳"
 ]
-const chishenme = (st, callback, hasMine = true) => {
+let hash = {
+
+}
+const chishenme = (qq, st, callback, hasMine = true) => {
+  let r
 	if(st.match('嘉然') && Math.random() > 0.4) {
-		callback(`${st}${hasMine ? '我' : ''}两拳`)
-		return
-	}
-  callback(`${st}${list[parseInt(Math.random() * list.length)]}`)
+	  r = `${st}${hasMine ? '我' : ''}两拳`
+	} else {
+    r = `${st}${list[parseInt(Math.random() * list.length)]}`
+  }
+  if(hash[qq]) {
+    if(hash[qq].st == st) {
+      hash[qq].c ++
+      if(hash[qq].c > 3 && hash[qq].exp > Date.now()) {
+        callback(`${r}，爱吃不吃`)
+        return
+      }
+    }
+  }
+  hash[qq] = {
+    st,
+    c: 1,
+    exp: Date.now() + 30 * 60 * 1000,
+    r
+  }
+  callback(r)
 }
 
 module.exports = {

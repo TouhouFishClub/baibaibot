@@ -1048,6 +1048,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(content.startsWith('menu') || content.startsWith('菜单')) {
     menu(content, groupid, callback)
+    return
   }
 
   let con =content.trim(), fi = con.substring(0,4)
@@ -1203,11 +1204,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		}
   }
   if(con.endsWith('吃什么')) {
-    chishenme(con.substring(0, con.length - 2), callback)
+    chishenme(from, con.substring(0, con.length - 2), callback)
 		return
   }
   if(con.endsWith('什么') && con.match('吃').length) {
-    chishenme(con.substring(0, con.length - 2), callback, false)
+    chishenme(from, con.substring(0, con.length - 2), callback, false)
 		return
   }
   if(con == 'bcr日程') {
