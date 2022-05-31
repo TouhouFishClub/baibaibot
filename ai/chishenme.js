@@ -78,10 +78,11 @@ const chishenme = (qq, st, callback, hasMine = true) => {
 	} else {
     r = `${st}${list[parseInt(Math.random() * list.length)]}`
   }
+	let c = 1
   if(hash[qq]) {
     if(hash[qq].st == st) {
-      hash[qq].c ++
-      if(hash[qq].c > 3 && hash[qq].exp > Date.now()) {
+      c = hash[qq].c + 1
+      if(c > 3 && hash[qq].exp > Date.now()) {
         callback(`${r}，爱吃不吃`)
         return
       }
@@ -89,7 +90,7 @@ const chishenme = (qq, st, callback, hasMine = true) => {
   }
   hash[qq] = {
     st,
-    c: 1,
+    c,
     exp: Date.now() + 30 * 60 * 1000,
     r
   }
