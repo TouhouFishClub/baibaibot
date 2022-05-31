@@ -83,6 +83,7 @@ const chishenme = (qq, st, callback, hasMine = true) => {
     if(hash[qq].st == st) {
       c = hash[qq].c + 1
       if(c > 3 && hash[qq].exp > Date.now()) {
+        r = hash[qq].r
         callback(`${r}，爱吃不吃`)
         return
       }
