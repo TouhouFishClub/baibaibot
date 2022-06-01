@@ -27,6 +27,9 @@ const renderCard = (data, callback) => {
 }
 
 const ygo = async (content, callback) => {
+  if(!content.length) {
+    return
+  }
   let d = await fetchData(content)
   console.log(d)
   try {
@@ -37,7 +40,7 @@ const ygo = async (content, callback) => {
   }
   if(d.result.length) {
     if(d.result.length > 1) {
-      callback(`找到${d.result.length}张卡\n${d.result.map(x => `ygo ${x.id} | ${x.cn_name}${x.cn_name != x.cnocg_n ? `(${x.cnocg_n})` : ''}`).join('\n')}`)
+      callback(`找到${d.result.length}张卡\n${d.result.slice(0, 10).map(x => `ygo ${x.id} | ${x.cn_name}${x.cn_name != x.cnocg_n ? `(${x.cnocg_n})` : ''}`).join('\n')}`)
     } else {
       renderCard(d.result[0], callback)
     }
