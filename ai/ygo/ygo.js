@@ -25,7 +25,7 @@ const fetchData = async content => {
 }
 
 const renderCard = (data, callback) => {
-  let out = `[ID: ${data.id}]\n${data.cn_name}${data.cn_name != data.cnocg_n ? `(${data.cnocg_n})` : ''}\n${data.text.types}\n${data.text.desc}\n${data.text.pdesc}`
+  let out = `[ID: ${data.id}]\n[CQ:image,url=https://cdn.233.momobako.com/ygopro/pics/${data.id}.jpg]\n${data.cn_name}${data.cn_name != data.cnocg_n ? `(${data.cnocg_n})` : ''}\n${data.text.types}\n${data.text.desc}\n${data.text.pdesc}`
   callback(out)
 }
 
@@ -33,6 +33,8 @@ const ygo = async (content, callback) => {
   if(!content.length) {
     return
   }
+
+  //https://cdn.233.momobako.com/ygopro/pics/14558127.jpg!half
 
   let allData = fs.readJsonSync(path.join(__dirname, 'cards.json'))
   let result, d
