@@ -1364,7 +1364,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
   if(fie.toLowerCase() == 'ygo'){
-    actp(con.substring(3).trim(), callback);
+    ygo(con.substring(3).trim(), callback);
     return;
   }
 
