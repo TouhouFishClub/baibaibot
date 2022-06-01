@@ -211,8 +211,8 @@
 // const cut = [2, 10, 50, 90, 95, 99, 100]
 // console.log(cut.map((x, i, a) => i ? `${a[i - 1]} ~ ${x} : ${arr.filter(f => f >= a[i - 1] && f < x).length}（${arr.filter(f => f >= a[i - 1] && f < x).length / count * 100}%）` : `< ${x} : ${arr.filter(f => f < x).length}（${arr.filter(f => f < x).length / count * 100}%）`).concat([`>= ${cut[cut.length - 1]} : ${arr.filter(f => f >= cut[cut.length - 1]).length}（${arr.filter(f => f >= cut[cut.length - 1]).length / count * 100}%）`]).join('\n'))
 
-const { fetchTencentApi } = require('./CoV2019ByTencentApi');
+const { ygo } = require('./ygo')
 
-(async () => {
-  console.log(await fetchTencentApi('境外'))
-})()
+ygo('咕', d => {
+  console.log(d)
+})

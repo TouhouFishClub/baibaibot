@@ -133,6 +133,7 @@ const { ergo } = require('./ai/mabinogi/ergo')
 const { mabiGacha } = require('./ai/mabinogi/gacha/index')
 
 const { menu } = require('./ai/menu')
+const { ygo } = require('./ai/ygo')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -1361,6 +1362,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         anr(from, sa, callback)
     }
     return
+  }
+  if(fie.toLowerCase() == 'ygo'){
+    actp(con.substring(3).trim(), callback);
+    return;
   }
 
   if(fie.toLowerCase() == 'dtc'){
