@@ -213,6 +213,6 @@
 
 const { ygo } = require('./ygo/ygo')
 
-ygo('14128', d => {
+ygo('融合', d => {
   console.log(d)
 })

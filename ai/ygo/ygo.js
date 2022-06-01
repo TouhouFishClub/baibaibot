@@ -24,9 +24,9 @@ const fetchData = async content => {
   })
 }
 
-const renderCard = (data, callback) => {
+const renderCard = data => {
   let out = `[ID: ${data.id}]\n[CQ:image,file=https://cdn.233.momobako.com/ygopro/pics/${data.id}.jpg]\n${data.cn_name}${data.cn_name != data.cnocg_n ? `(${data.cnocg_n})` : ''}\n${data.text.types}\n${data.text.desc}\n${data.text.pdesc}`
-  callback(out)
+  return out
 }
 
 const ygo = async (content, callback) => {
@@ -56,9 +56,10 @@ const ygo = async (content, callback) => {
   // }
   if(d.result && d.result.length) {
     if(d.result.length > 1) {
-      callback(`找到${d.result.length}张卡\n${d.result.slice(0, 10).map(x => `ygo ${x.cid} | ${x.cn_name}${x.cn_name != x.cnocg_n ? `(${x.cnocg_n})` : ''}`).join('\n')}`)
+      let t = d.result.filter(x => x.cn_name == content || x.cnocg_n == content)
+      callback(`找到${d.result.length}张卡\n${d.result.slice(0, 5).map(x => `ygo ${x.cid} | ${x.cn_name}${x.cn_name != x.cnocg_n ? `(${x.cnocg_n})` : ''}`).join('\n')}${t.length === 1 ? `\n已定位到:${content}\n${renderCard(t[0])}` : ''}`)
     } else {
-      renderCard(d.result[0], callback)
+      callback(renderCard(d.result[0]))
     }
   } else {
     callback('未找到任何卡')
