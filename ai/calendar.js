@@ -162,7 +162,7 @@ const searchCalendar = async (project, groupId, callback) => {
   }
 }
 
-const addCalendar = async (author, groupId, callback, project, activity, st) => {
+const addCalendar = async (author, groupId, callback, project, activity, st, et) => {
   if(project.length > 6) {
     callback('标题过长')
     return
