@@ -37,7 +37,7 @@ const ygo = async (content, callback) => {
   let allData = fs.readJsonSync(path.join(__dirname, 'cards.json'))
   let result, d
   if(/^\d+$/.test(content)) {
-    result = allData[content]
+    result = [allData[content]].filter(x => x)
   } else {
     result = Object.values(allData).filter(x => (x.cn_name && x.cn_name.match(content)) || (x.cnocg_n && x.cnocg_n.match(content)))
   }

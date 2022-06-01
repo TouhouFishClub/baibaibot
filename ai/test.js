@@ -213,6 +213,6 @@
 
 const { ygo } = require('./ygo/ygo')
 
-ygo('咕咕', d => {
+ygo('14128', d => {
   console.log(d)
 })
