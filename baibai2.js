@@ -133,7 +133,7 @@ const { ergo } = require('./ai/mabinogi/ergo')
 const { mabiGacha } = require('./ai/mabinogi/gacha/index')
 
 const { menu } = require('./ai/menu')
-const { ygo } = require('./ai/ygo')
+const { ygo } = require('./ai/ygo/ygo')
 
 let globalConfig = {
 	FLASH_RESEND : false

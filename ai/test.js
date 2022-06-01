@@ -211,8 +211,8 @@
 // const cut = [2, 10, 50, 90, 95, 99, 100]
 // console.log(cut.map((x, i, a) => i ? `${a[i - 1]} ~ ${x} : ${arr.filter(f => f >= a[i - 1] && f < x).length}（${arr.filter(f => f >= a[i - 1] && f < x).length / count * 100}%）` : `< ${x} : ${arr.filter(f => f < x).length}（${arr.filter(f => f < x).length / count * 100}%）`).concat([`>= ${cut[cut.length - 1]} : ${arr.filter(f => f >= cut[cut.length - 1]).length}（${arr.filter(f => f >= cut[cut.length - 1]).length / count * 100}%）`]).join('\n'))
 
-const { ygo } = require('./ygo')
+const { ygo } = require('./ygo/ygo')
 
-ygo('咕', d => {
+ygo('咕咕', d => {
   console.log(d)
 })
