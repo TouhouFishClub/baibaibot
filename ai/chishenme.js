@@ -85,7 +85,7 @@ const chishenme = (qq, st, callback, hasMine = true) => {
       fs.readdir('../coolq-data/cq/data/image/send/food/', function (err, files) {
         var len = files.length;
         var rdfile = files[Math.floor(Math.random() * len)];
-        var imgret = '' + '[CQ:'+imgtype+',file=send/setu/' + rdfile + ']';
+        var imgret = '' + '[CQ:'+'image'+',file=send/setu/' + rdfile + ']';
         r = imgret+'\n'+st+rdfile;
         let c = 1
         if(hash[qq]) {
