@@ -236,5 +236,6 @@ const splitStr = (str, start, end, ignoreSearch = false) => {
 }
 
 module.exports = {
-	mabiGacha
+	mabiGacha,
+	fetchData
 }

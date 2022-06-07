@@ -68,29 +68,53 @@ const list = [
   "爆米花",
   "我两拳"
 ]
-const chishenme = (st, callback, hasMine = true) => {
-  if(Math.random()<0.0){
-    if(st.match('嘉然') && Math.random() > 0.4) {
-      callback(`${st}${hasMine ? '我' : ''}两拳`)
-      return
-    }
-    callback(`${st}${list[parseInt(Math.random() * list.length)]}`)
-  }else{
-    fs.readdir('../coolq-data/cq/data/image/send/food/', function (err, files) {
-      var len = files.length;
-      var rdfile = files[Math.floor(Math.random() * len)];
-      var imgret = '' + '[CQ:'+imgtype+',file=send/food/' + rdfile + ']';
-      ret = imgret + "\n" + st + rdfile;
-      callback(ret);
-    })
-  }
+let hash = {
 
 }
 
+const fs = require('fs'),
+const chishenme = (qq, st, callback, hasMine = true) => {
+  let r
+  if(st.match('嘉然') && Math.random() > 0.4) {
+    r = `${st}${hasMine ? '我' : ''}两拳`
+  } else {
 
-var fs = require('fs');
-var request = require('request');
+    if(Math.random()<0.1){
+      r = `${st}${list[parseInt(Math.random() * list.length)]}`
+    }else{
+      fs.readdir('../coolq-data/cq/data/image/send/food/', function (err, files) {
+        var len = files.length;
+        var rdfile = files[Math.floor(Math.random() * len)];
+        var imgret = '' + '[CQ:'+imgtype+',file=send/setu/' + rdfile + ']';
+        r = imgret+'\n'+st+rdfile;
+      })
+    }
 
+
+
+
+
+
+  }
+  let c = 1
+  if(hash[qq]) {
+    if(hash[qq].st == st) {
+      c = hash[qq].c + 1
+      if(c > 3 && hash[qq].exp > Date.now()) {
+        r = hash[qq].r
+        callback(`${r}，爱吃不吃`)
+        return
+      }
+    }
+  }
+  hash[qq] = {
+    st,
+    c,
+    exp: Date.now() + 30 * 60 * 1000,
+    r
+  }
+  callback(r)
+}
 
 
 
@@ -155,15 +179,11 @@ function getdouguo(c){
       }
 
     }
-      getdouguo(c+24);
+    getdouguo(c+24);
   });
 }
 
-function run(){
-  getdouguo(1);
-}
 
-run()
 
 
 

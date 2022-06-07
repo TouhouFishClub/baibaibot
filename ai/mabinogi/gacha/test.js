@@ -1,7 +1,11 @@
-const { mabiGacha } = require('./index')
+const { mabiGacha, fetchData } = require('./index');
 mabiGacha('111', d => {
 	console.log(d)
 })
+	// (async () => {
+	// 	let d = await fetchData('https://luoqi.tiancity.com/homepage/event/2022/0601blpl/')
+	// 	console.log(d)
+	// })()
 // var HTMLParser = require('node-html-parser');
 //
 // var root = HTMLParser.parse(`<table border="1">

@@ -191,6 +191,10 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
   }
   const searchKeywords = keywords => {
     let finalArr = [], optSetObjFilter = optionSetObj.concat([])
+    /* pretreatment */
+    if(keywords.buff.indexOf('手') > -1) {
+      keywords.buffIgnore.push('手里剑', '武器', '手工艺')
+    }
     /* ignore buff */
     if(keywords.buffIgnore.length) {
       keywords.buffIgnore.forEach(ignore => {
