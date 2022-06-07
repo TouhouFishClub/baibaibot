@@ -77,10 +77,12 @@ const chishenme = (qq, st, callback, hasMine = true) => {
   let r
   if(st.match('嘉然') && Math.random() > 0.4) {
     r = `${st}${hasMine ? '我' : ''}两拳`
+    callback(r)
   } else {
 
     if(Math.random()<0.1){
       r = `${st}${list[parseInt(Math.random() * list.length)]}`
+      callback(r)
     }else{
       fs.readdir('../coolq-data/cq/data/image/send/food/', function (err, files) {
         var len = files.length;
