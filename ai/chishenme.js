@@ -87,6 +87,26 @@ const chishenme = (qq, st, callback, hasMine = true) => {
         var rdfile = files[Math.floor(Math.random() * len)];
         var imgret = '' + '[CQ:'+imgtype+',file=send/setu/' + rdfile + ']';
         r = imgret+'\n'+st+rdfile;
+        let c = 1
+        if(hash[qq]) {
+          if(hash[qq].st == st) {
+            c = hash[qq].c + 1
+            if(c > 3 && hash[qq].exp > Date.now()) {
+              r = hash[qq].r
+              callback(`${r}，爱吃不吃`)
+              return
+            }
+          }
+        }
+        hash[qq] = {
+          st,
+          c,
+          exp: Date.now() + 30 * 60 * 1000,
+          r
+        }
+        callback(r)
+
+
       })
     }
 
@@ -96,24 +116,7 @@ const chishenme = (qq, st, callback, hasMine = true) => {
 
 
   }
-  let c = 1
-  if(hash[qq]) {
-    if(hash[qq].st == st) {
-      c = hash[qq].c + 1
-      if(c > 3 && hash[qq].exp > Date.now()) {
-        r = hash[qq].r
-        callback(`${r}，爱吃不吃`)
-        return
-      }
-    }
-  }
-  hash[qq] = {
-    st,
-    c,
-    exp: Date.now() + 30 * 60 * 1000,
-    r
-  }
-  callback(r)
+
 }
 
 
