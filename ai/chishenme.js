@@ -80,7 +80,7 @@ const chishenme = (qq, st, callback, hasMine = true) => {
     callback(r)
   } else {
 
-    if(Math.random()<0.4){
+    if(Math.random()<0.7){
       r = `${st}${list[parseInt(Math.random() * list.length)]}`
       callback(r)
     }else{
