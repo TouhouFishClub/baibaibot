@@ -193,7 +193,7 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
     let finalArr = [], optSetObjFilter = optionSetObj.concat([])
     /* pretreatment */
     if(keywords.buff.indexOf('手') > -1) {
-      keywords.buffIgnore.push('手里剑', '双手武器', '手工艺')
+      keywords.buffIgnore.push('手里剑', '武器', '手工艺')
     }
     /* ignore buff */
     if(keywords.buffIgnore.length) {
