@@ -72,7 +72,7 @@ let hash = {
 
 }
 
-const fs = require('fs'),
+const fs = require('fs');
 const chishenme = (qq, st, callback, hasMine = true) => {
   let r
   if(st.match('嘉然') && Math.random() > 0.4) {
