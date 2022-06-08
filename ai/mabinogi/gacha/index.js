@@ -21,27 +21,36 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 	if(!gachaInfo.length) {
 		await loadGachaGroup()
 	}
-	let gacha = gachaInfo[0]
-	let items = randomGacha(gacha, gachaCount)
+	let gacha = gachaInfo[0], isHunDan = false
+	if(!gacha.rare['C'].length && !gacha.rare['D'].length) {
+		isHunDan = true
+	}
 
 	let point = 0
 
 	switch(gachaCount) {
 		case 1:
-			point = 50
+			point = isHunDan ? 500 : 50
 			break
 		case 11:
-			point = 500
+			if(isHunDan)
+				gachaCount = 10
+			point = isHunDan ? 5000 : 500
 			break
 		case 60:
-			point = 2640
+			if(isHunDan)
+				gachaCount = 13
+			point = isHunDan ? 6500 : 2640
 			break
 		case 600:
-			point = 26400
+			if(isHunDan)
+				gachaCount = 130
+			point = isHunDan ? 65000 : 26400
 			break
 		default:
 			point = 0
 	}
+	let items = randomGacha(gacha, gachaCount)
 
 	// console.log(point)
 
