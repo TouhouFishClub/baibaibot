@@ -25,10 +25,50 @@ function generateGaImage(utext,callback){
     console.log(err);
   })
   sendGmImage(img1,'',callback,1);
+}
+
+function handleMazeReply(content,gid,qq,callback){
+  content = content.trim();
+  var ca = content.split('$');
+  if(ca.length==2){
+    var u1 = ca[0];
+    var u2 = ca[1];
+    if(u1.length<u2.length&&u2.length<15&&u1.length>=1){
+      generateMazeImage(ca[0],ca[1],callback)
+    }
+  }
+
+}
+
+function generateMazeImage(utext1,utext2,callback){
+  var wd = utext2.length*40+100
+  var img1 = new imageMagick("static/black.png");
+  img1.autoOrient()
+//    .stroke("#CCCC99")
+//    .strokeWidth(1)
+    .fill('blue')
+    .resize(wd,200,"!")
+    .font('./static/STXIHEI.TTF')
+
+  var st = wd/2 - utext1.length * 20
+  var et = wd/2 + utext1.length * 20;
+
+  img1.fontSize(20).fill('#CCCC99')
+  img1.drawText(0,-30,utext1,'center')
+  img1.fontSize(40).fill('#CCCC99')
+  img1.drawLine(st,100,et,100)
+  img1.drawText(0,30,utext2,'center')
+  img1.write("1112.jpg",function(err){
+    console.log(222);
+    console.log(err);
+  })
+  sendGmImage(img1,'',callback,1);
 
 }
 
 
+
 module.exports={
-  handleGaReply
+  handleGaReply,
+  handleMazeReply
 }
