@@ -45,7 +45,7 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 		case 600:
 			if(isHunDan)
 				gachaCount = 110
-			point = isHunDan ? 5400 : 26400
+			point = isHunDan ? 54000 : 26400
 			break
 		default:
 			point = 0
