@@ -67,7 +67,6 @@ function generateMazeImage(utext1,utext2,callback){
 }
 
 
-generateMazeImage("粉毛兔洞","超级玛丽歼灭战");
 
 module.exports={
   handleGaReply,
