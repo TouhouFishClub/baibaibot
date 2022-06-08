@@ -1437,7 +1437,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
      handleGaReply(content.substring(2),groupid,from,callback);
      return;
   }
-  if(rcontent.split('$').length==2{
+  if(rcontent.split('$').length==2){
     handleMazeReply(rcontent,groupid,from,callback);
     return;
   }
