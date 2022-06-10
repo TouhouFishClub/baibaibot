@@ -89,217 +89,213 @@ const AREAS = {
     ]
   },
   'BGE': {
-    name: '',
+    name: '班格',
     goods: [
       {
         level: 1,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '班格的煤炭',
+        blockLimit: 10,
+        weight: 8
       },
       {
         level: 2,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '大理石',
+        blockLimit: 10,
+        weight: 20
       },
       {
         level: 3,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '黄水晶',
+        blockLimit: 10,
+        weight: 25
       },
       {
         level: 4,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '苏格兰高地矿石',
+        blockLimit: 8,
+        weight: 30
       },
       {
         level: 5,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '铅',
+        blockLimit: 10,
+        weight: 30
       }
     ],
     timesQuery: [
-      { id: 'DEK', time: },
-      { id: 'DBL', time: },
-      { id: 'BGE', time: },
-      { id: 'AMM', time: },
-      { id: 'TTI', time: },
-      { id: 'TLA', time: },
-      { id: 'KPU', time: },
-      { id: 'BEF', time: },
+      { id: 'DEK', time: 367 },
+      { id: 'DBL', time: 200 },
+      { id: 'AMM', time: 283 },
+      { id: 'TTI', time: 440 },
+      { id: 'TLA', time: 600 },
+      { id: 'KPU', time: 180 },
+      { id: 'BEF', time: 510 },
     ]
   },
   'AMM': {
-    name: '',
+    name: '艾明马恰',
     goods: [
       {
         level: 1,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '威化',
+        blockLimit: 40,
+        weight: 3
       },
       {
         level: 2,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '啤酒',
+        blockLimit: 50,
+        weight: 4
       },
       {
         level: 3,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '熏制的野味',
+        blockLimit: 50,
+        weight: 3
       },
       {
         level: 4,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '蘑菇意大利面',
+        blockLimit: 50,
+        weight: 5
       },
       {
         level: 5,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '碳烤熊肉',
+        blockLimit: 10,
+        weight: 40
       }
     ],
     timesQuery: [
-      { id: 'DEK', time: },
-      { id: 'DBL', time: },
-      { id: 'BGE', time: },
-      { id: 'AMM', time: },
-      { id: 'TTI', time: },
-      { id: 'TLA', time: },
-      { id: 'KPU', time: },
-      { id: 'BEF', time: },
+      { id: 'DEK', time: 300 },
+      { id: 'DBL', time: 140 },
+      { id: 'BGE', time: 283 },
+      { id: 'TTI', time: 333 },
+      { id: 'TLA', time: 330 },
+      { id: 'KPU', time: 169 },
+      { id: 'BEF', time: 500 },
     ]
   },
   'TTI': {
-    name: '',
+    name: '塔汀',
     goods: [
       {
         level: 1,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '热气结晶',
+        blockLimit: 100,
+        weight: 2
       },
       {
         level: 2,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '音乐盒保存石',
+        blockLimit: 50,
+        weight: 3
       },
       {
         level: 3,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '帕拉鲁结晶',
+        blockLimit: 100,
+        weight: 2
       },
       {
         level: 4,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '环形栅栏结晶',
+        blockLimit: 100,
+        weight: 4
       },
       {
         level: 5,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '炼金结晶',
+        blockLimit: 10,
+        weight: 5
       }
     ],
     timesQuery: [
-      { id: 'DEK', time: },
-      { id: 'DBL', time: },
-      { id: 'BGE', time: },
-      { id: 'AMM', time: },
-      { id: 'TTI', time: },
-      { id: 'TLA', time: },
-      { id: 'KPU', time: },
-      { id: 'BEF', time: },
+      { id: 'DEK', time: 215 },
+      { id: 'DBL', time: 235 },
+      { id: 'BGE', time: 440 },
+      { id: 'AMM', time: 333 },
+      { id: 'TLA', time: 240 },
+      { id: 'KPU', time: 280 },
+      { id: 'BEF', time: 610 },
     ]
   },
   'TLA': {
-    name: '',
+    name: '塔拉',
     goods: [
       {
         level: 1,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '迷你化妆台',
+        blockLimit: 10,
+        weight: 20
       },
       {
         level: 2,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '茶几',
+        blockLimit: 5,
+        weight: 25
       },
       {
         level: 3,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '摇椅',
+        blockLimit: 5,
+        weight: 25
       },
       {
         level: 4,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '儿童高低床',
+        blockLimit: 3,
+        weight: 75
       },
       {
         level: 5,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '大型红酒架',
+        blockLimit: 1,
+        weight: 300
       }
     ],
     timesQuery: [
-      { id: 'DEK', time: },
-      { id: 'DBL', time: },
-      { id: 'BGE', time: },
-      { id: 'AMM', time: },
-      { id: 'TTI', time: },
-      { id: 'TLA', time: },
-      { id: 'KPU', time: },
-      { id: 'BEF', time: },
+      { id: 'DEK', time: 461 },
+      { id: 'DBL', time: 430 },
+      { id: 'BGE', time: 600 },
+      { id: 'AMM', time: 330 },
+      { id: 'TTI', time: 240 },
+      { id: 'KPU', time: 450 },
+      { id: 'BEF', time: 790 },
     ]
   },
   'KPU': {
-    name: '',
+    name: '卡普',
     goods: [
       {
         level: 1,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '卡普海苔',
+        blockLimit: 50,
+        weight: 2
       },
       {
         level: 2,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '卡普海贝',
+        blockLimit: 50,
+        weight: 3
       },
       {
         level: 3,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '鲨鱼翅',
+        blockLimit: 50,
+        weight: 4
       },
       {
         level: 4,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '海蜇',
+        blockLimit: 30,
+        weight: 6
       },
       {
         level: 5,
-        name: '',
-        blockLimit: ,
-        weight:
+        name: '水怪鳞片',
+        blockLimit: 50,
+        weight: 2
       }
     ],
     timesQuery: [
