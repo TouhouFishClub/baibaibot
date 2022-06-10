@@ -359,7 +359,7 @@ const ITEMS = [
     name: '[羊驼]拖车',
     block: 11,
     weight: 1200,
-    timeRate: 0.7
+    timeRate: 0.75
   },
   {
     name: '[伙伴]运输用大象',
@@ -379,11 +379,12 @@ const analysis = (routes, itemInfo, profits, itemWeight) => routes.map((r, i) =>
     profit: profits[i],
     item: itemInfo.map(info => {
       let { name, count, timeRate } = info
-      let exp = profits[i] ? ~~(Math.pow((itemWeight * profits[i]), 0.5) * count * 30 / timeRate) : 0
+      let exp = profits[i] ? ~~(Math.pow((itemWeight * profits[i]), 0.5) * count * 30 * 1.15) : 0
       return {
         name,
         exp,
-        expAvg: ~~(exp / r.time)
+        time: ~~(r.time * timeRate),
+        expAvg: ~~(exp / r.time / timeRate)
       }
     })
   }
@@ -425,7 +426,7 @@ const trade = (content, qq, groupId, callback) => {
     out += `${itemInfo.map(x => `${x.name}: ${x.count}`).join('\n')}\n`
     out += `=====================\n`
 
-    out += `${analysis(timesQuery, itemInfo, sp.slice(1), weight).map(x => `${x.name}(${x.profit > 0 ? `+${x.profit}` : '无利润'})\n${x.item.map(i => `  贸易工具:${i.name}\n  总经验:${i.exp}\n  每秒经验:${i.expAvg}`).join('\n')}`).join('\n')}\n`
+    out += `${analysis(timesQuery, itemInfo, sp.slice(1), weight).map(x => `${x.name}(${x.profit > 0 ? `+${x.profit}` : '无利润'})\n${x.item.map(i => `  贸易工具:${i.name}（${i.time}s）\n  总经验:${i.exp}\n  每秒经验:${i.expAvg}`).join('\n')}`).join('\n')}\n`
   } else {
     out = `${sp[0]} 未找到`
   }
