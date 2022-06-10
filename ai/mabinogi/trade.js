@@ -367,9 +367,31 @@ const ITEMS = [
   }
 ]
 
-
 const trade = (content, qq, groupId, callback) => {
+  if(groupId != 577587780) {
+    return
+  }
+  let aq = {}, sp = content.replace(/[， ]/g, ',').split(',').filter(x => x.trim()), out = ''
+  Object.keys(AREAS).forEach(ak => {
+    AREAS[ak].goods.forEach(item => {
+      aq[item.name] = {
+        ak,
+        level: item.level
+      }
+    })
+  })
+  // console.log(aq)
+  // console.log(sp)
+  if(aq[sp[0]]) {
+    let {ak, level} = aq[sp[0]]
+    console.log(ak)
+    console.log(level)
 
+  } else {
+    out = `${sp[0]} 未找到`
+  }
+
+  callback(out)
 }
 
 module.exports = {
