@@ -358,18 +358,37 @@ const ITEMS = [
   {
     name: '[羊驼]拖车',
     block: 11,
-    weight: 1200
+    weight: 1200,
+    timeRate: 0.7
   },
   {
     name: '[伙伴]运输用大象',
     block: 9,
-    weight: 1900
+    weight: 1900,
+    timeRate: 1
   }
 ]
 
 const calcTradeCount = (item, blockLimit, weight) => {
   return Math.min(item.block * blockLimit, item.weight / weight)
 }
+
+const analysis = (routes, itemInfo, profits, itemWeight) => routes.map((r, i) => {
+  return {
+    name: AREAS[r.id].name,
+    profit: profits[i],
+    item: itemInfo.map(info => {
+      let { name, count, timeRate } = info
+      let exp = profits[i] ? ~~(Math.pow((itemWeight * profits[i]), 0.5) * count * 30 / timeRate) : 0
+      return {
+        name,
+        exp,
+        expAvg: ~~(exp / r.time)
+      }
+    })
+  }
+
+})
 
 const trade = (content, qq, groupId, callback) => {
   if(groupId != 577587780) {
@@ -399,13 +418,14 @@ const trade = (content, qq, groupId, callback) => {
     let itemInfo = ITEMS.map(x => {
       return {
         name: x.name,
-        count: calcTradeCount(x, blockLimit, weight)
+        count: calcTradeCount(x, blockLimit, weight),
+        timeRate: x.timeRate
       }
     })
     out += `${itemInfo.map(x => `${x.name}: ${x.count}`).join('\n')}\n`
     out += `=====================\n`
-    out += `${timesQuery.map(x => `->${AREAS[x.id].name}`).join('\n')}\n`
 
+    out += `${analysis(timesQuery, itemInfo, sp.slice(1), weight).map(x => `${x.name}(${x.profit > 0 ? `+${x.profit}` : '无利润'})\n${x.item.map(i => `  贸易工具:${i.name}\n  总经验:${i.exp}\n  每秒经验:${i.expAvg}`).join('\n')}`).join('\n')}\n`
   } else {
     out = `${sp[0]} 未找到`
   }
