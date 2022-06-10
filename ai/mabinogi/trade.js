@@ -299,14 +299,13 @@ const AREAS = {
       }
     ],
     timesQuery: [
-      { id: 'DEK', time: },
-      { id: 'DBL', time: },
-      { id: 'BGE', time: },
-      { id: 'AMM', time: },
-      { id: 'TTI', time: },
-      { id: 'TLA', time: },
-      { id: 'KPU', time: },
-      { id: 'BEF', time: },
+      { id: 'DEK', time: 200 },
+      { id: 'DBL', time: 40 },
+      { id: 'BGE', time: 180 },
+      { id: 'AMM', time: 170 },
+      { id: 'TTI', time: 280 },
+      { id: 'TLA', time: 450 },
+      { id: 'BEF', time: 326 },
     ]
   },
   'BEF': {
