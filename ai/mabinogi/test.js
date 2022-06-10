@@ -2,6 +2,12 @@
 // const iconv = require('iconv-lite')
 // const {getPageData} = require('./tools/optionsetWhere')
 
+const { trade } = require('./trade')
+
+trade('黑光剑 ', 111,577587780,d => {
+  console.log(d)
+})
+
 
 
 // let e = iconv.encode('麦当劳', 'gbk')

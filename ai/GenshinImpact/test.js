@@ -8,12 +8,12 @@
 // })()
 
 const {createRange, uniAnalysis, Reliquary} = require('./Reliquary')
-const { F } = require('./compair')
-let ts = Date.now()
-let area = new F(10, 20, 30, 40).execute().getResult()
-console.log(area)
-// console.log(area.totalArr.map(x => Array.from(new Set(x))).reduce((p, e) => p.concat(e), []))
-console.log(`Done : ${Date.now() - ts}`)
+// const { F } = require('./compair')
+// let ts = Date.now()
+// let area = new F(10, 20, 30, 40).execute().getResult()
+// console.log(area)
+// // console.log(area.totalArr.map(x => Array.from(new Set(x))).reduce((p, e) => p.concat(e), []))
+// console.log(`Done : ${Date.now() - ts}`)
 
 // ts = Date.now()
 // let area2 = createRange([10, 20, 30, 40])
@@ -31,6 +31,6 @@ console.log(`Done : ${Date.now() - ts}`)
 // 	console.log(x.index)
 // })
 
-// Reliquary('[CQ:image,file=0c6599d921adad1571ed44a79c9796c2.image,url=https://gchat.qpic.cn/gchatpic_new/799018865/4188919449-2224573346-91BE2AE2146336DD99470CCB0997CA6C/0?term=3]', d=> {
-// 	console.log(d)
-// })
+Reliquary('[CQ:image,file=48dbccb2dec745cebb842ec0f865063d.image,url=https://gchat.qpic.cn/gchatpic_new/799018865/577587780-2698655802-7EEBD1E6C3C81F6E4DDED44378192E1F/0?term=3,subType=0]', 122, 111, d=> {
+	console.log(d)
+}, 'baiduAip')
