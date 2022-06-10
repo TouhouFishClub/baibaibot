@@ -367,6 +367,10 @@ const ITEMS = [
   }
 ]
 
+const calcTradeCount = (item, blockLimit, weight) => {
+  return Math.min(item.block * blockLimit, item.weight / weight)
+}
+
 const trade = (content, qq, groupId, callback) => {
   if(groupId != 577587780) {
     return
@@ -384,8 +388,23 @@ const trade = (content, qq, groupId, callback) => {
   // console.log(sp)
   if(aq[sp[0]]) {
     let {ak, level} = aq[sp[0]]
-    console.log(ak)
-    console.log(level)
+    // console.log(ak)
+    // console.log(level)
+    let { goods, timesQuery } = AREAS[ak]
+    let { name, blockLimit, weight } = goods[level - 1]
+    out += `${AREAS[ak].name} - ${name}\n`
+    out += `单个箱位容量: ${blockLimit}\n`
+    out += `单个重量: ${weight}\n`
+    out += `=====================\n`
+    let itemInfo = ITEMS.map(x => {
+      return {
+        name: x.name,
+        count: calcTradeCount(x, blockLimit, weight)
+      }
+    })
+    out += `${itemInfo.map(x => `${x.name}: ${x.count}`).join('\n')}\n`
+    out += `=====================\n`
+    out += `${timesQuery.map(x => `->${AREAS[x.id].name}`).join('\n')}\n`
 
   } else {
     out = `${sp[0]} 未找到`

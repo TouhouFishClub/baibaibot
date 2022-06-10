@@ -4,7 +4,7 @@
 
 const { trade } = require('./trade')
 
-trade('黑光剑 ', 111,577587780,d => {
+trade('海蜇 35 0 38 31 52 59 0', 111,577587780,d => {
   console.log(d)
 })
 
