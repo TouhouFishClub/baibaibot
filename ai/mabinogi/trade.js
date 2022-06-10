@@ -1,4 +1,6 @@
 
+const { drawTxtImage } = require('../../cq/drawImageBytxt')
+
 const AREAS = {
   'DEK': {
     name: '迪尔科内尔',
@@ -406,8 +408,9 @@ const trade = (content, qq, groupId, callback) => {
   })
   // console.log(aq)
   // console.log(sp)
-  if(aq[sp[0]]) {
-    let {ak, level} = aq[sp[0]]
+  let target = Object.keys(aq).filter(x => x.match(sp[0]))[0]
+  if(target) {
+    let {ak, level} = target
     // console.log(ak)
     // console.log(level)
     let { goods, timesQuery } = AREAS[ak]
@@ -430,8 +433,9 @@ const trade = (content, qq, groupId, callback) => {
   } else {
     out = `${sp[0]} 未找到`
   }
+  // callback(out)
 
-  callback(out)
+  drawTxtImage(``, out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
 module.exports = {
