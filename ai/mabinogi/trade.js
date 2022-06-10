@@ -354,6 +354,19 @@ const AREAS = {
   }
 }
 
+const ITEMS = [
+  {
+    name: '[羊驼]拖车',
+    block: 11,
+    weight: 1200
+  },
+  {
+    name: '[伙伴]运输用大象',
+    block: 9,
+    weight: 1900
+  }
+]
+
 
 const trade = (content, qq, groupId, callback) => {
 
