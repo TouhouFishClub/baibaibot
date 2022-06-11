@@ -407,7 +407,7 @@ const analysis = (routes, carrierInfo, profits, itemWeight) => {
 }
 
 const trade = (content, qq, groupId, callback) => {
-  if(groupId != 577587780) {
+  if(groupId != 577587780 || qq != 799018865) {
     return
   }
   let aq = {}, sp = content.replace(/[， ]/g, ',').split(',').filter(x => x.trim()), out = ''
@@ -437,7 +437,8 @@ const trade = (content, qq, groupId, callback) => {
     })
     let allCityDesc = analysis(timesQuery, carrierInfo, sp.slice(1), weight)
 
-    renderImage(AREAS[ak], goods[level - 1], carrierInfo, allCityDesc)
+    renderImage(AREAS[ak], goods[level - 1], carrierInfo, allCityDesc, callback)
+    return
 
     out += `${AREAS[ak].name} - ${name}\n`
     out += `单个箱位容量: ${blockLimit}\n`
@@ -453,7 +454,7 @@ const trade = (content, qq, groupId, callback) => {
   }
   callback(out)
 
-  // drawTxtImage(``, out, callback, {color: 'black', font: 'STXIHEI.TTF'})
+  drawTxtImage(``, out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
 const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc, callback) => {
@@ -544,6 +545,15 @@ const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc, callback) => 
     .city-info-container .carrier-flex .carrier-infos + .carrier-infos{
       border-left: 1px dashed #bbb;
     }
+    .first {
+      background: rgba(255, 215, 0, .5);
+    }
+    .second {
+      background: rgba(169, 169, 169, .5);
+    }
+    .third {
+      background: rgba(210, 105, 30, .5);
+    }
   </style>
 </head>
 <body>
@@ -562,22 +572,22 @@ const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc, callback) => 
       <div class="label">各村落市价</div>
       ${allCityDesc.map(city => `
         <div class="city-info">
-          <div class="name">${city.name}(${city.profit > 0 ? `<span style="color: #d40000">+ ${city.profit}</span>` : '<span style="color: #0f97f8">无利润</span>'})</div>
+          <div class="name">${city.name} ( ${city.profit > 0 ? `<span style="color: #d40000; font-weight: bold">+ ${city.profit}</span>` : '<span style="color: #0f97f8; font-weight: bold">无利润</span>'} )</div>
           ${city.profit > 0 ? `
             <div class="carrier-flex">
               ${city.item.map(ci => `
                 <div class="carrier-infos">
                   <div class="carrier-name">${ci.name}(${ci.time}s)</div>
                   <div class="carrier-item-desc">
-                    <div>总经验:${ci.exp}(${ci.expRank})</div>
-                    <div>每秒经验:${ci.expAvg}(${ci.expAvgRank})</div>
+                    <div class="${['', 'first', 'second', 'third'][ci.expRank]}">总经验:${ci.exp}(${ci.expRank})</div>
+                    <div class="${['', 'first', 'second', 'third'][ci.expAvgRank]}">每秒经验:${ci.expAvg}(${ci.expAvgRank})</div>
                   </div>
                 </div>
               `).join('')}
             </div>
           ` : `
           <div class="carrier-flex">
-            该城市没有利润
+            <div class="carrier-infos">该城市没有利润</div>
           </div>
           `}
         </div>
@@ -586,16 +596,16 @@ const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc, callback) => 
   </div>
 </body>
 </html>`
-  // let output = path.join(IMAGE_DATA, 'mabi_trade', `trade.png`)
-  let output = './trade.png'
+  let output = path.join(IMAGE_DATA, 'mabi_trade', `trade.png`)
+  // let output = './trade.png'
   nodeHtmlToImage({
     output,
     html
   })
     .then(() => {
       console.log(`保存trade.png成功！`)
-      // let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_trade', `${group}.png`)}]`
-      // callback(imgMsg)
+      let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_trade', `${group}.png`)}]`
+      callback(imgMsg)
     })
 
 }

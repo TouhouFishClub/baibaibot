@@ -4,9 +4,9 @@
 
 const { trade } = require('./trade')
 
-// trade('海蜇 37 0 44 43 67 79 0 ', 111,577587780,d => {
-//   console.log(d)
-// })
+trade('海蜇 37 0 44 43 67 79 0 ', 111,577587780,d => {
+  console.log(d)
+})
 // trade('食人魔屠夫假面 18 27 20 30 35 0 0', 111,577587780,d => {
 //   console.log(d)
 // })
@@ -22,9 +22,9 @@ const { trade } = require('./trade')
 // trade('止呼噜药 10 19 17 12 20 12 20', 111,577587780,d => {
 //   console.log(d)
 // })
-trade('人参药水 14 40 38 20 48 17 44', 111,577587780,d => {
-  console.log(d)
-})
+// trade('人参药水 14 40 38 20 48 17 44', 111,577587780,d => {
+//   console.log(d)
+// })
 
 
 
