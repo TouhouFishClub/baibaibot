@@ -410,7 +410,7 @@ const trade = (content, qq, groupId, callback) => {
   // console.log(sp)
   let target = Object.keys(aq).filter(x => x.match(sp[0]))[0]
   if(target) {
-    let {ak, level} = target
+    let {ak, level} = aq[target]
     // console.log(ak)
     // console.log(level)
     let { goods, timesQuery } = AREAS[ak]
