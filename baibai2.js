@@ -1290,8 +1290,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     guildRankSearch(grs, from, groupid, callback, option)
     return
   }
-  if(fie.toLowerCase() == 'mbt') {
-    trade(con.substring(3), from, port, groupid, callback)
+  if(fie.toLowerCase() == 'tra') {
+    trade(con.substring(3), from, groupid, callback)
 	  return
   }
   if(fie.toLowerCase() == 'ysr') {
