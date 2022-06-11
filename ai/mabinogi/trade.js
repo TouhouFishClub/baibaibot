@@ -604,7 +604,7 @@ const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc, callback) => 
   })
     .then(() => {
       console.log(`保存trade.png成功！`)
-      let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_trade', `${group}.png`)}]`
+      let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_trade', `trade.png`)}]`
       callback(imgMsg)
     })
 
