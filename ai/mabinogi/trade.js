@@ -371,9 +371,7 @@ const ITEMS = [
   }
 ]
 
-const calcTradeCount = (item, blockLimit, weight) => {
-  return ~~Math.min(item.block * blockLimit, item.weight / weight)
-}
+const calcTradeCount = (item, blockLimit, weight) => ~~Math.min(item.block * blockLimit, item.weight / weight)
 
 const analysis = (routes, itemInfo, profits, itemWeight) => routes.map((r, i) => {
   return {
