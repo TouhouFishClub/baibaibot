@@ -577,10 +577,10 @@ const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc, callback) => 
             <div class="carrier-flex">
               ${city.item.map(ci => `
                 <div class="carrier-infos">
-                  <div class="carrier-name">${ci.name}(${ci.time}s)</div>
+                  <div class="carrier-name">${ci.name} (${ci.time}s)</div>
                   <div class="carrier-item-desc">
-                    <div class="${['', 'first', 'second', 'third'][ci.expRank]}">总经验:${ci.exp}(${ci.expRank})</div>
-                    <div class="${['', 'first', 'second', 'third'][ci.expAvgRank]}">每秒经验:${ci.expAvg}(${ci.expAvgRank})</div>
+                    <div class="${['', 'first', 'second', 'third'][ci.expRank]}">总经验:${ci.exp} (${ci.expRank})</div>
+                    <div class="${['', 'first', 'second', 'third'][ci.expAvgRank]}">每秒经验:${ci.expAvg} (${ci.expAvgRank})</div>
                   </div>
                 </div>
               `).join('')}
