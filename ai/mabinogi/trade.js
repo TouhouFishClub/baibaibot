@@ -381,7 +381,7 @@ const analysis = (routes, itemInfo, profits, itemWeight) => routes.map((r, i) =>
     profit: profits[i],
     item: itemInfo.map(info => {
       let { name, count, timeRate } = info
-      let exp = profits[i] ? ~~(Math.pow((itemWeight * profits[i]), 0.5) * count * 30 * 1.15) : 0
+      let exp = profits[i] ? ~~(~~Math.pow((itemWeight * profits[i]), 0.5) * count * 30 * 1.15) : 0
       return {
         name,
         exp,
