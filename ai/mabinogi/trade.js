@@ -1,3 +1,4 @@
+const _ = require('lodash')
 
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
@@ -356,7 +357,7 @@ const AREAS = {
   }
 }
 
-const ITEMS = [
+const CARRIER = [
   {
     name: '[羊驼]拖车',
     block: 11,
@@ -373,23 +374,35 @@ const ITEMS = [
 
 const calcTradeCount = (item, blockLimit, weight) => ~~Math.min(item.block * blockLimit, item.weight / weight)
 
-const analysis = (routes, itemInfo, profits, itemWeight) => routes.map((r, i) => {
-  return {
-    name: AREAS[r.id].name,
-    profit: profits[i],
-    item: itemInfo.map(info => {
-      let { name, count, timeRate } = info
-      let exp = profits[i] ? ~~(~~Math.pow((itemWeight * profits[i]), 0.5) * count * 30 * 1.15) : 0
-      return {
-        name,
-        exp,
-        time: ~~(r.time * timeRate),
-        expAvg: ~~(exp / r.time / timeRate)
-      }
+const analysis = (routes, carrierInfo, profits, itemWeight) => {
+  let out = routes.map((r, i) => {
+    return {
+      name: AREAS[r.id].name,
+      profit: profits[i],
+      item: carrierInfo.map(info => {
+        let { name, count, timeRate } = info
+        let exp = profits[i] ? ~~(~~Math.pow((itemWeight * profits[i]), 0.5) * count * 30 * 1.15) : 0
+        return {
+          name,
+          exp,
+          time: ~~(r.time * timeRate),
+          expAvg: ~~(exp / r.time / timeRate)
+        }
+      })
+    }
+  })
+  let expHash = {}, expAvgHash = {}
+  _.flatten(out.map(x => x.item.map(i => i.exp))).sort((a, b) => a - b).forEach((x, i, a) => expHash[x] = a.length - i)
+  _.flatten(out.map(x => x.item.map(i => i.expAvg))).sort((a, b) => a - b).forEach((x, i, a) => expAvgHash[x] = a.length - i)
+  out.forEach(x => {
+    x.item.forEach(i => {
+      i.expRank = expHash[i.exp]
+      i.expAvgRank = expAvgHash[i.expAvg]
     })
-  }
-
-})
+  })
+  console.log(out[0].item)
+  return out
+}
 
 const trade = (content, qq, groupId, callback) => {
   if(groupId != 577587780) {
@@ -413,27 +426,36 @@ const trade = (content, qq, groupId, callback) => {
     // console.log(level)
     let { goods, timesQuery } = AREAS[ak]
     let { name, blockLimit, weight } = goods[level - 1]
-    out += `${AREAS[ak].name} - ${name}\n`
-    out += `单个箱位容量: ${blockLimit}\n`
-    out += `单个重量: ${weight}\n`
-    out += `=====================\n`
-    let itemInfo = ITEMS.map(x => {
+    let carrierInfo = CARRIER.map(x => {
       return {
         name: x.name,
         count: calcTradeCount(x, blockLimit, weight),
         timeRate: x.timeRate
       }
     })
-    out += `${itemInfo.map(x => `${x.name}: ${x.count}`).join('\n')}\n`
+    let allCityDesc = analysis(timesQuery, carrierInfo, sp.slice(1), weight)
+
+    renderImage(AREAS[ak], goods[level - 1], carrierInfo, allCityDesc)
+
+    out += `${AREAS[ak].name} - ${name}\n`
+    out += `单个箱位容量: ${blockLimit}\n`
+    out += `单个重量: ${weight}\n`
+    out += `=====================\n`
+    out += `${carrierInfo.map(x => `${x.name}: ${x.count}`).join('\n')}\n`
     out += `=====================\n`
 
-    out += `${analysis(timesQuery, itemInfo, sp.slice(1), weight).map(x => `${x.name}(${x.profit > 0 ? `+${x.profit}` : '无利润'})\n${x.item.map(i => `  贸易工具:${i.name}（${i.time}s）\n  总经验:${i.exp}\n  每秒经验:${i.expAvg}`).join('\n')}`).join('\n')}\n`
+    out += `${allCityDesc.map(x => `${x.name}(${x.profit > 0 ? `+${x.profit}` : '无利润'})\n${x.item.map(i => `  贸易工具:${i.name}（${i.time}s）\n  总经验:${i.exp}(${i.expRank})\n  每秒经验:${i.expAvg}(${i.expAvgRank})`).join('\n')}`).join('\n')}\n`
+
   } else {
     out = `${sp[0]} 未找到`
   }
-  // callback(out)
+  callback(out)
 
-  drawTxtImage(``, out, callback, {color: 'black', font: 'STXIHEI.TTF'})
+  // drawTxtImage(``, out, callback, {color: 'black', font: 'STXIHEI.TTF'})
+}
+
+const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc) => {
+
 }
 
 module.exports = {
