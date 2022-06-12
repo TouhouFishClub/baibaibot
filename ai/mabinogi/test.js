@@ -2,11 +2,12 @@
 // const iconv = require('iconv-lite')
 // const {getPageData} = require('./tools/optionsetWhere')
 
-const { trade } = require('./trade')
+const { trade, searchBasePrice } = require('./trade')
 
-trade('海蜇 34 -254 34 25 40 56 -185', 111,577587780,d => {
-  console.log(d)
-})
+searchBasePrice(700)
+// trade('海蜇 34 -254 34 25 40 56 -185', 111,577587780,d => {
+//   console.log(d)
+// })
 // trade('食人魔屠夫假面 18 27 20 30 35 0 0', 111,577587780,d => {
 //   console.log(d)
 // })

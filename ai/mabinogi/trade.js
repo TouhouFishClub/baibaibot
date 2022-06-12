@@ -375,6 +375,49 @@ const CARRIER = [
   }
 ]
 
+const searchBasePrice = (expAvg) => {
+  let out = ''
+
+  let allArea = Object.values(AREAS).concat([])
+  for(let i = 0; i < allArea.length; i ++) {
+    let city = allArea[i]
+    for(let j = 0; j < city.goods.length; j ++) {
+      let cn = []
+      CARRIER.forEach(c => {
+        cn.push(Object.assign(c, {count: calcTradeCount(c, allArea[i].goods[j].blockLimit, allArea[i].goods[j].weight)}))
+      })
+      allArea[i].goods[j].carrier = JSON.parse(JSON.stringify(cn))
+    }
+  }
+
+
+  allArea.forEach(city => {
+    out += `${city.name}\n`
+    city.goods.forEach(good => {
+      out += `  ${good.name}\n`
+      itemCityBasePrice(city.timesQuery, good, expAvg).forEach(tq => {
+        console.log(tq)
+        out += `    ${tq.cityName}\t`
+        tq.carriers.forEach(ci => {
+          out += `    ${ci.name}底价： ${ci.base < 100 ? `${ci.base}  ` : ci.base}\t`
+        })
+        out += '\n'
+      })
+    })
+
+  })
+  console.log(out)
+}
+
+const itemCityBasePrice = (timesQuery, goodInfo, expAvg) => {
+  return JSON.parse(JSON.stringify(timesQuery)).map(x => Object.assign(x, {
+    cityName: AREAS[x.id].name,
+    carriers: JSON.parse(JSON.stringify(goodInfo.carrier)).map(c => Object.assign(c, {
+      base: Math.ceil(Math.pow(~~((expAvg * x.time * c.timeRate / 1.15 / 30 / c.count) + 1), 2) / goodInfo.weight)
+    }))
+  }))
+}
+
 const calcTradeCount = (item, blockLimit, weight) => ~~Math.min(item.block * blockLimit, item.weight / weight)
 
 const analysis = (routes, carrierInfo, profits, itemWeight) => {
@@ -425,7 +468,7 @@ const trade = (content, qq, groupId, callback) => {
   if(target) {
     let {ak, level} = aq[target]
     // console.log(ak)
-    // console.log(level)
+    // console.log(level)ca
     let { goods, timesQuery } = AREAS[ak]
     let { name, blockLimit, weight } = goods[level - 1]
     let carrierInfo = CARRIER.map(x => {
@@ -611,5 +654,6 @@ const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc, callback) => 
 }
 
 module.exports = {
-  trade
+  trade,
+  searchBasePrice
 }
