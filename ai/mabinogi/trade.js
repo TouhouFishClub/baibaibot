@@ -516,6 +516,8 @@ const tradeOcr = (content, port, callback) => {
 						console.log(d.data.texts)
 						console.log('=============')
 						console.log(d.data.texts[0])
+						analysisOcr(d.data.texts)
+
 					} else {
 						callback(d.msg)
 					}
@@ -525,6 +527,20 @@ const tradeOcr = (content, port, callback) => {
 	} else {
 		callback('没有识别到图片')
 	}
+}
+
+const analysisOcr = textArr => {
+	let obj = {}, out = ''
+	let allGoods = _.flattenDeep(Object.values(AREAS).map(x => x.goods)).map(x => x.name)
+	obj.name = {
+		data: textArr[0].text,
+		conf: textArr[0].confidence
+	}
+	out += `${obj.name.data}(${obj.name.conf}): ${new Set(allGoods).has(obj.name.data) ? '已':'未'}定位\n`
+	console.log('=============')
+	console.log(obj)
+	console.log('=============')
+	console.log(out)
 }
 
 const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc, callback) => {
