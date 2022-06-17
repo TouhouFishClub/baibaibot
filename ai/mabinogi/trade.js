@@ -451,7 +451,7 @@ const analysis = (routes, carrierInfo, profits, itemWeight) => {
 }
 
 const trade = (content, port, qq, groupId, callback) => {
-  if(!(groupId == 577587780 || qq == 799018865)) {
+  if(!(groupId == 577587780 || qq == 799018865 || qq == 1683130049)) {
     return
   }
   let aq = {}, sp = content.replace(/[， ]/g, ',').split(',').filter(x => x.trim()), out = ''
