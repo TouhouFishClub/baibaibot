@@ -2,6 +2,7 @@ const path = require('path')
 const _ = require('lodash')
 const nodeHtmlToImage = require('node-html-to-image')
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'))
+const { ocr } = require('../image/cqhttp-ocr')
 
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
@@ -449,7 +450,7 @@ const analysis = (routes, carrierInfo, profits, itemWeight) => {
   return out
 }
 
-const trade = (content, qq, groupId, callback) => {
+const trade = (content, port, qq, groupId, callback) => {
   if(!(groupId == 577587780 || qq == 799018865)) {
     return
   }
@@ -498,6 +499,32 @@ const trade = (content, qq, groupId, callback) => {
   callback(out)
 
   drawTxtImage(``, out, callback, {color: 'black', font: 'STXIHEI.TTF'})
+}
+
+const tradeOcr = (content, port, callback) => {
+	let n = content.indexOf('[CQ:image')
+	if(n > -1){
+		content.substr(n).split(',').forEach(p => {
+			let sp = p.split('=')
+			if(sp[0] == 'file'){
+				// console.log(sp[1])
+				ocr(sp[1], port, d => {
+					if(d.data) {
+						console.log('=============')
+						console.log(d.data)
+						console.log('=============')
+						console.log(d.data.texts)
+						console.log('=============')
+						console.log(d.data.texts[0])
+					} else {
+						callback(d.msg)
+					}
+				})
+			}
+		})
+	} else {
+		callback('没有识别到图片')
+	}
 }
 
 const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc, callback) => {
@@ -655,5 +682,6 @@ const renderImage = (cityInfo, goodInfo, carrierInfo, allCityDesc, callback) => 
 
 module.exports = {
   trade,
+	tradeOcr,
   searchBasePrice
 }

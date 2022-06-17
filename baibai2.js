@@ -125,7 +125,7 @@ const {handleGaReply,handleMazeReply} = require('./ai/image/gimage');
 
 const { renderColorBoard } = require('./ai/mabinogi/renderColor')
 const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
-const { trade } = require('./ai/mabinogi/trade')
+const { trade, tradeOcr } = require('./ai/mabinogi/trade')
 
 const { searchMabiRecipe } = require('./ai/mabinogi/recipe/searchRecipe')
 
@@ -1291,7 +1291,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
   if(fie.toLowerCase() == 'tra') {
-    trade(con.substring(3), from, groupid, callback)
+    trade(con.substring(3), port, from, groupid, callback)
+	  return
+  }
+  if(fie.toLowerCase() == 'tro') {
+		tradeOcr(con.substring(3), port, callback)
 	  return
   }
   if(fie.toLowerCase() == 'ysr') {
