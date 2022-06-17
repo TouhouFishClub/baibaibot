@@ -529,14 +529,56 @@ const tradeOcr = (content, port, callback) => {
 	}
 }
 
+const compairText = () => {
+
+}
+
 const analysisOcr = textArr => {
 	let obj = {}, out = ''
 	let allGoods = _.flattenDeep(Object.values(AREAS).map(x => x.goods)).map(x => x.name)
-	obj.name = {
-		data: textArr[0].text,
+	let allCity = Object.values(AREAS).map(x => x.name.slice(0, 2))
+	let allCityIdHash = {}
+	Object.keys(AREAS).forEach(key => {
+		allCityIdHash[AREAS[key].name.slice(0, 2)] = key
+	})
+	obj.good = {
+		text: textArr[0].text,
 		conf: textArr[0].confidence
 	}
-	out += `${obj.name.data}(${obj.name.conf}): ${new Set(allGoods).has(obj.name.data) ? '已':'未'}定位\n`
+	obj.base = {
+		text: textArr[1].text.match(/\d万?\d+/) ? textArr[1].text.match(/\d万?\d+/)[0] : '',
+		conf: textArr[1].confidence
+	}
+	obj.citys = []
+	let cityIdTmp, cityDatas = []
+	for(let i = 2; i < textArr.length; i ++) {
+		let block = textArr[i], check = block.text.slice(0, 2)
+		if(new Set(allCity).has(check)) {
+			// save city
+			if(cityIdTmp) {
+				obj.citys.push({
+					id: cityIdTmp.text,
+					idConf: cityIdTmp.conf
+				})
+			}
+			cityIdTmp = {
+				text: allCityIdHash[check],
+				conf: block.confidence
+			}
+			cityDatas = []
+		} else {
+			if(block.match(/\d万?\d+/)) {
+				cityDatas.push({
+					text: block.text.match(/\d万?\d+/)[0],
+					conf: block.confidence
+				})
+			}
+		}
+	}
+
+
+	out += `${obj.good.text}(${obj.good.conf}): ${new Set(allGoods).has(obj.good.data) ? '已':'未'}定位\n`
+	out += `基础价格: ${obj.base.text}(${obj.base.conf})\n`
 	console.log('=============')
 	console.log(obj)
 	console.log('=============')
