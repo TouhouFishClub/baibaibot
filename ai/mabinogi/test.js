@@ -2,9 +2,9 @@
 // const iconv = require('iconv-lite')
 // const {getPageData} = require('./tools/optionsetWhere')
 
-const { trade, searchBasePrice } = require('./trade')
-
-searchBasePrice(700)
+// const { trade, searchBasePrice } = require('./trade')
+//
+// searchBasePrice(700)
 // trade('海蜇 34 -254 34 25 40 56 -185', 111,577587780,d => {
 //   console.log(d)
 // })
@@ -73,14 +73,14 @@ searchBasePrice(700)
 // console.log(max)
 // console.log(min)
 
-	// createEchoStone(d => {
-	// 	console.log(d)
-	// }, true)
+// createEchoStone(d => {
+// 	console.log(d)
+// }, true)
 
 // const ow = require('./tools/optionsetWhere')
 //
-// const rua = require('./ruawork')
-// rua(data => console.log(data))
+const rua = require('./ruawork')
+rua(data => console.log(data))
 
 // os('aa', '铁瓮城', 'normal', d => {
 //   console.log(d)

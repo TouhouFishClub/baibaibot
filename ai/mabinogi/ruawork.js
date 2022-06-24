@@ -6,7 +6,8 @@ module.exports = function(callback){
   const dsp = value => (value < 10 ? '0' + value : value)
   let msg = ''
 
-  let adjust_value = -53
+  // let adjust_value = -53
+  let adjust_value = 0
   let adjust_value2 = Math.floor(adjust_value * 1.5)
 
 
