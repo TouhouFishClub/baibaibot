@@ -66,7 +66,7 @@ const Ferry = [
 
 const FindCurrentTimes = (now, baseTimeId, timeOffset) => {
 	let { base, interval } = BaseTime[baseTimeId]
-	let st = base.getTime() + ~~((now - (base.getTime() + timeOffset * 1000)) / (interval[0] + interval[1])) * (interval[0] + interval[1])
+	let st = base.getTime() + ~~((now - (base.getTime() + timeOffset * 1000)) / (interval[0] + interval[1])) * (interval[0] + interval[1]) + timeOffset * 1000
 	return [st, st + interval[0], st + interval[0] + interval[2]]
 }
 
