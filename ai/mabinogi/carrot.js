@@ -6,7 +6,7 @@ const { drawTxtImage } = require('../../cq/drawImageBytxt')
 const carrot = async (getData, callback) => {
 	let res = await fetchData(), out = ''
 	let next = splitText(res, 'var end = "', '";', true), nextTs = new Date(next).getTime()
-	out += `下次刷新时间: ${nextTs}\n`
+	out += `下次刷新时间: ${next}\n`
 	let nowTs = parseInt(splitText(res, 'var now = "', '";', true))
 	// out += `当前时间: ${nowTs}\n`
 	out += `当前胡萝卜售价:\n`
