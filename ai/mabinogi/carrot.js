@@ -1,17 +1,34 @@
+const http = require("http")
 const https = require("https")
+const { myip } = require('../../baibaiConfigs')
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
-const carrot = async callback => {
+const carrot = async (getData, callback) => {
 	let res = await fetchData(), out = ''
-	out += `下次刷新时间: ${splitText(res, 'var end = "', '";', true)}\n`
-	// out += `当前时间: ${splitText(res, 'var now = "', '";', true)}\n`
+	let next = splitText(res, 'var end = "', '";', true), nextTs = new Date(next).getTime()
+	out += `下次刷新时间: ${nextTs}\n`
+	let nowTs = parseInt(splitText(res, 'var now = "', '";', true))
+	// out += `当前时间: ${nowTs}\n`
 	out += `当前胡萝卜售价:\n`
+	let goodPrice = false
 	res.split('当前胡萝卜售价').slice(1).map((str, i) => {
 		let price = splitText(str, '<span>', '</span>', true)
+		if(price == 5) {
+			goodPrice = true
+		}
 		out += `${['菲利亚', '巴勒斯', '克拉'][i]}: ${price}贸易货币/胡萝卜\n`
 	})
 	// callback(out)
-	drawTxtImage(``, out, callback, {color: 'black', font: 'STXIHEI.TTF'})
+	if(getData) {
+		return {
+			out,
+			nextTs,
+			nowTs,
+			goodPrice
+		}
+	} else {
+		drawTxtImage(``, out, callback, {color: 'black', font: 'STXIHEI.TTF'})
+	}
 }
 
 const splitText = (str, start, end = '', ignore = false) => {
@@ -58,6 +75,43 @@ const fetchData = async () => {
 // carrot(d=> {
 // 	console.log(d)
 // })
+
+const autoWhiteList = [{
+	id: 727605874,
+	port: 29334
+}]
+
+const autoSendMsg = (msg) => {
+	autoWhiteList.forEach(group => {
+		let options = {
+			host: myip,
+			port: group.port,
+			path: `/send_group_msg?group_id=${group.id}&message=${encodeURIComponent(`【自动查询】\n\n${msg}`)}`,
+			method: 'GET',
+			headers: {}
+		}
+		let req = http.request(options);
+		req.on('error', function(err) {
+			console.log('req err:');
+			console.log(err);
+		});
+		req.end();
+	})
+}
+
+
+const startTimeout = async (isFirst = false) => {
+	let data = await carrot(true)
+	if(isFirst) {
+		autoSendMsg(data.out)
+	}
+  let timeLeft = data.nextTs - data.nowTs + 10000
+  setTimeout(() => {
+    startTimeout()
+  }, timeLeft)
+}
+
+startTimeout(true)
 
 module.exports = {
 	carrot

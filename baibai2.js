@@ -1199,7 +1199,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     mabiCalendar(callback)
   }
   if(con == '胡萝卜') {
-    carrot(callback)
+    carrot(false, callback)
 		return
   }
   if(con == '打开财富密码') {
