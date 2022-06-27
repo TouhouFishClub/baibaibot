@@ -102,9 +102,7 @@ const autoSendMsg = (msg) => {
 
 const startTimeout = async (isFirst = false) => {
 	let data = await carrot(true)
-	if(isFirst) {
-		autoSendMsg(data.out)
-	}
+	autoSendMsg(`${data.out}${data.goodPrice ? '\n赶紧卖萝卜！！！！': ''}`)
   let timeLeft = data.nextTs - data.nowTs + 10000
   setTimeout(() => {
     startTimeout()
