@@ -1,7 +1,8 @@
 const https = require("https");
 
 const carrot = async callback => {
-	let res = fetchData()
+	let res = await fetchData()
+	console.log(res)
 	console.log('end', splitText(res, 'var end', ';'))
 	console.log('now', splitText(res, 'var now', ';'))
 	res.split('当前胡萝卜售价').slice(1).map(str => {
