@@ -76,10 +76,21 @@ const fetchData = async () => {
 // 	console.log(d)
 // })
 
-const autoWhiteList = [{
-	id: 727605874,
-	port: 29334
-}]
+const autoWhiteList = [
+	{
+		id: 727605874,
+		port: 29334
+	},{
+		id: 1025639743,
+		port: 25334
+	},{
+		id: 1072617253,
+		port: 29334
+	},{
+		id: 577587780,
+		port: 24334
+	}
+]
 
 const autoSendMsg = (msg) => {
 	autoWhiteList.forEach(group => {
