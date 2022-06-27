@@ -86,7 +86,7 @@ const autoSendMsg = (msg) => {
 		let options = {
 			host: myip,
 			port: group.port,
-			path: `/send_group_msg?group_id=${group.id}&message=${encodeURIComponent(`【自动查询】\n\n${msg}`)}`,
+			path: `/send_group_msg?group_id=${group.id}&message=${encodeURIComponent(`【自动查询】\n${msg}`)}`,
 			method: 'GET',
 			headers: {}
 		}
@@ -102,7 +102,9 @@ const autoSendMsg = (msg) => {
 
 const startTimeout = async (isFirst = false) => {
 	let data = await carrot(true)
-	autoSendMsg(`${data.out}${data.goodPrice ? '\n赶紧卖萝卜！！！！': ''}`)
+	if(data.goodPrice) {
+		autoSendMsg(`${data.out}${data.goodPrice ? '\n赶紧卖萝卜！！！！': ''}`)
+	}
   let timeLeft = data.nextTs - data.nowTs + 10000
   setTimeout(() => {
     startTimeout()
