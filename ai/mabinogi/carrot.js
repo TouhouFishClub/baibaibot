@@ -4,7 +4,7 @@ const carrot = async callback => {
 	let res = await fetchData()
 	// console.log(res)
 	console.log(splitText(res, 'var end = "', '"', true))
-	console.log(splitText(res.split('var end = ')[1], 'var now = "', '"', true))
+	// console.log(splitText(res.split('var end = ')[1], 'var now = "', '"', true))
 	res.split('当前胡萝卜售价').slice(1).map(str => {
 		console.log(splitText(str, '<span>', '</span>', true))
 	})
