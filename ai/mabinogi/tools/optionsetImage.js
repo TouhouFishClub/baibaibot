@@ -28,6 +28,11 @@ let fontFamily = 'STXIHEI'
 
 const checkMaxWidth = (ctx, str, maxWidth) => {
   let start = 0, splitArr = []
+	if(str.startsWith('author')) {
+		ctx.font = `14px ${fontFamily}`
+	} else {
+		ctx.font = `20px ${fontFamily}`
+	}
   for(let i = 1; i < str.length; i++){
     if(ctx.measureText(str.substring(start, i)).width > maxWidth){
       splitArr.push(str.substring(start, i - 1))
