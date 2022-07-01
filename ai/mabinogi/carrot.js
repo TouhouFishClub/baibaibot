@@ -95,6 +95,9 @@ const autoWhiteList = [
 	},{
 		id: 315902131,
 		port: 29334
+	},{
+		id: 7469496,
+		port: 29334
 	}
 ]
 
