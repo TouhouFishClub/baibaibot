@@ -559,7 +559,7 @@ function handleMsg_D(msgObj,botqq) {
     content = content.substring(6).trim();
   }
 
-  if(getMsgCount(port)>1500){
+  if(getMsgCount(port)>1500&&gidstr.startsWith('9071052')){
     return;
   }
 
