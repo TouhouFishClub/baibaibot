@@ -79,13 +79,13 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 		} else {
 			userGachaLimit[user] = {
 				breakPoint: point,
-				expire: Date.now() + point * 100
+				expire: Date.now() + point * 1000
 			}
 		}
 	} else {
 		userGachaLimit[user] = {
 			breakPoint: point,
-			expire: Date.now() + point * 100
+			expire: Date.now() + point * 1000
 		}
 	}
 
