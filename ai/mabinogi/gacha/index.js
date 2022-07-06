@@ -10,12 +10,31 @@ const MONGO_URL = require('../../../baibaiConfigs').mongourl;
 // const MONGO_URL = 'mongodb://127.0.0.1:27017/db_mabinogi_gacha'
 
 let userPointCount = new Map()
+let userGachaLimit = {}
 
 let gachaInfo = [
 
 ]
 
 let client
+
+const createTimeStr = ts => {
+	ts = ~~(ts / 1000)
+	let out = []
+	for(let i = 0; i < 3; i ++) {
+		if(ts) {
+			let t = ts
+			if(i < 2) {
+				t = ts % 60
+			}
+			if(t) {
+				out.unshift(`${t}${['秒', '分', '小时'][i]}`)
+			}
+			ts = ~~(ts/60)
+		}
+	}
+	return out.join('')
+}
 
 const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 	if(!gachaInfo.length) {
@@ -53,6 +72,22 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 	let items = randomGacha(gacha, gachaCount)
 
 	// console.log(point)
+	if(userGachaLimit[user]) {
+		if(Date.now() < userGachaLimit[user].expire) {
+			drawTxtImage(`[CQ:at,qq=${user}]`, `你还在搬砖赚钱，请${createTimeStr(userGachaLimit[user].expire - Date.now())}后再抽`, callback, {color: 'black', font: 'STXIHEI.TTF'})
+			return
+		} else {
+			userGachaLimit[user] = {
+				breakPoint: point,
+				expire: Date.now() + point * 100
+			}
+		}
+	} else {
+		userGachaLimit[user] = {
+			breakPoint: point,
+			expire: Date.now() + point * 100
+		}
+	}
 
 
 	if(userPointCount.has(user)) {
