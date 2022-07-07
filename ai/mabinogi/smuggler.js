@@ -16,6 +16,7 @@ const fixArea = {
   "ガイレフの丘ラインアルトの南": {name: "盖尔茨丘陵南", imgNum: 10, img: ''},
   "ガイレフの丘フィアードダンジョン": {name: "盖尔茨丘陵 菲奥娜地下城", imgNum: 11, img: 'gai_fia.png'},
   "トゥガルドアイル伐採キャンプ東": {name: "杜加德伐木场东", imgNum: 12, img: 'tug_camp_nanto.png'},
+  "トゥガルドアイル伐採キャンプ南東": {name: "杜加德伐木场东南", imgNum: 31, img: 'tug_camp_nanto.png'},
   "コリブ渓谷北": {name: "考利芙峡谷北", imgNum: 13, img: 'co_kita.png'},
   "コリブ渓谷南": {name: "考利芙峡谷南", imgNum: 14, img: 'co_minami.png'},
   "スリアブクィリンの岩石地帯東": {name: "斯利比岩石地带东", imgNum: 15, img: 'cu_ga_higashi.png'},
