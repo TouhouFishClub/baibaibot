@@ -3,6 +3,31 @@ const https = require("https")
 const { myip } = require('../../baibaiConfigs')
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
+const autoWhiteList = [
+	{
+		id: 727605874,
+		port: 29334
+	},{
+		id: 1025639743,
+		port: 25334
+	},{
+		id: 1072617253,
+		port: 29334
+	},{
+		id: 577587780,
+		port: 24334
+	},{
+		id: 1011153915,
+		port: 29334
+	},{
+		id: 315902131,
+		port: 29334
+	},{
+		id: 7469496,
+		port: 29334
+	}
+]
+
 const carrot = async (getData, callback) => {
 	let res = await fetchData(), out = ''
 	let next = splitText(res, 'var end = "', '";', true), nextTs = new Date(next).getTime()
@@ -76,30 +101,6 @@ const fetchData = async () => {
 // 	console.log(d)
 // })
 
-const autoWhiteList = [
-	{
-		id: 727605874,
-		port: 29334
-	},{
-		id: 1025639743,
-		port: 25334
-	},{
-		id: 1072617253,
-		port: 29334
-	},{
-		id: 577587780,
-		port: 24334
-	},{
-		id: 1011153915,
-		port: 29334
-	},{
-		id: 315902131,
-		port: 29334
-	},{
-		id: 7469496,
-		port: 29334
-	}
-]
 
 const autoSendMsg = (msg) => {
 	autoWhiteList.forEach(group => {
