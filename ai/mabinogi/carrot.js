@@ -28,7 +28,7 @@ const autoWhiteList = [
 	}
 ]
 
-const carrot = async (getData, callback) => {
+const carrot = async (getData, callback, groupId) => {
 	let res = await fetchData(), out = ''
 	let next = splitText(res, 'var end = "', '";', true), nextTs = new Date(next).getTime()
 	out += `下次刷新时间: ${next}\n`
@@ -52,7 +52,8 @@ const carrot = async (getData, callback) => {
 			goodPrice
 		}
 	} else {
-		drawTxtImage(``, out, callback, {color: 'black', font: 'STXIHEI.TTF'})
+		autoWhiteList.filter(x => x.id == groupId).length
+		drawTxtImage(autoWhiteList.filter(x => x.id == groupId).length ? '5萝卜有自动提示的，别问了！' : '', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 	}
 }
 
