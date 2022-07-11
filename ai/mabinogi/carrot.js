@@ -38,7 +38,7 @@ const carrot = async (getData, callback, groupId) => {
 	let goodPrice = false
 	res.split('当前胡萝卜售价').slice(1).map((str, i) => {
 		let price = splitText(str, '<span>', '</span>', true)
-		if(price >= 4) {
+		if(price == 5) {
 			goodPrice = true
 		}
 		out += `${['菲利亚', '巴勒斯', '克拉'][i]}: ${price}贸易货币/胡萝卜\n`
@@ -53,7 +53,7 @@ const carrot = async (getData, callback, groupId) => {
 		}
 	} else {
 		autoWhiteList.filter(x => x.id == groupId).length
-		drawTxtImage(autoWhiteList.filter(x => x.id == groupId).length ? '4萝卜以上有自动提示的，别问了！' : '', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
+		drawTxtImage(autoWhiteList.filter(x => x.id == groupId).length ? '5萝卜有自动提示的，别问了！' : '', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 	}
 }
 
