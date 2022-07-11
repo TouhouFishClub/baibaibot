@@ -53,7 +53,7 @@ const carrot = async (getData, callback, groupId) => {
 		}
 	} else {
 		autoWhiteList.filter(x => x.id == groupId).length
-		drawTxtImage(autoWhiteList.filter(x => x.id == groupId).length ? '5萝卜有自动提示的，别问了！' : '', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
+		drawTxtImage(autoWhiteList.filter(x => x.id == groupId).length ? '5萝卜有自动提示的，别问了！\n胡萝卜兑换延期到17号，记得清空萝卜和币' : '胡萝卜兑换延期到17号，记得清空萝卜和币', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 	}
 }
 
