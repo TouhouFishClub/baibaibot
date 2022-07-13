@@ -6384,1050 +6384,1029 @@ var SellItem6458120327 = [[2000, 15000, ["NPC", 4828]]];
 var SellItem6458120328 = [[2000, 30000, ["NPC", 4828]]];
 
 function OnloadFunction() {
-  SkillLists();
-  StartDate();
-  SkillToList(0)
+	SkillLists();
+	StartDate();
+	SkillToList(0)
 }
 
 function SkillLists() {
-  let t = "<table bordercolor=black cellspacing=0 border=1 style='text-align:center;margin:auto;font-size:10;' bgColor=black Width=378><tr><td colspan=3 bgColor=gold id=SkillListKey></td></tr></table><br><table bordercolor=black cellspacing=0 border=1 style='text-align:center;margin:auto;' bgColor=black><tr>";
-  for (var i = 0; i < SkillList.length; i++) {
-    if ((i != 0) & (i % 3 == 0)) t += TableMiddle;
-    t += "<td onmouseover='MouseOver(this)' onmouseout='MouseOut(this)' width=121 id=Skill" + SkillList[i] + " onclick='ChangeSkill(" + SkillList[i] + ")'><img src='img/Skill/" + SkillList[i] + ".png'><br><font size='2'>" + eval("Skill" + SkillList[i] + "[0]") + "</font></td>"
-  }
-  t += "</tr></table><table bordercolor=black cellspacing=0 border=1 style='text-align:center;margin:auto;' bgColor=black><tr>";
-  t += "<td onmouseover='MouseOver(this)' onmouseout='MouseOut(this)' width=150 id=ErgEnhance onclick='ChangeSkill(&quot;ErgEnhance&quot;)'>" + ErgEnhance + "</font></td>";
-  t += "</tr></table>";
-  document.getElementById("Skill").innerHTML = t
+	let t = "<table bordercolor=black cellspacing=0 border=1 style='text-align:center;margin:auto;font-size:10;' bgColor=black Width=378><tr><td colspan=3 bgColor=gold id=SkillListKey></td></tr></table><br><table bordercolor=black cellspacing=0 border=1 style='text-align:center;margin:auto;' bgColor=black><tr>";
+	for (var i = 0; i < SkillList.length; i++) {
+		if ((i != 0) & (i % 3 == 0)) t += TableMiddle;
+		t += "<td onmouseover='MouseOver(this)' onmouseout='MouseOut(this)' width=121 id=Skill" + SkillList[i] + " onclick='ChangeSkill(" + SkillList[i] + ")'><img src='img/Skill/" + SkillList[i] + ".png'><br><font size='2'>" + eval("Skill" + SkillList[i] + "[0]") + "</font></td>"
+	}
+	t += "</tr></table><table bordercolor=black cellspacing=0 border=1 style='text-align:center;margin:auto;' bgColor=black><tr>";
+	t += "<td onmouseover='MouseOver(this)' onmouseout='MouseOut(this)' width=150 id=ErgEnhance onclick='ChangeSkill(&quot;ErgEnhance&quot;)'>" + ErgEnhance + "</font></td>";
+	t += "</tr></table>";
+	document.getElementById("Skill").innerHTML = t
 }
 
 function ChangeSkill(Id) {
-  CloseSkillList();
-  if (SkillNow != Id) {
-    document.getElementById("ItemList").innerHTML = "";
-    document.getElementById('MainBodySpan').innerHTML = "";
-    CloseItemList(Id)
-  }
+	CloseSkillList();
+	if (SkillNow != Id) {
+		document.getElementById("ItemList").innerHTML = "";
+		document.getElementById('MainBodySpan').innerHTML = "";
+		CloseItemList(Id)
+	}
 }
 
 function CloseSkillList() {
-  let SkillListHeight = parseInt(document.getElementById("Skill").clientHeight);
-  if (SkillListHeight > 23) {
-    document.getElementById("Skill").style.height = SkillListHeight - 20 + "px";
-    setTimeout("CloseSkillList()", 1)
-  } else {
-    document.getElementById("Skill").style.height = "23px";
-    document.getElementById("SkillListKey").innerHTML = "▲";
-    document.getElementById("SkillListKey").onclick = OpenSkillList
-  }
+	let SkillListHeight = parseInt(document.getElementById("Skill").clientHeight);
+	if (SkillListHeight > 23) {
+		document.getElementById("Skill").style.height = SkillListHeight - 20 + "px";
+		setTimeout("CloseSkillList()", 1)
+	} else {
+		document.getElementById("Skill").style.height = "23px";
+		document.getElementById("SkillListKey").innerHTML = "▲";
+		document.getElementById("SkillListKey").onclick = OpenSkillList
+	}
 }
 
 function OpenSkillList() {
-  let SkillListHeight = parseInt(document.getElementById("Skill").clientHeight);
-  if (SkillListHeight < 574) {
-    document.getElementById("Skill").style.height = SkillListHeight + 20 + "px";
-    setTimeout("OpenSkillList()", 1)
-  } else {
-    document.getElementById("Skill").style.height = "574px";
-    document.getElementById("SkillListKey").innerHTML = "▼";
-    document.getElementById("SkillListKey").onclick = CloseSkillList
-  }
+	let SkillListHeight = parseInt(document.getElementById("Skill").clientHeight);
+	if (SkillListHeight < 574) {
+		document.getElementById("Skill").style.height = SkillListHeight + 20 + "px";
+		setTimeout("OpenSkillList()", 1)
+	} else {
+		document.getElementById("Skill").style.height = "574px";
+		document.getElementById("SkillListKey").innerHTML = "▼";
+		document.getElementById("SkillListKey").onclick = CloseSkillList
+	}
 }
 
 function CloseItemList(Id) {
-  let ItemListHeight = parseInt(document.getElementById("ItemList").clientHeight);
-  if (ItemListHeight > 10) {
-    document.getElementById("ItemList").style.height = ItemListHeight - 10 + "px";
-    setTimeout("CloseItemList(" + IdAmendJS(Id) + ")", 1)
-  } else {
-    document.getElementById("ItemList").style.border = "5px solid gold";
-    let NewHeight = 546;
-    let NewWidth = 0;
-    switch (Id) {
-      case 10001:
-        NewWidth = 330;
-        break;
-      case 10012:
-        NewHeight = 160;
-        NewWidth = 100;
-        break;
-      case 10013:
-        NewWidth = 260;
-        break;
-      case 10015:
-        NewHeight = 310;
-        NewWidth = 100;
-        break;
-      case 10016:
-        NewWidth = 280;
-        break;
-      case 10014:
-        NewWidth = 210;
-        break;
-      case 10022:
-        NewWidth = 220;
-        break;
-      case 10023:
-        NewWidth = 190;
-        break;
-      case 10030:
-        NewWidth = 310;
-        break;
-      case 10036:
-        NewHeight = 480;
-      case 10031:
-      case 10033:
-      case 57002:
-        NewWidth = 180;
-        break;
-      case 10104:
-        NewHeight = 280;
-        NewWidth = 160;
-        break;
-      case 10020:
-      case 10040:
-      case 10041:
-      case 27103:
-        NewWidth = 230;
-        break;
-      case 35001:
-        NewHeight = 80;
-        NewWidth = 90;
-        break;
-      case 35012:
-        NewWidth = 170;
-        break;
-      case "ErgEnhance":
-        NewWidth = 130
-    }
-    document.getElementById("ItemList").style.width = NewWidth + "px";
-    OpenItemList(Id, NewHeight)
-  }
+	let ItemListHeight = parseInt(document.getElementById("ItemList").clientHeight);
+	if (ItemListHeight > 10) {
+		document.getElementById("ItemList").style.height = ItemListHeight - 10 + "px";
+		setTimeout("CloseItemList(" + IdAmendJS(Id) + ")", 1)
+	} else {
+		document.getElementById("ItemList").style.border = "5px solid gold";
+		let NewHeight = 546;
+		let NewWidth = 0;
+		switch (Id) {
+			case 10001:
+				NewWidth = 330;
+				break;
+			case 10012:
+				NewHeight = 160;
+				NewWidth = 100;
+				break;
+			case 10013:
+				NewWidth = 260;
+				break;
+			case 10015:
+				NewHeight = 310;
+				NewWidth = 100;
+				break;
+			case 10016:
+				NewWidth = 280;
+				break;
+			case 10014:
+				NewWidth = 210;
+				break;
+			case 10022:
+				NewWidth = 220;
+				break;
+			case 10023:
+				NewWidth = 190;
+				break;
+			case 10030:
+				NewWidth = 310;
+				break;
+			case 10036:
+				NewHeight = 480;
+			case 10031:
+			case 10033:
+			case 57002:
+				NewWidth = 180;
+				break;
+			case 10104:
+				NewHeight = 280;
+				NewWidth = 160;
+				break;
+			case 10020:
+			case 10040:
+			case 10041:
+			case 27103:
+				NewWidth = 230;
+				break;
+			case 35001:
+				NewHeight = 80;
+				NewWidth = 90;
+				break;
+			case 35012:
+				NewWidth = 170;
+				break;
+			case "ErgEnhance":
+				NewWidth = 130
+		}
+		document.getElementById("ItemList").style.width = NewWidth + "px";
+		OpenItemList(Id, NewHeight)
+	}
 }
 
 function OpenItemList(Id, NewHeight) {
-  let ItemListHeight = parseInt(document.getElementById("ItemList").clientHeight);
-  if (ItemListHeight < NewHeight) {
-    document.getElementById("ItemList").style.height = ItemListHeight + 15 + "px";
-    setTimeout("OpenItemList(" + IdAmendJS(Id) + "," + NewHeight + ")", 1)
-  } else {
-    document.getElementById("ItemList").style.height = NewHeight + "px";
-    SkillToList(Id)
-  }
+	let ItemListHeight = parseInt(document.getElementById("ItemList").clientHeight);
+	if (ItemListHeight < NewHeight) {
+		document.getElementById("ItemList").style.height = ItemListHeight + 15 + "px";
+		setTimeout("OpenItemList(" + IdAmendJS(Id) + "," + NewHeight + ")", 1)
+	} else {
+		document.getElementById("ItemList").style.height = NewHeight + "px";
+		SkillToList(Id)
+	}
 }
 
 function SkillToList(Id) {
-  if (typeof SkillNow != "number") {
-    document.getElementById(SkillNow).className = ""
-  } else if (SkillNow != 0) {
-    document.getElementById("Skill" + SkillNow).className = ""
-  }
-  let ItemList;
-  let IdType = "";
-  if (typeof Id != "number") {
-    document.getElementById(Id).className = "ListTd";
-    ItemList = eval(Id + "List")
-  } else {
-    if (Id != 0) document.getElementById("Skill" + Id).className = "ListTd";
-    ItemList = eval(eval("Skill" + Id + "[1]") + "List");
-    IdType = "Item"
-  }
-  SkillNow = Id;
-  let t = "<table align='center' id='ItemLists' cellspacing=0>";
-  let ItemName;
-  for (var i = 0; i < ItemList.length; i++) {
-    ItemName = eval(IdType + ItemList[i] + "[0]");
-    t += "<tr id=Cuisine" + ItemList[i] + " onclick='Cuisine(" + IdAmendHTML(ItemList[i]) + ")'><td onmouseover='MouseOver(this)' onmouseout='MouseOut(this)'>" + ItemName + "</td></tr>"
-  }
-  t += "</table>";
-  CuisineNow = 0;
-  document.getElementById("ItemList").innerHTML = t;
-  document.getElementById("ItemList").scrollTop = 0
+	if (typeof SkillNow != "number") {
+		document.getElementById(SkillNow).className = ""
+	} else if (SkillNow != 0) {
+		document.getElementById("Skill" + SkillNow).className = ""
+	}
+	let ItemList;
+	let IdType = "";
+	if (typeof Id != "number") {
+		document.getElementById(Id).className = "ListTd";
+		ItemList = eval(Id + "List")
+	} else {
+		if (Id != 0) document.getElementById("Skill" + Id).className = "ListTd";
+		ItemList = eval(eval("Skill" + Id + "[1]") + "List");
+		IdType = "Item"
+	}
+	SkillNow = Id;
+	let t = "<table align='center' id='ItemLists' cellspacing=0>";
+	let ItemName;
+	for (var i = 0; i < ItemList.length; i++) {
+		ItemName = eval(IdType + ItemList[i] + "[0]");
+		t += "<tr id=Cuisine" + ItemList[i] + " onclick='Cuisine(" + IdAmendHTML(ItemList[i]) + ")'><td onmouseover='MouseOver(this)' onmouseout='MouseOut(this)'>" + ItemName + "</td></tr>"
+	}
+	t += "</table>";
+	CuisineNow = 0;
+	document.getElementById("ItemList").innerHTML = t;
+	document.getElementById("ItemList").scrollTop = 0
 }
 
 function MainBody(Id) {
-  let t = "";
-  let IdType = "";
-  if (SkillNow == 10030) t = ItemDissolution(Id);
-  TemporaryCuisine = [IdAmendJS(Id)];
-  if (ErgEnhanceList.includes(Id)) {
-    t += ErgEnhances(Id)
-  } else {
-    t += eval("Item(" + Id + ",1)");
-    IdType = "Item"
-  }
-  if (eval(IdType + Id + "[0].indexOf('兼职')==-1")) {
-    for (let i = 1; i < TemporaryCuisine.length; i++) {
-      t += eval("Item(" + TemporaryCuisine[i] + ")")
-    }
-  }
-  document.getElementById('MainBodySpan').innerHTML = t;
-  document.getElementById("MainBody").scrollTop = "0";
-  setTimeout("CheckImg()", 0)
+	let t = "";
+	let IdType = "";
+	if (SkillNow == 10030) t = ItemDissolution(Id);
+	TemporaryCuisine = [IdAmendJS(Id)];
+	if (ErgEnhanceList.includes(Id)) {
+		t += ErgEnhances(Id)
+	} else {
+		t += eval("Item(" + Id + ",1)");
+		IdType = "Item"
+	}
+	if (eval(IdType + Id + "[0].indexOf('兼职')==-1")) {
+		for (let i = 1; i < TemporaryCuisine.length; i++) {
+			t += eval("Item(" + TemporaryCuisine[i] + ")")
+		}
+	}
+	document.getElementById('MainBodySpan').innerHTML = t;
+	document.getElementById("MainBody").scrollTop = "0";
+	setTimeout("CheckImg()", 0)
 }
 
 function Item(Id, a) {
-  let t = TdMain(Id, a);
-  let CheckT = t;
-  let tt;
-  let Length;
-  let RowsQuantity;
-  let LocaleLimit = "";
-  let EventLimit = "";
-  let TalentLimit = "";
-  let QuestLimit = "";
-  let OtherSkill = "";
-  let AmendQuantity;
-  try {
-    let MillingItem = eval("MillingItem" + Id);
-    Length = MillingItem.length;
-    t += TableMiddle + TdSkill(10012);
-    t += "<td width='580'>" + CompleteTable(TdMaterial(MillingItem[0], "×" + MillingItem[1], 160), 560) + "</td>"
-  } catch (e) {
-    e
-  }
-  try {
-    let TailoringItem = eval("TailoringItem" + Id);
-    if (TalentTailoringList.includes(Id)) TalentLimit = TalentTailoringList[0];
-    if (SightOfOtherSideTailoringList.includes(Id)) OtherSkill = 58010;
-    t += TableMiddle + TdSkill(10001, QuestLimit, LocaleLimit, EventLimit, TalentLimit, TailoringItem.length - 1, "", TailoringItem[0][0], OtherSkill, TailoringItem[0][1]);
-    for (var i = 1; i < TailoringItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      AmendQuantity = "N";
-      tt = TdMaterial(TailoringItem[i][0], "", 50, 2);
-      for (var j = 1; j < TailoringItem[i].length; j += 2) {
-        if (TailoringItem[i][j] == 0) {
-          tt += TableMiddle;
-          j++;
-          AmendQuantity = ""
-        }
-        tt += TdMaterial(TailoringItem[i][j], "×" + TailoringItem[i][j + 1] + AmendQuantity)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-    TalentLimit = "";
-    OtherSkill = ""
-  } catch (e) {
-    e
-  }
-  try {
-    let HandicraftItem = eval("HandicraftItem" + Id);
-    for (var i = 0; i < LocaleHandicraftList.length; i++) {
-      if (LocaleHandicraftList[i].includes(Id)) {
-        if (LocaleLimit != "") LocaleLimit += "、";
-        LocaleLimit += LocaleHandicraftList[i][0]
-      }
-    }
-    for (var i = 0; i < EventHandicraftList.length; i++) {
-      if (EventHandicraftList[i].includes(Id)) EventLimit += EventHandicraftList[i][0]
-    }
-    t += TableMiddle + TdSkill(10013, QuestLimit, LocaleLimit, EventLimit, TalentLimit, HandicraftItem.length - 1, HandicraftItem[0][0], HandicraftItem[0][1]);
-    for (var i = 1; i < HandicraftItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < HandicraftItem[i].length; j += 2) {
-        tt += TdMaterial(HandicraftItem[i][j], "×" + HandicraftItem[i][j + 1], 560 / HandicraftItem[i].length)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-    LocaleLimit = "";
-    EventLimit = ""
-  } catch (e) {
-    e
-  }
-  try {
-    let WeavingItem = eval("WeavingItem" + Id);
-    if (TalentWeavingList.includes(Id)) TalentLimit = TalentWeavingList[0];
-    t += TableMiddle + TdSkill(10014, QuestLimit, LocaleLimit, EventLimit, TalentLimit, WeavingItem.length - 1, WeavingItem[0]);
-    for (var i = 1; i < WeavingItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < WeavingItem[i].length; j += 2) {
-        tt += TdMaterial(WeavingItem[i][j], "×" + WeavingItem[i][j + 1], 160)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-    TalentLimit = ""
-  } catch (e) {
-    e
-  }
-  try {
-    let RefineItem = eval("RefineItem" + Id);
-    if (TalentRefineList.includes(Id)) TalentLimit = TalentRefineList[0];
-    t += TableMiddle + TdSkill(10015, QuestLimit, LocaleLimit, EventLimit, TalentLimit, RefineItem.length - 1, RefineItem[0]);
-    for (var i = 1; i < RefineItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < RefineItem[i].length; j += 2) {
-        tt += TdMaterial(RefineItem[i][j], "×" + RefineItem[i][j + 1], 160)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-    TalentLimit = ""
-  } catch (e) {
-    e
-  }
-  try {
-    let BlacksmithItem = eval("BlacksmithItem" + Id);
-    if (TalentBlacksmithList.includes(Id)) TalentLimit = TalentBlacksmithList[0];
-    if (SightOfOtherSideBlacksmithList.includes(Id)) OtherSkill = 58010;
-    t += TableMiddle + TdSkill(10016, QuestLimit, LocaleLimit, EventLimit, TalentLimit, BlacksmithItem.length - 1, "", BlacksmithItem[0][0], OtherSkill, BlacksmithItem[0][1]);
-    for (var i = 1; i < BlacksmithItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      AmendQuantity = "N";
-      tt = TdMaterial(BlacksmithItem[i][0], "", 50, 2);
-      for (var j = 1; j < BlacksmithItem[i].length; j += 2) {
-        if (BlacksmithItem[i][j] == 0) {
-          tt += TableMiddle;
-          j++;
-          AmendQuantity = ""
-        }
-        tt += TdMaterial(BlacksmithItem[i][j], "×" + BlacksmithItem[i][j + 1] + AmendQuantity)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-    TalentLimit = "";
-    OtherSkill = ""
-  } catch (e) {
-    e
-  }
-  try {
-    let CookingItem = eval("CookingItem" + Id);
-    Length = CookingItem.length;
-    RowsQuantity = ((Length - 1) / 6);
-    for (var i = 0; i < LocaleCookingList.length; i++) {
-      if (LocaleCookingList[i].includes(Id)) {
-        if (LocaleLimit != "") LocaleLimit += "、";
-        LocaleLimit += LocaleCookingList[i][0]
-      }
-    }
-    for (var i = 0; i < EventCookingList.length; i++) {
-      if (EventCookingList[i].includes(Id)) EventLimit += EventCookingList[i][0]
-    }
-    t += TableMiddle + TdSkill(10020, QuestLimit, LocaleLimit, EventLimit, TalentLimit, RowsQuantity, CookingItem[0]);
-    for (var i = 1; i < Length; i += 6) {
-      if (i != 1) t += TableMiddle;
-      t += "<td width='580'>" + CompleteTable(TdMaterial(CookingItem[i], CookingItem[i + 1] + "%", 160) + TdMaterial(CookingItem[i + 2], CookingItem[i + 3] + "%", 160) + TdMaterial(CookingItem[i + 4], CookingItem[i + 5] + "%", 160), 560) + "</td>"
-    }
-    LocaleLimit = "";
-    EventLimit = ""
-  } catch (e) {
-    e
-  }
-  try {
-    let HerbalismItem = eval("HerbalismItem" + Id);
-    t += TableMiddle + TdSkill(10021) + TdText(HerbalismItem[0])
-  } catch (e) {
-    e
-  }
-  try {
-    let PotionMakingItem = eval("PotionMakingItem" + Id);
-    Length = PotionMakingItem.length;
-    for (var i = 0; i < LocalePotionMakingList.length; i++) {
-      if (LocalePotionMakingList[i].includes(Id)) {
-        if (LocaleLimit != "") LocaleLimit += "、";
-        LocaleLimit += LocalePotionMakingList[i][0]
-      }
-    }
-    for (var i = 0; i < EventPotionMakingList.length; i++) {
-      if (EventPotionMakingList[i].includes(Id)) EventLimit += EventPotionMakingList[i][0]
-    }
-    if (SightOfOtherSidePotionMakingList.includes(Id)) OtherSkill = 58010;
-    tt = "";
-    t += TableMiddle + TdSkill(10022, QuestLimit, LocaleLimit, EventLimit, TalentLimit, RowsQuantity, PotionMakingItem[0], "", OtherSkill);
-    for (var i = 1; i < Length; i += 2) {
-      tt += TdMaterial(PotionMakingItem[i], "×" + PotionMakingItem[i + 1], 560 / Length)
-    }
-    t += "<td valign='Bottom' width='580'>" + CompleteTable(tt, 560) + "</td>";
-    LocaleLimit = "";
-    EventLimit = "";
-    OtherSkill = ""
-  } catch (e) {
-    e
-  }
-  tt = "";
-  for (var i = 0; i < FishingItemList.length; i++) {
-    if (FishingItemList[i].includes(Id)) {
-      if (tt != "") tt += "、";
-      tt += FishingItemList[i][0]
-    }
-  }
-  for (var i = 0; i < EventFishingList.length; i++) {
-    if (EventFishingList[i].includes(Id)) EventLimit += EventFishingList[i][0]
-  }
-  if (tt != "") t += TableMiddle + TdSkill(10023, "", "", EventLimit) + TdText(tt);
-  EventLimit = "";
-  try {
-    let MetallurgyItem = eval("MetallurgyItem" + Id);
-    t += TableMiddle + TdSkill(10028) + TdText(MetallurgyItem[0])
-  } catch (e) {
-    e
-  }
-  try {
-    let DissolutionItem = eval("DissolutionItem" + Id);
-    t += TableMiddle + TdSkill(10030, QuestLimit, LocaleLimit, EventLimit, TalentLimit, DissolutionItem.length - 1, DissolutionItem[0]);
-    for (var i = 1; i < DissolutionItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < DissolutionItem[i].length; j += 2) {
-        tt += TdMaterial(DissolutionItem[i][j], "×" + DissolutionItem[i][j + 1], 160)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-  } catch (e) {
-    e
-  }
-  try {
-    let SynthesisItem = eval("SynthesisItem" + Id);
-    t += TableMiddle + TdSkill(10031, QuestLimit, LocaleLimit, EventLimit, TalentLimit, SynthesisItem.length - 1, SynthesisItem[0]);
-    for (var i = 1; i < SynthesisItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < SynthesisItem[i].length; j += 2) {
-        tt += TdMaterial(SynthesisItem[i][j], "×" + SynthesisItem[i][j + 1], 160)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-  } catch (e) {
-    e
-  }
-  try {
-    let CarpentryItem = eval("CarpentryItem" + Id);
-    if (TalentCarpentryList.includes(Id)) TalentLimit = TalentCarpentryList[0];
-    t += TableMiddle + TdSkill(10033, QuestLimit, LocaleLimit, EventLimit, TalentLimit, CarpentryItem.length - 1, CarpentryItem[0]);
-    for (var i = 1; i < CarpentryItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < CarpentryItem[i].length; j += 2) {
-        tt += TdMaterial(CarpentryItem[i][j], "×" + CarpentryItem[i][j + 1], 560 / (CarpentryItem[i].length))
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-    TalentLimit = ""
-  } catch (e) {
-    e
-  }
-  try {
-    let StageTicketMakingItem = eval("StageTicketMakingItem" + Id);
-    t += TableMiddle + TdSkill(10036, QuestLimit, LocaleLimit, EventLimit, TalentLimit, StageTicketMakingItem.length - 1);
-    for (var i = 1; i < StageTicketMakingItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < StageTicketMakingItem[i].length; j += 2) {
-        tt += TdMaterial(StageTicketMakingItem[i][j], "×" + StageTicketMakingItem[i][j + 1], 560 / (StageTicketMakingItem[i].length))
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-  } catch (e) {
-    e
-  }
-  try {
-    let HeulwenEngineeringItem = eval("HeulwenEngineeringItem" + Id);
-    tt = "";
-    t += TableMiddle + TdSkill(10040, QuestLimit, LocaleLimit, EventLimit, TalentLimit, HeulwenEngineeringItem.length - 1, HeulwenEngineeringItem[0]);
-    for (var i = 1; i < HeulwenEngineeringItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < HeulwenEngineeringItem[i].length; j += 2) {
-        tt += TdMaterial(HeulwenEngineeringItem[i][j], "×" + HeulwenEngineeringItem[i][j + 1], 560 / HeulwenEngineeringItem[i].length)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-  } catch (e) {
-    e
-  }
-  try {
-    let MagicCraftItem = eval("MagicCraftItem" + Id);
-    if (SightOfOtherSideMagicCraftList.includes(Id)) OtherSkill = 58010;
-    tt = "";
-    t += TableMiddle + TdSkill(10041, QuestLimit, LocaleLimit, EventLimit, TalentLimit, MagicCraftItem.length - 1, MagicCraftItem[0], "", OtherSkill);
-    for (var i = 1; i < MagicCraftItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < MagicCraftItem[i].length; j += 2) {
-        tt += TdMaterial(MagicCraftItem[i][j], "×" + MagicCraftItem[i][j + 1], 560 / MagicCraftItem[i].length)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-    OtherSkill = ""
-  } catch (e) {
-    e
-  }
-  if (RareMineralogyList.includes(Id)) {
-    t += TableMiddle + TdSkill(10042) + TdText("希尔文矿山")
-  }
-  if (SulienEcologyList.includes(Id)) {
-    t += TableMiddle + TdSkill(10043) + TdText("希里安生态保护区")
-  }
-  if (FindMaterialList.includes(Id)) {
-    t += TableMiddle + TdSkill(10045) + TdText("击杀任意怪")
-  }
-  try {
-    let StationaryCraftItem = eval("StationaryCraftItem" + Id);
-    t += TableMiddle + TdSkill(10104, QuestLimit, LocaleLimit, EventLimit, TalentLimit, StationaryCraftItem.length - 1, StationaryCraftItem[0]);
-    for (var i = 1; i < StationaryCraftItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < StationaryCraftItem[i].length; j += 2) {
-        tt += TdMaterial(StationaryCraftItem[i][j], "×" + StationaryCraftItem[i][j + 1], 560 / StationaryCraftItem[i].length)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-  } catch (e) {
-    e
-  }
-  try {
-    let FynnsCraftItem = eval("FynnsCraftItem" + Id);
-    t += TableMiddle + TdSkill(27103, QuestLimit, LocaleLimit, EventLimit, TalentLimit, FynnsCraftItem.length - 1, FynnsCraftItem[0]);
-    for (var i = 1; i < FynnsCraftItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < FynnsCraftItem[i].length; j += 2) {
-        tt += TdMaterial(FynnsCraftItem[i][j], "×" + FynnsCraftItem[i][j + 1], 560 / FynnsCraftItem[i].length)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-  } catch (e) {
-    e
-  }
-  try {
-    let ManaFormingItem = eval("ManaFormingItem" + Id);
-    if (FireballManaFormingList.includes(Id)) {
-      OtherSkill = 30202
-    } else if (IceSpearManaFormingList.includes(Id)) {
-      OtherSkill = 30302
-    } else if (ThunderManaFormingList.includes(Id)) {
-      OtherSkill = 30102
-    }
-    tt = "";
-    t += TableMiddle + TdSkill(35001, QuestLimit, LocaleLimit, EventLimit, TalentLimit, ManaFormingItem.length - 1, ManaFormingItem[0], "", OtherSkill);
-    for (var i = 1; i < ManaFormingItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = "";
-      for (var j = 0; j < ManaFormingItem[i].length; j += 2) {
-        tt += TdMaterial(ManaFormingItem[i][j], "×" + ManaFormingItem[i][j + 1], 560 / ManaFormingItem[i].length)
-      }
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-    OtherSkill = ""
-  } catch (e) {
-    e
-  }
-  try {
-    let MetalConversionItem = eval("MetalConversionItem" + Id);
-    t += TableMiddle + TdSkill(35012, QuestLimit, LocaleLimit, EventLimit, TalentLimit, MetalConversionItem.length - 1, MetalConversionItem[0], "", OtherSkill);
-    for (var i = 1; i < MetalConversionItem.length; i++) {
-      if (i != 1) t += TableMiddle;
-      tt = TdMaterial(MetalConversionItem[i][0], "×" + MetalConversionItem[i][1] + "～" + MetalConversionItem[i][2], 560 / MetalConversionItem[i].length);
-      t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
-    }
-  } catch (e) {
-    e
-  }
-  try {
-    let MiningItem = eval("MiningItem" + Id);
-    t += TableMiddle + TdSkill(55002) + TdText(MiningItem[0])
-  } catch (e) {
-    e
-  }
-  tt = "";
-  for (var i = 0; i < KillItemList.length; i++) {
-    if (KillItemList[i][1].includes(Id)) {
-      if (tt != "") tt += "、";
-      tt += KillItemList[i][0]
-    }
-  }
-  if (tt != "") {
-    for (var i = 0; i < QuestKillList.length; i++) {
-      if (QuestKillList[i].includes(Id)) QuestLimit += QuestKillList[i][0]
-    }
-    t += TableMiddle + TdSkill("击杀", QuestLimit) + TdText(tt)
-  }
-  QuestLimit = "";
-  try {
-    let GatherItem = eval("GatherItem" + Id);
-    let a = "";
-    if (["GetWater", 55005].includes(GatherItem[0])) {
-      a = TdMaterial(63020, "", 100)
-    }
-    let b = TdText(GatherItem[1]);
-    if (GatherItem[1] + 0 == GatherItem[1]) {
-      a = "";
-      b = "";
-      for (var i = 1; i < GatherItem.length; i += 2) {
-        b += TdMaterial(GatherItem[i], "×" + GatherItem[i + 1])
-      }
-    }
-    t += TableMiddle + TdSkill(GatherItem[0], QuestLimit) + "<td width='580'>" + CompleteTable(a + b, 560) + "</td>";
-    QuestLimit = ""
-  } catch (e) {
-    e
-  }
-  tt = "";
-  RowsQuantity = 0;
-  for (var i = 0; i < ExplorationList.length; i++) {
-    if (ExplorationList[i][1].includes(Id)) {
-      if (tt != "") tt += "<br>";
-      tt += ExplorationList[i][0];
-      RowsQuantity++;
-      if (i > 1) {
-        OtherSkill = 23104
-      }
-    }
-  }
-  if (tt != "") t += TableMiddle + TdSkill(50014, "", "", "", "", RowsQuantity, "", "", OtherSkill) + TdText(tt);
-  OtherSkill = "";
-  tt = "";
-  RowsQuantity = 0;
-  for (var i = 0; i < RelicInvestigationItemList.length; i++) {
-    if (RelicInvestigationItemList[i][1].includes(Id)) {
-      if (tt != "") tt += TableMiddle;
-      tt += "<td width='580'>" + CompleteTable(TdMaterial(RelicInvestigationItemList[i][0], "×1"), 300) + "</td>";
-      RowsQuantity++
-    }
-  }
-  if (tt != "") t += TableMiddle + TdSkill(57002, "", "", "", "", RowsQuantity) + tt;
-  for (var i = 0; i < GiftItemList.length; i++) {
-    tt = "";
-    RowsQuantity = 0;
-    AmendQuantity = "";
-    for (var j = 1; j < GiftItemList[i].length; j++) {
-      if (GiftItemList[i][j][2].includes(Id)) {
-        if (tt != "") tt += TableMiddle;
-        if (GiftItemList[i][j][3] > 1) AmendQuantity = "×" + GiftItemList[i][j][3];
-        tt += "<td width='580'>" + CompleteTable(TdMaterial(GiftItemList[i][j][1], AmendQuantity, 170) + TdText(GiftItemList[i][j][0]), 560) + "</td>";
-        RowsQuantity++
-      }
-    }
-    if (tt != "") t += TableMiddle + TdSkill(GiftItemList[i][0], "", "", "", "", RowsQuantity) + tt
-  }
-  for (var i = 0; i < QuestItemList.length; i++) {
-    tt = "";
-    for (var j = 1; j < QuestItemList[i].length; j++) {
-      if (QuestItemList[i][j].includes(Id)) {
-        if (tt != "") tt += "<br>";
-        tt += QuestItemList[i][j][0]
-      }
-    }
-    if (tt != "") t += TableMiddle + TdQuest(QuestItemList[i][0]) + TdText(tt)
-  }
-  try {
-    let QuestItem = eval("QuestItem" + Id);
-    for (var i = 0; i < QuestItem.length; i++) {
-      t += TableMiddle + TdQuest(QuestItem[i][0]) + TdText(QuestItem[i][1])
-    }
-  } catch (e) {
-    e
-  }
-  try {
-    let SellItem = eval("SellItem" + Id);
-    for (var i = 0; i < SellItem.length; i++) {
-      tt = "";
-      t += TableMiddle + TdCurrency(SellItem[i][0], SellItem[i][1]);
-      for (var j = 2; j < SellItem[i].length; j++) {
-        if (["NPC", "Pet"].includes(SellItem[i][j][0])) {
-          for (var k = 1; k < SellItem[i][j].length; k++) {
-            tt += TdCharacter(SellItem[i][j][k], SellItem[i][j][0])
-          }
-        } else {
-          tt += TdText(SellItem[i][j])
-        }
-      }
-      t += "<td width='580'>" + CompleteTable(tt) + "</td>"
-    }
-  } catch (e) {
-    e
-  }
-  let UseItem = "";
-  tt = "";
-  RowsQuantity = 0;
-  for (var i = 0; i < UseList.length; i++) {
-    UseItem = eval("Item" + UseList[i]);
-    if (UseItem.includes(Id)) {
-      if (tt != "") tt += TableMiddle;
-      tt += "<td width='580'>" + CompleteTable(TdMaterial(UseList[i]), 560) + "</td>";
-      RowsQuantity++
-    }
-  }
-  if (tt != "") t += TableMiddle + TdSkill("使用", "", "", "", "", RowsQuantity) + tt;
-  if (CheckT == t) {
-    t += TableMiddle + TdText("？", 667)
-  }
-  return CompleteTable(t, 860, 1)
+	let t = TdMain(Id, a);
+	let CheckT = t;
+	let tt;
+	let Length;
+	let RowsQuantity;
+	let LocaleLimit = "";
+	let EventLimit = "";
+	let TalentLimit = "";
+	let QuestLimit = "";
+	let OtherSkill = "";
+	let AmendQuantity;
+	try {
+		let MillingItem = eval("MillingItem" + Id);
+		Length = MillingItem.length;
+		t += TableMiddle + TdSkill(10012);
+		t += "<td width='580'>" + CompleteTable(TdMaterial(MillingItem[0], "×" + MillingItem[1], 160), 560) + "</td>"
+	} catch (e) {
+		e
+	}
+	try {
+		let TailoringItem = eval("TailoringItem" + Id);
+		if (TalentTailoringList.includes(Id)) TalentLimit = TalentTailoringList[0];
+		if (SightOfOtherSideTailoringList.includes(Id)) OtherSkill = 58010;
+		t += TableMiddle + TdSkill(10001, QuestLimit, LocaleLimit, EventLimit, TalentLimit, TailoringItem.length - 1, "", TailoringItem[0][0], OtherSkill, TailoringItem[0][1]);
+		for (var i = 1; i < TailoringItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			AmendQuantity = "N";
+			tt = TdMaterial(TailoringItem[i][0], "", 50, 2);
+			for (var j = 1; j < TailoringItem[i].length; j += 2) {
+				if (TailoringItem[i][j] == 0) {
+					tt += TableMiddle;
+					j++;
+					AmendQuantity = ""
+				}
+				tt += TdMaterial(TailoringItem[i][j], "×" + TailoringItem[i][j + 1] + AmendQuantity)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+		TalentLimit = "";
+		OtherSkill = ""
+	} catch (e) {
+		e
+	}
+	try {
+		let HandicraftItem = eval("HandicraftItem" + Id);
+		for (var i = 0; i < LocaleHandicraftList.length; i++) {
+			if (LocaleHandicraftList[i].includes(Id)) {
+				if (LocaleLimit != "") LocaleLimit += "、";
+				LocaleLimit += LocaleHandicraftList[i][0]
+			}
+		}
+		for (var i = 0; i < EventHandicraftList.length; i++) {
+			if (EventHandicraftList[i].includes(Id)) EventLimit += EventHandicraftList[i][0]
+		}
+		t += TableMiddle + TdSkill(10013, QuestLimit, LocaleLimit, EventLimit, TalentLimit, HandicraftItem.length - 1, HandicraftItem[0][0], HandicraftItem[0][1]);
+		for (var i = 1; i < HandicraftItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < HandicraftItem[i].length; j += 2) {
+				tt += TdMaterial(HandicraftItem[i][j], "×" + HandicraftItem[i][j + 1], 560 / HandicraftItem[i].length)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+		LocaleLimit = "";
+		EventLimit = ""
+	} catch (e) {
+		e
+	}
+	try {
+		let WeavingItem = eval("WeavingItem" + Id);
+		if (TalentWeavingList.includes(Id)) TalentLimit = TalentWeavingList[0];
+		t += TableMiddle + TdSkill(10014, QuestLimit, LocaleLimit, EventLimit, TalentLimit, WeavingItem.length - 1, WeavingItem[0]);
+		for (var i = 1; i < WeavingItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < WeavingItem[i].length; j += 2) {
+				tt += TdMaterial(WeavingItem[i][j], "×" + WeavingItem[i][j + 1], 160)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+		TalentLimit = ""
+	} catch (e) {
+		e
+	}
+	try {
+		let RefineItem = eval("RefineItem" + Id);
+		if (TalentRefineList.includes(Id)) TalentLimit = TalentRefineList[0];
+		t += TableMiddle + TdSkill(10015, QuestLimit, LocaleLimit, EventLimit, TalentLimit, RefineItem.length - 1, RefineItem[0]);
+		for (var i = 1; i < RefineItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < RefineItem[i].length; j += 2) {
+				tt += TdMaterial(RefineItem[i][j], "×" + RefineItem[i][j + 1], 160)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+		TalentLimit = ""
+	} catch (e) {
+		e
+	}
+	try {
+		let BlacksmithItem = eval("BlacksmithItem" + Id);
+		if (TalentBlacksmithList.includes(Id)) TalentLimit = TalentBlacksmithList[0];
+		if (SightOfOtherSideBlacksmithList.includes(Id)) OtherSkill = 58010;
+		t += TableMiddle + TdSkill(10016, QuestLimit, LocaleLimit, EventLimit, TalentLimit, BlacksmithItem.length - 1, "", BlacksmithItem[0][0], OtherSkill, BlacksmithItem[0][1]);
+		for (var i = 1; i < BlacksmithItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			AmendQuantity = "N";
+			tt = TdMaterial(BlacksmithItem[i][0], "", 50, 2);
+			for (var j = 1; j < BlacksmithItem[i].length; j += 2) {
+				if (BlacksmithItem[i][j] == 0) {
+					tt += TableMiddle;
+					j++;
+					AmendQuantity = ""
+				}
+				tt += TdMaterial(BlacksmithItem[i][j], "×" + BlacksmithItem[i][j + 1] + AmendQuantity)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+		TalentLimit = "";
+		OtherSkill = ""
+	} catch (e) {
+		e
+	}
+	try {
+		let CookingItem = eval("CookingItem" + Id);
+		Length = CookingItem.length;
+		RowsQuantity = ((Length - 1) / 6);
+		for (var i = 0; i < LocaleCookingList.length; i++) {
+			if (LocaleCookingList[i].includes(Id)) {
+				if (LocaleLimit != "") LocaleLimit += "、";
+				LocaleLimit += LocaleCookingList[i][0]
+			}
+		}
+		for (var i = 0; i < EventCookingList.length; i++) {
+			if (EventCookingList[i].includes(Id)) EventLimit += EventCookingList[i][0]
+		}
+		t += TableMiddle + TdSkill(10020, QuestLimit, LocaleLimit, EventLimit, TalentLimit, RowsQuantity, CookingItem[0]);
+		for (var i = 1; i < Length; i += 6) {
+			if (i != 1) t += TableMiddle;
+			t += "<td width='580'>" + CompleteTable(TdMaterial(CookingItem[i], CookingItem[i + 1] + "%", 160) + TdMaterial(CookingItem[i + 2], CookingItem[i + 3] + "%", 160) + TdMaterial(CookingItem[i + 4], CookingItem[i + 5] + "%", 160), 560) + "</td>"
+		}
+		LocaleLimit = "";
+		EventLimit = ""
+	} catch (e) {
+		e
+	}
+	try {
+		let HerbalismItem = eval("HerbalismItem" + Id);
+		t += TableMiddle + TdSkill(10021) + TdText(HerbalismItem[0])
+	} catch (e) {
+		e
+	}
+	try {
+		let PotionMakingItem = eval("PotionMakingItem" + Id);
+		Length = PotionMakingItem.length;
+		for (var i = 0; i < LocalePotionMakingList.length; i++) {
+			if (LocalePotionMakingList[i].includes(Id)) {
+				if (LocaleLimit != "") LocaleLimit += "、";
+				LocaleLimit += LocalePotionMakingList[i][0]
+			}
+		}
+		for (var i = 0; i < EventPotionMakingList.length; i++) {
+			if (EventPotionMakingList[i].includes(Id)) EventLimit += EventPotionMakingList[i][0]
+		}
+		if (SightOfOtherSidePotionMakingList.includes(Id)) OtherSkill = 58010;
+		tt = "";
+		t += TableMiddle + TdSkill(10022, QuestLimit, LocaleLimit, EventLimit, TalentLimit, RowsQuantity, PotionMakingItem[0], "", OtherSkill);
+		for (var i = 1; i < Length; i += 2) {
+			tt += TdMaterial(PotionMakingItem[i], "×" + PotionMakingItem[i + 1], 560 / Length)
+		}
+		t += "<td valign='Bottom' width='580'>" + CompleteTable(tt, 560) + "</td>";
+		LocaleLimit = "";
+		EventLimit = "";
+		OtherSkill = ""
+	} catch (e) {
+		e
+	}
+	tt = "";
+	for (var i = 0; i < FishingItemList.length; i++) {
+		if (FishingItemList[i].includes(Id)) {
+			if (tt != "") tt += "、";
+			tt += FishingItemList[i][0]
+		}
+	}
+	for (var i = 0; i < EventFishingList.length; i++) {
+		if (EventFishingList[i].includes(Id)) EventLimit += EventFishingList[i][0]
+	}
+	if (tt != "") t += TableMiddle + TdSkill(10023, "", "", EventLimit) + TdText(tt);
+	EventLimit = "";
+	try {
+		let MetallurgyItem = eval("MetallurgyItem" + Id);
+		t += TableMiddle + TdSkill(10028) + TdText(MetallurgyItem[0])
+	} catch (e) {
+		e
+	}
+	try {
+		let DissolutionItem = eval("DissolutionItem" + Id);
+		t += TableMiddle + TdSkill(10030, QuestLimit, LocaleLimit, EventLimit, TalentLimit, DissolutionItem.length - 1, DissolutionItem[0]);
+		for (var i = 1; i < DissolutionItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < DissolutionItem[i].length; j += 2) {
+				tt += TdMaterial(DissolutionItem[i][j], "×" + DissolutionItem[i][j + 1], 160)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+	} catch (e) {
+		e
+	}
+	try {
+		let SynthesisItem = eval("SynthesisItem" + Id);
+		t += TableMiddle + TdSkill(10031, QuestLimit, LocaleLimit, EventLimit, TalentLimit, SynthesisItem.length - 1, SynthesisItem[0]);
+		for (var i = 1; i < SynthesisItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < SynthesisItem[i].length; j += 2) {
+				tt += TdMaterial(SynthesisItem[i][j], "×" + SynthesisItem[i][j + 1], 160)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+	} catch (e) {
+		e
+	}
+	try {
+		let CarpentryItem = eval("CarpentryItem" + Id);
+		if (TalentCarpentryList.includes(Id)) TalentLimit = TalentCarpentryList[0];
+		t += TableMiddle + TdSkill(10033, QuestLimit, LocaleLimit, EventLimit, TalentLimit, CarpentryItem.length - 1, CarpentryItem[0]);
+		for (var i = 1; i < CarpentryItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < CarpentryItem[i].length; j += 2) {
+				tt += TdMaterial(CarpentryItem[i][j], "×" + CarpentryItem[i][j + 1], 560 / (CarpentryItem[i].length))
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+		TalentLimit = ""
+	} catch (e) {
+		e
+	}
+	try {
+		let StageTicketMakingItem = eval("StageTicketMakingItem" + Id);
+		t += TableMiddle + TdSkill(10036, QuestLimit, LocaleLimit, EventLimit, TalentLimit, StageTicketMakingItem.length - 1);
+		for (var i = 1; i < StageTicketMakingItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < StageTicketMakingItem[i].length; j += 2) {
+				tt += TdMaterial(StageTicketMakingItem[i][j], "×" + StageTicketMakingItem[i][j + 1], 560 / (StageTicketMakingItem[i].length))
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+	} catch (e) {
+		e
+	}
+	try {
+		let HeulwenEngineeringItem = eval("HeulwenEngineeringItem" + Id);
+		tt = "";
+		t += TableMiddle + TdSkill(10040, QuestLimit, LocaleLimit, EventLimit, TalentLimit, HeulwenEngineeringItem.length - 1, HeulwenEngineeringItem[0]);
+		for (var i = 1; i < HeulwenEngineeringItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < HeulwenEngineeringItem[i].length; j += 2) {
+				tt += TdMaterial(HeulwenEngineeringItem[i][j], "×" + HeulwenEngineeringItem[i][j + 1], 560 / HeulwenEngineeringItem[i].length)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+	} catch (e) {
+		e
+	}
+	try {
+		let MagicCraftItem = eval("MagicCraftItem" + Id);
+		if (SightOfOtherSideMagicCraftList.includes(Id)) OtherSkill = 58010;
+		tt = "";
+		t += TableMiddle + TdSkill(10041, QuestLimit, LocaleLimit, EventLimit, TalentLimit, MagicCraftItem.length - 1, MagicCraftItem[0], "", OtherSkill);
+		for (var i = 1; i < MagicCraftItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < MagicCraftItem[i].length; j += 2) {
+				tt += TdMaterial(MagicCraftItem[i][j], "×" + MagicCraftItem[i][j + 1], 560 / MagicCraftItem[i].length)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+		OtherSkill = ""
+	} catch (e) {
+		e
+	}
+	if (RareMineralogyList.includes(Id)) {
+		t += TableMiddle + TdSkill(10042) + TdText("希尔文矿山")
+	}
+	if (SulienEcologyList.includes(Id)) {
+		t += TableMiddle + TdSkill(10043) + TdText("希里安生态保护区")
+	}
+	if (FindMaterialList.includes(Id)) {
+		t += TableMiddle + TdSkill(10045) + TdText("击杀任意怪")
+	}
+	try {
+		let StationaryCraftItem = eval("StationaryCraftItem" + Id);
+		t += TableMiddle + TdSkill(10104, QuestLimit, LocaleLimit, EventLimit, TalentLimit, StationaryCraftItem.length - 1, StationaryCraftItem[0]);
+		for (var i = 1; i < StationaryCraftItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < StationaryCraftItem[i].length; j += 2) {
+				tt += TdMaterial(StationaryCraftItem[i][j], "×" + StationaryCraftItem[i][j + 1], 560 / StationaryCraftItem[i].length)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+	} catch (e) {
+		e
+	}
+	try {
+		let FynnsCraftItem = eval("FynnsCraftItem" + Id);
+		t += TableMiddle + TdSkill(27103, QuestLimit, LocaleLimit, EventLimit, TalentLimit, FynnsCraftItem.length - 1, FynnsCraftItem[0]);
+		for (var i = 1; i < FynnsCraftItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < FynnsCraftItem[i].length; j += 2) {
+				tt += TdMaterial(FynnsCraftItem[i][j], "×" + FynnsCraftItem[i][j + 1], 560 / FynnsCraftItem[i].length)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+	} catch (e) {
+		e
+	}
+	try {
+		let ManaFormingItem = eval("ManaFormingItem" + Id);
+		if (FireballManaFormingList.includes(Id)) {
+			OtherSkill = 30202
+		} else if (IceSpearManaFormingList.includes(Id)) {
+			OtherSkill = 30302
+		} else if (ThunderManaFormingList.includes(Id)) {
+			OtherSkill = 30102
+		}
+		tt = "";
+		t += TableMiddle + TdSkill(35001, QuestLimit, LocaleLimit, EventLimit, TalentLimit, ManaFormingItem.length - 1, ManaFormingItem[0], "", OtherSkill);
+		for (var i = 1; i < ManaFormingItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = "";
+			for (var j = 0; j < ManaFormingItem[i].length; j += 2) {
+				tt += TdMaterial(ManaFormingItem[i][j], "×" + ManaFormingItem[i][j + 1], 560 / ManaFormingItem[i].length)
+			}
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+		OtherSkill = ""
+	} catch (e) {
+		e
+	}
+	try {
+		let MetalConversionItem = eval("MetalConversionItem" + Id);
+		t += TableMiddle + TdSkill(35012, QuestLimit, LocaleLimit, EventLimit, TalentLimit, MetalConversionItem.length - 1, MetalConversionItem[0], "", OtherSkill);
+		for (var i = 1; i < MetalConversionItem.length; i++) {
+			if (i != 1) t += TableMiddle;
+			tt = TdMaterial(MetalConversionItem[i][0], "×" + MetalConversionItem[i][1] + "～" + MetalConversionItem[i][2], 560 / MetalConversionItem[i].length);
+			t += "<td width='580'>" + CompleteTable(tt, 560) + "</td>"
+		}
+	} catch (e) {
+		e
+	}
+	try {
+		let MiningItem = eval("MiningItem" + Id);
+		t += TableMiddle + TdSkill(55002) + TdText(MiningItem[0])
+	} catch (e) {
+		e
+	}
+	tt = "";
+	for (var i = 0; i < KillItemList.length; i++) {
+		if (KillItemList[i][1].includes(Id)) {
+			if (tt != "") tt += "、";
+			tt += KillItemList[i][0]
+		}
+	}
+	if (tt != "") {
+		for (var i = 0; i < QuestKillList.length; i++) {
+			if (QuestKillList[i].includes(Id)) QuestLimit += QuestKillList[i][0]
+		}
+		t += TableMiddle + TdSkill("击杀", QuestLimit) + TdText(tt)
+	}
+	QuestLimit = "";
+	try {
+		let GatherItem = eval("GatherItem" + Id);
+		let a = "";
+		if (["GetWater", 55005].includes(GatherItem[0])) {
+			a = TdMaterial(63020, "", 100)
+		}
+		let b = TdText(GatherItem[1]);
+		if (GatherItem[1] + 0 == GatherItem[1]) {
+			a = "";
+			b = "";
+			for (var i = 1; i < GatherItem.length; i += 2) {
+				b += TdMaterial(GatherItem[i], "×" + GatherItem[i + 1])
+			}
+		}
+		t += TableMiddle + TdSkill(GatherItem[0], QuestLimit) + "<td width='580'>" + CompleteTable(a + b, 560) + "</td>";
+		QuestLimit = ""
+	} catch (e) {
+		e
+	}
+	tt = "";
+	RowsQuantity = 0;
+	for (var i = 0; i < ExplorationList.length; i++) {
+		if (ExplorationList[i][1].includes(Id)) {
+			if (tt != "") tt += "<br>";
+			tt += ExplorationList[i][0];
+			RowsQuantity++;
+			if (i > 1) {
+				OtherSkill = 23104
+			}
+		}
+	}
+	if (tt != "") t += TableMiddle + TdSkill(50014, "", "", "", "", RowsQuantity, "", "", OtherSkill) + TdText(tt);
+	OtherSkill = "";
+	tt = "";
+	RowsQuantity = 0;
+	for (var i = 0; i < RelicInvestigationItemList.length; i++) {
+		if (RelicInvestigationItemList[i][1].includes(Id)) {
+			if (tt != "") tt += TableMiddle;
+			tt += "<td width='580'>" + CompleteTable(TdMaterial(RelicInvestigationItemList[i][0], "×1"), 300) + "</td>";
+			RowsQuantity++
+		}
+	}
+	if (tt != "") t += TableMiddle + TdSkill(57002, "", "", "", "", RowsQuantity) + tt;
+	for (var i = 0; i < GiftItemList.length; i++) {
+		tt = "";
+		RowsQuantity = 0;
+		AmendQuantity = "";
+		for (var j = 1; j < GiftItemList[i].length; j++) {
+			if (GiftItemList[i][j][2].includes(Id)) {
+				if (tt != "") tt += TableMiddle;
+				if (GiftItemList[i][j][3] > 1) AmendQuantity = "×" + GiftItemList[i][j][3];
+				tt += "<td width='580'>" + CompleteTable(TdMaterial(GiftItemList[i][j][1], AmendQuantity, 170) + TdText(GiftItemList[i][j][0]), 560) + "</td>";
+				RowsQuantity++
+			}
+		}
+		if (tt != "") t += TableMiddle + TdSkill(GiftItemList[i][0], "", "", "", "", RowsQuantity) + tt
+	}
+	for (var i = 0; i < QuestItemList.length; i++) {
+		tt = "";
+		for (var j = 1; j < QuestItemList[i].length; j++) {
+			if (QuestItemList[i][j].includes(Id)) {
+				if (tt != "") tt += "<br>";
+				tt += QuestItemList[i][j][0]
+			}
+		}
+		if (tt != "") t += TableMiddle + TdQuest(QuestItemList[i][0]) + TdText(tt)
+	}
+	try {
+		let QuestItem = eval("QuestItem" + Id);
+		for (var i = 0; i < QuestItem.length; i++) {
+			t += TableMiddle + TdQuest(QuestItem[i][0]) + TdText(QuestItem[i][1])
+		}
+	} catch (e) {
+		e
+	}
+	try {
+		let SellItem = eval("SellItem" + Id);
+		for (var i = 0; i < SellItem.length; i++) {
+			tt = "";
+			t += TableMiddle + TdCurrency(SellItem[i][0], SellItem[i][1]);
+			for (var j = 2; j < SellItem[i].length; j++) {
+				if (["NPC", "Pet"].includes(SellItem[i][j][0])) {
+					for (var k = 1; k < SellItem[i][j].length; k++) {
+						tt += TdCharacter(SellItem[i][j][k], SellItem[i][j][0])
+					}
+				} else {
+					tt += TdText(SellItem[i][j])
+				}
+			}
+			t += "<td width='580'>" + CompleteTable(tt) + "</td>"
+		}
+	} catch (e) {
+		e
+	}
+	let UseItem = "";
+	tt = "";
+	RowsQuantity = 0;
+	for (var i = 0; i < UseList.length; i++) {
+		UseItem = eval("Item" + UseList[i]);
+		if (UseItem.includes(Id)) {
+			if (tt != "") tt += TableMiddle;
+			tt += "<td width='580'>" + CompleteTable(TdMaterial(UseList[i]), 560) + "</td>";
+			RowsQuantity++
+		}
+	}
+	if (tt != "") t += TableMiddle + TdSkill("使用", "", "", "", "", RowsQuantity) + tt;
+	if (CheckT == t) {
+		t += TableMiddle + TdText("？", 667)
+	}
+	return CompleteTable(t, 860, 1)
 }
 
 function ItemDissolution(Id) {
-  let ItemName = eval("Item" + Id);
-  let tt = "";
-  let t;
-  BreakLabel:for (var i = 0; i < DissolutionItemList.length; i++) {
-    if (DissolutionItemList[i][0] == Id) {
-      t = "<td title='ClassID：" + AmendId(Id) + "' class='MainTd'><img border='0' src='img/Item/" + AmendId(Id) + ".png'><br>" + ItemName[0] + "<br>×" + DissolutionItemList[i][1][0] + "</td>" + TableMiddle + TdSkill(10030, "", "", "", "", 1, DissolutionItemList[i][1][1]);
-      for (var j = 0; j < DissolutionItemList[i][2].length; j += 3) {
-        tt += TdMaterial(DissolutionItemList[i][2][j], "×" + DissolutionItemList[i][2][j + 1] + "～" + DissolutionItemList[i][2][j + 2], 745 / DissolutionItemList[i][2].length)
-      }
-      t += TableMiddle + "<td>" + CompleteTable(tt, 760) + "</td>";
-      break BreakLabel
-    }
-  }
-  return CompleteTable(t, 765, 1)
+	let ItemName = eval("Item" + Id);
+	let tt = "";
+	let t;
+	BreakLabel:for (var i = 0; i < DissolutionItemList.length; i++) {
+		if (DissolutionItemList[i][0] == Id) {
+			t = "<td title='ClassID：" + AmendId(Id) + "' class='MainTd'><img border='0' src='img/Item/" + AmendId(Id) + ".png'><br>" + ItemName[0] + "<br>×" + DissolutionItemList[i][1][0] + "</td>" + TableMiddle + TdSkill(10030, "", "", "", "", 1, DissolutionItemList[i][1][1]);
+			for (var j = 0; j < DissolutionItemList[i][2].length; j += 3) {
+				tt += TdMaterial(DissolutionItemList[i][2][j], "×" + DissolutionItemList[i][2][j + 1] + "～" + DissolutionItemList[i][2][j + 2], 745 / DissolutionItemList[i][2].length)
+			}
+			t += TableMiddle + "<td>" + CompleteTable(tt, 760) + "</td>";
+			break BreakLabel
+		}
+	}
+	return CompleteTable(t, 765, 1)
 }
 
 function ErgEnhances(Id) {
-  let ErgEnhanceItem = eval(Id);
-  let Limit = "";
-  let tt = "";
-  let t = "<td style='font-size:30pt' class='MainTd'>" + ErgEnhanceItem[0] + "</td><td>开放尔格最高等级<br>成功率：" + ErgEnhanceItem[1] + "%</td>" + TableMiddle;
-  for (var i = 0; i < ErgEnhanceItem[2].length; i++) {
-    if (i > 3) Limit = ErgEnhanceItem[2][i][2];
-    if (Limit != "") Limit += "<br>";
-    tt += TdMaterial(ErgEnhanceItem[2][i][0], Limit + "×" + ErgEnhanceItem[2][i][1])
-  }
-  t += TableMiddle + "<td colspan=2>" + CompleteTable(tt, 845) + "</td>";
-  return CompleteTable(t, 850, 1)
+	let ErgEnhanceItem = eval(Id);
+	let Limit = "";
+	let tt = "";
+	let t = "<td style='font-size:30pt' class='MainTd'>" + ErgEnhanceItem[0] + "</td><td>开放尔格最高等级<br>成功率：" + ErgEnhanceItem[1] + "%</td>" + TableMiddle;
+	for (var i = 0; i < ErgEnhanceItem[2].length; i++) {
+		if (i > 3) Limit = ErgEnhanceItem[2][i][2];
+		if (Limit != "") Limit += "<br>";
+		tt += TdMaterial(ErgEnhanceItem[2][i][0], Limit + "×" + ErgEnhanceItem[2][i][1])
+	}
+	t += TableMiddle + "<td colspan=2>" + CompleteTable(tt, 845) + "</td>";
+	return CompleteTable(t, 850, 1)
 }
 
 function CompleteTable(t, Width = "", Type = 0) {
-  if (Width != "") {
-    Width = " width='" + Width + "'"
-  }
-  let TableTop = "<table cellspacing=0 border=1 align='center' style='text-align:center;' bgColor=black " + Width + " bordercolor=";
-  let TableBottom = "</tr></table>";
-  if (Type == 0) {
-    TableTop += "black id='MaterialLists'><tr>"
-  } else {
-    TableTop += "gold><tr>";
-    TableBottom += "<br>"
-  }
-  return TableTop + t + TableBottom
+	if (Width != "") {
+		Width = " width='" + Width + "'"
+	}
+	let TableTop = "<table cellspacing=0 border=1 align='center' style='text-align:center;' bgColor=black " + Width + " bordercolor=";
+	let TableBottom = "</tr></table>";
+	if (Type == 0) {
+		TableTop += "black id='MaterialLists'><tr>"
+	} else {
+		TableTop += "gold><tr>";
+		TableBottom += "<br>"
+	}
+	return TableTop + t + TableBottom
 }
 
 function GetRandom(Min, Max) {
-  return Math.floor(Math.random() * (Max - Min + 1)) + Min
+	return Math.floor(Math.random() * (Max - Min + 1)) + Min
 }
 
 function MouseOver(obj) {
-  obj.style = "border:1px solid gold;"
+	obj.style = "border:1px solid gold;"
 }
 
 function MouseOut(obj) {
-  obj.style = "border:1px solid #000000;"
+	obj.style = "border:1px solid #000000;"
 }
 
 function ItemColor(Id, t) {
-  let ItemId = document.getElementsByName("Item" + Id);
-  if (t.style.background == "") {
-    let ColorId = "hsl(" + GetRandom(0, 360) + "," + GetRandom(0, 50) + "%," + GetRandom(50, 60) + "%)";
-    for (var j = 0; j < ItemId.length; j++) {
-      ItemId[j].style.background = ColorId
-    }
-  } else {
-    for (var j = 0; j < ItemId.length; j++) {
-      ItemId[j].style.background = ""
-    }
-  }
+	let ItemId = document.getElementsByName("Item" + Id);
+	if (t.style.background == "") {
+		let ColorId = "hsl(" + GetRandom(0, 360) + "," + GetRandom(0, 50) + "%," + GetRandom(50, 60) + "%)";
+		for (var j = 0; j < ItemId.length; j++) {
+			ItemId[j].style.background = ColorId
+		}
+	} else {
+		for (var j = 0; j < ItemId.length; j++) {
+			ItemId[j].style.background = ""
+		}
+	}
 }
 
 function Cuisine(Id) {
-  if (CuisineNow != 0) document.getElementById("Cuisine" + CuisineNow).className = "";
-  document.getElementById("Cuisine" + Id).className = "ListTd";
-  CuisineNow = Id;
-  MainBody(Id)
+	if (CuisineNow != 0) document.getElementById("Cuisine" + CuisineNow).className = "";
+	document.getElementById("Cuisine" + Id).className = "ListTd";
+	CuisineNow = Id;
+	MainBody(Id)
 }
 
 function TdEffect(Item) {
-  let Effect = "";
-  if (Item[1] == "Food") {
-    Effect += FoodEffectName[0] + " " + Item[2] + " " + "秒";
-    for (var i = 3; i < Item.length; i++) {
-      if (Item[i] != 0) {
-        if (Item[i] > 0) {
-          Effect += "、" + "<font color='#0000FF' class='EffectTd'>" + FoodEffectName[i - 2] + " " + Item[i] + " 增加</font>"
-        } else if (Item[i] < 0) {
-          Effect += "、" + "<font color='#FF0000' class='EffectTd'>" + FoodEffectName[i - 2] + " " + Math.abs(Item[i]) + " 减少</font>"
-        } else if (Item[i] + 0 != Item[i]) {
-          Effect += "<br>" + Item[i]
-        }
-      }
-    }
-  } else if (Item[1] == "PetFood") {
-    for (var i = 2; i < Item.length; i++) {
-      if (Item[i] != 0) {
-        if (Effect != "") Effect += "、";
-        if (Item[i] > 0) {
-          Effect += "<font color='#0000FF' class='EffectTd'>" + FoodEffectName[i - 1] + " " + Item[i] + " 增加</font>"
-        } else if (Item[i] + 0 != Item[i]) {
-          Effect += "<br>" + Item[i]
-        }
-      }
-    }
-  } else if (Item[1] == "fish") {
-    if (Item[2] != "") Effect = "基础大小 " + Item[2].toFixed(2) + " cm"
-  } else if (Item[1] == "training") {
-    Effect = "驯兽加成 " + Item[2]
-  } else {
-    if (Item[1] != undefined) Effect = Item[1]
-  }
-  return CompleteTable("<td>" + Effect + "</td>", 650)
+	let Effect = "";
+	if (Item[1] == "Food") {
+		Effect += FoodEffectName[0] + " " + Item[2] + " " + "秒";
+		for (var i = 3; i < Item.length; i++) {
+			if (Item[i] != 0) {
+				if (Item[i] > 0) {
+					Effect += "、" + "<font color='#0000FF' class='EffectTd'>" + FoodEffectName[i - 2] + " " + Item[i] + " 增加</font>"
+				} else if (Item[i] < 0) {
+					Effect += "、" + "<font color='#FF0000' class='EffectTd'>" + FoodEffectName[i - 2] + " " + Math.abs(Item[i]) + " 减少</font>"
+				} else if (Item[i] + 0 != Item[i]) {
+					Effect += "<br>" + Item[i]
+				}
+			}
+		}
+	} else if (Item[1] == "PetFood") {
+		for (var i = 2; i < Item.length; i++) {
+			if (Item[i] != 0) {
+				if (Effect != "") Effect += "、";
+				if (Item[i] > 0) {
+					Effect += "<font color='#0000FF' class='EffectTd'>" + FoodEffectName[i - 1] + " " + Item[i] + " 增加</font>"
+				} else if (Item[i] + 0 != Item[i]) {
+					Effect += "<br>" + Item[i]
+				}
+			}
+		}
+	} else if (Item[1] == "fish") {
+		if (Item[2] != "") Effect = "基础大小 " + Item[2].toFixed(2) + " cm"
+	} else if (Item[1] == "training") {
+		Effect = "驯兽加成 " + Item[2]
+	} else {
+		if (Item[1] != undefined) Effect = Item[1]
+	}
+	return CompleteTable("<td>" + Effect + "</td>", 650)
 }
 
 function TdMain(Id, a) {
-  let Effect = "";
-  let ItemName = eval("Item" + Id);
-  let c = " class='MainTd'";
-  if (a == 1) Effect = TdEffect(ItemName);
-  Effect = TdText(Effect, 0, 2);
-  if (a != 1) {
-    c = " name='Item" + Id + "' onclick='ItemColor(" + Id + ",this)' style='border:gold solid 5px;'";
-    Effect = ""
-  }
-  let t = "<td title='ClassID：" + AmendId(Id) + "' width=180 rowspan=30" + c + "><img border='0' src='img/Item/" + AmendId(Id) + ".png'><br>" + ItemName[0] + "</td>" + Effect;
-  return t
+	let Effect = "";
+	let ItemName = eval("Item" + Id);
+	let c = " class='MainTd'";
+	if (a == 1) Effect = TdEffect(ItemName);
+	Effect = TdText(Effect, 0, 2);
+	if (a != 1) {
+		c = " name='Item" + Id + "' onclick='ItemColor(" + Id + ",this)' style='border:gold solid 5px;'";
+		Effect = ""
+	}
+	let t = "<td title='ClassID：" + AmendId(Id) + "' width=180 rowspan=30" + c + "><img border='0' src='img/Item/" + AmendId(Id) + ".png'><br>" + ItemName[0] + "</td>" + Effect;
+	return t
 }
 
 function TdSkill(Id, QuestLimit = "", LocaleLimit = "", EventLimit = "", TalentLimit = "", Rows, Lv, Difficulty = "", OtherSkillId = "", Progress = "") {
-  let t = "";
-  let SkillLv = "";
-  if (typeof Lv == "number") SkillLv = SkillLevelName[Lv];
-  if (typeof Difficulty == "number") Difficulty = "\n难度：" + SkillLevelName[Difficulty];
-  if (typeof Progress == "number") Progress = "\n单次完成度：" + Math.min(99.9, Progress * 100).toFixed(1) + "%";
-  if (QuestLimit != "") t += "<td style='background-color:gold;color:silver' title='" + QuestLimit + "'>副本限定</td>" + TableMiddle;
-  if (LocaleLimit != "") t += "<td style='background-color:gold;color:pink' title='" + LocaleLimit + "'>区服限定</td>" + TableMiddle;
-  if (EventLimit != "") t += "<td style='background-color:gold;color:white' title='" + EventLimit + "活动'>活动限定</td>" + TableMiddle;
-  if (TalentLimit != "") t += "<td style='background-color:gold;color:cyan'>" + TalentLimit + "专用</td>" + TableMiddle;
-  if (["GetWater", "AlpacaShearing", "AlpacaPaperSheep", "GetFireElemental", "GetIceElemental", "GetLightningElemental", "GetSilverVineBerry"].includes(Id)) {
-    t += "<td><img border='0' src='img/Skill/" + Id + ".png'></td>"
-  } else if ((Id + 0) != Id) {
-    t += "<td>" + Id + "</td>"
-  } else if (Id == 10020 & Lv >= 0) {
-    t += "<td onmouseover='ShowCookingTool(" + Lv + ",this)' onmouseout='ShowCookingTool()'><img border='0' title='" + eval("Skill" + Id + "[0]") + " " + SkillLv + "&#10;" + CookingActionNames[Lv] + "' src='img/Skill/" + Id + CookingActionNames[Lv] + ".png'></td>"
-  } else {
-    t += "<td><img border='0' title='" + eval("Skill" + Id + "[0]") + " " + SkillLv + Difficulty + Progress + "' src='img/Skill/" + Id + ".png'></td>"
-  }
-  if (OtherSkillId != "") t += TableMiddle + "<td><img border='0' title='" + eval("Skill" + OtherSkillId + "[0]") + "' src='img/Skill/" + OtherSkillId + ".png'></td>";
-  return "<td width=80 rowspan=" + Rows + ">" + CompleteTable(t, 70) + "</td>"
+	let t = "";
+	let SkillLv = "";
+	if (typeof Lv == "number") SkillLv = SkillLevelName[Lv];
+	if (typeof Difficulty == "number") Difficulty = "\n难度：" + SkillLevelName[Difficulty];
+	if (typeof Progress == "number") Progress = "\n单次完成度：" + Math.min(99.9, Progress * 100).toFixed(1) + "%";
+	if (QuestLimit != "") t += "<td style='background-color:gold;color:silver' title='" + QuestLimit + "'>副本限定</td>" + TableMiddle;
+	if (LocaleLimit != "") t += "<td style='background-color:gold;color:pink' title='" + LocaleLimit + "'>区服限定</td>" + TableMiddle;
+	if (EventLimit != "") t += "<td style='background-color:gold;color:white' title='" + EventLimit + "活动'>活动限定</td>" + TableMiddle;
+	if (TalentLimit != "") t += "<td style='background-color:gold;color:cyan'>" + TalentLimit + "专用</td>" + TableMiddle;
+	if (["GetWater", "AlpacaShearing", "AlpacaPaperSheep", "GetFireElemental", "GetIceElemental", "GetLightningElemental", "GetSilverVineBerry"].includes(Id)) {
+		t += "<td><img border='0' src='img/Skill/" + Id + ".png'></td>"
+	} else if ((Id + 0) != Id) {
+		t += "<td>" + Id + "</td>"
+	} else if (Id == 10020 & Lv >= 0) {
+		t += "<td onmouseover='ShowCookingTool(" + Lv + ",this)' onmouseout='ShowCookingTool()'><img border='0' title='" + eval("Skill" + Id + "[0]") + " " + SkillLv + "&#10;" + CookingActionNames[Lv] + "' src='img/Skill/" + Id + CookingActionNames[Lv] + ".png'></td>"
+	} else {
+		t += "<td><img border='0' title='" + eval("Skill" + Id + "[0]") + " " + SkillLv + Difficulty + Progress + "' src='img/Skill/" + Id + ".png'></td>"
+	}
+	if (OtherSkillId != "") t += TableMiddle + "<td><img border='0' title='" + eval("Skill" + OtherSkillId + "[0]") + "' src='img/Skill/" + OtherSkillId + ".png'></td>";
+	return "<td width=80 rowspan=" + Rows + ">" + CompleteTable(t, 70) + "</td>"
 }
 
 function TdQuest(Id) {
-  let t = "<td width=80><img border='0' src='img/Quest/" + Id + ".png'></td>";
-  return t
+	let t = "<td width=80><img border='0' src='img/Quest/" + Id + ".png'></td>";
+	return t
 }
 
 function TdCurrency(Id, Quantity) {
-  let t;
-  if (Quantity > 9999) {
-    if (Quantity % 10000 == 0) {
-      Quantity = Math.floor(Quantity / 10000) + "万"
-    } else {
-      Quantity = Math.floor(Quantity / 10000) + "万" + Quantity % 10000
-    }
-  }
-  if (Id == Id + 0) {
-    if (Id == 2000) {
-      Quantity += " Gold"
-    } else if (Id == 72015) {
-      Quantity += " 杜卡特"
-    } else {
-      Quantity += " 个"
-    }
-    t = "<td width=80 title='" + eval("Item" + Id + "[0]") + "' valign='Bottom'><img border='0' src='img/Item/" + Id + ".png'><br>" + Quantity + "<br>"
-  } else {
-    t = "<td width=80 valign='Bottom'>" + Id + "<br>" + Quantity + "分<br>"
-  }
-  return t
+	let t;
+	if (Quantity > 9999) {
+		if (Quantity % 10000 == 0) {
+			Quantity = Math.floor(Quantity / 10000) + "万"
+		} else {
+			Quantity = Math.floor(Quantity / 10000) + "万" + Quantity % 10000
+		}
+	}
+	if (Id == Id + 0) {
+		if (Id == 2000) {
+			Quantity += " Gold"
+		} else if (Id == 72015) {
+			Quantity += " 杜卡特"
+		} else {
+			Quantity += " 个"
+		}
+		t = "<td width=80 title='" + eval("Item" + Id + "[0]") + "' valign='Bottom'><img border='0' src='img/Item/" + Id + ".png'><br>" + Quantity + "<br>"
+	} else {
+		t = "<td width=80 valign='Bottom'>" + Id + "<br>" + Quantity + "分<br>"
+	}
+	return t
 }
 
 function TdMaterial(Id, Proportion = "", Width = 100, Rows = 1) {
-  CheckCuisines(Id);
-  let t;
-  Width = " width=" + Width;
-  if (Id == "") {
-    t = "<td" + Width + "><br>"
-  } else if ((Id > 0)) {
-    let ItemName = eval("Item" + Id)[0];
-    t = "<td title='ClassID：" + AmendId(Id) + "'" + Width + " name='Item" + Id + "' onclick='ItemColor(" + Id + ",this)' valign='Bottom' rowspan=" + Rows + "><img border='0' src='img/Item/" + AmendId(Id) + ".png'><br>" + ItemName + "<br>" + Proportion + "</td>"
-  } else {
-    t = "<td title='" + eval("Item" + Id + "[0][0]") + "' height='" + eval("Item" + Id + "[0][1]") + "'" + Width + " valign='Bottom' bgColor=#AAAAAA><div name='Item" + Id + "'></div>" + Proportion + "</td>";
-    if (eval("Item" + Id + "On==0")) {
-      setTimeout("ItemCategory('" + Id + "')", 100);
-      eval("Item" + Id + "On= 1")
-    }
-  }
-  return t
+	CheckCuisines(Id);
+	let t;
+	Width = " width=" + Width;
+	if (Id == "") {
+		t = "<td" + Width + "><br>"
+	} else if ((Id > 0)) {
+		let ItemName = eval("Item" + Id)[0];
+		t = "<td title='ClassID：" + AmendId(Id) + "'" + Width + " name='Item" + Id + "' onclick='ItemColor(" + Id + ",this)' valign='Bottom' rowspan=" + Rows + "><img border='0' src='img/Item/" + AmendId(Id) + ".png'><br>" + ItemName + "<br>" + Proportion + "</td>"
+	} else {
+		t = "<td title='" + eval("Item" + Id + "[0][0]") + "' height='" + eval("Item" + Id + "[0][1]") + "'" + Width + " valign='Bottom' bgColor=#AAAAAA><div name='Item" + Id + "'></div>" + Proportion + "</td>";
+		if (eval("Item" + Id + "On==0")) {
+			setTimeout("ItemCategory('" + Id + "')", 100);
+			eval("Item" + Id + "On= 1")
+		}
+	}
+	return t
 }
 
 function TdCharacter(CharacterId, CharacterType) {
-  let Character = eval(CharacterType + CharacterId);
-  let t = `<td><div class="custom-td-container"></div><img class="chara-img" border='0' src='img/${CharacterType}/${CharacterId}.png'>${InjectCharacterInfo(CharacterId, CharacterType)}</div></td>`
-  return t
-}
-
-function InjectCharacterInfo(CharacterId, CharacterType) {
-  if (typeof CharacterId != "number") {
-    return ""
-  } else {
-    let html = ``
-    let Character = eval(CharacterType + CharacterId);
-    if (CharacterType == "Pet") {
-      CharacterType = "宠物";
-      if ([730201, 730202, 730206, 730207, 730208, 730209, 730210].includes(CharacterId)) {
-        CharacterType = "伙伴"
-      }
-      html += `<div class="chara-info">${CharacterType}</div>`
-    }
-    html += `<div class="chara-info">${Character[0]}</div>`
-    if (CharacterType == "NPC") {
-      html += `<div class="chara-info">${Character[1]}</div>`
-    }
-    return html
-  }
+	let Character = eval(CharacterType + CharacterId);
+	let t = "<td onmouseover='ShowCharacterData(this," + CharacterId + ",&quot;" + CharacterType + "&quot;)' onmouseout='ShowCharacterData(this)'><img border='0' src='img/" + CharacterType + "/" + CharacterId + ".png'></td>";
+	return t
 }
 
 function TdText(a, Width = "", Cols = 1) {
-  if (Width != "") {
-    Width = " width=" + Width
-  }
-  let t = "<td " + Width + " colspan=" + Cols + ">" + a + "</td>";
-  return t
+	if (Width != "") {
+		Width = " width=" + Width
+	}
+	let t = "<td " + Width + " colspan=" + Cols + ">" + a + "</td>";
+	return t
 }
 
 function ItemCategory(Categorys, n = 0) {
-  let ItemList = eval("Item" + Categorys + "[1]");
-  let ItemId = document.getElementsByName("Item" + Categorys);
-  for (var j = 0; j < ItemId.length; j++) {
-    ItemId[j].innerHTML = "<img border='0' src='img/Item/" + ItemList[n] + ".png'><br>" + eval("Item" + ItemList[n])[0];
-    if (Categorys == "Fossil") {
-      n = (n + GetRandom(1, ItemList.length - 1)) % ItemList.length
-    }
-  }
-  n = (n + 1) % ItemList.length;
-  CheckImg();
-  setTimeout("ItemCategory('" + Categorys + "'," + n + ")", 1000)
+	let ItemList = eval("Item" + Categorys + "[1]");
+	let ItemId = document.getElementsByName("Item" + Categorys);
+	for (var j = 0; j < ItemId.length; j++) {
+		ItemId[j].innerHTML = "<img border='0' src='img/Item/" + ItemList[n] + ".png'><br>" + eval("Item" + ItemList[n])[0];
+		if (Categorys == "Fossil") {
+			n = (n + GetRandom(1, ItemList.length - 1)) % ItemList.length
+		}
+	}
+	n = (n + 1) % ItemList.length;
+	CheckImg();
+	setTimeout("ItemCategory('" + Categorys + "'," + n + ")", 1000)
 }
 
 function InitializeTemp() {
-  document.getElementById("Temp").innerHTML = "";
-  document.getElementById("Temp").className = "Temp";
-  document.getElementById("Temp").style = ""
+	document.getElementById("Temp").innerHTML = "";
+	document.getElementById("Temp").className = "Temp";
+	document.getElementById("Temp").style = ""
 }
 
 function GetPosition(th) {
-  let AbsoluteLeft = th.offsetLeft;
-  let AbsoluteTop = th.offsetTop;
-  while (th.offsetParent != "[object HTMLDivElement]") {
-    th = th.offsetParent;
-    AbsoluteLeft += th.offsetLeft;
-    AbsoluteTop += th.offsetTop
-  }
-  return [AbsoluteLeft, AbsoluteTop]
+	let AbsoluteLeft = th.offsetLeft;
+	let AbsoluteTop = th.offsetTop;
+	while (th.offsetParent != "[object HTMLDivElement]") {
+		th = th.offsetParent;
+		AbsoluteLeft += th.offsetLeft;
+		AbsoluteTop += th.offsetTop
+	}
+	return [AbsoluteLeft, AbsoluteTop]
 }
 
 function ShowCharacterData(th, CharacterId, CharacterType) {
-  if (typeof CharacterId != "number") {
-    InitializeTemp();
-    th.style = ""
-  } else {
-    th.style = "border:1px solid gold;";
-    let Character = eval(CharacterType + CharacterId);
-    if (CharacterType == "Pet") {
-      CharacterType = "宠物";
-      if ([730201, 730202, 730206, 730207, 730208, 730209, 730210].includes(CharacterId)) {
-        CharacterType = "伙伴"
-      }
-    }
-    let t = TdText(CharacterType) + TableMiddle + TdText(Character[0]);
-    if (CharacterType == "NPC") {
-      t += TableMiddle + TdText(Character[1])
-    }
-    document.getElementById("Temp").innerHTML = CompleteTable(t);
-    document.getElementById("Temp").className = "CharacterData";
-    let AbsolutePosition = GetPosition(th);
-    let TopPosition = AbsolutePosition[1] + 48;
-    let TempHeight = parseInt(document.getElementById("Temp").clientHeight);
-    if ((TopPosition + TempHeight) > (parseInt(document.getElementById("MainBody").scrollTop) + 560)) {
-      TopPosition = AbsolutePosition[1] - 8 - TempHeight
-    }
-    document.getElementById("Temp").style.left = AbsolutePosition[0] - parseInt(document.getElementById("Temp").clientWidth) + 40 + "px";
-    document.getElementById("Temp").style.top = TopPosition + "px"
-  }
+	if (typeof CharacterId != "number") {
+		InitializeTemp();
+		th.style = ""
+	} else {
+		th.style = "border:1px solid gold;";
+		let Character = eval(CharacterType + CharacterId);
+		if (CharacterType == "Pet") {
+			CharacterType = "宠物";
+			if ([730201, 730202, 730206, 730207, 730208, 730209, 730210].includes(CharacterId)) {
+				CharacterType = "伙伴"
+			}
+		}
+		let t = TdText(CharacterType) + TableMiddle + TdText(Character[0]);
+		if (CharacterType == "NPC") {
+			t += TableMiddle + TdText(Character[1])
+		}
+		document.getElementById("Temp").innerHTML = CompleteTable(t);
+		document.getElementById("Temp").className = "CharacterData";
+		let AbsolutePosition = GetPosition(th);
+		let TopPosition = AbsolutePosition[1] + 48;
+		let TempHeight = parseInt(document.getElementById("Temp").clientHeight);
+		if ((TopPosition + TempHeight) > (parseInt(document.getElementById("MainBody").scrollTop) + 560)) {
+			TopPosition = AbsolutePosition[1] - 8 - TempHeight
+		}
+		document.getElementById("Temp").style.left = AbsolutePosition[0] - parseInt(document.getElementById("Temp").clientWidth) + 40 + "px";
+		document.getElementById("Temp").style.top = TopPosition + "px"
+	}
 }
 
 function ShowCookingTool(Lv, th) {
-  if (typeof Lv != "number") {
-    InitializeTemp()
-  } else {
-    let t;
-    let AbsolutePosition = GetPosition(th);
-    let CookingToolProject = [[0, 0], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [2, 0], [2, 0], [2, 0], [1, 1], [2, 0], [1, 1], [2, 0], [3, 0], [4, 0], [5, 0]];
-    let RighthandCookingTool = [40042, 40044, 40043, 41406, 41407, 41408];
-    let LefhandCookingTool = [46005, 46004];
-    document.getElementById("Temp").className = "CookingTool";
-    t = TdMaterial(RighthandCookingTool[CookingToolProject[Lv][0]], "", 80) + TdMaterial(LefhandCookingTool[CookingToolProject[Lv][1]], "", 80);
-    if ([1, 2, 3, 4, 5, 9, 11, 14].includes(Lv)) {
-      t += TableMiddle + "<td colspan=2 align='center'>" + CompleteTable("<div class='Fire'></div>") + "</td>"
-    }
-    let MainBodyScrollTop = parseInt(document.getElementById("MainBody").scrollTop);
-    document.getElementById("Temp").innerHTML = CompleteTable(t);
-    document.getElementById("Temp").style.left = AbsolutePosition[0] + 85 + "px";
-    document.getElementById("Temp").style.top = Math.max(Math.min(AbsolutePosition[1] + 3, MainBodyScrollTop + 556 - parseInt(document.getElementById("Temp").clientHeight)), MainBodyScrollTop + 2) + "px"
-  }
+	if (typeof Lv != "number") {
+		InitializeTemp()
+	} else {
+		let t;
+		let AbsolutePosition = GetPosition(th);
+		let CookingToolProject = [[0, 0], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [2, 0], [2, 0], [2, 0], [1, 1], [2, 0], [1, 1], [2, 0], [3, 0], [4, 0], [5, 0]];
+		let RighthandCookingTool = [40042, 40044, 40043, 41406, 41407, 41408];
+		let LefhandCookingTool = [46005, 46004];
+		document.getElementById("Temp").className = "CookingTool";
+		t = TdMaterial(RighthandCookingTool[CookingToolProject[Lv][0]], "", 80) + TdMaterial(LefhandCookingTool[CookingToolProject[Lv][1]], "", 80);
+		if ([1, 2, 3, 4, 5, 9, 11, 14].includes(Lv)) {
+			t += TableMiddle + "<td colspan=2 align='center'>" + CompleteTable("<div class='Fire'></div>") + "</td>"
+		}
+		let MainBodyScrollTop = parseInt(document.getElementById("MainBody").scrollTop);
+		document.getElementById("Temp").innerHTML = CompleteTable(t);
+		document.getElementById("Temp").style.left = AbsolutePosition[0] + 85 + "px";
+		document.getElementById("Temp").style.top = Math.max(Math.min(AbsolutePosition[1] + 3, MainBodyScrollTop + 556 - parseInt(document.getElementById("Temp").clientHeight)), MainBodyScrollTop + 2) + "px"
+	}
 }
 
 function CheckCuisines(Id) {
-  if (TemporaryCuisine.indexOf(Id) == -1 & Id > 0) TemporaryCuisine.push(Id)
+	if (TemporaryCuisine.indexOf(Id) == -1 & Id > 0) TemporaryCuisine.push(Id)
 }
 
 function IdAmendHTML(Id) {
-  if (typeof Id != "number") Id = "&quot;" + Id + "&quot;";
-  return Id
+	if (typeof Id != "number") Id = "&quot;" + Id + "&quot;";
+	return Id
 }
 
 function IdAmendJS(Id) {
-  if (typeof Id != "number") Id = "'" + Id + "'";
-  return Id
+	if (typeof Id != "number") Id = "'" + Id + "'";
+	return Id
 }
 
 function AmendId(Id) {
-  if (["60000", "60044", "60081", "60600", "64500", "64581", "60800"].includes((Id + " ").substring(0, 5))) Id = (Id + " ").substring(0, 5);
-  return Id
+	if (["60000", "60044", "60081", "60600", "64500", "64581", "60800"].includes((Id + " ").substring(0, 5))) Id = (Id + " ").substring(0, 5);
+	return Id
 }
 
 function StartTime() {
-  var today = new Date();
-  var Hours = today.getHours();
-  var Minutes = today.getMinutes();
-  var Seconds = today.getSeconds();
-  var RealityTime = (Hours * 60 + Minutes) * 60 + Seconds + today.getMilliseconds() / 1000;
-  if ((Hours + Minutes + Seconds) == 0) StartDate();
-  var ErinnTime = Math.floor(RealityTime * 40);
-  var ErinnSeconds = ErinnTime % 60;
-  var ErinnMinutes = (ErinnTime - ErinnSeconds) / 60 % 60;
-  var ErinnHours = (ErinnTime - ErinnSeconds - ErinnMinutes * 60) / 3600 % 24;
-  document.getElementById('nowTimeSpan').innerHTML = CheckTime(Hours) + ":" + CheckTime(Minutes) + ":" + CheckTime(Seconds) + " ";
-  document.getElementById('ErinnTimeSpan').innerHTML = CheckTime(ErinnHours) + ":" + CheckTime(ErinnMinutes) + ":" + CheckTime(ErinnSeconds)
+	var today = new Date();
+	var Hours = today.getHours();
+	var Minutes = today.getMinutes();
+	var Seconds = today.getSeconds();
+	var RealityTime = (Hours * 60 + Minutes) * 60 + Seconds + today.getMilliseconds() / 1000;
+	if ((Hours + Minutes + Seconds) == 0) StartDate();
+	var ErinnTime = Math.floor(RealityTime * 40);
+	var ErinnSeconds = ErinnTime % 60;
+	var ErinnMinutes = (ErinnTime - ErinnSeconds) / 60 % 60;
+	var ErinnHours = (ErinnTime - ErinnSeconds - ErinnMinutes * 60) / 3600 % 24;
+	document.getElementById('nowTimeSpan').innerHTML = CheckTime(Hours) + ":" + CheckTime(Minutes) + ":" + CheckTime(Seconds) + " ";
+	document.getElementById('ErinnTimeSpan').innerHTML = CheckTime(ErinnHours) + ":" + CheckTime(ErinnMinutes) + ":" + CheckTime(ErinnSeconds)
 }
 
 function StartDate() {
-  let today = new Date();
-  let Year = today.getFullYear();
-  let Month = today.getMonth() + 1;
-  let Dates = today.getDate();
-  let Day = new Array(" 星期日 ", " 星期一 ", " 星期二 ", " 星期三 ", " 星期四 ", " 星期五 ", " 星期六 ");
-  let ErinnDay = new Array("　立春　", "　春分　", "　入夏　", "　夏至　", "　秋收　", " 秋收节 ", "　元旦　");
-  document.getElementById('nowDateSpan').innerHTML = Year + "-" + CheckTime(Month) + "-" + CheckTime(Dates) + Day[today.getDay()];
-  document.getElementById('ErinnDateSpan').innerHTML = ErinnDay[today.getDay()]
+	let today = new Date();
+	let Year = today.getFullYear();
+	let Month = today.getMonth() + 1;
+	let Dates = today.getDate();
+	let Day = new Array(" 星期日 ", " 星期一 ", " 星期二 ", " 星期三 ", " 星期四 ", " 星期五 ", " 星期六 ");
+	let ErinnDay = new Array("　立春　", "　春分　", "　入夏　", "　夏至　", "　秋收　", " 秋收节 ", "　元旦　");
+	document.getElementById('nowDateSpan').innerHTML = Year + "-" + CheckTime(Month) + "-" + CheckTime(Dates) + Day[today.getDay()];
+	document.getElementById('ErinnDateSpan').innerHTML = ErinnDay[today.getDay()]
 }
 
 function CheckTime(i) {
-  if (i < 10) i = "0" + i;
-  return i
+	if (i < 10) i = "0" + i;
+	return i
 }
 
 function CheckImg() {
-  let AllImg = document.getElementsByTagName("img");
-  for (i = 0; i < AllImg.length; i++) AllImg[i].onerror = function () {
-    this.src = "img/onerror.png"
-  }
+	let AllImg = document.getElementsByTagName("img");
+	for (i = 0; i < AllImg.length; i++) AllImg[i].onerror = function () {
+		this.src = "img/onerror.png"
+	}
 }
 
 // setInterval('StartTime()', 110);
@@ -7436,69 +7415,67 @@ const ItemNameToItemId = new Map()
 const ItemIdToItemDetail = new Map()
 
 const CreateSkillLists = () => {
-  SkillList.forEach(skillId => {
-    let skill = eval(`Skill${skillId}`)
-    console.log(`===== ${skill[0]} =====`)
-    let skillList = eval(`${skill[1]}List`)
-    FormatItems(skillList, skill[0], skill[1], skillId)
-  })
+	SkillList.forEach(skillId => {
+		let skill = eval(`Skill${skillId}`)
+		console.log(`===== ${skill[0]} =====`)
+		let skillList = eval(`${skill[1]}List`)
+		FormatItems(skillList, skill[0], skill[1], skillId)
+	})
 }
 
 const FormatItems = (skillList, skillName, skillCode, skillId) => {
-  skillList.forEach(itemId => {
-    let item = eval(`Item${itemId}`)
-    // console.log(item)
-    ItemNameToItemId.set(item[0], itemId)
-    ItemIdToItemDetail.set(itemId, {
-      itemSource: item,
-      name: item[0],
-      skillName,
-      skillCode,
-      skillId,
-      html: MainBodyRebuild(itemId, skillId)
-    })
-  })
+	skillList.forEach(itemId => {
+		let item = eval(`Item${itemId}`)
+		// console.log(item)
+		ItemNameToItemId.set(item[0], itemId)
+		ItemIdToItemDetail.set(itemId, {
+			itemSource: item,
+			name: item[0],
+			skillName,
+			skillCode,
+			skillId,
+			html: MainBodyRebuild(itemId, skillId)
+		})
+	})
 }
 
 const getItems = () => {
-  if(!ItemNameToItemId.size){
-    CreateSkillLists()
-  }
-  return {
-    ItemNameToItemId,
-    ItemIdToItemDetail
-  }
+	if (!ItemNameToItemId.size) {
+		CreateSkillLists()
+	}
+	return {
+		ItemNameToItemId,
+		ItemIdToItemDetail
+	}
 }
 
 
 // 重写方法
 const MainBodyRebuild = (Id, skillId) => {
-  let t = "";
-  let IdType = "";
-  if (skillId == 10030) t = ItemDissolution(Id);
-  TemporaryCuisine = [IdAmendJS(Id)];
-  if (ErgEnhanceList.includes(Id)) {
-    t += ErgEnhances(Id)
-  } else {
-    t += eval("Item(" + Id + ",1)");
-    IdType = "Item"
-  }
-  if (eval(IdType + Id + "[0].indexOf('兼职')==-1")) {
-    for (let i = 1; i < TemporaryCuisine.length; i++) {
-      t += eval("Item(" + TemporaryCuisine[i] + ")")
-    }
-  }
-  return t
+	let t = "";
+	let IdType = "";
+	if (skillId == 10030) t = ItemDissolution(Id);
+	TemporaryCuisine = [IdAmendJS(Id)];
+	if (ErgEnhanceList.includes(Id)) {
+		t += ErgEnhances(Id)
+	} else {
+		t += eval("Item(" + Id + ",1)");
+		IdType = "Item"
+	}
+	if (eval(IdType + Id + "[0].indexOf('兼职')==-1")) {
+		for (let i = 1; i < TemporaryCuisine.length; i++) {
+			t += eval("Item(" + TemporaryCuisine[i] + ")")
+		}
+	}
+	return t
 }
 
 
-
-
 module.exports = {
-  // website entry
-  // OnloadFunction,
+	// website entry
+	// OnloadFunction,
 
-  // custom functions
-  // CreateSkillLists,
-  getItems
+	// custom functions
+	// CreateSkillLists,
+	getItems
 }
