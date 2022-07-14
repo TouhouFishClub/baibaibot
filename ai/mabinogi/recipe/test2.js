@@ -1,5 +1,5 @@
 const { searchMabiRecipe } = require('./searchRecipe')
 
-searchMabiRecipe('14160', (c) => {
+searchMabiRecipe('13821', (c) => {
   console.log(c)
 })

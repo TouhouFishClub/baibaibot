@@ -7247,11 +7247,14 @@ function TdMaterial(Id, Proportion = "", Width = 100, Rows = 1) {
 		let ItemName = eval("Item" + Id)[0];
 		t = "<td title='ClassID：" + AmendId(Id) + "'" + Width + " name='Item" + Id + "' onclick='ItemColor(" + Id + ",this)' valign='Bottom' rowspan=" + Rows + "><img border='0' src='img/Item/" + AmendId(Id) + ".png'><br>" + ItemName + "<br>" + Proportion + "</td>"
 	} else {
-		t = "<td title='" + eval("Item" + Id + "[0][0]") + "' height='" + eval("Item" + Id + "[0][1]") + "'" + Width + " valign='Bottom' bgColor=#AAAAAA><div name='Item" + Id + "'></div>" + Proportion + "</td>";
-		if (eval("Item" + Id + "On==0")) {
-			setTimeout("ItemCategory('" + Id + "')", 100);
-			eval("Item" + Id + "On= 1")
-		}
+		t = "<td title='" + eval("Item" + Id + "[0][0]") + "' height='" + eval("Item" + Id + "[0][1]") + "'" + Width + " valign='Bottom' bgColor=#AAAAAA>" + ItemCategoryRebuildSimple(Id) + Proportion + "</td>"
+
+		// t = "<td title='" + eval("Item" + Id + "[0][0]") + "' height='" + eval("Item" + Id + "[0][1]") + "'" + Width + " valign='Bottom' bgColor=#AAAAAA><div name='Item" + Id + "'>" + ItemCategoryRebuildSimple(Id) + "</div>" + Proportion + "</td>";
+		// console.log(t)
+		// if (eval("Item" + Id + "On==0")) {
+		// 	setTimeout("ItemCategory('" + Id + "')", 1);
+		// 	eval("Item" + Id + "On= 1")
+		// }
 	}
 	return t
 }
@@ -7469,6 +7472,40 @@ const MainBodyRebuild = (Id, skillId) => {
 	}
 	return t
 }
+
+
+function ItemCategoryRebuildSimple(Categorys, n = 0) {
+	let ItemList = eval("Item" + Categorys + "[1]");
+	// console.log(ItemList)
+	// let ItemId = document.getElementsByName("Item" + Categorys);
+	return "<img border='0' src='img/Item/" + ItemList[n] + ".png'><br>" + eval("Item" + ItemList[n])[0];
+	// for (var j = 0; j < ItemId.length; j++) {
+	// 	ItemId[j].innerHTML = "<img border='0' src='img/Item/" + ItemList[n] + ".png'><br>" + eval("Item" + ItemList[n])[0];
+	// 	if (Categorys == "Fossil") {
+	// 		n = (n + GetRandom(1, ItemList.length - 1)) % ItemList.length
+	// 	}
+	// }
+	// n = (n + 1) % ItemList.length;
+	// CheckImg();
+	// setTimeout("ItemCategory('" + Categorys + "'," + n + ")", 1000)
+}
+
+//todo: 这里只留档，因为调用的太多
+// function TdMaterialRebuild(Id, Proportion = "", Width = 100, Rows = 1) {
+// 	CheckCuisines(Id);
+// 	let t;
+// 	Width = " width=" + Width;
+// 	if (Id == "") {
+// 		t = "<td" + Width + "><br>"
+// 	} else if ((Id > 0)) {
+// 		let ItemName = eval("Item" + Id)[0];
+// 		t = "<td title='ClassID：" + AmendId(Id) + "'" + Width + " name='Item" + Id + "' onclick='ItemColor(" + Id + ",this)' valign='Bottom' rowspan=" + Rows + "><img border='0' src='img/Item/" + AmendId(Id) + ".png'><br>" + ItemName + "<br>" + Proportion + "</td>"
+// 	} else {
+// 		t = "<td title='" + eval("Item" + Id + "[0][0]") + "' height='" + eval("Item" + Id + "[0][1]") + "'" + Width + " valign='Bottom' bgColor=#AAAAAA>" + ItemCategoryRebuildSimple(Id) + Proportion + "</td>"
+// 	}
+// 	return t
+// }
+
 
 
 module.exports = {
