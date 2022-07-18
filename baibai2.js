@@ -136,7 +136,7 @@ const { mabiGacha } = require('./ai/mabinogi/gacha/index')
 const { menu } = require('./ai/menu')
 const { ygo } = require('./ai/ygo/ygo')
 
-const { carrot } = require('./ai/mabinogi/carrot')
+// const { carrot } = require('./ai/mabinogi/carrot')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -1198,10 +1198,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(con == '洛奇老黄历') {
     mabiCalendar(callback)
   }
-  if(con == '胡萝卜') {
-    carrot(false, callback, groupid)
-		return
-  }
+  // if(con == '胡萝卜') {
+  //   carrot(false, callback, groupid)
+	// 	return
+  // }
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)
   }
