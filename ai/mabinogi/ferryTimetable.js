@@ -2,12 +2,12 @@ const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
 const BaseTime = {
 	Iria: {
-		base: new Date('2022-06-24 1:55:28'),
-		interval: [6*60*1000, 5*60*1000, 4*60*1000]
+		base: new Date('2022-06-24 1:55:28'), //到港时间
+		interval: [5*60*1000, 6*60*1000, 4*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
 	},
 	Belvast: {
-		base: new Date('2022-06-24 2:58:28'),
-		interval: [(3*60+30)*1000, (2*60+30)*1000, 2*60*1000]
+		base: new Date('2022-06-24 2:58:28'), //到港时间
+		interval: [(2*60+30)*1000, (3*60+30)*1000, 2*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
 	}
 }
 
@@ -64,10 +64,31 @@ const Ferry = [
 	}
 ]
 
-const FindCurrentTimes = (now, baseTimeId, timeOffset) => {
+const FindCurrentTimes = (now, baseTimeId, timeOffset, count = 1) => {
 	let { base, interval } = BaseTime[baseTimeId]
-	let st = base.getTime() + ~~((now - (base.getTime() + timeOffset * 1000)) / (interval[0] + interval[1])) * (interval[0] + interval[1]) + timeOffset * 1000
-	return [st, st + interval[0], st + interval[0] + interval[2]]
+	let baseTime = base.getTime() - interval[0]
+	let waitTime = baseTime + ~~((now - (baseTime + timeOffset * 1000)) / (interval[0] + interval[1])) * (interval[0] + interval[1]) + timeOffset * 1000
+	let out = [], tmpTime
+	for(let i = 0; i < count; i ++) {
+		if(i) {
+			out.push([
+				tmpTime,
+				tmpTime + interval[0],
+				tmpTime + interval[0] + interval[1],
+				tmpTime + interval[0] + interval[1] + interval[2]
+			])
+			tmpTime = tmpTime + interval[0] + interval[1]
+		} else {
+			out.push([
+				waitTime,
+				waitTime + interval[0],
+				waitTime + interval[0] + interval[1],
+				waitTime + interval[0] + interval[1] + interval[2]
+			])
+			tmpTime = waitTime + interval[0] + interval[1]
+		}
+	}
+	return out
 }
 
 const RenderTime = ts => {
@@ -77,16 +98,20 @@ const RenderTime = ts => {
 
 const FerryTimetable = callback => {
 	let out = '', now = Date.now()
+	out += `now: ${RenderTime(now)}\n`
 	Ferry.forEach(routing => {
 		out += ''
 		out += `================\n`
 		out += `${routing.from} -> ${routing.to}\n`
-		out += `${FindCurrentTimes(now, routing.baseTime, routing.timeOffset).map(ts => RenderTime(ts))}\n`
+		let times = FindCurrentTimes(now, routing.baseTime, routing.timeOffset, 3)
+		// out += `${FindCurrentTimes(now, routing.baseTime, routing.timeOffset).map(ts => RenderTime(ts))}\n`
+		out += `${times.map(gt => gt.map(ts => RenderTime(ts))).join('\n')}\n`
 	})
-	console.log(out)
+	// console.log(out)
+	drawTxtImage('', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
-FerryTimetable()
-// module.exports = {
-// 	FerryTimetable
-// }
+// FerryTimetable()
+module.exports = {
+	FerryTimetable
+}

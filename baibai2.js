@@ -138,6 +138,8 @@ const { ygo } = require('./ai/ygo/ygo')
 
 // const { carrot } = require('./ai/mabinogi/carrot')
 
+const { FerryTimetable } = require('./ai/mabinogi/ferryTimetable')
+
 let globalConfig = {
 	FLASH_RESEND : false
 }
@@ -1202,6 +1204,13 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   //   carrot(false, callback, groupid)
 	// 	return
   // }
+  if(con == '轮渡时刻表') {
+		if(from != 799018865) {
+			return
+		}
+		FerryTimetable(callback)
+		return
+  }
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)
   }
