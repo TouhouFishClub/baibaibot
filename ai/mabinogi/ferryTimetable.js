@@ -2,11 +2,21 @@ const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
 const BaseTime = {
 	Iria: {
-		base: new Date('2022-06-24 1:55:28'), //到港时间
+		// base: new Date('2022-06-24 1:55:28'), //到港时间
+		base: new Date('2022-07-18 18:07:53'), //到港时间
 		interval: [5*60*1000, 6*60*1000, 4*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
 	},
+	// Connous: {
+	// 	base: new Date('2022-07-18 18:07:53'), //到港时间
+	// 	interval: [5*60*1000, 6*60*1000, 4*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
+	// },
+	// Qilla: {
+	// 	base: new Date('2022-07-18 20:18:23'), //到港时间
+	// 	interval: [5*60*1000, 6*60*1000, 4*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
+	// },
 	Belvast: {
-		base: new Date('2022-06-24 2:58:28'), //到港时间
+		// base: new Date('2022-06-24 2:58:28'), //到港时间
+		base: new Date('2022-07-18 17:00:27'), //到港时间
 		interval: [(2*60+30)*1000, (3*60+30)*1000, 2*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
 	}
 }
@@ -165,7 +175,7 @@ const FerryTimetable = (qq, groupId, callback) => {
 	// drawTxtImage('', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
-FerryTimetable()
-// module.exports = {
-// 	FerryTimetable
-// }
+// FerryTimetable()
+module.exports = {
+	FerryTimetable
+}
