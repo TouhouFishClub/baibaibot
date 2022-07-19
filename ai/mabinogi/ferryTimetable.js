@@ -1,3 +1,7 @@
+const fs = require('fs')
+const path = require('path')
+const nodeHtmlToImage = require('node-html-to-image')
+const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'))
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
 const BaseTime = {
@@ -144,6 +148,99 @@ const fixStrLength = (targetLength, str) => {
 	return str
 }
 
+const RenderFerryImage = (now, info, callback) => {
+	// let output = path.join(IMAGE_DATA, 'mabi_recipe', `${name}.png`)
+	let output = path.join(`timetable.png`)
+
+	nodeHtmlToImage({
+		output,
+		html: `
+<html>
+  <head>
+    <title></title>
+    <style>
+    	* {
+    		margin: 0;
+    		border: 0;
+    		padding: 0;
+    	}
+    	body {
+    		width: 640px;
+    	}
+    	.main-container {
+    		padding: 20px;
+    		background-color: rgba(1,34,115,1);
+    	}
+    	.port-group {
+    		margin-bottom: 20px;
+    	}
+    	.port-group .port-label{
+    		font-size: 40px;
+    		color: #fff;
+    	}
+    	.time-table-container {
+    		margin-top: 20px;
+    		width: 600px;
+    	}
+    	.time-table-container .time-table-header,
+    	.time-table-container .time-table-row{
+    		font-size: 16px;
+    		display: flex;
+    		color: #fff;
+    	}
+    	.time-table-container .time-table-row{
+    		background-color: #ff0;	
+    	}
+    	.time-table-container .time-table-col-1{
+    		width: 150px;
+    	}
+    	.time-table-container .time-table-col-2{
+    		width: 150px;
+    	}
+    	.time-table-container .time-table-col-3{
+    		width: 150px;
+    	}
+    	.time-table-container .time-table-col-4{
+    		width: 150px;
+    	}
+    </style>
+  </head>
+  <body>
+  	<div class="main-container">
+  		${info.map(port => `
+				<div class="port-group">
+					<div class="port-label">${port.label}</div>
+					<div class="time-table-container">
+						<div class="time-table-header">
+							<div class="time-table-col time-table-col-1">Destination</div>
+							<div class="time-table-col time-table-col-2">ETD</div>
+							<div class="time-table-col time-table-col-3">ETA</div>
+							<div class="time-table-col time-table-col-4">status</div>
+						</div>
+						${port.arrival.map(arrival => arrival.times.map((time, index) => `
+							<div class="time-table-row">
+								<div class="time-table-col time-table-col-1">${arrival.to}</div>
+								<div class="time-table-col time-table-col-2">${RenderTime(time[2])}</div>
+								<div class="time-table-col time-table-col-3">${RenderTime(time[3])}</div>
+								<div class="time-table-col time-table-col-4">${arrival.status.group == index ? `${['WAIT', 'CHECK IN'][arrival.status.target]}(${RenderCountDown(arrival.status.timeOffset)})`: ''}</div>
+							</div>
+						`)).join('')}
+					</div>
+				</div>
+  		`).join('')}
+		</div>
+  </body>
+</html>
+`
+	})
+		.then(() => {
+			console.log(`保存timetable.png成功！`)
+			// let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_recipe', `${name}.png`)}]`
+			// callback(imgMsg)
+		})
+
+}
+
 const FerryTimetable = (qq, groupId, callback) => {
 	if(!(groupId == 577587780 || qq == 799018865)) {
 		return
@@ -162,7 +259,7 @@ const FerryTimetable = (qq, groupId, callback) => {
 			})
 		}
 	})
-
+	
 	let out = `now: ${RenderTime(now)}\n`
 	info.forEach(port => {
 		out += `================\n`
@@ -172,10 +269,11 @@ const FerryTimetable = (qq, groupId, callback) => {
 		out += '\n'
 	})
 	console.log(out)
+	RenderFerryImage(now, info, callback)
 	// drawTxtImage('', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
-// FerryTimetable()
+// FerryTimetable(799018865, 1)
 module.exports = {
 	FerryTimetable
 }

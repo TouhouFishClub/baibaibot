@@ -1205,10 +1205,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	// 	return
   // }
   if(con == '轮渡时刻表') {
-		if(from != 799018865) {
-			return
-		}
-		FerryTimetable(callback)
+		FerryTimetable(from, groupid, callback)
 		return
   }
   if(con == '打开财富密码') {
