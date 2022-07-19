@@ -91,27 +91,81 @@ const FindCurrentTimes = (now, baseTimeId, timeOffset, count = 1) => {
 	return out
 }
 
+const AddZero = num => num < 10 ? `0${num}` : num
+
+
 const RenderTime = ts => {
 	let d = new Date(ts)
-	return `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+	return `${d.getHours()}:${AddZero(d.getMinutes())}:${AddZero(d.getSeconds())}`
 }
 
-const FerryTimetable = callback => {
-	let out = '', now = Date.now()
-	out += `now: ${RenderTime(now)}\n`
-	Ferry.forEach(routing => {
-		out += ''
-		out += `================\n`
-		out += `${routing.from} -> ${routing.to}\n`
-		let times = FindCurrentTimes(now, routing.baseTime, routing.timeOffset, 3)
-		// out += `${FindCurrentTimes(now, routing.baseTime, routing.timeOffset).map(ts => RenderTime(ts))}\n`
-		out += `${times.map(gt => gt.map(ts => RenderTime(ts))).join('\n')}\n`
+const RenderCountDown = ts => `${~~(ts / 1000 / 60)}:${AddZero(~~(ts / 1000) % 60)}`
+
+const checkStatus = (times, targetTs) => {
+	for(let i = 0; i < times.length; i ++) {
+		let targetGroup = times[i]
+		if(targetTs < targetGroup[1] && targetTs >= targetGroup[0]){
+			return {
+				group: i,
+				target: 0,
+				timeOffset: targetGroup[1] - targetTs
+			}
+		}
+		if(targetTs < targetGroup[2] && targetTs >= targetGroup[1]){
+			return {
+				group: i,
+				target: 1,
+				timeOffset: targetGroup[2] - targetTs
+			}
+		}
+	}
+	return {
+		group: -1,
+		target: -1,
+		timeOffset: 0
+	}
+}
+
+const fixStrLength = (targetLength, str) => {
+	let sl =  str.replace(/[^\u0000-\u00ff]/g, "aa").length
+	if (sl < targetLength) {
+		return `${str}${new Array(targetLength - sl).fill(' ').join('')}`
+	}
+	return str
+}
+
+const FerryTimetable = (qq, groupId, callback) => {
+	if(!(groupId == 577587780 || qq == 799018865)) {
+		return
+	}
+	let now = Date.now()
+	let info = Array.from(new Set(Ferry.map(x => x.from))).map(port => {
+		return {
+			label: port,
+			arrival: Ferry.filter(x => x.from == port).map(routing => {
+				let times = FindCurrentTimes(now, routing.baseTime, routing.timeOffset, 3)
+				return {
+					to: routing.to,
+					times,
+					status: checkStatus(times, now)
+				}
+			})
+		}
 	})
-	// console.log(out)
-	drawTxtImage('', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
+
+	let out = `now: ${RenderTime(now)}\n`
+	info.forEach(port => {
+		out += `================\n`
+		out += `${port.label}\n`
+		out += `Destination\t${fixStrLength(8, 'ETD')}\t${fixStrLength(8, 'ETA')}\tstatus\n`
+		out += port.arrival.map(arrival => arrival.times.map((time, index) => `${arrival.to}\t${RenderTime(time[2])}\t${RenderTime(time[3])}\t${arrival.status.group == index ? `${['WAIT', 'CHECK IN'][arrival.status.target]}(${RenderCountDown(arrival.status.timeOffset)})`: ''}`).join('\n')).join('\n')
+		out += '\n'
+	})
+	console.log(out)
+	// drawTxtImage('', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
-// FerryTimetable()
-module.exports = {
-	FerryTimetable
-}
+FerryTimetable()
+// module.exports = {
+// 	FerryTimetable
+// }
