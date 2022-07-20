@@ -431,6 +431,24 @@ function addSendQueue(groupid,msg,botqq){
     });
 }
 
+const formatMsg = msg => {
+	let out = []
+	msg.split('[CQ:').forEach((cqmsg, index) => {
+		if(index) {
+
+		} else {
+			if(cqmsg) {
+				out.push({
+					"type": "text",
+					"data": {
+						"text": cqmsg
+					}
+				})
+			}
+		}
+	})
+}
+
 const formatSize = (byte) => {
   let sizeOpt = ['byte', 'KB', 'MB', 'GB', 'TB'], i = 0, t = byte
   while(i < sizeOpt.length && t > 1) {
