@@ -1204,7 +1204,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   //   carrot(false, callback, groupid)
 	// 	return
   // }
-  if(con == '轮渡时刻表') {
+  if(con == '轮渡时刻表' || con == 'mft') {
 		FerryTimetable(from, groupid, callback)
 		return
   }

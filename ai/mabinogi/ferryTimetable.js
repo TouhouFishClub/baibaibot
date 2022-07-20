@@ -3,6 +3,31 @@ const path = require('path')
 const nodeHtmlToImage = require('node-html-to-image')
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'))
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
+const font2base64 = require('node-font2base64')
+//THEME
+const THEMES = {
+	BG: '#012273',
+	PORT_LABEL: '#FFF',
+	TEXT: '#FFF',
+	TIME: '#FFA',
+	ROW_BG_ST: '#3C76FF',
+	ROW_BG_FROM: '#3969e3',
+	ROW_BG_TO: '#042e83',
+	ROW_BG_ED: '#001F5D',
+	STATUS_CHECK_IN: '#34ff34',
+	STATUS_WAIT: '#ffff1a'
+}
+//FONTS
+const ALGER = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'ALGER.ttf'))
+// const SANS_SERIF = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'Microsoft Sans Serif.ttf'))
+const AGT_SUPER_BOLD = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'ArupalaGroteskTrial-SuperBold.ttf'))
+// const Acosta = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'Acosta.otf'))
+const FPT_BOLD = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'FPTypewriterDEMO-Bold.otf'))
+// const MasSimple = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'MasSimple_1.0.ttf'))
+// const NortuneExtrablack = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'NortuneExtrablack-L3zO4.ttf'))
+const Corp_Bold = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'Corp-Bold.otf'))
+const MalbergTrial = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'MalbergTrial-Heavy.ttf'))
+// require('../../font/')
 
 const BaseTime = {
 	Iria: {
@@ -107,7 +132,6 @@ const FindCurrentTimes = (now, baseTimeId, timeOffset, count = 1) => {
 
 const AddZero = num => num < 10 ? `0${num}` : num
 
-
 const RenderTime = ts => {
 	let d = new Date(ts)
 	return `${d.getHours()}:${AddZero(d.getMinutes())}:${AddZero(d.getSeconds())}`
@@ -149,8 +173,8 @@ const fixStrLength = (targetLength, str) => {
 }
 
 const RenderFerryImage = (now, info, callback) => {
-	// let output = path.join(IMAGE_DATA, 'mabi_recipe', `${name}.png`)
-	let output = path.join(`timetable.png`)
+	let output = path.join(IMAGE_DATA, 'mabi_other', `timetable.png`)
+	// let output = path.join(`timetable.png`)
 
 	nodeHtmlToImage({
 		output,
@@ -159,6 +183,27 @@ const RenderFerryImage = (now, info, callback) => {
   <head>
     <title></title>
     <style>
+    	/* inject font face */
+    	@font-face {
+        font-family: 'ALGER';
+        src: url(${ALGER}) format('truetype');
+      }
+    	@font-face {
+        font-family: 'AGT_SUPER_BOLD';
+        src: url(${AGT_SUPER_BOLD}) format('truetype');
+      }
+    	@font-face {
+        font-family: 'MalbergTrial';
+        src: url(${MalbergTrial}) format('truetype');
+      }
+    	@font-face {
+        font-family: 'FPT_BOLD';
+        src: url(${FPT_BOLD}) format('opentype');
+      }
+    	@font-face {
+        font-family: 'Corp_Bold';
+        src: url(${Corp_Bold}) format('opentype');
+      }
     	* {
     		margin: 0;
     		border: 0;
@@ -169,39 +214,79 @@ const RenderFerryImage = (now, info, callback) => {
     	}
     	.main-container {
     		padding: 20px;
-    		background-color: rgba(1,34,115,1);
+    		background-color: ${THEMES.BG};
     	}
     	.port-group {
     		margin-bottom: 20px;
     	}
     	.port-group .port-label{
     		font-size: 40px;
-    		color: #fff;
+    		font-family: ALGER;
+    		color: ${THEMES.PORT_LABEL};
     	}
     	.time-table-container {
-    		margin-top: 20px;
+    		margin-top: 10px;
     		width: 600px;
+    		display: flex;
+    		flex-direction: column;
+    		justify-content: flex-start;
     	}
     	.time-table-container .time-table-header,
     	.time-table-container .time-table-row{
-    		font-size: 16px;
+    		font-size: 20px;
     		display: flex;
-    		color: #fff;
+    		align-items: center;
+    		color: ${THEMES.TEXT};
+    	}
+    	.time-table-container .time-table-header{
+    		font-family: FPT_BOLD;
     	}
     	.time-table-container .time-table-row{
-    		background-color: #ff0;	
+    		height: 40px;
+    		border-top: 1px solid #fff;
+    		background: linear-gradient(to bottom, ${THEMES.ROW_BG_ST}, ${THEMES.ROW_BG_FROM} 45%, ${THEMES.ROW_BG_TO} 55%, ${THEMES.ROW_BG_ED} 100%);
     	}
     	.time-table-container .time-table-col-1{
-    		width: 150px;
+    		box-sizing: border-box;
+    		padding-left: 10px;
+    		width: 220px;
     	}
     	.time-table-container .time-table-col-2{
-    		width: 150px;
+    		width: 120px;
     	}
     	.time-table-container .time-table-col-3{
-    		width: 150px;
+    		width: 120px;
     	}
     	.time-table-container .time-table-col-4{
-    		width: 150px;
+    		width: 140px;
+    	}
+    	.time-table-container .time-table-row{
+    	}
+    	.time-table-container .time-table-row .time-table-col-1{
+    		font-size: 24px;
+    		font-family: AGT_SUPER_BOLD;
+    	}
+    	.time-table-container .time-table-row .time-table-col-2{
+    		font-size: 22px;
+    		color: ${THEMES.TIME};
+    		font-family: Corp_Bold;
+    	}
+    	.time-table-container .time-table-row .time-table-col-3{
+    		font-size: 22px;
+    		color: ${THEMES.TIME};
+    		font-family: Corp_Bold;
+    	}
+    	.time-table-container .time-table-row .time-table-col-4{
+    		font-family: MalbergTrial;
+    		font-size: 20px;
+    	}
+    	.time-table-container .time-table-row .status{
+    	}
+    	.time-table-container .time-table-row .status.wait{
+    		color: ${THEMES.STATUS_WAIT};
+    	}
+    	.time-table-container .time-table-row .status.check-in{
+    		color: ${THEMES.STATUS_CHECK_IN};
     	}
     </style>
   </head>
@@ -222,9 +307,16 @@ const RenderFerryImage = (now, info, callback) => {
 								<div class="time-table-col time-table-col-1">${arrival.to}</div>
 								<div class="time-table-col time-table-col-2">${RenderTime(time[2])}</div>
 								<div class="time-table-col time-table-col-3">${RenderTime(time[3])}</div>
-								<div class="time-table-col time-table-col-4">${arrival.status.group == index ? `${['WAIT', 'CHECK IN'][arrival.status.target]}(${RenderCountDown(arrival.status.timeOffset)})`: ''}</div>
+								<div class="time-table-col time-table-col-4">
+									${arrival.status.group == index ? `
+										${[
+											'<span class="status wait">WAIT</span>',
+											'<span class="status check-in">CHECK IN</span>'
+											][arrival.status.target]}(${RenderCountDown(arrival.status.timeOffset)})
+									`: ''}
+								</div>
 							</div>
-						`)).join('')}
+						`).join('')).join('')}
 					</div>
 				</div>
   		`).join('')}
@@ -235,8 +327,8 @@ const RenderFerryImage = (now, info, callback) => {
 	})
 		.then(() => {
 			console.log(`保存timetable.png成功！`)
-			// let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_recipe', `${name}.png`)}]`
-			// callback(imgMsg)
+			let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `timetable.png`)}]`
+			callback(imgMsg)
 		})
 
 }
@@ -259,16 +351,15 @@ const FerryTimetable = (qq, groupId, callback) => {
 			})
 		}
 	})
-	
-	let out = `now: ${RenderTime(now)}\n`
-	info.forEach(port => {
-		out += `================\n`
-		out += `${port.label}\n`
-		out += `Destination\t${fixStrLength(8, 'ETD')}\t${fixStrLength(8, 'ETA')}\tstatus\n`
-		out += port.arrival.map(arrival => arrival.times.map((time, index) => `${arrival.to}\t${RenderTime(time[2])}\t${RenderTime(time[3])}\t${arrival.status.group == index ? `${['WAIT', 'CHECK IN'][arrival.status.target]}(${RenderCountDown(arrival.status.timeOffset)})`: ''}`).join('\n')).join('\n')
-		out += '\n'
-	})
-	console.log(out)
+	// let out = `now: ${RenderTime(now)}\n`
+	// info.forEach(port => {
+	// 	out += `================\n`
+	// 	out += `${port.label}\n`
+	// 	out += `Destination\t${fixStrLength(8, 'ETD')}\t${fixStrLength(8, 'ETA')}\tstatus\n`
+	// 	out += port.arrival.map(arrival => arrival.times.map((time, index) => `${arrival.to}\t${RenderTime(time[2])}\t${RenderTime(time[3])}\t${arrival.status.group == index ? `${['WAIT', 'CHECK IN'][arrival.status.target]}(${RenderCountDown(arrival.status.timeOffset)})`: ''}`).join('\n')).join('\n')
+	// 	out += '\n'
+	// })
+	// console.log(out)
 	RenderFerryImage(now, info, callback)
 	// drawTxtImage('', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
