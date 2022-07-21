@@ -32,7 +32,8 @@ const MalbergTrial = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', 
 const BaseTime = {
 	Iria: {
 		// base: new Date('2022-06-24 1:55:28'), //到港时间
-		base: new Date('2022-07-18 18:07:53'), //到港时间
+		// base: new Date('2022-07-18 18:07:53'), //到港时间
+		base: new Date('2022-07-20 18:08:33'), //到港时间 -1：30
 		interval: [5*60*1000, 6*60*1000, 4*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
 	},
 	// Connous: {
