@@ -12,6 +12,7 @@ var path = require('path');
 //const { QQ, MsgHandler } = require('./qqlib');
 
 const{saveTxt,answer,getMsgCount} = require(path.join(__dirname, '/lib/mongo.js'))
+const { drawTxtImage } = require('./cq/drawImageBytxt')
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
@@ -842,7 +843,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ret = ret + "大头菜价记录和预测【dtsh】\n"
     ret = ret + "其他/意见或建议/定制功能请到\n"
     ret = ret + "https://github.com/TouhouFishClub/baibaibot/issues"
-    callback(ret.trim());
+		drawTxtImage('', ret.trim(), callback, {color: 'black', font: 'STXIHEI.TTF'})
+    // callback(ret.trim());
     return;
   }
 
@@ -1053,22 +1055,22 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.match(/^尔格\d{1,2}突破\d{1,5}手$/)) {
     ergo(from, content, callback)
   }
-  if(content == '洛奇来一发') {
-    mabiGacha(from, callback, 1)
-    return;
-  }
-  if(content == '洛奇来十连') {
-    mabiGacha(from, callback, 11)
-    return;
-  }
-  if(content == '洛奇来一单') {
-    mabiGacha(from, callback, 60)
-    return;
-  }
-  if(content == '洛奇来十单') {
-    mabiGacha(from, callback, 600)
-    return;
-  }
+  // if(content == '洛奇来一发') {
+  //   mabiGacha(from, callback, 1)
+  //   return;
+  // }
+  // if(content == '洛奇来十连') {
+  //   mabiGacha(from, callback, 11)
+  //   return;
+  // }
+  // if(content == '洛奇来一单') {
+  //   mabiGacha(from, callback, 60)
+  //   return;
+  // }
+  // if(content == '洛奇来十单') {
+  //   mabiGacha(from, callback, 600)
+  //   return;
+  // }
 
   if(content.startsWith('menu') || content.startsWith('菜单')) {
     menu(content, groupid, callback)
@@ -1510,7 +1512,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       ret = ret + '`d50x10：ROLL10次小于50整数\n';
       ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n闲聊：``+对话\n";
       ret = ret + "今日运势占卜【今日运势】【jrrp】\n";
-      callback(ret);
+			drawTxtImage('', ret.trim(), callback, {color: 'black', font: 'STXIHEI.TTF'})
+      // callback(ret);
     }else{
       reply(c1,name,callback,groupid,from,groupName,nickname,port);
     }
