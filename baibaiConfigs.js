@@ -5,6 +5,7 @@ let TEST = 'baibai'
 var mongourl = 'mongodb://192.168.17.236:27050/db_bot';
 var mongoff14url = 'mongodb://192.168.17.236:27050/db_ff14';
 var myip = '192.168.17.236';
+const LOCALE_IP = '192.168.17.236'
 
 module.exports = {
   IMAGE_DATA,
@@ -12,5 +13,6 @@ module.exports = {
   TEST,
   mongourl,
   mongoff14url,
-  myip
+  myip,
+	LOCALE_IP
 }
