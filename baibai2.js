@@ -426,6 +426,8 @@ function addSendQueue(groupid,msg,botqq){
     port = 27334;
   }else if(botqq==11){
     port = 29334;
+  }else if(botqq==12){
+    port = 26334;
   }else{
     port = 23334;
   }
