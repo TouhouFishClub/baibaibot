@@ -1159,7 +1159,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(con.startsWith('jrrp') || con.startsWith('今日运势')){
-    if(port == 29334){
+    if(port == 29334 || port == 26334){
       return
     }
     let s = con.substring(4).trim()
@@ -1472,7 +1472,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(rcontent.startsWith("抽卡")){
-    if(port == 29334){
+    if(port == 29334 || port == 26334){
       return
     }
     drawNameCard(name,from,callback,groupid);
@@ -1481,14 +1481,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
   if(rcontent.startsWith("猫图")||rcontent.startsWith("吸猫")){
-    if(port == 29334){
+    if(port == 29334 || port == 26334){
       return
     }
     catreply(rcontent.substring(2),from,callback);
     return;
   }
 
-  if(!new Set([23334, 29334]).has(port)){
+  if(!new Set([23334, 29334, 26334]).has(port)){
 
     if(rcontent.startsWith("炼铜1")){
       copperReply(rcontent,groupid,from,callback,port);
@@ -1501,7 +1501,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     }
   }
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
-    if(port == 29334){
+    if(port == 29334 || port == 26334){
       return
     }
     runsetu(rcontent,groupid,from,callback,port);
