@@ -158,6 +158,7 @@ initWS2();
 initWS3();
 initWS4();
 initWS5();
+initWS6();
 
 var wsonline = false;
 function initWS(){
@@ -300,6 +301,34 @@ function initWS5(){
     client.connect('ws://'+myip+':27335/event');
 }
 
+function initWS6(){
+  var WebSocketClient = require('websocket').client;
+
+  var client = new WebSocketClient();
+
+  client.on('connectFailed', function(error) {
+    console.log('Connect Error: ' + error.toString());
+  });
+
+  client.on('connect', function(connection) {
+    wsonline = true;
+    console.log('WebSocket Client Connected26335');
+    connection.on('error', function(error) {
+      console.log("Connection Error: " + error.toString());
+    });
+    connection.on('close', function() {
+      wsonline=false;
+      console.log('echo-protocol Connection Closed');
+    });
+    connection.on('message', function(message) {
+      if (message.type === 'utf8') {
+        handleMsg(JSON.parse(message.utf8Data),12)
+      }
+    });
+  });
+  client.connect('ws://'+myip+':26335/event');
+}
+
 function reconnect(){
   if(!wsonline){
     initWS();
@@ -397,6 +426,8 @@ function addSendQueue(groupid,msg,botqq){
     port = 27334;
   }else if(botqq==11){
     port = 29334;
+  }else if(botqq==12){
+    port = 26334;
   }else{
     port = 23334;
   }
@@ -533,6 +564,8 @@ function handleMsg_D(msgObj,botqq) {
     port = 27334;
   }else if(botqq==11){
     port = 29334;
+  }else if(botqq==12){
+    port = 26334;
   }else{
     var sf = (self+"").substring(0,5);
     if(sf=="38490"){
@@ -1126,7 +1159,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(con.startsWith('jrrp') || con.startsWith('今日运势')){
-    if(port == 29334){
+    if(port == 29334 || port == 26334){
       return
     }
     let s = con.substring(4).trim()
@@ -1439,7 +1472,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(rcontent.startsWith("抽卡")){
-    if(port == 29334){
+    if(port == 29334 || port == 26334){
       return
     }
     drawNameCard(name,from,callback,groupid);
@@ -1448,14 +1481,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
   if(rcontent.startsWith("猫图")||rcontent.startsWith("吸猫")){
-    if(port == 29334){
+    if(port == 29334 || port == 26334){
       return
     }
     catreply(rcontent.substring(2),from,callback);
     return;
   }
 
-  if(!new Set([23334, 29334]).has(port)){
+  if(!new Set([23334, 29334, 26334]).has(port)){
 
     if(rcontent.startsWith("炼铜1")){
       copperReply(rcontent,groupid,from,callback,port);
@@ -1468,7 +1501,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     }
   }
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
-    if(port == 29334){
+    if(port == 29334 || port == 26334){
       return
     }
     runsetu(rcontent,groupid,from,callback,port);
