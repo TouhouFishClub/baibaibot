@@ -29,11 +29,17 @@ const Corp_Bold = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..
 const MalbergTrial = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'MalbergTrial-Heavy.ttf'))
 // require('../../font/')
 
+const calcOffset = (time1, time2, intervalArray) => {
+	let basePeriod = intervalArray[0] + intervalArray[1]
+	return (time2.getTime() - time1.getTime() - ~~((time2.getTime() - time1.getTime()) / basePeriod) * basePeriod) / 1000
+}
+
 const BaseTime = {
 	Iria: {
 		// base: new Date('2022-06-24 1:55:28'), //到港时间
 		// base: new Date('2022-07-18 18:07:53'), //到港时间
-		base: new Date('2022-07-20 18:08:33'), //到港时间 -1：20
+		// base: new Date('2022-07-20 18:08:33'), //到港时间 -1：20
+		base: new Date('2022-07-27 18:09:12'), //到港时间 +279 / +4'39"
 		interval: [5*60*1000, 6*60*1000, 4*60*1000], //等待到港时间，等待开船时间，等待到目的地时间
 		offset: [7, -62, -1, -13, 11, 8, -13, -5, 25, 0]
 	},
@@ -48,7 +54,8 @@ const BaseTime = {
 	Belvast: {
 		// base: new Date('2022-06-24 2:58:28'), //到港时间
 		// base: new Date('2022-07-18 d17:00:27'), //到港时间
-		base: new Date('2022-07-22 2:22:05'), //到港时间 - 2：20
+		// base: new Date('2022-07-22 2:22:05'), //到港时间 - 2：20
+		base: new Date('2022-07-27 18:24:42'), //到港时间 +37 / +0'37"
 		interval: [(2*60+30)*1000, (3*60+30)*1000, 2*60*1000], //等待到港时间，等待开船时间，等待到目的地时间
 		offset: [7, -61, 0, -10, 13, 8, -11, -4, 24, 0]
 	}
