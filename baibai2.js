@@ -1055,22 +1055,22 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.match(/^尔格\d{1,2}突破\d{1,5}手$/)) {
     ergo(from, content, callback)
   }
-  // if(content == '洛奇来一发') {
-  //   mabiGacha(from, callback, 1)
-  //   return;
-  // }
-  // if(content == '洛奇来十连') {
-  //   mabiGacha(from, callback, 11)
-  //   return;
-  // }
-  // if(content == '洛奇来一单') {
-  //   mabiGacha(from, callback, 60)
-  //   return;
-  // }
-  // if(content == '洛奇来十单') {
-  //   mabiGacha(from, callback, 600)
-  //   return;
-  // }
+  if(content == '洛奇来一发') {
+    mabiGacha(from, callback, 1)
+    return;
+  }
+  if(content == '洛奇来十连') {
+    mabiGacha(from, callback, 11)
+    return;
+  }
+  if(content == '洛奇来一单') {
+    mabiGacha(from, callback, 60)
+    return;
+  }
+  if(content == '洛奇来十单') {
+    mabiGacha(from, callback, 600)
+    return;
+  }
 
   if(content.startsWith('menu') || content.startsWith('菜单')) {
     menu(content, groupid, callback)
