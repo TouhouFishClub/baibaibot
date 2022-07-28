@@ -125,7 +125,7 @@ const { calendar } = require('./ai/calendar.js')
 const {handleGaReply,handleMazeReply} = require('./ai/image/gimage');
 
 const { renderColorBoard } = require('./ai/mabinogi/renderColor')
-const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
+
 const { trade, tradeOcr } = require('./ai/mabinogi/trade')
 
 const { searchMabiRecipe } = require('./ai/mabinogi/recipe/searchRecipe')
@@ -1058,30 +1058,6 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(content == '关闭回音石活动') {
 	  echoStoneEventSwitch(groupid, callback, false)
-	  return
-  }
-
-  if(content == '开启活动提示') {
-	  mabinogi_red_packet_set(groupid, port, callback)
-	  return
-  }
-
-  if(content == '关闭活动提示') {
-	  mabinogi_red_packet_remove(groupid, port, callback)
-	  return
-  }
-
-  if(content == '123') {
-    callback('456')
-  }
-
-  if(content == '查询红包活动') {
-    mabinogi_red_packet(callback)
-	  return
-  }
-
-  if(content == '查询自动发送') {
-    mabinogi_red_packet_list(callback)
 	  return
   }
 

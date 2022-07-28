@@ -75,7 +75,7 @@ const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
 	let items = randomGacha(gacha, gachaCount)
 
 	// console.log(point)
-	
+
 	// if(userGachaLimit[user]) {
 	// 	if(Date.now() < userGachaLimit[user].expire) {
 	// 		drawTxtImage(`[CQ:at,qq=${user}]`, `你还在搬砖赚钱，请${createTimeStr(userGachaLimit[user].expire - Date.now())}后再抽`, callback, {color: 'black', font: 'STXIHEI.TTF'})

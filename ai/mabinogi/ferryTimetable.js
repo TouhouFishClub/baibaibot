@@ -36,12 +36,13 @@ const calcOffset = (time1, time2, intervalArray) => {
 
 const BaseTime = {
 	Iria: {
+		baseStr: '2022-07-27 18:09:12',
 		// base: new Date('2022-06-24 1:55:28'), //到港时间
 		// base: new Date('2022-07-18 18:07:53'), //到港时间
 		// base: new Date('2022-07-20 18:08:33'), //到港时间 -1：20
 		base: new Date('2022-07-27 18:09:12'), //到港时间 +279 / +4'39"
 		interval: [5*60*1000, 6*60*1000, 4*60*1000], //等待到港时间，等待开船时间，等待到目的地时间
-		offset: [7, -62, -1, -13, 11, 8, -13, -5, 25, 0]
+		offset: [7, -62, -1, -13, 11, 8, -13, -5, 25, 0] //Eavan Pihne Altam
 	},
 	// Connous: {
 	// 	base: new Date('2022-07-18 18:07:53'), //到港时间
@@ -52,6 +53,7 @@ const BaseTime = {
 	// 	interval: [5*60*1000, 6*60*1000, 4*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
 	// },
 	Belvast: {
+		baseStr: '2022-07-27 18:24:42',
 		// base: new Date('2022-06-24 2:58:28'), //到港时间
 		// base: new Date('2022-07-18 d17:00:27'), //到港时间
 		// base: new Date('2022-07-22 2:22:05'), //到港时间 - 2：20
@@ -227,6 +229,20 @@ const RenderFerryImage = (now, info, callback) => {
     		padding: 20px;
     		background-color: ${THEMES.BG};
     	}
+    	.main-container .info-group{
+    		color: ${THEMES.TEXT};
+    		margin-bottom: 15px;
+    	}
+    	.main-container .info-group .label{
+    		font-size: 16px;
+    	}
+    	.main-container .info-group .desc{
+    		font-size: 16px;
+    		margin-top: 5px;
+    	}
+    	.main-container .info-group .desc span{
+    		margin-right: 10px;
+    	}
     	.port-group {
     		margin-bottom: 20px;
     	}
@@ -303,6 +319,10 @@ const RenderFerryImage = (now, info, callback) => {
   </head>
   <body>
   	<div class="main-container">
+  		<div class="info-group">
+  			<div class="label">Update Time</div>
+  			<div class="desc">${Object.keys(BaseTime).map(area => `<span>${area}: ${BaseTime[area].baseStr}</span>`)}</div>
+			</div>
   		${info.map(port => `
 				<div class="port-group">
 					<div class="port-label">${port.label}</div>
