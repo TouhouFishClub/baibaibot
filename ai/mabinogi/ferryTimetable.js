@@ -358,7 +358,7 @@ const RenderFerryImage = (now, info, callback) => {
 							Object.keys(BaseTime[area].offset).map(server => 
 								`<div class="desc-line"><span>${server}</span>
 								${BaseTime[area].offset[server].map(offset => 
-									`<span class="${offset < 0 ? 'early' : 'late'}">${offset < 0 ? '-' : ''}${RenderCountDown(offset < 0 ? -offset : offset)}</span>`
+									`<span class="${offset < 0 ? 'early' : 'late'}">${offset < 0 ? '-' : ''}${RenderCountDown(offset < 0 ? -offset*1000 : offset*1000)}</span>`
 								)}</div>`
 							).join('')
 						).join('')
