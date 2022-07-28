@@ -365,7 +365,7 @@ function initWS7(){
     });
     connection.on('message', function(message) {
       if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),12)
+        handleMsg(JSON.parse(message.utf8Data),13)
       }
     });
   });
