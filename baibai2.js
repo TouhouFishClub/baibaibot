@@ -1511,7 +1511,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(!new Set([23334, 29334, 26334]).has(port)){
+  if(!new Set([23334, 29334, 26334, 28334]).has(port)){
 
     if(rcontent.startsWith("炼铜1")){
       copperReply(rcontent,groupid,from,callback,port);
@@ -1524,7 +1524,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     }
   }
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
-    if(port == 29334 || port == 26334){
+    if(port == 29334 || port == 26334 || port == 28334){
       return
     }
     runsetu(rcontent,groupid,from,callback,port);
@@ -1657,9 +1657,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   if(content.indexOf('百百')>-1){
-    if(port == 29334){
-      return
-    }
+    // if(port == 29334){
+    //   return
+    // }
     tulingMsg(from,content.trim(),callback,groupid);
     return;
   }
