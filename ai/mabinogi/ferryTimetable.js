@@ -19,7 +19,7 @@ const THEMES = {
 }
 //FONTS
 const ALGER = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'ALGER.ttf'))
-// const SANS_SERIF = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'Microsoft Sans Serif.ttf'))
+const SANS_SERIF = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'Microsoft Sans Serif.ttf'))
 const AGT_SUPER_BOLD = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'ArupalaGroteskTrial-SuperBold.ttf'))
 // const Acosta = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'Acosta.otf'))
 const FPT_BOLD = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'FPTypewriterDEMO-Bold.otf'))
@@ -42,7 +42,11 @@ const BaseTime = {
 		// base: new Date('2022-07-20 18:08:33'), //到港时间 -1：20
 		base: new Date('2022-07-27 18:09:12'), //到港时间 +279 / +4'39"
 		interval: [5*60*1000, 6*60*1000, 4*60*1000], //等待到港时间，等待开船时间，等待到目的地时间
-		offset: [7, -62, -1, -13, 11, 8, -13, -5, 25, 0] //Eavan Pihne Altam
+		offset: {
+			'Eavan': [7, -62, -1, -13, 11, 8, -13, -5, 25, 0],
+			'Altam': [],
+			'Pihne': [],
+		}  //Eavan Pihne Altam
 	},
 	// Connous: {
 	// 	base: new Date('2022-07-18 18:07:53'), //到港时间
@@ -59,7 +63,11 @@ const BaseTime = {
 		// base: new Date('2022-07-22 2:22:05'), //到港时间 - 2：20
 		base: new Date('2022-07-27 18:24:42'), //到港时间 +37 / +0'37"
 		interval: [(2*60+30)*1000, (3*60+30)*1000, 2*60*1000], //等待到港时间，等待开船时间，等待到目的地时间
-		offset: [7, -61, 0, -10, 13, 8, -11, -4, 24, 0]
+		offset: {
+			'Eavan': [7, -61, 0, -10, 13, 8, -11, -4, 24, 0],
+			'Altam': [],
+			'Pihne': [],
+		}
 	}
 }
 
@@ -198,6 +206,10 @@ const RenderFerryImage = (now, info, callback) => {
     <style>
     	/* inject font face */
     	@font-face {
+        font-family: 'SANS_SERIF';
+        src: url(${SANS_SERIF}) format('truetype');
+      }
+    	@font-face {
         font-family: 'ALGER';
         src: url(${ALGER}) format('truetype');
       }
@@ -232,6 +244,7 @@ const RenderFerryImage = (now, info, callback) => {
     	.main-container .info-group{
     		color: ${THEMES.TEXT};
     		margin-bottom: 15px;
+    		font-family: SANS_SERIF;
     	}
     	.main-container .info-group .label{
     		font-size: 16px;
@@ -239,6 +252,15 @@ const RenderFerryImage = (now, info, callback) => {
     	.main-container .info-group .desc{
     		font-size: 16px;
     		margin-top: 5px;
+    	}
+    	.main-container .info-group .desc.offset-status{
+    		font-family: MalbergTrial;
+    	}
+    	.main-container .info-group .desc.offset-status .early{
+    		color: ${THEMES.STATUS_CHECK_IN}
+    	}
+    	.main-container .info-group .desc.offset-status .late{
+    		color: ${THEMES.STATUS_WAIT}
     	}
     	.main-container .info-group .desc span{
     		margin-right: 10px;
@@ -321,7 +343,24 @@ const RenderFerryImage = (now, info, callback) => {
   	<div class="main-container">
   		<div class="info-group">
   			<div class="label">Update Time</div>
-  			<div class="desc">${Object.keys(BaseTime).map(area => `<span>${area}: ${BaseTime[area].baseStr}</span>`)}</div>
+  			<div class="desc">
+					${Object.keys(BaseTime).map(area => `<span>${area}: ${BaseTime[area].baseStr}</span>`).join('')}
+				</div>
+			</div>
+  		<div class="info-group">
+  			<div class="label">Channel Offset</div>
+  			<div class="desc offset-status">
+					${
+						Object.keys(BaseTime).map(area => 
+							Object.keys(BaseTime[area].offset).map(server => 
+								`<span>${server}</span>
+								${BaseTime[area].offset[server].map(offset => 
+									`<span class="${offset < 0 ? 'early' : 'late'}">${offset < 0 ? '-' : ''}${RenderCountDown(offset < 0 ? -offset : offset)}</span>`
+								)}`
+							).join('')
+						).join('')
+					}
+				</div>
 			</div>
   		${info.map(port => `
 				<div class="port-group">
