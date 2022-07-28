@@ -159,6 +159,22 @@ initWS3();
 initWS4();
 initWS5();
 initWS6();
+initWS7();
+
+const BOT_MASTER = [
+  {
+    port: 29334,
+    master: 782804214
+  },
+  {
+    port: 26334,
+    master: 1150926118
+  },
+  {
+    port: 28334,
+    master: 2512217733
+  }
+]
 
 var wsonline = false;
 function initWS(){
@@ -328,6 +344,33 @@ function initWS6(){
   });
   client.connect('ws://'+myip+':26335/event');
 }
+function initWS7(){
+  var WebSocketClient = require('websocket').client;
+
+  var client = new WebSocketClient();
+
+  client.on('connectFailed', function(error) {
+    console.log('Connect Error: ' + error.toString());
+  });
+
+  client.on('connect', function(connection) {
+    wsonline = true;
+    console.log('WebSocket Client Connected28335');
+    connection.on('error', function(error) {
+      console.log("Connection Error: " + error.toString());
+    });
+    connection.on('close', function() {
+      wsonline=false;
+      console.log('echo-protocol Connection Closed');
+    });
+    connection.on('message', function(message) {
+      if (message.type === 'utf8') {
+        handleMsg(JSON.parse(message.utf8Data),12)
+      }
+    });
+  });
+  client.connect('ws://'+myip+':28335/event');
+}
 
 function reconnect(){
   if(!wsonline){
@@ -428,6 +471,8 @@ function addSendQueue(groupid,msg,botqq){
     port = 29334;
   }else if(botqq==12){
     port = 26334;
+  }else if(botqq==13){
+    port = 28334;
   }else{
     port = 23334;
   }
@@ -566,6 +611,8 @@ function handleMsg_D(msgObj,botqq) {
     port = 29334;
   }else if(botqq==12){
     port = 26334;
+  }else if(botqq==13){
+    port = 28334;
   }else{
     var sf = (self+"").substring(0,5);
     if(sf=="38490"){
