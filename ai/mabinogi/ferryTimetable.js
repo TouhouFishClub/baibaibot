@@ -260,10 +260,10 @@ const RenderFerryImage = (now, info, callback) => {
     		font-family: MalbergTrial;
     	}
     	.main-container .info-group .desc.offset-status .early{
-    		color: ${THEMES.STATUS_CHECK_IN}
+    		color: #34ff34
     	}
     	.main-container .info-group .desc.offset-status .late{
-    		color: ${THEMES.STATUS_WAIT}
+    		color: #d80000
     	}
     	.main-container .info-group .desc span{
     		margin-right: 10px;
@@ -354,15 +354,15 @@ const RenderFerryImage = (now, info, callback) => {
   			<div class="label">Channel Offset</div>
   			<div class="desc offset-status">
 					${
-						Object.keys(BaseTime).map(area => 
-							Object.keys(BaseTime[area].offset).map(server => 
-								`<div class="desc-line"><span>${server}</span>
-								${BaseTime[area].offset[server].map(offset => 
-									`<span class="${offset < 0 ? 'early' : 'late'}">${offset < 0 ? '-' : ''}${RenderCountDown(offset < 0 ? -offset*1000 : offset*1000)}</span>`
-								)}</div>`
-							).join('')
-						).join('')
-					}
+			Object.keys(BaseTime).map(area =>
+				Object.keys(BaseTime[area].offset).map(server =>
+					`<div class="desc-line"><span>${server}</span>
+								${BaseTime[area].offset[server].map(offset =>
+						`<span class="${offset == 0 ? '' : offset < 0 ? 'early' : 'late'}">${offset == 0 ? '' : offset < 0 ? '-' : '+'}${RenderCountDown(offset < 0 ? -offset * 1000 : offset * 1000)}</span>`
+					)}</div>`
+				).join('')
+			).join('')
+		}
 				</div>
 			</div>
   		${info.map(port => `
@@ -383,10 +383,10 @@ const RenderFerryImage = (now, info, callback) => {
 								<div class="time-table-col time-table-col-4">
 									${arrival.status.group == index ? `
 										${[
-											'<span class="status wait">WAIT</span>',
-											'<span class="status check-in">CHECK IN</span>'
-											][arrival.status.target]}(${RenderCountDown(arrival.status.timeOffset)})
-									`: ''}
+			'<span class="status wait">WAIT</span>',
+			'<span class="status check-in">CHECK IN</span>'
+		][arrival.status.target]}(${RenderCountDown(arrival.status.timeOffset)})
+									` : ''}
 								</div>
 							</div>
 						`).join('')).join('')}
