@@ -35,8 +35,9 @@ const calcOffset = (time1, time2, intervalArray) => {
 }
 
 const ChannelOffset = {
+	// 'Eavan': [7, -62, -1, -13, 11, 8, -13, -5, 25, 0],
 	'Eavan': [-25, -70, -11, -16, 5, -2, -16, -19, 299, 0],
-	'Altam': [],
+	'Altam': [31, 43, -100, -121, 254, -117, 239, -215, -133, -116],
 	'Pihne': [],
 }
 
