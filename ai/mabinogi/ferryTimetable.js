@@ -253,6 +253,9 @@ const RenderFerryImage = (now, info, callback) => {
     		font-size: 16px;
     		margin-top: 5px;
     	}
+    	.main-container .info-group .desc .desc-line{
+    		margin-top: 3px;
+    	}
     	.main-container .info-group .desc.offset-status{
     		font-family: MalbergTrial;
     	}
@@ -353,10 +356,10 @@ const RenderFerryImage = (now, info, callback) => {
 					${
 						Object.keys(BaseTime).map(area => 
 							Object.keys(BaseTime[area].offset).map(server => 
-								`<span>${server}</span>
+								`<div class="desc-line"><span>${server}</span>
 								${BaseTime[area].offset[server].map(offset => 
 									`<span class="${offset < 0 ? 'early' : 'late'}">${offset < 0 ? '-' : ''}${RenderCountDown(offset < 0 ? -offset : offset)}</span>`
-								)}`
+								)}</div>`
 							).join('')
 						).join('')
 					}
