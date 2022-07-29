@@ -121,9 +121,9 @@ const Ferry = [
 	}
 ]
 
-const FindCurrentTimes = (now, baseTimeId, timeOffset, count = 1) => {
+const FindCurrentTimes = (now, baseTimeId, timeOffset, server = 'Eavan', channel = 9, count = 1) => {
 	let { base, interval } = BaseTime[baseTimeId]
-	let baseTime = base.getTime() - interval[0]
+	let baseTime = base.getTime() - interval[0] + (ChannelOffset[server][channel] || 0) * 1000
 	let waitTime = baseTime + ~~((now - (baseTime + timeOffset * 1000)) / (interval[0] + interval[1])) * (interval[0] + interval[1]) + timeOffset * 1000
 	let out = [], tmpTime
 	for(let i = 0; i < count; i ++) {
@@ -190,7 +190,7 @@ const fixStrLength = (targetLength, str) => {
 	return str
 }
 
-const RenderFerryImage = (now, info, callback) => {
+const RenderFerryImage = (now, info, ChannelOffset, callback) => {
 	let output = path.join(IMAGE_DATA, 'mabi_other', `timetable.png`)
 	// let output = path.join(`timetable.png`)
 
@@ -403,16 +403,37 @@ const RenderFerryImage = (now, info, callback) => {
 
 }
 
-const FerryTimetable = (qq, groupId, callback) => {
+const FerryTimetable = (content, qq, groupId, callback) => {
 	if(!(groupId == 577587780 || qq == 799018865)) {
 		return
+	}
+	let server = 'Eavan', channel = 9
+	switch(content.substring(0, 2).toUpperCase()) {
+		case 'YW':
+			server = 'Eavan'
+			break
+		case 'YT':
+			server = 'Altam'
+			break
+		case 'PN':
+			server = 'Pihne'
+			break
+	}
+	let ct = content.substring(2, 4)
+	if(/\d{2}/.test(ct) || ct == 10){
+		channel = 9
+	} else {
+		ct = content.substring(2, 3)
+		if(/\d/.test(ct) || ct > 0) {
+			channel = ct - 1
+		}
 	}
 	let now = Date.now()
 	let info = Array.from(new Set(Ferry.map(x => x.from))).map(port => {
 		return {
 			label: port,
 			arrival: Ferry.filter(x => x.from == port).map(routing => {
-				let times = FindCurrentTimes(now, routing.baseTime, routing.timeOffset, 3)
+				let times = FindCurrentTimes(now, routing.baseTime, routing.timeOffset, server, channel, 3)
 				return {
 					to: routing.to,
 					times,
@@ -430,7 +451,13 @@ const FerryTimetable = (qq, groupId, callback) => {
 	// 	out += '\n'
 	// })
 	// console.log(out)
-	RenderFerryImage(now, info, callback)
+
+	let newChannelOffset = {}, target = ChannelOffset[server][channel] || 0
+	Object.keys(ChannelOffset).forEach(sn => {
+		newChannelOffset[sn] = ChannelOffset[sn].map(x => x - target)
+	})
+
+	RenderFerryImage(now, info, newChannelOffset, callback)
 	// drawTxtImage('', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 

@@ -1281,7 +1281,13 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	// 	return
   // }
   if(con == '轮渡时刻表' || con == 'mft') {
-		FerryTimetable(from, groupid, callback)
+		if(con == '轮渡时刻表') {
+			con = con.substring(5).trim()
+		}
+		if(con == 'mft') {
+			con = con.substring(3).trim()
+		}
+		FerryTimetable(con, from, groupid, callback)
 		return
   }
   if(con == '打开财富密码') {
