@@ -1280,11 +1280,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   //   carrot(false, callback, groupid)
 	// 	return
   // }
-  if(con == '轮渡时刻表' || con == 'mft') {
-		if(con == '轮渡时刻表') {
+  if(con.startsWith('轮渡时刻表') || con.startsWith('mft')) {
+		if(con.startsWith('轮渡时刻表')) {
 			con = con.substring(5).trim()
 		}
-		if(con == 'mft') {
+		if(con.startsWith('mft')) {
 			con = con.substring(3).trim()
 		}
 		FerryTimetable(con, from, groupid, callback)

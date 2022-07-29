@@ -461,7 +461,7 @@ const FerryTimetable = (content, qq, groupId, callback) => {
 	// drawTxtImage('', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
-// FerryTimetable(799018865, 1)
+// FerryTimetable('yt5', 799018865, 1, d=>{console.log(d)})
 module.exports = {
 	FerryTimetable
 }
