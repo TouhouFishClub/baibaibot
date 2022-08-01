@@ -188,7 +188,7 @@ function initWS(){
 
   client.on('connect', function(connection) {
     wsonline = true;
-    console.log('WebSocket Client Connected');
+    console.log('WebSocket Client Connected 23335');
     connection.on('error', function(error) {
       console.log("Connection Error: " + error.toString());
     });
@@ -216,7 +216,7 @@ function initWS2(){
 
   client.on('connect', function(connection) {
     wsonline = true;
-    console.log('WebSocket Client Connected');
+    console.log('WebSocket Client Connected 24335');
     connection.on('error', function(error) {
       console.log("Connection Error: " + error.toString());
     });
@@ -244,7 +244,7 @@ function initWS3(){
 
   client.on('connect', function(connection) {
     wsonline = true;
-    console.log('WebSocket Client Connected');
+    console.log('WebSocket Client Connected 25335');
     connection.on('error', function(error) {
       console.log("Connection Error: " + error.toString());
     });
@@ -272,7 +272,7 @@ function initWS4(){
 
   client.on('connect', function(connection) {
     wsonline = true;
-    console.log('WebSocket Client Connected29335');
+    console.log('WebSocket Client Connected 29335');
     connection.on('error', function(error) {
       console.log("Connection Error: " + error.toString());
     });
@@ -300,7 +300,7 @@ function initWS5(){
 
     client.on('connect', function(connection) {
         wsonline = true;
-        console.log('WebSocket Client Connected');
+        console.log('WebSocket Client Connected 27335');
         connection.on('error', function(error) {
             console.log("Connection Error: " + error.toString());
         });
@@ -328,7 +328,7 @@ function initWS6(){
 
   client.on('connect', function(connection) {
     wsonline = true;
-    console.log('WebSocket Client Connected26335');
+    console.log('WebSocket Client Connected 26335');
     connection.on('error', function(error) {
       console.log("Connection Error: " + error.toString());
     });
@@ -355,7 +355,7 @@ function initWS7(){
 
   client.on('connect', function(connection) {
     wsonline = true;
-    console.log('WebSocket Client Connected28335');
+    console.log('WebSocket Client Connected 28335');
     connection.on('error', function(error) {
       console.log("Connection Error: " + error.toString());
     });
