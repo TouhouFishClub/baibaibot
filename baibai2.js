@@ -1516,21 +1516,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     catreply(rcontent.substring(2),from,callback);
     return;
   }
-
-  if(!new Set([23334, 29334, 26334, 28334]).has(port)){
-
-    if(rcontent.startsWith("炼铜1")){
-      copperReply(rcontent,groupid,from,callback,port);
-      return;
-    }
-    if(rcontent.startsWith("炼铜2")){
-      if(groupid == 720801895) return
-      copperReply(rcontent,groupid,from,callback,port);
-      return;
-    }
-  }
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
-    if(!new Set([23334, 29334, 26334, 28334]).has(port)){
+    if(new Set([23334, 29334, 26334, 28334]).has(port)){
       return
     }
     runsetu(rcontent,groupid,from,callback,port);
