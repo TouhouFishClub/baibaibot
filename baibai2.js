@@ -1501,7 +1501,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(rcontent.startsWith("抽卡")){
-    if(port == 29334 || port == 26334){
+    if(!new Set([23334, 29334, 26334, 28334]).has(port)){
       return
     }
     drawNameCard(name,from,callback,groupid);
@@ -1510,7 +1510,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
   if(rcontent.startsWith("猫图")||rcontent.startsWith("吸猫")){
-    if(port == 29334 || port == 26334){
+    if(!new Set([23334, 29334, 26334, 28334]).has(port)){
       return
     }
     catreply(rcontent.substring(2),from,callback);
@@ -1530,7 +1530,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     }
   }
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
-    if(port == 29334 || port == 26334 || port == 28334){
+    if(!new Set([23334, 29334, 26334, 28334]).has(port)){
       return
     }
     runsetu(rcontent,groupid,from,callback,port);
