@@ -1518,7 +1518,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
     if(new Set([23334, 29334, 26334, 28334]).has(port)){
-      //return
+      return
     }
     runsetu(rcontent,groupid,from,callback,port);
     return;
