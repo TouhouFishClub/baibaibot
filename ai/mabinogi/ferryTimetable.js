@@ -354,15 +354,17 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
     	}
     	.main-container .info-group .desc-line{
     		font-size: 16px;
-    		margin-top: 5px;
+    		margin-top: 3px;
     	}
     	.main-container .info-group .desc-line span{
     		margin-right: 10px;
     	}
     	.main-container .info-group .desc-line .desc-label{
-    		margin-right: 20px;
+    		font-family: MalbergTrial;
+    		margin-right: 15px;
     	}
     	.main-container .info-group .desc-line .offset-status{
+    		margin-right: 15px;
     		font-family: MalbergTrial;
     	}
     	.main-container .info-group .desc-line .offset-status.early{
@@ -372,7 +374,7 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
     		color: #d80000
     	}
     	.port-group {
-    		margin-bottom: 20px;
+    		margin-bottom: 12px;
     	}
     	.port-group .port-label{
     		font-size: 40px;
@@ -460,8 +462,7 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
 							<span 
 								class="offset-status ${(offset == 0 || offset == null) ? '' : offset < 0 ? 'early' : 'late'}"
 							>
-								${(offset == 0 || offset == null) ? '' : offset < 0 ? '-' : '+'}
-								${offset == null ? '-:--' : RenderCountDown(offset < 0 ? -offset * 1000 : offset * 1000)}
+								${(offset == 0 || offset == null) ? '' : offset < 0 ? '-' : '+'}${offset == null ? '-:--' : RenderCountDown(offset < 0 ? -offset * 1000 : offset * 1000)}
 							</span>`).join('')}
 					</div>
 				</div>
