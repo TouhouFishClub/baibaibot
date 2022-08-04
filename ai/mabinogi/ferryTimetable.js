@@ -510,9 +510,9 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
 }
 
 const FerryTimetable = (content, qq, groupId, callback) => {
-	if(!(groupId == 577587780 || qq == 799018865)) {
-		return
-	}
+	// if(!(groupId == 577587780 || qq == 799018865)) {
+	// 	return
+	// }
 	let server = 'Eavan', channel = 9
 	switch(content.substring(0, 2).toUpperCase()) {
 		case 'YW':
