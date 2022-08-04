@@ -346,7 +346,7 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
     	}
     	.main-container .info-group{
     		color: ${THEMES.TEXT};
-    		margin-bottom: 8px;
+    		margin-bottom: 5px;
     	}
     	.main-container .info-group .label{
     		font-family: AGT_SUPER_BOLD;
@@ -374,7 +374,7 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
     		color: #d80000
     	}
     	.port-group {
-    		margin-bottom: 15px;
+    		margin-top: 15px;
     	}
     	.port-group .port-label{
     		font-size: 40px;
