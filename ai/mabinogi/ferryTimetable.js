@@ -346,7 +346,7 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
     	}
     	.main-container .info-group{
     		color: ${THEMES.TEXT};
-    		margin-bottom: 15px;
+    		margin-bottom: 8px;
     	}
     	.main-container .info-group .label{
     		font-family: AGT_SUPER_BOLD;
@@ -364,7 +364,7 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
     		margin-right: 15px;
     	}
     	.main-container .info-group .desc-line .offset-status{
-    		margin-right: 15px;
+    		margin-right: 6px;
     		font-family: MalbergTrial;
     	}
     	.main-container .info-group .desc-line .offset-status.early{
@@ -374,7 +374,7 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
     		color: #d80000
     	}
     	.port-group {
-    		margin-bottom: 12px;
+    		margin-bottom: 15px;
     	}
     	.port-group .port-label{
     		font-size: 40px;
