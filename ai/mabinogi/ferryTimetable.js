@@ -135,15 +135,17 @@ const BaseTime = {
 	'Eavan': {
 		base: {
 			Iria: {
-				timeStr: '2022-08-04 01:39:32',
-				interval: [5*60*1000, 6*60*1000, 4*60*1000],
+				// timeStr: '2022-08-04 01:39:32',
+				timeStr: '2022-08-11 01:56:46',
+				interval: [5*60*1000, 6*60*1000, 4*60*1000], //等待到港时间，等待开船时间，等待到目的地时间
 			},
 			Belvast: {
-				timeStr: '2022-08-04 01:36:02',
-				interval: [(2*60+30)*1000, (3*60+30)*1000, 2*60*1000]
+				timeStr: '2022-08-11 01:56:46',
+				interval: [(2*60+30)*1000, (3*60+30)*1000, 2*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
 			}
 		},
-		channelOffset: [-6, -77, -12, -21, 14, -6, -15, -14, 7, 0]
+		// channelOffset: [-6, -77, -12, -21, 14, -6, -15, -14, 7, 0]
+		channelOffset: [-12, -136, -30, -31, -1, -17, -27, -22, -56, 0]
 	},
 	'Altam': {
 		base: {
@@ -178,51 +180,51 @@ const Ferry = [
 		from: 'Port Sella',
 		to: 'Port Ceann',
 		baseTime: 'Iria',
-		timeOffset: 0,
+		timeOffset: 60,
 	},
 	{
 		from: 'Port Connous',
 		to: 'Port Ceann',
 		baseTime: 'Iria',
-		timeOffset: 0,
+		timeOffset: 60,
 	},
 	{
 		from: 'Port Ceann',
 		to: 'Port Sella',
 		baseTime: 'Iria',
-		timeOffset: -60,
+		timeOffset: 0,
 	},
 	{
 		from: 'Port Ceann',
 		to: 'Port Connous',
 		baseTime: 'Iria',
-		timeOffset: -30,
+		timeOffset: 30,
 	},
 	{
 		from: 'Port Cobh',
 		to: 'Port Qilla',
 		baseTime: 'Iria',
-		timeOffset: -60,
+		timeOffset: 0,
 		checkTicket: true
 	},
 	{
 		from: 'Port Qilla',
 		to: 'Port Cobh',
 		baseTime: 'Iria',
-		timeOffset: -30,
+		timeOffset: 30,
 	},
 	{
 		from: 'Port Cobh',
 		to: 'Belvast Island',
 		baseTime: 'Belvast',
-		timeOffset: -30,
+		timeOffset: 0,
 		checkTicket: true
 	},
 	{
 		from: 'Belvast Island',
 		to: 'Port Cobh',
 		baseTime: 'Belvast',
-		timeOffset: 0,
+		timeOffset: 30,
 	}
 ]
 
