@@ -274,10 +274,14 @@ const fetchData = async url => {
 			res.setEncoding('utf16le');
 			let rawData = '';
 			res.on('data', chunk => {
-				rawData += iconv.decode(iconv.encode(chunk, 'utf16'), 'utf8');
+				rawData += chunk
+				// rawData += iconv.decode(iconv.encode(chunk, 'utf16'), charset);
 			});
 			res.on('end', () => {
-				resolve(rawData)
+				let data = iconv.decode(iconv.encode(rawData, 'utf16'), 'utf8')
+				let charset = splitStr(data, 'charset=', '"', true)
+				// console.log('=======\n\n\n\ncharset', charset)
+				resolve(iconv.decode(iconv.encode(rawData, 'utf16'), charset))
 			})
 			res.on('error', e => {
 				console.log(`===== FETCH DATA ERROR：${url} =====`)
