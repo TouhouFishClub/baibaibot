@@ -160,7 +160,8 @@ initWS4();
 initWS5();
 initWS6();
 initWS7();
-initWS8();
+initWS1001();
+initWS1002();
 
 const BOT_MASTER = [
   {
@@ -372,7 +373,7 @@ function initWS7(){
   });
   client.connect('ws://'+myip+':28335/event');
 }
-function initWS8(){
+function initWS1001(){
   var WebSocketClient = require('websocket').client;
 
   var client = new WebSocketClient();
@@ -393,11 +394,38 @@ function initWS8(){
     });
     connection.on('message', function(message) {
       if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),14)
+        handleMsg(JSON.parse(message.utf8Data),1001)
       }
     });
   });
   client.connect('ws://'+myip+':30005/event');
+}
+function initWS1002(){
+  var WebSocketClient = require('websocket').client;
+
+  var client = new WebSocketClient();
+
+  client.on('connectFailed', function(error) {
+    console.log('Connect Error: ' + error.toString());
+  });
+
+  client.on('connect', function(connection) {
+    wsonline = true;
+    console.log('WebSocket Client Connected 30015');
+    connection.on('error', function(error) {
+      console.log("Connection Error: " + error.toString());
+    });
+    connection.on('close', function() {
+      wsonline=false;
+      console.log('echo-protocol Connection Closed');
+    });
+    connection.on('message', function(message) {
+      if (message.type === 'utf8') {
+        handleMsg(JSON.parse(message.utf8Data),1002)
+      }
+    });
+  });
+  client.connect('ws://'+myip+':30015/event');
 }
 
 function reconnect(){
@@ -501,8 +529,10 @@ function addSendQueue(groupid,msg,botqq){
     port = 26334;
   }else if(botqq==13){
     port = 28334;
-  }else if(botqq==14){
+  }else if(botqq==1001){
     port = 30004;
+  }else if(botqq==1002){
+    port = 30014;
   }else{
     port = 23334;
   }
@@ -643,8 +673,10 @@ function handleMsg_D(msgObj,botqq) {
     port = 26334;
   }else if(botqq==13){
     port = 28334;
-  }else if(botqq==14){
+  }else if(botqq==1001){
 		port = 30004;
+	}else if(botqq==1002){
+		port = 30014;
 	}else{
     var sf = (self+"").substring(0,5);
     if(sf=="38490"){
@@ -1533,7 +1565,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(rcontent.startsWith("抽卡")){
-    if(new Set([23334, 29334, 26334, 28334, 30004]).has(port)){
+    if(new Set([23334, 29334, 26334, 28334, 30004, 30014]).has(port)){
       return
     }
     drawNameCard(name,from,callback,groupid);
@@ -1542,14 +1574,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
   if(rcontent.startsWith("猫图")||rcontent.startsWith("吸猫")){
-    if(new Set([23334, 29334, 26334, 28334, 30004]).has(port)){
+    if(new Set([23334, 29334, 26334, 28334, 30004, 30014]).has(port)){
       return
     }
     catreply(rcontent.substring(2),from,callback);
     return;
   }
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
-    if(new Set([23334, 29334, 26334, 28334, 30004]).has(port)){
+    if(new Set([23334, 29334, 26334, 28334, 30004, 30014]).has(port)){
       return
     }
     runsetu(rcontent,groupid,from,callback,port);
