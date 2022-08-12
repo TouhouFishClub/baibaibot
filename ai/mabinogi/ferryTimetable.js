@@ -131,7 +131,7 @@ const calcOffset = (time1, time2, intervalArray) => {
 // ]
 
 const I18N = {
-	'zh': {
+	'cn': {
 		'Eavan': '伊文',
 		'Altam': '亚特',
 		'Pihne': '潘妮',
