@@ -1,10 +1,17 @@
-const { mabiGacha, fetchData } = require('./index');
+const { mabiGacha, fetchData, loadGachaGroup } = require('./index');
 // mabiGacha('111', d => {
 // 	console.log(d)
 // })
 	(async () => {
-		let d = await fetchData('https://luoqi.tiancity.com/homepage/event/2022/0706ydsppl/')
-		console.log(d)
+		// for(let i = 1; i < 10; i ++) {
+		// 	let res = await loadGachaGroup(i, true)
+		// 	console.log(res)
+		// }
+		// let d = await fetchData('https://luoqi.tiancity.com/homepage/event/2022/0810djcpl/')
+		// console.log(d)
+		await mabiGacha(799018865, d => {
+			console.log(d)
+		})
 	})()
 // var HTMLParser = require('node-html-parser');
 //

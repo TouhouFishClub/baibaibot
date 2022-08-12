@@ -140,8 +140,8 @@ const randomGacha = (gachaInfo, count) => {
 	return items
 }
 
-const loadGachaGroup = async () => {
-	let article = await fetchData(`https://luoqi.tiancity.com/homepage/article/Class_231_Time_1.html`)
+const loadGachaGroup = async (page = 1, source = false) => {
+	let article = await fetchData(`https://luoqi.tiancity.com/homepage/article/Class_231_Time_${page}.html`)
 	// 拆分
 	let urls = splitStr(article, '<ul class="newsList">', '</ul>', true).split('</li>').map(x => {
 		return splitStr(x, '//', '"', true)
@@ -172,6 +172,7 @@ const loadGachaGroup = async () => {
 			info.name = t.name
 			let data = await fetchData(t.link)
 			// let sp = splitStr(data, '<body', '</body>')
+			// console.log(splitStr(data, 'var pl', '}'))
 			let pl = splitStr(splitStr(data, 'var pl', '}'), '{', '}')
 			// console.log('================\n\n\n\n')
 			// let root = HTMLParser.parse(sp).querySelectorAll('table').toString()
@@ -193,6 +194,23 @@ const loadGachaGroup = async () => {
 				eval(`raremap = ${pl.trim()}`)
 				info.rare = raremap
 				gachaInfo.push(info)
+				if(source) {
+					let rareKeys = Object.keys(raremap), out = []
+					for(let i = 0; i < rareKeys.length; i ++) {
+						let rareInfo = raremap[rareKeys[i]]
+						let [color, rare, rareList] = rareInfo
+						for(let j = 0; j < rareList.length; j ++) {
+							out.push({
+								_id: rareList[j],
+								pool: info.name,
+								rare,
+								color,
+								rareTag: rareKeys[i]
+							})
+						}
+					}
+					return out
+				}
 
 				if(!client) {
 					try {
@@ -242,6 +260,7 @@ const loadGachaGroup = async () => {
 			} catch (e) {
 				console.log(`====== MABINOGI GACHA ERROR ======`)
 				console.log(t.name)
+				console.log(data)
 				console.log(e)
 			}
 		}
@@ -255,10 +274,14 @@ const fetchData = async url => {
 			res.setEncoding('utf16le');
 			let rawData = '';
 			res.on('data', chunk => {
-				rawData += iconv.decode(iconv.encode(chunk, 'utf16'), 'gbk');
+				rawData += chunk
+				// rawData += iconv.decode(iconv.encode(chunk, 'utf16'), charset);
 			});
 			res.on('end', () => {
-				resolve(rawData)
+				let data = iconv.decode(iconv.encode(rawData, 'utf16'), 'utf8')
+				let charset = splitStr(data, 'charset=', '"', true)
+				// console.log('=======\n\n\n\ncharset', charset)
+				resolve(iconv.decode(iconv.encode(rawData, 'utf16'), charset))
 			})
 			res.on('error', e => {
 				console.log(`===== FETCH DATA ERROR：${url} =====`)
@@ -285,5 +308,6 @@ const splitStr = (str, start, end, ignoreSearch = false) => {
 
 module.exports = {
 	mabiGacha,
-	fetchData
+	fetchData,
+	loadGachaGroup
 }
