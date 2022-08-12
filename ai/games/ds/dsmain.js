@@ -167,6 +167,7 @@ function handleDSReply(content,groupid,qq,name,callback,port){
           gonext('捉内鬼游戏开始\n内鬼人数'+getTraitorNum(),callback);
           Ncallback = callback;
         }else{
+          init();
           callback('参加人数不足，游戏结束');
         }
       },60000);
@@ -278,6 +279,7 @@ function gonext(lastret,callback){
     gonext1(lastret,callback);
   }else{
     generateImage(lastret.trim()+'\n'+wa[1],callback);
+    init();
   }
 }
 
