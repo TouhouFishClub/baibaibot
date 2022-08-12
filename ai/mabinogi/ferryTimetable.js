@@ -411,7 +411,7 @@ const RenderFerryImage = (now, info, ChannelOffset, language, callback) => {
     		margin-bottom: 5px;
     	}
     	.main-container .info-group .label{
-    		font-family: AGT_SUPER_BOLD SANS_SERIF;
+    		font-family: AGT_SUPER_BOLD;
     		font-size: 16px;
     	}
     	.main-container .info-group .desc-line{
@@ -440,7 +440,7 @@ const RenderFerryImage = (now, info, ChannelOffset, language, callback) => {
     	}
     	.port-group .port-label{
     		font-size: 40px;
-    		font-family: ALGER SANS_SERIF;
+    		font-family: ALGER;
     		color: ${THEMES.PORT_LABEL};
     	}
     	.time-table-container {
@@ -458,7 +458,7 @@ const RenderFerryImage = (now, info, ChannelOffset, language, callback) => {
     		color: ${THEMES.TEXT};
     	}
     	.time-table-container .time-table-header{
-    		font-family: FPT_BOLD SANS_SERIF;
+    		font-family: FPT_BOLD;
     	}
     	.time-table-container .time-table-row{
     		height: 40px;
@@ -483,7 +483,7 @@ const RenderFerryImage = (now, info, ChannelOffset, language, callback) => {
     	}
     	.time-table-container .time-table-row .time-table-col-1{
     		font-size: 24px;
-    		font-family: AGT_SUPER_BOLD SANS_SERIF;
+    		font-family: AGT_SUPER_BOLD;
     	}
     	.time-table-container .time-table-row .time-table-col-2{
     		font-size: 22px;
@@ -496,7 +496,7 @@ const RenderFerryImage = (now, info, ChannelOffset, language, callback) => {
     		font-family: Corp_Bold;
     	}
     	.time-table-container .time-table-row .time-table-col-4{
-    		font-family: MalbergTrial SANS_SERIF;
+    		font-family: MalbergTrial;
     		font-size: 20px;
     	}
     	.time-table-container .time-table-row .status{
