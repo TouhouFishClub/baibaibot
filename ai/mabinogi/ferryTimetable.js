@@ -400,7 +400,7 @@ const RenderFerryImage = (now, info, ChannelOffset, language, callback) => {
     		padding: 0;
     	}
     	body {
-    		width: 640px;
+    		width: 680px;
     	}
     	.main-container {
     		padding: 20px;
@@ -445,7 +445,7 @@ const RenderFerryImage = (now, info, ChannelOffset, language, callback) => {
     	}
     	.time-table-container {
     		margin-top: 10px;
-    		width: 600px;
+    		width: 640px;
     		display: flex;
     		flex-direction: column;
     		justify-content: flex-start;
@@ -477,7 +477,7 @@ const RenderFerryImage = (now, info, ChannelOffset, language, callback) => {
     		width: 130px;
     	}
     	.time-table-container .time-table-col-4{
-    		width: 100px;
+    		width: 140px;
     	}
     	.time-table-container .time-table-row{
     	}
