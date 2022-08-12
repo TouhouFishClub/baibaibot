@@ -79,11 +79,39 @@ function inituser(){
       nt++;
     }
   }
+  var ngstr = ''
+  var ngqq = [];
   for(var qq in usermap){
     var rd = Math.floor(Math.random()*maplen)
     rd=0
     map[rd][qq]=usermap[qq];
+    if(usermap[qq].role==1){
+      ngstr = ngstr + '【'+usermap[qq].name+'】'
+      ngqq.push(qq);
+    }
   }
+  for(var i=0;i<ngqq.length;i++){
+    sendPriv(ngqq[i],ngstr);
+  }
+
+
+}
+
+function sendPriv(userid,str){
+  var options = {
+    host: ''+myip+'',
+    port: gameport,
+    path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(str),
+    method: 'GET',
+    headers: {}
+  };
+  console.log("ngpriv:" + userid + ":" + content + ":" + res);
+  var req = http.request(options);
+  req.on('error', function (err) {
+    console.log('req err:');
+    console.log(err);
+  });
+  req.end();
 }
 
 function init(){
@@ -152,7 +180,8 @@ function handleDSReply(content,groupid,qq,name,callback,port){
 
     }
   }else if(nowrunning==groupid&&gamestart==1){
-    var ca = content.split(' ');
+    console.log('rrrrrrrrrrrrrrrrrr:'+content);
+    var ca = content.trim().split(' ');
     if(ca.length==2){
       var nextmatch = false;
       for(var oqq in usermap){
