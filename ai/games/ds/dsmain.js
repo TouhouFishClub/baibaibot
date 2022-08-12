@@ -22,7 +22,7 @@ var rt = [
   "从任意玩家手里夺取一个骰子",
   "送给任意玩家一个骰子",
   "夺取或送给任意玩家一个骰子",
-  "一定概率获得内鬼提示"
+  "一定概率获得内鬼提示(暂无，概率为0)"
 ]
 var odarr = '①②③④⑤⑥⑦⑧⑨⑩'.split('');
 function addplayer(qq,name){
@@ -313,7 +313,7 @@ function gonext1(lastret,callback){
     for(var oqq in usermap){
       if(usermap[oqq].id==nextuser){
         if(usermap[oqq].dice>0){
-          ret = ret + '下一个【'+usermap[oqq].name+'】,';
+          ret = ret + '下一个【'+usermap[oqq].name+'】,骰子数：'+usermap[oqq].dice+',';
           var mapd = map[usermap[oqq].lastmap].d;
           if(mapd>=0){
             ret = ret + '您的权益是【'+rt[mapd]+'】\n'
