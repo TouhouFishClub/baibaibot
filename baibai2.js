@@ -1040,12 +1040,16 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
-  if(content=="捉内鬼"||content.trim().substring(0,3).toLocaleLowerCase()=='zng'){
+  if(content=="捉内鬼"){
       handleDSReply(content,groupid,from,name,callback,port);
       return;
   }
   if(content.trim().substring(0,3).toLocaleLowerCase()=='tng'){
-    handleVoteReply(content,groupid,from,name,callback,port);
+    handleVoteReply(content.substring(3),groupid,from,name,callback,port);
+    return;
+  }
+  if(content.trim().substring(0,3).toLocaleLowerCase()=='zng'){
+    handleVoteReply(content.substring(3),groupid,from,name,callback,port);
     return;
   }
 
