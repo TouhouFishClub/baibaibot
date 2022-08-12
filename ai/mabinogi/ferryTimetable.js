@@ -130,6 +130,66 @@ const calcOffset = (time1, time2, intervalArray) => {
 // 	}
 // ]
 
+const I18N = {
+	'cn': {
+		'Eavan': '伊文',
+		'Altam': '亚特',
+		'Pihne': '潘妮',
+		'Port Sella': '塞拉港口(巨人港)',
+		'Port Connous': '肯努斯港口(精灵港)',
+		'Port Ceann': '凯安港口',
+		'Port Cobh': '卡普港口',
+		'Port Qilla': '克拉港口',
+		'Belvast Island': '贝尔法斯特',
+		'Update Time': '更新时间',
+		'Channel Offset': '频道偏移时间',
+		'Destination': '目的地',
+		'ETD': '预计离港时间',
+		'ETA': '预计到达时间',
+		'status': '状态',
+		'WAIT': '等候',
+		'CHECK IN': '检票中',
+	},
+	'en': {
+		'Eavan': 'Eavan',
+		'Altam': 'Altam',
+		'Pihne': 'Pihne',
+		'Port Sella': 'Port Sella',
+		'Port Connous': 'Port Connous',
+		'Port Ceann': 'Port Ceann',
+		'Port Cobh': 'Port Cobh',
+		'Port Qilla': 'Port Qilla',
+		'Belvast Island': 'Belvast Island',
+		'Update Time': 'Update Time',
+		'Channel Offset': 'Channel Offset',
+		'Destination': 'Destination',
+		'ETD': 'ETD',
+		'ETA': 'ETA',
+		'status': 'status',
+		'WAIT': 'WAIT',
+		'CHECK IN': 'CHECK IN',
+	},
+	'jp': {
+		'Eavan': 'Eavan',
+		'Altam': 'Altam',
+		'Pihne': 'Pihne',
+		'Port Sella': 'Port Sella',
+		'Port Connous': 'Port Connous',
+		'Port Ceann': 'Port Ceann',
+		'Port Cobh': 'Port Cobh',
+		'Port Qilla': 'Port Qilla',
+		'Belvast Island': 'Belvast Island',
+		'Update Time': 'Update Time',
+		'Channel Offset': 'Channel Offset',
+		'Destination': 'Destination',
+		'ETD': 'ETD',
+		'ETA': 'ETA',
+		'status': 'status',
+		'WAIT': 'WAIT',
+		'CHECK IN': 'CHECK IN',
+	}
+}
+
 
 const BaseTime = {
 	'Eavan': {
@@ -298,7 +358,7 @@ const fixStrLength = (targetLength, str) => {
 	return str
 }
 
-const RenderFerryImage = (now, info, ChannelOffset, callback) => {
+const RenderFerryImage = (now, info, ChannelOffset, language, callback) => {
 	let output = path.join(IMAGE_DATA, 'mabi_other', `timetable.png`)
 	// let output = path.join(`timetable.png`)
 
@@ -408,16 +468,16 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
     	.time-table-container .time-table-col-1{
     		box-sizing: border-box;
     		padding-left: 10px;
-    		width: 220px;
+    		width: 240px;
     	}
     	.time-table-container .time-table-col-2{
-    		width: 120px;
+    		width: 130px;
     	}
     	.time-table-container .time-table-col-3{
-    		width: 120px;
+    		width: 130px;
     	}
     	.time-table-container .time-table-col-4{
-    		width: 140px;
+    		width: 100px;
     	}
     	.time-table-container .time-table-row{
     	}
@@ -455,11 +515,11 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
   			<div class="info-group">
 					<div class="label">${server}</div>
 					<div class="desc-line">
-						<span class="desc-label">Update Time</span>
+						<span class="desc-label">${I18N[language]['Update Time']}</span>
 						${Object.keys(BaseTime[server].base).map(area => `<span>${area}: ${BaseTime[server].base[area].timeStr}</span>`).join('')}
 					</div>
 					<div class="desc-line">
-						<span class="desc-label">Channel Offset</span>
+						<span class="desc-label">${I18N[language]['Channel Offset']}</span>
 						${ChannelOffset[server].map(offset => `
 							<span 
 								class="offset-status ${(offset == 0 || offset == null) ? '' : offset < 0 ? 'early' : 'late'}"
@@ -471,24 +531,24 @@ const RenderFerryImage = (now, info, ChannelOffset, callback) => {
   		`)}
   		${info.map(port => `
 				<div class="port-group">
-					<div class="port-label">${port.label}</div>
+					<div class="port-label">${I18N[language][port.label]}</div>
 					<div class="time-table-container">
 						<div class="time-table-header">
-							<div class="time-table-col time-table-col-1">Destination</div>
-							<div class="time-table-col time-table-col-2">ETD</div>
-							<div class="time-table-col time-table-col-3">ETA</div>
-							<div class="time-table-col time-table-col-4">status</div>
+							<div class="time-table-col time-table-col-1">${I18N[language]['Destination']}</div>
+							<div class="time-table-col time-table-col-2">${I18N[language]['ETD']}</div>
+							<div class="time-table-col time-table-col-3">${I18N[language]['ETA']}</div>
+							<div class="time-table-col time-table-col-4">${I18N[language]['status']}</div>
 						</div>
 						${port.arrival.map(arrival => arrival.times.map((time, index) => `
 							<div class="time-table-row">
-								<div class="time-table-col time-table-col-1">${arrival.to}</div>
+								<div class="time-table-col time-table-col-1">${I18N[language][arrival.to]}</div>
 								<div class="time-table-col time-table-col-2">${RenderTime(time[2])}</div>
 								<div class="time-table-col time-table-col-3">${RenderTime(time[3])}</div>
 								<div class="time-table-col time-table-col-4">
 									${arrival.status.group == index ? `
 										${[
-												'<span class="status wait">WAIT</span>',
-												'<span class="status check-in">CHECK IN</span>'
+												`<span class="status wait">${I18N[language]['WAIT']}</span>`,
+												`<span class="status check-in">${I18N[language]['CHECK IN']}</span>`
 											][arrival.status.target]
 										}(${RenderCountDown(arrival.status.timeOffset)})
 									` : ''}
@@ -515,7 +575,23 @@ const FerryTimetable = (content, qq, groupId, callback) => {
 	// if(!(groupId == 577587780 || qq == 799018865)) {
 	// 	return
 	// }
-	let server = 'Eavan', channel = 9
+	let server = 'Eavan', channel = 9, language = 'en'
+	content = content.trim()
+	switch(content.substring(0, 2).toUpperCase()) {
+		case 'CN':
+			language = 'cn'
+			content = content.substring(2)
+			break
+		case 'EN':
+			language = 'en'
+			content = content.substring(2)
+			break
+		case 'JP':
+			language = 'jp'
+			content = content.substring(2)
+			break
+	}
+	content = content.trim()
 	switch(content.substring(0, 2).toUpperCase()) {
 		case 'YW':
 			server = 'Eavan'
@@ -575,7 +651,7 @@ const FerryTimetable = (content, qq, groupId, callback) => {
 		}
 	})
 
-	RenderFerryImage(now, info, newChannelOffset, callback)
+	RenderFerryImage(now, info, newChannelOffset, language, callback)
 	// drawTxtImage('', out, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
