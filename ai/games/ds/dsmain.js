@@ -3,7 +3,7 @@ var request = require('request');
 const path = require('path')
 const nodeHtmlToImage = require('node-html-to-image')
 const { IMAGE_DATA } = require('../../../baibaiConfigs.js')
-
+var http = require('http');
 
 var nowrunning = 0;
 var gamestart = 0;
@@ -161,10 +161,14 @@ function handleDSReply(content,groupid,qq,name,callback,port){
       rule = rule + 'ZNG【使用权益目标】【空格】【使用骰子数】示例：【ZNG 2 6】：\n';
 
       setTimeout(function(){
-        gamestart = 1;
-        inituser();
-        gonext('捉内鬼游戏开始\n内鬼人数'+getTraitorNum(),callback);
-        Ncallback = callback;
+        if(Object.keys(usermap).length>=3){
+          gamestart = 1;
+          inituser();
+          gonext('捉内鬼游戏开始\n内鬼人数'+getTraitorNum(),callback);
+          Ncallback = callback;
+        }else{
+          callback('参加人数不足，游戏结束');
+        }
       },60000);
       callback(rule+'\n捉内鬼游戏1分钟后开始\n加入游戏：【捉内鬼】\n')
     }else if(nowrunning==groupid&&gamestart==0){
