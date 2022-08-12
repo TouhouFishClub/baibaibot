@@ -79,7 +79,7 @@ function inituser(){
       nt++;
     }
   }
-  var ngstr = ''
+  var ngstr = '内鬼：'
   var ngqq = [];
   for(var qq in usermap){
     var rd = Math.floor(Math.random()*maplen)
@@ -105,7 +105,6 @@ function sendPriv(userid,str){
     method: 'GET',
     headers: {}
   };
-  console.log("ngpriv:" + userid + ":" + content + ":" + res);
   var req = http.request(options);
   req.on('error', function (err) {
     console.log('req err:');
