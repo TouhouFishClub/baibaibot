@@ -135,8 +135,8 @@ const I18N = {
 		'Eavan': '伊文',
 		'Altam': '亚特',
 		'Pihne': '潘妮',
-		'Port Sella': '塞拉港口（巨人港）',
-		'Port Connous': '肯努斯港口（精灵港）',
+		'Port Sella': '塞拉港口(巨人港)',
+		'Port Connous': '肯努斯港口(精灵港)',
 		'Port Ceann': '凯安港口',
 		'Port Cobh': '卡普港口',
 		'Port Qilla': '克拉港口',
@@ -468,16 +468,16 @@ const RenderFerryImage = (now, info, ChannelOffset, language, callback) => {
     	.time-table-container .time-table-col-1{
     		box-sizing: border-box;
     		padding-left: 10px;
-    		width: 220px;
+    		width: 240px;
     	}
     	.time-table-container .time-table-col-2{
-    		width: 120px;
+    		width: 130px;
     	}
     	.time-table-container .time-table-col-3{
-    		width: 120px;
+    		width: 130px;
     	}
     	.time-table-container .time-table-col-4{
-    		width: 140px;
+    		width: 100px;
     	}
     	.time-table-container .time-table-row{
     	}
