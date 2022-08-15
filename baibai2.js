@@ -141,6 +141,8 @@ const { ygo } = require('./ai/ygo/ygo')
 
 const { FerryTimetable } = require('./ai/mabinogi/ferryTimetable')
 
+const {handleDSReply,handleVoteReply} = require('./ai/games/ds/dsmain')
+
 let globalConfig = {
 	FLASH_RESEND : false
 }
@@ -1022,6 +1024,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
 
+
   if(
     content === '炸弹人' ||
     content === '炸彈人' ||
@@ -1037,6 +1040,18 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
+  if(content=="捉内鬼"){
+      handleDSReply(content,groupid,from,name,callback,port);
+      return;
+  }
+  if(content.trim().substring(0,3).toLocaleLowerCase()=='tng'){
+    handleVoteReply(content.substring(3),groupid,from,name,callback,port);
+    return;
+  }
+  if(content.trim().substring(0,3).toLocaleLowerCase()=='zng'){
+    handleDSReply(content.substring(3),groupid,from,name,callback,port);
+    return;
+  }
 
 
 
