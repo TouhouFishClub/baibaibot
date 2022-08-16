@@ -1,0 +1,89 @@
+<html>
+<head>
+	<meta charSet="utf-8">
+	<script src='https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js'></script>
+	<script src='https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js'></script>
+	<style>
+		html, body, #main {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			background-color: #0a0905;
+		}
+	</style>
+</head>
+<body>
+<div id='main'>11223</div>
+<script>
+	var chart = echarts.init(document.getElementById('main'));
+	var keywords = {
+		"visualMap": 22199,
+		"continuous": 10288,
+		"contoller": 620,
+		"series": 274470,
+		"gauge": 12311,
+		"detail": 1206,
+		"piecewise": 4885,
+		"textStyle": 32294,
+		"markPoint": 18574,
+		"pie": 38929,
+		"roseType": 969,
+		"label": 37517,
+	}
+
+	var data = [];
+	for (var name in keywords) {
+		data.push({
+			name: name,
+			value: Math.sqrt(keywords[name])
+		})
+	}
+
+	var maskImage = new Image();
+
+	var option = {
+		series: [{
+			type: 'wordCloud',
+			sizeRange: [4, 150],
+			rotationRange: [0, 0],
+			gridSize: 0,
+			shape: 'pentagon',
+			maskImage: maskImage,
+			drawOutOfBound: false,
+			// layoutAnimation: true,
+			keepAspect: true,
+			textStyle: {
+				fontWeight: 'bold',
+				color: function () {
+					return 'rgb(' + [
+						Math.round(Math.random() * 200) + 50,
+						Math.round(Math.random() * 50),
+						Math.round(Math.random() * 50) + 50
+					].join(',') + ')';
+				}
+			},
+			emphasis: {
+				textStyle: {
+					color: '#528'
+				}
+			},
+			data: data.sort(function (a, b) {
+				return b.value - a.value;
+			})
+		}]
+	};
+
+	maskImage.onload = function () {
+		option.series[0].maskImage
+		chart.setOption(option);
+	}
+
+	maskImage.src = './logo.png';
+
+	window.onresize = function () {
+		chart.resize();
+	}
+
+</script>
+</body>
+</html>
