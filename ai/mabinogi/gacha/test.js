@@ -7,11 +7,11 @@ const { mabiGacha, fetchData, loadGachaGroup } = require('./index');
 		// 	let res = await loadGachaGroup(i, true)
 		// 	console.log(res)
 		// }
-		// let d = await fetchData('https://luoqi.tiancity.com/homepage/event/2022/0810djcpl/')
-		// console.log(d)
-		await mabiGacha(799018865, d => {
-			console.log(d)
-		})
+		let d = await fetchData('https://luoqi.tiancity.com/homepage/event/2022/0817shsmpl/')
+		console.log(d)
+		// await mabiGacha(799018865, d => {
+		// 	console.log(d)
+		// })
 	})()
 // var HTMLParser = require('node-html-parser');
 //

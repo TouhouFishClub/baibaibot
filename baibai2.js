@@ -140,8 +140,10 @@ const { ygo } = require('./ai/ygo/ygo')
 // const { carrot } = require('./ai/mabinogi/carrot')
 
 const { FerryTimetable } = require('./ai/mabinogi/ferryTimetable')
+const { BossWork } = require('./ai/mabinogi/BossWork')
 
 const {handleDSReply,handleVoteReply} = require('./ai/games/ds/dsmain')
+
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -1368,6 +1370,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		}
 		FerryTimetable(con, from, groupid, callback)
 		return
+  }
+  if(con.toLowerCase() == 'bosswork' || con.toLowerCase() == 'boss时间表') {
+		BossWork(from, groupid, callback)
   }
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)
