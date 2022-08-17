@@ -328,8 +328,8 @@ const RenderWorkTimeLine = (callback) => {
 `
 	})
 		.then(() => {
-			console.log(`保存timetable.png成功！`)
-			let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `timetable.png`)}]`
+			console.log(`保存bosswork.png成功！`)
+			let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `bosswork.png`)}]`
 			callback(imgMsg)
 		})
 }
