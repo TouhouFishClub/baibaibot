@@ -17,7 +17,8 @@ const BossList = {
 		],
 		cnName: '黑龙',
 		name: 'Black Dragon',
-		progressColor: '#000'
+		progressColor: '#000',
+		textColor: '#505050'
 	},
 	WhiteDragon: {
 		genMinute: 57,
@@ -32,7 +33,8 @@ const BossList = {
 		],
 		cnName: '白龙',
 		name: 'White Dragon',
-		progressColor: '#b4fff8'
+		progressColor: '#b4fff8',
+		textColor: '#00564e'
 	},
 	PrairieDragon: {
 		genMinute: 12,
@@ -47,7 +49,8 @@ const BossList = {
 		],
 		cnName: '平原龙',
 		name: 'Prairie Dragon',
-		progressColor: '#008a07'
+		progressColor: '#008a07',
+		textColor: '#90fd97'
 	},
 	DesertDragon: {
 		genMinute: 12,
@@ -62,7 +65,8 @@ const BossList = {
 		],
 		cnName: '沙漠龙',
 		name: 'Desert Dragon',
-		progressColor: '#703c00'
+		progressColor: '#703c00',
+		textColor: '#ffc174'
 	},
 	RedDragon: {
 		genMinute: 12,
@@ -77,7 +81,8 @@ const BossList = {
 		],
 		cnName: '红龙',
 		name: 'Red Dragon',
-		progressColor: '#d80000'
+		progressColor: '#d80000',
+		textColor: '#ff9191'
 	},
 	Mokkurkalfi: {
 		genMinute: 27,
@@ -92,7 +97,8 @@ const BossList = {
 		],
 		cnName: '莫库尔卡皮',
 		name: 'Mokkurkalfi',
-		progressColor: '#003d00'
+		progressColor: '#003d00',
+		textColor: '#7fff7f'
 	},
 	SylvanDragon: {
 		genMinute: 27,
@@ -107,7 +113,8 @@ const BossList = {
 		],
 		cnName: '希尔斑龙',
 		name: 'Sylvan Dragon',
-		progressColor: '#315bc9'
+		progressColor: '#315bc9',
+		textColor: '#7b94b4'
 	},
 	Mammoth: {
 		genMinute: 32,
@@ -122,7 +129,8 @@ const BossList = {
 		],
 		cnName: '猛犸象',
 		name: 'Mammoth',
-		progressColor: '#ffa036'
+		progressColor: '#ffa036',
+		textColor: '#4f2a00'
 	},
 	Ifrit: {
 		genMinute: 32,
@@ -137,7 +145,8 @@ const BossList = {
 		],
 		cnName: '火神',
 		name: 'Ifrit',
-		progressColor: '#ff7272'
+		progressColor: '#ff7272',
+		textColor: '#770000'
 	},
 	Yeti: {
 		genMinute: 32,
@@ -152,7 +161,8 @@ const BossList = {
 		],
 		cnName: '雪人',
 		name: 'Yeti',
-		progressColor: '#6e98ff'
+		progressColor: '#6e98ff',
+		textColor: '#002172'
 	},
 	GiantLion: {
 		genMinute: 45,
@@ -167,7 +177,8 @@ const BossList = {
 		],
 		cnName: '巨大狮子',
 		name: 'Giant Lion',
-		progressColor: '#ffb820'
+		progressColor: '#ffb820',
+		textColor: '#593e00'
 	},
 	GiantSandworm: {
 		genMinute: 45,
@@ -182,7 +193,8 @@ const BossList = {
 		],
 		cnName: '巨大沙虫怪',
 		name: 'Giant Sandworm',
-		progressColor: '#8f8f8f'
+		progressColor: '#8f8f8f',
+		textColor: '#3f3232'
 	},
 	GiantAlligator: {
 		genMinute: 45,
@@ -197,7 +209,8 @@ const BossList = {
 		],
 		cnName: '巨大鳄鱼',
 		name: 'Giant Alligator',
-		progressColor: '#74903d'
+		progressColor: '#74903d',
+		textColor: '#2b3d00'
 	},
 }
 
@@ -269,7 +282,7 @@ const RenderWorkTimeLine = (callback) => {
     	.main-container .time-line{
     		display: flex;
     		justify-content: space-between;
-    		height: 80px;
+    		height: 60px;
     	}
     	.main-container .time-line + .time-line{
     		border-top: 1px solid #666;
@@ -285,14 +298,22 @@ const RenderWorkTimeLine = (callback) => {
     	}
     	.main-container .time-line .time-line-progress{
     		width: 720px;
-    		height: 80px;
+    		height: 60px;
     		position: relative;
     		background-color: #f3f3f3;
     		overflow: hidden;
     	}
+    	.main-container .time-line .time-line-progress .boss-name{
+    		width: 720px;
+    		height: 60px;
+    		position: absolute;
+    		font-size: 48px;
+    		text-align: center;
+    		line-height: 60px;
+    	}
     	.main-container .time-line .time-line-progress .time-line-progress-item{
     		width: 29px;
-    		height: 80px;
+    		height: 60px;
     		position: absolute;
     		top: 0;
     	}
@@ -308,7 +329,6 @@ const RenderWorkTimeLine = (callback) => {
 			return `
 					<div class="time-line">
 						<div class="boss-info">
-							<div class="info-desc">[${state ? '上班中' : '未上班'}] ${bossInfo.cnName}</div>
 							<div class="info-desc">本次：${currentInfo.current}</div>
 							<div class="info-desc">下次：${nextInfo}</div>
 							<div class="info-desc">剩余${currentInfo.count}次</div>
@@ -317,6 +337,7 @@ const RenderWorkTimeLine = (callback) => {
 							${bossInfo.hourOfWeek[cWeek].map(hour => {
 				return `<div class="time-line-progress-item" style="left: ${hour * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.progressColor};"></div>`
 			}).join('')}
+							<div class="boss-name" style="color: ${textColor}">${bossInfo.cnName}(${bossInfo.name})</div>
 						</div>
 					</div>
 				`
