@@ -215,7 +215,7 @@ const BossWork = (qq, group, callback) => {
 		let state = checkWorkState(bossInfo.genMinute, bossInfo.hourOfWeek[cWeek], bossInfo.hourOfWeek[(cWeek + 6) % 7])
 		let currentInfo = checkCurrentTime(bossInfo.genMinute, bossInfo.hourOfWeek[cWeek])
 		let nextInfo = checkNextTime(bossInfo.genMinute, bossInfo.hourOfWeek[cWeek], bossInfo.hourOfWeek[(cWeek + 1) % 7])
-		return `[${ state ? '上班中': '未上班'}] ${bossInfo.cnName}\n本次出现时间：${currentInfo.current}\n下次出现时间：${nextInfo}\n今日剩余${currentInfo.count}次\n`
+		return `[${ state ? '上班中': '未上班'}] ${bossInfo.cnName}\n本次出现时间：${currentInfo.current}\n下次出现时间：${nextInfo}\n今日剩余${currentInfo.count}次\n========`
 	}).join('\n')
 	drawTxtImage('', str, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
