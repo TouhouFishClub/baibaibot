@@ -334,6 +334,7 @@ const RenderWorkTimeLine = (callback) => {
 							<div class="info-desc">剩余${currentInfo.count}次</div>
 						</div>
 						<div class="time-line-progress">
+							${(bossInfo.hourOfWeek[cWeek][0] == 0 && bossInfo.hourOfWeek[(cWeek + 6) % 7][bossInfo.hourOfWeek[(cWeek + 6) % 7].length - 1] == 23) ? `<div class="time-line-progress-item" style="left: ${-1 * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.progressColor};"></div>` : ''}
 							${bossInfo.hourOfWeek[cWeek].map(hour => {
 				return `<div class="time-line-progress-item" style="left: ${hour * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.progressColor};"></div>`
 			}).join('')}
