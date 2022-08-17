@@ -337,7 +337,7 @@ const RenderWorkTimeLine = (callback) => {
 							${bossInfo.hourOfWeek[cWeek].map(hour => {
 				return `<div class="time-line-progress-item" style="left: ${hour * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.progressColor};"></div>`
 			}).join('')}
-							<div class="boss-name" style="color: ${textColor}">${bossInfo.cnName}(${bossInfo.name})</div>
+							<div class="boss-name" style="color: ${bossInfo.textColor}">${bossInfo.cnName}(${bossInfo.name})</div>
 						</div>
 					</div>
 				`
