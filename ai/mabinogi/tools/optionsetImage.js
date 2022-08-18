@@ -93,6 +93,7 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
   const MAX_WIDTH = 350
   desc.forEach(str => {
     // console.log(str)
+		str = str.trim()
     let buff = true
     if(/^\[.*\]$/.test(str)){
       buff = false
