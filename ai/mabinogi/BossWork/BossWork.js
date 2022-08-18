@@ -18,7 +18,9 @@ const BossList = {
 		cnName: '黑龙',
 		name: 'Black Dragon',
 		progressColor: '#000',
-		textColor: '#505050'
+		textColor: '#505050',
+		monsterColor: '#2b2b2b',
+		monsterImage: 'BlackDragon.png'
 	},
 	WhiteDragon: {
 		genMinute: 57,
@@ -34,7 +36,9 @@ const BossList = {
 		cnName: '白龙',
 		name: 'White Dragon',
 		progressColor: '#b4fff8',
-		textColor: '#00564e'
+		textColor: '#00564e',
+		monsterColor: '#d9edec',
+		monsterImage: 'WhiteDragon.png'
 	},
 	PrairieDragon: {
 		genMinute: 12,
@@ -50,7 +54,9 @@ const BossList = {
 		cnName: '平原龙',
 		name: 'Prairie Dragon',
 		progressColor: '#008a07',
-		textColor: '#90fd97'
+		textColor: '#90fd97',
+		monsterColor: '#c2d1a6',
+		monsterImage: 'PrairieDragon.png'
 	},
 	DesertDragon: {
 		genMinute: 12,
@@ -66,7 +72,9 @@ const BossList = {
 		cnName: '沙漠龙',
 		name: 'Desert Dragon',
 		progressColor: '#703c00',
-		textColor: '#ffc174'
+		textColor: '#ffc174',
+		monsterColor: '#fef2ca',
+		monsterImage: 'DesertDragon.png'
 	},
 	RedDragon: {
 		genMinute: 12,
@@ -82,7 +90,9 @@ const BossList = {
 		cnName: '红龙',
 		name: 'Red Dragon',
 		progressColor: '#d80000',
-		textColor: '#ff9191'
+		textColor: '#ff9191',
+		monsterColor: '#f2d0cf',
+		monsterImage: 'RedDragon.png'
 	},
 	Mokkurkalfi: {
 		genMinute: 27,
@@ -98,7 +108,9 @@ const BossList = {
 		cnName: '莫库尔卡皮',
 		name: 'Mokkurkalfi',
 		progressColor: '#003d00',
-		textColor: '#7fff7f'
+		textColor: '#7fff7f',
+		monsterColor: '#cebcca',
+		monsterImage: 'Mokkurkalfi.png'
 	},
 	SylvanDragon: {
 		genMinute: 27,
@@ -114,7 +126,9 @@ const BossList = {
 		cnName: '希尔斑龙',
 		name: 'Sylvan Dragon',
 		progressColor: '#315bc9',
-		textColor: '#7b94b4'
+		textColor: '#7b94b4',
+		monsterColor: '#d6cabe',
+		monsterImage: 'SylvanDragon.png'
 	},
 	Mammoth: {
 		genMinute: 32,
@@ -130,7 +144,9 @@ const BossList = {
 		cnName: '猛犸象',
 		name: 'Mammoth',
 		progressColor: '#ffa036',
-		textColor: '#4f2a00'
+		textColor: '#4f2a00',
+		monsterColor: '#cabcb1',
+		monsterImage: 'Mammoth.png'
 	},
 	Ifrit: {
 		genMinute: 32,
@@ -146,7 +162,9 @@ const BossList = {
 		cnName: '火神',
 		name: 'Ifrit',
 		progressColor: '#ff7272',
-		textColor: '#770000'
+		textColor: '#770000',
+		monsterColor: '#f8d9bd',
+		monsterImage: 'Ifrit.png'
 	},
 	Yeti: {
 		genMinute: 32,
@@ -162,7 +180,9 @@ const BossList = {
 		cnName: '雪人',
 		name: 'Yeti',
 		progressColor: '#6e98ff',
-		textColor: '#002172'
+		textColor: '#002172',
+		monsterColor: '#cbd2ee',
+		monsterImage: 'Yeti.png'
 	},
 	GiantLion: {
 		genMinute: 45,
@@ -178,7 +198,9 @@ const BossList = {
 		cnName: '巨大狮子',
 		name: 'Giant Lion',
 		progressColor: '#ffb820',
-		textColor: '#593e00'
+		textColor: '#593e00',
+		monsterColor: '#fbd374',
+		monsterImage: 'GiantLion.png'
 	},
 	GiantSandworm: {
 		genMinute: 45,
@@ -194,7 +216,9 @@ const BossList = {
 		cnName: '巨大沙虫怪',
 		name: 'Giant Sandworm',
 		progressColor: '#8f8f8f',
-		textColor: '#3f3232'
+		textColor: '#3f3232',
+		monsterColor: '#ebebeb',
+		monsterImage: 'GiantSandworm.png'
 	},
 	GiantAlligator: {
 		genMinute: 45,
@@ -210,7 +234,9 @@ const BossList = {
 		cnName: '巨大鳄鱼',
 		name: 'Giant Alligator',
 		progressColor: '#74903d',
-		textColor: '#2b3d00'
+		textColor: '#2b3d00',
+		monsterColor: '#8cb7ae',
+		monsterImage: 'GiantAlligator.png'
 	},
 }
 
@@ -288,8 +314,8 @@ const RenderWorkTimeLine = (callback) => {
     		border-top: 1px solid #666;
     	}
     	.main-container .time-line .boss-info{
-    		width: 100px;
-    		height: 80px;
+    		width: 150px;
+    		height: 60px;
     	}
     	.main-container .time-line .boss-info .info-desc{
     		width: 150px;

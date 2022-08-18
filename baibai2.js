@@ -140,7 +140,7 @@ const { ygo } = require('./ai/ygo/ygo')
 // const { carrot } = require('./ai/mabinogi/carrot')
 
 const { FerryTimetable } = require('./ai/mabinogi/ferryTimetable')
-const { BossWork } = require('./ai/mabinogi/BossWork')
+const { BossWork } = require('./ai/mabinogi/BossWork/BossWork')
 
 const {handleDSReply,handleVoteReply} = require('./ai/games/ds/dsmain')
 
