@@ -2,8 +2,8 @@ const fs = require('fs-extra')
 const path = require('path')
 const xml2js = require('xml2js')
 module.exports = function(callback) {
-  let optionsetInfo = fs.readFileSync(path.join(__dirname, 'optionset_IT6'), 'utf-8')
-  let optionsetXml = fs.readFileSync(path.join(__dirname, 'optionset_IT6.xml'), 'utf-8')
+  let optionsetInfo = fs.readFileSync(path.join(__dirname, 'optionset_IT11'), 'utf-8')
+  let optionsetXml = fs.readFileSync(path.join(__dirname, 'optionset_IT11.xml'), 'utf-8')
 	let optionsetCustom = fs.readJsonSync(path.join(__dirname, 'custom.json'), 'utf-8')
   // console.log(optionsetXml)
   optionsetXml = optionsetXml.substring(optionsetXml.indexOf('<'))
@@ -13,7 +13,7 @@ module.exports = function(callback) {
     let sp = val.split('\t')
     transform[`_LT[xml.optionset.${sp[0]}]`] = sp[1]
   })
-  let effectiveOptionset = []
+  let effectiveOptionsetHashMap = {}
   parser.parseString(optionsetXml, (err, result) => {
     let options = result.OptionSet.OptionSetList[0].OptionSet.map(val => val.$)
 	  if(optionsetCustom.length) {
@@ -52,9 +52,9 @@ module.exports = function(callback) {
         obj.Buff = buffArr
         obj.BuffStr = buffArr.concat(debuffArr).join(',')
         obj.Debuff = debuffArr
-        effectiveOptionset.push(obj)
+				effectiveOptionsetHashMap[obj.ID] = obj
       }
     })
-    callback(effectiveOptionset)
+    callback(Object.values(effectiveOptionsetHashMap))
   })
 }
