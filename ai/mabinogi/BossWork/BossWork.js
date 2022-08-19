@@ -319,6 +319,8 @@ const RenderWorkTimeLine = (callback) => {
     		width: 150px;
     		height: 60px;
     		position: relative;
+    		padding-left: 60px;
+    		padding-right: 3px;
     	}
     	.main-container .time-line .boss-info .boss-image{
     		height: 60px;
@@ -327,8 +329,14 @@ const RenderWorkTimeLine = (callback) => {
     		top: 0;
     		left: 0;
     	}
+    	.main-container .time-line .boss-info .boss-cutline{
+    		width: 3px;
+    		height: 60px;
+    		position: absolute;
+    		top: 0;
+    		right: 0;
+    	}
     	.main-container .time-line .boss-info .info-desc{
-    		width: 150px;
     		line-height: 20px;
     		font-size: 14px;
     	}
@@ -370,11 +378,12 @@ const RenderWorkTimeLine = (callback) => {
 							<div class="info-desc">本次：${currentInfo.current}</div>
 							<div class="info-desc">下次：${nextInfo}</div>
 							<div class="info-desc">剩余${currentInfo.count}次</div>
+							<div class="boss-cutline" style="background-color: ${bossInfo.progressColor}"></div>
 						</div>
 						<div class="time-line-progress">
-							${(bossInfo.hourOfWeek[cWeek][0] == 0 && bossInfo.hourOfWeek[(cWeek + 6) % 7][bossInfo.hourOfWeek[(cWeek + 6) % 7].length - 1] == 23) ? `<div class="time-line-progress-item" style="left: ${-1 * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.progressColor};"></div>` : ''}
+							${(bossInfo.hourOfWeek[cWeek][0] == 0 && bossInfo.hourOfWeek[(cWeek + 6) % 7][bossInfo.hourOfWeek[(cWeek + 6) % 7].length - 1] == 23) ? `<div class="time-line-progress-item" style="left: ${-1 * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.monsterColor};"></div>` : ''}
 							${bossInfo.hourOfWeek[cWeek].map(hour => {
-				return `<div class="time-line-progress-item" style="left: ${hour * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.progressColor};"></div>`
+				return `<div class="time-line-progress-item" style="left: ${hour * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.monsterColor};"></div>`
 			}).join('')}
 							<div class="boss-name" style="color: ${bossInfo.textColor}">${bossInfo.cnName}(${bossInfo.name})</div>
 						</div>
