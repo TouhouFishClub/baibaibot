@@ -21,6 +21,7 @@ const BossList = {
 		progressColor: '#000',
 		textColor: '#505050',
 		monsterColor: '#2b2b2b',
+		monsterInfoColor: '#fff',
 		monsterImage: 'BlackDragon.png'
 	},
 	WhiteDragon: {
@@ -327,7 +328,7 @@ const RenderWorkTimeLine = (callback) => {
     		width: 150px;
     		height: 60px;
     		position: relative;
-    		padding-left: 75px;
+    		padding-left: 90px;
     		padding-right: 3px;
     		display: flex;
     		flex-direction: row;
@@ -339,10 +340,11 @@ const RenderWorkTimeLine = (callback) => {
     		width: auto;
     		position: absolute;
     		top: 0;
-    		left: 0;
+    		left: 10px;
     	}
     	.main-container .time-line .boss-info .boss-time{
     		display: flex;
+    		height: 60px;
     		flex-direction: column;
     		justify-content: center;
     		align-items: flex-start;
@@ -356,6 +358,24 @@ const RenderWorkTimeLine = (callback) => {
     	}
     	.main-container .time-line .boss-info .boss-time .time + .time{
     		border-top: 1px solid #999;
+    	}
+    	.main-container .time-line .boss-info .boss-count{
+    		display: flex;
+    		height: 60px;
+    		flex-direction: column;
+    		justify-content: center;
+    		align-items: flex-start;
+    		padding-left: 5px;
+    		padding-right: 5px;
+    	}
+    	.main-container .time-line .boss-info .boss-count .label{
+    		font-size: 20px;
+    		line-height: 24px;
+    	}
+    	.main-container .time-line .boss-info .boss-count .label{
+    		font-size: 36px;
+    		line-height: 40px;
+    		font-family: Corp_Bold;
     	}
     	.main-container .time-line .boss-info .boss-cutline{
 				width: 3px;
@@ -408,7 +428,10 @@ const RenderWorkTimeLine = (callback) => {
 								<div class="time current">${currentInfo.current}</div>
 								<div class="time next">${nextInfo}</div>
 							</div>
-							<div class="info-desc">剩余${currentInfo.count}次</div>
+							<div class="boss-count">
+								<div class="label">剩余</div>
+								<div class="text">${currentInfo.count}</div>
+							</div>
 							<div class="boss-cutline" style="background-color: ${bossInfo.progressColor}"></div>
 						</div>
 						<div class="time-line-progress">
