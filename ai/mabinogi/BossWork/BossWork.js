@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const nodeHtmlToImage = require('node-html-to-image')
-const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'))
+const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', '..', 'baibaiConfigs.js'))
 // const { drawTxtImage } = require('../../cq/drawImageBytxt')
 const BossList = {
 	BlackDragon: {
