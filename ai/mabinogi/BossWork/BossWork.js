@@ -356,6 +356,9 @@ const RenderWorkTimeLine = (callback) => {
     		line-height: 26px;
     		font-family: Corp_Bold;
     	}
+    	.main-container .time-line .boss-info .boss-time .time.current{
+    		opacity: 0.7;
+    	}
     	.main-container .time-line .boss-info .boss-time .time + .time{
     		border-top: 1px solid #999;
     	}
@@ -372,7 +375,7 @@ const RenderWorkTimeLine = (callback) => {
     		font-size: 20px;
     		line-height: 24px;
     	}
-    	.main-container .time-line .boss-info .boss-count .label{
+    	.main-container .time-line .boss-info .boss-count .text{
     		font-size: 36px;
     		line-height: 40px;
     		font-family: Corp_Bold;
