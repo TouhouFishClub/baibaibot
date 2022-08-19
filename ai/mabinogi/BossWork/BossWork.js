@@ -302,7 +302,7 @@ const RenderWorkTimeLine = (callback) => {
         src: url(${Corp_Bold}) format('opentype');
       }
     	body {
-    		width: 930px;
+    		width: 1020px;
     	}
     	.main-container {
     		padding: 30px;
@@ -325,7 +325,7 @@ const RenderWorkTimeLine = (callback) => {
     		/* border-top: 1px solid #666; */
     	}
     	.main-container .time-line .boss-info{
-    		width: 150px;
+    		width: 147px;
     		height: 60px;
     		position: relative;
     		padding-left: 90px;
@@ -451,7 +451,7 @@ const RenderWorkTimeLine = (callback) => {
 					</div>
 				`
 		}).join('')}
-  		<div class="cross-time-line" style="left: ${new Date().getHours() * 30 + new Date().getMinutes() / 2 + 180}px"></div>
+  		<div class="cross-time-line" style="left: ${new Date().getHours() * 30 + new Date().getMinutes() / 2 + 270}px"></div>
 		</div>
   </body>
 </html>
