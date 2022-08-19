@@ -409,7 +409,7 @@ const RenderWorkTimeLine = (callback) => {
     	}
     	.main-container .time-line .time-line-progress .time-line-progress-item{
     		width: 29px;
-    		border-left: 1px solid #000;
+    		border-right: 1px solid #000;
     		height: 60px;
     		position: absolute;
     		top: 0;
@@ -444,7 +444,7 @@ const RenderWorkTimeLine = (callback) => {
 						<div class="time-line-progress">
 							${(bossInfo.hourOfWeek[cWeek][0] == 0 && bossInfo.hourOfWeek[(cWeek + 6) % 7][bossInfo.hourOfWeek[(cWeek + 6) % 7].length - 1] == 23) ? `<div class="time-line-progress-item" style="left: ${-1 * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.monsterColor}; border-color: ${bossInfo.progressColor}"></div>` : ''}
 							${bossInfo.hourOfWeek[cWeek].map(hour => {
-				return `<div class="time-line-progress-item" style="left: ${hour * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.monsterColor};"></div>`
+				return `<div class="time-line-progress-item" style="left: ${hour * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.monsterColor}; border-color: ${bossInfo.progressColor}"></div>`
 			}).join('')}
 							<div class="boss-name" style="color: ${bossInfo.textColor}">${bossInfo.cnName}(${bossInfo.name})</div>
 						</div>
