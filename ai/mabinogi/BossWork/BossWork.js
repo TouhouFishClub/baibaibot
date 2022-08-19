@@ -344,15 +344,18 @@ const RenderWorkTimeLine = (callback) => {
     	.main-container .time-line .boss-info .boss-time{
     		display: flex;
     		flex-direction: column;
-    		justify-content: space-between;
+    		justify-content: center;
     		align-items: flex-start;
     		padding-left: 5px;
     		padding-right: 5px;
     	}
     	.main-container .time-line .boss-info .boss-time .time{
-    		font-size: 20px;
-    		line-height: 24px;
+    		font-size: 22px;
+    		line-height: 26px;
     		font-family: Corp_Bold;
+    	}
+    	.main-container .time-line .boss-info .boss-time .time + .time{
+    		border-top: 1px solid #999;
     	}
     	.main-container .time-line .boss-info .boss-cutline{
 				width: 3px;
