@@ -350,19 +350,16 @@ const RenderWorkTimeLine = (callback) => {
     		padding-right: 5px;
     	}
     	.main-container .time-line .boss-info .boss-time .time{
-    		display: flex;
-    		flex-direction: column;
-    		justify-content: space-between;
-    		align-items: flex-start;
-    		padding-left: 5px;
-    		padding-right: 5px;
-    	}
-    	.main-container .time-line .boss-info .boss-cutline{
     		font-size: 20px;
     		line-height: 24px;
+    		font-family: Corp_Bold;
     	}
-    	.main-container .time-line .boss-info .boss-cutline + .boss-cutline{
-    		border-top: 1px solid #999;
+    	.main-container .time-line .boss-info .boss-cutline{
+				width: 3px;
+				height: 60px;
+				position: absolute;
+				top: 0;
+				right: 0;
     	}
     	.main-container .time-line .boss-info .info-desc{
     		line-height: 20px;
@@ -407,8 +404,6 @@ const RenderWorkTimeLine = (callback) => {
 								<div class="time current">${currentInfo.current}</div>
 								<div class="time next">${nextInfo}</div>
 							</div>
-							<div class="info-desc">本次：</div>
-							<div class="info-desc">下次：${nextInfo}</div>
 							<div class="info-desc">剩余${currentInfo.count}次</div>
 							<div class="boss-cutline" style="background-color: ${bossInfo.progressColor}"></div>
 						</div>
