@@ -74,7 +74,7 @@ const BossList = {
 		cnName: '沙漠龙',
 		name: 'Desert Dragon',
 		progressColor: '#703c00',
-		textColor: '#ffc174',
+		textColor: '#985200',
 		monsterColor: '#fef2ca',
 		monsterImage: 'DesertDragon.png'
 	},
@@ -348,7 +348,7 @@ const RenderWorkTimeLine = (callback) => {
     		flex-direction: column;
     		justify-content: center;
     		align-items: flex-start;
-    		padding-left: 5px;
+    		padding-left: 10px;
     		padding-right: 5px;
     	}
     	.main-container .time-line .boss-info .boss-time .time{
@@ -369,7 +369,7 @@ const RenderWorkTimeLine = (callback) => {
     		justify-content: center;
     		align-items: center;
     		padding-left: 5px;
-    		padding-right: 5px;
+    		padding-right: 10px;
     	}
     	.main-container .time-line .boss-info .boss-count .label{
     		font-size: 16px;
