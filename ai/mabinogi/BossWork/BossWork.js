@@ -367,17 +367,17 @@ const RenderWorkTimeLine = (callback) => {
     		height: 60px;
     		flex-direction: column;
     		justify-content: center;
-    		align-items: flex-start;
+    		align-items: center;
     		padding-left: 5px;
     		padding-right: 5px;
     	}
     	.main-container .time-line .boss-info .boss-count .label{
-    		font-size: 20px;
-    		line-height: 24px;
+    		font-size: 16px;
+    		line-height: 20px;
     	}
     	.main-container .time-line .boss-info .boss-count .text{
-    		font-size: 36px;
-    		line-height: 40px;
+    		font-size: 32px;
+    		line-height: 36px;
     		font-family: Corp_Bold;
     	}
     	.main-container .time-line .boss-info .boss-cutline{
