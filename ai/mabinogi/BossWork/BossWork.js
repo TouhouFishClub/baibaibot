@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const nodeHtmlToImage = require('node-html-to-image')
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', '..', 'baibaiConfigs.js'))
-const font2base64 = require("_node-font2base64@0.7.1@node-font2base64");
+const font2base64 = require('node-font2base64')
 // const { drawTxtImage } = require('../../cq/drawImageBytxt')
 const BossList = {
 	BlackDragon: {
