@@ -278,6 +278,8 @@ const BossWork = (qq, group, callback) => {
 	// drawTxtImage('', str, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
+const BossImageParser = filename => `data:image/png;base64,${new Buffer.from(fs.readFileSync(path.join(__dirname, 'img', filename))).toString('base64')}`
+
 const RenderWorkTimeLine = (callback) => {
 
 	let output = path.join(IMAGE_DATA, 'mabi_other', `bosswork.png`)
@@ -311,11 +313,19 @@ const RenderWorkTimeLine = (callback) => {
     		height: 60px;
     	}
     	.main-container .time-line + .time-line{
-    		border-top: 1px solid #666;
+    		/* border-top: 1px solid #666; */
     	}
     	.main-container .time-line .boss-info{
     		width: 150px;
     		height: 60px;
+    		position: relative;
+    	}
+    	.main-container .time-line .boss-info .boss-image{
+    		height: 60px;
+    		width: auto;
+    		position: absolute;
+    		top: 0;
+    		left: 0;
     	}
     	.main-container .time-line .boss-info .info-desc{
     		width: 150px;
@@ -355,7 +365,8 @@ const RenderWorkTimeLine = (callback) => {
 			let nextInfo = checkNextTime(bossInfo.genMinute, bossInfo.hourOfWeek[cWeek], bossInfo.hourOfWeek[(cWeek + 1) % 7])
 			return `
 					<div class="time-line">
-						<div class="boss-info">
+						<div class="boss-info" style="background-color: ${bossInfo.monsterColor}">
+							<img src="${BossImageParser(bossInfo.monsterImage)}" class="boss-image"/>
 							<div class="info-desc">本次：${currentInfo.current}</div>
 							<div class="info-desc">下次：${nextInfo}</div>
 							<div class="info-desc">剩余${currentInfo.count}次</div>
