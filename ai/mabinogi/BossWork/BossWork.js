@@ -336,7 +336,7 @@ const RenderWorkTimeLine = (callback) => {
     		font-size: 32px;
     		text-align: left;
     		line-height: 60px;
-    		text-shadow: -1px -1px 10px #fff;
+    		text-shadow: 1px 1px 2px #fff;
     	}
     	.main-container .time-line .time-line-progress .time-line-progress-item{
     		width: 30px;
