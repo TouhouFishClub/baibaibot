@@ -395,7 +395,6 @@ const RenderWorkTimeLine = (callback) => {
     		width: 720px;
     		height: 60px;
     		position: relative;
-    		background-color: #f3f3f3;
     		overflow: hidden;
     	}
     	.main-container .time-line .time-line-progress .boss-name{
@@ -409,10 +408,15 @@ const RenderWorkTimeLine = (callback) => {
     		text-shadow: 1px 1px 2px #fff;
     	}
     	.main-container .time-line .time-line-progress .time-line-progress-item{
-    		width: 30px;
+    		width: 29px;
+    		border-left: 1px solid #000;
     		height: 60px;
     		position: absolute;
     		top: 0;
+    		background-color: #fff;
+    	}
+    	.main-container .time-line .time-line-progress:nth-child(odd) .time-line-progress-item{
+    		background-color: #f3f3f3;
     	}
     </style>
   </head>
@@ -438,7 +442,7 @@ const RenderWorkTimeLine = (callback) => {
 							<div class="boss-cutline" style="background-color: ${bossInfo.progressColor}"></div>
 						</div>
 						<div class="time-line-progress">
-							${(bossInfo.hourOfWeek[cWeek][0] == 0 && bossInfo.hourOfWeek[(cWeek + 6) % 7][bossInfo.hourOfWeek[(cWeek + 6) % 7].length - 1] == 23) ? `<div class="time-line-progress-item" style="left: ${-1 * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.monsterColor};"></div>` : ''}
+							${(bossInfo.hourOfWeek[cWeek][0] == 0 && bossInfo.hourOfWeek[(cWeek + 6) % 7][bossInfo.hourOfWeek[(cWeek + 6) % 7].length - 1] == 23) ? `<div class="time-line-progress-item" style="left: ${-1 * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.monsterColor}; border-color: ${bossInfo.progressColor}"></div>` : ''}
 							${bossInfo.hourOfWeek[cWeek].map(hour => {
 				return `<div class="time-line-progress-item" style="left: ${hour * 30 + bossInfo.genMinute / 2}px; background-color: ${bossInfo.monsterColor};"></div>`
 			}).join('')}
