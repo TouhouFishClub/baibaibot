@@ -2,6 +2,7 @@ var gm = require('gm')
 var request = require("request");
 var fs = require("fs");
 var imageMagick = gm.subClass({ imageMagick : true });
+var path = require('path');
 var {sendGmImage} = require('../../../cq/sendImage');
 const {banUserInGroup} = require('../../../cq/cache');
 
@@ -158,7 +159,6 @@ function init(callback) {
       gunstr=gunstr+"0";
     }
   }
-  require('./render').renderImage(map);
   if(keys.length<2){
     callback("参加人数不足,游戏结束");
     running=false;
