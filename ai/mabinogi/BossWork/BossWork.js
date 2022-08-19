@@ -348,8 +348,7 @@ const RenderWorkTimeLine = (callback) => {
     		flex-direction: column;
     		justify-content: center;
     		align-items: flex-start;
-    		padding-left: 10px;
-    		padding-right: 5px;
+    		flex-grow: 1;
     	}
     	.main-container .time-line .boss-info .boss-time .time{
     		font-size: 22px;
@@ -368,7 +367,6 @@ const RenderWorkTimeLine = (callback) => {
     		flex-direction: column;
     		justify-content: center;
     		align-items: center;
-    		padding-left: 5px;
     		padding-right: 10px;
     	}
     	.main-container .time-line .boss-info .boss-count .label{
