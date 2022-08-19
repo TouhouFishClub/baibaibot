@@ -54,7 +54,7 @@ const BossList = {
 		cnName: '平原龙',
 		name: 'Prairie Dragon',
 		progressColor: '#008a07',
-		textColor: '#90fd97',
+		textColor: '#265428',
 		monsterColor: '#c2d1a6',
 		monsterImage: 'PrairieDragon.png'
 	},
@@ -108,7 +108,7 @@ const BossList = {
 		cnName: '莫库尔卡皮',
 		name: 'Mokkurkalfi',
 		progressColor: '#003d00',
-		textColor: '#7fff7f',
+		textColor: '#274b27',
 		monsterColor: '#cebcca',
 		monsterImage: 'Mokkurkalfi.png'
 	},
@@ -336,9 +336,10 @@ const RenderWorkTimeLine = (callback) => {
     		font-size: 32px;
     		text-align: left;
     		line-height: 60px;
+    		text-shadow: -1px -1px 10px #fff;
     	}
     	.main-container .time-line .time-line-progress .time-line-progress-item{
-    		width: 29px;
+    		width: 30px;
     		height: 60px;
     		position: absolute;
     		top: 0;
