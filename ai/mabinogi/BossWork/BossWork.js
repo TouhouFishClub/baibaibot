@@ -302,7 +302,7 @@ const RenderWorkTimeLine = (callback) => {
         src: url(${Corp_Bold}) format('opentype');
       }
     	body {
-    		width: 1020px;
+    		width: 1040px;
     	}
     	.main-container {
     		padding: 30px;
@@ -325,7 +325,7 @@ const RenderWorkTimeLine = (callback) => {
     		/* border-top: 1px solid #666; */
     	}
     	.main-container .time-line .boss-info{
-    		width: 147px;
+    		width: 167px;
     		height: 60px;
     		position: relative;
     		padding-left: 90px;
@@ -348,6 +348,7 @@ const RenderWorkTimeLine = (callback) => {
     		flex-direction: column;
     		justify-content: center;
     		align-items: flex-start;
+    		padding-left: 10px;
     		flex-grow: 1;
     	}
     	.main-container .time-line .boss-info .boss-time .time{
