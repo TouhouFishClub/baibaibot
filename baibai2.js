@@ -1001,7 +1001,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ret = ret + "俄罗斯轮盘【俄罗斯轮盘】\n";
     ret = ret + "炸弹人【炸弹人】\n";
     ret = ret + "抽卡【抽卡】\n";
-    ret = ret + "群友互砍【'g】\n";
+    ret = ret + "捉内鬼【捉内鬼】\n";
     ret = ret + ""
     callback(ret.trim());
     return;
