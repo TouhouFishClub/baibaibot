@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const nodeHtmlToImage = require('node-html-to-image')
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', '..', 'baibaiConfigs.js'))
+const font2base64 = require("_node-font2base64@0.7.1@node-font2base64");
 // const { drawTxtImage } = require('../../cq/drawImageBytxt')
 const BossList = {
 	BlackDragon: {
@@ -90,7 +91,7 @@ const BossList = {
 		cnName: '红龙',
 		name: 'Red Dragon',
 		progressColor: '#d80000',
-		textColor: '#ff9191',
+		textColor: '#9d0000',
 		monsterColor: '#f2d0cf',
 		monsterImage: 'RedDragon.png'
 	},
@@ -240,6 +241,8 @@ const BossList = {
 	},
 }
 
+const Corp_Bold = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'Corp-Bold.otf'))
+
 const checkWorkState = (genMinute, workTimes, yesterdayWorkTimes) => {
 	let now = new Date(), cHour = now.getHours(), cMinute = now.getMinutes()
 	if(cHour < 1 && workTimes[0] == 0 && cMinute < genMinute && yesterdayWorkTimes[yesterdayWorkTimes.length - 1] == 23) {
@@ -256,7 +259,7 @@ const checkCurrentTime = (genMinute, workTimes) => {
 	let now = new Date(), cHour = now.getHours(), cMinute = now.getMinutes(), tHour = cHour - (cMinute < genMinute ? 1 : 0)
 	return {
 		count: workTimes.filter(x => x > tHour).length,
-		current: new Set(workTimes).has(tHour) ? `${tHour}:${genMinute}` : '无'
+		current: new Set(workTimes).has(tHour) ? `${tHour}:${genMinute}` : '--:--'
 	}
 }
 const checkNextTime = (genMinute, workTimes, tomorrowWorkTimes) => {
@@ -282,6 +285,7 @@ const BossImageParser = filename => `data:image/png;base64,${new Buffer.from(fs.
 
 const RenderWorkTimeLine = (callback) => {
 
+
 	let output = path.join(IMAGE_DATA, 'mabi_other', `bosswork.png`)
 	// let output = path.join(`bosswork.png`)
 
@@ -292,6 +296,10 @@ const RenderWorkTimeLine = (callback) => {
   <head>
     <title></title>
     <style>
+    	@font-face {
+        font-family: 'Corp_Bold';
+        src: url(${Corp_Bold}) format('opentype');
+      }
     	body {
     		width: 930px;
     	}
@@ -319,8 +327,12 @@ const RenderWorkTimeLine = (callback) => {
     		width: 150px;
     		height: 60px;
     		position: relative;
-    		padding-left: 60px;
+    		padding-left: 75px;
     		padding-right: 3px;
+    		display: flex;
+    		flex-direction: row;
+    		justify-content: space-between;
+    		align-items: center;
     	}
     	.main-container .time-line .boss-info .boss-image{
     		height: 60px;
@@ -329,12 +341,28 @@ const RenderWorkTimeLine = (callback) => {
     		top: 0;
     		left: 0;
     	}
+    	.main-container .time-line .boss-info .boss-time{
+    		display: flex;
+    		flex-direction: column;
+    		justify-content: space-between;
+    		align-items: flex-start;
+    		padding-left: 5px;
+    		padding-right: 5px;
+    	}
+    	.main-container .time-line .boss-info .boss-time .time{
+    		display: flex;
+    		flex-direction: column;
+    		justify-content: space-between;
+    		align-items: flex-start;
+    		padding-left: 5px;
+    		padding-right: 5px;
+    	}
     	.main-container .time-line .boss-info .boss-cutline{
-    		width: 3px;
-    		height: 60px;
-    		position: absolute;
-    		top: 0;
-    		right: 0;
+    		font-size: 20px;
+    		line-height: 24px;
+    	}
+    	.main-container .time-line .boss-info .boss-cutline + .boss-cutline{
+    		border-top: 1px solid #999;
     	}
     	.main-container .time-line .boss-info .info-desc{
     		line-height: 20px;
@@ -373,9 +401,13 @@ const RenderWorkTimeLine = (callback) => {
 			let nextInfo = checkNextTime(bossInfo.genMinute, bossInfo.hourOfWeek[cWeek], bossInfo.hourOfWeek[(cWeek + 1) % 7])
 			return `
 					<div class="time-line">
-						<div class="boss-info" style="background-color: ${bossInfo.monsterColor}">
+						<div class="boss-info" style="background-color: ${bossInfo.monsterColor}; color: ${bossInfo.monsterInfoColor || '#333'}">
 							<img src="${BossImageParser(bossInfo.monsterImage)}" class="boss-image"/>
-							<div class="info-desc">本次：${currentInfo.current}</div>
+							<div class="boss-time">
+								<div class="time current">${currentInfo.current}</div>
+								<div class="time next">${nextInfo}</div>
+							</div>
+							<div class="info-desc">本次：</div>
 							<div class="info-desc">下次：${nextInfo}</div>
 							<div class="info-desc">剩余${currentInfo.count}次</div>
 							<div class="boss-cutline" style="background-color: ${bossInfo.progressColor}"></div>
