@@ -378,6 +378,7 @@ const RenderWorkTimeLine = (callback) => {
     	.main-container .time-line .time-line-progress .boss-name{
     		width: 720px;
     		height: 60px;
+    		padding-left: 20px;
     		position: absolute;
     		font-size: 32px;
     		text-align: left;
