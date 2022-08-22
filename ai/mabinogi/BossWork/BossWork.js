@@ -459,16 +459,13 @@ const RenderWorkTimeLine = (callback) => {
 							<img src="${BossImageParser(bossInfo.monsterImage)}" class="boss-image"/>
 							<div class="boss-time">
 								<div class="time current">
-									<div class="day-info">
-										${currentInfo.isTomorrow ? '明日': '今日'}
-									</div>
 									<div class="desc">
 										${currentInfo.current}
 									</div>
 								</div>
 								<div class="time next">
 									<div class="day-info">
-										${currentInfo.isTomorrow ? '明日': '今日'}
+										${nextInfo.isTomorrow ? '明日': '今日'}
 									</div>
 									<div class="desc">
 										${nextInfo.time}
