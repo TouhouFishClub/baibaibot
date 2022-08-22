@@ -266,7 +266,16 @@ const checkCurrentTime = (genMinute, workTimes) => {
 const checkNextTime = (genMinute, workTimes, tomorrowWorkTimes) => {
 	let now = new Date(), cHour = now.getHours(), cMinute = now.getMinutes(), tHour = cHour + (cMinute < genMinute ? 0 : 1)
 	let targetHour = workTimes.concat(tomorrowWorkTimes.map(x => x + 24)).filter(x => x >= tHour)[0]
-	return targetHour > 23 ? `[明日]${targetHour % 24}:${genMinute}`: `${targetHour}:${genMinute}`
+	return targetHour > 23 ?
+		{
+			isTomorrow: true,
+			time: `${targetHour % 24}:${genMinute}`
+		}
+		:
+		{
+			isTomorrow: false,
+			time: `${targetHour}:${genMinute}`
+		}
 }
 
 const BossWork = (qq, group, callback) => {
@@ -302,7 +311,7 @@ const RenderWorkTimeLine = (callback) => {
         src: url(${Corp_Bold}) format('opentype');
       }
     	body {
-    		width: 1040px;
+    		width: 1010px;
     	}
     	.main-container {
     		padding: 30px;
@@ -316,6 +325,12 @@ const RenderWorkTimeLine = (callback) => {
     		top: 30px;
     		bottom: 30px;
     	}
+    	.main-container .cross-time-line-base{
+    		position: absolute;
+    		border: 1px solid #f00;
+    		top: 30px;
+    		bottom: 30px;
+    	}
     	.main-container .time-line{
     		display: flex;
     		justify-content: space-between;
@@ -325,7 +340,7 @@ const RenderWorkTimeLine = (callback) => {
     		/* border-top: 1px solid #666; */
     	}
     	.main-container .time-line .boss-info{
-    		width: 167px;
+    		width: 137px;
     		height: 60px;
     		position: relative;
     		padding-left: 90px;
@@ -352,9 +367,21 @@ const RenderWorkTimeLine = (callback) => {
     		flex-grow: 1;
     	}
     	.main-container .time-line .boss-info .boss-time .time{
+    		display: flex;
+    		justify-content: space-between;
+    		align-items: center;
+    	}
+    	.main-container .time-line .boss-info .boss-time .time .day-info{
+    		font-size: 12px;
+    		line-height: 13px;
+    		width: 18px;
+    		zoom: 0.8;
+    	}
+    	.main-container .time-line .boss-info .boss-time .time .desc{
     		font-size: 22px;
     		line-height: 26px;
     		font-family: Corp_Bold;
+    		flex-shrink: 0;
     	}
     	.main-container .time-line .boss-info .boss-time .time.current{
     		opacity: 0.7;
@@ -431,8 +458,22 @@ const RenderWorkTimeLine = (callback) => {
 						<div class="boss-info" style="background-color: ${bossInfo.monsterColor}; color: ${bossInfo.monsterInfoColor || '#333'}">
 							<img src="${BossImageParser(bossInfo.monsterImage)}" class="boss-image"/>
 							<div class="boss-time">
-								<div class="time current">${currentInfo.current}</div>
-								<div class="time next">${nextInfo}</div>
+								<div class="time current">
+									<div class="day-info">
+										${currentInfo.isTomorrow ? '明日': '今日'}
+									</div>
+									<div class="desc">
+										${currentInfo.current}
+									</div>
+								</div>
+								<div class="time next">
+									<div class="day-info">
+										${currentInfo.isTomorrow ? '明日': '今日'}
+									</div>
+									<div class="desc">
+										${nextInfo.time}
+									</div>
+							</div>
 							</div>
 							<div class="boss-count">
 								<div class="label">剩余</div>
@@ -450,7 +491,8 @@ const RenderWorkTimeLine = (callback) => {
 					</div>
 				`
 		}).join('')}
-  		<div class="cross-time-line" style="left: ${new Date().getHours() * 30 + new Date().getMinutes() / 2 + 270}px"></div>
+  		<div class="cross-time-line" style="left: ${new Date().getHours() * 30 + new Date().getMinutes() / 2 + 260}px"></div>
+  		<!--div class="cross-time-line-base" style="left: 260px"></div-->
 		</div>
   </body>
 </html>
