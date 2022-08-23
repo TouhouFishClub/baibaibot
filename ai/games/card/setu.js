@@ -77,6 +77,15 @@ function runsetu(content,gid,qq,callback,port){
       }
   }
 
+  if(true){
+    fs.readdir('../coolq-data/cq/data/image/send/setu/', function (err, files) {
+      var len = files.length;
+      var rdfile = files[Math.floor(Math.random() * len)];
+      var ret = '' + '[CQ:'+imgtype+',file=send/setu/' + rdfile + ']';
+      callback(ret);
+    })
+    return;
+  }
 
 
   var apikey;
