@@ -465,6 +465,13 @@ function checkwin(){
   var ret = '';
   var alive = 0;
   var winrank = -1;
+  var ngstr = '内鬼：';
+  for(var qq in usermap){
+    if(usermap[qq].role==1){
+      ngstr = nsgtr + '【'+usermap[qq].name+'】'
+    }
+  }
+  ret = ngstr + "\n";
   for(var qq in usermap){
     if(usermap[qq].dice>0){
       alive++;
