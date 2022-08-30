@@ -23,7 +23,7 @@ const chartHeight = 300
 
 var cookiechocobo = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong; PHPSESSID=q4ljhu81j84gh5f13sen25eo6t; mogboard_server=LaNuoXiYa; _gat_gtag_UA_147847104_1=1';
 var cookiemog = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong; PHPSESSID=q4ljhu81j84gh5f13sen25eo6t; mogboard_server=BaiYinXiang';
-var cookiecat = '__cfduid=d044f513cc4f89bcdf5f878ef8242396f1597646052; PHPSESSID=ct7bavo5162m76ighdia55d5hd; mogboard_leftnav=off; mogboard_homeworld=no; _ga=GA1.2.43986777.1597646056; _gid=GA1.2.606319622.1597646056; _gat_gtag_UA_147847104_1=1; mogboard_server=JingYuZhuangYuan; mogboard_language=chs; mogboard_timezone=Asia/Hong_Kong';
+var cookiecat = '__Host-next-auth.csrf-token=c192ea3cb692b73ff88855cab54ea36ad66faa62beb875f8907e1f3c3bccfe63%7C2a2e75c503e449053ace75e76787abda6e55cc98843b2b3c9a308d493d8a2c36; __Secure-next-auth.callback-url=https%3A%2F%2Funiversalis.app; mogboard_language=chs; mogboard_timezone=Asia%2FShanghai; mogboard_leftnav=off; mogboard_homeworld=no; mogboard_server=%E9%9D%99%E8%AF%AD%E5%BA%84%E5%9B%AD';
 
 
 var MongoClient = require('mongodb').MongoClient;
