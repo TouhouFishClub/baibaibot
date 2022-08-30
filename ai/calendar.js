@@ -144,21 +144,29 @@ const deleteCalendarByOid = async (_id, callback) => {
 }
 
 const searchCalendar = async (project, groupId, callback) => {
-	let data = await client.db('db_bot').collection('cl_calendar').find({ project, groupId }).toArray()
+	let now = new Date(), year = now.getFullYear(), month = now.getMonth() + 1, p = project
+	if(p.indexOf('#')) {
+		let sp = project.indexOf('#')
+		p = sp[1]
+		let dateSp = sp[0].split('-')
+		year = dateSp[0]
+		month = dateSp[1]
+	}
+
+	let data = await client.db('db_bot').collection('cl_calendar').find({ p, groupId }).toArray()
 	if(data.length > 0) {
 
-		let now = new Date()
-		renderCalendar(now.getFullYear(), now.getMonth() + 1, callback, data.map(x => {
+		renderCalendar(year, month, callback, data.map(x => {
 			return {
 				name: x.activity,
 				start_time: formatTime(x.startTime),
 				end_time: formatTime(x.endTime)
 			}
-		}), `${project}_${groupId}`)
+		}), `${p}_${groupId}`)
 
 		// callback(`${project}: \n${data.map(x => `${x.activity} ${formatTime(x.startTime)} ~ ${formatTime(x.endTime)}`).join('\n')}`)
 	} else {
-		callback(`${project}: 没有数据`)
+		callback(`${p}: 没有数据`)
 	}
 }
 
