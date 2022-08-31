@@ -8,7 +8,7 @@ const nodeHtmlToImage = require('node-html-to-image')
 let client
 
 const analysisChatData = data => {
-	let obj = {}
+	let obj = {}, out = {}
 	data.forEach(msg => {
 		if(msg.d){
 			let filterCQ = msg.d.split('[CQ:').map((x, i) => i ? x.split(']')[1]: x).filter(x => x.trim())
@@ -32,7 +32,15 @@ const analysisChatData = data => {
 			})
 		}
 	})
-	return obj
+	Object.keys(obj).map(x => {
+		return {
+			k: x,
+			v: obj[x]
+		}
+	}).sort((a, b) => b.v -a.v).slice(0, 150).forEach(o => {
+		out[o.k] = o.v
+	})
+	return out
 }
 
 const fetchGroupData = async groupId => {
