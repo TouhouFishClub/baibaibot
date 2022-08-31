@@ -11,7 +11,7 @@ const analysisChatData = data => {
 	let obj = {}
 	data.forEach(msg => {
 		if(msg.d){
-			let filterCQ = msg.d.split('[CQ:').map((x, i) => i ? x.split(']')[1]: x).filter(x => x)
+			let filterCQ = msg.d.split('[CQ:').map((x, i) => i ? x.split(']')[1]: x).filter(x => x.trim())
 			filterCQ.forEach(txt => {
 				console.log(txt)
 				nodejieba.cut(txt).forEach(c => {
