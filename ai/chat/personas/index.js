@@ -10,6 +10,7 @@ let client
 const analysisChatData = data => {
 	let obj = {}
 	data.forEach(msg => {
+		console.log(msg)
 		msg.split('[CQ:').map(x => x.split(']')[1]).filter(x => x).forEach(txt => nodejieba.cut(txt).forEach(c => {
 			if(obj[c]) {
 				obj[c] = obj[c] + 1
