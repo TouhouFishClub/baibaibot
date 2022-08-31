@@ -11,13 +11,16 @@ const analysisChatData = data => {
 	let obj = {}
 	data.forEach(msg => {
 		if(msg.d){
-			msg.d.split('[CQ:').map(x => x.split(']')[1]).filter(x => x).forEach(txt => nodejieba.cut(txt).forEach(c => {
-				if(obj[c]) {
-					obj[c] = obj[c] + 1
-				} else {
-					obj[c] = 1
-				}
-			}))
+			msg.d.split('[CQ:').map(x => x.split(']')[1]).filter(x => x).forEach(txt => {
+				console.log(txt)
+				nodejieba.cut(txt).forEach(c => {
+					if(obj[c]) {
+						obj[c] = obj[c] + 1
+					} else {
+						obj[c] = 1
+					}
+				})
+			})
 		}
 	})
 	return obj
