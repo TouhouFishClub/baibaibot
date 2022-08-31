@@ -8,10 +8,10 @@ var client = new AipOcrClient(APP_ID, API_KEY, SECRET_KEY);
 
 
 function baiduocr(url,callback) {
-  // var url = "http://gchat.qpic.cn/gchatpic_new/357474405/568281876-2857650099-4BBADF732E3557929D632EF18B7CC221/0?vuin=2375373419&term=2";
+  // var url = "https://gchat.qpic.cn/gchatpic_new/799018865/727605874-2709565858-EED85D67165766654DE3EBCEC0834637/0?term=2";
   client.generalBasicUrl(url).then(function (result) {
     var wds = result.words_result;
-    console.log(wds);
+    console.log(result);
     var ret = '';
     for(var i=0;i<wds.length;i++){
       var wd = wds[i].words;
