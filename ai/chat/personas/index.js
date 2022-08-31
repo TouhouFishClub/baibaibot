@@ -15,10 +15,14 @@ const analysisChatData = data => {
 			filterCQ.forEach(txt => {
 				let splitEn = Array.from(txt.matchAll(/[a-zA-Z0-9]+/g)).map(x => x[0])
 				splitEn.forEach(en => {
-					if(obj[en]) {
-						obj[en] = obj[en] + 1
+					if(/^\d{1,3}$/.test(en)) {
+
 					} else {
-						obj[en] = 1
+						if(obj[en]) {
+							obj[en] = obj[en] + 1
+						} else {
+							obj[en] = 1
+						}
 					}
 					txt = txt.split(en).join('')
 				})
