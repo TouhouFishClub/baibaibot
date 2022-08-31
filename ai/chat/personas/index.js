@@ -13,7 +13,15 @@ const analysisChatData = data => {
 		if(msg.d){
 			let filterCQ = msg.d.split('[CQ:').map((x, i) => i ? x.split(']')[1]: x).filter(x => x.trim())
 			filterCQ.forEach(txt => {
-				console.log(txt)
+				let splitEn = Array.from(txt.matchAll(/[a-zA-Z0-9]+/g)).map(x => x[0])
+				splitEn.forEach(en => {
+					if(obj[en]) {
+						obj[en] = obj[en] + 1
+					} else {
+						obj[en] = 1
+					}
+					txt = txt.split(en).join('')
+				})
 				nodejieba.cut(txt).forEach(c => {
 					if(obj[c]) {
 						obj[c] = obj[c] + 1
