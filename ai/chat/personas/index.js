@@ -8,6 +8,9 @@ const nodeHtmlToImage = require('node-html-to-image')
 let client
 
 const analysisChatData = data => {
+	load({
+		userDict: join(__dirname, 'userdict.txt'),
+	})
 	let msgList = []
 	data.forEach(msg => {
 		if(msg.d){
