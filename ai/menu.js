@@ -66,7 +66,7 @@ const menu = async (content, group, callback) => {
       console.log(e)
     }
   }
-  let sp = content.split(' ').filter(x => x)
+  let sp = content.split(' ').filter(x => x && x.indexOf('[CQ') == -1)
   switch (sp[1]) {
     case 'add':
     case '增加':
