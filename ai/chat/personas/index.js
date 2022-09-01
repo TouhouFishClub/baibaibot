@@ -47,9 +47,11 @@ const renderChatPersonas = async (groupId, callback) => {
 		}
 	}
 
-	let obj = await fetchGroupData(groupId)
-	console.log(obj)
-	return
+	let extractArr = await fetchGroupData(groupId)
+	let keyWords = {}
+	extractArr.forEach(item => {
+		keyWords[item.word] = ~~item.weight
+	})
 
 	let echart = readFileSync(join(__dirname, 'echart.min.js'), 'utf-8')
 	let echartWordcloud = readFileSync(join(__dirname, 'echart-wordcloud.js'), 'utf-8')
@@ -78,20 +80,7 @@ const renderChatPersonas = async (groupId, callback) => {
 <div id='main'></div>
 <script>
   var chart = echarts.init(document.getElementById('main'));
-  var keywords = {
-    "visualMap": 22199,
-    "continuous": 10288,
-    "contoller": 620,
-    "series": 274470,
-    "gauge": 12311,
-    "detail": 1206,
-    "piecewise": 4885,
-    "textStyle": 32294,
-    "markPoint": 18574,
-    "pie": 38929,
-    "roseType": 969,
-    "label": 37517,
-  }
+  var keywords = ${JSON.stringify(keyWords)}
 
   var data = [];
   for (var name in keywords) {
