@@ -131,8 +131,7 @@ const renderChatPersonas = async (groupId, callback) => {
 		`
 	})
 		.then(() => {
-			console.log(`保存timetable.png成功！`)
-			console.log(`保存timetable.png成功！`)
+			console.log(`保存${groupId}.png成功！`)
 			let imgMsg = `[CQ:image,file=${join('send', 'other', `${groupId}.png`)}]`
 			callback(imgMsg)
 		})
