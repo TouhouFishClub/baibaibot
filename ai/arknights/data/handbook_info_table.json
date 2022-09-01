@@ -1721,7 +1721,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_silent_set_1",
+          "storySetName": "职场新人",
+          "sortId": 1,
+          "storyGetTime": 1656993600,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_silent_set_1_story_1",
+              "storySetId": "story_silent_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "前路艰辛曲折，但作为一个新人，她已经做得够好了。",
+              "storyInfo": "info/obt/memory/story_silent_1_1",
+              "storyTxt": "obt/memory/story_silent_1_1"
+            }
+          ],
+          "charId": "char_108_silent"
+        }
+      ]
     },
     "char_134_ifrit": {
       "charID": "char_134_ifrit",
@@ -1837,7 +1871,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_ifrit_set_1",
+          "storySetName": "小队长",
+          "sortId": 1,
+          "storyGetTime": 1656993600,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_ifrit_set_1_story_1",
+              "storySetId": "story_ifrit_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "她觉得照顾自己的人瘦了，那人却说，是她长高了。",
+              "storyInfo": "info/obt/memory/story_ifrit_1_1",
+              "storyTxt": "obt/memory/story_ifrit_1_1"
+            }
+          ],
+          "charId": "char_134_ifrit"
+        }
+      ]
     },
     "char_202_demkni": {
       "charID": "char_202_demkni",
@@ -2225,6 +2293,39 @@
               "storyIntro": "每天都要连轴转，烦在其中，乐在其中。",
               "storyInfo": "info/obt/memory/story_otter_1_1",
               "storyTxt": "obt/memory/story_otter_1_1"
+            }
+          ],
+          "charId": "char_242_otter"
+        },
+        {
+          "storySetId": "story_otter_set_2",
+          "storySetName": "造物之心",
+          "sortId": 2,
+          "storyGetTime": 1658822400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "60",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "200",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_otter_set_2_story_1",
+              "storySetId": "story_otter_set_2",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "从莱茵生命到罗德岛，它们一路同行。",
+              "storyInfo": "info/obt/memory/story_otter_2_1",
+              "storyTxt": "obt/memory/story_otter_2_1"
             }
           ],
           "charId": "char_242_otter"
@@ -3762,7 +3863,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_headbr_set_1",
+          "storySetName": "强中自有强中手",
+          "sortId": 1,
+          "storyGetTime": 1658822400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_headbr_set_1_story_1",
+              "storySetId": "story_headbr_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "不要想太多，开心地玩一场吧。",
+              "storyInfo": "info/obt/memory/story_headbr_1_1",
+              "storyTxt": "obt/memory/story_headbr_1_1"
+            }
+          ],
+          "charId": "char_115_headbr"
+        }
+      ]
     },
     "char_195_glassb": {
       "charID": "char_195_glassb",
@@ -6203,7 +6338,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_bluep_set_1",
+          "storySetName": "触不可及",
+          "sortId": 1,
+          "storyGetTime": 1656993600,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_bluep_set_1_story_1",
+              "storySetId": "story_bluep_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "最远的距离，是从传说到现实的距离。",
+              "storyInfo": "info/obt/memory/story_bluep_1_1",
+              "storyTxt": "obt/memory/story_bluep_1_1"
+            }
+          ],
+          "charId": "char_129_bluep"
+        }
+      ]
     },
     "char_143_ghost": {
       "charID": "char_143_ghost",
@@ -6946,7 +7115,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_estell_set_1",
+          "storySetName": "她的一小步",
+          "sortId": 1,
+          "storyGetTime": 1658822400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_estell_set_1_story_1",
+              "storySetId": "story_estell_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "每个暂存于心的念头都会有绽放的一天。",
+              "storyInfo": "info/obt/memory/story_estell_1_1",
+              "storyTxt": "obt/memory/story_estell_1_1"
+            }
+          ],
+          "charId": "char_127_estell"
+        }
+      ]
     },
     "char_141_nights": {
       "charID": "char_141_nights",
@@ -7389,6 +7592,39 @@
               "storyIntro": "闲暇的时光，却总是被工作打断。",
               "storyInfo": "info/obt/memory/story_skgoat_1_1",
               "storyTxt": "obt/memory/story_skgoat_1_1"
+            }
+          ],
+          "charId": "char_183_skgoat"
+        },
+        {
+          "storySetId": "story_skgoat_set_2",
+          "storySetName": "远方遗物",
+          "sortId": 2,
+          "storyGetTime": 1654747200,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "60",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "200",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_skgoat_set_2_story_1",
+              "storySetId": "story_skgoat_set_2",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "工作之外的事情，偶尔要比工作更复杂。",
+              "storyInfo": "info/obt/memory/story_skgoat_2_1",
+              "storyTxt": "obt/memory/story_skgoat_2_1"
             }
           ],
           "charId": "char_183_skgoat"
@@ -8186,7 +8422,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_hpsts_set_1",
+          "storySetName": "锻造",
+          "sortId": 1,
+          "storyGetTime": 1661414400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_hpsts_set_1_story_1",
+              "storySetId": "story_hpsts_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "修补的不仅仅是武器，还有武器对于使用者的意义。",
+              "storyInfo": "info/obt/memory/story_hpsts_1_1",
+              "storyTxt": "obt/memory/story_hpsts_1_1"
+            }
+          ],
+          "charId": "char_163_hpsts"
+        }
+      ]
     },
     "char_144_red": {
       "charID": "char_144_red",
@@ -8889,7 +9159,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_skfire_set_1",
+          "storySetName": "老同学",
+          "sortId": 1,
+          "storyGetTime": 1661414400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_skfire_set_1_story_1",
+              "storySetId": "story_skfire_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "士别三日，当刮目相看。",
+              "storyInfo": "info/obt/memory/story_skfire_1_1",
+              "storyTxt": "obt/memory/story_skfire_1_1"
+            }
+          ],
+          "charId": "char_166_skfire"
+        }
+      ]
     },
     "char_240_wyvern": {
       "charID": "char_240_wyvern",
@@ -11273,7 +11577,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_brownb_set_1",
+          "storySetName": "终场铃声",
+          "sortId": 1,
+          "storyGetTime": 1661414400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_brownb_set_1_story_1",
+              "storySetId": "story_brownb_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "擂台终局敲响的钟声，不过是在宣告下一场比赛的来临。",
+              "storyInfo": "info/obt/memory/story_brownb_1_1",
+              "storyTxt": "obt/memory/story_brownb_1_1"
+            }
+          ],
+          "charId": "char_137_brownb"
+        }
+      ]
     },
     "char_164_nightm": {
       "charID": "char_164_nightm",
@@ -11609,7 +11947,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_skadi_set_1",
+          "storySetName": "不见尽头的旅途",
+          "sortId": 1,
+          "storyGetTime": 1654747200,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_skadi_set_1_story_1",
+              "storySetId": "story_skadi_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "她一直以为，自己是最后的深海猎人。",
+              "storyInfo": "info/obt/memory/story_skadi_1_1",
+              "storyTxt": "obt/memory/story_skadi_1_1"
+            }
+          ],
+          "charId": "char_263_skadi"
+        }
+      ]
     },
     "char_284_spot": {
       "charID": "char_284_spot",
@@ -12105,7 +12477,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_greyy_set_1",
+          "storySetName": "过滤星星",
+          "sortId": 1,
+          "storyGetTime": 1654747200,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_greyy_set_1_story_1",
+              "storySetId": "story_greyy_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "他学着自己的母亲，努力照亮了一方夜空。",
+              "storyInfo": "info/obt/memory/story_greyy_1_1",
+              "storyTxt": "obt/memory/story_greyy_1_1"
+            }
+          ],
+          "charId": "char_253_greyy"
+        }
+      ]
     },
     "char_010_chen": {
       "charID": "char_010_chen",
@@ -13766,7 +14172,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_mgllan_set_1",
+          "storySetName": "生生不息",
+          "sortId": 1,
+          "storyGetTime": 1661414400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_mgllan_set_1_story_1",
+              "storySetId": "story_mgllan_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "唱着歌的老人埋下的种子，麦哲伦把它们种成大片的花。",
+              "storyInfo": "info/obt/memory/story_mgllan_1_1",
+              "storyTxt": "obt/memory/story_mgllan_1_1"
+            }
+          ],
+          "charId": "char_248_mgllan"
+        }
+      ]
     },
     "char_131_flameb": {
       "charID": "char_131_flameb",
@@ -15628,7 +16068,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_hmau_set_1",
+          "storySetName": "南墙",
+          "sortId": 1,
+          "storyGetTime": 1654747200,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_hmau_set_1_story_1",
+              "storySetId": "story_hmau_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "良心哭的声音太小，吵不过金银落在饭碗里的那一阵叮当作响。",
+              "storyInfo": "info/obt/memory/story_hmau_1_1",
+              "storyTxt": "obt/memory/story_hmau_1_1"
+            }
+          ],
+          "charId": "char_226_hmau"
+        }
+      ]
     },
     "char_383_snsant": {
       "charID": "char_383_snsant",
@@ -18438,7 +18912,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_podego_set_1",
+          "storySetName": "花期",
+          "sortId": 1,
+          "storyGetTime": 1658822400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_podego_set_1_story_1",
+              "storySetId": "story_podego_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "希望花香会让大家开心。",
+              "storyInfo": "info/obt/memory/story_podego_1_1",
+              "storyTxt": "obt/memory/story_podego_1_1"
+            }
+          ],
+          "charId": "char_258_podego"
+        }
+      ]
     },
     "char_358_lisa": {
       "charID": "char_358_lisa",
@@ -19388,7 +19896,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_thorns_set_1",
+          "storySetName": "纪念日",
+          "sortId": 1,
+          "storyGetTime": 1660190400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_thorns_set_1_story_1",
+              "storySetId": "story_thorns_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "遵循自己的心意做事，不问出身。",
+              "storyInfo": "info/obt/memory/story_thorns_1_1",
+              "storyTxt": "obt/memory/story_thorns_1_1"
+            }
+          ],
+          "charId": "char_293_thorns"
+        }
+      ]
     },
     "char_218_cuttle": {
       "charID": "char_218_cuttle",
@@ -19500,7 +20042,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -19754,7 +20296,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -19870,7 +20412,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -20020,11 +20562,45 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_flint_set_1",
+          "storySetName": "合格的战士",
+          "sortId": 1,
+          "storyGetTime": 1660190400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_flint_set_1_story_1",
+              "storySetId": "story_flint_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "若拳头还不够大，就必须掌握其他解决问题的手段。",
+              "storyInfo": "info/obt/memory/story_flint_1_1",
+              "storyTxt": "obt/memory/story_flint_1_1"
+            }
+          ],
+          "charId": "char_415_flint"
+        }
+      ]
     },
     "char_416_zumama": {
       "charID": "char_416_zumama",
@@ -20136,7 +20712,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -20252,7 +20828,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -20360,7 +20936,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_aprl_set_1",
+          "storySetName": "猎人的视线",
+          "sortId": 1,
+          "storyGetTime": 1660190400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_aprl_set_1_story_1",
+              "storySetId": "story_aprl_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "他人是厌恶或喜欢，她最终选择不询问。",
+              "storyInfo": "info/obt/memory/story_aprl_1_1",
+              "storyTxt": "obt/memory/story_aprl_1_1"
+            }
+          ],
+          "charId": "char_365_aprl"
+        }
+      ]
     },
     "char_388_mint": {
       "charID": "char_388_mint",
@@ -20472,7 +21082,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -20588,7 +21198,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -20704,7 +21314,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -20812,7 +21422,41 @@
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_aosta_set_1",
+          "storySetName": "编织来日",
+          "sortId": 1,
+          "storyGetTime": 1654747200,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_aosta_set_1_story_1",
+              "storySetId": "story_aosta_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "或许这就是他想要的生活方式，或许自己可以尝试去抓住它。",
+              "storyInfo": "info/obt/memory/story_aosta_1_1",
+              "storyTxt": "obt/memory/story_aosta_1_1"
+            }
+          ],
+          "charId": "char_346_aosta"
+        }
+      ]
     },
     "char_265_sophia": {
       "charID": "char_265_sophia",
@@ -21028,7 +21672,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -21178,7 +21822,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -21294,7 +21938,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -21410,7 +22054,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -21560,7 +22204,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -21676,7 +22320,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -21826,7 +22470,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -21942,7 +22586,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -22058,11 +22702,45 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_pinecn_set_1",
+          "storySetName": "展信好",
+          "sortId": 1,
+          "storyGetTime": 1660190400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_pinecn_set_1_story_1",
+              "storySetId": "story_pinecn_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "工人总是怀着美好的愿景，无论是在移动城市里还是罗德岛上。",
+              "storyInfo": "info/obt/memory/story_pinecn_1_1",
+              "storyTxt": "obt/memory/story_pinecn_1_1"
+            }
+          ],
+          "charId": "char_440_pinecn"
+        }
+      ]
     },
     "char_332_archet": {
       "charID": "char_332_archet",
@@ -22174,7 +22852,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -22290,7 +22968,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -22406,7 +23084,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -22522,7 +23200,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -22638,7 +23316,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -22788,7 +23466,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -22904,7 +23582,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -23020,7 +23698,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -23137,7 +23815,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -23254,7 +23932,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -23371,7 +24049,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -23488,7 +24166,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -23604,7 +24282,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -23720,11 +24398,45 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_toddi_set_1",
+          "storySetName": "装甲与重弩",
+          "sortId": 1,
+          "storyGetTime": 1654747200,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_toddi_set_1_story_1",
+              "storySetId": "story_toddi_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "出任务也要选个合适的队友。",
+              "storyInfo": "info/obt/memory/story_toddi_1_1",
+              "storyTxt": "obt/memory/story_toddi_1_1"
+            }
+          ],
+          "charId": "char_363_toddi"
+        }
+      ]
     },
     "char_304_zebra": {
       "charID": "char_304_zebra",
@@ -23836,7 +24548,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -23952,7 +24664,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -24068,7 +24780,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -24184,7 +24896,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -24334,7 +25046,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -24450,7 +25162,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -24566,7 +25278,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -24682,7 +25394,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -24798,11 +25510,45 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
-      "handbookAvgList": []
+      "handbookAvgList": [
+        {
+          "storySetId": "story_indigo_set_1",
+          "storySetName": "硬核饮品",
+          "sortId": 1,
+          "storyGetTime": 1660190400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_indigo_set_1_story_1",
+              "storySetId": "story_indigo_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "把它一饮而尽需要的不是酒量，而是一颗为朋友着想的心。",
+              "storyInfo": "info/obt/memory/story_indigo_1_1",
+              "storyTxt": "obt/memory/story_indigo_1_1"
+            }
+          ],
+          "charId": "char_469_indigo"
+        }
+      ]
     },
     "char_485_pallas": {
       "charID": "char_485_pallas",
@@ -24914,7 +25660,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -25030,7 +25776,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -25146,7 +25892,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -25296,7 +26042,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -25479,7 +26225,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -25595,7 +26341,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -25711,7 +26457,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -25827,7 +26573,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -25943,7 +26689,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -26041,7 +26787,7 @@
         {
           "stories": [
             {
-              "storyText": "与格蕾纳蒂熟识的人都知道她对骑士贵族充满了厌恨，然而格蕾纳蒂本人，也曾是一位骑士贵族。\n格蕾纳蒂的家族过去颇有名望，但在格蕾纳蒂的祖母去世后，负责经营家业的长辈在决策上出现失误，整个家族企业巨额亏损，家族从此一蹶不振。也就在此时，格蕾纳蒂意外感染了矿石病。\n在那之后，族人们对她的态度产生了巨大的改变。\n从小玩到大的兄弟姐妹不再往来，几位有交情的叔父也渐渐没了联系，家族中的长辈似乎是将她这个人给遗忘了。\n卡利斯卡人心中有着一个共同声音：“卡利斯卡不应有感染者，只要格雷纳蒂还在，我们的声誉就会受损。”\n随着家族的持续凋敝，家族成员对格雷纳蒂的态度也从沉默渐渐变成了愤怒。她曾见到过长辈们如何羞辱领地上的感染者，可她从未想过，身为大家族中的一员，自己也会因矿石病而遭受这样的对待。\n更令她难以置信的是，长骑好像希望把她这个感染者从卡利斯卡赶出去。\n好像她不姓卡利斯卡，而只是某个被天灾侵袭家村庄后无家可归，患上矿石病的民众。\n这种疑惑很快就被驱散了，可现实要比她想的更加无情——她或许真的连待在家乡的自由都没有了。\n一日，长骑召唤她去商讨某件事项的解决方案。传达讯息的人说得很委婉，但她很清楚，自己就是那个所谓“事项”。\n在格蕾纳蒂叩响长骑会客厅大门后，她看到了卡利斯卡的长骑——和另外一位贵族长骑。\n他们应该是在会谈，氛围并不融洽，对方咄咄逼人，想要在卡利斯卡家族身上获得更多利益，而格蕾纳蒂的长骑，好像已经在他的会客厅里，把所有的谈判筹码拱手相让了。\n那位贵族长骑见到格蕾纳蒂勃然大怒，指责卡利斯卡窝藏感染者，甚至还把感染者带到自己面前，他当众撕毁了条约，并表示此后将不再与卡利斯卡合作。\n格蕾纳蒂知道对方只是借自己的出现把毁约的责任推了个干净，可长骑，一个家族的大家长，却对此事毫无意识，甚至把怒火全撒在了格蕾纳蒂身上。\n最终，在一个没有月光的夜晚，家族长骑召开集体会议，决定以投票的方式决定格蕾纳蒂这个感染者的去留。\n——全票通过。\n在场没有人投反对票，甚至没有人弃权，连格蕾纳蒂的父母都举起了手。\n格蕾纳蒂知道他们有自己的苦衷，但在那一刻，她能感觉到自己的泪水从脸颊上流下。\n同情她的人一言不发、厌恶她的人大声叫好、坐在主位上的长骑故作公正。\n这就是卡利斯卡，卡西米尔骑士贵族的缩影。\n自那以后，格蕾纳蒂离开家乡独自一人来到大骑士领，从地下竞技场一步步打拼上来，她想要通过参加骑士竞技来重获名誉，这样，她就可以回到那个腐朽殆尽的家族里，让他们好好看看自己的成就，让他们承认自己当初的错误，让他们洗刷强加在她身上的污名。\n可在那之后的事呢？\n索娜考虑过了，她还没有。",
+              "storyText": "与格蕾纳蒂熟识的人都知道她对骑士贵族充满了厌恨，然而格蕾纳蒂本人，也曾是一位骑士贵族。\n格蕾纳蒂的家族过去颇有名望，但在格蕾纳蒂的祖母去世后，负责经营家业的长辈在决策上出现失误，整个家族企业巨额亏损，家族从此一蹶不振。也就在此时，格蕾纳蒂意外感染了矿石病。\n在那之后，族人们对她的态度产生了巨大的改变。\n从小玩到大的兄弟姐妹不再往来，几位有交情的叔父也渐渐没了联系，家族中的长辈似乎是将她这个人给遗忘了。\n卡利斯卡人心中有着一个共同声音：“卡利斯卡不应有感染者，只要格蕾纳蒂还在，我们的声誉就会受损。”\n随着家族的持续凋敝，家族成员对格蕾纳蒂的态度也从沉默渐渐变成了愤怒。她曾见到过长辈们如何羞辱领地上的感染者，可她从未想过，身为大家族中的一员，自己也会因矿石病而遭受这样的对待。\n更令她难以置信的是，长骑好像希望把她这个感染者从卡利斯卡赶出去。\n好像她不姓卡利斯卡，而只是某个被天灾侵袭家村庄后无家可归，患上矿石病的民众。\n这种疑惑很快就被驱散了，可现实要比她想的更加无情——她或许真的连待在家乡的自由都没有了。\n一日，长骑召唤她去商讨某件事项的解决方案。传达讯息的人说得很委婉，但她很清楚，自己就是那个所谓“事项”。\n在格蕾纳蒂叩响长骑会客厅大门后，她看到了卡利斯卡的长骑——和另外一位贵族长骑。\n他们应该是在会谈，氛围并不融洽，对方咄咄逼人，想要在卡利斯卡家族身上获得更多利益，而格蕾纳蒂的长骑，好像已经在他的会客厅里，把所有的谈判筹码拱手相让了。\n那位贵族长骑见到格蕾纳蒂勃然大怒，指责卡利斯卡窝藏感染者，甚至还把感染者带到自己面前，他当众撕毁了条约，并表示此后将不再与卡利斯卡合作。\n格蕾纳蒂知道对方只是借自己的出现把毁约的责任推了个干净，可长骑，一个家族的大家长，却对此事毫无意识，甚至把怒火全撒在了格蕾纳蒂身上。\n最终，在一个没有月光的夜晚，家族长骑召开集体会议，决定以投票的方式决定格蕾纳蒂这个感染者的去留。\n——全票通过。\n在场没有人投反对票，甚至没有人弃权，连格蕾纳蒂的父母都举起了手。\n格蕾纳蒂知道他们有自己的苦衷，但在那一刻，她能感觉到自己的泪水从脸颊上流下。\n同情她的人一言不发、厌恶她的人大声叫好、坐在主位上的长骑故作公正。\n这就是卡利斯卡，卡西米尔骑士贵族的缩影。\n自那以后，格蕾纳蒂离开家乡独自一人来到大骑士领，从地下竞技场一步步打拼上来，她想要通过参加骑士竞技来重获名誉，这样，她就可以回到那个腐朽殆尽的家族里，让他们好好看看自己的成就，让他们承认自己当初的错误，让他们洗刷强加在她身上的污名。\n可在那之后的事呢？\n索娜考虑过了，她还没有。",
               "unLockType": 2,
               "unLockParam": "200",
               "unLockString": ""
@@ -26059,7 +26805,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -26121,7 +26867,7 @@
         {
           "stories": [
             {
-              "storyText": "【源石记忆概览】\n再次归来的耀骑士，依旧与过去一样勇毅而可靠，但她的战斗方式还是发生了一定变化。除了常用武器的更换之外，她对源石记忆的应用也不再拘泥于治疗。那柄金芒缠绕的剑枪，在战场上无疑会给敌人带来极强的威慑。\n就像她的好友闪灵说的那样，“与我们一同流浪的日子里，玛嘉烈学会了如何收敛锋芒，而回到卡西米尔再度发起冲锋的耀骑士，已学会了心无旁骛地盛放。”\n不光闪灵小姐和夜莺小姐，其他与临光合作过的干员也都惊叹于临光的改变，但并没有人感到不适应。大家很清楚，无论正义是否决定要对邪恶强硬，只要正义与邪恶一样处在边际上，就都必然会有锋芒。同样沐浴在耀骑士的光芒之下，邪恶的人或许会感到灼痛难当，而正义的同伴则依然会受到无上的鼓舞。\n\n【武器鉴定】\n干员临光现在使用的剑枪与其从前使用的战锤一样，是由与临光一家交好的卡西米尔工匠设计打造，并经过干员瑕光强化。这柄剑枪曾在临光与血骑士一战时折断，随后再次由干员瑕光修复。\n经罗德岛工程部门鉴定，临光的剑枪不仅有着堪比卡西米尔征战骑士制式武器的强度，还无比契合临光本人的源石技艺，于理想情况下，甚至能给她释放的法术带来将近百分之十的效果提升。在负责鉴定的工程师的请求下，临光征得其武器设计者的同意，授权罗德岛制作了一柄剑枪的六分之一模型，存放于工程部门，供各工程干员及学员研究学习。\n补充：不要让可露希尔知道耀骑士的高精度剑枪模型在大骑士领能卖多少钱。我们和耀骑士说好了，这模型仅此一件。",
+              "storyText": "【源石技艺概览】\n再次归来的耀骑士，依旧与过去一样勇毅而可靠，但她的战斗方式还是发生了一定变化。除了常用武器的更换之外，她对源石技艺的应用也不再拘泥于治疗。那柄金芒缠绕的剑枪，在战场上无疑会给敌人带来极强的威慑。\n就像她的好友闪灵说的那样，“与我们一同流浪的日子里，玛嘉烈学会了如何收敛锋芒，而回到卡西米尔再度发起冲锋的耀骑士，已学会了心无旁骛地盛放。”\n不光闪灵小姐和夜莺小姐，其他与临光合作过的干员也都惊叹于临光的改变，但并没有人感到不适应。大家很清楚，无论正义是否决定要对邪恶强硬，只要正义与邪恶一样处在边际上，就都必然会有锋芒。同样沐浴在耀骑士的光芒之下，邪恶的人或许会感到灼痛难当，而正义的同伴则依然会受到无上的鼓舞。\n\n【武器鉴定】\n干员临光现在使用的剑枪与其从前使用的战锤一样，是由与临光一家交好的卡西米尔工匠设计打造，并经过干员瑕光强化。这柄剑枪曾在临光与血骑士一战时折断，随后再次由干员瑕光修复。\n经罗德岛工程部门鉴定，临光的剑枪不仅有着堪比卡西米尔征战骑士制式武器的强度，还无比契合临光本人的源石技艺，于理想情况下，甚至能给她释放的法术带来将近百分之十的效果提升。在负责鉴定的工程师的请求下，临光征得其武器设计者的同意，授权罗德岛制作了一柄剑枪的六分之一模型，存放于工程部门，供各工程干员及学员研究学习。\n补充：不要让可露希尔知道耀骑士的高精度剑枪模型在大骑士领能卖多少钱。我们和耀骑士说好了，这模型仅此一件。",
               "unLockType": 2,
               "unLockParam": "50",
               "unLockString": ""
@@ -26175,7 +26921,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -26271,7 +27017,7 @@
         {
           "stories": [
             {
-              "storyText": "干员焰尾的代号来自于她的骑士封号，而熟悉她的人，都直呼其名“索娜”。她不来自任何一个古老的骑士家族，更不是天赋异禀的骑士人才。早在焰尾骑士还是札拉克女孩索娜的时候，她不过是一个生活在卡西米尔某个札拉克聚集区的普通卡西米尔人。然而一场天灾改变了索娜的生活轨迹，由于当地少数的骑士贵族卡利斯卡家对领民的漠视，导致索娜的家园被毁于一旦。她的家人、朋友和过去平静的生活几乎在一夜之间烟消云散。年轻的扎拉克姑娘并没有坚强到立刻接受事实——尽管现在的她完全看不到过去的影子，但每当提及故乡和过去，那个健谈的、总是挂着开朗笑容的索娜总是会不经意地产生些许情绪的停顿。而那个无助的札拉克索娜，是如何走出那段灾难的，我们并不知晓。只知道在红松骑士团的其他成员认识索娜的时候，她就已经是今天这般模样，仿佛从未改变。\n“我是能感觉出她俩之间有些什么就是了，不过偶尔提起过去，也无非就是格蕾纳蒂以前的骑士家族愧对索娜之类的，从没听她们说过更多啊。”——野鬃\n“索娜当然没你们想象的那么坚强，我其实见过她偷偷落泪的......呃，没什么。”——灰毫",
+              "storyText": "干员焰尾的代号来自于她的骑士封号，而熟悉她的人，都直呼其名“索娜”。她不来自任何一个古老的骑士家族，更不是天赋异禀的骑士人才。早在焰尾骑士还是札拉克女孩索娜的时候，她不过是一个生活在卡西米尔某个札拉克聚集区的普通卡西米尔人。然而一场天灾改变了索娜的生活轨迹，由于当地少数的骑士贵族卡利斯卡家对领民的漠视，导致索娜的家园被毁于一旦。她的家人、朋友和过去平静的生活几乎在一夜之间烟消云散。年轻的札拉克姑娘并没有坚强到立刻接受事实——尽管现在的她完全看不到过去的影子，但每当提及故乡和过去，那个健谈的、总是挂着开朗笑容的索娜总是会不经意地产生些许情绪的停顿。而那个无助的札拉克索娜，是如何走出那段灾难的，我们并不知晓。只知道在红松骑士团的其他成员认识索娜的时候，她就已经是今天这般模样，仿佛从未改变。\n“我是能感觉出她俩之间有些什么就是了，不过偶尔提起过去，也无非就是格蕾纳蒂以前的骑士家族愧对索娜之类的，从没听她们说过更多啊。”——野鬃\n“索娜当然没你们想象的那么坚强，我其实见过她偷偷落泪的......呃，没什么。”——灰毫",
               "unLockType": 2,
               "unLockParam": "50",
               "unLockString": ""
@@ -26319,13 +27065,13 @@
         {
           "stories": [
             {
-              "storyText": "红松骑士团，一开始就是为了感染者在大骑士领的生存而建立的。索娜选对了她的合伙人，远牙骑士，灰豪骑士，野鬃骑士，她们都有着各自为战的理由。\n现在，尘埃落定，尽管商业联合会和无胄盟利用了她们，尽管卡西米尔仍旧没有丁点扭转，但她们逃出来了，她们活下来了，而且，她们救了很多人。\n那下一步呢？\n小灰无疑最信任她。远牙也会沉默的跟随她。野鬃则一如既往地希望她给出一个冲锋的方向。\n索娜似乎从一开始，就是最没有理由站在第一线的人。\n但她当然不是真的“没有理由”，没有任何一个缺乏信念的人能在那样一个打磨人性的城市里挣扎到那个地步。\n只是极少有人意识到——和咱们的耀骑士临光一样——有些人天生有着奉献的精神和牺牲的觉悟，有的人天生就能够为了一个远大的目标而战。\n而这个目标，目前和罗德岛是高度一致的。\n未来？未来嘛......如今的骑士之国已经与“骑士”大相径庭，未来究竟如何，与我们似乎也没啥关系啦。\n——■■■",
+              "storyText": "红松骑士团，一开始就是为了感染者在大骑士领的生存而建立的。索娜选对了她的合伙人，远牙骑士，灰毫骑士，野鬃骑士，她们都有着各自为战的理由。\n现在，尘埃落定，尽管商业联合会和无胄盟利用了她们，尽管卡西米尔仍旧没有丁点扭转，但她们逃出来了，她们活下来了，而且，她们救了很多人。\n那下一步呢？\n小灰无疑最信任她。远牙也会沉默的跟随她。野鬃则一如既往地希望她给出一个冲锋的方向。\n索娜似乎从一开始，就是最没有理由站在第一线的人。\n但她当然不是真的“没有理由”，没有任何一个缺乏信念的人能在那样一个打磨人性的城市里挣扎到那个地步。\n只是极少有人意识到——和咱们的耀骑士临光一样——有些人天生有着奉献的精神和牺牲的觉悟，有的人天生就能够为了一个远大的目标而战。\n而这个目标，目前和罗德岛是高度一致的。\n未来？未来嘛......如今的骑士之国已经与“骑士”大相径庭，未来究竟如何，与我们似乎也没啥关系啦。\n——■■■",
               "unLockType": 1,
               "unLockParam": "2;1",
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -26441,7 +27187,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -26613,7 +27359,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -26729,7 +27475,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -26845,7 +27591,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -26961,7 +27707,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -27077,7 +27823,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -27194,7 +27940,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -27344,7 +28090,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -27460,7 +28206,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -27576,7 +28322,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -27692,7 +28438,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -27808,7 +28554,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -27924,7 +28670,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -28074,7 +28820,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -28190,7 +28936,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -28306,7 +29052,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -28456,7 +29202,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -28572,7 +29318,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -28688,7 +29434,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -28838,7 +29584,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -28954,7 +29700,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -29070,7 +29816,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -29186,7 +29932,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -29336,7 +30082,7 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -29486,7 +30232,123 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": []
+    },
+    "char_4043_erato": {
+      "charID": "char_4043_erato",
+      "drawName": "温泉瓜",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】埃拉托\n【性别】女\n【战斗经验】三年\n【出身地】米诺斯\n【生日】3月14日\n【种族】黎博利\n【身高】158cm\n【矿石病感染情况】\n参照医学检测报告，确认为非感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】标准\n【战场机动】优良\n【生理耐受】标准\n【战术规划】普通\n【战斗技巧】标准\n【源石技艺适应性】优良",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "埃拉托，来自米诺斯的吟游诗人，对抗萨尔贡殖民者的游击队成员。\n至于本人反复强调的“蝉联三届勇士大会射箭项目冠军”和“米诺斯第一竖琴演奏家”的身份无法考证，暂不录入档案。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓清晰，未见异常阴影，循环系统内源石颗粒检测未见异常，无矿石病感染迹象，现阶段可确认为非矿石病感染者。\n\n【体细胞与源石融合率】0%\n干员埃拉托没有被源石感染的迹象。\n\n【血液源石结晶密度】0.16u/L\n对于普通人而言已经是有些危险的程度，需要定时参加检测。\n“埃拉托小姐独自走过这么多地方，还没有做什么防护措施，真不知道该说是有躲避危险的直觉，还是单纯的运气好，以后可千万不能这样了。”\n——医疗干员",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "“你问我是谁？在回答这个问题之前，我要先讲一个故事。当巍峨的荷谟伊山还是平地的时候，有一个人——不愿意听故事？那你就不能先回答我的问题吗？那位帕拉斯到底在不在这里？”\n当风尘仆仆的埃拉托小姐找到罗德岛时，首先问起的是“那位帕拉斯在不在这里？”虽然按常理判断，对帕拉斯不怀好意的人应该也不会像这般直接造访，但是考虑到帕拉斯身份的敏感性，罗德岛还是第一时间对埃拉托的身份进行了核实。\n埃拉托，出身于米诺斯南部某村庄。精于弓术与琴艺，参加过米诺斯对萨尔贡的反侵略战争，在战斗中立下杰出战功。以上信息经过人事部的深入调查，确认属实。\n埃拉托与帕拉斯一样参与过对抗萨尔贡的战斗，但二人并不在同一片战场。将侵略者彻底驱逐出自己的家乡后，不甘于平静生活的埃拉托正好听到了“胜利女神”的传闻，便想一睹这位英雄人物的真容。埃拉托跟随线索多方打听，终于得知了帕拉斯秘密前往某医疗公司治疗矿石病的消息，又经过了漫长的旅程，终于找到了罗德岛。\n确认过帕拉斯本人也有着结识这位故乡的战士的强烈意愿，人事干员安排了二人见面。出身同一个地区，又有着相似爱好与审美的两人自然很快熟络起来。但经过彻夜长谈后，两人又不欢而散。\n“帕拉斯那家伙想一直躲在这里的话就随她好了，她想要维护的那个完美的‘胜利女神’形象，就算整个米诺斯认同，十二英雄认同，我也绝不会认同！”而帕拉斯则非常遗憾地表示：“如果埃拉托小姐酒量再好一点的话，该有多好。”\n最终，埃拉托在听帕拉斯介绍过罗德岛的情况后，被罗德岛的传奇经历所吸引，主动提出想要留在这里。在通过了入职测试后，埃拉托如愿成为一名外勤干员。",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "埃拉托小姐经常提及的“勇士大会连续三届射箭冠军”和“米诺斯知名剧团首席客座竖琴演奏师”等荣誉无从考证。但是她引以为傲的两项技能，弓术与琴艺，的确称得上杰出。\n在米诺斯人民推翻了萨尔贡的殖民统治后，两国间也并没有迎来和平，尤其是处在米诺斯国境线附近的村庄，依然会不时受到萨尔贡的侵扰。米诺斯人民自发组织起对抗萨尔贡军队的游击队，埃拉托正是其中的一员。她来到罗德岛后在任务中的表现，也证明了她的弓术技巧的确是经历过真正战场的考验的。\n埃拉托小姐的竖琴技术同样优秀。过去的演出经历暂且不谈，她定期在疗养庭院举行的吟游诗弹唱表演很快成了在罗德岛广受欢迎的娱乐活动。埃拉托可以对敌人神经产生影响的特殊源石技艺同样依赖于琴声施展。一些莱塔尼亚干员认为这种源石技艺与莱塔尼亚常见的音乐源石技艺同源。埃拉托对于自己源石技艺的学习经过讳莫如深，但可以确认的是，埃拉托小姐对于这种源石技艺的掌控尚不纯熟。这一点直接体现为，她在战场上让敌人沉睡的琴声，也常常令她音乐的听众安眠。不过关于这一点埃拉托本人倒是毫不介意。\n“他们会做一个好梦的，就让故事在梦里延续吧。”\n\n【补充记录】\n由雅赛努斯城邦中十二英雄神殿举办的勇士大会是一项有着悠久历史的活动，旨在鼓励大众增强体魄，培养积极进取的精神。这种活动也确实获得了广大人民的喜爱，吸引了来自米诺斯各地在某一方面有特长的人专程来到雅赛努斯参加比赛，大会包含的项目也在逐年增加。\n除了雅赛努斯，也有不少其他城邦效仿勇士大会的形式举办比赛，并同样命名为“勇士大会”。而埃拉托小姐参加的，正是米诺斯南部数个小型城镇联合举办的比赛。虽然规模不能算小，但较之雅赛努斯的勇士大会，还是不能同日而语。她的冠军奖牌，也的确是有官方认证的。\n凭埃拉托小姐的实力，或许可以期待她在下一次雅赛努斯的英雄大会中取得一个优秀的成绩。",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "埃拉托小姐在来到罗德岛之前，已经走过了许多地方。当然这并不是因为迷路，应该说，埃拉托小姐的旅行一开始就不是以寻找帕拉斯为单一目标的。她从米诺斯出发，一路走过了玻利瓦尔、哥伦比亚、卡西米尔、莱塔尼亚，最终在维多利亚找到了罗德岛。虽然埃拉托小姐只当这是一次愉快的远游，但我们都应清楚，这样漫长的旅行，若没有远超常人的毅力和决心是不能完成的。\n埃拉托小姐有一本珍藏的笔记，上面记满了她这段旅程的见闻。记录方式多种多样，有的是长篇的游记，有的是对眼前无名景色的速写，有的只是即兴写下的两句诗。埃拉托并没有对这些记录做细致的整理，但各地区的风土人情在记录中已然有了十足的体现。\n除了沿途的风景，这本笔记上还记载了埃拉托从各处搜集来的神话故事与英雄传说。虽然埃拉托自己没有自觉，但这些各地区的神话传说的确在一定程度上反映了当地人民的价值观念与历史观念，“生存逼出了人类的所有智慧，经时间变为经验，通过神话传说演变为真理”。埃拉托小姐收集的故事数量之多范围之广，已经让这本笔记有了相当的民俗研究价值。\n埃拉托热衷于收集不同地方的传说故事，对于米诺斯本土的各种神话传说更是如数家珍。在萨尔贡的百年侵占期间，米诺斯损失了无数文化典籍，人们口口相传的故事便成了许多历史的唯一记录载体。在那场“不太愉快”的谈话后，帕拉斯依然会常常找埃拉托记录她所听到的米诺斯的传说。\n“你现在整理这些故事，是准备以后将它们带回十二英雄神殿吗？”\n“如果可能的话，我更希望是由埃拉托小姐你亲自将它们带回去啊......”\n“我就知道！你这个无聊的完美主义祭司！好啊，我会把你在罗德岛的每一次醉酒经历写进书里一并带回去的！”\n\n【权限记录】\n喜爱花卉的埃拉托在发现了罗德岛有疗养庭院这样的去处后，立即成了这里的常客。但埃拉托小姐的兴趣似乎并不只在花卉。有人注意到，有好几次，埃拉托待在疗养庭院里，盯着忙碌的调香师小姐出神，想要上前搭话却欲言又止的样子。经帕拉斯的请求，这条记录暂不公开。",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "埃拉托小姐从来不认为自己是一个吟游诗人。\n“吟游诗人？那是只会记录故事的人吧。我自己啊，一定得是故事里的人。我希望很多很多年后，人们会传唱我的故事。那一定是让人们听完可以感到爱与希望的故事。”\n多数米诺斯人都追求着英雄的荣誉，埃拉托小姐也不例外。但在此之外，埃拉托小姐对英雄与荣誉还有着自己的理解。\n英雄应当与人民站在一起，应当成为人们心中的精神领袖。需要有十二英雄这样的传奇故事鼓舞后人反抗压迫，也应有歌唱美好与善意的诗篇引导人们，以一颗温柔的心包容这片大地。埃拉托小姐编写的吟游诗里，主角往往不强大，甚至有着明显的缺点，但一定是非常乐观与温柔的。主角在经过了诸多困难后，最终一定会得到较为完满的结局。或许这就是埃拉托小姐的英雄观念：以一种温柔的方式，鼓舞人们带着热情去生活。对于爱与美的追求可以成为人们生活的信念，埃拉托小姐对一切事物的兴趣和仿佛永远不会枯竭的热情，或许正来源于此。\n不深知丑恶者不足以谈美，未经苦难者不足以谈希望。而切实走过许多地方，亲眼见过无数风景的埃拉托小姐诗篇里吟诵的美好，的确有着鼓舞人心的力量。",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "“你有没有想象过，也许有这样一个地方，那里没有不同种族、不同国家的纷争，也没有感染者与普通人的矛盾，只有诗篇与音乐，花与阳光。这不是传说，或许它真的存在于这片大地的某个角落。”\n“当然，这个地方是不能被轻易找到的。一定是要经过许多、许多的挫折与困难，而且，只有真正心怀勇气与爱的英雄才能找到这个地方。”\n“所以说，首先要做的，是去相信有这样一个地方。嗯，要坚定地相信，然后你才会有去寻找它的动力。而只要你开始寻找，最后一定会找到些什么的。博士，你愿意和我一起去寻找这个地方吗？”",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -29602,7 +30464,1303 @@
               "unLockString": ""
             }
           ],
-          "storyTitle": "晋升资料",
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": []
+    },
+    "char_4046_ebnhlz": {
+      "charID": "char_4046_ebnhlz",
+      "drawName": "竜崎いち",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】黑键\n【性别】男\n【战斗经验】没有战斗经验\n【出身地】莱塔尼亚\n【生日】6月5日\n【种族】卡普里尼\n【身高】173cm\n【矿石病感染情况】\n参照医学检测报告，确认为感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】标准\n【战场机动】普通\n【生理耐受】普通\n【战术规划】标准\n【战斗技巧】标准\n【源石技艺适应性】卓越",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "黑键，莱塔尼亚平民，于维谢海姆事件中感染矿石病，经干员芙蓉介绍来罗德岛治疗，在源石技艺方面展现出不凡天赋。经考核后，作为外勤干员加入罗德岛。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓模糊，可见异常阴影，循环系统内源石颗粒检测异常，有矿石病感染迹象，现阶段可确认为是矿石病感染者。\n\n【体细胞与源石融合率】5%\n体表可见少量源石结晶。\n\n【血液源石结晶密度】0.22u/L\n感染后未能第一时间接受治疗，矿石病有轻微扩散迹象，现已得到控制。",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "看起来不好接近的卡普里尼青年。\n如果去问他时间，他会看表，然后彬彬有礼地告诉你现在是几点几分。尽管如此，假如你想以此为契机和他多聊几句，他很快就会用礼貌的言辞终结一切对话的可能性。\n只有博士和少数几位干员能让他敞开心扉。和他们聊天时，黑键会展露出不常示人的另一面，毫无顾忌地发表自己的意见。不过，无论聊到什么东西，他的话里几乎总是带着几分若有似无的阴阳怪气，即使在谈及自己时也是这样，甚至比谈及其他时有过之而无不及。\n偶尔有人会看到黑键演奏乐器的身影。据目击者的描述，黑键几乎能自如地操控所有乐器，但他最常演奏的是一把大提琴，琴声哀戚，让人回忆起已经远去的人和事。\n还有传言说长笛也是黑键的专精之一，但他在罗德岛上从未吹奏过。",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "根据莱塔尼亚官方出具的说明文件，黑键来自莱塔尼亚的中型城市维谢海姆，是一名普通的大学生，在城内某高校攻读音乐与源石技艺学位。他在一场发生于维谢海姆的不幸事件中感染了矿石病，不得不中断学业，前往罗德岛求医。\n\n【权限记录】\n很遗憾，那份说明文件里的真话很少。\n黑键并不出生于维谢海姆。迄今为止，他生命中的绝大多数时间都在破败的小城乌提卡度过。\n黑键也不是什么平民，至少在乌提卡时不是。事实上，直到启程来罗德岛之前，他都是乌提卡伯爵。被指派给他的监护人以乌提卡伯爵代理的身份发号施令，即使在他成年之后仍旧如此。\n和其他贵族儿童一样，黑键接受了对一名莱塔尼亚贵族来说不可或缺的教育：礼仪、文学、源石技艺，以及与源石技艺密不可分，有时甚至更为重要的音乐。\n许多父母竭尽所能为自己的子女聘请更好的音乐教师，这些教师也在贵族幼童的成长中发挥着举足轻重的作用，有些贵族甚至会以音乐启蒙老师名气的高低作为评判人物的标准之一。\n然而，按照黑键本人的说法，他的监护人并不想这么做。\n“那位老师把几样乐器放在我面前，和蔼地问我对什么感兴趣。\n“我抓起一把小提琴拉了一段，他喜出望外，连声说我是个天才，但我无暇回应他的溢美之词。因为在看到那些乐器的同时，一大堆完全陌生的概念和操作方法涌进了我的脑子，仿佛一个真实存在的人正在对我发号施令。\n“就算如此，我也还是高兴的。自从我来到乌提卡，第一次有人愿意如此热烈地赞扬我。呵，明明已经听过那么多口是心非的赞美了，我还是不长记性。\n“第二天，我又见到了那位老师，但他看我的眼神里只剩下厌恶。很显然，我的代理人把一些事实告诉了他。”\n负责记录的人事部干员对莱塔尼亚的局势并不熟悉，于是随口问道：“什么事实？”\n“乌提卡是巫王的家传领地，那么，乌提卡伯爵是什么人呢？”",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【权限记录】\n在新旧政权交替的时间节点上，莱塔尼亚经历了剧烈的动荡。饱受巫王残害的人们把怒火倾泻在一切与巫王有关的人事物上，黑键的父母就因为和巫王遥远的血亲关系死于那一时期。\n与之相应，少部分人不乐见旧时代的终结。他们以各种方式反抗双子女皇的统治，其中最激进的那些被称为“巫王残党”。是他们让黑键免遭和父母一样的厄运，也是他们把黑键拖进了更大的漩涡之中。\n黑键用一句话解释他们对自己做了什么：“他们往我脑子里塞了一段尘世之音。”\n医疗部数次检查了黑键的脑部，却仍旧无法确定尘世之音到底以何种形式存在于黑键脑中。可以确定的是，尘世之音的确存在，会引发剧烈的头痛，与黑键如同与生俱来般的音乐天赋和源石技艺息息相关，可我们却无法确定它到底“是什么”。\n经黑键介绍，我们从干员车尔尼手中获得了一些研究手稿的复印件。按照手稿中语焉不详的记载，尘世之音是巫王兴之所至演奏的旋律，这些旋律被宫廷乐师记录下来，就成了尘世之音。\n“那么，尘世之音难道不应该是乐谱或磁带吗？”\n“你们觉得我脑子里面到底是有纸片，还是有塑料？”\n最终，医疗部不得不暂时接受黑键的解释：\n“那就是一段旋律，一段强大的旋律，强大到我甚至一直在担心，自己是否会在不知不觉间被其吞噬。”\n“人被旋律吞噬？这真的可能吗？”\n“我只能说，我会尽全力......不让这种事情发生第二次。”\n在那之后，黑键拒绝与我们继续就这一问题展开讨论。",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【权限记录】\n刚来到罗德岛的时候，黑键并未过多地表现出如干员芙蓉和车尔尼描述的刻薄或言辞上的攻击性。大部分干员都只知道罗德岛上来了一位沉默而彬彬有礼的莱塔尼亚干员。那时的黑键不主动和人说话，时常在没人的时候发呆，盯着他几乎不离身的那把大提琴出神。有干员出于担心问他需不需要帮助，他也只是轻微摇一摇头。\n黑键的转变发生在他第一次出外勤任务之后。那是一次极为成功的行动，罗德岛从一家状况极为恶劣的福利院中救出了十几位孤儿，为并未感染矿石病的孩子联系了可靠的机构，并收治了其中的感染者。\n值得一提的是，从识破福利院管理者的伪装到营救行动中的源石技艺支援，黑键全程都在发挥重要作用。\n回到罗德岛之后，黑键开始一点一点地脱离之前的状态，他开始和主动来找自己的人对话，开始了解罗德岛的一切，开始尖刻地评价自己看不过去的东西——当然，仅限对博士和少数几个干员。\n他甚至参加了一次干员们自己举办的读书会，并在会后和几名干员建立了通信关系。\n罗德岛上的大部分干员都难以察觉黑键的这些变化，但有一件事，所有人都看在眼里：\n黑键现在不再盯着大提琴出神了。他更常做的是拉响它，和着琴声轻轻哼唱，仿佛在与一位朋友对话。",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "“把自甘堕落用华丽的辞藻包装起来，也不能掩盖你的短视，我愚蠢的血脉。”\n“多谢夸奖，老头。”\n“而你甚至还在自我怀疑。你觉得自己对不公义愤填膺，你又怀疑自己的义愤并非出自本心；最后，你接受了这种怀疑，你告诉自己，就当自己是演的好了，你要一直演下去......可笑，可笑之极！”\n“多谢你的谆谆教诲，麻烦你给我点时间，让我把你的话忘干净。”\n“呵......”\n“你一定在疑惑，为什么我不再在你出声的时候让你闭嘴了，对不对？”\n“说来听听。”\n“第一，我已经意识到，大喊大叫既不能让你噤声，也不能让我的头痛减轻，顺带一提，我现在更关心的是后者。\n“第二，我仍不知道你究竟是什么，是尘世之音中的一缕残响，还是我自己的幻听。我甚至不知道，会不会有一天，出于什么我想不到的原因，我也变得像白垩那样，在刺耳的旋律中彻底失去我自己。\n“但我已经不再害怕你了，老头。这事就这么简单。”",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": [
+        {
+          "storySetId": "story_ebnhlz_set_1",
+          "storySetName": "孤灯",
+          "sortId": 1,
+          "storyGetTime": 1654747200,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_ebnhlz_set_1_story_1",
+              "storySetId": "story_ebnhlz_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "夜色深沉，冷雨寂静无声。那盏孤灯竭力闪烁，希望隐没的太阳不要在夜里冻僵。",
+              "storyInfo": "info/obt/memory/story_ebnhlz_1_1",
+              "storyTxt": "obt/memory/story_ebnhlz_1_1"
+            }
+          ],
+          "charId": "char_4046_ebnhlz"
+        }
+      ]
+    },
+    "char_1024_hbisc2": {
+      "charID": "char_1024_hbisc2",
+      "drawName": "下野宏铭",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】芙蓉\n【性别】女\n【战斗经验】未公开\n【出身地】维多利亚\n【生日】6月21日\n【种族】萨卡兹\n【身高】160cm\n【矿石病感染情况】\n参照医学检测报告，确认为感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】普通\n【战场机动】标准\n【生理耐受】标准\n【战术规划】优良\n【战斗技巧】普通\n【源石技艺适应性】优良",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "经过系统的医疗理论培训以及长时间的临床实践训练后，芙蓉已经由实习医生转为正式医疗干员，并且成为了医疗部的主治医师之一。芙蓉不仅在医疗外勤任务上有相当丰富的经验，在健康管理以及病后护理的理论研究方面也颇有建树。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓模糊，可见异常阴影，循环系统内源石颗粒检测异常，有矿石病感染迹象，现阶段可确认为是矿石病感染者。\n\n【体细胞与源石融合率】14%\n干员胸腔部位有大面积异常阴影。\n\n【血液源石结晶密度】0.30u/L\n病情暂时没有继续恶化的现象。\n“芙蓉小姐在健康管理方面很专业，对自己也很严格。但即便如此，那次战斗遗留下的影响还是十分严重，她的感染程度不容乐观，需要定时接受检查。”——安赛尔",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "作为罗德岛新一代的年轻力量，从A1预备组走出来的这些孩子的成长，大家都是看在眼里的。其中芙蓉的变化，尤为引人注目。\n能力上的成长自不必说，那个总是以最强硬的态度要求身边所有人的芙蓉却也不知道在何时“消失”了。上一次见到芙蓉大吵大闹着没收病人的零食，风风火火地要求病人严格执行她的健康作息表是什么时候的事了？现在的芙蓉，只要温和地告诉病人们怎样做对身体有好处，病人们就都乖乖照做了。我们有理由相信，芙蓉的内心里，天生就有一种可以温暖人心的力量。她现在只是学会了以恰当的方式，将自己真实的一面展示给大家。\n之前那个整天跟在干员Pith身后问这问那的小跟班，如今也担起了给更年轻的实习医生解疑答惑的前辈角色。就在不知不觉中，芙蓉已经承担起了医疗部相当一部分专业工作，也能时常见到她守在病床边，耐心安抚着那些惊慌害怕的病人，这的确是只有她才能做到的事......时间总是在推着我们向前走，不允许我们对遗失在过去的东西多加回顾。只是偶尔看到这些经过时光洗礼积淀下来的成果，我们又怎能不欣慰呢？\n要是所有人都还在就好了。",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "从毫无基础的实习医生到一名可以独当一面的主治医生需要多久？五年？十年？对于在这条道路上半途而废的大多数人来说，这是一生也无法达到的目标。\n罗德岛上的确有许多专业能力和知识储备都极为杰出的医疗人员。但是对于他们来说，也很难专门抽出时间来系统性地将庞大的现代医疗理论教授给学生。在这种情况下，芙蓉所能做的，就是将每一次实践都当作学习机会。她一丝不苟地总结医疗经验，认真记下前辈提到的每一个知识点，然后利用几乎全部的空余时间去查阅资料、慢慢消化，最终融会贯通。\n芙蓉在照顾病人的本职工作上有着非常丰富的经验，温柔的性格与细腻的心思让她在医疗护理上得心应手。在积累了足够的医疗知识后，芙蓉正在尝试以自己原本就擅长的营养学为基础，总结一套系统性的医疗护理理论。目前已有的研究成果得到了凯尔希医生的高度认可。以这套理论为指导，芙蓉主导了一次医疗部病房设备的升级换代。从之后病人的恢复情况来看，这些措施的确取得了明显的成果。\n“医疗的概念，绝不仅仅是在危急时刻将病人带离生命危险。给予患者充分的关怀，让他们的身体、心理都维持在一个健康的状态，以抵御疾病的侵害，这也是医疗重要的一环。这是一项长期的工作，需要充分的细心与耐心，还有对病人发自内心的关怀。”在罗德岛医疗部修订版手册中，芙蓉加上了这样一段话。",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "罗德岛的医疗干员在执行外勤任务时，往往会有至少一名外勤干员陪同，以确保医护人员的安全。在与芙蓉同行的外勤干员的任务报告中，我们看到了不少令人不安的信息。\n“任务一开始并不顺利，本地的感染者对我们怀有明显的戒备甚至是敌意......”\n“我当时差点没有忍住想狠狠揍他一拳。最终把我拦下来的不是罗德岛员工守则，而是芙蓉医生......我知道他是感染者，我也是，芙蓉医生也是。那个人明明知道芙蓉是救了他一命的人，他怎么敢对芙蓉说那样的话......我们最终没有产生冲突。”\n以上片段摘自某位外勤干员的任务报告。然而相似的记录，还出现在了许多其他与芙蓉合作的外勤干员的任务报告中。更令人在意的是，所有相关事件在芙蓉的任务报告中只字未提。\n对芙蓉始终保持沉默的态度有所担忧的不只是我们，炎熔也多次找到过我们，请我们多加留意芙蓉的身心状况。\n“那个家伙自己是什么都不会说的。但这不代表她真的不在意......我还是想请你们盯着她一点，毕竟她只是个看上去能把自己照顾得很好的笨蛋。只是看上去而已。”\n摒弃偏见与仇恨是罗德岛的一贯主张，但不可否认的是，在大地各处，对感染者，对萨卡兹的仇恨客观存在。背负着复杂的身份，还要尽力履行一名医生的责任，而很多时候敌意的来源，偏偏是自己想要帮助的对象......芙蓉所承担的压力，他人只能想象，却很难真正地感同身受。我们非常希望芙蓉可以打开心扉与他人交流，而在她本人寻求帮助之前，我们所能做的只有继续留意观察，并且在为芙蓉安排任务时有所选择。\n芙蓉至今从未推辞过任何外勤任务。",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "芙蓉常常提起自己儿时曾经居住的那片街区。\n根据她的描述，那里像隐于伦蒂尼姆这座繁华城市角落的贫民区。那里住着许多不同国籍、不同种族的人。有伦蒂尼姆本地的菲林工人，也有来自萨尔贡的瓦伊凡行商。大家出身各异，但“需要拼尽全力才能在这里扎根生存”这一共性，足以让所有人团结在一起。\n当芙蓉带着无比怀念的情绪描述那里融洽祥和的生活图景时，我们不禁怀疑，这片大地上是否真的存在这样的角落？时隔多年，尤其是伦蒂尼姆还经历过那样的动乱，那片老城区哪怕真实存在过，恐怕也早已化为废墟。\n也许是回忆带有自我美化的特性，也许只是芙蓉有些幸运，当初那个还不知偏见为何物的萨卡兹女孩第一次接触家庭之外的环境时，遇到的就是一些友善的人。这些最初的记忆成为了芙蓉相信善意最简单又坚定的理由。这片大地上存在仇恨与偏见，也存在爱与善意。至于二者究竟孰多孰少，对于芙蓉来说似乎根本不能算是一个问题。 寒夜中一点灯火或许不足以取暖，却可以支撑起一个人继续前行的信念。现在的芙蓉，正在以自己的行动将这一点光亮传递下去。\n她或许远比我们想象的要坚强。",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "“......在这次任务中，干员芙蓉展现出了非常专业的能力。尽心尽责地照顾感染者，在危急时刻果决地行动，客观上解除了夕照区大规模的感染危机......综合评估，根据芙蓉在此次任务中的杰出表现，建议给予相应的晋升奖励。”\n“但是值得一提的是，干员芙蓉在任务中时常会有不顾自身安危的激进行为。虽然她的本意还是为了更好地完成医疗救援任务，但是我们并不提倡这种冒险的做法。没有人要求罗德岛的医疗人员将自己的生命安危置于患者之后，这不能称为正确的观念......希望干员芙蓉今后在其他危险的场合，能学着保护自己。”\n——摘自罗德岛夕照区办事处负责人行板关于维谢海姆事件的任务报告\n\n“维谢海姆的夕照区是一个很有趣的地方，咖啡与特色小吃十分美味，人们能歌善舞，也十分热情好客。在医疗任务中，我得到了许多来自当地人们的帮助......我十分怀念那里。”\n——摘自芙蓉关于维谢海姆事件的任务报告",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": [
+        {
+          "storySetId": "story_hbisc2_set_1",
+          "storySetName": "无名之花",
+          "sortId": 1,
+          "storyGetTime": 1654747200,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_hbisc2_set_1_story_1",
+              "storySetId": "story_hbisc2_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "预言中的恶魔来到了夕照区，但是带走了灾难。",
+              "storyInfo": "info/obt/memory/story_hbisc2_1_1",
+              "storyTxt": "obt/memory/story_hbisc2_1_1"
+            }
+          ],
+          "charId": "char_1024_hbisc2"
+        }
+      ]
+    },
+    "char_4047_pianst": {
+      "charID": "char_4047_pianst",
+      "drawName": "九日九号",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】车尔尼\n【性别】男\n【战斗经验】没有战斗经验\n【出身地】莱塔尼亚\n【生日】9月10日\n【种族】埃拉菲亚\n【身高】182cm\n【矿石病感染情况】\n体表有源石结晶分布，参照医学检测报告，确认为感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】标准\n【战场机动】标准\n【生理耐受】标准\n【战术规划】标准\n【战斗技巧】普通\n【源石技艺适应性】优良",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "车尔尼，莱塔尼亚夕照区的优秀音乐家，维谢海姆事件后在当地的罗德岛办事处兼职重装干员。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓模糊，可见异常阴影，循环系统内源石颗粒检测异常，有矿石病感染迹象，现阶段可确认为是矿石病感染者。\n\n【体细胞与源石融合率】11%\n在脖子与后背上有大量源石结晶分布。\n\n【血液源石结晶密度】0.25u/L\n病情稳定，暂无恶化迹象。",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "威廉·菲赫特·车尔尼，只是提到他的名字，便能让每个夕照区的人心中充满自豪与崇敬。除了拥有卓然的作曲天赋，车尔尼亦有着不俗的钢琴演奏技巧。他的十指异常修长，能够轻松够到跨十一度的琴键，因此，很多由他写成的乐章往往演奏难度也颇高。但即便如此，也无法阻止夕照区的人们满怀着激情，日复一日地弹奏他的名篇。\n在夕照区的深夜时分，摇篮边伴着稚嫩孩童无忧入梦的，是他所作的催眠曲；路灯下伴着相拥爱侣缓缓起舞的，是他所作的小夜曲；棺椁旁伴着苍老面孔安详离世的，是他所作的安魂曲。因为身患矿石病，车尔尼不常出门离家，但他写下的每一个音符，都随着传唱人的脚步，越过绵延千里的山脉与翻涌奔流的河水，走向更远的远方。\n夕照区那些灯火通明的宴会厅中，曾有乐队彻夜奏响车尔尼创作的舞曲，但他本人对那样的场合没有任何兴趣，他的注意力大多都被挥霍在一沓沓杂乱的乐谱上。有时，他一天什么也不做，只是在桌前静坐。没人因此指责他，因为大家都知道，那里曾承载着他的全部。\n在维谢海姆事件中，车尔尼的生命一度垂危，但正是这一次濒死的经历让他转变想法加入罗德岛，而他也因此获得了离开莱塔尼亚的机会。从此之后，一片远比夕照区、远比莱塔尼亚更为广阔的大地，将在他眼前徐徐展开。于是，那方窄窄的小桌，再也装不下车尔尼胸中时刻汹涌咆哮的，对远方的渴望与向往。",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "“车尔尼先生，怎么说呢......的确，我是见过更不好相处的人。而且，总体来说，他还算是个和善的好人。但是——有些时候，你就是想大嘴巴抽他，根本克制不住。”\n“我懂你，他简直是我见过最不配合的病患，上周我怎么说来着，不要熬夜，注意作息，按时吃饭，及时吃药，至少三遍！但是这周我去宿舍为他体检，啧，猜我看到什么了？”\n“还能有什么，满地的乐谱，满是咖啡渍的杯子，一口没动的晚餐，啊，当然了，还有半死不活的车尔尼先生本人。”\n“你俩别说了，我手已经痒了。”\n“不过这是他的工作不是吗？舰上很多人忙起来都是这个样子......”\n“闭嘴，小伙子，再多为他辩解一句，你就等着值一周夜班吧。”\n“我......就是很喜欢车尔尼先生嘛，他真的是个很优秀的音乐家啊！而且上个月他送了我一大罐护手霜，还贴心嘱咐我要爱护自己的双手。”\n“噫——如果爱护的方式是指像他一样每天涂二十多遍护手霜的话，那我还是免了。”\n“所以你指甲旁长了这么多倒刺，像车尔尼先生就不会长。”\n“哼，他当然不会长，他连手指划了个小口子都要来医疗部看看。”\n“不过实话说，如果我的手像他一样值钱，我也这么干。”\n“我决定好了，你俩一起滚去值夜班吧。”\n“嗨，这个位置有人吗？食堂里没有其他空位子了。”\n“别客气，坐就是了。”\n“谢谢，对了，你们听车尔尼先生刚发布的新曲子了吗？太精彩了！”\n“呃，我们还没能抽出时间来......”\n“看，刚刚还有报道说他宣布把这首曲子获得的收入全部捐出去，用来救助莱塔尼亚因矿石病失去双亲的孩子。怎么会有这样的人，明明自己兜里也不剩几个子儿。”\n“......”\n“哎，你不吃了吗？还剩下好多啊，什么事这么着急。”\n“给人体检！”\n“给谁啊？”\n“还能谁，那位车尔尼啊。”\n——出自医疗干员在食堂里的闲聊。\n“我没有偷听，我就是恰好坐在了旁边。”\n——干员芙蓉如是说。",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "在分析任何乐曲之前，我们都不应略过对作曲家本人事迹与经历的深入剖析。众所周知，威廉·车尔尼出生在夕照区的一个音乐世家，早年丧父的他由母亲海莉·车尔尼一力抚养长大。作为一名精通乐理的琴师，海莉在丈夫去世后靠为他人调琴修音挣取薪水来补贴家用。\n因为无人照料，海莉常常把儿子也带到工作场所。在海莉的顾客中，不乏琴艺高超的大家，而他们无一例外都被年纪尚幼的车尔尼所展露出的非凡天赋所吸引，尽管他此时还未投入任何琴师门下，但他们都愿对其倾囊相授。\n在车尔尼十四岁时，其母海莉不幸病逝，而他本人也在料理亡母后事时不慎感染矿石病。于是他只好放弃去往莱塔尼亚首都音乐学院继续深造的计划，转而在夕照区本地的一位作曲名家处学习。在那里他结识了老师的长女，其姓名我们无从知晓，只能从他本人的访谈录中浅悉，这位被车尔尼视为一生挚友的女孩也极具音乐天赋，两人一次次的较量与拼比不仅没有伤害到他们的情谊，反而让他们愈发惺惺相惜，形影不离。\n这样美好的日子一直持续到六年后，这时的车尔尼已经成为当地极负盛名的演奏家，可再多的光环加身也无法掩盖他此刻命运的黑暗，他的挚友在他二十岁时因为矿石病恶化去世。大受打击的音乐家因此一蹶不振，只能靠创作来宣泄心中的痛苦。闭门一年后，他的代表作《晨暮》——也就是我今天要讲授的乐曲，面世了。\n这首《晨暮》令作曲家本人跻身莱塔尼亚一流音乐家之席，其背后却隐藏着足以将作曲家吞噬殆尽的巨大苦痛。这深重的痛苦将作曲家周身如铁桶般密闭的躯壳撕开了一道长长的裂口，也正是从这道裂隙中，作曲家柔软的内质终于窥见了外部世界的真正模样。\n......或许我不应该再多讲了，我们应该直接听听它。\n——摘自莱塔尼亚最高音乐学院第四节音乐赏析课的课堂记录。",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "尊敬的凯尔希女士与博士，近来我在进行中的一项研究因为资金的短缺难以为继，所以希望您二位可以给予我一些额外的支持与帮助。\n该研究项目旨在通过学习音乐帮助年轻干员学习掌握源石技艺，以及深入挖掘个人音乐水平对其学习源石技艺的具体影响。以我本人为例，年幼时我曾在在学习源石技艺初期遇到了不小的麻烦，有长达数月的时间，学习都毫无进展。但后来，我意识到，莱塔尼亚的源石技艺体系与它的音乐体系相辅相成，而我在音乐上的天赋，对于源石技艺的学习是一块亟待被开发的富矿。于是我迅速调整学习计划，把书本上的基础理论抛之脑后，直接将自己掌握的乐理知识应用在源石技艺的学习上，最终取得了事半功倍的效果。\n其次，一个人学习源石技艺的过程，对于我们研究音乐在莱塔尼亚源石法术体系中的具体作用有着巨大的价值。可以说，莱塔尼亚最顶尖的术师几乎无一例外都是伟大的音乐家。而在莱塔尼亚的古典法术发展史中，里程碑式音乐作品的出现也会带来极具突破性的法术发现。通过莱塔尼亚的历史记录不难发现，二者的发展曲线高度贴合，法术发展的繁荣高峰期往往与音乐创作的大爆发同时或相继出现。相应地，当音乐的发展走入困境时，法术的发展也会陷于低迷的状态。\n到目前为止，我的研究已经小有所成，可以得出结论，年轻干员们每一次取得的进步与成果都和他们在音乐学习方面的突破紧紧关联。音乐在其中起到的具体作用也将在进一步的研究中揭示。\n最后我想说，在莱塔尼亚各领域的源石技艺中都广泛应用了音乐。特别是医疗法术，在夕照区，我们有一套独特的应对矿石病的医疗法术体系，在长久的实验中，该体系的作用已经得到有效的验证。当然，如果能获得更多的支持的话，该项目的研究可以立刻提上日程。\n\n——摘自干员车尔尼的《研究经费申请请示书》",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "“创作音乐就是在暴风中走钢丝，我一直是这么想的。”他放下啤酒瓶，转头对你感叹。\n“你的灵魂就是你脚下的绳子，它得足够坚韧才能不在暴风的撕扯中断裂。那些从欲望与情绪中脱胎而出的暴风，它们很可怕，而脚下，脚下是无底的深渊。我的前方却只有那一道窄窄的细绳。”他咽了口唾沫，接下来的话似乎很难开口。\n“我一直在担惊受怕，博士。”\n“因为我脑海里的乐音，正是那条在狂风中剧烈抖动的绳子所发出的声响。”",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": []
+    },
+    "char_4048_doroth": {
+      "charID": "char_4048_doroth",
+      "drawName": "Jacknife",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】多萝西\n【性别】女\n【战斗经验】没有战斗经验\n【出身地】哥伦比亚\n【生日】5月8日\n【种族】札拉克\n【身高】170cm\n【矿石病感染情况】\n参照医学检测报告，确认为非感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】普通\n【战场机动】普通\n【生理耐受】标准\n【战术规划】标准\n【战斗技巧】普通\n【源石技艺适应性】优良",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "莱茵生命源石技艺应用科主任，在罗德岛选择使用自己的本名作为代号。\n多萝西·弗兰克斯小姐以“莱茵生命与罗德岛的合作项目负责人”这一身份加入我们，将会在许多研究项目上为罗德岛提供帮助。身为源石技艺应用科的主任，她对源石技艺本身的理解毋庸置疑，而在源石技艺的应用上更是炉火纯青。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓清晰，未见异常阴影，循环系统内源石颗粒检测未见异常，无矿石病感染迹象，现阶段可确认为非矿石病感染者。\n\n【体细胞与源石融合率】0%\n干员多萝西目前没有被源石感染的迹象。\n但我们都知道，她体内存在的某些东西，危险程度或许不亚于源石感染。\n\n【血液源石结晶密度】0.13u/L\n干员多萝西长期埋首与源石密切相关的种种实验，尽管防护措施齐全，但仍需额外注意。",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "多萝西·弗兰克斯女士在罗德岛舰内的初次亮相，是莱茵生命初步平息发生在特里蒙城郊的骚乱，能量科主任斐尔迪南·克鲁尼因涉嫌非法实验而正式遭通缉之后不久。干员多萝西正是在这样的时间点，带着一份于双方都有益的合作项目，促成了莱茵生命与罗德岛目前为止最高等级的合作——由一科主任亲自负责，并执行派遣。\n对于这位身份敏感的女士，首先需要申明的一点的是：在莱茵生命享有的主任头衔，绝非干员多萝西用来装点自己的一种炫耀手段。\n我们屡次在介绍干员多萝西时提及她的这一职位，只是因为这最能够直观展现出干员多萝西的生平与其最值得瞩目的才能，她是莱茵生命众多研究者中最出众的代表之一，她是源石技艺应用领域专家中的专家，她经手主导的研究项目曾造成怎样的后果，我们之中的一些人曾亲眼目睹。\n尽管从结论上来说，曾经的能量科主任斐尔迪南被认为是这场事件的罪魁祸首，但不能否认的是，那些危险的实验成果，正是我们面前这位笑意盈盈的女士一手造就的。",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "干员多萝西出生在萨尔贡的一个移民家庭，她的父亲是一名在荒野上行医的民间医师，母亲则是一名拓荒者。\n因为父亲常年四处行医，多萝西由身为拓荒者的母亲一手带大，黄沙漫天的荒野一直是多萝西童年生活中最熟悉的风景。母亲所在拓荒队中的叔叔阿姨们，就是多萝西除双亲外最熟悉亲近的人，她喜欢将每一位拓荒队的成员都写进她的日记中，他们都是她重要的家人。\n多萝西的母亲作为拓荒者的后代，同样在荒野上成为了一名拓荒者，但她显然并不希望女儿步自己的后尘。多萝西自小便展现出了非凡的天赋，成绩优异远超同龄的其他孩子。这让她的父母异常欣喜，他们努力供女儿读书，为她攒下足够进入大学的积蓄，让多萝西可以不必为物质上的问题而太过烦恼。在现如今的哥伦比亚，只要一个人有足够的才能，就算是拓荒者的后代，也有机会借此实现社会阶级的飞跃。有天资者能够凭借天赋向上攀登——换句话说，资质不佳的人在哥伦比亚的命运，也似乎已有定论。至少多萝西的父母完全相信，他们的女儿会有一个远比他们要更加光明美好的未来。\n多萝西一如父母期盼的那样顺利成长，她的优秀有目共睹。然而，在接到铸铁城理工大学的夏令营邀请时，为此欢庆的一家人没有人能够料到，这一次分离就是永别。在天灾的袭击下，多萝西母亲所在的临时基地被整个摧毁，母亲与许多拓荒队成员惨死其中。\n多萝西的父亲曾在事后尝试安抚情绪失控的女儿，但收效甚微。而将自己关在房间闭门不出数日后，再度拉开房门出现在众人面前的多萝西，看上去已经收敛了悲伤。\n想必她在那时，心中就已经隐隐有了方向。",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "总体来说，干员多萝西在罗德岛的派遣期间，与舰内的其他干员相处得十分愉快。\n除去待在实验室里的时间，多萝西最常去的地方是舰内的放映室，在那里观看一部黑白电影是她最爱的休闲活动，偶尔也能够遇到拥有同样兴趣的干员。没过多久，她就正式收到了电影爱好小组的邀请，成为了这个小团体的一分子。\n而本身性格便温柔可亲的多萝西，实际上还非常喜欢照顾身边的人，许多干员都曾得到她温柔的叮嘱——不过遗憾的是，多萝西似乎经常忘记把自己也算进需要照顾的对象中，常常还在关心身边的人，自己却状况百出起来。\n对于这样让人担忧的干员多萝西，曾在莱茵生命与其有过交流的几名干员早已习以为常。干员星源往往会主动承担起照顾多萝西这一职责，而受到照料的多萝西则显得有些羞赧。但有时，也会看到她放下大姐姐的那一面，像个小女孩一样眨着眼睛，拉着干员星源，提一些无伤大雅的小要求。\n不过，同样需要注意的是，经干员赫默的观察及报告，我们发觉干员多萝西在交谈中的一些观点确实存在一定程度的偏执，尤其是在“保护所有人”“让大家幸福”这些方面。干员多萝西在涉及这类话题时偶尔会出现情绪的轻微失控，这种执念因她的家庭遭遇而生，根深蒂固，难以劝解。",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "据干员多萝西本人透露，她与公司元老塞雷娅、斐尔迪南等人不同，是莱茵生命主任级的成员中最晚加入的一个，同时也是最后一个。原本的莱茵生命还只有九科，直到她从政府研究机关带着项目跳槽来到这家受哥伦比亚重点扶持的科技企业，莱茵生命的源石技艺应用科才成立，十科并立的架构就此成型。\n在莱茵生命公司内部，多萝西与其他科主任之间的关系总体来说并不算差，至少能够维持表面上的和睦。在她的实验领域，就连公认难以相处的斐尔迪南，也曾给过她不少帮助。就算心知斐尔迪南的帮助总是“价值不菲”，但在自己想要达成的那个目标面前，要付出的代价并不被当时的多萝西看在眼里。\n\n【语音记录】\n“是的，我是最后加入的一个。克丽斯腾、塞雷娅、斐尔迪南还有帕尔维斯，他们都是最初的成员。”\n“哦，这么说或许你会误会，最初是克丽斯腾和塞雷娅两个人创办了公司，斐尔迪南和帕尔维斯都是最先响应的那一拨人。”\n“和我一样，都是自己带着项目来的。莱茵生命一直在吸纳这样的成员，我们有稳定成型、可实施性强的项目，克丽斯腾给我们提供平台，而我们用成果反哺莱茵生命。”\n“当时，是克丽斯腾找上了我，她了解我的研究，并且愿意给我支持。我加入时，帕尔维斯交给奥利维亚的项目刚刚出了差错......啊，这其实没什么，只是一个实验失败了而已。”\n“公司内部是因塞雷娅主任的事乱成一团，我头一次见克丽斯腾那样，或许从那时候开始，斐尔迪南就已经有了一些打算。”\n“这一次的事......斐尔迪南有他自己的想法，我没法评价他的所作所为，毕竟这也与我有关。”\n“帕尔维斯吗？嗯......”\n“大部分时候，他都是很好说话的人，不会得罪其他人。你可以和帕尔维斯一起喝喝茶，听听音乐，这都没问题。”\n“但是帕尔维斯也是研究者。斐尔迪南是，克丽斯腾是，我也是。”\n“哎，我真不想这么和你说......”\n“博士，我相信你可以理解我的意思，毕竟......我们如此相似。”",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "多萝西·弗兰克斯女士的言行都是真诚的，这一点毋庸置疑。但在这种真诚之中，却始终包藏着一些危险的要素，绝不可以因为对方温和的笑容、专注的视线，以及直白的关怀而低估这位研究者本身所带有的危险性。就算之前的实验风波已平息，目前干员多萝西在与我们的合作中也未表现出任何危险的倾向，但必须明确认识到的是，干员多萝西并未、从未、未来也不会改变她的初衷。\n——她真切地希望所有人都平等地得到幸福。\n早在大学时代，干员多萝西就已经开始关注洛肯·威廉姆斯的一些研究项目，我们可以猜测，当洛肯在大学演讲时，多萝西或许就坐在台下，因而某些理念深受其影响。尤其是实验伦理观念这一方面，从之前的事件中足可窥见端倪。而莱茵生命在“洛肯水箱”事件中起到怎样的作用，多萝西本人又扮演着什么样的角色，我们不得而知，但所有的猜测都指向并不乐观的方向。\n值得注意的是，对于多萝西的加入，反而是在莱茵生命时期与其交集最少的干员塞雷娅率先说出了自己的看法。\n“我了解她们那样的人。”\n塞雷娅这样提醒我们，“要当心，她们会为了一个‘美好的’想法不顾一切。”",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": []
+    },
+    "char_1027_greyy2": {
+      "charID": "char_1027_greyy2",
+      "drawName": "我妻洛酱",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】格雷伊\n【性别】男\n【战斗经验】没有战斗经验\n【出身地】玻利瓦尔\n【生日】6月6日\n【种族】佩洛\n【身高】169cm\n【矿石病感染情况】\n参照医学检测报告，确认为感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】普通\n【战场机动】标准\n【生理耐受】标准\n【战术规划】普通\n【战斗技巧】标准\n【源石技艺适应性】标准",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "格雷伊，已通过数项工程师相关科目测试。\n现于工程部任职，聚焦新技术研发与应用，并视需求参与包括作战与技术实测在内的多项行动。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓模糊，可见异常阴影，循环系统内源石颗粒检测异常，有矿石病感染迹象，现阶段可确认为是矿石病感染者。\n\n【体细胞与源石融合率】7.3%\n融合趋势已得到有效的控制，但仍需谨慎对待患者病情。\n\n【血液源石结晶密度】0.26u/L\n考虑到患者病情而采取了一系列非保守治疗法，目前成效喜人。建议稳步推进治疗进程。",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "关于干员格雷伊的生活和工作状态，医疗部和工程部确实收到过一些抗议，但这些抗议也往往令他们哭笑不得。\n为了帮上大家的忙，格雷伊在前两年确实努力到了有些过火的程度，甚至有小道消息称他曾帮忙检修电路到深夜，因为顾不上吃饭而导致低血糖晕倒。但平日里看到他那努力的劲头，大家只得面面相觑，也不好开口去泼冷水。尽管干员格雷伊本人也对此感到内疚，但真到了下一次，又忍不住重蹈覆辙忙到差点透支体力。\n“总要有一点转机的”，Mechanist先生在读完某一次大规模检修的报告后突然这么说道。随后在另外某个很平凡的日子里，大家就一下都听说了Mechanist先生竟然新收了一名小学徒。精英干员的任务毕竟繁重，这类事情不说稀奇，但至少也不那么常有。\n而Mechanist先生表示一切都只是水到渠成而已。学徒嘛，有个不坏的目标，有对知识的渴望，这比什么都重要不是吗？帮助人把劲使对地方和帮机械理清排线结构，其中的门路或许是差不多的。\n当然了，关于干员格雷伊，后来医疗部和工程部也就很少再收到上面所提到的那类抗议了。",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "干员格雷伊似乎有些不爱惜自己的身体，具体则表现在于......他日以继夜地扑在学习和工作上。通常我们不会认为这是什么坏事，除非我们要讨论的是一位身体素质本就会比健康的人们更差一些的矿石病患者。当然，他的作息有医疗部的监督，总归不会太过火，我们一度更在意的其实是心理健康问题。\n为此我们人事部甚至特意向医疗部求证，但测试结果不会骗人。不同于我们的假设，干员格雷伊身上并没有什么幸存者综合征，或者是一些类似的障碍。必须承认我们似乎把人想得太狭隘，干员格雷伊努力的原动力并不是创伤，甚至也不是单纯地要向罗德岛报恩什么的。他是真心地对这些技术感兴趣，也是真心地想把这些技术回馈到改善人们的生活上。\n“技术改善生活”这句话在我们的眼中往往意味着，是技术的进步为我们带来了更多的便利。但似乎我们都容易忽略，那些始终不懈地尝试将技术实践于改善生活的人，才是实现它的关键。医疗技术如此，工程技术亦然。罗德岛承诺，会为这样的干员们努力搭建一个可供他们去发挥的平台。",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "源石之中所蕴含的，那股躁动不安的能量，在数个世纪以来都困扰着，也激励着我们。而在将其驯化的历史中，最令人兴奋与骄傲的杰作之一，无疑是利用源石提取并转化电能的技术。这种转换一举化解了源石技艺良导体成本高昂的问题，促进了源石能源的经济化；同时，也进一步拓展了源石能源的安全化和易用化。\n受益于这样的技术，多种需要源石稳定供能的产品都得以普及至民用市场，其中就包括我们现今早就不以为奇的、没有爆炸风险且无需高昂维护成本的照明设备。源石能源的发掘对泰拉是一场爆炸式的冲击，而此项技术，则将这场冲击化作了滋润移动城市血管每一缕末梢的涓涓细流。\n——《移动城市技术漫谈，第三辑》序言",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "沃尔沃特科钦斯基所生产和制造的电控设备颇负盛名，结合我们所做的调查外加多方证据显示，干员格雷伊的母亲极有可能是一名曾受聘于该企业的工程师，然而我们并未在任何一份官方的留档中发现其母的名字。但有报告显示，在玻利瓦尔地区曾发现某项该企业的失窃技术原型，事件的相关人员仍在追查中。根据手头零散的线索，我们有理由相信，该项技术原型无疑与某种新型能源技术相关。技术革新给人们带来的绝不会只是福音，为了承载它的诞生，背后也必定有不为人知的牺牲。进一步的调查将有被反追踪的风险，我们的行动或许只能告一段落。\n另，我们有理由相信，其父已经在动乱中被拘捕并失去音信，生存几率渺茫。建议人事部酌情判断是否告知干员本人。",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "Mechanist最近，就最近，有一点点忧郁，就一点点。不过更令人忧郁的，或许是他忧郁起来的样子在旁人看来稍有些滑稽，又或许是这种忧郁难以被分担。\n想一想，就在不久前一次与莱茵生命相关的任务中——尽管并不令人意外——见到了一种只存在于想象中的物质。\n是的，也许它并未超乎想象。人们对源石技艺与其导体当然早就发挥过各式各样离奇的想象，但当有人告诉你，那种痴人说梦般的，又极富想象力的好东西，被别人给实现了......\n嗯，似乎有一些寂寞，有一些不平，又有一些羡慕，当然或许还会有一些，嫉妒？\n只因斐尔迪南所言非虚。一种梦幻般的源石技艺良导体当然有机会成为下一个时代的开端，何况它的意义显然并不只是一种导体而已。想必任何一名对尖端技术有憧憬的工程师都无法遏制自己跃跃欲试的心情。\n幸运的是，亲眼见证了那种递质最大潜力的小格雷伊非常能够理解Mechanist的感受；不幸的是，最近有一点点忧郁的工程师还得再多一个。",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": [
+        {
+          "storySetId": "story_greyy2_set_1",
+          "storySetName": "撰写光明",
+          "sortId": 1,
+          "storyGetTime": 1656993600,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_greyy2_set_1_story_1",
+              "storySetId": "story_greyy2_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "他的笔记录下数据，也记录下想感谢的人。",
+              "storyInfo": "info/obt/memory/story_greyy2_1_1",
+              "storyTxt": "obt/memory/story_greyy2_1_1"
+            }
+          ],
+          "charId": "char_1027_greyy2"
+        }
+      ]
+    },
+    "char_135_halo": {
+      "charID": "char_135_halo",
+      "drawName": "YUJI",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】星源\n【性别】女\n【战斗经验】没有战斗经验\n【出身地】哥伦比亚\n【生日】7月10日\n【种族】黎博利\n【身高】166cm\n【矿石病感染情况】\n参照医学检测报告，确认为感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】普通\n【战场机动】标准\n【生理耐受】标准\n【战术规划】标准\n【战斗技巧】标准\n【源石技艺适应性】标准",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "莱茵生命能量科研究员，埃琳娜·乌比卡博士。在罗德岛驻留期间则使用其原名作为代号以示区分。\n使用自制法杖以极具特色的源石技艺制衡敌人，但比起前线作战，本人更希望在后方承接专业研究及器械维护方面的工作。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓模糊，可见异常阴影，循环系统内源石颗粒检测异常，有矿石病感染迹象，现阶段可确认为是矿石病感染者。\n\n【体细胞与源石融合率】4%\n星源右小腿接近脚踝处有感染痕迹。\n\n【血液源石结晶密度】0.2u/L\n仅有轻微感染，体表尚未生成明显源石晶体。\n\n该干员医疗档案已按需求提高保密等级，与干员星极的档案共同归档，请相关操作人员注意。——匿名高权限医疗干员",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "星源并非初次来到罗德岛。之前，由于一场发生在莱茵总部的实验事故，她患上了矿石病，和姐姐一起短暂驻留罗德岛并成为干员。休养了一阵，确认身体无碍后，便回到莱茵生命能量科继续工作。此次来到罗德岛，明面上是星源主动申请外派，内里似乎与莱茵生命内部的另一场实验事故，以及能量科的人事调整有关。在一段时间内，她将不会返回莱茵生命，而是留在罗德岛工作及生活。星源是电力学与工程学的双学位博士，此前就和罗德岛工坊以及后勤部的干员有过接触，因此很轻松就重新适应了在罗德岛的生活。由此可见，人事部对她精神状态的担忧完全是多此一举。\n“我知道她最近在莱茵那儿出了点事，但她一回来就跑我这里打招呼，第二天就带着材料来定制实验器材，看上去是有大课题要做。呵，看那劲头，我拿我的锤子和你保证，星源但凡颓废个半天，我全年绩效就塞你口袋里。”——匿名高级工匠",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "乌比卡家族祖上曾是高卢星象学派的末支，由于被主流学派排挤而选择移民至哥伦比亚南部并在当地扎根，无意间避开了高卢亡国带来的影响，现如今已成为了拥有相当社会地位的庞大家族。星极与星源便是这个家族新生代中的一员。\n两姐妹的父母，乌比卡先生与乌比卡女士虽是包办婚姻，倒也算得上情投意合，幸福美满，结婚后没过多久就有了第一胎。乌比卡先生运用自己的星象研究预测未来，发现自己这一生或许只能有一个孩子，因此，他为自己即将诞生的孩子设计了一个响亮的名字：星极，意为群星的极点。\n让乌比卡先生措手不及的是，就在乌比卡女士分娩那一天，两个女孩呱呱坠地。乌比卡先生大喜过望，为自己这个意料之外的女儿起名为星源，乌比卡先生希望，这个女儿能够如群星的源头般为家族带来新的气运。\n星源从小是个好学上进的人，她虽没有姐姐那种将学识信手拈来举一反三的能力，但她更努力，更刻苦。因此在年少时，她施展的源石技艺比姐姐更闪耀，她对于星象知识的掌握达到了连她父亲都会挑挑眉毛的程度。按照乌比卡先生的说法，星源“本能和她姐姐一起，成为家族璀璨未来的支柱”。\n然而她没有。\n星源的转变来源于一个破损星象仪。就在那一天，就在她发现父亲与母亲，两位资深的星象学家，将一个能够修复的星象仪器随手丢弃并买了一个崭新的时，她突然发现，自己的所学所识，是那么地，不实用。她没敢把肚子里那句“修修还能用”当着父母的面说出来，而是把那个星象仪带回房间里，看了几册说明书和制作指南，自己拆解复原，找制作仪器的师傅聊天，鼓捣了几个月把它完全修好。星源拿给姐姐看，她的姐姐兴奋地接过仪器，一边夸赞她心灵手巧一边和她分享糖果。而当她把仪器展示给父母时，她获得的只有两句冷冰冰的回话：\n“你为什么在这废铜烂铁上浪费时间？”\n“星源，我希望你把时间用在正道上。”\n她默默回到房里，看着书架上一排又一排的星象学专著，而后又看向窗外望不到边际的移动城市地块，她明悟了。\n就算她精通群星的周期性变化规律，能够信誓旦旦地对旁人描述这种遥远且不切实际的变化，这种学识本身，对于整片大地终究是毫无裨益。要是继续学着家族那套一无是处的骗术，她今后就只能够成为一个连仪器都修不好的星象骗子。她真正希望掌握的，是那些被她父亲视为糟粕的，那些真正能够让世界变得更美好的东西。\n科学。\n自那一天起，星源开始消极对待父母与其一众老师们的星象学授课，转而将重心放在了学校课程上。她曾经试图以学业成绩证明自己选择的正确性，但父母对其行为的轻蔑彻底激起了她骨子里的倔强。如果没有姐姐星极从中周旋缓和，以星源的性子，或许会不顾后果地离家出走。最终，在获得大学入学通知书，确认自己拥有一笔储蓄且有稳定收入来源后，星源从家里搬了出去，再也没有回到那个折磨了她许久的家。为了迎接新生活，她在大学新生报到时为自己准备了一个新名字：埃琳娜。\n她才不想做那虚幻飘渺的星，她想要成为光芒。",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "作为最顶尖的科技公司，莱茵生命的招聘标准足以让大多数人望而却步。即使是拥有双学历的埃琳娜，在莱茵这个硕士博士满地打杂的公司里，也确实不值一提。但“幸运”的是，她有一位好老师——莱茵生命能量科主任斐尔迪南发起的实验项目她在大学时期就有参与，以此为契机，埃琳娜跟着这位业界先驱工作学习数年，最终成为了他的得意门生。这其中的辛劳与艰险，自不必说。斐尔迪南手下有数十名研究员，算上担任客座教授时教授的学生，至少有数千人。埃琳娜被他看中，一方面当然与其过硬的学术素养有关，而另一方面，也是斐尔迪南最中意的，是她在极端情况下的决策力、反应力以及行动力。\n数年前，能量科实验室区域发生了一场极为严重的源石液泄漏事故，当时能量科主要负责人员皆在莱茵总部外办公，防卫科按照预案处理该起事故。然而，由于泄漏影响到了其他部门，加之数项实验一旦中止，未充分反应的材料将会成为更棘手的危害源，整个救援现场进展缓慢。当时，如果不是作为实习研究员的埃琳娜担起责任主动给防卫科主任塞雷娅讲解了现场状况并带头拯救伤员，摆在斐尔迪南面前的或许会是个令他更加难堪的烂摊子。当然，也就是在这一起事故中，她因救人心切未穿戴完整防护装备进入高危区域而感染了源石病，她的姐姐星极，则在被卷入事故时由埃琳娜带入安全屋避难，后因与妹妹接触出现共发性矿石病症状，一同被送至罗德岛就医。\n\n“迄今，我们仍不清楚共发性矿石病的具体成因。这种极为稀少的病例只在近年有所发现。在现有的病情案例中，我们发现了些许共通点：感染者皆有已受感染的同卵双胞胎兄弟姐妹、从小修习并使用相同的源石技艺、心灵上的密切联系、与刚成为感染者的血亲在接触过程中出现的强烈情感波动以及一个猜想因素：时间与空间。所有案例都在兄弟姐妹成为感染者后数小时中有过接触，暂无此时间后共发的病例，也不存在异地受感突发矿石病的案例。”\n“样本数有多少？”\n“本舰一例，各国罗德岛分部传回的案例统共两例。”\n“还是太少了，形成这样的猜想或许过于武断。”\n“这种病症本来就十分稀有，我们只能在有限的资料下进行研究。”\n“我知道你急于在这件事上取得成就，并为那些受苦难的人带去治疗方案，但还请你将你那固有的谨慎贯彻到底。你看，我们有不少情感丰沛时冲动使用源石技艺导致他人患病的案例，也存在着多种血亲间由于外因陆续患病的案例。”\n“那不是更说明——”\n“那说明你猜想中的每一个点都会被他人找到特殊案例进行反驳。”\n“......（懊恼的叹息声）”\n“矿石病不是普通病症，其他病症的逻辑在它身上并不适用。”\n“......我是不会放弃的。”\n“当然，你不会。但在此之前，我希望你先为这些病患们拟定好医疗计划。”\n“已经做好了，三份文件夹，都在你桌上。”\n“多谢，辛苦了。”\n......\n“还有什么事吗？”\n“我在想，如果科学逻辑无法解释这些患者的矿石病，或许我的确应该另辟蹊径。”\n“你的意思是？”\n“我听说罗德岛现有的病例来自于占星术师世家。这件事或许不涉及常理因果，只能从神秘学范畴上予以解答。她们的父亲曾经预言过自己只有一个女儿。或许他的预言结果并没有错。”\n“这些依旧只是根植于你假定推论上的猜测......但你若是认定如此的话，那便去做吧。”\n——医疗部会议室，高权限医疗干员间的录音节选",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "埃琳娜一直以为自己的导师斐尔迪南是一个严厉但尊重个人意志的好老师。但在“359号基地事件”中，她在斐尔迪南身上看到了自己双亲的影子——控制欲、不信任、高压态势。她曾经不顾一切地想要摆脱这样的人，可在兜兜转转十几年后，却还是掉入了一个相同的坑。所以在那一刻，她决定和自己的老板，自己的导师做个了断，并且在之后向莱茵生命提出了外派要求，前往罗德岛，回到姐姐身边。只有在这里，她才能静下来，细细为未来做准备。现在她很迷茫，自己的主要研究因为斐尔迪南消失不见以及整个能量科的变动毁于一旦。近十年的努力成果进入封存状态，而且似乎看不到重启的那一天，就好像一个源石虫养殖户在某一天打开房门时发现自己的虫舍消失不见了。所有技术细节都在脑子里，可就算能复现，罗德岛也并没有那么多资源供她使用。更何况，现在她是一名干员，她有新的责任，新的义务。她还有许多其他事要做......\n但换一个角度来看，埃琳娜觉得自己的生活也没那么痛苦，新生活，新机遇，罗德岛驻舰人员的丰富度与广度能够支持她做许多微小却有益的研究。罗德岛的管理者看上去高效且专业——这次她好好确认过，这位被称作博士的管理者值得信任。最重要的是，她现在就住在姐姐宿舍旁边。\n她终于回家了。",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "众所周知，星源对家族的星象传承一直颇有微词，偶尔也会因为言辞过于激烈而被姐姐弹脑袋。但有一点她不得不承认，年幼时的训练还是对她有些许裨益的。\n乌比卡两姐妹的源石技艺虽然同出一源，但在展现方式上还是有所区别。星极的源石技艺注重复杂表现，星源的源石技艺则专注于简洁自然，有时只要她轻轻挥舞一下法杖，如绸缎般的小能量束就能让人心情好上一整天。有这样“华而不实”的表象做支撑，自然也能麻痹一些为非作歹的恶徒，他们所不知道的是，只要调整好参数，看似绵软无力的能量束也能瞬间变为高能光束，将一个身强力壮的丰蹄送进医院半个月。\n星源一直很喜欢待在工坊里，虽然她不是专业工匠，但作为一个时常向工坊发起邀约的甲方，她的专业性自然也是毋庸置疑的。偶尔，她也会借用工坊自己鼓捣些物件，主要是维修自用法杖，其次就是帮助姐姐调试星象仪。从前，这是她向姐姐讨要零花钱的手段，现在则是两人亲密关系的象征，即使行在不同的路上，两姐妹依旧是互相鼓励互相依赖——没有姐姐的稳重与周全，星源便容易冲动行事；然而没有了妹妹的果断与毅力，星极有时也会做不出抉择。相异，相依，确实是对这对姐妹关系最好的概括。",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": []
+    },
+    "char_1026_gvial2": {
+      "charID": "char_1026_gvial2",
+      "drawName": "LLC",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】嘉维尔\n【性别】女\n【战斗经验】十一年\n【出身地】萨尔贡\n【生日】5月1日\n【种族】阿达克利斯\n【身高】163cm\n【矿石病感染情况】\n体表有源石结晶分布，参照医学检测报告，确认为感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】优良\n【战场机动】标准\n【生理耐受】优良\n【战术规划】标准\n【战斗技巧】优良\n【源石技艺适应性】标准",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "嘉维尔现在仍是罗德岛医疗部的一员，但在罗德岛需要她发挥自己的战斗力而非医学素养的时候，她也会拿起战斧，冲锋陷阵。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓模糊，可见异常阴影，循环系统内源石颗粒检测异常，有矿石病感染迹象，现阶段可确认为是矿石病感染者。\n\n【体细胞与源石融合率】15.3%\n和刚来罗德岛时没差多少，没什么好担心的。\n\n【血液源石结晶密度】0.27u/L\n虽然我自己的身体我自己最清楚，但病情能控制得这么好，医疗部的其他干员也帮了我很大的忙。要不我找个时间请大家一起去阿卡胡拉度假吧。\n——嘉维尔",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "大多数干员都对嘉维尔从阿卡胡拉回来时的那一身装备印象深刻，有传言说那是嘉维尔学医以前从部族继承下来的装备。传言越来越离谱，最后甚至出现了“嘉维尔曾经用那把大斧在阿卡胡拉的最高峰一击劈出一道瀑布，那道瀑布成了阿卡胡拉的地标”之类的变体。传言的来源已不可考，不过干员特米米显然很喜欢这些离谱的故事，还在故事传播和演化的过程中起到了推波助澜的作用。\n特米米的个人兴趣先放在一边，事实情况是，嘉维尔的这身装备完全出自干员森蚺之手。在接到特米米关于阿卡胡拉可能发生灾难的来信之后，嘉维尔提出了更换新装备的申请，于是森蚺用最好的材料赶制了一整套装备，从武器到盔甲再到配饰应有尽有。但嘉维尔一眼相中的，还是这把看起来颇有气势，挥舞起来也相当顺手的大斧。",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "特米米信中提到的波及整个阿卡胡拉的大灾难，基本上是斯第奇·画布（现为罗德岛干员至简）杜撰出来的，但位于阿卡胡拉地下的杜林城市，际崖城，确实遭遇了一场毁灭性的灾难。幸运的是，在当地居民和罗德岛干员的共同努力之下，际崖城的全部居民都在灾难发生之前来到了地上。事件中没有任何人员伤亡。\n值得一提的是，嘉维尔在这次事件中发挥了极为重要的作用。她第一个提出让杜林人前往地面避难的想法，说服了计划的反对者，最后一批撤出际崖城，还在杜林地面聚落的建设过程中维持了秩序，保证聚落在预计时间之内完工——没能参与此次事件的干员很难想象嘉维尔舌战群儒的景象，但对那些事件的亲历者来说，就像医生与战士两种身份以一种奇妙但不失和谐的方式在嘉维尔身上融合一样，这些事情仅仅是自然而然地发生了而已，完全没什么好奇怪的。\n“没办法，谁叫她是嘉维尔啊。”",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "话虽如此，医疗部的同事们仍然看得出，嘉维尔发生了一些微妙的变化。这绝不是说她在朝着更多愁善感或者类似的方向变化，她只是更加自信、更加健谈，而且更喜欢谈及自己的家乡了。\n必须澄清的是，就算是刚刚加入罗德岛时，她也并未对自己的家乡有什么避讳。对那时的她而言，家乡就是家乡而已，不必着重强调，也无需避而不谈。只是罗德岛既然无意对她的过去刨根问底，她自然也没必要时时刻刻把阿卡胡拉挂在嘴边。\n然而，以那次奇妙的雨林假期为开端，罗德岛上陆陆续续多了不少来自阿卡胡拉的干员，嘉维尔关于家乡的话匣子也逐渐打开。于是，我们对这片区域的认识也与日俱增：一片过去被认为是无人区的丛林，大大小小的部族，尚武好战的提亚卡乌，还有缓慢而不可逆的工业化进程......现在又加上了数十万从地下涌上来的杜林人。这么多要素放在一起，哪怕是大地上最富有远见的规划家，在想到阿卡胡拉的未来时，恐怕也要觉得头痛。\n但嘉维尔完全不觉得。\n在她看来，有她，有特米米，有祖玛玛，有依娜姆，还有那么多能征善战的提亚卡乌，阿卡胡拉面临的一切困难都有解决办法。伙伴们毫无保留地信任她，而她也全心全意依赖着伙伴们。无论前路有多少艰险，就算她真的不得不在阿卡胡拉地势最高处劈凿出一道瀑布，在伙伴们的全力支持之下，也不是什么不可企及的事。所以，她怎么可能不以自己的家乡为荣呢？\n当然，对于伙伴们更相信她的拳头而不是医术这一点，她自己也没什么好办法。这大概就是所谓幸福的烦恼吧。",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【权限记录】\n短期来看，杜林人的这次迁徙并未对阿卡胡拉造成什么明显的影响。在巧妙的掩饰与伪装之下，萨尔贡的统治者派出的眼线未能察觉阿卡胡拉的工业化进程，而且在第一批杜林人抵达地面之前就返回了宫廷。这导致萨尔贡高层对阿卡胡拉发生的变化处于完全不知情的状态，也使得依娜姆得以顺利被承认为阿卡胡拉的王酋，获得了与其他对领土、人口和产能垂涎欲滴的王酋平起平坐，守护阿卡胡拉的法理基础。\n如果地上的提亚卡乌和地下的杜林人相安无事，这样的局面应该还能维持很久，但际崖城毕竟已经回不去了。过于陡峭的人口增长曲线势必使阿卡胡拉的资源消耗加剧，森蚺的部族也已经从杜林人的技术中获益良多。从长期来看，阿卡胡拉发生的变化是不可能藏得住的。他们总有一天要直接面对来自外部的压力。\n很难说嘉维尔在提出让杜林人上陆避难的主意时有没有想这么多，但她显然已经敏锐地感知到了这一决定背后隐藏着的沉重责任。要不然，她也不会在决定阿卡胡拉王酋人选时罕见地犹豫起来。她毕竟也是罗德岛医疗部的嘉维尔，非要她在治病救人的理想和阿卡胡拉的前途之间分一个孰轻孰重，实在有些强人所难。\n关键时刻，朋友们挺身而出，让嘉维尔从两难之中解脱出来，但这并不意味着嘉维尔放弃了天平的任何一边。她只是选择了对自己和阿卡胡拉来说都最舒服，也最合适的解决方式。\n如果谁对这样的结论有任何疑惑，不妨亲身去阿卡胡拉转转，听听提亚卡乌口中流传的嘉维尔的真正事迹，看看阿卡胡拉正中央那座越改越大，距离建成遥遥无期的纪念碑，感受一下嘉维尔这个名字在阿卡胡拉能调动起多大的合力，也就差不多了——这里面还没算嘉维尔自己的力量呢。\n一旦阿卡胡拉面临什么难以逾越的艰难险阻，嘉维尔将会第一时间赶回去，用自己的铁拳和巨斧开辟出新的道路。",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【特急】\n致依娜姆：\n我觉得与其用石材建造纪念碑和雕像，不如造些更实用的东西。但你说提亚卡乌们的呼声实在太大，我理解，我也不想和大家对着干。\n至于雕像的细节，比如到底要做几个人、做什么造型之类的，你说提亚卡乌们甚至还学习杜林人为这件事举办了一次投票，虽然他们最后还是打起来了，但这毕竟是个尝试。\n但是！\n我坚决不同意给雕像上的我安个粗尾巴！\n重复一次，就算粗尾巴派赢了投票，又赢了群架，我也坚决不同意！这么重大的决定，你们好歹考虑一下本人的意见行不行啊！\n请务必把雕像尾巴的最终结果附在下次的信中，如果还是粗尾巴派占上风，我就不得不考虑紧急请一次假，回阿卡胡拉亲自“说服”大家了！\n嘉维尔",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": [
+        {
+          "storySetId": "story_gvial2_set_1",
+          "storySetName": "以酒精之名！",
+          "sortId": 1,
+          "storyGetTime": 1660190400,
+          "rewardItem": [],
+          "unlockParam": [
+            {
+              "unlockType": 1,
+              "unlockParam1": "2",
+              "unlockParam2": "1",
+              "unlockParam3": null
+            },
+            {
+              "unlockType": 2,
+              "unlockParam1": "50",
+              "unlockParam2": null,
+              "unlockParam3": null
+            }
+          ],
+          "avgList": [
+            {
+              "storyId": "story_gvial2_set_1_story_1",
+              "storySetId": "story_gvial2_set_1",
+              "storySort": 1,
+              "storyCanShow": true,
+              "storyIntro": "要让醉醺醺的家伙们和酒说再见可不容易，哪怕是暂时的。",
+              "storyInfo": "info/obt/memory/story_gvial2_1_1",
+              "storyTxt": "obt/memory/story_gvial2_1_1"
+            }
+          ],
+          "charId": "char_1026_gvial2"
+        }
+      ]
+    },
+    "char_4055_bgsnow": {
+      "charID": "char_4055_bgsnow",
+      "drawName": "Chuzenji",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】鸿雪\n【性别】女\n【战斗经验】没有战斗经验\n【出身地】乌萨斯\n【生日】3月15日\n【种族】鲁珀\n【身高】177cm\n【矿石病感染情况】\n参照医学检测报告，确认为非感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】标准\n【战场机动】普通\n【生理耐受】标准\n【战术规划】优良\n【战斗技巧】标准\n【源石技艺适应性】标准",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "鸿雪，自称阿芙朵嘉·锐笔。可确认阿芙朵嘉为其本名，但本人不愿透露真实姓氏。在风险研判后，人事部决定不进行进一步的询问。\n经际崖城商业代表克罗绮·砖石介绍来罗德岛考察，现作为狙击干员参与外勤任务。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓清晰，未见异常阴影，循环系统内源石颗粒检测未见异常，无矿石病感染迹象，现阶段可确认为非矿石病感染者。\n\n【体细胞与源石融合率】0%\n干员鸿雪没有被源石感染的迹象。\n\n【血液源石结晶密度】0.12u/L\n干员鸿雪甚少接触源石。",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "阿芙朵嘉·锐笔，际崖城的文学代表，在说服杜林人前往阿卡胡拉避难的过程中发挥了重要作用——很难想象报告上的这些话是在描述我们眼前的这位鲁珀族女性。杜林城邦的鲁珀族文学代表，这背后一定有故事。\n我们的猜测没错，但鸿雪对绝大多数非杜林族干员保持着强烈的警惕性，在过分礼貌之余拒绝透露任何非必要的信息。从际崖城回来的干员们似乎听鸿雪讲过内情，但大家默契地三缄其口。\n很久以后，鸿雪才略微谈到自己进入际崖城之前的经历：她原本是一名乌萨斯贵族的女儿；在一场乏善可陈的政治阴谋中，她的家人相继死去，最终只剩她一个人侥幸逃脱，误打误撞地进了际崖城。\n她平淡地把这几句话说了出来，没有补充任何细节，但谁都能从她异常冰冷的语调中感受到她曾经历过的悲痛、恐怖和幻灭。\n在那之后，她在际崖城度过了许多年，享受着对她而言来之不易的安宁与和平，直到际崖城的长夏终结。无忧无虑的杜林人很大程度上抚平了那段经历给她留下的创伤，让她从此以杜林城邦的一员自居，但也让她开始对非杜林人（或者说“地上人”）和他们创造出来的东西，从文化到工业产品，抱有近乎偏执的不信任感。\n这不是她的错，更不是杜林人的错。",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "与对待其他干员时礼貌而疏远的态度不同，鸿雪对罗德岛上的杜林族干员展现出非同一般的关爱。\n据干员至简透露，鸿雪在际崖城的时候并不是现在这样的。那时她更喜欢到处散步，或者一个人坐在开阔的地方发呆，再就是写写东西——总而言之，不是喜欢替人操心的类型。\n到了罗德岛之后可就不一样了。鸿雪会从各个角度关照岛上杜林族干员的生活，从餐食是否可口、工时是否太长，到外勤任务前的装备整理是否妥当，都在她的关注范围之内。就连性格别扭的至简都不得不坐在满满一铁皮桶的铅笔旁边承认：“我那天抱怨了一句铅笔不够，她就帮我弄来这么多......我以前可不知道她这么厉害。”\n鸿雪本人倒不讳言这么做的理由：“罗德岛是个好地方，我承认。但罗德岛无论如何都不可能像际崖城一样满足杜林族干员的需求。我只是不太放心他们，然后顺手帮他们把事情办了而已。”\n我们多次劝说她，过度的关爱可能会起到反作用，延缓杜林族干员适应新生活的进程。最后，不知道是我们的劝说起了效，还是哪位杜林族干员对她说了什么，鸿雪终于在一定程度上改变了原来的想法，至少不再帮杜林族干员包办生活琐事了。\n尽管如此，她还是会花很多时间和杜林族干员们在一起，杜林族干员们也喜欢她。只有在这种时候，她才会露出完全放下戒备的放松表情。\n后来这种关系扩展到罗德岛上的小孩子们身上，但范围也就到此为止了。\n\n我不要玩积木，我已经成年了！\n——桃金娘\n\n呃......这可不是单纯的玩积木。你想，这可是一场比谁积木堆得最高的比赛，大将军不想享受这场紧张刺激的比赛吗？\n——鸿雪\n\n我要去我要去！\n——桃金娘",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "作为“文学代表”，鸿雪在际崖城承担了大量广告标语和文案包装之类的工作。与际崖城杜林人散漫的语言组织方式不同，她的广告词总能别出心裁，在融合（对杜林人而言的）异域风情的同时以最快速度抓住杜林人的眼球，很快就不愁没订单了。\n在商业写作之余，鸿雪也在进行文学创作——诗歌、小说、剧作。与简单明快的广告词不同，土生土长的际崖城居民很难理解鸿雪笔下的情节和隐喻到底想表达什么。饥馑、严寒、阴谋、凶杀......这些名词对杜林人来说实在太遥远，就算他们在理性上认识到阴谋就是给别人使绊子，他们所能想象的最令人发指的阴谋也不过是往别人的蜜酒里兑半瓶醋。\n对鸿雪来说，这两件事成了某种矛盾的具象化：浮夸有趣的广告词象征着杜林式惬意而无忧无虑的生活，而混合着寒冷与血腥味的文学创作连接着不堪回首的过去。杜林人喜欢前者，她也喜欢前者，但她始终无法说服自己，不要把闲暇时间投入后者之中。\n她只是开始有意识地区分写作用的工具：写广告词时用打字机，而创作更私人的东西的时候，就用墨水和钢笔。\n顺带一提，在作为外勤干员参与战斗时，鸿雪的两样武器也脱胎自钢笔和打字机。她的弩是初到际崖城时沟通不畅的产物，她想要一支新钢笔——现在她宿舍里体积最大的家具就是钢笔陈列柜——杜林工匠却做出了一把弩；她的“打字机”则是到罗德岛后工程干员的改装产物。按照本人的说法，“我预感这台打字机以后可能派不上用场了。反正以后要在地面上生活，战斗是少不了的，不如改装成武器吧。”\n尽管如此，她在罗德岛上偶尔仍会接到一些广告和标语创作之类的请求。打字机已经无法打字，但她还是欣然接受。她用钢笔记录构思，打草稿，委托人得到的最终版本与她在际崖城写下的东西迥然不同，只有生动的修辞始终如一。",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "“鸿雪小姐，其实我一直有一个感受，可能会有点冒犯......”\n“请说吧，真理。我很高兴能遇到你这样敏锐的读者，怎么会觉得冒犯呢。”\n“我能感受到，您笔下的角色很想切断自己和故乡的联系，但无论如何，这种联系都会在书末以更激烈的形式呈现在读者眼前。”\n“没错。我一开始其实是想让他们彻底与乌萨斯撇清干系的。但是，每当我写出那样的结尾，我就有一种很强烈的感受......那是我强加给角色的东西，不是角色自己的意志。我本来就不是什么高明的作家，如果还要按照自己的喜好强行扭转人物的行为，那我写的东西就彻底没有意义了。”\n“您太谦虚了。”\n“不，不......其实最近，我甚至更深刻地体会到了自己的无知。”\n“您是说？”\n“在听过你们的故事之后，我更强烈地意识到，对于我，一个年纪轻轻就逃到际崖城避难的乌萨斯贵族的女儿来说，乌萨斯的残酷比我经历过的，比我能想象的，要复杂得多，也深重得多。”\n“但您还是鼓起勇气去写了。”\n“仅仅是去写而已。”\n......\n“鸿雪小姐，做个假设，仅仅是个假设——为了您在文学上能更进一步，假如有机会的话，您想回乌萨斯看看吗？”\n“不。就算我只能止步于此，我也绝对不想再去体验那种痛苦和绝望了。”\n“唔......”\n“难道在经历了那么多之后，你不这么觉得？”\n“我......其实是想回去看看的。那里毕竟是我的故乡。”\n“故乡？”\n“抱歉，鸿雪小姐，我是不是——”\n“没关系，没关系的。我只是越来越搞不懂故乡这个词是什么意思了。话又说回来，此时此刻，能让我想‘回去’的地方，仍然只有际崖城。”\n......\n“好了，不聊这些了。来，尝尝杜林风格的饮料。”\n“这个是......蜜酿？”\n“放心，这是去除了酒精的版本，我特地找后勤部定制的。”\n......\n“真理，真理？你怎么睡着了？难道后勤部给我的是有酒精的——\n“呃......我想起来了......\n“醉蜜——对，一定是醉蜜！\n“这个词已经有多少年没听人说过了？”",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【权限记录】\n1月18日\n因为外勤任务重回萨尔贡。和依娜姆说好了，我得先克制一下迫不及待的心情，晚些再去阿卡胡拉。我们要先谒见另一个王酋，代表罗德岛寻求与他们的合作。\n当地的几个部落为水源打了起来，丑陋。\n\n1月25日\n那几个部落终于握手言和了，但也只是因为王酋的压力休战了而已。王酋的压力一减轻，他们多半还要打。\n\n2月9日\n耽搁了十几天，因为发现了当地一个秘密的感染者聚落。我从来没见过那么恶劣的居住条件。\n我试探了一下，王酋轻描淡写地说，如果他治下真有感染者，就全部活埋掉。我不得不克制住给他一箭的冲动。\n\n2月12日\n护理感染者。有个患者的状况很不好，她说自己要死就死在水源地，把水源污染掉，让所有人一起渴死。\n我试图说服她这么做不能减轻任何人的痛苦，但她完全不听。\n我无权指责她，但她让我更加思念在际崖城度过的时光了。\n\n2月14日\n怎么会这样？！\n那个患者真的趁人不备，在半夜偷偷溜走了。我第一时间赶到水源地，她就在水边徘徊。\n她在水边绕了一圈又一圈，最后......走进了沙漠，再也没出来。\n我没追上她。\n回到聚落，我发现她给我留了一封信。她说自己想清楚了，就算部落里的家伙全都是混蛋，她至少要替那些人的孩子想一想。孩子是无辜的。\n这种事情......永远都不会在际崖城发生。际崖城没有悲剧的土壤。\n我曾经以为地上也不会有这种事——地上不乏悲剧，但没人会为几个素不相识的孩子放弃切齿的仇恨，这样的情节只可能出现在我的小说里，是我的自欺欺人，但是——但是！\n我需要找个人谈谈！",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": []
+    },
+    "char_497_ctable": {
+      "charID": "char_497_ctable",
+      "drawName": "温泉瓜",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】晓歌\n【性别】女\n【战斗经验】六年\n【出身地】玻利瓦尔\n【生日】4月7日\n【种族】黎博利\n【身高】169cm\n【矿石病感染情况】\n体表有源石结晶分布，参照医学检测报告，确认为感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】标准\n【战场机动】普通\n【生理耐受】标准\n【战术规划】标准\n【战斗技巧】标准\n【源石技艺适应性】标准",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "晓歌，罗德岛驻玻利瓦尔办事处在难民区解救出来的矿石病患者，转交本舰进行后续治疗。根据本人意愿，于半年后以正式干员身份加入罗德岛。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓模糊，可见异常阴影，循环系统内源石颗粒检测异常，有矿石病感染迹象，现阶段可确认为是矿石病感染者。\n\n【体细胞与源石融合率】14%\n结晶主要分布于右上臂。\n\n【血液源石结晶密度】0.30u/L\n丧失生存欲望的感染者其实并不少见，但很多病人在与我们建立良好的交流状态后，会透露他们过去的经历，我们通常会依此加深双方的信任，更好地推进治疗。然而，晓歌在治疗初期曾一度拒绝与我们交流，甚至想中断治疗，即便她并没有采取任何过激手段，她的情况还是令我们十分担心。\n好在她在治疗后期还是选择了相信我们。",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "晓歌曾在同一批被送到本舰治疗的病人中引发过一些小小的讨论，内容类似于她这样气质的女士为何会在难民区中生命垂危。她给人的感觉更像是一位莱塔尼亚殷实家庭中的小姐，而不是一个在难民区矿石病急性发作，导致周围人恐慌撤离，被请来支援的罗德岛办事处干员紧急救治的流浪者。\n当然，这种问题很冒犯，没有人会真的直接去询问晓歌本人。而在她病情日趋稳定愿意交流后，病人们又觉得这位女士对音乐和文学都有一定程度，甚至是较为深入的认知。几位病人说，晓歌给他们的感觉很像一位家庭教师，或者说她可能就是一位家庭教师：她会演奏十数种乐器，聊起诸多文雅诗集，她的谈吐十分得体，在休息时间，她也会愿意去接触一些年纪尚小的病人。“也许就是因为成了感染者，才变成现在这样吧。”病人们唏嘘。\n但从外勤干员带回的资料和人事部干员做的背景调查来看，晓歌似乎曾与玻利瓦尔某军火组织相关。不过根据现有情报，在被办事处救起之前，晓歌与该组织已经没有联系。",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "在治疗阶段，我们会推荐病人们多去莱娜小姐的庭院，一方面可以通过香薰舒缓身心，另一方面，里面饲养的小磐蟹也会让病人们的心情转好，一些小病人尤其喜欢在庭院玩耍。但晓歌在前往庭院后，对那里的环境和磐蟹产生了明显的抵触情绪，甚至是恐惧。不过并不是豆苗饲养的小磐蟹让她害怕，而是当时领路的干员口中的“宠物”一词，似乎令晓歌觉得非常不适，以至于她问了我们一个很恐怖的问题：是不是会让前来治病的孩子们挑选自己喜欢的小磐蟹，和它们培养出感情，最后再杀了这些小宠物。医疗干员在当时坚决地给出了否定的答案，晓歌也并没有对这个回答有更多的回应。\n随着治疗的进行，晓歌在罗德岛的活动范围增大，她对“教官”“训练室”一类的词也会产生异常反应，但对于过去，她始终不愿与我们多讲。\n自然，我们并不会强迫任何人讲述他本人不愿提及的过去，况且晓歌的背景资料已经通过审核，确定对罗德岛不会产生危害，那么我们要做的就是尽可能地释放善意，让她能够信任罗德岛，把这里与她过去所处的环境作出区分。\n令人开心的是，在选择成为干员后，晓歌最近似乎有领养一只小磐蟹的想法。虽然她本人还有些怀疑，自己是否能很好地保护这样一个小生命？她看起来有些害怕再有什么生命从她手上流失。不过她既然已经有了这些担忧和想法，我们也相信她能做好这件事，更何况还会有很多热心的人想要帮她，比如，豆苗已经迫不及待了。",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "在成为干员后，晓歌对玻利瓦尔的现状这一问题展现出极大的兴趣与求知欲，同时，她的迷茫也显而易见。在与杜宾或是博士的交流中，我们能发现她对于玻利瓦尔真实现状的认知非常片面，联系一些她隐约中透露出的过往来看，晓歌所了解的信息主要来自她之前所属的组织，而那个组织并不希望晓歌这样的人对时事政治有多么深入的了解。但现在不同了，杜宾或博士都不会拒绝一位有求知欲的年轻人。在了解了诸多事情真相后，晓歌对玻利瓦尔的感情与看法变得十分复杂。\n在填写出身地的时候，晓歌犹豫很久写下了“玻利瓦尔”，但她也向我们反复申明，自己的祖国并非玻利瓦尔，自己只是自幼生活在这里，玻利瓦尔是她最熟悉的地方，但也是改变了她原本生活轨迹的地方。已经发生的苦难很难去追究具体是哪个人的责任。晓歌说自己之前看玻利瓦尔人，觉得似乎每个人都是凶手，而到最后，她觉得自己更像是那个做了最大错事的人，她恐惧又自责，想用自己的命去赎罪。\n不过晓歌说她现在早已放弃了当初那个消极的想法，就那样死在难民区里并不能改变任何事。既然已经被救，她就要自己活着，不仅仅是赎罪，还要更好地走她之前稍微有些想法的路：如果生命不只是那些人口中的“目标”和“工具”，她应该要做的是什么，又应该怎么做出正确的决定。",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "晓歌在接手罗德岛分派的任务时与其他干员有一个明显的区别：她会事无巨细地，甚至是有些过分地追问任务的细节。当然，很多富有责任心或是新晋的干员担心任务出错都会采用类似的方法，但晓歌的做法显然超出了这个范畴：如果这次的任务是援助一些感染者工人，她甚至会想要弄清楚这家工厂开办者的家族事迹。而在任务结束后，晓歌也会写下长长的、不合规范的任务报告，其中附带着她对任务目标背景前史等等的各项调查，她会自己先判断这项任务需要自己做什么，自己应该以怎样的方式来完成这项任务，在里面罗列出众多的可能性，并强迫性地在报告中告诫自己非极端状况绝对不许出手伤人。\n这样不合规范的任务报告及任务流程被纠正过很多次，晓歌在后期提交的版本已经看不到任何之前的痕迹，但她并没有停止这种有些偏执的行为。她宿舍中写满调查思路的草稿纸越堆越多，列出的可能性越来越详细，直到她甚至因为不愿带武器出任务而被记过。\n晓歌最严重的应激反应出现在一次失误伤人后。即便当时在场的所有小队干员都不认为晓歌有错，她也在返回本舰后选择了用绝食惩罚自己——断绝食物似乎对她有着别样的意义，而她也最终被察觉到了异样的医疗部干员发现，强行送去输液补充营养。在这件事后，晓歌被禁止了很长一段时间的外勤任务。\n但任务中也并不是没有好事发生：那是晓歌第一次救下了一个年幼的孩子，当她拉住那只苍白瘦弱又布满脏污的手，把手中的饮用水和食物送到那人的嘴边时，晓歌不受控制地剧烈颤抖起来——她相信自己和罗德岛有能力救下这个孩子，为她提供正常的未来道路，自由的选择。她第一次觉得自己是幸运的。",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "晓歌在后来为我们讲述了她的第一个朋友。\n那是一个小姑娘，只有五六岁，晓歌是这个小姑娘的家庭教师，教她乐器的基础知识，偶尔读读故事书，学做一些简单的点心。小姑娘有些畏惧平日里不苟言笑的父母，仆人们也不会和贵族家的女儿有过多交谈，家庭教师的身份既有师长的地位，也有朋友的亲近，小姑娘很快就十分依赖自己这位文静的老师。晓歌从来没有回答过小姑娘问出的，关于老师是否知道自己的父亲母亲在做什么的问题，也没有给她讲过除了音乐以外的任何知识。直到她恐惧又颤抖地完成了自己的第一个任务，怀着自己能活下去的喜悦和对眼前鲜血的强烈恶心，她匆忙地到达了规定的地点，在回程搜身的路上，来接应的人从她身上搜出了一个不能带回去的东西——一个被小姑娘不知什么时候塞进口袋的布偶。\n晓歌的讲述到这里就结束了，她轻轻地抚摸着自己收养的一只小羽兽。",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
+          "unLockorNot": true
+        }
+      ],
+      "handbookAvgList": []
+    },
+    "char_4054_malist": {
+      "charID": "char_4054_malist",
+      "drawName": "〇亻",
+      "infoName": "Unknown",
+      "storyTextAudio": [
+        {
+          "stories": [
+            {
+              "storyText": "【代号】至简\n【性别】男\n【战斗经验】没有战斗经验\n【出身地】杜林\n【生日】4月20日\n【种族】杜林\n【身高】130cm\n【矿石病感染情况】\n体表有源石结晶分布，参照医学检测报告，确认为感染者。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "基础档案",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "【物理强度】普通\n【战场机动】普通\n【生理耐受】普通\n【战术规划】标准\n【战斗技巧】普通\n【源石技艺适应性】优良",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "综合体检测试",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "至简，杜林族结构工程师、建筑设计师，重度矿石病感染者，目前于罗德岛接受治疗，于工程部任职，偶尔作为工程干员参与外勤任务。",
+              "unLockType": 0,
+              "unLockParam": "",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "客观履历",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "造影检测结果显示，该干员体内脏器轮廓模糊，可见异常阴影，循环系统内源石颗粒检测异常，有矿石病感染迹象，现阶段可确认为是矿石病感染者。\n\n【体细胞与源石融合率】9.6%\n右腿可见少量源石结晶。\n\n【血液源石结晶密度】0.27u/L\n至简时常因为太过沉浸于设计而忘记按时到医疗部接受治疗，这个时候有一句话非常管用，说完之后三秒钟就能看到至简躺在体检床上：\n“嘉维尔来了！”",
+              "unLockType": 2,
+              "unLockParam": "25",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "临床诊断分析",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "在工作中，罗德岛的干员们不会对来自地底的杜林干员有过多的关注，但在生活中，干员们对杜林人还是很感兴趣的：有杜林小姐的迷迷糊糊，桃金娘小姐的活力满满，还有褐果的认真踏实，干员们对杜林一族的幻想保持在一个美好的基准上，然后他们遇见了至简。\n虽然嘉维尔说他已经好了许多，但有时候至简的行动还是会让一些干员半天说不出话来。比如突然出现在哪里并对四周的室内设计指指点点，一个月提交了八十次申请要改造自己的宿舍，还有就是他最明显的特点：一定要保证自己浑身上下都是完全干净的，不论遇到多紧急的情况，那支绘图的铅笔都要擦干净笔屑、稳稳地别在耳后，以免蹭到身上任何一个角落。而每当这种时候，当初出外勤与嘉维尔一行人完成对接的那位医疗干员总是会摆出一副“我早就和你们说过了”的表情。\n不过至简做的设计是真的很有水准，对于房屋内部改造，他会提出很多十分简洁但有效的构架。有时有什么加急的活做不完，只要有他在旁边絮絮叨叨，很快就能有新灵感。笔者写到这里时被身边的同事询问至简性格上有什么优点，笔者的回答是没（以下记录缺失）\n\n附件一：\n我不应该在文件上乱涂乱画，不应该擅自删除终端资料，我错了。——至简",
+              "unLockType": 2,
+              "unLockParam": "50",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料一",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "不过虽然如此，并没有哪位干员会真的去讨厌至简，大家能看出来，至简在很努力地学着如何和众人好好相处，只不过他现在还不能特别好地掌握那个度。比如其他干员在遇到困难时总是会赶紧向经验丰富的前辈求救，或者是和同龄干员一起讨论，至简则会先独自一个人想来想去，和谁也不说。他也知道自己应该去寻求帮助，但总是会拖上好几天，然后顶着一看就是遇到大问题了的发型别别扭扭地讲一大堆无关的事，最后才说出自己无法解决的问题。\n一部分工程部干员向可露希尔反映过这个问题，明明至简在帮别人想设计的时候脸上表情看起来十分得意，像是一早起来就抓到十条大肥虫的小羽兽，但他自己在遇到困难的时候却这么难去开口寻求帮助。或许他还是太过自矜了，对一个设计者来说，自矜不算坏事，但至简也需要更多的时间和经历来意识到——再厉害的人也会遇到瓶颈，设计者要做的事是接受这一事实，而不是对抗它，更不要因此否定自己。\n“不过他其实还是挺听话的，你在帮完他之后趁热打铁说上几句，下次他的状态就能好上很多。”——某工程部干员",
+              "unLockType": 2,
+              "unLockParam": "100",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料二",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "至简在之前从未想过自己有一天会离开际崖城，也从未想过自己修缮大穹顶的契机竟然是为了留下它一个完美的遗容，但事情就是这样发生了。他在仓促之间尽力做到了最好，在睡梦里离开了那座生活已久的城市，等到他再次睁开眼的时候，周围已经是阿卡胡拉的地上风景了。绝大部分的际崖城居民们留在部落中开始搭建新的家园，至简和其他几位感染者来到了罗德岛，接受治疗。\n他不怎么提起际崖城，也不怎么流露出怀念的情绪，和众多际崖城居民一样，至简展示出了一种豁达的态度：他们还会有下一个家园。只是至简在心里还是觉得微微可惜，他最终得到了认可，但这份认可的证明却只能被埋在地下，而且应该不会再有可以重见的那一天，所以他原本也想一同加入修建新家园的行列——如果自己的生命注定短暂，他要用这些时间以现任设计代表的身份，为际崖城居民们设计出可以让他们长久居住的城市。但这件事最终也是因为际崖城的居民们，没有继续推进下去，倒不是因为他们不愿至简辛苦，而是大部分人完全沉迷于在地上玩耍，没有人一起干活。在看到这幅景象后，至简苦笑着被嘉维尔说动，决定先前往罗德岛治疗矿石病。\n在离开的那一天，至简回头看向这片雨林，叙光已经出发去寻找老师，零零散散的一些际崖城居民开始建起暂住的房屋。至简告诉嘉维尔，自己只是暂时前往罗德岛，总有一天，他还要回到这里，建出能让自己和所有人都满意的家园。",
+              "unLockType": 2,
+              "unLockParam": "150",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料三",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "在来到罗德岛几个月后，至简接到了他第一个独立大型任务：改造舰船下层的杂物间。那是一块很久以前就开始使用的底层空间，在并没有做好规划的情况下已经放入了太多物品和设备，并随着时间的推移逐渐混乱起来。这给后续的工作带来了很大的麻烦，改造中不可避免地会遇到十分多的问题。工程部希望能用这次任务进一步改善至简的工作状态，同时锻炼他的心态，自然，他们已经做好了相应的准备，以免出现无法应对的问题。至简看到杂物间的状态后意料之内地脸色黑了几度，但意料之外地没有对这里的状态发表他平日里会发表的长篇言论，反而是相当平静地接下了任务，回到他的设计台开始打草稿。一个月后，至简给出了一份超出工程部期待值的设计稿。原本杂乱的空间被分割有序，一些之前被浪费的拐角被重新利用，甚至做出了很多视觉上的错落。根据工程部的观察，至简主动询问了这些物品和设备的所有部门，规划出最合适的收纳状态，也时常和其他工程部干员讨论设计，修改设计稿所用的时间一次比一次少，整个流程十分顺畅，至简的精神状态也十分良好。\n对于这个出乎工程部意料的结果，至简本人并没有过多的解释，他只是表示，自己现在能够做到享受自己的设计，最主要的原因是，他希望有一天能再见到自己的老师，而他想给老师展示的，是一个平和的、独立的、强大的自己。\n我们并不是十分了解至简与他老师之间究竟发生过什么，嘉维尔又是如何改变了他，最起码现在，至简展现出来的状态不错。尤其是那一次，在至简一次次地接受治疗，突然发觉自己已经很久没有感受到来自这些石头的疼痛后，他第一次打开了一桶来自际崖城的浆果番茄酒，坐在宿舍里品尝着这种他之前从未仔细品尝过的甜味，时间似乎在变缓，至简感觉自己好像理解了族人们开心享乐的意义。\n在那之后，至简也在下意识地逐渐转变着设计的风格：如果你得到允许进入至简的宿舍，你就能看到那些增加了许多柔和线条，以及出现了白色以外色彩的全新装潢，甚至他之前最厌恶复杂设计的各类家具上，也能看到原本他口中“毫无意义”的“美学失败品”。\n“总算像人住的地方了。”嘉维尔这样评价。",
+              "unLockType": 2,
+              "unLockParam": "200",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "档案资料四",
+          "unLockorNot": true
+        },
+        {
+          "stories": [
+            {
+              "storyText": "你如果见过至简被桃金娘小姐打扮成花朵娃娃的样子，相信我，你绝对会因为这件事笑上三天。\n起因很简单，桃金娘小姐举办了罗德岛第一届杜林人联欢会，当然，不是杜林人也可以去参加，我就去了。至简嘴上说着又烦又复杂，还是按照桃金娘说的去布置了那个小活动厅，哇，真的是，花枝招展。\n后来来参加的人越来越多，里面也越来越热闹，还有人偷偷带了点果酒——是谁我就暂时先保密了，大家开始用装扮房间的花朵互相打扮，模拟某个杜林城市的庆典，至简就被大家弄成那个样子了——主要还是桃金娘小姐和褐果的功劳，他俩审美还真不错！至简居然没生气，最后甚至跳起来往所有人头上插花，玩得开心得很！\n我就说了，其实他心里说不定还挺喜欢的嘛！",
+              "unLockType": 1,
+              "unLockParam": "2;1",
+              "unLockString": ""
+            }
+          ],
+          "storyTitle": "晋升记录",
           "unLockorNot": true
         }
       ],
@@ -32289,6 +34447,586 @@
       "zoneNameForShow": "龙门",
       "picId": "story_loading2",
       "stageGetTime": 1651388400
+    },
+    "char_226_hmau": {
+      "charId": "char_226_hmau",
+      "stageId": "mem_hmau_1",
+      "levelId": "Obt/Memory/level_memory_hmau_1",
+      "zoneId": "storyMission",
+      "code": "mem_hmau_1",
+      "name": "浑金一块",
+      "loadingPicId": "loading_Painting_Day",
+      "description": "在战场上，不是每个人都敢放心地把后背交给阿这样的坏小子，但是吽却愿意百分百交付自己的信任。因为吽待身边的人从来都是真心相对，赤忱相见，而对自己的家人，吽更是无微不至地关心着，心甘情愿站在前方为他们遮风挡雨。试问，这样的人，有谁能够不喜爱呢？又有谁能够不信赖？",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "庭院",
+      "zoneNameForShow": "炎国",
+      "picId": "story_loading_Painting_Day",
+      "stageGetTime": 1654747200
+    },
+    "char_253_greyy": {
+      "charId": "char_253_greyy",
+      "stageId": "mem_greyy_1",
+      "levelId": "Obt/Memory/level_memory_greyy_1",
+      "zoneId": "storyMission",
+      "code": "mem_greyy_1",
+      "name": "闪烁徘徊",
+      "loadingPicId": "loading_LM_rain",
+      "description": "过去的回忆总是在格雷伊的心中不断地徘徊，它们会幻化成各种可怖的样子久久不愿离去，他唯一能做的就是攥紧手中的法杖，在无边的黑暗中为自己点亮一些光芒。光芒会击碎眼前的恐惧，也会照亮他身后的同伴，每当格雷伊用自己的努力摆脱一个又一个难缠的噩梦，那点闪烁的微弱光辉所带来的勇气，足以支撑他走过更多的困难。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "雨天街区",
+      "zoneNameForShow": "龙门",
+      "picId": "story_loading_LM_rain",
+      "stageGetTime": 1654747200
+    },
+    "char_263_skadi": {
+      "charId": "char_263_skadi",
+      "stageId": "mem_skadi_1",
+      "levelId": "Obt/Memory/level_memory_skadi_1",
+      "zoneId": "storyMission",
+      "code": "mem_skadi_1",
+      "name": "纯粹的强大",
+      "loadingPicId": "loadingE2",
+      "description": "不愿意和他人合作的人，往往是对自己的能力有所误判，但斯卡蒂显然不在此列。无论多么强大的敌人，最终都会倒在她的巨剑之下。\n放心让她去独自面对那些常人难以匹敌的对手吧。深海猎人这个词，对于大多数人来说或许很陌生，但是在见过斯卡蒂的战斗之后，他们至少会知道，深海猎人，意味着纯粹的强大。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "洞窟",
+      "zoneNameForShow": "卡西米尔",
+      "picId": "story_loadingE2",
+      "stageGetTime": 1654747200
+    },
+    "char_346_aosta": {
+      "charId": "char_346_aosta",
+      "stageId": "mem_aosta_1",
+      "levelId": "Obt/Memory/level_memory_aosta_1",
+      "zoneId": "storyMission",
+      "code": "mem_aosta_1",
+      "name": "琐碎",
+      "loadingPicId": "loading_OOD_02",
+      "description": "解决完一个麻烦后，往往还会冒出更多的麻烦，奥斯塔总是习惯在做出第一步之前就往后再想很多步，他的计划通常能解决掉许多令队友们措手不及的问题。这个习惯有他本人的性格使然，也有身边几个朋友对他的影响，毕竟，在叙拉古，没有脑子的人很难活得长久。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "沙漠街市",
+      "zoneNameForShow": "萨尔贡",
+      "picId": "story_loading_OOD_02",
+      "stageGetTime": 1654747200
+    },
+    "char_363_toddi": {
+      "charId": "char_363_toddi",
+      "stageId": "mem_toddi_1",
+      "levelId": "Obt/Memory/level_memory_toddi_1",
+      "zoneId": "storyMission",
+      "code": "mem_toddi_1",
+      "name": "火矢天降",
+      "loadingPicId": "loading_DM",
+      "description": "别惹熔泉是干员们的共识，这并不意味着她脾气暴躁，实际上，熔泉只是不在乎他人的看法，只遵从自己的内心罢了。她宁愿把思考人际关系微妙之处的时间花在思考如何让她的攻城弩轰塌一栋楼上。\n找准时机，果断出手，无论是什么样的敌人，熔泉都有信心让他们成为破城矢下的飞灰。注意了，火矢天降！",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "荒野",
+      "zoneNameForShow": "切尔诺伯格",
+      "picId": "story_loading_DM",
+      "stageGetTime": 1654747200
+    },
+    "char_134_ifrit": {
+      "charId": "char_134_ifrit",
+      "stageId": "mem_ifrit_1",
+      "levelId": "Obt/Memory/level_memory_ifrit_1",
+      "zoneId": "storyMission",
+      "code": "mem_ifrit_1",
+      "name": "互为后盾",
+      "loadingPicId": "loading_VC_hillock2",
+      "description": "每个孩子都曾偷偷描画过自己未来想成为的模样，而伊芙利特早已遇到那样一个人，对方是孩子的英雄，是安全感的象征，是她努力想要成为，甚至超越的人。\n而现在，她还在窃喜于能与其并肩作战，期许自己能够成为那个人最好的后盾。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "小丘郡广场",
+      "zoneNameForShow": "维多利亚",
+      "picId": "story_loading_VC_hillock2",
+      "stageGetTime": 1656993600
+    },
+    "char_108_silent": {
+      "charId": "char_108_silent",
+      "stageId": "mem_silent_1",
+      "levelId": "Obt/Memory/level_memory_silent_1",
+      "zoneId": "storyMission",
+      "code": "mem_silent_1",
+      "name": "全域救护",
+      "loadingPicId": "loading_Obsidian_Cave",
+      "description": "许多干员都乐意与赫默医生共同承担作战任务，在远赴那些地形崎岖的战场时更是如此。除了精湛的医术，赫默医生还能操纵无人机抵达那些一般医疗干员无法正常开展救护的位置，为身处险地的干员提供及时而有效的治疗。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "火山洞窟",
+      "zoneNameForShow": "汐斯塔",
+      "picId": "story_loading_Obsidian_Cave",
+      "stageGetTime": 1656993600
+    },
+    "char_129_bluep": {
+      "charId": "char_129_bluep",
+      "stageId": "mem_bluep_1",
+      "levelId": "Obt/Memory/level_memory_bluep_1",
+      "zoneId": "storyMission",
+      "code": "mem_bluep_1",
+      "name": "渗骨毒液",
+      "loadingPicId": "loading_IW_Town",
+      "description": "作为毒理学专家，蓝毒拥有独特的毒药配置能力，淬了毒的箭矢在战斗时无疑是敌人的噩梦，持久的伤害能有效削减敌人的战斗力。而对于友方，请丝毫不要怀疑蓝毒小姐的忠诚。更何况，以防万一，她总会为大家准备解毒剂。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "尚蜀古街",
+      "zoneNameForShow": "炎国",
+      "picId": "story_loading_IW_Town",
+      "stageGetTime": 1656993600
+    },
+    "char_115_headbr": {
+      "charId": "char_115_headbr",
+      "stageId": "mem_headbr_1",
+      "levelId": "Obt/Memory/level_memory_headbr_1",
+      "zoneId": "storyMission",
+      "code": "mem_headbr_1",
+      "name": "互帮互助",
+      "loadingPicId": "loading2",
+      "description": "凛冬永远敢于第一个冲上战场，不仅仅是因为她的性格，更是因为她信赖自己的朋友。她相信她们永远会和自己一起，解决所有出现在她们面前的问题。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "市区",
+      "zoneNameForShow": "龙门",
+      "picId": "story_loading2",
+      "stageGetTime": 1658822400
+    },
+    "char_127_estell": {
+      "charId": "char_127_estell",
+      "stageId": "mem_estell_1",
+      "levelId": "Obt/Memory/level_memory_estell_1",
+      "zoneId": "storyMission",
+      "code": "mem_estell_1",
+      "name": "据守险地",
+      "loadingPicId": "loading_DM",
+      "description": "整合运动听说负责这座临时医疗营地守卫工作的是一位没有携带武器的阿达克利斯少女，因此派出了大量人手想要袭击此地。在外面侦察的暗索将敌袭的情报提前带了回来，但......这场战斗，不会有更多的援军。以少胜多似乎只会出现在历史或传说中，但艾丝黛尔或许真的能在敌潮下，与暗索一起守卫营地的安全，请相信她们。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "荒野",
+      "zoneNameForShow": "切尔诺伯格",
+      "picId": "story_loading_DM",
+      "stageGetTime": 1658822400
+    },
+    "char_258_podego": {
+      "charId": "char_258_podego",
+      "stageId": "mem_podego_1",
+      "levelId": "Obt/Memory/level_memory_podego_1",
+      "zoneId": "storyMission",
+      "code": "mem_podego_1",
+      "name": "幽径",
+      "loadingPicId": "loading_SG",
+      "description": "钳兽们是如何应对向它们袭去的孢子的，波登可来不及细想。叶浪翻涌，树林中光影摇曳，它们已经越逼越近。波登可深呼一口气，闭上了眼睛，钳兽们的爪子摩擦地面的窸窣动静似乎消失了，她听到了......花朵们在说话。“你们这些小家伙，可不要小瞧植物的力量。”波登可睁开眼，手中的法杖高高举起。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "丛林",
+      "zoneNameForShow": "萨尔贡",
+      "picId": "story_loading_SG",
+      "stageGetTime": 1658822400
+    },
+    "char_293_thorns": {
+      "charId": "char_293_thorns",
+      "stageId": "mem_thorns_1",
+      "levelId": "Obt/Memory/level_memory_thorns_1",
+      "zoneId": "storyMission",
+      "code": "mem_thorns_1",
+      "name": "搭把手",
+      "loadingPicId": "loading_DM",
+      "description": "棘刺计算过自己挥剑的速度，也预估了自己将要面对的这批敌人的能力。最终他判定，自己一个人就能对付这群人，于是拒绝了他人的增援。\n不过放心，在必要的时候，还是有人会帮他一把。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "荒野",
+      "zoneNameForShow": "切尔诺伯格",
+      "picId": "story_loading_DM",
+      "stageGetTime": 1660190400
+    },
+    "char_415_flint": {
+      "charId": "char_415_flint",
+      "stageId": "mem_flint_1",
+      "levelId": "Obt/Memory/level_memory_flint_1",
+      "zoneId": "storyMission",
+      "code": "mem_flint_1",
+      "name": "更快！更强！",
+      "loadingPicId": "loading4",
+      "description": "提亚卡乌的战士深谙战斗需占据地利的道理，尽管离开了一段时间，但她仍旧熟知这片雨林的每一个角落。\n只要能够更快地挥拳，就没有什么敌人能越过她进入她的家乡！",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "摧毁后",
+      "zoneNameForShow": "切尔诺伯格",
+      "picId": "story_loading4",
+      "stageGetTime": 1660190400
+    },
+    "char_365_aprl": {
+      "charId": "char_365_aprl",
+      "stageId": "mem_aprl_1",
+      "levelId": "Obt/Memory/level_memory_aprl_1",
+      "zoneId": "storyMission",
+      "code": "mem_aprl_1",
+      "name": "狩猎的节拍",
+      "loadingPicId": "loading4",
+      "description": "四月有她自己的一套丛林生存法则。首先判断时机，看好风向，隐藏好气息，永远当先出手的那一方；然后灵活应变，随时更换阵地，无论遇到怎样的困境绝不慌张；最后，狩猎过程中不可以听歌，但可以哼首小调让队友放松心情。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "摧毁后",
+      "zoneNameForShow": "切尔诺伯格",
+      "picId": "story_loading4",
+      "stageGetTime": 1660190400
+    },
+    "char_469_indigo": {
+      "charId": "char_469_indigo",
+      "stageId": "mem_indigo_1",
+      "levelId": "Obt/Memory/level_memory_indigo_1",
+      "zoneId": "storyMission",
+      "code": "mem_indigo_1",
+      "name": "光影谜面",
+      "loadingPicId": "loading_iberia",
+      "description": "如果礁石和涌浪是禁锢方向的基底，那么灯塔的光就是启示谜底的谜面。看多了光线打在夜中海面上的样子，难免不对这股指引方向的灯光抱有敬意。而那些在光线和黑暗中逡巡许久的生命，又将去向何处？",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "城镇",
+      "zoneNameForShow": "伊比利亚",
+      "picId": "story_loading_iberia",
+      "stageGetTime": 1660190400
+    },
+    "char_440_pinecn": {
+      "charId": "char_440_pinecn",
+      "stageId": "mem_pinecn_1",
+      "levelId": "Obt/Memory/level_memory_pinecn_1",
+      "zoneId": "storyMission",
+      "code": "mem_pinecn_1",
+      "name": "小憩",
+      "loadingPicId": "loading4",
+      "description": "工人各有所长，安排在合适的岗位上便能将其能力最大化。可一旦人手不够，现有人员的工作压力就会变大。那么，至少在下次开工前休息一下，有了充足的精力才能好好干活呀！",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "灾难爆发",
+      "zoneNameForShow": "切尔诺伯格",
+      "picId": "story_loading4",
+      "stageGetTime": 1660190400
+    },
+    "char_248_mgllan": {
+      "charId": "char_248_mgllan",
+      "stageId": "mem_mgllan_1",
+      "levelId": "Obt/Memory/level_memory_mgllan_1",
+      "zoneId": "storyMission",
+      "code": "mem_mgllan_1",
+      "name": "取之不尽，用之不竭",
+      "loadingPicId": "loading_LM_frost",
+      "description": "科技是科研者的武器，不要小看站在你面前的小姑娘，她可不是孤军作战。\n她的身后有着由智慧凝结出的得力帮手，每一项功能都来源自一次亲身经历过的险境，足以帮助她在前行的路上走得更远。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "冰雪地带",
+      "zoneNameForShow": "龙门",
+      "picId": "story_loading_LM_frost",
+      "stageGetTime": 1661414400
+    },
+    "char_163_hpsts": {
+      "charId": "char_163_hpsts",
+      "stageId": "mem_hpsts_1",
+      "levelId": "Obt/Memory/level_memory_hpsts_1",
+      "zoneId": "storyMission",
+      "code": "mem_hpsts_1",
+      "name": "扼守",
+      "loadingPicId": "loading_DM",
+      "description": "锻造者少言，但手中之力不少。她所造的武器能保障使用者的安全，她本人也会站在最前面，抵挡住来自敌人的攻击与炮火。\n在战场上，再多的话语也不及一个坚定的后背让人更有安全感。请相信她的能力，并在她身后为她所做的努力献上你的力量。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "荒野",
+      "zoneNameForShow": "切尔诺伯格",
+      "picId": "story_loading_DM",
+      "stageGetTime": 1661414400
+    },
+    "char_166_skfire": {
+      "charId": "char_166_skfire",
+      "stageId": "mem_skfire_1",
+      "levelId": "Obt/Memory/level_memory_skfire_1",
+      "zoneId": "storyMission",
+      "code": "mem_skfire_1",
+      "name": "焮天铄地",
+      "loadingPicId": "loading_VC_hillock2",
+      "description": "天火自傲于自己的能力，没有什么能逃过由她操控的烈焰，一切只在她的想或者不想。但这并不代表她是一个恣意妄为的人，在一次又一次地发现总有太多火焰也无法焚烧殆尽的东西后，天火决定停下来思考，自己要做的究竟是什么。而后她发现了比火焰更能烧尽脏污的东西——她的智慧。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "小丘郡广场",
+      "zoneNameForShow": "维多利亚",
+      "picId": "story_loading_VC_hillock2",
+      "stageGetTime": 1661414400
+    },
+    "char_137_brownb": {
+      "charId": "char_137_brownb",
+      "stageId": "mem_brownb_1",
+      "levelId": "Obt/Memory/level_memory_brownb_1",
+      "zoneId": "storyMission",
+      "code": "mem_brownb_1",
+      "name": "车轮战",
+      "loadingPicId": "loading4",
+      "description": "远离拳台走上战场，猎蜂强悍的双拳藏起了她的不适，轮番上阵的敌人和四处袭来的剑影难免让她疲于应对，但深刻在骨髓中的执拗总是令她选择坚守阵线，永不退缩。请在一切结束后，为她递上一条冰湿的毛巾，相信她疲惫的面庞会为此展露笑颜。",
+      "unlockParam": [
+        {
+          "unlockType": 1,
+          "unlockParam1": "2",
+          "unlockParam2": "1",
+          "unlockParam3": null
+        }
+      ],
+      "rewardItem": [
+        {
+          "id": "4003",
+          "count": 200,
+          "type": "DIAMOND_SHD"
+        }
+      ],
+      "stageNameForShow": "摧毁后",
+      "zoneNameForShow": "切尔诺伯格",
+      "picId": "story_loading4",
+      "stageGetTime": 1661414400
     }
   },
   "handbookStageTime": [
@@ -32482,6 +35220,51 @@
         "char_436_whispr",
         "char_378_asbest",
         "char_278_orchid"
+      ]
+    },
+    {
+      "timestamp": 1654747200,
+      "charSet": [
+        "char_226_hmau",
+        "char_253_greyy",
+        "char_263_skadi",
+        "char_346_aosta",
+        "char_363_toddi"
+      ]
+    },
+    {
+      "timestamp": 1656993600,
+      "charSet": [
+        "char_134_ifrit",
+        "char_108_silent",
+        "char_129_bluep"
+      ]
+    },
+    {
+      "timestamp": 1658822400,
+      "charSet": [
+        "char_115_headbr",
+        "char_127_estell",
+        "char_258_podego"
+      ]
+    },
+    {
+      "timestamp": 1660190400,
+      "charSet": [
+        "char_293_thorns",
+        "char_415_flint",
+        "char_365_aprl",
+        "char_469_indigo",
+        "char_440_pinecn"
+      ]
+    },
+    {
+      "timestamp": 1661414400,
+      "charSet": [
+        "char_248_mgllan",
+        "char_163_hpsts",
+        "char_166_skfire",
+        "char_137_brownb"
       ]
     }
   ]
