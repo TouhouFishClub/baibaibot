@@ -32,7 +32,7 @@ const analysisChatData = data => {
 			msgList.push(filterCQ)
 		}
 	})
-	return textRankExtract(msgList.join('\n'), 256)
+	return extract(msgList.join('\n'), 256)
 }
 
 const fetchGroupData = async groupId => {
@@ -61,7 +61,7 @@ const renderChatPersonas = async (groupId, callback) => {
 	}
 
 	let extractArr = await fetchGroupData(groupId)
-	console.log(extractArr)
+	// console.log(extractArr)
 	let keyWords = {}
 	extractArr.forEach(item => {
 		keyWords[item.word] = ~~item.weight
