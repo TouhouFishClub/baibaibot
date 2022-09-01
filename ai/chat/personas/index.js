@@ -6,6 +6,9 @@ const { cut, load, extract } = require("nodejieba")
 const nodeHtmlToImage = require('node-html-to-image')
 const path = require("path");
 
+let echart = readFileSync(join(__dirname, 'echart.min.js'), 'utf-8')
+let echartWordcloud = readFileSync(join(__dirname, 'echart-wordcloud.js'), 'utf-8')
+
 let client
 
 const analysisChatData = data => {
@@ -53,9 +56,6 @@ const renderChatPersonas = async (groupId, callback) => {
 	extractArr.forEach(item => {
 		keyWords[item.word] = ~~item.weight
 	})
-
-	let echart = readFileSync(join(__dirname, 'echart.min.js'), 'utf-8')
-	let echartWordcloud = readFileSync(join(__dirname, 'echart-wordcloud.js'), 'utf-8')
 
 	let output = path.join(IMAGE_DATA, 'other', `${groupId}.png`)
 	// let output = path.join(`${groupId}.png`)
