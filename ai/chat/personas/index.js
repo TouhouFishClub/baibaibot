@@ -15,7 +15,7 @@ let client
 
 const analysisChatData = data => {
 	load({
-		userDict: './user.dict.utf8',
+		userDict: join(__dirname, 'user.dict.utf8'),
 	})
 	let msgList = []
 	data.forEach(msg => {
