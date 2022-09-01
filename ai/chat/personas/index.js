@@ -7,46 +7,6 @@ const nodeHtmlToImage = require('node-html-to-image')
 
 let client
 
-const analysisChatDataOld = data => {
-	let obj = {}, out = {}
-	data.forEach(msg => {
-		if(msg.d){
-			let filterCQ = msg.d.split('[CQ:').map((x, i) => i ? x.split(']')[1]: x).filter(x => x.trim())
-			filterCQ.forEach(txt => {
-				let splitEn = Array.from(txt.matchAll(/[a-zA-Z0-9]+/g)).map(x => x[0])
-				splitEn.forEach(en => {
-					if(/^\d{1,3}$/.test(en)) {
-
-					} else {
-						if(obj[en]) {
-							obj[en] = obj[en] + 1
-						} else {
-							obj[en] = 1
-						}
-					}
-					txt = txt.split(en).join('')
-				})
-				cut(txt).forEach(c => {
-					if(obj[c]) {
-						obj[c] = obj[c] + 1
-					} else {
-						obj[c] = 1
-					}
-				})
-			})
-		}
-	})
-	Object.keys(obj).map(x => {
-		return {
-			k: x,
-			v: obj[x]
-		}
-	}).sort((a, b) => b.v -a.v).slice(0, 150).forEach(o => {
-		out[o.k] = o.v
-	})
-	return out
-}
-
 const analysisChatData = data => {
 	let msgList = []
 	data.forEach(msg => {
@@ -62,12 +22,12 @@ const analysisChatData = data => {
 			msgList.push(filterCQ)
 		}
 	})
-	return extract(msgList.join('\n'), 50)
+	return extract(msgList.join('\n'), 100)
 }
 
 const fetchGroupData = async groupId => {
 	let groupData = await client.db('db_bot').collection('cl_chat').find({
-		_id: { $gt: new Date(Date.now() - 1000*60*60*6) },
+		_id: { $gt: new Date(Date.now() - 1000*60*60*24) },
 		gid: groupId
 	}).toArray()
 	console.log(`===> group data length: ${groupData.length}`)
