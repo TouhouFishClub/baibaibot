@@ -2,7 +2,7 @@ const { readFileSync } = require('fs')
 const { join } = require('path')
 const MongoClient = require('mongodb').MongoClient
 const { mongourl, IMAGE_DATA } = require('../../../baibaiConfigs');
-const { cut, load, extract } = require("nodejieba")
+const { cut, load, extract, textRankExtract } = require("nodejieba")
 const nodeHtmlToImage = require('node-html-to-image')
 const path = require("path");
 
@@ -32,7 +32,7 @@ const analysisChatData = data => {
 			msgList.push(filterCQ)
 		}
 	})
-	return extract(msgList.join('\n'), 256)
+	return textRankExtract(msgList.join('\n'), 256)
 }
 
 const fetchGroupData = async groupId => {
