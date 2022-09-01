@@ -2,12 +2,12 @@ const fs = require('fs')
 const path = require('path')
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../../baibaiConfigs').mongourl;
-const nodejieba = require("nodejieba")
+const {cut, load, extract} = require("nodejieba")
 const nodeHtmlToImage = require('node-html-to-image')
 
 let client
 
-const analysisChatData = data => {
+const analysisChatDataOld = data => {
 	let obj = {}, out = {}
 	data.forEach(msg => {
 		if(msg.d){
@@ -26,7 +26,7 @@ const analysisChatData = data => {
 					}
 					txt = txt.split(en).join('')
 				})
-				nodejieba.cut(txt).forEach(c => {
+				cut(txt).forEach(c => {
 					if(obj[c]) {
 						obj[c] = obj[c] + 1
 					} else {
@@ -45,6 +45,24 @@ const analysisChatData = data => {
 		out[o.k] = o.v
 	})
 	return out
+}
+
+const analysisChatData = data => {
+	let msgList = []
+	data.forEach(msg => {
+		if(msg.d){
+			let filterCQ = msg.d.split('[CQ:').map((x, i) => i ? x.split(']')[1]: x).filter(x => x.trim()).join('')
+			let splitEn = Array.from(txt.matchAll(/[a-zA-Z0-9]+/g)).map(x => x[0])
+
+			splitEn.forEach(en => {
+				msgList.push(en)
+				filterCQ = filterCQ.split(en).join('')
+			})
+
+			msgList.push(filterCQ)
+		}
+	})
+	return extract(msgList.join('\n'), 50)
 }
 
 const fetchGroupData = async groupId => {
