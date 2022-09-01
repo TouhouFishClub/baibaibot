@@ -9,6 +9,8 @@ const path = require("path");
 let echart = readFileSync(join(__dirname, 'echart.min.js'), 'utf-8')
 let echartWordcloud = readFileSync(join(__dirname, 'echart-wordcloud.js'), 'utf-8')
 
+let personasLimit = {}
+
 let client
 
 const analysisChatData = data => {
@@ -49,6 +51,12 @@ const renderChatPersonas = async (groupId, callback) => {
 			console.log('MONGO ERROR FOR PERSONAS MODULE!!')
 			console.log(e)
 		}
+	}
+
+	if(personasLimit[groupId] && Date.now() < personasLimit[groupId]) {
+		let imgMsg = `[CQ:image,file=${join('send', 'other', `${groupId}.png`)}]`
+		callback(imgMsg)
+		return
 	}
 
 	let extractArr = await fetchGroupData(groupId)
@@ -108,15 +116,18 @@ const renderChatPersonas = async (groupId, callback) => {
 							fontWeight: 'bold',
 							color: function () {
 								return 'rgb(' + [
-									Math.round(Math.random() * 200) + 50,
-									Math.round(Math.random() * 50),
-									Math.round(Math.random() * 50) + 50
+									// Math.round(Math.random() * 200) + 50,
+									// Math.round(Math.random() * 50),
+									// Math.round(Math.random() * 50) + 50
+									Math.round(Math.random() * 150) + 100,
+									Math.round(Math.random() * 150) + 100,
+									Math.round(Math.random() * 150) + 100
 								].join(',') + ')';
 							}
 						},
 						emphasis: {
 							textStyle: {
-								color: '#528'
+								color: '#fff'
 							}
 						},
 						data: data.sort(function (a, b) {
@@ -133,6 +144,7 @@ const renderChatPersonas = async (groupId, callback) => {
 		.then(() => {
 			console.log(`保存${groupId}.png成功！`)
 			let imgMsg = `[CQ:image,file=${join('send', 'other', `${groupId}.png`)}]`
+			personasLimit[groupId] = Date.now() + 30 * 60 * 1000
 			callback(imgMsg)
 		})
 }
