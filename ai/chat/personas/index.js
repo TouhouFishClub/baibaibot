@@ -1,8 +1,8 @@
-const fs = require('fs')
-const path = require('path')
+const { readFileSync } = require('fs')
+const { join } = require('path')
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../../baibaiConfigs').mongourl;
-const {cut, load, extract} = require("nodejieba")
+const { cut, load, extract } = require("nodejieba")
 const nodeHtmlToImage = require('node-html-to-image')
 
 let client
@@ -51,8 +51,8 @@ const renderChatPersonas = async (groupId, callback) => {
 	console.log(obj)
 	return
 
-	let echart = fs.readFileSync(path.join(__dirname, 'echart.min.js'), 'utf-8')
-	let echartWordcloud = fs.readFileSync(path.join(__dirname, 'echart-wordcloud.js'), 'utf-8')
+	let echart = readFileSync(join(__dirname, 'echart.min.js'), 'utf-8')
+	let echartWordcloud = readFileSync(join(__dirname, 'echart-wordcloud.js'), 'utf-8')
 
 	nodeHtmlToImage({
 		output: './image.png',
