@@ -13,10 +13,11 @@ let personasLimit = {}
 
 let client
 
+load({
+	userDict: join(__dirname, 'user.dict.utf8'),
+})
+
 const analysisChatData = data => {
-	load({
-		userDict: join(__dirname, 'user.dict.utf8'),
-	})
 	let msgList = []
 	data.forEach(msg => {
 		if(msg.d && !msg.d.startsWith('http') && msg.uid != 981069482){
