@@ -144,6 +144,7 @@ const { BossWork } = require('./ai/mabinogi/BossWork/BossWork')
 
 const {handleDSReply,handleVoteReply} = require('./ai/games/ds/dsmain')
 
+const { renderChatPersonas } = require('./ai/chat/personas/index')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -1373,6 +1374,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(con.toLowerCase() == 'bosswork' || con.toLowerCase() == 'boss时间表') {
 		BossWork(from, groupid, callback)
+  }
+  if(con == '群关键词' || con == 'hawk') {
+		renderChatPersonas(groupid, callback)
   }
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)

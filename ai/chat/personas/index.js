@@ -1,9 +1,10 @@
 const { readFileSync } = require('fs')
 const { join } = require('path')
 const MongoClient = require('mongodb').MongoClient
-const MONGO_URL = require('../../../baibaiConfigs').mongourl;
+const { mongourl, IMAGE_DATA } = require('../../../baibaiConfigs');
 const { cut, load, extract } = require("nodejieba")
 const nodeHtmlToImage = require('node-html-to-image')
+const path = require("path");
 
 let client
 
@@ -25,7 +26,7 @@ const analysisChatData = data => {
 			msgList.push(filterCQ)
 		}
 	})
-	return extract(msgList.join('\n'), 100)
+	return extract(msgList.join('\n'), 256)
 }
 
 const fetchGroupData = async groupId => {
@@ -40,7 +41,7 @@ const fetchGroupData = async groupId => {
 const renderChatPersonas = async (groupId, callback) => {
 	if(!client) {
 		try {
-			client = await MongoClient.connect(MONGO_URL)
+			client = await MongoClient.connect(mongourl)
 		} catch (e) {
 			console.log('MONGO ERROR FOR PERSONAS MODULE!!')
 			console.log(e)
@@ -56,81 +57,88 @@ const renderChatPersonas = async (groupId, callback) => {
 	let echart = readFileSync(join(__dirname, 'echart.min.js'), 'utf-8')
 	let echartWordcloud = readFileSync(join(__dirname, 'echart-wordcloud.js'), 'utf-8')
 
+	let output = path.join(IMAGE_DATA, 'other', `${groupId}.png`)
+	// let output = path.join(`${groupId}.png`)
+
 	nodeHtmlToImage({
-		output: './image.png',
+		output,
 		html: `
-<html>
-<head>
-  <meta charSet="utf-8">
-  <script>
-  	${echart}
-	</script>
-  <script>
-  	${echartWordcloud}
-	</script>
-  <style>
-    html, body, #main {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-    }
-  </style>
-</head>
-<body>
-<div id='main'></div>
-<script>
-  var chart = echarts.init(document.getElementById('main'));
-  var keywords = ${JSON.stringify(keyWords)}
-
-  var data = [];
-  for (var name in keywords) {
-    data.push({
-      name: name,
-      value: Math.sqrt(keywords[name])
-    })
-  }
-
-  var maskImage = new Image();
-
-  var option = {
-    series: [{
-      type: 'wordCloud',
-      sizeRange: [4, 150],
-      rotationRange: [0, 0],
-      gridSize: 0,
-      shape: 'pentagon',
-      drawOutOfBound: false,
-      keepAspect: true,
-      textStyle: {
-        fontWeight: 'bold',
-        color: function () {
-          return 'rgb(' + [
-            Math.round(Math.random() * 200) + 50,
-            Math.round(Math.random() * 50),
-            Math.round(Math.random() * 50) + 50
-          ].join(',') + ')';
-        }
-      },
-      emphasis: {
-        textStyle: {
-          color: '#528'
-        }
-      },
-      data: data.sort(function (a, b) {
-        return b.value - a.value;
-      })
-    }]
-  };
-	chart.setOption(option);
-	document.querySelector('#output').innerHTML = 'SUCCESS'
-</script>
-</body>
-</html>
+			<html>
+			<head>
+				<meta charSet="utf-8">
+				<script>
+					${echart}
+				</script>
+				<script>
+					${echartWordcloud}
+				</script>
+				<style>
+					html, body, #main {
+						width: 100%;
+						height: 100%;
+						margin: 0;
+						background-color: #0a0905;
+					}
+				</style>
+			</head>
+			<body>
+			<div id='main'></div>
+			<script>
+				var chart = echarts.init(document.getElementById('main'));
+				var keywords = ${JSON.stringify(keyWords)}
+			
+				var data = [];
+				for (var name in keywords) {
+					data.push({
+						name: name,
+						value: Math.sqrt(keywords[name])
+					})
+				}
+			
+				var option = {
+					series: [{
+						type: 'wordCloud',
+						sizeRange: [4, 150],
+						rotationRange: [0, 0],
+						gridSize: 0,
+						shape: 'pentagon',
+						drawOutOfBound: false,
+						keepAspect: true,
+						textStyle: {
+							fontWeight: 'bold',
+							color: function () {
+								return 'rgb(' + [
+									Math.round(Math.random() * 200) + 50,
+									Math.round(Math.random() * 50),
+									Math.round(Math.random() * 50) + 50
+								].join(',') + ')';
+							}
+						},
+						emphasis: {
+							textStyle: {
+								color: '#528'
+							}
+						},
+						data: data.sort(function (a, b) {
+							return b.value - a.value;
+						})
+					}]
+				};
+				chart.setOption(option);
+			</script>
+			</body>
+			</html>
 		`
 	})
 		.then(() => {
 			console.log(`保存timetable.png成功！`)
+			console.log(`保存timetable.png成功！`)
+			let imgMsg = `[CQ:image,file=${join('send', 'other', `${groupId}.png`)}]`
+			callback(imgMsg)
 		})
 }
 
-renderChatPersonas(205700800)
+module.exports = {
+	renderChatPersonas
+}
+// renderChatPersonas(205700800)
