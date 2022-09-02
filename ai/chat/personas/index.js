@@ -125,9 +125,9 @@ const renderChatPersonas = async (groupId, callback) => {
 									// Math.round(Math.random() * 150) + 100,
 									// Math.round(Math.random() * 150) + 100,
 									// Math.round(Math.random() * 150) + 100
-									c,
-									c,
-									255
+									255,
+									255,
+									c
 								].join(',') + ')';
 							}
 						},
