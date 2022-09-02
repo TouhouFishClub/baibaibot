@@ -105,6 +105,7 @@ const renderChatPersonas = async (groupId, callback) => {
 					})
 				}
 			
+				var c = Math.round(Math.random() * 150) + 100;
 				var option = {
 					series: [{
 						type: 'wordCloud',
@@ -121,9 +122,12 @@ const renderChatPersonas = async (groupId, callback) => {
 									// Math.round(Math.random() * 200) + 50,
 									// Math.round(Math.random() * 50),
 									// Math.round(Math.random() * 50) + 50
-									Math.round(Math.random() * 150) + 100,
-									Math.round(Math.random() * 150) + 100,
-									Math.round(Math.random() * 150) + 100
+									// Math.round(Math.random() * 150) + 100,
+									// Math.round(Math.random() * 150) + 100,
+									// Math.round(Math.random() * 150) + 100
+									c,
+									c,
+									0
 								].join(',') + ')';
 							}
 						},
