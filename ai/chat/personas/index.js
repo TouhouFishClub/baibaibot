@@ -31,7 +31,7 @@ const analysisChatData = data => {
 				filterCQ = filterCQ.split(en).join('')
 			})
 
-			msgList.unshift(filterCQ)
+			msgList.push(filterCQ)
 		}
 	})
 	return extract(msgList.join('\n'), 256)
