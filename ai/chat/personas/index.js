@@ -117,7 +117,7 @@ const renderChatPersonas = async (groupId, callback) => {
 						textStyle: {
 							fontWeight: 'bold',
 							color: function () {
-								var c = Math.round(Math.random() * 150) + 100;
+								var c = Math.round(Math.random() * 200) + 50;
 								return 'rgb(' + [
 									// Math.round(Math.random() * 200) + 50,
 									// Math.round(Math.random() * 50),
@@ -127,7 +127,7 @@ const renderChatPersonas = async (groupId, callback) => {
 									// Math.round(Math.random() * 150) + 100
 									c,
 									c,
-									0
+									255
 								].join(',') + ')';
 							}
 						},
