@@ -18,8 +18,6 @@ load({
 })
 
 const analysisChatData = data => {
-	console.log('===data 1===')
-	console.log(data[0])
 	let msgList = []
 	data.forEach(msg => {
 		if(msg.d && !msg.d.startsWith('http') && msg.uid != 981069482){
