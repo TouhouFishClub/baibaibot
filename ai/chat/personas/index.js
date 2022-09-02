@@ -105,7 +105,6 @@ const renderChatPersonas = async (groupId, callback) => {
 					})
 				}
 			
-				var c = Math.round(Math.random() * 150) + 100;
 				var option = {
 					series: [{
 						type: 'wordCloud',
@@ -118,6 +117,7 @@ const renderChatPersonas = async (groupId, callback) => {
 						textStyle: {
 							fontWeight: 'bold',
 							color: function () {
+								var c = Math.round(Math.random() * 150) + 100;
 								return 'rgb(' + [
 									// Math.round(Math.random() * 200) + 50,
 									// Math.round(Math.random() * 50),
