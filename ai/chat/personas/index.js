@@ -117,17 +117,17 @@ const renderChatPersonas = async (groupId, callback) => {
 						textStyle: {
 							fontWeight: 'bold',
 							color: function () {
-								var c = Math.round(Math.random() * 200) + 50;
+								// var c = Math.round(Math.random() * 200) + 50;
 								return 'rgb(' + [
 									// Math.round(Math.random() * 200) + 50,
 									// Math.round(Math.random() * 50),
 									// Math.round(Math.random() * 50) + 50
-									// Math.round(Math.random() * 150) + 100,
-									// Math.round(Math.random() * 150) + 100,
-									// Math.round(Math.random() * 150) + 100
-									255,
-									255,
-									c
+									Math.round(Math.random() * 150) + 100,
+									Math.round(Math.random() * 150) + 100,
+									Math.round(Math.random() * 150) + 100
+									// 255,
+									// 255,
+									// c
 								].join(',') + ')';
 							}
 						},
