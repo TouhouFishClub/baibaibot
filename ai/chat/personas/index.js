@@ -26,6 +26,7 @@ const analysisChatData = data => {
 
 			splitEn.forEach(en => {
 				if(/^\d+$/.test(en)){
+					console.log(en)
 					return
 				}
 				msgList.push(en)
