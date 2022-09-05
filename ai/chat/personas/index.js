@@ -25,6 +25,9 @@ const analysisChatData = data => {
 			let splitEn = Array.from(filterCQ.matchAll(/[a-zA-Z0-9]+/g)).map(x => x[0])
 
 			splitEn.forEach(en => {
+				if(/^\d+$/.test(en)){
+					return
+				}
 				msgList.push(en)
 				filterCQ = filterCQ.split(en).join('')
 			})
