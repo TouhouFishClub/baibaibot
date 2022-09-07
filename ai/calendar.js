@@ -145,13 +145,13 @@ const deleteCalendarByOid = async (_id, callback) => {
 
 const searchCalendar = async (project, groupId, callback) => {
 	let now = new Date(), year = now.getFullYear(), month = now.getMonth() + 1, p = project
-	if(p.indexOf('#')) {
-		let sp = project.indexOf('#')
-		p = sp[1]
-		let dateSp = sp[0].split('-')
-		year = dateSp[0]
-		month = dateSp[1]
-	}
+	// if(p.indexOf('#')) {
+	// 	let sp = project.indexOf('#')
+	// 	p = sp[1]
+	// 	let dateSp = sp[0].split('-')
+	// 	year = dateSp[0]
+	// 	month = dateSp[1]
+	// }
 
 	let data = await client.db('db_bot').collection('cl_calendar').find({ p, groupId }).toArray()
 	if(data.length > 0) {
