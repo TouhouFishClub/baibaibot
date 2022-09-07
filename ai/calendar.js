@@ -153,7 +153,7 @@ const searchCalendar = async (project, groupId, callback) => {
 	// 	month = dateSp[1]
 	// }
 
-	let data = await client.db('db_bot').collection('cl_calendar').find({ p, groupId }).toArray()
+	let data = await client.db('db_bot').collection('cl_calendar').find({ project: p, groupId }).toArray()
 	if(data.length > 0) {
 
 		renderCalendar(year, month, callback, data.map(x => {
