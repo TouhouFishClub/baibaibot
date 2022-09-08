@@ -87,8 +87,8 @@ const renderChatPersonas = async (groupId, callback) => {
 				</script>
 				<style>
 					html, body, #main {
-						width: 100%;
-						height: 100%;
+						width: 500px;
+						height: 400px;
 						margin: 0;
 						background-color: #0a0905;
 					}
@@ -110,7 +110,7 @@ const renderChatPersonas = async (groupId, callback) => {
 			
 				var option = {
 					series: [{
-						type: 'wordCloud',,
+						type: 'wordCloud',
 						width: '100%',
 						height: '100%',
 						sizeRange: [4, 150],
