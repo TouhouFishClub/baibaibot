@@ -87,8 +87,8 @@ const renderChatPersonas = async (groupId, callback) => {
 				</script>
 				<style>
 					html, body, #main {
-						width: 500px;
-						height: 400px;
+						width: 100%;
+						height: 100%;
 						margin: 0;
 						background-color: #0a0905;
 					}
@@ -114,8 +114,9 @@ const renderChatPersonas = async (groupId, callback) => {
 						width: '100%',
 						height: '100%',
 						sizeRange: [4, 150],
-						rotationRange: [-90, 90],
-						rotationStep: 15,
+						rotationRange: [0, 0],
+						// rotationRange: [-90, 90],
+						// rotationStep: 15,
 						gridSize: 0,
 						shape: 'circle',
 						drawOutOfBound: false,
@@ -128,9 +129,9 @@ const renderChatPersonas = async (groupId, callback) => {
 									// Math.round(Math.random() * 200) + 50,
 									// Math.round(Math.random() * 50),
 									// Math.round(Math.random() * 50) + 50
-									Math.round(Math.random() * 255) + 0,
-									Math.round(Math.random() * 255) + 0,
-									Math.round(Math.random() * 255) + 0
+									Math.round(Math.random() * 150) + 100,
+									Math.round(Math.random() * 150) + 100,
+									Math.round(Math.random() * 150) + 100
 									// 255,
 									// 255,
 									// c
