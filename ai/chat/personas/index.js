@@ -110,11 +110,14 @@ const renderChatPersonas = async (groupId, callback) => {
 			
 				var option = {
 					series: [{
-						type: 'wordCloud',
+						type: 'wordCloud',,
+						width: '100%',
+						height: '100%',
 						sizeRange: [4, 150],
-						rotationRange: [0, 0],
+						rotationRange: [-90, 90],
+						rotationStep: 15,
 						gridSize: 0,
-						shape: 'pentagon',
+						shape: 'circle',
 						drawOutOfBound: false,
 						keepAspect: true,
 						textStyle: {
@@ -125,9 +128,9 @@ const renderChatPersonas = async (groupId, callback) => {
 									// Math.round(Math.random() * 200) + 50,
 									// Math.round(Math.random() * 50),
 									// Math.round(Math.random() * 50) + 50
-									Math.round(Math.random() * 150) + 100,
-									Math.round(Math.random() * 150) + 100,
-									Math.round(Math.random() * 150) + 100
+									Math.round(Math.random() * 255) + 0,
+									Math.round(Math.random() * 255) + 0,
+									Math.round(Math.random() * 255) + 0
 									// 255,
 									// 255,
 									// c
