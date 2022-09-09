@@ -4,6 +4,9 @@ const {secret} = require("../../secret");
 
 
 function diffuseReply(content,gid,qq,callback){
+	if(gid != 205700800) {
+		return
+	}
   var apikeylist = secret.u2;
   var apikey = apikeylist[Math.floor(Math.random()*apikeylist.length)];
 
