@@ -39,6 +39,10 @@ function diffuseReply(content,gid,qq,callback){
       // });
 
       var d1 = eval('(' + resbody + ')');
+      if(!(d1&&d1.urls&&d1.urls.get)){
+        callback(content+'\n画图失败哦');
+        return;
+      }
       var geturl = d1.urls.get;
       console.log(geturl);
       setTimeout(function(){
