@@ -57,24 +57,28 @@ function diffuseReply(content,gid,qq,callback){
           } else {
             console.log(resbody2);
             var d2 = eval('(' + resbody2 + ')');
-            var imgurl = d2.output[0];
+            if(d2.output&&d2.output[0]){
+              var imgurl = d2.output[0];
 
-            var now = new Date().getTime();
-            var filename = "../coolq-data/cq/data/image/send/diffuse/" + now+"_"+content;
-            var imgreq = request({
-              url: imgurl,
-              method: "GET",
-              proxy: 'http://192.168.17.241:2346',
-            }, function (error, response, body) {
-              if (error && error.code) {
-                console.log('pipe error catched!')
-                console.log(error);
-              }
-            }).pipe(fs.createWriteStream(filename));
-            imgreq.on('close', function () {
-              var ret = '[CQ:'+'image'+',file=send/diffuse/' + now+"_"+content + ']';
-              callback(content+'\n'+ret);
-            });
+              var now = new Date().getTime();
+              var filename = "../coolq-data/cq/data/image/send/diffuse/" + now+"_"+content;
+              var imgreq = request({
+                url: imgurl,
+                method: "GET",
+                proxy: 'http://192.168.17.241:2346',
+              }, function (error, response, body) {
+                if (error && error.code) {
+                  console.log('pipe error catched!')
+                  console.log(error);
+                }
+              }).pipe(fs.createWriteStream(filename));
+              imgreq.on('close', function () {
+                var ret = '[CQ:'+'image'+',file=send/diffuse/' + now+"_"+content + ']';
+                callback(content+'\n'+ret);
+              });
+            }else{
+              callback(content+'\n画图失败');
+            }
           }
         });
       },5000);
