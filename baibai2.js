@@ -6,6 +6,8 @@ var request = require('request');
 let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 
+const {diffuseReply} = require('./ai/image/diffuse')
+
 const { myip } = require('./baibaiConfigs')
 
 var path = require('path');
@@ -1587,6 +1589,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     getLike(from,name,callback);
     return;
   }
+
+  if(rcontent.startsWith("画图 ")){
+    diffuseReply(rcontent.substring(2),groupid,from,callback);
+    return;
+  }
+
 
   if(rcontent.startsWith("抽卡")){
     if(new Set([23334, 29334, 26334, 28334, 30004, 30014]).has(port)){
