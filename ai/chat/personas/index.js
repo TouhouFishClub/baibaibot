@@ -31,6 +31,9 @@ const analysisChatData = data => {
 				}
 				msgList.push(en)
 			})
+			if(filterCQ.match(/^尔格\d{1,2}突破\d{1,5}手$/)) {
+				return
+			}
 
 			msgList.push(filterCQ)
 		}
