@@ -1,6 +1,7 @@
 var fs = require('fs');
 var request = require('request');
-
+const {secret} = require("../../secret");
+var apikey = secret.u2;
 
 function diffuseReply(content,gid,qq,callback){
   content = content.trim()
@@ -12,7 +13,7 @@ function diffuseReply(content,gid,qq,callback){
     proxy:'http://192.168.17.241:2346',
     headers:{
       'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
-      'Authorization': 'Token 7c341f380d8a867678828bbc0ba6110d3fab7218',
+      'Authorization': 'Token '+apikey,
       'Content-Type':'application/json'
     },
     body:body1
@@ -46,7 +47,7 @@ function diffuseReply(content,gid,qq,callback){
           method: "GET",
           proxy: 'http://192.168.17.241:2346',
           headers: {
-            'Authorization': 'Token 7c341f380d8a867678828bbc0ba6110d3fab7218',
+            'Authorization': 'Token '+apikey,
             'Content-Type': 'application/json'
           },
         }, function (error, response, resbody2) {
