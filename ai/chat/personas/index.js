@@ -24,9 +24,9 @@ const analysisChatData = data => {
 			let filterCQ = msg.d.split('[CQ:').map((x, i) => i ? x.split(']')[1]: x).filter(x => x.trim()).join('')
 			let splitEn = Array.from(filterCQ.matchAll(/[a-zA-Z0-9]+/g)).map(x => x[0])
 
-			// if(filterCQ.match(/^尔格\d{1,2}突破\d{1,5}手$/)) {
-			// 	return
-			// }
+			if(filterCQ.match(/^尔格\d{1,2}突破\d{1,5}手$/)) {
+				return
+			}
 
 			splitEn.forEach(en => {
 				filterCQ = filterCQ.split(en).join('')
