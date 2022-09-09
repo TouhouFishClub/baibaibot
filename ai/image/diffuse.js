@@ -1,9 +1,13 @@
 var fs = require('fs');
 var request = require('request');
 const {secret} = require("../../secret");
-var apikey = secret.u2;
+
 
 function diffuseReply(content,gid,qq,callback){
+  var apikey = secret.u3;
+  if(Math.random()<0.5){
+    apikey = secret.u3;
+  }
   content = content.trim()
   var url = 'https://api.replicate.com/v1/predictions'
   var body1 = '{"version": "a9758cbfbd5f3c2094457d996681af52552901775aa2d6dd0b17fd15df959bef", "input": {"prompt": "'+content+'"}}';
