@@ -100,6 +100,13 @@ const checkAuth = (req, res) => new Promise((resolve, reject) => {
   }
 })
 
+app.get('/pushMsg', (req, res) => {
+	console.log('\n\n\n=======')
+	console.log(req)
+	console.log(req.query)
+	console.log('=======\n\n\n')
+	res.send('ok')
+})
 
 app.get('/chathistory',function(req,res){
   var querydata = req.query;
