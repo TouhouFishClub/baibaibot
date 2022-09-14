@@ -1591,6 +1591,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(rcontent.startsWith("画图 ")){
+    if(new Set([23334, 26334, 28334, 30004, 30014]).has(port)){
+      return
+    }
     diffuseReply(rcontent.substring(2),groupid,from,callback);
     return;
   }
