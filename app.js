@@ -14,6 +14,7 @@ const multer = require('multer')
 const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
 const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
 const { myip } = require('./baibaiConfigs')
+const { analyzerMessage } = require('./ai/GenshinImpact/GenshinPush')
 const ports = new Set([
 	// 23334,
 	24334, // 2号机 3291864216
@@ -104,6 +105,7 @@ app.get('/pushMsg', (req, res) => {
 	console.log('\n\n\n=======')
 	console.log(req)
 	console.log(req.query)
+	analyzerMessage(req.query.message)
 	console.log('=======\n\n\n')
 	res.send('ok')
 })
