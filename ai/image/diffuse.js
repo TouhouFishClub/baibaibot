@@ -87,7 +87,7 @@ function diffuseReply(content,gid,qq,callback){
             }
           }
         });
-      },5000);
+      },8000);
     }
   });
 }
