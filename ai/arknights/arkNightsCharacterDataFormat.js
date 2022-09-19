@@ -26,7 +26,7 @@ let akc_patch_data = []
 const formatCharacter = () => {
   if(!akc_init){
     Object.values(fs.readJsonSync(path.join(__dirname, 'data', 'character_table.json'))).forEach(ch => {
-      if(!hasTarget(ignore, ch.name) && (ch.potentialItemId || ch.name == '断罪者' || ch.name == '罗小黑')){
+      if(!hasTarget(ignore, ch.name) && (ch.potentialItemId || ch.name == '暴行' || ch.name == '断罪者' || ch.name == '罗小黑')){
         let pubId = ch.phases[0].characterPrefabKey
         // console.log(pubId)
         if(anch(pubId)) {
