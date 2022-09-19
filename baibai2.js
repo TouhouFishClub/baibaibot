@@ -173,14 +173,17 @@ initWS1002();
 const BOT_MASTER = [
   {
     port: 29334,
+    qq: 3580280499,
     master: 782804214
   },
   {
     port: 26334,
+    qq: 3159074419,
     master: 1150926118
   },
   {
     port: 28334,
+		qq: 3477642092,
     master: 2512217733
   }
 ]
