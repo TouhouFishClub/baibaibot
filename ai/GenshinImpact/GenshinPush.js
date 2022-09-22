@@ -76,7 +76,7 @@ const analyzerMessage = msg => {
 	})
 	// out.users = users
 	// console.log(out)
-
+	// this.renderImage(out)
 }
 
 const renderImage = data => {
