@@ -108,7 +108,7 @@ const renderImage = data => {
   
 </body>
 </html>`
-	let output = path.join(IMAGE_DATA, 'mabi_trade', `genshin_push.png`)
+	let output = path.join(IMAGE_DATA, 'other', `genshin_push.png`)
 	// let output = './trade.png'
 	nodeHtmlToImage({
 		output,
@@ -116,7 +116,7 @@ const renderImage = data => {
 	})
 		.then(() => {
 			console.log(`保存trade.png成功！`)
-			let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_trade', `genshin_push.png`)}]`
+			let imgMsg = `[CQ:image,file=${path.join('send', 'other', `genshin_push.png`)}]`
 			callback(imgMsg)
 		})
 
