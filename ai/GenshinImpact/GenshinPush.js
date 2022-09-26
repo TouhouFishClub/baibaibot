@@ -249,7 +249,7 @@ const renderImage = data => {
 	})
 		.then(() => {
 			console.log(`保存genshin_push.png成功！`)
-			let imgMsg = `[CQ:image,file=${path.join(IMAGE_DATA, 'other', `genshin_push.png`)}]`
+			let imgMsg = `[CQ:image,file=file:${path.join(IMAGE_DATA, 'other', `genshin_push.png`)}]`
 			sendMsg(imgMsg, {
 				port: 24334,
 				id: 577587780
