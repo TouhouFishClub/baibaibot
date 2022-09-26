@@ -198,7 +198,7 @@ const renderImage = data => {
 <body>
 <div class="main-container">
 	<div class="top-panel">
-		<div class="title">Helper</div>
+		<div class="title">Genshin Helper</div>
 		<div class="check-status">
 			<div class="status-item success">
 				<div class="status-label">
