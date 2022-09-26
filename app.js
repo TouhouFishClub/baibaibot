@@ -102,11 +102,11 @@ const checkAuth = (req, res) => new Promise((resolve, reject) => {
 })
 
 app.get('/pushMsg', (req, res) => {
-	console.log('\n\n\n=======')
-	console.log(req)
-	console.log(req.query)
-	analyzerMessage(req.query.message)
-	console.log('=======\n\n\n')
+	// console.log('\n\n\n=======')
+	// console.log(req)
+	// console.log(req.query)
+	// analyzerMessage(req.query.message)
+	// console.log('=======\n\n\n')
 	res.send('ok')
 })
 
