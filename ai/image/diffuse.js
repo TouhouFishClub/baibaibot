@@ -13,6 +13,7 @@ function diffuseReply(content,gid,qq,callback,waifu){
     version = "9e767fbac45bea05d5e1823f737f927856c613e18cbc8d9068bafdc6d600a0f7"
   }
   var body1 = '{"version": "'+version+'", "input": {"prompt": "'+content+'"}}';
+  console.log(body1)
   request({
     url: url,
     method: "POST",
