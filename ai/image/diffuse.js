@@ -3,12 +3,16 @@ var request = require('request');
 const {secret} = require("../../secret");
 
 
-function diffuseReply(content,gid,qq,callback){
+function diffuseReply(content,gid,qq,callback,waifu){
   var apikeylist = secret.u2;
   var apikey = apikeylist[Math.floor(Math.random()*apikeylist.length)];
   content = content.trim()
   var url = 'https://api.replicate.com/v1/predictions'
-  var body1 = '{"version": "a9758cbfbd5f3c2094457d996681af52552901775aa2d6dd0b17fd15df959bef", "input": {"prompt": "'+content+'"}}';
+  var version = "a9758cbfbd5f3c2094457d996681af52552901775aa2d6dd0b17fd15df959bef";
+  if(waifu){
+    version = "9e767fbac45bea05d5e1823f737f927856c613e18cbc8d9068bafdc6d600a0f7"
+  }
+  var body1 = '{"version": '+version+', "input": {"prompt": "'+content+'"}}';
   request({
     url: url,
     method: "POST",
