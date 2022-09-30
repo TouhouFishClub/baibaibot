@@ -240,7 +240,7 @@ const renderImage = data => {
 			${
 				user.error 
 					? 
-					`<div class="info-line">签到状态: ${user.status}</div>` 
+					`<div class="info-line">${user.error}</div>` 
 					: 
 					`
 					<div class="user-top">
