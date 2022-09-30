@@ -19,10 +19,9 @@ const emojiSet = new Set([
 ])
 
 const analyzerMessage = msg => {
-	console.log(`=======\n\n\n${msg}\n\n\n=======`)
+	// console.log(`=======\n\n\n${msg}\n\n\n=======`)
 	let out = {}, users = [], userInfo = {}, analyzerUser = false
 	msg.split('\n').forEach(line => {
-		console.log('=>', line)
 		if(analyzerUser) {
 			if(line.trim().startsWith('🔅')) {
 				// 🔅{nickname} {level} {region_name}
@@ -84,8 +83,7 @@ const analyzerMessage = msg => {
 		}
 	})
 	users.push(userInfo)
-
-	out.users = users.filter(x => x.nickname)
+	out.users = users.filter(x => x.nickname || x.error)
 	let update = new Date()
 	out.dateStr = `${update.getFullYear()}-${addZero(update.getMonth() + 1)}-${addZero(update.getDate())} ${update.getHours()}:${addZero(update.getMinutes())}:${addZero(update.getSeconds())}`
 	console.log(out)
