@@ -22,6 +22,7 @@ const analyzerMessage = msg => {
 	console.log(`=======\n\n\n${msg}\n\n\n=======`)
 	let out = {}, users = [], userInfo = {}, analyzerUser = false
 	msg.split('\n').forEach(line => {
+		console.log('=>', line)
 		if(analyzerUser) {
 			if(line.trim().startsWith('🔅')) {
 				// 🔅{nickname} {level} {region_name}
@@ -62,12 +63,13 @@ const analyzerMessage = msg => {
 				userInfo.current_mora = line.split(':')[1].trim()
 				return
 			}
+			if(line.indexOf('失效') > -1) {
+				userInfo.error = line.trim()
+				return
+			}
 			if(line.trim().startsWith('🌈')) {
 				users.push(userInfo)
 				userInfo = {}
-			}
-			if(line.indexOf('失效') > -1) {
-				userInfo.error = line.trim()
 			}
 		} else {
 			if(line.trim().startsWith('#')) {
@@ -82,7 +84,7 @@ const analyzerMessage = msg => {
 		}
 	})
 	users.push(userInfo)
-	
+
 	out.users = users.filter(x => x.nickname)
 	let update = new Date()
 	out.dateStr = `${update.getFullYear()}-${addZero(update.getMonth() + 1)}-${addZero(update.getDate())} ${update.getHours()}:${addZero(update.getMinutes())}:${addZero(update.getSeconds())}`
