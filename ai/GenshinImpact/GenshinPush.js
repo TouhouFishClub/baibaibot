@@ -81,6 +81,8 @@ const analyzerMessage = msg => {
 			}
 		}
 	})
+	users.push(userInfo)
+	
 	out.users = users.filter(x => x.nickname)
 	let update = new Date()
 	out.dateStr = `${update.getFullYear()}-${addZero(update.getMonth() + 1)}-${addZero(update.getDate())} ${update.getHours()}:${addZero(update.getMinutes())}:${addZero(update.getSeconds())}`
