@@ -61,9 +61,12 @@ const analyzerMessage = msg => {
 				userInfo.current_mora = line.split(':')[1].trim()
 				return
 			}
-			if(line.trim().startsWith('###')) {
+			if(line.trim().startsWith('🌈')) {
 				users.push(userInfo)
 				userInfo = {}
+			}
+			if(line.indexOf('失效') > -1) {
+				userInfo.error = line.trim()
 			}
 		} else {
 			if(line.trim().startsWith('#')) {
@@ -78,9 +81,13 @@ const analyzerMessage = msg => {
 		}
 	})
 	out.users = users.filter(x => x.nickname)
+	let update = new Date()
+	out.dateStr = `${update.getFullYear()}-${addZero(update.getMonth() + 1)}-${addZero(update.getDate())} ${update.getHours()}:${addZero(update.getMinutes())}:${addZero(update.getSeconds())}`
 	console.log(out)
 	renderImage(out)
 }
+
+const addZero = num => num < 10 ? `0${num}` : num
 
 const renderImage = data => {
 	let html = `
@@ -123,6 +130,12 @@ const renderImage = data => {
     }
     .main-container .top-panel .title{
     	font-size: 32px;
+    	line-height: 1;
+    	text-align: center;
+    }
+    .main-container .top-panel .date{
+    	font-size: 14px;
+    	margin-top: 10px;
     	line-height: 1;
     	text-align: center;
     }
@@ -199,6 +212,7 @@ const renderImage = data => {
 <div class="main-container">
 	<div class="top-panel">
 		<div class="title">Genshin Helper</div>
+		<div class="date">${ data.dateStr }</div>
 		<div class="check-status">
 			<div class="status-item success">
 				<div class="status-label">
@@ -220,21 +234,29 @@ const renderImage = data => {
 	</div>
 	${data.users.map(user => `
 		<div class="user-card">
-			<div class="user-top">
-				<div class="user-info">
-					<div class="level">${user.level}</div>
-					<div class="nickname">${user.nickname}</div>
-				</div>
-				<div class="user-region">
-					${user.region_name}
-				</div>
-			</div>
-			<div class="info-line">签到状态: ${user.status}</div>
-			<div class="info-line">今天获得: ${user.reward_name}×${user.reward_cnt}</div>
-			<div class="info-line">(本月签到${user.total_sign_day}天)</div>
-			<div class="info-line">旅行者 ${new Date().getMonth() + 1 } 月札记</div>
-			<div class="info-line">原石: ${user.current_primogems}</div>
-			<div class="info-line">摩拉: ${user.current_mora}</div>
+			${
+				user.error 
+					? 
+					`<div class="info-line">签到状态: ${user.status}</div>` 
+					: 
+					`
+					<div class="user-top">
+						<div class="user-info">
+							<div class="level">${user.level}</div>
+							<div class="nickname">${user.nickname}</div>
+						</div>
+						<div class="user-region">
+							${user.region_name}
+						</div>
+					</div>
+					<div class="info-line">签到状态: ${user.status}</div>
+					<div class="info-line">今天获得: ${user.reward_name}×${user.reward_cnt}</div>
+					<div class="info-line">(本月签到${user.total_sign_day}天)</div>
+					<div class="info-line">旅行者 ${new Date().getMonth() + 1 } 月札记</div>
+					<div class="info-line">原石: ${user.current_primogems}</div>
+					<div class="info-line">摩拉: ${user.current_mora}</div>
+					`
+			}
 		</div>
 	`).join('')}
 </div>
