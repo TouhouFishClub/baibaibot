@@ -19,6 +19,7 @@ const emojiSet = new Set([
 ])
 
 const analyzerMessage = msg => {
+	console.log(`=======\n\n\n${msg}\n\n\n=======`)
 	let out = {}, users = [], userInfo = {}, analyzerUser = false
 	msg.split('\n').forEach(line => {
 		if(analyzerUser) {
