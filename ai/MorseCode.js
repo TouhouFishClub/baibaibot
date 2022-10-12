@@ -69,7 +69,7 @@ const morse = (content, isEncode, callback) => {
 		})
 		callback(`\\${ns.join('\\')}`)
 	} else {
-		let c = content.split('\\').filter(x => x)
+		let c = content.replace(/\//g, '\\').split('\\').filter(x => x)
 		for(let i = 0; i < c.length; i ++){
 			if(decode(c[i])) {
 				ns.push(c[i])
