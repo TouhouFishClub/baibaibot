@@ -98,7 +98,7 @@ const { raffle } = require('./ai/spinach/RedBlueBall')
 // const cov = require('./ai/CoV2020')
 const { cov } = require('./ai/CoV2019ByTianApi')
 const chp = require('./ai/chp')
-const morse = require('./ai/MorseCode')
+const { morse } = require('./ai/MorseCode')
 
 const {actp} = require('./ai/AnimalCrossing/TurnipProphet')
 const { saveDTCPrice } = require('./ai/AnimalCrossing/priceRecord');
