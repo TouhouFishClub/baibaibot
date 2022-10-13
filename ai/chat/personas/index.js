@@ -33,7 +33,7 @@ const analysisChatData = data => {
 				if(/^\d+$/.test(en)){
 					return
 				}
-				msgList.push(en)
+				msgList.push(`${en}`.toLowerCase())
 			})
 
 			msgList.push(filterCQ)
