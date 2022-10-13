@@ -33,7 +33,7 @@ const decodeZhs = code => {
 }
 
 const encodeZhsByUnicode = char => {
-	return char.charCodeAt(0).toString(16).split('').map(x => encode(x)).join(' ')
+	return char.charCodeAt(0).toString(16).split('').map(x => encode(x.toUpperCase())).join(' ')
 }
 
 const decodeZhsByUnicode = code => {
