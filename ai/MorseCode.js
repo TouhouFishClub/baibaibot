@@ -51,7 +51,7 @@ const morse = (content, isEncode, callback) => {
 		return
 	}
 	if(isEncode) {
-		let c = content.toUpperCase(), toUnicode = false
+		let c = content.toUpperCase().trim(), toUnicode = false
 		if(c.startsWith('U')) {
 			toUnicode = true
 			c = c.substring(1)
@@ -71,8 +71,9 @@ const morse = (content, isEncode, callback) => {
 	} else {
 		let c = content.replace(/\//g, '\\').split('\\').filter(x => x)
 		for(let i = 0; i < c.length; i ++){
+			console.log(c[i])
 			if(decode(c[i])) {
-				ns.push(c[i])
+				ns.push(decode(c[i]))
 				continue
 			}
 			if(c[i].split(' ').length > 0 && decodeZhsByUnicode(c[i])) {
