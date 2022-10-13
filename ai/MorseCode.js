@@ -57,7 +57,7 @@ const morse = (content, isEncode, callback) => {
 			c = c.substring(1)
 		}
 		c.split('').forEach(s => {
-			if(/^[ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:,;?='/!-_"()$&@]+$/.test(c)) {
+			if(/^[ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:,;?='/!-_"()$&@]+$/.test(s)) {
 				ns.push(encode(s))
 			} else {
 				if(toUnicode) {
