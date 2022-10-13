@@ -1594,7 +1594,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(rcontent.startsWith("魔法少女")){
-  	novelAI(callback);   
+  	novelAI(callback,content);   
 	return;
   }	
 
