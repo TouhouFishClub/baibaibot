@@ -1,7 +1,7 @@
 var fs = require('fs');
 var request = require('request');
 const {secret} = require("../../secret");
-
+var base64ToImage = require('base64-to-image');
 
 function diffuseReply(content,gid,qq,callback,waifu){
   var apikeylist = secret.u2;
@@ -88,7 +88,11 @@ function diffuseReply(content,gid,qq,callback,waifu){
                 callback(content+'\n'+ret);
               });
             }else{
-              callback(content+'\n画图失败');
+              if(waifu){
+                callback(content+'\n绘图失败');
+              }else{
+                callback(content+'\n画图失败');
+              }
             }
           }
         });
@@ -96,6 +100,40 @@ function diffuseReply(content,gid,qq,callback,waifu){
     }
   });
 }
+
+function novelAI(){
+ //  curl -i -X POST -d '{"fn_index":12,"data":["magical girl","","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}' \
+ // -H 'content-type: application/json' -H 'referer: https://25796.gradio.app/' \
+ // -H 'user-agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36' \
+ // https://28113.gradio.app/api/predict/
+  var hostid = 28113;
+  var url = 'https://'+hostid+'.gradio.app/api/predict/';
+  var bd = '{"fn_index":12,"data":["magical girl","","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}'
+  request({
+    url: url,
+    method: "POST",
+    headers:{
+      'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+      'Content-Type':'application/json',
+      'referer': 'https://'+hostid+'.gradio.app/'
+    },
+    body:bd
+  }, function(error, response, resbody) {
+    if (error && error.code) {
+      console.log('pipe error catched!')
+      console.log(error);
+    } else {
+      var data = eval('('+resbody+')');
+      var base64 = data.data[0];
+      var path ='fn123';
+      var optionalObj = {'fileName': 'imageFileName', 'type':'png'};
+      base64ToImage(base64,path,optionalObj);
+    }
+  });
+}
+novelAI()
+
+
 
 
 module.exports={
