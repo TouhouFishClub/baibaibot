@@ -108,13 +108,14 @@ function novelAI(){
  // https://28113.gradio.app/api/predict/
   var hostid = 28113;
   var url = 'https://'+hostid+'.gradio.app/api/predict/';
-  var bd = '{"fn_index":12,"data":["magical girl","","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}'
+  var bd = {"fn_index":12,"data":["magical girl","","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}
+  var bdstr = JSON.stringify(bd);
   request({
     url: url,
     method: "POST",
     headers:{
       'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
-      'Content-Type':'application/json',
+      'content-type':'application/json',
       'referer': 'https://'+hostid+'.gradio.app/'
     },
     body:bd
@@ -123,6 +124,7 @@ function novelAI(){
       console.log('pipe error catched!')
       console.log(error);
     } else {
+      console.log(resbody.substring(0,3000));
       var data = eval('('+resbody+')');
       var base64 = data.data[0];
       var path ='fn123';
