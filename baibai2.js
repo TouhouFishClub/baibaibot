@@ -1593,7 +1593,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(rcontent.startsWith("魔法少女")｛
+  if(rcontent.startsWith("魔法少女"))｛
   	novelAI(callback);   
   ｝	
 
