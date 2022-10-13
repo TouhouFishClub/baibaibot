@@ -51,10 +51,10 @@ const morse = (content, isEncode, callback) => {
 		return
 	}
 	if(isEncode) {
-		let c = content.toUpperCase().trim(), toUnicode = false
+		let c = content.toUpperCase(), toUnicode = false
 		if(c.startsWith('U')) {
 			toUnicode = true
-			c = c.substring(1)
+			c = c.substring(1).trim()
 		}
 		c.split('').forEach(s => {
 			if(/^[ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:,;?='/!-_"()$&@]+$/.test(s)) {
