@@ -6,7 +6,7 @@ var request = require('request');
 let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 
-const {diffuseReply} = require('./ai/image/diffuse')
+const {diffuseReply,novelAI} = require('./ai/image/diffuse')
 
 const { myip } = require('./baibaiConfigs')
 
@@ -1592,6 +1592,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     getLike(from,name,callback);
     return;
   }
+
+  if(rcontent.startsWith("魔法少女")｛
+  	novelAI(callback);   
+  ｝	
 
   if(rcontent.startsWith("画图 ")||rcontent.startsWith("绘图 ")){
     if(new Set([23334, 26334, 28334, 30004, 30014]).has(port)){
