@@ -1596,7 +1596,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(rcontent.startsWith("魔法少女")){
   	novelAI(callback);   
 	return;
-  ｝	
+  }	
 
   if(rcontent.startsWith("画图 ")||rcontent.startsWith("绘图 ")){
     if(new Set([23334, 26334, 28334, 30004, 30014]).has(port)){
