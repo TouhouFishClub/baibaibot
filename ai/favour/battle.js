@@ -1074,6 +1074,10 @@ function regenTimer(){
 }
 
 function regen(){
+
+}
+
+function regen0(){
     var query = {};
     cl_user.find().toArray(function(err, userArr) {
       for(var i=0;i<userArr.length;i++){
