@@ -156,6 +156,7 @@ function naifu(callback,content){
       'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
       'content-type':'application/json',
     },
+    proxy: 'http://192.168.17.241:2346',
     body:JSON.stringify(bd)
   }, function(error, response, resbody) {
     if (error && error.code) {
