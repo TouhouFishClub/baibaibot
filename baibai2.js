@@ -1597,7 +1597,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   	naifu(callback,rcontent);
 	return;
   }
-  if(rcontent.startsWith("少女魔法")){
+  if(rcontent.startsWith("马猴烧酒")){
     novelAI(callback,rcontent);
     return;
   }

@@ -109,11 +109,9 @@ function novelAI(callback,content){
  // -H 'content-type: application/json' -H 'referer: https://25796.gradio.app/' \
  // -H 'user-agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36' \
  // https://28113.gradio.app/api/predict/
-  var hostid = 20261;
-
+  var hostid = 10214;
   var url = 'https://'+hostid+'.gradio.app/api/predict/';
   var bd = {"fn_index":12,"data":[content.substring(4).trim(),"","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}
-  var bdstr = JSON.stringify(bd);
   request({
     url: url,
     method: "POST",
@@ -135,7 +133,7 @@ function novelAI(callback,content){
       let dataBuffer = new Buffer(base64,'base64');
       sendImageMsgBuffer(dataBuffer, 'coin_'+new Date().getTime(), 'coin', msg => {
         callback(msg)
-      })
+      },content,'MF');
     }
   });
 }
@@ -144,7 +142,7 @@ function novelAI(callback,content){
 
 
 function naifu(callback,content){
-  content=content.substring(4);
+  content=content.substring(4).trim();
   var url = 'https://rebate-aggressive-rehab-author.trycloudflare.com/generate-stream';
   var seed = Math.floor(Math.random()*4294967295)
   var bd = {"prompt":"masterpiece, best quality, "+content,"width":512,"height":768,"scale":12,"sampler":"k_euler_ancestral","steps":20,"seed":seed,"n_samples":1,"ucPreset":0,"uc":"lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"}
@@ -174,7 +172,7 @@ function naifu(callback,content){
       let dataBuffer = new Buffer(imgb64,'base64');
       sendImageMsgBuffer(dataBuffer, seed+"_"+fnc+"_"+now, 'naifu', msg => {
         callback(msg)
-      },content+'\n'+seed+'\n','MF');
+      },content,'MF');
     }
   });
 }
