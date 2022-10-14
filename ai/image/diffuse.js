@@ -147,7 +147,7 @@ function naifu(callback,content){
   var seed = Math.floor(Math.random()*4294967295)
   var bd = {"prompt":"masterpiece, best quality, "+content,"width":512,"height":768,"scale":12,"sampler":"k_euler_ancestral","steps":20,"seed":seed,"n_samples":1,"ucPreset":0,"uc":"lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"}
   var now = new Date().getTime();
-  var fnc = content.replace(/,/g,'-').replace(/\//g,')').split('\n')[0].substring(0,150);
+  var fnc = encodeURIComponent(content).substring(0,100);
   var fn = "public/png/"+seed+"_"+fnc+"_"+now;
   var imgreq = request({
     url: url,
