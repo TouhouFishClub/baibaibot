@@ -2,6 +2,9 @@ var fs = require('fs');
 var request = require('request');
 const {secret} = require("../../secret");
 var base64ToImage = require('base64-to-image');
+const b64img = require('node-base64-image');
+var path = require('path');
+const { sendImageMsgBuffer } = require(path.join(__dirname, '../../cq/sendImage.js'))
 
 function diffuseReply(content,gid,qq,callback,waifu){
   var apikeylist = secret.u2;
@@ -101,14 +104,15 @@ function diffuseReply(content,gid,qq,callback,waifu){
   });
 }
 
-function novelAI(){
+function novelAI(callback,content){
  //  curl -i -X POST -d '{"fn_index":12,"data":["magical girl","","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}' \
  // -H 'content-type: application/json' -H 'referer: https://25796.gradio.app/' \
  // -H 'user-agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36' \
  // https://28113.gradio.app/api/predict/
-  var hostid = 28113;
+  var hostid = 20261;
+
   var url = 'https://'+hostid+'.gradio.app/api/predict/';
-  var bd = {"fn_index":12,"data":["magical girl","","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}
+  var bd = {"fn_index":12,"data":[content.substring(4).trim(),"","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}
   var bdstr = JSON.stringify(bd);
   request({
     url: url,
@@ -118,26 +122,66 @@ function novelAI(){
       'content-type':'application/json',
       'referer': 'https://'+hostid+'.gradio.app/'
     },
-    body:bd
+    body:JSON.stringify(bd)
   }, function(error, response, resbody) {
     if (error && error.code) {
       console.log('pipe error catched!')
       console.log(error);
     } else {
-      console.log(resbody.substring(0,3000));
       var data = eval('('+resbody+')');
-      var base64 = data.data[0];
-      var path ='fn123';
-      var optionalObj = {'fileName': 'imageFileName', 'type':'png'};
-      base64ToImage(base64,path,optionalObj);
+      var base64 = data.data[0][0].substring(22);
+      console.log(base64.substring(0,300));
+      var now = new Date().getTime();
+      let dataBuffer = new Buffer(base64,'base64');
+      sendImageMsgBuffer(dataBuffer, 'coin_'+new Date().getTime(), 'coin', msg => {
+        callback(msg)
+      })
     }
   });
 }
-novelAI()
+//novelAI(function(r){console.log(r)})
 
 
+
+function naifu(callback,content){
+  content=content.substring(4);
+  var url = 'https://rebate-aggressive-rehab-author.trycloudflare.com/generate-stream';
+  var seed = Math.floor(Math.random()*4294967295)
+  var bd = {"prompt":"masterpiece, best quality, "+content,"width":512,"height":768,"scale":12,"sampler":"k_euler_ancestral","steps":20,"seed":seed,"n_samples":1,"ucPreset":0,"uc":"lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"}
+  var now = new Date().getTime();
+  var fnc = content.replace(/,/g,'-');
+  var fn = "public/png/"+seed+"_"+fnc+"_"+now;
+  var imgreq = request({
+    url: url,
+    method: "POST",
+    headers:{
+      'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+      'content-type':'application/json',
+    },
+    body:JSON.stringify(bd)
+  }, function(error, response, resbody) {
+    if (error && error.code) {
+      console.log('pipe error catched!')
+      console.log(error);
+    } else {
+    }
+  }).pipe(fs.createWriteStream(fn));
+  imgreq.on('close', function () {
+    if (fs.existsSync(fn)) {
+      var data = fs.readFileSync(fn,"utf-8")
+      var da = data.split('\n');
+      var imgb64 = da[2].substring(5);
+      let dataBuffer = new Buffer(imgb64,'base64');
+      sendImageMsgBuffer(dataBuffer, seed+"_"+fnc+"_"+now, 'naifu', msg => {
+        callback(msg)
+      },content+'\n'+seed+'\n','MF');
+    }
+  });
+}
 
 
 module.exports={
-  diffuseReply
+  novelAI,
+  diffuseReply,
+  naifu
 }
