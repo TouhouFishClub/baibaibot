@@ -184,7 +184,7 @@ function naifu(callback,content,novelaitoken){
         var checkimgurl = 'http://localhost:11001/url='+encodeURIComponent(imgurl);
 
         request({
-          url: url,
+          url: checkimgurl,
           headers:{
 
           }
