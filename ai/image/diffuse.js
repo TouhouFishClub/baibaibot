@@ -182,32 +182,37 @@ function naifu(callback,content,novelaitoken){
   });
 }
 
-
+var novelAIToken = undefined;
 async function novelAIDiffuse(content,gid,qq,callback){
-  var url = 'https://api.novelai.net/user/login'
-  var novelAIEml = secret.u4[0];
-  var novelAIPwd = secret.u4[1];
-  var pwdkey = calcAccessKey(novelAIEml,novelAIPwd);
-  var bd = {"key":pwdkey};
-  request({
-    url: url,
-    method: "POST",
-    headers:{
-      'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
-      'content-type':'application/json',
-      'referer': 'https://novelai.net/'
-    },
-    body:JSON.stringify(bd)
-  }, function(error, response, resbody) {
-    if (error && error.code) {
-      console.log('pipe error catched!')
-      console.log(error);
-    } else {
-      var data = eval('('+resbody+')');
-      var token = data.accessToken;
-      naifu(callback,content,token){
-    }
-  });
+  if(novelAIToken)  {
+    naifu(callback, content, novelAIToken)
+  }else {
+   var url = 'https://api.novelai.net/user/login'
+    var novelAIEml = secret.u4[0];
+    var novelAIPwd = secret.u4[1];
+    var pwdkey = calcAccessKey(novelAIEml, novelAIPwd);
+    var bd = {"key": pwdkey};
+    request({
+      url: url,
+      method: "POST",
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+        'content-type': 'application/json',
+        'referer': 'https://novelai.net/'
+      },
+      body: JSON.stringify(bd)
+    }, function (error, response, resbody) {
+      if (error && error.code) {
+        console.log('pipe error catched!')
+        console.log(error);
+      } else {
+        var data = eval('(' + resbody + ')');
+        var token = data.accessToken;
+        novelAIToken = token;
+        naifu(callback, content, token)
+      }
+    });
+  }
 }
 
 const sodium = require('libsodium-wrappers');
