@@ -194,7 +194,7 @@ function naifu(callback,content,novelaitoken){
             console.log(error);
           } else {
             if(checkresbody==0){
-              callback('NSFW!\n'+seed+"_"+fnc+"_"+now);
+              callback('NSFW!\n'+seed+"_"+fnc+"_"+now+'\nrate:'+rate);
             }else{
               callback(msg)
             }
