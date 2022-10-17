@@ -11,6 +11,8 @@ const parser = new xml2js.Parser()
 let filterDataStorage = {}
 let itemUpgradeData = []
 let upgradeOptionsetHash = {}
+let npcInfoHash = {}
+let gemInfo = {}
 
 const readXmlParse = filePath => new Promise((resolve, reject) => {
 	console.log(`read file ${filePath}`)
@@ -46,6 +48,10 @@ const filterItem = async () => {
 	let filterData = {}
 	xmlData.forEach((data, index) => {
 		data.Items.Mabi_Item.forEach(item => {
+			if(item.$.Category && item.$.Category.startsWith('/jewel')) {
+				gemInfo[item.$.ID] = txtData[index][item.$.Text_Name1]
+				return
+			}
 			if(item.$.Par_UpgradeMax && item.$.Par_UpgradeMax > 0 && (!item.$.Locale || item.$.Locale === 'china')) {
 				let localeNameCn = item.$.Text_Name1 ? txtData[index][item.$.Text_Name1] : 'NULL'
 				if(
@@ -126,6 +132,22 @@ const formatOptionset = async () => {
 	return hash
 }
 
+const formatNpcInfo = async () => {
+	let xmlData = await readXmlParse(path.join(__dirname, 'data', `npcinfo.xml`))
+	let txt = fs.readFileSync(path.join(__dirname, 'data', `npcinfo.china.txt`), 'utf-8')
+
+	let transform = {}
+	txt.split('\n').forEach(val => {
+		let sp = val.split('\t')
+		transform[`_LT[xml.npcinfo.${sp[0].trim()}]`] = sp[1]
+	})
+	let hash = {}
+	xmlData.NpcInfoList.NpcInfo.forEach(x => {
+		hash[x.$.GeneralName] = transform[x.$.LocalName]
+	})
+	return hash
+}
+
 const matchEquipUpgrade = async Category => {
 	if(itemUpgradeData.length === 0) {
 		itemUpgradeData = await formatUpgradeInfo()
@@ -146,6 +168,9 @@ const searchEquipUpgrade = async (content, callback) => {
 	}
 	if(Object.keys(upgradeOptionsetHash).length === 0) {
 		upgradeOptionsetHash = await formatOptionset()
+	}
+	if(Object.keys(npcInfoHash).length === 0) {
+		npcInfoHash = await formatNpcInfo()
 	}
 	let filterEq
 	if(/^\d+$/.test(content)) {
@@ -168,7 +193,10 @@ const searchEquipUpgrade = async (content, callback) => {
 // 定义武器升级详细信息, 返回HTML
 const analyzerEffect = effectStr => {
 	if(effectStr.startsWith('modify')) {
-		let [type, info] = effectStr.substring(7, effectStr.length - 1).split(',').map(x => x.trim())
+		let [type, info, ...arg] = effectStr.substring(7, effectStr.length - 1).split(',').map(x => x.trim())
+		if(type == 'chain_casting') {
+			info = arg[0]
+		}
 		let typeCn = {
 			'balance': '平衡性',
 			'critical': '暴击率',
@@ -204,6 +232,9 @@ const analyzerEffect = effectStr => {
 	// 释放数据
 	if (effectStr.startsWith('use_optionset')){
 		return `<span style="color: #1083FF">${upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)]}</span>`
+	}
+	if (effectStr.startsWith('luckyupgrade')) {
+		return `<span style="color: #1083FF">铁匠改造数据[${effectStr.substring(13, effectStr.length - 1)}]</span>`
 	}
 	return effectStr
 }
@@ -305,12 +336,33 @@ const renderImage = (targetItem, upgradeInfos) => {
 				<br/>
 				效果: ${x.effect.split(';').map(ef => analyzerEffect(ef)).join(' ')}
 				<br/>
-				改造NPC: ${x.available_npc}
+				改造NPC: ${x.available_npc.split(';').map(x => `${npcInfoHash[x] || x}`).join(', ')}
+				<br/>
+				需要熟练度: ${x.need_ep}
+				<br/>
+				需要金币: ${x.need_gold}
 			</div>
 		`).join('')}
 	</div>
 	<div class="upgrade-card">
-		${gemUpgrade.map(x => `<div class="upgrade-item">（0 ~ 0）${x.localnameCn}: ${x.descCn}</div>`).join('')}
+		${gemUpgrade.map(x => `
+			<div class="upgrade-item">
+				（0 ~ 0）${x.localnameCn}: ${x.descCn}
+				<br/>
+				效果: ${x.effect.split(';').map(ef => analyzerEffect(ef)).join(' ')}
+				<br/>
+				改造NPC: ${x.available_npc.split(';').map(x => `${npcInfoHash[x] || x}`).join(', ')}
+				<br/>
+				需要宝石: ${x.need_gem.split(';').map(gemItem => {
+					let [gemId, size] = gemItem.split(',').map(x => x.trim()) 
+					return `${gemInfo[gemId] || gemId}(${size})`
+				}).join(', ')}
+				<br/>
+				需要熟练度: ${x.need_ep}
+				<br/>
+				需要金币: ${x.need_gold}
+			</div>
+		`).join('')}
 	</div>
 </div>
   
@@ -334,4 +386,4 @@ const renderImage = (targetItem, upgradeInfos) => {
 // searchEquipUpgrade('41440', d => {console.log(d)})
 // 这是采集用小刀
 // searchEquipUpgrade('40023', d => {console.log(d)})
-searchEquipUpgrade('毁灭弓', d => {console.log(d)})
+searchEquipUpgrade('死神先锋', d => {console.log(d)})
