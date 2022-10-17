@@ -231,7 +231,7 @@ const analyzerEffect = effectStr => {
 	}
 	// 释放数据
 	if (effectStr.startsWith('use_optionset')){
-		return upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)].split('\n').map(x => `<div class="effect-item" style="color: #57aeff">${x}</div>`).join('')
+		return upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)] ? upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)].split('\\n').map(x => `<div class="effect-item" style="color: #57aeff">${x}</div>`).join('') : effectStr
 	}
 	if (effectStr.startsWith('luckyupgrade')) {
 		return `<div class="effect-item" style="color: #57aeff">铁匠改造数据[${effectStr.substring(13, effectStr.length - 1)}]</div>`
@@ -453,7 +453,7 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 // searchEquipUpgrade('41440', d => {console.log(d)})
 // 这是采集用小刀
 // searchEquipUpgrade('40023', d => {console.log(d)})
-// searchEquipUpgrade('毁灭弓', d => {console.log(d)})
+// searchEquipUpgrade(1,2,'死神魔术师', d => {console.log(d)})
 module.exports = {
 	searchEquipUpgrade
 }
