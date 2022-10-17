@@ -149,6 +149,7 @@ function naifu(callback,content,novelaitoken){
   }
   var seed = Math.floor(Math.random()*4294967295)
   var bd = {"prompt":"masterpiece, best quality, "+content,"width":512,"height":768,"scale":12,"sampler":"k_euler_ancestral","steps":20,"seed":seed,"n_samples":1,"ucPreset":0,"uc":"lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"}
+  bd.input=bd.prompt;
   var now = new Date().getTime();
   var fnc = '';
   var fn = "public/png/"+seed+"_"+fnc+"_"+now;
