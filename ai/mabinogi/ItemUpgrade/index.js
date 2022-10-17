@@ -162,7 +162,7 @@ const matchEquipUpgrade = async Category => {
 	return out
 }
 
-const searchEquipUpgrade = async (content, callback) => {
+const searchEquipUpgrade = async (qq, group, content, callback) => {
 	if(Object.keys(filterDataStorage).length === 0) {
 		filterDataStorage = await filterItem()
 	}
@@ -180,14 +180,14 @@ const searchEquipUpgrade = async (content, callback) => {
 	}
 	if(filterEq.length === 1) {
 		let meu = await matchEquipUpgrade(filterEq[0].Category)
-		renderImage(filterEq[0], meu)
+		renderImage(filterEq[0], meu, callback)
 		return
 	}
 	if(filterEq.length === 0) {
 		callback(`未找到${content}`)
 		return
 	}
-	callback(filterEq.splice(0, 100).map(x => `meu ${x.ID} | ${x.localeNameCn}`).join('\n'))
+	callback(filterEq.splice(0, 30).map(x => `meu ${x.ID} | ${x.localeNameCn}`).join('\n'))
 }
 
 // 定义武器升级详细信息, 返回HTML
@@ -239,7 +239,7 @@ const analyzerEffect = effectStr => {
 	return effectStr
 }
 
-const renderImage = (targetItem, upgradeInfos) => {
+const renderImage = (targetItem, upgradeInfos, callback) => {
 	console.log(upgradeInfos.map(x => `[${x.id}]（${x.upgraded_min} ~ ${x.upgraded_max}）${x.localnameCn}: ${x.descCn}`).join('\n'))
 	console.log(upgradeInfos.length)
 	let normalUpgrade = [], gemUpgrade = []
@@ -430,14 +430,16 @@ const renderImage = (targetItem, upgradeInfos) => {
   
 </body>
 </html>`
-	// let output = path.join(IMAGE_DATA, 'other', `MabiItemUpgrade.png`)
-	let output = './MabiItemUpgrade.png'
+	let output = path.join(IMAGE_DATA, 'mabi_other', `MabiItemUpgrade.png`)
+	// let output = './MabiItemUpgrade.png'
 	nodeHtmlToImage({
 		output,
 		html
 	})
 		.then(() => {
 			console.log(`保存MabiItemUpgrade.png成功！`)
+			let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiItemUpgrade.png`)}]`
+			callback(imgMsg)
 		})
 
 }
@@ -448,4 +450,7 @@ const renderImage = (targetItem, upgradeInfos) => {
 // searchEquipUpgrade('41440', d => {console.log(d)})
 // 这是采集用小刀
 // searchEquipUpgrade('40023', d => {console.log(d)})
-searchEquipUpgrade('毁灭弓', d => {console.log(d)})
+// searchEquipUpgrade('毁灭弓', d => {console.log(d)})
+module.exports = {
+	searchEquipUpgrade
+}

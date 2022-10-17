@@ -143,6 +143,7 @@ const { ygo } = require('./ai/ygo/ygo')
 
 const { FerryTimetable } = require('./ai/mabinogi/ferryTimetable')
 const { BossWork } = require('./ai/mabinogi/BossWork/BossWork')
+const { searchEquipUpgrade } = require('./ai/mabinogi/ItemUpgrade/index')
 
 const {handleDSReply,handleVoteReply} = require('./ai/games/ds/dsmain')
 
@@ -1575,6 +1576,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(fie == 'opt' && fi != 'opts'){
     op(from, name, con.substring(3).trim(), 'image', callback);
+    return;
+  }
+
+  if(fie == 'meu'){
+    searchEquipUpgrade(from, groupid, con.substring(3).trim(), callback);
     return;
   }
 
