@@ -227,14 +227,14 @@ const analyzerEffect = effectStr => {
 			'magic_defense' : '魔法防御',
 			'magic_protect': '魔法保护'
 		}[type] || type
-		return `<span style="color: ${info > 0 ? '#1083FF' : '#FB0007'}">${typeCn} ${info > 0 ? '+' : ''}${info}</span>`
+		return `<div class="effect-item" style="color: ${info > 0 ? '#57aeff' : '#fb675f'}">${typeCn} ${info > 0 ? '+' : ''}${info}</div>`
 	}
 	// 释放数据
 	if (effectStr.startsWith('use_optionset')){
-		return `<span style="color: #1083FF">${upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)]}</span>`
+		return upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)].split('\n').map(x => `<div class="effect-item" style="color: #57aeff">${x}</div>`).join('')
 	}
 	if (effectStr.startsWith('luckyupgrade')) {
-		return `<span style="color: #1083FF">铁匠改造数据[${effectStr.substring(13, effectStr.length - 1)}]</span>`
+		return `<div class="effect-item" style="color: #57aeff">铁匠改造数据[${effectStr.substring(13, effectStr.length - 1)}]</div>`
 	}
 	return effectStr
 }
@@ -270,97 +270,159 @@ const renderImage = (targetItem, upgradeInfos) => {
       line-height: 1.4;
     }
     body {
-      width: 800px;
+      width: 840px;
       min-height: 20px;
       padding: 20px;
       box-sizing: border-box;
-      background: #806637;
+      background: #222;
 			font-family: HANYIWENHEI;
     }
     .main-container {
     	min-height: 20px;
     }
-    .main-container .top-panel{
-    	padding: 10px 20px;
-    	background-color: #eee3cd;
-    	border-radius: 8px;
+    .main-container .equip-info{
+    	display: flex;
+    	justify-content: space-between;
+    	align-content: flex-end;
+    	border-bottom: 2px solid #fff;
+    	color: #fff;
+    }
+    .main-container .equip-info .equip-name{
+    	font-size: 40px;
+    	line-height: 1.4;
+    }
+    .main-container .upgrade-group{
+    	margin-top: 20px;
+    }
+    .main-container .upgrade-group .upgrade-item{
+    	display: flex;
+    	align-items: stretch;
+    	color: #fff;
+    	background: #000;
+    	padding: 10px 0;
+    }
+    .main-container .upgrade-group .upgrade-item.cut-top-border{
+    	border-top: 8px solid #999;
+    }
+    .main-container .upgrade-group .upgrade-item:nth-child(odd){
+    	background: #444;
+    }
+    .main-container .upgrade-group .upgrade-item .item-col{
     	display: flex;
     	flex-direction: column;
-    	align-items: stretch;
-    	justify-content: flex-start;
+    	align-items: flex-start;
+    	justify-content: center;
+    	box-sizing: border-box;
+    	padding: 0 10px;
+    	border-right: 1px dashed #999;
     }
-    .main-container .top-panel .title{
-    	font-size: 32px;
-    	line-height: 1;
-    	text-align: center;
+    .main-container .upgrade-group .upgrade-item .col-1{
+    	width: 200px;
     }
-    .main-container .top-panel .date{
+    .main-container .upgrade-group .upgrade-item .col-2{
+    	width: 150px;
+    }
+    .main-container .upgrade-group .upgrade-item .col-3{
+    	width: 50px;
+    	font-size: 24px;
+    	align-items: center;
+    }
+    .main-container .upgrade-group .upgrade-item .col-4{
+    	width: 100px;
+    	font-size: 20px;
+    	align-items: center;
+    	color: #ffd94c;
+    }
+    .main-container .upgrade-group .upgrade-item .col-5{
+    	width: 200px;
     	font-size: 14px;
-    	margin-top: 10px;
-    	line-height: 1;
-    	text-align: center;
     }
-    
-    .main-container .upgrade-card{
-    	padding: 10px 20px;
-    	background-color: #eee3cd;
+    .main-container .upgrade-group .upgrade-item .item-step-info{
+    	width: 100px;
     	display: flex;
-    	flex-direction: column;
+    	flex-direction: row;
     	align-items: stretch;
-    	justify-content: flex-start;
-    	margin-top: 15px;
-    	border-radius: 8px;
-    	position: relative;
     }
-    
-    .main-container .upgrade-card .upgrade-item{
+    .main-container .upgrade-group .upgrade-item .need-gem{
+    	width: 100px;
     	font-size: 14px;
-    	line-height: 20px;
     }
-    
-    .main-container .upgrade-card .upgrade-item + .upgrade-item{
-    	border-top: 1px dashed #000;
+    .main-container .upgrade-group .upgrade-item .item-step-info .step-item{
+    	width: 20px;
+    	display: flex;
+    	align-items: center;
+    	justify-content: center;
+    }
+    .main-container .upgrade-group .upgrade-item .item-step-info .step-item.active{
+    	background: #57aeff;
+    	color: #fff;
+    }
+    .main-container .upgrade-group .upgrade-item .upgrade-label{
+    	font-size: 24px;
+    }
+    .main-container .upgrade-group .upgrade-item .upgrade-desc{
+    	font-size: 12px;
+    	color: #999;
+    }
+    .main-container .upgrade-group .upgrade-item .effect-item{
+    	font-size: 16px;
     }
   </style>
 </head>
 <body>
 <div class="main-container">
-	<div class="top-panel">
-		<div class="title">${targetItem.localeNameCn}</div>
-		<div class="date">改造数据</div>
+	<div class="equip-info">
+		<div class="equip-name">${targetItem.localeNameCn}</div>
 	</div>
-	<div class="upgrade-card">
+	<div class="upgrade-group">
 		${normalUpgrade.map(x => `
 			<div class="upgrade-item">
-				（${x.upgraded_min} ~ ${x.upgraded_max}）${x.localnameCn}: ${x.descCn}
-				<br/>
-				效果: ${x.effect.split(';').map(ef => analyzerEffect(ef)).join(' ')}
-				<br/>
-				改造NPC: ${x.available_npc.split(';').map(x => `${npcInfoHash[x] || x}`).join(', ')}
-				<br/>
-				需要熟练度: ${x.need_ep}
-				<br/>
-				需要金币: ${x.need_gold}
+				<div class="item-col col-1">
+					<div class="upgrade-label">${x.localnameCn}</div>
+					<div class="upgrade-desc">${x.descCn}</div>
+				</div>
+				<div class="item-col col-2">
+					${x.effect.split(';').map(ef => analyzerEffect(ef)).join(' ')}
+				</div>
+				<div class="item-col col-3">
+					${x.need_ep}
+				</div>
+				<div class="item-col col-4">
+					${x.need_gold}
+				</div>
+				<div class="item-col col-5">
+					${x.available_npc.split(';').map(x => `${npcInfoHash[x] || x}`).join(', ')}
+				</div>
+				<div class="item-step-info">
+					${[0,1,2,3,4].map(i => (x.upgraded_min <= i && i <= x.upgraded_max) ? `<div class="step-item active">${i}</div>` : `<div class="step-item">${i}</div>`).join('')}
+				</div>
 			</div>
 		`).join('')}
-	</div>
-	<div class="upgrade-card">
-		${gemUpgrade.map(x => `
-			<div class="upgrade-item">
-				（0 ~ 0）${x.localnameCn}: ${x.descCn}
-				<br/>
-				效果: ${x.effect.split(';').map(ef => analyzerEffect(ef)).join(' ')}
-				<br/>
-				改造NPC: ${x.available_npc.split(';').map(x => `${npcInfoHash[x] || x}`).join(', ')}
-				<br/>
-				需要宝石: ${x.need_gem.split(';').map(gemItem => {
-					let [gemId, size] = gemItem.split(',').map(x => x.trim()) 
-					return `${gemInfo[gemId] || gemId}(${size})`
-				}).join(', ')}
-				<br/>
-				需要熟练度: ${x.need_ep}
-				<br/>
-				需要金币: ${x.need_gold}
+		
+		${gemUpgrade.map((x, i) => `
+			<div class="upgrade-item${i ? '' : ' cut-top-border'}">
+				<div class="item-col col-1">
+					<div class="upgrade-label">${x.localnameCn}</div>
+					<div class="upgrade-desc">${x.descCn}</div>
+				</div>
+				<div class="item-col col-2">
+					${x.effect.split(';').map(ef => analyzerEffect(ef)).join(' ')}
+				</div>
+				<div class="item-col col-3">
+					${x.need_ep}
+				</div>
+				<div class="item-col col-4">
+					${x.need_gold}
+				</div>
+				<div class="item-col col-5">
+					${x.available_npc.split(';').map(x => `${npcInfoHash[x] || x}`).join(', ')}
+				</div>
+				<div class="need-gem">
+					${x.need_gem.split(';').map(gemItem => {
+						let [gemId, size] = gemItem.split(',').map(x => x.trim())
+						return `${gemInfo[gemId] || gemId}(${size})`
+					}).join('<br/>')}
+				</div>
 			</div>
 		`).join('')}
 	</div>
@@ -386,4 +448,4 @@ const renderImage = (targetItem, upgradeInfos) => {
 // searchEquipUpgrade('41440', d => {console.log(d)})
 // 这是采集用小刀
 // searchEquipUpgrade('40023', d => {console.log(d)})
-searchEquipUpgrade('死神先锋', d => {console.log(d)})
+searchEquipUpgrade('毁灭弓', d => {console.log(d)})
