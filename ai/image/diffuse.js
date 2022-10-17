@@ -175,12 +175,31 @@ function naifu(callback,content,novelaitoken){
   }).pipe(fs.createWriteStream(fn));
   imgreq.on('close', function () {
     if (fs.existsSync(fn)) {
-      var data = fs.readFileSync(fn,"utf-8")
+      var data = fs.readFileSync(fn,"utf-8");
       var da = data.split('\n');
       var imgb64 = da[2].substring(5);
       let dataBuffer = new Buffer(imgb64,'base64');
       sendImageMsgBuffer(dataBuffer, seed+"_"+fnc+"_"+now, 'naifu', msg => {
-        callback(msg)
+        var imgurl = 'http://192.168.17.236:4101/send/naifu/'+seed+"_"+fnc+"_"+now+'.png';
+        var checkimgurl = 'http://localhost:11001/url='+encodeURIComponent(imgurl);
+
+        request({
+          url: url,
+          headers:{
+
+          }
+        }, function(error, response, checkresbody) {
+          if (error && error.code) {
+            console.log('pipe error catched!')
+            console.log(error);
+          } else {
+            if(checkresbody==0){
+              callback('NSFW!\n'+seed+"_"+fnc+"_"+now);
+            }else{
+              callback(msg)
+            }
+          }
+        })
       },content,'MF');
     }
   });
@@ -214,6 +233,7 @@ async function novelAIDiffuse(content,gid,qq,callback){
         var data = eval('(' + resbody + ')');
         var token = data.accessToken;
         novelAIToken = token;
+        console.log('novelAI login ok:'+token)
         naifu(callback, content, token)
       }
     });
