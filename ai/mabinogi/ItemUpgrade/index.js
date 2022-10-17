@@ -346,6 +346,9 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
     .main-container .upgrade-group .upgrade-item .need-gem{
     	width: 100px;
     	font-size: 14px;
+    	box-sizing: border-box;
+    	padding-left: 5px;
+    	padding-right: 5px;
     }
     .main-container .upgrade-group .upgrade-item .item-step-info .step-item{
     	width: 20px;
