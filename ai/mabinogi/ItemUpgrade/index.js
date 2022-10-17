@@ -10,6 +10,7 @@ const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '
 const parser = new xml2js.Parser()
 let filterDataStorage = {}
 let itemUpgradeData = []
+let upgradeOptionsetHash = {}
 
 const readXmlParse = filePath => new Promise((resolve, reject) => {
 	console.log(`read file ${filePath}`)
@@ -52,10 +53,11 @@ const filterItem = async () => {
 					localeNameCn.indexOf('临时') === -1 &&
 					localeNameCn.indexOf('不开放') === -1 &&
 					localeNameCn.indexOf('禁止') === -1 &&
+					localeNameCn.indexOf('交易') === -1 &&
+					localeNameCn.indexOf('专用') === -1 &&
 					!localeNameCn.startsWith('@') &&
 					!localeNameCn.startsWith('精灵') &&
-					!localeNameCn.startsWith('交易') &&
-					!localeNameCn.startsWith('专用')
+					!localeNameCn.startsWith('租赁')
 				) {
 					// console.log(item.$.Par_UpgradeMax, `${txtData[index][item.$.Text_Name1]}`)
 					filterData[item.$.ID] = Object.assign(item.$, {
@@ -108,6 +110,22 @@ const formatUpgradeInfo = async () => {
 	}))
 }
 
+const formatOptionset = async () => {
+	let xmlData = await readXmlParse(path.join(__dirname, 'data', `optionset.xml`))
+	let txt = fs.readFileSync(path.join(__dirname, 'data', `optionset.china.txt`), 'utf-8')
+
+	let transform = {}
+	txt.split('\n').forEach(val => {
+		let sp = val.split('\t')
+		transform[`_LT[xml.optionset.${sp[0].trim()}]`] = sp[1]
+	})
+	let hash = {}
+	xmlData.OptionSet.OptionSetList[0].OptionSet.forEach(x => {
+		hash[x.$.ID] = transform[x.$.OptionDesc]
+	})
+	return hash
+}
+
 const matchEquipUpgrade = async Category => {
 	if(itemUpgradeData.length === 0) {
 		itemUpgradeData = await formatUpgradeInfo()
@@ -125,6 +143,9 @@ const matchEquipUpgrade = async Category => {
 const searchEquipUpgrade = async (content, callback) => {
 	if(Object.keys(filterDataStorage).length === 0) {
 		filterDataStorage = await filterItem()
+	}
+	if(Object.keys(upgradeOptionsetHash).length === 0) {
+		upgradeOptionsetHash = await formatOptionset()
 	}
 	let filterEq
 	if(/^\d+$/.test(content)) {
@@ -167,18 +188,22 @@ const analyzerEffect = effectStr => {
 			'immune_ranged': '远程攻击自动防御率',
 			'immune_magic': '魔法攻击自动防御率',
 			'manause_revised': '魔法消耗减少',
-			'manaburn_revised' : '',
-			'chain_casting' : '',
+			'manaburn_revised' : '魔法蒸发减少',
+			'chain_casting' : '魔法组合',
 			'magic_damage': '魔法攻击力',
-			'casting_speed': 'xx速度',
+			'casting_speed': '施展速度',
 			'lance_piercing': '穿刺等级',
-			'musicbuff_bonus' : '',
-			'musicbuff_duration' : '',
+			'musicbuff_bonus' : '音乐系技能增益效果增加',
+			'musicbuff_duration' : '音乐系技能增益效果持续时间增加',
 			'max_bullet': '最大装弹数增加',
 			'magic_defense' : '魔法防御',
 			'magic_protect': '魔法保护'
 		}[type] || type
 		return `<span style="color: ${info > 0 ? '#1083FF' : '#FB0007'}">${typeCn} ${info > 0 ? '+' : ''}${info}</span>`
+	}
+	// 释放数据
+	if (effectStr.startsWith('use_optionset')){
+		return `<span style="color: #1083FF">${upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)]}</span>`
 	}
 	return effectStr
 }
@@ -309,4 +334,4 @@ const renderImage = (targetItem, upgradeInfos) => {
 // searchEquipUpgrade('41440', d => {console.log(d)})
 // 这是采集用小刀
 // searchEquipUpgrade('40023', d => {console.log(d)})
-searchEquipUpgrade('30412', d => {console.log(d)})
+searchEquipUpgrade('毁灭弓', d => {console.log(d)})
