@@ -153,10 +153,6 @@ function naifu(callback,content,novelaitoken){
   if(novelaitoken){
     bd = {"input":"masterpiece, best quality, "+content,"model":"safe-diffusion","parameters":{"width":512,"height":768,"scale":11,"sampler":"k_euler_ancestral","steps":20,"seed":seed,"n_samples":1,"ucPreset":0,"qualityToggle":true,"uc":"lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"}};
   }
-
-
-  bd.input=bd.prompt;
-  bd.model = 'safe-diffusion';
   var now = new Date().getTime();
   var fnc = '';
   var fn = "public/png/"+seed+"_"+fnc+"_"+now;

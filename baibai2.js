@@ -6,7 +6,7 @@ var request = require('request');
 let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 
-const {diffuseReply,novelAI,naifu} = require('./ai/image/diffuse')
+const {diffuseReply,novelAI,naifu,novelAIDiffuse} = require('./ai/image/diffuse')
 
 const { myip } = require('./baibaiConfigs')
 
@@ -1596,6 +1596,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(rcontent.startsWith("魔法少女")){
   	naifu(callback,rcontent);
 	return;
+  }
+  if(rcontent.startsWith("魔法烧酒")){
+    novelAIDiffuse(rcontent,groupid,from,callback);
+    return;
   }
   if(rcontent.startsWith("马猴烧酒")){
     novelAI(callback,rcontent);
