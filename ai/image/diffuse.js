@@ -105,10 +105,6 @@ function diffuseReply(content,gid,qq,callback,waifu){
 }
 
 function novelAI(callback,content){
- //  curl -i -X POST -d '{"fn_index":12,"data":["magical girl","","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}' \
- // -H 'content-type: application/json' -H 'referer: https://25796.gradio.app/' \
- // -H 'user-agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36' \
- // https://28113.gradio.app/api/predict/
   var hostid = 10214;
   var url = 'https://'+hostid+'.gradio.app/api/predict/';
   var bd = {"fn_index":12,"data":[content.substring(4).trim(),"","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}
@@ -141,10 +137,16 @@ function novelAI(callback,content){
 
 
 
-function naifu(callback,content){
+function naifu(callback,content,novelaitoken){
   content=content.substring(4).trim();
   var naifuurl = secret.u3;
-  var url = naifuurl;
+  var url;
+  if(novelaitoken){
+    url = 'https://api.novelai.net/ai/generate-image';
+  }else{
+    novelaitoken = '';
+    url = naifuurl
+  }
   var seed = Math.floor(Math.random()*4294967295)
   var bd = {"prompt":"masterpiece, best quality, "+content,"width":512,"height":768,"scale":12,"sampler":"k_euler_ancestral","steps":20,"seed":seed,"n_samples":1,"ucPreset":0,"uc":"lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"}
   var now = new Date().getTime();
@@ -156,6 +158,7 @@ function naifu(callback,content){
     headers:{
       'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
       'content-type':'application/json',
+      'authorization': 'Bearer '+novelaitoken
     },
     proxy: 'http://192.168.17.241:2346',
     body:JSON.stringify(bd)
@@ -180,8 +183,56 @@ function naifu(callback,content){
 }
 
 
+async function novelAIDiffuse(content,gid,qq,callback){
+  var url = 'https://api.novelai.net/user/login'
+  var novelAIEml = secret.u4[0];
+  var novelAIPwd = secret.u4[1];
+  var pwdkey = calcAccessKey(novelAIEml,novelAIPwd);
+  var bd = {"key":pwdkey};
+  request({
+    url: url,
+    method: "POST",
+    headers:{
+      'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+      'content-type':'application/json',
+      'referer': 'https://novelai.net/'
+    },
+    body:JSON.stringify(bd)
+  }, function(error, response, resbody) {
+    if (error && error.code) {
+      console.log('pipe error catched!')
+      console.log(error);
+    } else {
+      var data = eval('('+resbody+')');
+      var token = data.accessToken;
+      naifu(callback,content,token){
+    }
+  });
+}
+
+const sodium = require('libsodium-wrappers');
+
+async function calcAccessKey(email,password) {
+  await sodium.ready
+  return sodium.crypto_pwhash(
+    64,
+    new Uint8Array(Buffer.from(password)),
+    sodium.crypto_generichash(
+      sodium.crypto_pwhash_SALTBYTES,
+      password.slice(0, 6) + email + 'novelai_data_access_key',
+    ),
+    2,
+    2e6,
+    sodium.crypto_pwhash_ALG_ARGON2ID13,
+    'base64').slice(0, 64)
+}
+
+
+
+
 module.exports={
   novelAI,
   diffuseReply,
-  naifu
+  naifu,
+  novelAIDiffuse
 }
