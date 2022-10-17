@@ -194,6 +194,7 @@ function naifu(callback,content,novelaitoken){
             console.log(error);
           } else {
             if(checkresbody==0){
+              var rate = response.headers.rate;
               callback('NSFW!\n'+seed+"_"+fnc+"_"+now+'\nrate:'+rate);
             }else{
               callback(msg)
