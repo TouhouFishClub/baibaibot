@@ -191,7 +191,7 @@ async function novelAIDiffuse(content,gid,qq,callback){
    var url = 'https://api.novelai.net/user/login'
     var novelAIEml = secret.u4[0];
     var novelAIPwd = secret.u4[1];
-    var pwdkey = calcAccessKey(novelAIEml, novelAIPwd);
+    var pwdkey = await calcAccessKey(novelAIEml, novelAIPwd);
     var bd = {"key": pwdkey};
     request({
       url: url,
