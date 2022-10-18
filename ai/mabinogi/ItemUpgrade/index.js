@@ -64,6 +64,7 @@ const filterItem = async () => {
 					localeNameCn.indexOf('专用') === -1 &&
 					!localeNameCn.startsWith('@') &&
 					!localeNameCn.startsWith('精灵') &&
+					!localeNameCn.startsWith('新手') &&
 					!localeNameCn.startsWith('租赁')
 				) {
 					// console.log(item.$.Par_UpgradeMax, `${txtData[index][item.$.Text_Name1]}`)
@@ -141,7 +142,7 @@ const formatProduction = async () => {
 	})
 	let hash = {}
 	xmlData.Production.MetalExtraction[0].Production.forEach(x => {
-		hash[x.$.ProductItemId] = transform[x.$.OptionDesc].replace('转换', '')
+		hash[x.$.ProductItemId] = transform[x.$.Title].replace('转换', '')
 	})
 	xmlData.Production.Carpentry[0].Production.forEach(x => {
 		hash[x.$.ProductItemId] = transform[x.$.Title].replace('制作', '')
