@@ -12,6 +12,7 @@ let filterDataStorage = {}
 let itemUpgradeData = []
 let upgradeOptionsetHash = {}
 let npcInfoHash = {}
+let productionHash = {}
 let gemInfo = {}
 
 const readXmlParse = filePath => new Promise((resolve, reject) => {
@@ -73,8 +74,6 @@ const filterItem = async () => {
 			}
 		})
 	})
-	// console.log(Object.values(filterData).map(x => x.localeNameCn).join('\n'))
-	// console.log(Object.values(filterData).length)
 	return filterData
 }
 
@@ -132,6 +131,24 @@ const formatOptionset = async () => {
 	return hash
 }
 
+const formatProduction = async () => {
+	let xmlData = await readXmlParse(path.join(__dirname, 'data', `production.xml`))
+	let txt = fs.readFileSync(path.join(__dirname, 'data', `production.china.txt`), 'utf-8')
+	let transform = {}
+	txt.split('\n').forEach(val => {
+		let sp = val.split('\t')
+		transform[`_LT[xml.production.${sp[0].trim()}]`] = sp[1]
+	})
+	let hash = {}
+	xmlData.Production.MetalExtraction[0].Production.forEach(x => {
+		hash[x.$.ProductItemId] = transform[x.$.OptionDesc].replace('转换', '')
+	})
+	xmlData.Production.Carpentry[0].Production.forEach(x => {
+		hash[x.$.ProductItemId] = transform[x.$.Title].replace('制作', '')
+	})
+	return hash
+}
+
 const formatNpcInfo = async () => {
 	let xmlData = await readXmlParse(path.join(__dirname, 'data', `npcinfo.xml`))
 	let txt = fs.readFileSync(path.join(__dirname, 'data', `npcinfo.china.txt`), 'utf-8')
@@ -171,6 +188,9 @@ const searchEquipUpgrade = async (qq, group, content, callback) => {
 	}
 	if(Object.keys(npcInfoHash).length === 0) {
 		npcInfoHash = await formatNpcInfo()
+	}
+	if(Object.keys(productionHash).length === 0) {
+		productionHash = await formatProduction()
 	}
 	let filterEq
 	if(/^\d+$/.test(content)) {
@@ -238,6 +258,16 @@ const analyzerEffect = effectStr => {
 	}
 	if (effectStr.startsWith('personalize')) {
 		return `<div class="effect-item" style="color: #fb675f">装备专有化</div>`
+	}
+	if(effectStr.startsWith('set(collecting_bonus_product')) {
+		let [setType, id] = effectStr.substring(4, effectStr.length - 1).split(',').map(x => x.trim())
+		let setTxt = effectStr
+		switch(setType) {
+			case `collecting_bonus_product`:
+				setTxt = productionHash[id]
+				break
+		}
+		return `<div class="effect-item" style="color: #57aeff">${setTxt || effectStr}</div>`
 	}
 	return effectStr
 }
