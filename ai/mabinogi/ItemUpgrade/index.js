@@ -187,7 +187,7 @@ const searchEquipUpgrade = async (qq, group, content, callback) => {
 		callback(`未找到${content}`)
 		return
 	}
-	callback(filterEq.splice(0, 30).map(x => `meu ${x.ID} | ${x.localeNameCn}`).join('\n'))
+	callback(filterEq.splice(0, 10).map(x => `meu ${x.ID} | ${x.localeNameCn}`).join('\n'))
 }
 
 // 定义武器升级详细信息, 返回HTML
