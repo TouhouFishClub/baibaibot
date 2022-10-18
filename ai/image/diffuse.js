@@ -202,7 +202,7 @@ function naifu(callback,content,novelaitoken){
                 callback(msg)
               }
             }else{
-
+              callback(msg)
             }
           }
         })
