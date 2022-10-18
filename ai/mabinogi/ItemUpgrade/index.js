@@ -112,7 +112,7 @@ const formatUpgradeInfo = async () => {
 	return xmlData.upgrade_db.upgrade.map(item => Object.assign(item.$, {
 		localnameCn: transform[item.$.localname].trim(),
 		descCn: transform[item.$.desc].trim(),
-		filterArr: item.$.item_filter.split('/').filter(x => x && x !== '*')
+		filterArr: item.$.item_filter.split('|').filter(x => x)
 	}))
 }
 
@@ -173,8 +173,12 @@ const matchEquipUpgrade = async Category => {
 	let ca = Category.split('/').filter(x => x && x !== '*')
 	let out = []
 	itemUpgradeData.forEach(item => {
-		if(Array.from(new Set(item.filterArr.concat(ca))).length === ca.length) {
-			out.push(item)
+		for(let i = 0; i < item.filterArr.length; i ++) {
+			let tf = item.filterArr[i].split('/').filter(x => x && x !== '*')
+			if(Array.from(new Set(tf.concat(ca))).length === ca.length) {
+				out.push(item)
+				break
+			}
 		}
 	})
 	return out
