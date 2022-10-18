@@ -192,12 +192,17 @@ function naifu(callback,content,novelaitoken){
           if (error && error.code) {
             console.log('pipe error catched!')
             console.log(error);
+            callback(msg)
           } else {
             if(checkresbody==0){
               var rate = response.headers.rate;
-              callback('NSFW!\n'+seed+"_"+fnc+"_"+now+'\nrate:'+rate);
+              if(rate>0.75){
+                callback('NSFW!\n'+seed+"_"+fnc+"_"+now+'\nrate:'+rate);
+              }else{
+                callback(msg)
+              }
             }else{
-              callback(msg)
+
             }
           }
         })
