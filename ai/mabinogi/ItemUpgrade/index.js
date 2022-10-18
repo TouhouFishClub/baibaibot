@@ -36,9 +36,9 @@ const filterItem = async () => {
 		'itemdb_subequip',
 		'itemdb_weapon',
 	]
-	let xmlData = await Promise.all(files.map(file => readXmlParse(path.join(__dirname, 'IT', `${file}.xml`))))
+	let xmlData = await Promise.all(files.map(file => readXmlParse(path.join(__dirname, 'data', 'IT', `${file}.xml`))))
 	let txtData = files.map(file => {
-		let txt = fs.readFileSync(path.join(__dirname, 'IT', `${file}.china.txt`), 'utf-8')
+		let txt = fs.readFileSync(path.join(__dirname, 'data', 'IT', `${file}.china.txt`), 'utf-8')
 		let transform = {}
 		txt.split('\n').forEach(val => {
 			let sp = val.split('\t')
@@ -79,8 +79,8 @@ const filterItem = async () => {
 }
 
 const formatUpgradeInfo = async () => {
-	let xmlData = await readXmlParse(path.join(__dirname, 'IT', `itemupgradedb.xml`))
-	let txt = fs.readFileSync(path.join(__dirname, 'IT', `itemupgradedb.china.txt`), 'utf-8')
+	let xmlData = await readXmlParse(path.join(__dirname, 'data', 'IT', `itemupgradedb.xml`))
+	let txt = fs.readFileSync(path.join(__dirname, 'data', 'IT', `itemupgradedb.china.txt`), 'utf-8')
 	let transform = {}
 	txt.split('\n').forEach(val => {
 		let sp = val.split('\t')
@@ -117,8 +117,8 @@ const formatUpgradeInfo = async () => {
 }
 
 const formatOptionset = async () => {
-	let xmlData = await readXmlParse(path.join(__dirname, 'IT', `optionset.xml`))
-	let txt = fs.readFileSync(path.join(__dirname, 'IT', `optionset.china.txt`), 'utf-8')
+	let xmlData = await readXmlParse(path.join(__dirname, 'data', 'IT', `optionset.xml`))
+	let txt = fs.readFileSync(path.join(__dirname, 'data', 'IT', `optionset.china.txt`), 'utf-8')
 
 	let transform = {}
 	txt.split('\n').forEach(val => {
@@ -133,8 +133,8 @@ const formatOptionset = async () => {
 }
 
 const formatProduction = async () => {
-	let xmlData = await readXmlParse(path.join(__dirname, 'IT', `production.xml`))
-	let txt = fs.readFileSync(path.join(__dirname, 'IT', `production.china.txt`), 'utf-8')
+	let xmlData = await readXmlParse(path.join(__dirname, 'data', 'IT', `production.xml`))
+	let txt = fs.readFileSync(path.join(__dirname, 'data', 'IT', `production.china.txt`), 'utf-8')
 	let transform = {}
 	txt.split('\n').forEach(val => {
 		let sp = val.split('\t')
@@ -151,8 +151,8 @@ const formatProduction = async () => {
 }
 
 const formatNpcInfo = async () => {
-	let xmlData = await readXmlParse(path.join(__dirname, 'IT', `npcinfo.xml`))
-	let txt = fs.readFileSync(path.join(__dirname, 'IT', `npcinfo.china.txt`), 'utf-8')
+	let xmlData = await readXmlParse(path.join(__dirname, 'data', 'IT', `npcinfo.xml`))
+	let txt = fs.readFileSync(path.join(__dirname, 'data', 'IT', `npcinfo.china.txt`), 'utf-8')
 
 	let transform = {}
 	txt.split('\n').forEach(val => {
