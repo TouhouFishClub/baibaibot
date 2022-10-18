@@ -1580,6 +1580,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie == 'meu'){
+		
     searchEquipUpgrade(from, groupid, con.substring(3).trim(), callback);
     return;
   }
