@@ -143,7 +143,7 @@ const formatNpcInfo = async () => {
 	})
 	let hash = {}
 	xmlData.NpcInfoList.NpcInfo.forEach(x => {
-		hash[x.$.GeneralName] = transform[x.$.LocalName]
+		hash[x.$.GeneralName.toLowerCase()] = transform[x.$.LocalName]
 	})
 	return hash
 }
@@ -235,6 +235,9 @@ const analyzerEffect = effectStr => {
 	}
 	if (effectStr.startsWith('luckyupgrade')) {
 		return `<div class="effect-item" style="color: #57aeff">铁匠改造数据[${effectStr.substring(13, effectStr.length - 1)}]</div>`
+	}
+	if (effectStr.startsWith('personalize')) {
+		return `<div class="effect-item" style="color: #fb675f">装备专有化</div>`
 	}
 	return effectStr
 }
@@ -385,7 +388,7 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 					<div class="upgrade-desc">${x.descCn}</div>
 				</div>
 				<div class="item-col col-2">
-					${x.effect.split(';').map(ef => analyzerEffect(ef)).join(' ')}
+					${x.effect.split(';').map(ef => analyzerEffect(ef.trim())).join(' ')}
 				</div>
 				<div class="item-col col-3">
 					${x.need_ep}
@@ -394,7 +397,7 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 					${x.need_gold}
 				</div>
 				<div class="item-col col-5">
-					${x.available_npc.split(';').map(x => `${npcInfoHash[x] || x}`).join(', ')}
+					${x.available_npc.split(';').map(x => `${npcInfoHash[x.toLowerCase()] || x}`).join(', ')}
 				</div>
 				<div class="item-step-info">
 					${[0,1,2,3,4].map(i => (x.upgraded_min <= i && i <= x.upgraded_max) ? `<div class="step-item active">${i}</div>` : `<div class="step-item">${i}</div>`).join('')}
@@ -409,7 +412,7 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 					<div class="upgrade-desc">${x.descCn}</div>
 				</div>
 				<div class="item-col col-2">
-					${x.effect.split(';').map(ef => analyzerEffect(ef)).join(' ')}
+					${x.effect.split(';').map(ef => analyzerEffect(ef.trim())).join(' ')}
 				</div>
 				<div class="item-col col-3">
 					${x.need_ep}
@@ -418,7 +421,7 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 					${x.need_gold}
 				</div>
 				<div class="item-col col-5">
-					${x.available_npc.split(';').map(x => `${npcInfoHash[x] || x}`).join(', ')}
+					${x.available_npc.split(';').map(x => `${npcInfoHash[x.toLowerCase()] || x}`).join(', ')}
 				</div>
 				<div class="need-gem">
 					${x.need_gem.split(';').map(gemItem => {
