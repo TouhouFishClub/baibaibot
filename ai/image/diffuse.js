@@ -196,7 +196,7 @@ function naifu(callback,content,novelaitoken){
           } else {
             if(checkresbody==0){
               var rate = response.headers.rate;
-              if(rate>0.75){
+              if(rate>0.85){
                 callback('NSFW!\n'+seed+"_"+fnc+"_"+now+'\nrate:'+rate);
               }else{
                 callback(msg)
