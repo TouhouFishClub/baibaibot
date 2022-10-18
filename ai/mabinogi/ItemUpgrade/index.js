@@ -145,7 +145,7 @@ const formatProduction = async () => {
 		hash[x.$.ProductItemId] = transform[x.$.Title].replace('转换', '')
 	})
 	xmlData.Production.Carpentry[0].Production.forEach(x => {
-		hash[x.$.ProductItemId] = transform[x.$.Title].replace('制作', '')
+		hash[x.$.ProductItemId] = transform[x.$.Title].replace('制做', '')
 	})
 	return hash
 }
