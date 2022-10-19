@@ -9,7 +9,7 @@ const renderColorBoard = (context, callback) => {
     let cp = context.replace(/[， ]/g, ',').split(',')
     if(cp.filter(x => parseInt(x) < 256).length == 3){
       rgb = `${cp.join(',')}`
-      hex = `#${cp.map(x => parseInt(x).toString(16)).join('').toUpperCase()}`
+      hex = `#${cp.map(x => `${x < 16 ? '0': ''}${parseInt(x).toString(16)}`).join('').toUpperCase()}`
       c = `rgb(${cp.join(',')})`
     }
   }
@@ -20,7 +20,7 @@ const renderColorBoard = (context, callback) => {
       c = c.split('').map(x => `${x}${x}`).join('')
     }
     hex = `#${c.toUpperCase()}`
-    rgb = _.chunk(c.split(''), 2).map(x => `${x < 16 ? '0': ''}${parseInt(x.join(''), 16)}`).join(',')
+    rgb = _.chunk(c.split(''), 2).map(x => `${parseInt(x.join(''), 16)}`).join(',')
     c = `#${c}`
   }
   if(c) {
