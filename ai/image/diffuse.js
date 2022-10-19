@@ -12,10 +12,13 @@ function diffuseReply(content,gid,qq,callback,waifu){
   content = content.trim()
   var url = 'https://api.replicate.com/v1/predictions'
   var version = "a9758cbfbd5f3c2094457d996681af52552901775aa2d6dd0b17fd15df959bef";
-  if(waifu){
-    version = "9e767fbac45bea05d5e1823f737f927856c613e18cbc8d9068bafdc6d600a0f7"
-  }
   var body1 = '{"version": "'+version+'", "input": {"prompt": "'+content+'"}}';
+  if(waifu){
+    version = "d79228478508623d9192cfbf39c9fe089d9db7e1dc51cd1c4d266cd58b138453"
+    body0 = {"version":version,"input":{"positive_prompt":content,"negative_prompt":"ugly","num_inference_steps":20,"width":768,"height":432}};
+    body1 = JSON.stringify(body0);
+  }
+
   console.log(body1)
   request({
     url: url,
@@ -99,7 +102,7 @@ function diffuseReply(content,gid,qq,callback,waifu){
             }
           }
         });
-      },8000);
+      },12000);
     }
   });
 }
