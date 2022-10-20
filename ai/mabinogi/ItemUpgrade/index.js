@@ -166,17 +166,22 @@ const formatNpcInfo = async () => {
 	return hash
 }
 
-const matchEquipUpgrade = async Category => {
+const matchEquipUpgrade = async (Category, maxUpgrade) => {
 	if(itemUpgradeData.length === 0) {
 		itemUpgradeData = await formatUpgradeInfo()
 	}
 	let ca = Category.split('/').filter(x => x && x !== '*')
 	let out = []
 	itemUpgradeData.forEach(item => {
+		if(item.upgraded_min > maxUpgrade){
+			return
+		}
 		for(let i = 0; i < item.filterArr.length; i ++) {
 			let tf = item.filterArr[i].split('/').filter(x => x && x !== '*')
 			if(Array.from(new Set(tf.concat(ca))).length === ca.length) {
-				out.push(item)
+				out.push(Object.assign(item, {
+					upgraded_max: item.upgraded_max > maxUpgrade ? maxUpgrade : item.upgraded_max
+				}))
 				break
 			}
 		}
@@ -204,7 +209,7 @@ const searchEquipUpgrade = async (qq, group, content, callback) => {
 		filterEq = Object.values(filterDataStorage).filter(x => new RegExp(content).test(x.localeNameCn))
 	}
 	if(filterEq.length === 1) {
-		let meu = await matchEquipUpgrade(filterEq[0].Category)
+		let meu = await matchEquipUpgrade(filterEq[0].Category, filterEq[0].Par_UpgradeMax)
 		renderImage(filterEq[0], meu, callback)
 		return
 	}
