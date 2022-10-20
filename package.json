@@ -29,6 +29,7 @@
     "https-proxy-agent": "5.0.0",
     "iconv": "^2.3.0",
     "iconv-lite": "^0.5.1",
+    "libsodium-wrappers": "^0.7.10",
     "lodash": "^4.17.4",
     "md5": "^2.2.1",
     "mongodb": "^2.2.30",
