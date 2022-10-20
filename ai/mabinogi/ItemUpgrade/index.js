@@ -209,7 +209,7 @@ const searchEquipUpgrade = async (qq, group, content, callback) => {
 		filterEq = Object.values(filterDataStorage).filter(x => new RegExp(content).test(x.localeNameCn))
 	}
 	if(filterEq.length === 1) {
-		let meu = await matchEquipUpgrade(filterEq[0].Category, filterEq[0].Par_UpgradeMax)
+		let meu = await matchEquipUpgrade(filterEq[0].Category, filterEq[0].Par_UpgradeMax - 1)
 		renderImage(filterEq[0], meu, callback)
 		return
 	}
