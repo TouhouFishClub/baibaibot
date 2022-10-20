@@ -2,7 +2,7 @@ var fs = require('fs');
 var request = require('request');
 const {secret} = require("../../secret");
 // var base64ToImage = require('base64-to-image');
-const b64img = require('node-base64-image');
+// const b64img = require('node-base64-image');
 var path = require('path');
 const { sendImageMsgBuffer } = require(path.join(__dirname, '../../cq/sendImage.js'))
 
