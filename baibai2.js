@@ -1604,12 +1604,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   	naifu(callback,rcontent);
 	return;
   }
-  if(rcontent.startsWith("魔法烧酒")){
-    novelAIDiffuse(rcontent,groupid,from,callback);
-    return;
-  }
   if(rcontent.startsWith("魔法烧酒HD")){
     HDdiffuse(rcontent,groupid,from,callback);
+    return;
+  }
+  if(rcontent.startsWith("魔法烧酒")){
+    novelAIDiffuse(rcontent,groupid,from,callback);
     return;
   }
   if(rcontent.startsWith("马猴烧酒")){
