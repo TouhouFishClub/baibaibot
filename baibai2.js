@@ -7,7 +7,7 @@ let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 
 const {diffuseReply,novelAI,naifu,novelAIDiffuse,HDdiffuse} = require('./ai/image/diffuse')
-
+const {ImgScale} = require('./ai/image/scale');
 const { myip } = require('./baibaiConfigs')
 
 var path = require('path');
@@ -1597,6 +1597,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(rcontent=='好感度'){
     getLike(from,name,callback);
+    return;
+  }
+
+  if(rcontent.startsWith("HD")){
+    ImgScale(rcontent,groupid,from,callback);
     return;
   }
 
