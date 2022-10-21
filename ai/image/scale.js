@@ -4,6 +4,7 @@ const {secret} = require("../../secret");
 
 function ImgScale(content,gid,qq,callback){
   var n = content.indexOf("[CQ:image");
+  var s1 = content;
   if (n >= 0) {
     var n1 = s1.indexOf(']');
     var image = s1.substring(n, n1 + 1);
