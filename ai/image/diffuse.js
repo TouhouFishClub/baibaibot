@@ -161,7 +161,7 @@ function naifu(callback,content,novelaitoken){
       wd = 512;
       hd = 768
     }
-    bd = {"input":"masterpiece, best quality, "+content,"model":"safe-diffusion","parameters":{"width":wd,"height":hd,"scale":11,"sampler":"k_euler_ancestral","steps":28,"seed":seed,"n_samples":1,"ucPreset":0,"qualityToggle":true,"uc":"lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"}};
+    bd = {"input":"masterpiece, best quality, "+content,"model":"safe-diffusion","parameters":{"width":wd,"height":hd,"scale":11,"sampler":"k_euler_ancestral","steps":28,"seed":seed,"n_samples":1,"ucPreset":0,"qualityToggle":true,"uc":"((part of the head)), ((((mutated hands and fingers)))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, bad hands, text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, fat, obese, chubby, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render, unity, unreal, maya, photorealistic"}};
     if(Math.random()<1){
       bd.model="nai-diffusion"
     }
