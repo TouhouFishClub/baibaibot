@@ -123,7 +123,7 @@ function scaletask(imgurl,callback){
               }
             }
           });
-        },13000);
+        },15000);
       }
     }
   });
