@@ -325,14 +325,23 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
     }
     .main-container .equip-info{
     	display: flex;
+    	width: 100%;;
     	justify-content: space-between;
     	align-content: flex-end;
     	border-bottom: 2px solid #fff;
     	color: #fff;
+    	position: relative;
     }
     .main-container .equip-info .equip-name{
     	font-size: 40px;
     	line-height: 1.4;
+    }
+    .main-container .equip-info .equip-id{
+    	font-size: 14px;
+    	line-height: 1.4;
+    	position: absolute;
+    	top: -14px;
+    	left: 0;
     }
     .main-container .upgrade-group{
     	margin-top: 20px;
@@ -418,6 +427,7 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 <body>
 <div class="main-container">
 	<div class="equip-info">
+		<div class="equip-id">[${targetItem.ID}]</div>
 		<div class="equip-name">${targetItem.localeNameCn}</div>
 	</div>
 	<div class="upgrade-group">
