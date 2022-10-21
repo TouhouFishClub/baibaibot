@@ -49,13 +49,14 @@ function scaletask(imgurl,callback){
       console.log('pipe error catched!')
       console.log(error);
     } else {
-      console.log(resbody);
+      console.log('task ok,will get result');
       var d1 = eval('(' + resbody + ')');
       if(!(d1&&d1.urls&&d1.urls.get)){
-        console.log('scale failed');
+        callback('failed');
       }else{
         var geturl = d1.urls.get;
         setTimeout(function(){
+          console.log('get result now');
           request({
             url: geturl,
             method: "GET",
@@ -66,8 +67,7 @@ function scaletask(imgurl,callback){
             },
           }, function (error, response, resbody2) {
             if (error && error.code) {
-              console.log('pipe error catched!')
-              console.log(error);
+              callback('failed');
             } else {
               console.log(resbody2);
               var d2 = eval('(' + resbody2 + ')');
@@ -82,8 +82,6 @@ function scaletask(imgurl,callback){
                   proxy: 'http://192.168.17.241:2346',
                 }, function (error, response, body) {
                   if (error && error.code) {
-                    console.log('pipe error catched!')
-                    console.log(error);
                     callback('failed')
                   }
                 }).pipe(fs.createWriteStream(filename));
