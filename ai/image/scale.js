@@ -75,7 +75,7 @@ function scaletask(imgurl,callback){
                 var imgurl = d2.output;
                 console.log('iiiiiiiiiiiiiiiiiiiiiii'+imgurl)
                 var now = new Date().getTime();
-                var filename = "../coolq-data/cq/data/image/send/diffuse/" + now+".png";
+                var filename = "../coolq-data/cq/data/image/send/scale/" + now+".png";
                 var imgreq = request({
                   url: imgurl,
                   method: "GET",
