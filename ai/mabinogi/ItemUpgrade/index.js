@@ -47,11 +47,13 @@ const filterItem = async () => {
 		return transform
 	})
 	let filterData = {}
-	xmlData.forEach((data, index) => {
-		data.Items.Mabi_Item.forEach(item => {
+	for(let index = 0; index < xmlData.length; index ++) {
+		let data = xmlData[index]
+		for(let i = 0; i < data.Items.Mabi_Item.length; i ++) {
+			let item = data.Items.Mabi_Item[i]
 			if(item.$.Category && item.$.Category.startsWith('/jewel')) {
 				gemInfo[item.$.ID] = txtData[index][item.$.Text_Name1]
-				return
+				continue
 			}
 			if(item.$.Par_UpgradeMax && item.$.Par_UpgradeMax > 0 && (!item.$.Locale || item.$.Locale === 'china')) {
 				let localeNameCn = item.$.Text_Name1 ? txtData[index][item.$.Text_Name1] : 'NULL'
@@ -68,13 +70,23 @@ const filterItem = async () => {
 					!localeNameCn.startsWith('租赁')
 				) {
 					// console.log(item.$.Par_UpgradeMax, `${txtData[index][item.$.Text_Name1]}`)
-					filterData[item.$.ID] = Object.assign(item.$, {
+					let injectData = {
 						localeNameCn
-					})
+					}
+					if(item.$.XML) {
+						try {
+							let d = await parser.parseStringPromise(item.$.XML)
+							injectData['xmlParser'] = d.xml.$
+						} catch (err) {
+							console.log(`FAILED TO ${item.$.ID}`)
+						}
+					}
+					filterData[item.$.ID] = Object.assign(item.$, injectData)
 				}
 			}
-		})
-	})
+		}
+	}
+
 	return filterData
 }
 
@@ -210,6 +222,8 @@ const searchEquipUpgrade = async (qq, group, content, callback) => {
 	}
 	if(filterEq.length === 1) {
 		let meu = await matchEquipUpgrade(filterEq[0].Category, filterEq[0].Par_UpgradeMax - 1)
+		console.log(filterEq[0])
+		console.log(filterEq[0].xmlParser)
 		renderImage(filterEq[0], meu, callback)
 		return
 	}
@@ -281,6 +295,20 @@ const analyzerEffect = effectStr => {
 	}
 	return effectStr
 }
+const RandomProductHash = {
+	'attack_min': { label: '', rootKey: 'Par_AttackMin'},
+	'attack_max': { label: '', rootKey: 'Par_AttackMax'},
+	'critical': { label: '', rootKey: 'Par_CriticalRate'},
+	'balance': { label: '', rootKey: 'Par_AttackBalance'},
+	'durability_filled_max': { label: '', rootKey: 'Par_AttackBalance'},
+}
+const renderRandomInfo = targetItem => {
+	targetItem.random_product.split(';').map(productItem => {
+		let [product, min, max] = productItem.split(',').map(x => x.trim())
+		return ``
+	})
+
+}
 
 const renderImage = (targetItem, upgradeInfos, callback) => {
 	console.log(upgradeInfos.map(x => `[${x.id}]（${x.upgraded_min} ~ ${x.upgraded_max}）${x.localnameCn}: ${x.descCn}`).join('\n'))
@@ -342,6 +370,12 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
     	position: absolute;
     	top: -14px;
     	left: 0;
+    }
+    .main-container .equip-random{
+    	margin-top: 20px;
+    	border: 2px solid #fff;
+    	padding: 15px;
+    	border-radius: 10px;
     }
     .main-container .upgrade-group{
     	margin-top: 20px;
@@ -430,6 +464,11 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 		<div class="equip-id">[${targetItem.ID}]</div>
 		<div class="equip-name">${targetItem.localeNameCn}</div>
 	</div>
+	${targetItem.xmlParser && targetItem.xmlParser.random_product ? `
+	<div class="equip-random">
+		${renderRandomInfo(targetItem)}
+	</div>
+	` : ''}
 	<div class="upgrade-group">
 		${normalUpgrade.map(x => `
 			<div class="upgrade-item">
@@ -486,16 +525,16 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
   
 </body>
 </html>`
-	let output = path.join(IMAGE_DATA, 'mabi_other', `MabiItemUpgrade.png`)
-	// let output = './MabiItemUpgrade.png'
+	// let output = path.join(IMAGE_DATA, 'mabi_other', `MabiItemUpgrade.png`)
+	let output = './MabiItemUpgrade.png'
 	nodeHtmlToImage({
 		output,
 		html
 	})
 		.then(() => {
 			console.log(`保存MabiItemUpgrade.png成功！`)
-			let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiItemUpgrade.png`)}]`
-			callback(imgMsg)
+			// let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiItemUpgrade.png`)}]`
+			// callback(imgMsg)
 		})
 
 }
@@ -506,7 +545,7 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 // searchEquipUpgrade('41440', d => {console.log(d)})
 // 这是采集用小刀
 // searchEquipUpgrade('40023', d => {console.log(d)})
-// searchEquipUpgrade(1,2,'死神魔术师', d => {console.log(d)})
-module.exports = {
-	searchEquipUpgrade
-}
+searchEquipUpgrade(1,2,'死神先锋', d => {console.log(d)})
+// module.exports = {
+// 	searchEquipUpgrade
+// }
