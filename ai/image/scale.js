@@ -84,6 +84,7 @@ function scaletask(imgurl,callback){
                   if (error && error.code) {
                     console.log('pipe error catched!')
                     console.log(error);
+                    callback('failed')
                   }
                 }).pipe(fs.createWriteStream(filename));
                 imgreq.on('close', function () {
@@ -91,11 +92,11 @@ function scaletask(imgurl,callback){
                   callback(ret);
                 });
               }else{
-                console.log('failed222');
+                callback('failed')
               }
             }
           });
-        },8000);
+        },5000);
       }
     }
   });

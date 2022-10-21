@@ -286,8 +286,14 @@ function HDdiffuse(content,gid,qq,callback){
       var n1 = s1.indexOf(']');
       var imgpath = s1.substring(0,n1);
       realesrgan('../coolq-data/cq/data/image/'+imgpath,function(ret){
-        callback(ret);
+        if(ret.startsWith("fail")){
+          callback(r);
+        }else{
+          callback(ret);
+        }
       })
+    }else{
+      callback(r);
     }
   })
 }
