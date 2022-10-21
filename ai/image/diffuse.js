@@ -5,6 +5,7 @@ const {secret} = require("../../secret");
 // const b64img = require('node-base64-image');
 var path = require('path');
 const { sendImageMsgBuffer } = require(path.join(__dirname, '../../cq/sendImage.js'))
+const {realesrgan} = require('./scale');
 
 function diffuseReply(content,gid,qq,callback,waifu){
   var apikeylist = secret.u2;
@@ -276,11 +277,28 @@ async function calcAccessKey(email,password) {
 }
 
 
+function HDdiffuse(content,gid,qq,callback){
+  novelAIDiffuse(content.substring(2),gid,qq,function(r){
+    //  [CQ:image,file=send/naifu/3613846003__1666332859190.png]
+    var n = r.indexOf('send/naifu');
+    if(n>0){
+      var s1 = r.substring(n);
+      var n1 = s1.indexOf(']');
+      var imgpath = s1.substring(0,n1);
+      realesrgan('../coolq-data/cq/data/image/'+imgpath,function(ret){
+        callback(ret);
+      })
+    }
+  })
+}
+
+
 
 
 module.exports={
   novelAI,
   diffuseReply,
   naifu,
+  HDdiffuse,
   novelAIDiffuse
 }
