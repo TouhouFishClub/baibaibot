@@ -289,7 +289,7 @@ function HDdiffuse(content,gid,qq,callback){
         if(ret.startsWith("fail")){
           callback(r);
         }else{
-          callback(ret);
+          callback(r+"\n"+ret);
         }
       })
     }else{
