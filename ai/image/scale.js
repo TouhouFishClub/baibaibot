@@ -9,28 +9,29 @@ function ImgScale(content,gid,qq,callback){
     var image = s1.substring(n, n1 + 1);
     var n2 = image.indexOf("https://gchat.qpic.cn");
     var n22 = image.indexOf("http://gchat.qpic.cn");
-    if(n22>=0&&n2<0){
-      n2=n22;
+    if (n22 >= 0 && n2 < 0) {
+      n2 = n22;
     }
     if (n2 > 0) {
       var n3 = image.indexOf("?");
       var url = image.substring(n2, n3);
       var now = new Date();
-      var rd = Math.floor(Math.random()*8888+1000);
-      var filename = "../coolq-data/cq/data/image/send/tmp/"+now.getTime()+rd+".png";
+      var rd = Math.floor(Math.random() * 8888 + 1000);
+      var filename = "../coolq-data/cq/data/image/send/tmp/" + now.getTime() + rd + ".png";
       var req = request({
         url: url,
         method: "GET"
-      }, function(error, response, body){
-        if(error&&error.code){
+      }, function (error, response, body) {
+        if (error && error.code) {
           console.log('pipe error catched!')
           console.log(error);
         }
       }).pipe(fs.createWriteStream(filename));
-      req.on('close',function(){
-        realesrgan(filename,callback)
+      req.on('close', function () {
+        realesrgan(filename, callback)
       });
     }
+  }
 }
 
 function realesrgan(filepath,callback){
@@ -130,5 +131,4 @@ function scaletask(imgurl,callback){
 module.exports={
   realesrgan,
   ImgScale
-
 }
