@@ -1600,7 +1600,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(rcontent.startsWith("HD")){
+  if(rcontent.toUpperCase().startsWith("HD")){
     ImgScale(rcontent,groupid,from,callback);
     return;
   }
