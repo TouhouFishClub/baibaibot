@@ -94,7 +94,7 @@ function scaletask(imgurl,callback){
               }
             }
           });
-        },7000);
+        },11000);
       }
     }
   });
