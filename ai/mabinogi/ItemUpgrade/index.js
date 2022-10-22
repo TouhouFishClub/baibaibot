@@ -296,18 +296,47 @@ const analyzerEffect = effectStr => {
 	return effectStr
 }
 const RandomProductHash = {
-	'attack_min': { label: '', rootKey: 'Par_AttackMin'},
-	'attack_max': { label: '', rootKey: 'Par_AttackMax'},
-	'critical': { label: '', rootKey: 'Par_CriticalRate'},
-	'balance': { label: '', rootKey: 'Par_AttackBalance'},
-	'durability_filled_max': { label: '', rootKey: 'Par_AttackBalance'},
+	'attack_min': { label: '最大攻击力', rootKey: 'Par_AttackMin'},
+	'attack_max': { label: '最小攻击力', rootKey: 'Par_AttackMax'},
+	'critical': { label: '暴击率', rootKey: 'Par_CriticalRate'},
+	'balance': { label: '平衡性', rootKey: 'Par_AttackBalance'},
+	'durability_filled_max': { label: '最大耐久度', rootKey: 'Par_DurabilityMax'},
+	'magic_damage': { label: '魔法攻击力', rootKey: 'Par_MagicDamage'},
+	'defense': { label: '防御', rootKey: 'Par_Defense'},
+	'protect': { label: '保护', rootKey: 'Par_ProtectRate'},
+	'magic_defense': { label: '魔法防御', rootKey: 'magic_defense', xmlInfo: true},
+	'magic_protect': { label: '魔法保护', rootKey: 'magic_protect', xmlInfo: true},
 }
 const renderRandomInfo = targetItem => {
-	targetItem.random_product.split(';').map(productItem => {
+	return targetItem.xmlParser.random_product.split(';').map(productItem => {
 		let [product, min, max] = productItem.split(',').map(x => x.trim())
-		return ``
-	})
-
+		let hasProduct = RandomProductHash[product]
+		let outputHtml
+		if(hasProduct) {
+			let productBase = hasProduct.xmlInfo ? parseFloat(targetItem.xmlParser[hasProduct.rootKey] || '0') : parseFloat(targetItem[hasProduct.rootKey] || '0')
+			if(product == 'durability_filled_max') {
+				productBase /= 1000
+			}
+			outputHtml = `
+				<div class="product-random">
+					<div class="label">${hasProduct.label}(${productBase}) : </div>
+					<div class="text">${productBase + parseFloat(min)}<sup>+${min}</sup></div>
+					<div class="text">~</div>
+					<div class="text">${productBase + parseFloat(max)}<sup>+${max}</sup></div>
+				</div>
+			`
+		} else {
+			outputHtml = `
+				<div class="product-random">
+					<div class="label">${product}(仅浮动值) : </div>
+					<div class="text">${min}</div>
+					<div class="text">~</div>
+					<div class="text">${max}</div>
+				</div>
+			`
+		}
+		return outputHtml
+	}).join('')
 }
 
 const renderImage = (targetItem, upgradeInfos, callback) => {
@@ -374,8 +403,25 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
     .main-container .equip-random{
     	margin-top: 20px;
     	border: 2px solid #fff;
-    	padding: 15px;
+    	padding: 10px 15px;
     	border-radius: 10px;
+    }
+    .main-container .equip-random .product-random{
+    	display: flex;
+    	justify-content: flex-start;
+    	align-items: center;
+    }
+    .main-container .equip-random .product-random .label{
+    	width: 300px;
+    }
+    .main-container .equip-random .product-random .label,
+    .main-container .equip-random .product-random .text{
+    	font-size: 20px;
+    	color: #fff;
+    	margin-right: 8px;
+    }
+    .main-container .equip-random .product-random .text sup{
+    	color: #57aeff
     }
     .main-container .upgrade-group{
     	margin-top: 20px;
@@ -525,16 +571,16 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
   
 </body>
 </html>`
-	// let output = path.join(IMAGE_DATA, 'mabi_other', `MabiItemUpgrade.png`)
-	let output = './MabiItemUpgrade.png'
+	let output = path.join(IMAGE_DATA, 'mabi_other', `MabiItemUpgrade.png`)
+	// let output = './MabiItemUpgrade.png'
 	nodeHtmlToImage({
 		output,
 		html
 	})
 		.then(() => {
 			console.log(`保存MabiItemUpgrade.png成功！`)
-			// let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiItemUpgrade.png`)}]`
-			// callback(imgMsg)
+			let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiItemUpgrade.png`)}]`
+			callback(imgMsg)
 		})
 
 }
@@ -545,7 +591,7 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 // searchEquipUpgrade('41440', d => {console.log(d)})
 // 这是采集用小刀
 // searchEquipUpgrade('40023', d => {console.log(d)})
-searchEquipUpgrade(1,2,'死神先锋', d => {console.log(d)})
-// module.exports = {
-// 	searchEquipUpgrade
-// }
+// searchEquipUpgrade(1,2,'14159', d => {console.log(d)})
+module.exports = {
+	searchEquipUpgrade
+}
