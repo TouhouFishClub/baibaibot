@@ -47,11 +47,13 @@ const filterItem = async () => {
 		return transform
 	})
 	let filterData = {}
-	xmlData.forEach((data, index) => {
-		data.Items.Mabi_Item.forEach(item => {
+	for(let index = 0; index < xmlData.length; index ++) {
+		let data = xmlData[index]
+		for(let i = 0; i < data.Items.Mabi_Item.length; i ++) {
+			let item = data.Items.Mabi_Item[i]
 			if(item.$.Category && item.$.Category.startsWith('/jewel')) {
 				gemInfo[item.$.ID] = txtData[index][item.$.Text_Name1]
-				return
+				continue
 			}
 			if(item.$.Par_UpgradeMax && item.$.Par_UpgradeMax > 0 && (!item.$.Locale || item.$.Locale === 'china')) {
 				let localeNameCn = item.$.Text_Name1 ? txtData[index][item.$.Text_Name1] : 'NULL'
@@ -68,13 +70,23 @@ const filterItem = async () => {
 					!localeNameCn.startsWith('租赁')
 				) {
 					// console.log(item.$.Par_UpgradeMax, `${txtData[index][item.$.Text_Name1]}`)
-					filterData[item.$.ID] = Object.assign(item.$, {
+					let injectData = {
 						localeNameCn
-					})
+					}
+					if(item.$.XML) {
+						try {
+							let d = await parser.parseStringPromise(item.$.XML)
+							injectData['xmlParser'] = d.xml.$
+						} catch (err) {
+							console.log(`FAILED TO ${item.$.ID}`)
+						}
+					}
+					filterData[item.$.ID] = Object.assign(item.$, injectData)
 				}
 			}
-		})
-	})
+		}
+	}
+
 	return filterData
 }
 
@@ -210,6 +222,8 @@ const searchEquipUpgrade = async (qq, group, content, callback) => {
 	}
 	if(filterEq.length === 1) {
 		let meu = await matchEquipUpgrade(filterEq[0].Category, filterEq[0].Par_UpgradeMax - 1)
+		console.log(filterEq[0])
+		console.log(filterEq[0].xmlParser)
 		renderImage(filterEq[0], meu, callback)
 		return
 	}
@@ -281,6 +295,49 @@ const analyzerEffect = effectStr => {
 	}
 	return effectStr
 }
+const RandomProductHash = {
+	'attack_min': { label: '最大攻击力', rootKey: 'Par_AttackMin'},
+	'attack_max': { label: '最小攻击力', rootKey: 'Par_AttackMax'},
+	'critical': { label: '暴击率', rootKey: 'Par_CriticalRate'},
+	'balance': { label: '平衡性', rootKey: 'Par_AttackBalance'},
+	'durability_filled_max': { label: '最大耐久度', rootKey: 'Par_DurabilityMax'},
+	'magic_damage': { label: '魔法攻击力', rootKey: 'Par_MagicDamage'},
+	'defense': { label: '防御', rootKey: 'Par_Defense'},
+	'protect': { label: '保护', rootKey: 'Par_ProtectRate'},
+	'magic_defense': { label: '魔法防御', rootKey: 'magic_defense', xmlInfo: true},
+	'magic_protect': { label: '魔法保护', rootKey: 'magic_protect', xmlInfo: true},
+}
+const renderRandomInfo = targetItem => {
+	return targetItem.xmlParser.random_product.split(';').map(productItem => {
+		let [product, min, max] = productItem.split(',').map(x => x.trim())
+		let hasProduct = RandomProductHash[product]
+		let outputHtml
+		if(hasProduct) {
+			let productBase = hasProduct.xmlInfo ? parseFloat(targetItem.xmlParser[hasProduct.rootKey] || '0') : parseFloat(targetItem[hasProduct.rootKey] || '0')
+			if(product == 'durability_filled_max') {
+				productBase /= 1000
+			}
+			outputHtml = `
+				<div class="product-random">
+					<div class="label">${hasProduct.label}(${productBase}) : </div>
+					<div class="text">${productBase + parseFloat(min)}<sup>+${min}</sup></div>
+					<div class="text">~</div>
+					<div class="text">${productBase + parseFloat(max)}<sup>+${max}</sup></div>
+				</div>
+			`
+		} else {
+			outputHtml = `
+				<div class="product-random">
+					<div class="label">${product}(仅浮动值) : </div>
+					<div class="text">${min}</div>
+					<div class="text">~</div>
+					<div class="text">${max}</div>
+				</div>
+			`
+		}
+		return outputHtml
+	}).join('')
+}
 
 const renderImage = (targetItem, upgradeInfos, callback) => {
 	console.log(upgradeInfos.map(x => `[${x.id}]（${x.upgraded_min} ~ ${x.upgraded_max}）${x.localnameCn}: ${x.descCn}`).join('\n'))
@@ -342,6 +399,29 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
     	position: absolute;
     	top: -14px;
     	left: 0;
+    }
+    .main-container .equip-random{
+    	margin-top: 20px;
+    	border: 2px solid #fff;
+    	padding: 10px 15px;
+    	border-radius: 10px;
+    }
+    .main-container .equip-random .product-random{
+    	display: flex;
+    	justify-content: flex-start;
+    	align-items: center;
+    }
+    .main-container .equip-random .product-random .label{
+    	width: 300px;
+    }
+    .main-container .equip-random .product-random .label,
+    .main-container .equip-random .product-random .text{
+    	font-size: 20px;
+    	color: #fff;
+    	margin-right: 8px;
+    }
+    .main-container .equip-random .product-random .text sup{
+    	color: #57aeff
     }
     .main-container .upgrade-group{
     	margin-top: 20px;
@@ -430,6 +510,11 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 		<div class="equip-id">[${targetItem.ID}]</div>
 		<div class="equip-name">${targetItem.localeNameCn}</div>
 	</div>
+	${targetItem.xmlParser && targetItem.xmlParser.random_product ? `
+	<div class="equip-random">
+		${renderRandomInfo(targetItem)}
+	</div>
+	` : ''}
 	<div class="upgrade-group">
 		${normalUpgrade.map(x => `
 			<div class="upgrade-item">
@@ -506,7 +591,7 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 // searchEquipUpgrade('41440', d => {console.log(d)})
 // 这是采集用小刀
 // searchEquipUpgrade('40023', d => {console.log(d)})
-// searchEquipUpgrade(1,2,'死神魔术师', d => {console.log(d)})
+// searchEquipUpgrade(1,2,'14159', d => {console.log(d)})
 module.exports = {
 	searchEquipUpgrade
 }
