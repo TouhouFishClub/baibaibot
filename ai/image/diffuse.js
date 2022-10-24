@@ -200,12 +200,12 @@ async function saveMagicPrefer(content,gid,qq,callback){
   var ct = content.substring(4).trim();
   var ca = ct.split('\n');
   var n
-  var magicCfg = getMagicConfigDB(qq);
+  var magicCfg = await getMagicConfigDB(qq);
   if(!magicCfg){
     magicCfg={};
   }
   if(ct==''){
-    var ret = await getMagicCfgStr(magicCfg);
+    var ret = getMagicCfgStr(magicCfg);
     callback('您的咏唱设置如下：\n'+ret+'\n咏唱设置方法：\n【咏唱设置】【换行，后面每行一个设置】【key:value】');
     return;
   }
