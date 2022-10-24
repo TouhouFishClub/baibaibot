@@ -210,7 +210,7 @@ async function saveMagicPrefer(content,gid,qq,callback){
     return;
   }
   for(var i=1;i<ca.length;i++){
-    var da = ca[i].replace('/：/g',':').trim();
+    var da = ca[i].replace(/：/g,':').trim();
     var n = da.indexOf(':');
     if(n>0){
       var key = da.substring(0,n).trim();
