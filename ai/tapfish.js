@@ -7,7 +7,7 @@ const chineseNewYear = [
 const tombSweepingDay = [
   '2021-4-3',
   '2022-4-3',
-  '2023-4-3',
+  '2023-4-5',
 ]
 //端午
 const dragonBoatFestival = [
@@ -19,6 +19,7 @@ const dragonBoatFestival = [
 const midAutumnFestival = [
   '2021-9-19',
   '2022-9-29',
+  '2023-9-29',
 ]
 
 const calcDay = dateStrList => {
