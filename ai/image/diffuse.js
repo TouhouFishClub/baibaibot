@@ -295,7 +295,7 @@ async function getMagicConfigDB(qq){
 }
 
 
-function naifu(callback,content,novelaitoken,gid,qq){
+async function naifu(callback,content,novelaitoken,gid,qq){
   var magicCfg = await getMagicConfigDB(qq);
   content=content.substring(4).trim();
   var naifuurl = secret.u3;
