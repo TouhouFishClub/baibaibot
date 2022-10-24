@@ -157,7 +157,7 @@ function initDB(){
 function getMagicCfgStr(magicCfg){
   var ret = '咏唱设置：\n';
   if(magicCfg.size) {
-    ret = ret + magicCfg.size;
+    ret = ret + 'size:'+magicCfg.size;
   }else{
     ret = ret + 'size:768x512或512x768或640x640随机';
   }
