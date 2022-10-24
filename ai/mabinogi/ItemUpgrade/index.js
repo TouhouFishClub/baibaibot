@@ -296,8 +296,8 @@ const analyzerEffect = effectStr => {
 	return effectStr
 }
 const RandomProductHash = {
-	'attack_min': { label: '最大攻击力', rootKey: 'Par_AttackMin'},
-	'attack_max': { label: '最小攻击力', rootKey: 'Par_AttackMax'},
+	'attack_min': { label: '最小攻击力', rootKey: 'Par_AttackMin'},
+	'attack_max': { label: '最大攻击力', rootKey: 'Par_AttackMax'},
 	'critical': { label: '暴击率', rootKey: 'Par_CriticalRate'},
 	'balance': { label: '平衡性', rootKey: 'Par_AttackBalance'},
 	'durability_filled_max': { label: '最大耐久度', rootKey: 'Par_DurabilityMax'},
