@@ -254,7 +254,7 @@ async function saveMagicPrefer(content,gid,qq,callback){
         }
       }else if(key=='uc'){
         if(value.toLowerCase()=='default'||value=='默认'){
-          vv = '((part of the head)), (((((mutated hands and fingers))))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, ((poorly drawn hands)), missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, ((bad hands)), text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render, unity, unreal, maya, photorealistic, missing arm, missing leg'
+          vv =null;
         }else{
           vv = value;
         }
