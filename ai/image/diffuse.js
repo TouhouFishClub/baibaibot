@@ -159,7 +159,7 @@ function getMagicCfgStr(magicCfg){
   if(magicCfg.size) {
     ret = ret + magicCfg.size;
   }else{
-    ret = ret + 'size:768x512或512x768随机'+
+    ret = ret + 'size:768x512或512x768随机';
   }
 
   ret = ret.trim()+'\n';
