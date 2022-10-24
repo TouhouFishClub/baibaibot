@@ -197,7 +197,7 @@ function getMagicCfgStr(magicCfg){
 }
 
 async function saveMagicPrefer(content,gid,qq,callback){
-  var ct = content.substring(4).trim();
+  var ct = content.trim();
   var ca = ct.split('\n');
   var n
   var magicCfg = await getMagicConfigDB(qq);
