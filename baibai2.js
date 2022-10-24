@@ -6,7 +6,7 @@ var request = require('request');
 let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 
-const {diffuseReply,novelAI,naifu,novelAIDiffuse,HDdiffuse} = require('./ai/image/diffuse')
+const {diffuseReply,novelAI,naifu,novelAIDiffuse,HDdiffuse,saveMagicPrefer} = require('./ai/image/diffuse')
 const {ImgScale} = require('./ai/image/scale');
 const { myip } = require('./baibaiConfigs')
 
@@ -1604,7 +1604,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ImgScale(rcontent,groupid,from,callback);
     return;
   }
-
+  if(rcontent.startsWith('咏唱设置')){
+    saveMagicPrefer(content,gid,qq,callback);
+    return;
+  }
   if(rcontent.startsWith("魔法少女")){
   	naifu(callback,rcontent);
 	return;

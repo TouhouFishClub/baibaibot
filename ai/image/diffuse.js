@@ -6,6 +6,10 @@ const {secret} = require("../../secret");
 var path = require('path');
 const { sendImageMsgBuffer } = require(path.join(__dirname, '../../cq/sendImage.js'))
 const {realesrgan} = require('./scale');
+var MongoClient = require('mongodb').MongoClient;
+var mongourl = require('../../baibaiConfigs').mongourl;
+
+
 
 function diffuseReply(content,gid,qq,callback,waifu){
   var apikeylist = secret.u2;
@@ -139,9 +143,157 @@ function novelAI(callback,content){
 }
 //novelAI(function(r){console.log(r)})
 
+var udb;
+var cl_magic_config;
+
+initDB();
+function initDB(){
+  MongoClient.connect(mongourl, function(err, db) {
+    udb=db;
+    cl_magic_config = db.collection('cl_magic_config');
+  });
+}
+
+function getMagicCfgStr(magicCfg){
+  var ret = '咏唱设置：\n';
+  if(magicCfg.size) {
+    ret = ret + magicCfg.size;
+  }else{
+    ret = ret + 'size:768x512或512x768随机'+
+  }
+
+  ret = ret.trim()+'\n';
+  if(magicCfg.scale){
+    ret = ret + 'scale:'+magicCfg.scale;
+  }else{
+    ret = ret + 'scale:'+'未设置（默认12）';
+  }
+  ret = ret.trim()+'\n';
+  if(magicCfg.sampler){
+    ret = ret + 'sampler:'+magicCfg.sampler;
+  }else{
+    ret = ret + 'sampler:'+'未设置（默认k_euler_ancestral）';
+  }
+  ret = ret.trim()+'\n';
+  if(magicCfg.seed){
+    ret = ret + 'seed:'+magicCfg.seed;
+  }else{
+    ret = ret + 'seed:'+'未设置（默认随机）';
+  }
+  ret = ret.trim()+'\n';
+  if(magicCfg.model){
+    ret = ret + 'model:'+magicCfg.model;
+  }else{
+    ret = ret + 'model:'+'未设置（默认nai-diffusion）';
+  }
+  ret = ret.trim()+'\n';
+  if(magicCfg.uc){
+    ret = ret + 'uc:'+magicCfg.uc;
+  }else{
+    ret = ret + 'uc:'+'未设置（默认..）';
+  }
+  ret = ret.trim()+'\n';
+  return ret.trim();
+}
+
+async function saveMagicPrefer(content,gid,qq,callback){
+  var ct = content.substring(4).trim();
+  var ca = ct.split('\n');
+  var n
+  var magicCfg = getMagicConfigDB(qq);
+  if(!magicCfg){
+    magicCfg={};
+  }
+  if(ct==''){
+    var ret = await getMagicCfgStr(magicCfg);
+    callback('您的咏唱设置如下：\n'+ret+'\n咏唱设置方法：\n【咏唱设置】【换行，后面每行一个设置】【key:value】');
+    return;
+  }
+  for(var i=1;i<ca.length;i++){
+    var da = ca[i].replace('/：/g',':').trim();
+    var n = da.indexOf(':');
+    if(n>0){
+      var key = da.substring(0,n).trim();
+      var value = da.substring(n+1).trim();
+      var vv;
+      if(key=='scale'){
+        vv = parseFloat(value);
+        if(vv<1.1){
+          vv = 1.1;
+        }
+        if(vv>100){
+          vv = 100;
+        }
+      }else if(key=='size'){
+        value = value.replace(/\*/g,'x');
+        if(value=='768x512'||value=='512x768'||value=='640x640'){
+          vv = value;
+        }else{
+          vv = null;
+        }
+      }else if(key=='sampler'){
+        if(value=='k_euler_ancestral'||value=='k_euler'||value=='k_lms'||value=='plms'||value=='ddim'){
+          vv = value;
+        }else{
+          vv = 'k_euler_ancestral';
+        }
+      }else if(key=='seed'){
+        var vv = parseInt(value);
+        if(vv>0&&vv<4294967295){
+
+        }else{
+          vv = null;
+        }
+      }else if(key=='model'){
+        if(value=='nai-diffusion'||value=='safe-diffusion'||value=='nai-diffusion-furry'){
+          vv=value
+        }else{
+          vv = 'nai-diffusion'
+        }
+      }else if(key=='uc'){
+        if(value.toLowerCase()=='default'||value=='默认'){
+          vv = '((part of the head)), ((((mutated hands and fingers)))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, bad hands, text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, fat, obese, chubby, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render, unity, unreal, maya, photorealistic'
+        }else{
+          vv = value;
+        }
+      }
+      magicCfg[key]=vv;
+    }
+  }
+  saveMagicCfg(qq,magicCfg);
+  var ret = getMagicCfgStr(magicCfg);
+  callback('您的咏唱设置如下：\n'+ret+'\n咏唱设置方法：\n【咏唱设置】【换行，后面每行一个设置】【key:value】');
+}
+
+function saveMagicCfg(qq,magicCfg){
+  if(!cl_magic_config){
+    cl_magic_config = udb.collection('cl_magic_config');
+  }
+  magicCfg['_id']=qq;
+  cl_magic_config.save(magicCfg);
+}
+
+async function getMagicConfigDB(qq){
+    if(!cl_magic_config){
+      cl_magic_config = udb.collection('cl_magic_config');
+    }
+    return new Promise((resolve, reject) => {
+      cl_magic_config.findOne({'_id': qq}, function (err, magicData) {
+        if (err) {
+          resolve({})
+        } else {
+          if(magicData){
+            resolve(magicData);
+          }else{
+            resolve({});
+          }
+        }
+      });
+    })
+}
 
 
-function naifu(callback,content,novelaitoken){
+function naifu(callback,content,novelaitoken,gid,qq){
   content=content.substring(4).trim();
   var naifuurl = secret.u3;
   var url;
@@ -162,7 +314,7 @@ function naifu(callback,content,novelaitoken){
       hd = 768
     }
     bd = {"input":"masterpiece, best quality, "+content,"model":"safe-diffusion","parameters":{"width":wd,"height":hd,"scale":11,"sampler":"k_euler_ancestral","steps":28,"seed":seed,"n_samples":1,"ucPreset":0,"qualityToggle":true,"uc":"((part of the head)), ((((mutated hands and fingers)))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, bad hands, text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, fat, obese, chubby, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render, unity, unreal, maya, photorealistic"}};
-    bd.uc="lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark, username,blurry,bad feet"
+    bd.parameters.uc="lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark, username,blurry,bad feet"
     if(Math.random()<1){
       bd.model="nai-diffusion"
     }
@@ -228,7 +380,7 @@ function naifu(callback,content,novelaitoken){
 var novelAIToken = undefined;
 async function novelAIDiffuse(content,gid,qq,callback){
   if(novelAIToken)  {
-    naifu(callback, content, novelAIToken)
+    naifu(callback, content, novelAIToken,gid,qq)
   }else {
    var url = 'https://api.novelai.net/user/login'
     var novelAIEml = secret.u4[0];
@@ -254,7 +406,7 @@ async function novelAIDiffuse(content,gid,qq,callback){
         var token = data.accessToken;
         novelAIToken = token;
         console.log('novelAI login ok:'+token)
-        naifu(callback, content, token)
+        naifu(callback, content, token,gid,qq)
       }
     });
   }
@@ -307,5 +459,6 @@ module.exports={
   diffuseReply,
   naifu,
   HDdiffuse,
-  novelAIDiffuse
+  novelAIDiffuse,
+  saveMagicPrefer
 }
