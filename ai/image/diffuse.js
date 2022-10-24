@@ -159,14 +159,14 @@ function getMagicCfgStr(magicCfg){
   if(magicCfg.size) {
     ret = ret + magicCfg.size;
   }else{
-    ret = ret + 'size:768x512或512x768随机';
+    ret = ret + 'size:768x512或512x768或640x640随机';
   }
 
   ret = ret.trim()+'\n';
   if(magicCfg.scale){
     ret = ret + 'scale:'+magicCfg.scale;
   }else{
-    ret = ret + 'scale:'+'未设置（默认12）';
+    ret = ret + 'scale:'+'未设置（默认11）';
   }
   ret = ret.trim()+'\n';
   if(magicCfg.sampler){
@@ -228,6 +228,8 @@ async function saveMagicPrefer(content,gid,qq,callback){
         value = value.replace(/\*/g,'x');
         if(value=='768x512'||value=='512x768'||value=='640x640'){
           vv = value;
+        }else if(value=='随机'||value=='random'){
+          vv = null;
         }else{
           vv = null;
         }
@@ -294,6 +296,7 @@ async function getMagicConfigDB(qq){
 
 
 function naifu(callback,content,novelaitoken,gid,qq){
+  var magicCfg = await getMagicConfigDB(qq);
   content=content.substring(4).trim();
   var naifuurl = secret.u3;
   var url;
@@ -309,15 +312,42 @@ function naifu(callback,content,novelaitoken,gid,qq){
   if(novelaitoken){
     var wd = 768;
     var hd = 512;
-    if(Math.random()<0.0){
-      wd = 512;
-      hd = 768
+    var scale = 11;
+    var sampler = 'k_euler_ancestral';
+    var model = 'nai-diffusion';
+    var uc = "((part of the head)), ((((mutated hands and fingers)))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, bad hands, text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, fat, obese, chubby, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render, unity, unreal, maya, photorealistic";
+    if(magicCfg.size){
+      var sizea = magicCfg.size.split('x');
+      wd = parseInt(sizea[0]);
+      hd = parseInt(sizea[1]);
+
+    }else{
+      var rd = Math.random();
+      if(rd<0.3333){
+        wd = 512;
+        hd = 768
+      }else if(rd<0.6666){
+        wd = 640;
+        hd = 640
+      }
     }
-    bd = {"input":"masterpiece, best quality, "+content,"model":"safe-diffusion","parameters":{"width":wd,"height":hd,"scale":11,"sampler":"k_euler_ancestral","steps":28,"seed":seed,"n_samples":1,"ucPreset":0,"qualityToggle":true,"uc":"((part of the head)), ((((mutated hands and fingers)))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, bad hands, text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, fat, obese, chubby, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render, unity, unreal, maya, photorealistic"}};
-    bd.parameters.uc="lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark, username,blurry,bad feet"
-    if(Math.random()<1){
-      bd.model="nai-diffusion"
+    if(magicCfg.scale){
+      scale = magicCfg.scale;
     }
+    if(magicCfg.seed){
+      seed = magicCfg.seed;
+    }
+    if(magicCfg.uc){
+      uc = magicCfg.uc;
+    }
+    if(magicCfg.sampler){
+      sampler = magicCfg.sampler;
+    }
+    if(magicCfg.model){
+      model = magicCfg.model;
+    }
+    bd = {"input":"masterpiece, best quality, "+content,"model":model,"parameters":{"width":wd,"height":hd,"scale":scale,"sampler":sampler,"steps":28,"seed":seed,"n_samples":1,"ucPreset":0,"qualityToggle":true,"uc":uc}};
+    console.log(bd);
   }
   var now = new Date().getTime();
   var fnc = '';
