@@ -157,7 +157,7 @@ function naifu(callback,content,novelaitoken){
   if(novelaitoken){
     var wd = 768;
     var hd = 512;
-    if(Math.random()<0.5){
+    if(Math.random()<0.0){
       wd = 512;
       hd = 768
     }
