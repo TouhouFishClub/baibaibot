@@ -1605,7 +1605,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   if(rcontent.startsWith('咏唱设置')){
-    saveMagicPrefer(content,gid,qq,callback);
+    saveMagicPrefer(content,groupid,from,callback);
     return;
   }
   if(rcontent.startsWith("魔法少女")){
