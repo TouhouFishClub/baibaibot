@@ -465,11 +465,11 @@ function handleMsg_D(msgObj,port) {
   var content = msgObj.message;
   var self= msgObj.self_id;
   var callback
-  var port;
-  var sf = (self+"").substring(0,5);
-  if(sf=="38490"){
-    port = 29334;
-  }
+  // var port;
+  // var sf = (self+"").substring(0,5);
+  // if(sf=="38490"){
+  //   port = 29334;
+  // }
 
   var gidstr= groupid+"";
   var force=0;
