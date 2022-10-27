@@ -161,15 +161,6 @@ const configAdminSet = new Set([
 	799018865,
 	357474405
 ])
-initWS();
-initWS2();
-initWS3();
-initWS4();
-initWS5();
-initWS6();
-initWS7();
-initWS1001();
-initWS1002();
 
 const BOT_MASTER = [
   {
@@ -189,267 +180,94 @@ const BOT_MASTER = [
   }
 ]
 
-var wsonline = false;
-function initWS(){
-  var WebSocketClient = require('websocket').client;
-
-  var client = new WebSocketClient();
-
-  client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
-  });
-
-  client.on('connect', function(connection) {
-    wsonline = true;
-    console.log('WebSocket Client Connected 23335');
-    connection.on('error', function(error) {
-      console.log("Connection Error: " + error.toString());
-    });
-    connection.on('close', function() {
-      wsonline=false;
-      console.log('echo-protocol Connection Closed');
-    });
-    connection.on('message', function(message) {
-      if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data))
-      }
-    });
-  });
-  client.connect('ws://'+myip+':23335/event');
-}
-
-function initWS2(){
-  var WebSocketClient = require('websocket').client;
-
-  var client = new WebSocketClient();
-
-  client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
-  });
-
-  client.on('connect', function(connection) {
-    wsonline = true;
-    console.log('WebSocket Client Connected 24335');
-    connection.on('error', function(error) {
-      console.log("Connection Error: " + error.toString());
-    });
-    connection.on('close', function() {
-      wsonline=false;
-      console.log('echo-protocol Connection Closed');
-    });
-    connection.on('message', function(message) {
-      if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),2)
-      }
-    });
-  });
-  client.connect('ws://'+myip+':24335/event');
-}
-
-function initWS3(){
-  var WebSocketClient = require('websocket').client;
-
-  var client = new WebSocketClient();
-
-  client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
-  });
-
-  client.on('connect', function(connection) {
-    wsonline = true;
-    console.log('WebSocket Client Connected 25335');
-    connection.on('error', function(error) {
-      console.log("Connection Error: " + error.toString());
-    });
-    connection.on('close', function() {
-      wsonline=false;
-      console.log('echo-protocol Connection Closed');
-    });
-    connection.on('message', function(message) {
-      if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),3)
-      }
-    });
-  });
-  client.connect('ws://'+myip+':25335/event');
-}
-
-function initWS4(){
-  var WebSocketClient = require('websocket').client;
-
-  var client = new WebSocketClient();
-
-  client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
-  });
-
-  client.on('connect', function(connection) {
-    wsonline = true;
-    console.log('WebSocket Client Connected 29335');
-    connection.on('error', function(error) {
-      console.log("Connection Error: " + error.toString());
-    });
-    connection.on('close', function() {
-      wsonline=false;
-      console.log('echo-protocol Connection Closed');
-    });
-    connection.on('message', function(message) {
-      if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),11)
-      }
-    });
-  });
-  client.connect('ws://'+myip+':29335/event');
-}
-
-function initWS5(){
-    var WebSocketClient = require('websocket').client;
-
-    var client = new WebSocketClient();
-
-    client.on('connectFailed', function(error) {
-        console.log('Connect Error: ' + error.toString());
-    });
-
-    client.on('connect', function(connection) {
-        wsonline = true;
-        console.log('WebSocket Client Connected 27335');
-        connection.on('error', function(error) {
-            console.log("Connection Error: " + error.toString());
-        });
-        connection.on('close', function() {
-            wsonline=false;
-            console.log('echo-protocol Connection Closed');
-        });
-        connection.on('message', function(message) {
-            if (message.type === 'utf8') {
-                handleMsg(JSON.parse(message.utf8Data),5)
-            }
-        });
-    });
-    client.connect('ws://'+myip+':27335/event');
-}
-
-function initWS6(){
-  var WebSocketClient = require('websocket').client;
-
-  var client = new WebSocketClient();
-
-  client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
-  });
-
-  client.on('connect', function(connection) {
-    wsonline = true;
-    console.log('WebSocket Client Connected 26335');
-    connection.on('error', function(error) {
-      console.log("Connection Error: " + error.toString());
-    });
-    connection.on('close', function() {
-      wsonline=false;
-      console.log('echo-protocol Connection Closed');
-    });
-    connection.on('message', function(message) {
-      if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),12)
-      }
-    });
-  });
-  client.connect('ws://'+myip+':26335/event');
-}
-function initWS7(){
-  var WebSocketClient = require('websocket').client;
-
-  var client = new WebSocketClient();
-
-  client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
-  });
-
-  client.on('connect', function(connection) {
-    wsonline = true;
-    console.log('WebSocket Client Connected 28335');
-    connection.on('error', function(error) {
-      console.log("Connection Error: " + error.toString());
-    });
-    connection.on('close', function() {
-      wsonline=false;
-      console.log('echo-protocol Connection Closed');
-    });
-    connection.on('message', function(message) {
-      if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),13)
-      }
-    });
-  });
-  client.connect('ws://'+myip+':28335/event');
-}
-function initWS1001(){
-  var WebSocketClient = require('websocket').client;
-
-  var client = new WebSocketClient();
-
-  client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
-  });
-
-  client.on('connect', function(connection) {
-    wsonline = true;
-    console.log('WebSocket Client Connected 30005');
-    connection.on('error', function(error) {
-      console.log("Connection Error: " + error.toString());
-    });
-    connection.on('close', function() {
-      wsonline=false;
-      console.log('echo-protocol Connection Closed');
-    });
-    connection.on('message', function(message) {
-      if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),1001)
-      }
-    });
-  });
-  client.connect('ws://'+myip+':30005/event');
-}
-function initWS1002(){
-  var WebSocketClient = require('websocket').client;
-
-  var client = new WebSocketClient();
-
-  client.on('connectFailed', function(error) {
-    console.log('Connect Error: ' + error.toString());
-  });
-
-  client.on('connect', function(connection) {
-    wsonline = true;
-    console.log('WebSocket Client Connected 30015');
-    connection.on('error', function(error) {
-      console.log("Connection Error: " + error.toString());
-    });
-    connection.on('close', function() {
-      wsonline=false;
-      console.log('echo-protocol Connection Closed');
-    });
-    connection.on('message', function(message) {
-      if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),1002)
-      }
-    });
-  });
-  client.connect('ws://'+myip+':30015/event');
-}
-
-function reconnect(){
-  if(!wsonline){
-    initWS();
-    initWS2()
-    initWS3()
+var botlist = [
+  {
+    qq:1,
+    port:23334,
+    wsport:23335
+  },
+  {
+    qq:1,
+    port:24334,
+    wsport:24335
+  },
+  {
+    qq:1,
+    port:25334,
+    wsport:25335
+  },
+  {
+    qq:1,
+    port:26334,
+    wsport:26335
+  },
+  {
+    qq:1,
+    port:27334,
+    wsport:27335
+  },
+  {
+    qq:1,
+    port:28334,
+    wsport:28335
+  },
+  {
+    qq:1,
+    port:29334,
+    wsport:29335
+  },
+  {
+    qq:1,
+    port:30004,
+    wsport:30005
+  },
+  {
+    qq:1,
+    port:30014,
+    wsport:30015
   }
+
+]
+
+function init(){
+  for(var i=0;i<botlist.length;i++){
+    var port = botlist[i].port;
+    var wsport = botlist[i].wsport;
+    initBotWS(port,wsport);
+  }
+}
+
+function initBotWS(port,wsport){
+  var WebSocketClient = require('websocket').client;
+
+  var client = new WebSocketClient();
+
+  client.on('connectFailed', function(error) {
+    console.log('Connect Error: ' + error.toString());
+  });
+
+  client.on('connect', function(connection) {
+    wsonline = true;
+    console.log('WebSocket Client Connected '+wsport);
+    connection.on('error', function(error) {
+      console.log("Connection Error: " + error.toString());
+    });
+    connection.on('close', function() {
+      wsonline=false;
+      console.log('echo-protocol Connection Closed');
+    });
+    connection.on('message', function(message) {
+      if (message.type === 'utf8') {
+        handleMsg(JSON.parse(message.utf8Data),port)
+      }
+    });
+  });
+  client.connect('ws://'+myip+':'+wsport+'/event');
 }
 
 var queue = []
 var xqueue = []
-function addSendQueue(groupid,msg,botqq){
+function addSendQueue(groupid,msg,port){
   var gidstr = groupid+"";
   var vip = 0;
   if(gidstr.startsWith("20570")){
@@ -525,29 +343,6 @@ function addSendQueue(groupid,msg,botqq){
       vip=1;
     }
   }
-  var port;
-  if(botqq==2){
-    port = 24334;
-  }else if(botqq==3){
-    port = 25334;
-  }else if(botqq==4){
-    port = 26334;
-  }else if(botqq==5){
-    port = 27334;
-  }else if(botqq==11){
-    port = 29334;
-  }else if(botqq==12){
-    port = 26334;
-  }else if(botqq==13){
-    port = 28334;
-  }else if(botqq==1001){
-    port = 30004;
-  }else if(botqq==1002){
-    port = 30014;
-  }else{
-    port = 23334;
-  }
-
   if(port!=23334){
     vip = vip +1;
   }
@@ -606,15 +401,15 @@ const formatSize = (byte) => {
   return `${(t * 1024).toFixed(2)}${sizeOpt[i - 1]}`
 }
 
-function handleMsg(msgObj,botqq){
+function handleMsg(msgObj,port){
   try{
-    handleMsg_D0(msgObj,botqq);
+    handleMsg_D0(msgObj,port);
   }catch(e){
     console.log(e);
   }
 }
 
-function handleMsg_D0(msgObj,botqq){
+function handleMsg_D0(msgObj,port){
 
   //TODO: 目前百百会接受自己的发言，暂时先这样处理
   if(new Set([
@@ -653,16 +448,15 @@ function handleMsg_D0(msgObj,botqq){
     content = simplized(content);
     msgObj.message=content;
   }
-  handleMsg_D(msgObj,botqq);
+  handleMsg_D(msgObj,port);
 }
 
-function handleMsg_D(msgObj,botqq) {
+function handleMsg_D(msgObj,port) {
 
 
 
   // console.log('\n\n\n\n\n======================')
   // console.log(msgObj)
-  // console.log(botqq)
   // console.log('======================\n\n\n\n\n')
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
@@ -670,31 +464,9 @@ function handleMsg_D(msgObj,botqq) {
   var self= msgObj.self_id;
   var callback
   var port;
-  if(botqq==2){
-    port = 24334;
-  }else if(botqq==3){
-    port = 25334;
-  }else if(botqq==4){
-    port = 26334;
-  }else if(botqq==5){
-    port = 27334;
-  }else if(botqq==11){
+  var sf = (self+"").substring(0,5);
+  if(sf=="38490"){
     port = 29334;
-  }else if(botqq==12){
-    port = 26334;
-  }else if(botqq==13){
-    port = 28334;
-  }else if(botqq==1001){
-		port = 30004;
-	}else if(botqq==1002){
-		port = 30014;
-	}else{
-    var sf = (self+"").substring(0,5);
-    if(sf=="38490"){
-      port = 29334;
-    }else{
-      port = 23334;
-    }
   }
 
   var gidstr= groupid+"";
@@ -711,9 +483,8 @@ function handleMsg_D(msgObj,botqq) {
         gidstr.startsWith("22169")||
         gidstr.startsWith("67096")||
         gidstr.startsWith("77670")||
-      gidstr.startsWith("69738")||
-
-        gidstr.startsWith("61614")||
+        gidstr.startsWith("69738")||
+        gidstr.startsWith("96435")||
         gidstr.startsWith("xxxxx")
       )&&port==23334){
       return;
@@ -760,18 +531,18 @@ function handleMsg_D(msgObj,botqq) {
           wellcome = `欢迎[CQ:at,qq=${msgObj.user_id}]加群`
           break
       }
-      addSendQueue(groupid,wellcome,botqq);
+      addSendQueue(groupid,wellcome,port);
       return
     case 'group_decrease':
       if(msgObj.sub_type == 'kick') {
-        addSendQueue(groupid,`${msgObj.user_id}被踹走了`,botqq);
+        addSendQueue(groupid,`${msgObj.user_id}被踹走了`,port);
       } else {
-        addSendQueue(groupid,`${msgObj.user_id}溜走了`,botqq);
+        addSendQueue(groupid,`${msgObj.user_id}溜走了`,port);
       }
       return
     case 'group_upload':
       if(new Set([672926817, 577587780, '672926817', '577587780']).has(msgObj.group_id)) {
-        addSendQueue(groupid, `[CQ:at,qq=${msgObj.user_id}] 倒了群垃圾！\n ${msgObj.file.name}(${formatSize(msgObj.file.size || 0)})` ,botqq);
+        addSendQueue(groupid, `[CQ:at,qq=${msgObj.user_id}] 倒了群垃圾！\n ${msgObj.file.name}(${formatSize(msgObj.file.size || 0)})` ,port);
         return
       }
       break
@@ -833,7 +604,7 @@ function handleMsg_D(msgObj,botqq) {
   saveChat(groupid, from, name, content,port);
   callback = function (res, blank) {
     if (res.trim().length > 0) {
-      addSendQueue(groupid,res,botqq);
+      addSendQueue(groupid,res,port);
     }
   }
   handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group',port)
@@ -1879,7 +1650,6 @@ const test1='123123'
 
 module.exports={
   handleMsg,
-  reconnect,
   reply,
   handle_msg_D2,
   test1
