@@ -101,7 +101,7 @@ let saveImage = function(url,delay){
     var req = request({
       url: url,
       method: "GET",
-      proxy:'http://192.168.17.62:3128',
+      proxy:'http://192.168.17.241:2346',
       headers:{
         'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
         'Referer':'https://www.pixiv.net/ranking.php?mode=daily',
