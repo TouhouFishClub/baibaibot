@@ -271,91 +271,9 @@ var queue = []
 var xqueue = []
 function addSendQueue(groupid,msg,port){
   var gidstr = groupid+"";
-  var vip = 0;
-  if(gidstr.startsWith("20570")){
-    vip = 3;
-  }else if(gidstr.startsWith("69738")){
-    vip = 2;
-  }else if(gidstr.startsWith("22169")){
-    vip = 2;
-  }else if(gidstr.startsWith("63508")){
-    vip = 2;
-  }else if(gidstr.startsWith("78078")){
-    vip = 2;
-  }else if(gidstr.startsWith("56828")){
-    vip = 2;
-  }else if(gidstr.startsWith("96435")){
-    vip = 2;
-  }else if(gidstr.startsWith("14559")){
-    vip = 2;
-  }else if(gidstr.startsWith("77670")){
-    vip = 2;
-  }else if(gidstr.startsWith("54982")){
-    vip = 2;
-  }else if(gidstr.startsWith("57758")){
-    vip = 2;
-  }else if(gidstr.startsWith("74633")){
-    vip = 2;
-  }else if(gidstr.startsWith("29096")){
-    vip = 2;
-  }else if(gidstr.startsWith("59589")){
-    vip = 2;
-  }else if(gidstr.startsWith("11208")){
-    vip = 2;
-  }else if(gidstr.startsWith("4193673")){
-    vip = 1;
-  }else if(gidstr.startsWith("6707501")){
-    vip = 1;
-  }else if(gidstr.startsWith("176139")){
-    vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
-    vip = 1;
-  }else if(gidstr.startsWith("98265")){
-    vip = 1;
-  }else if(gidstr.startsWith("10273")){
-    vip = 1;
-  }else if(gidstr.startsWith("20549")){
-    vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
-    vip = 1;
-  }else if(gidstr.startsWith("18173")){
-    vip = 1;
-  }else if(gidstr.startsWith("39233")){
-    vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
-    vip = 1;
-  }else if(gidstr.startsWith("39255")){
-    vip = 1;
-  }else if(gidstr.startsWith("31590")){
-    vip = 1;
-  }else if(gidstr.startsWith("19302")){
-    vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
-    vip = 1;
-  }else if(gidstr.startsWith("30640")){
-    vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
-    vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
-    vip = 1;
-  }else if(gidstr.startsWith("xxxxx")){
-    vip = 1;
-  }else{
-    if(getGroupMemberNum(groupid)<10){
-      vip=1;
-    }
-  }
-  if(port!=23334){
-    vip = vip +1;
-  }
-
-
     msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
     msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
     msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
-
-
-
     var bdy = {"group_id": groupid, message: msg};
     console.log("send:"+groupid+":"+msg);
     request({
