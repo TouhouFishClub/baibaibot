@@ -229,6 +229,8 @@ var botlist = [
 
 ]
 
+
+init();
 function init(){
   for(var i=0;i<botlist.length;i++){
     var port = botlist[i].port;
