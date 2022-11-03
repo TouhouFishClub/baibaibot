@@ -521,6 +521,11 @@ function handleMsg_D(msgObj,port) {
   }
 
   var groupName = getGroupName(groupid,port);
+
+	console.log('\n\n\n\n=====================')
+	console.log(msgObj)
+	console.log('=====================\n\n\n\n')
+
   saveChat(groupid, from, name, content,port);
   callback = function (res, blank) {
     if (res.trim().length > 0) {
