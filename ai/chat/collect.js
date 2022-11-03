@@ -2,12 +2,15 @@ var MongoClient = require('mongodb').MongoClient;
 var mongourl = require('../../baibaiConfigs').mongourl;
 
 
-function saveChat(gid,uid,name,content,port){
+function saveChat(gid,uid,name,content,port, messageObjectSource){
   if(gid=='568281876'){
     return;
   }
   var now = new Date();
   var data = {'_id':now,gid:gid,uid:uid,n:name,d:content,ts:now.getTime(),port:port};
+	if(messageObjectSource && messageObjectSource.message_id) {
+		data.message_id = messageObjectSource.message_id
+	}
   MongoClient.connect(mongourl, function(err, db) {
     if(err){
       console.log('mongo erro4r:!!!!!!!!!');
