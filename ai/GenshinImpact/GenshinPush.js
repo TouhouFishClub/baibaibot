@@ -2,10 +2,13 @@ const http = require("http");
 const path = require("path");
 const _ = require('lodash')
 const nodeHtmlToImage = require('node-html-to-image')
-const { IMAGE_DATA, myip } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'))
+const MongoClient = require('mongodb').MongoClient
+const { mongourl, IMAGE_DATA, myip } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'))
 const font2base64 = require('node-font2base64')
 //FONTS
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'hk4e_zh-cn.ttf'))
+
+let client
 
 const emojiSet = new Set([
 	'🏆',
@@ -18,7 +21,16 @@ const emojiSet = new Set([
 	'🌕',
 ])
 
-const analyzerMessage = msg => {
+const analyzerMessage = async msg => {
+
+	if(!client) {
+		try {
+			client = await MongoClient.connect(mongourl)
+		} catch (e) {
+			console.log('MONGO ERROR FOR GENSHIN HELPER MODULE!!')
+			console.log(e)
+		}
+	}
 	// console.log(`=======\n\n\n${msg}\n\n\n=======`)
 	let out = {}, users = [], userInfo = {}, analyzerUser = false
 	msg.split('\n').forEach(line => {
