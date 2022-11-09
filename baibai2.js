@@ -440,7 +440,10 @@ function handleMsg_D(msgObj,port) {
 			msgObj.message.trim().startsWith('opt') ||
 			msgObj.message.trim().startsWith('meu') ||
 			msgObj.message.trim().startsWith('mbi') ||
-			msgObj.message.trim().startsWith('洛奇')
+			msgObj.message.trim().startsWith('洛奇') ||
+			msgObj.message.trim().startsWith('走私') ||
+			msgObj.message.trim().startsWith('rua') ||
+			msgObj.message.trim().startsWith('boss')
 		)
 	) {
 		if(msgObj.user_id != 799018865) {
