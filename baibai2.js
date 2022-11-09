@@ -418,13 +418,35 @@ function handleMsg_D(msgObj,port) {
     }
     if((
         gidstr.startsWith("20570")||
+        gidstr.startsWith("57758")||
         gidstr.startsWith("xxxxx")
       )&&port!=24334){
+      return;
+    }
+    if((
+        gidstr.startsWith("25032")||
+        gidstr.startsWith("xxxxx")
+      )&&port!=30004){
       return;
     }
   }else{
     content = content.substring(6).trim();
   }
+
+	//TODO: 洛奇官群屏蔽其他功能
+	if(
+		msgObj.group_id === 760946387 &&
+		!(
+			msgObj.message.trim().startsWith('opt') ||
+			msgObj.message.trim().startsWith('meu') ||
+			msgObj.message.trim().startsWith('mbi') ||
+			msgObj.message.trim().startsWith('洛奇')
+		)
+	) {
+		if(msgObj.user_id != 799018865) {
+			return
+		}
+	}
 
   if(getMsgCount(port)>1500){
     return;
@@ -433,8 +455,8 @@ function handleMsg_D(msgObj,port) {
   switch(msgObj.notice_type) {
     case 'group_increase':
       if(new Set([
-        2375373419, 3291864216, 1840239061, 981069482, 914853856, 2771362647,
-        '2375373419', '3291864216', '1840239061', '981069482', '914853856', '2771362647',
+        2375373419, 3291864216, 1840239061, 981069482, 914853856, 2771362647, 760946387,
+        '2375373419', '3291864216', '1840239061', '981069482', '914853856', '2771362647', '760946387',
       ]).has(msgObj.user_id)){
         return
       }
