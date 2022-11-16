@@ -921,19 +921,19 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ergo(from, content, callback)
   }
   if(content == '洛奇来一发') {
-    mabiGacha(from, callback, 1)
+    mabiGacha(from, groupid, callback, 1)
     return;
   }
   if(content == '洛奇来十连') {
-    mabiGacha(from, callback, 11)
+    mabiGacha(from, groupid, callback, 11)
     return;
   }
   if(content == '洛奇来一单') {
-    mabiGacha(from, callback, 60)
+    mabiGacha(from, groupid, callback, 60)
     return;
   }
   if(content == '洛奇来十单') {
-    mabiGacha(from, callback, 600)
+    mabiGacha(from, groupid, callback, 600)
     return;
   }
 

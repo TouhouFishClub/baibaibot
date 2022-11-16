@@ -36,8 +36,12 @@ const createTimeStr = ts => {
 	return out.join('')
 }
 
-const mabiGacha = async (user, callback, gachaCount = 60, gachaGroup) => {
-	if(user != 799018865) {
+const groupWhiteList = new Set([
+	250324987
+])
+
+const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) => {
+	if(!(user == 799018865 || groupWhiteList.has(groupId))) {
 		return
 	}
 	if(!gachaInfo.length) {
