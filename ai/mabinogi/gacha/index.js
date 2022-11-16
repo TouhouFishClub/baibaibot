@@ -37,7 +37,8 @@ const createTimeStr = ts => {
 }
 
 const groupWhiteList = new Set([
-	250324987
+	250324987,
+	1011153915
 ])
 
 const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) => {
