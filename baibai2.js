@@ -51,7 +51,7 @@ const rua = require('./ai/mabinogi/ruawork')
 const {baiduVoice} = require('./ai/voice/baiduvoice')
 const {saveChat} = require('./ai/chat/collect');
 const {getFoodRate} = require('./ai/kancolle/food');
-
+require('./ai/kancolle/senka2');
 const {descryptReply} = require('./ai/image/qqspeak');
 const rp = require('./ai/rp');
 const {G21Boss} = require('./ai/mabinogi/G21Boss');
