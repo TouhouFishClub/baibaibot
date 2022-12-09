@@ -149,7 +149,7 @@ const renderGroupCount = async (groupId, callback, type = 'img') => {
 
 	switch(type) {
 		case 'img':
-			renderGroupCountChart(groupCountObj, groupId, type)
+			renderGroupCountChart(groupCountObj, groupId, callback)
 			break
 	}
 }
