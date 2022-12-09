@@ -75,7 +75,7 @@ function getUserInfo(uuid,callback){
                 cl_senka_8.updateOne({'_id':uid},{'$set':{e:exp,cmt:cmt,ts:now,tse:nn}});
               }else{
                 dd[key]=exp;
-                cl_senka_8.updateOne({'_id':uid},{'$set':{d:dd,e:exp,cmt:cmt}});
+                cl_senka_8.updateOne({'_id':uid},{'$set':{d:dd,e:exp,cmt:cmt,ts:now,tse:nn}});
               }
             }else{
               var dd = {};
@@ -348,7 +348,7 @@ function gotimer(){
   },left)
 
 
-  var left2 = (43200000 - new Date().getTime()%43200000 + 3600000*6)%43200000+5000
+  var left2 = (43200000 - new Date().getTime()%43200000 + 220000+3600000*6)%43200000+5000
   var leftmin2 = left2/60000;
   console.log('leftmin2:'+leftmin2);
   setTimeout(function(){
@@ -356,7 +356,7 @@ function gotimer(){
     setTimeout(function(){
       timer();
     },60000);
-  },left)
+  },left2)
 
 
   var left3 = 3600000 - new Date().getTime()%3600000+10000
@@ -376,7 +376,7 @@ function gotimer(){
     }else{
       console.log('hour task:no2')
     }
-  },left)
+  },left3)
 }
 
 function timer(){
