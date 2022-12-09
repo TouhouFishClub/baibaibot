@@ -35,6 +35,7 @@ const fetchGroupData = async groupId => {
 }
 
 const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
+	console.log(groupCountObj)
 
 	let output = path.join(IMAGE_DATA, 'other', `${groupId}_count_img.png`)
 	// let output = path.join(`${groupId}.png`)
