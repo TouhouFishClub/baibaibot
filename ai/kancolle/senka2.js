@@ -585,9 +585,6 @@ function handleSenkaReply(content,gid,qq,callback){
     });
   }
 }
-setTimeout(function(){
-  handleSenkaReply('z8','','',function(r){console.log(r)})
-},200)
 
 module.exports={
   handleSenkaReply
