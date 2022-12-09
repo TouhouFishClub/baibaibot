@@ -352,6 +352,21 @@ function gotimer(){
     },60000);
   },left)
 
+
+  var left3 = 3600000 - new Date().getTime()%3600000+10000
+  var leftmin3 = left3/60000;
+  console.log('leftmin3:'+leftmin3);
+  setTimeout(function(){
+    var nowdate = new Date().getDate();
+    var nowmonth = new Date().getMonth();
+    if(nowdate==monthOfDay[nowmonth]){
+      var nowhour = new Date().getHours();
+      if(nowhour>=15&&nowhour<=22){
+        timer();
+      }
+    }
+  },left)
+
 }
 
 function timer(){
