@@ -6,8 +6,8 @@ const { cut, load, extract, textRankExtract } = require("nodejieba")
 const nodeHtmlToImage = require('node-html-to-image')
 const path = require("path");
 
-let echart = readFileSync(join(__dirname, '..', 'echart.min.js'), 'utf-8')
-let echartWordcloud = readFileSync(join(__dirname, '..', 'echart-wordcloud.js'), 'utf-8')
+let echart = readFileSync(join(__dirname, '..', 'libs', 'echart.min.js'), 'utf-8')
+let echartWordcloud = readFileSync(join(__dirname, '..', 'libs', 'echart-wordcloud.js'), 'utf-8')
 
 let personasLimit = {}
 

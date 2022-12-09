@@ -1,40 +1,80 @@
 const { readFileSync } = require('fs')
 const { join } = require('path')
 const MongoClient = require('mongodb').MongoClient
-const { mongourl, IMAGE_DATA } = require('../../../baibaiConfigs')
+const { mongourl, IMAGE_DATA, myip} = require('../../../baibaiConfigs')
 const nodeHtmlToImage = require('node-html-to-image')
 const path = require("path");
+const http = require("http");
 
-let echart = readFileSync(join(__dirname, '..', 'echart.min.js'), 'utf-8')
-let echartWordcloud = readFileSync(join(__dirname, '..', 'echart-wordcloud.js'), 'utf-8')
+let echart = readFileSync(join(__dirname, '..', 'libs', 'echart.min.js'), 'utf-8')
+let echartWordcloud = readFileSync(join(__dirname, '..', 'libs', 'echart-wordcloud.js'), 'utf-8')
 let personasLimit = {}
 
 let client
 
-const analysisChatData = data => {
+const analysisChatData = (data, userMap) => {
 	let accountCount = {}
 	data.forEach(msg => {
 		if(msg.d && msg.uid != 981069482){
-			if(accountCount[msg.uid]) {
-				accountCount[msg.uid] = accountCount[msg.uid] + 1
+			let nid = userMap[msg.uid] || msg.uid
+			if(accountCount[nid]) {
+				accountCount[nid] = accountCount[nid] + 1
 			} else {
-				accountCount[msg.uid] = 1
+				accountCount[nid] = 1
 			}
 		}
 	})
-	return Object.keys(accountCount).map(uid => {return {uid, count: accountCount[uid]}}).sort((a, b) => b.count - a.count)
+	// return Object.keys(accountCount).map(uid => {return {uid, count: accountCount[uid]}}).sort((a, b) => b.count - a.count)
+	return accountCount
 }
 
-const fetchGroupData = async groupId => {
+const fetchGroupUsers = (groupid, port) =>
+	new Promise(resolve => {
+		let url = `http://${myip}:${port}/get_group_member_list?group_id=${groupid}`
+		http.get(url, (res) => {
+			res.setEncoding('utf8');
+			let rawData = '';
+			res.on('data', (chunk) => { rawData += chunk; });
+			res.on('end', () => {
+				try {
+					const parsedData = JSON.parse(rawData);
+					const groupUsers = parsedData.data.map(x => {
+						return {
+							uid: x.user_id,
+							nid: x.card || x.nickname
+						}
+					})
+					// console.log('===============')
+					// console.log(groupUsers)
+					// console.log('===============')
+					resolve(groupUsers);
+				} catch (e) {
+					console.error(e.message);
+					resolve([])
+				}
+			});
+		}).on('error', (e) => {
+			console.error(`Got error: ${e.message}`);
+			resolve([])
+		})
+	})
+
+const fetchGroupData = async (port, groupId) => {
+	let users = await fetchGroupUsers(groupId, port)
+	let userMap = {}
+	users.forEach(x => {
+		userMap[x.uid] = x.nid
+	})
 	let groupData = await client.db('db_bot').collection('cl_chat').find({
 		_id: { $gt: new Date(Date.now() - 1000*60*60*24) },
 		gid: groupId
 	}).toArray()
 	console.log(`===> group data length: ${groupData.length}`)
-	return analysisChatData(groupData)
+	return analysisChatData(groupData, userMap)
 }
 
 const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
+	// console.log(groupCountObj)
 
 	let output = path.join(IMAGE_DATA, 'other', `${groupId}_count_img.png`)
 	// let output = path.join(`${groupId}.png`)
@@ -70,7 +110,7 @@ const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
 				for (var name in keywords) {
 					data.push({
 						name: name,
-						value: Math.sqrt(keywords[name])
+						value: keywords[name]
 					})
 				}
 			
@@ -128,7 +168,7 @@ const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
 		})
 }
 
-const renderGroupCount = async (groupId, callback, type = 'img') => {
+const renderGroupCount = async (port, groupId, callback, type = 'img') => {
 	if(!client) {
 		try {
 			client = await MongoClient.connect(mongourl)
@@ -144,12 +184,12 @@ const renderGroupCount = async (groupId, callback, type = 'img') => {
 		return
 	}
 
-	let groupCountObj = await fetchGroupData(groupId)
+	let groupCountObj = await fetchGroupData(port, groupId)
 	// console.log(extractArr)
 
 	switch(type) {
 		case 'img':
-			renderGroupCountChart(groupCountObj, groupId, type)
+			renderGroupCountChart(groupCountObj, groupId, callback)
 			break
 	}
 }
