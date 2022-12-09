@@ -74,7 +74,7 @@ const fetchGroupData = async (port, groupId) => {
 }
 
 const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
-	console.log(groupCountObj)
+	// console.log(groupCountObj)
 
 	let output = path.join(IMAGE_DATA, 'other', `${groupId}_count_img.png`)
 	// let output = path.join(`${groupId}.png`)
@@ -110,7 +110,7 @@ const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
 				for (var name in keywords) {
 					data.push({
 						name: name,
-						value: Math.sqrt(keywords[name])
+						value: keywords[name]
 					})
 				}
 			
