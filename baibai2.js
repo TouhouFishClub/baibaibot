@@ -1107,7 +1107,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		renderChatPersonas(groupid, callback)
   }
   if(con == '群水笔' || con == '群水比' || con == '群发言排行') {
-		renderGroupCount(groupid, callback)
+		renderGroupCount(port, groupid, callback)
   }
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)
