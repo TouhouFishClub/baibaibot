@@ -95,12 +95,16 @@ function getUserInfo(uuid,callback){
           shipstr+shipstr.trim();
           var ret = '';
           //ret = ret + name + "  【ID:"+data.api_member_id+"】\n";
+          var rrr = {};
+          rrr.exp=exp;
+          rrr.ship=shipstr;
+          rrr.cmt=cmt;
           ret = ret + name + "  \n";
 
           ret = ret + '经验值：【'+exp+'】\t 经验战果值：【'+exps+'】\n'
           ret = ret + cmt + '\n';
           ret = ret + shipstr;
-          callback(ret);
+          callback(rrr);
         }catch(e){
           console.log('error!!!!'+uuid)
           console.log(body);
@@ -348,7 +352,7 @@ function gotimer(){
   },left)
 
 
-  var left2 = (43200000 - new Date().getTime()%43200000 + 220000+3600000*6)%43200000+5000
+  var left2 = (43200000 - new Date().getTime()%43200000 + 3600000*6)%43200000+5000
   var leftmin2 = left2/60000;
   console.log('leftmin2:'+leftmin2);
   setTimeout(function(){
@@ -430,6 +434,172 @@ function getInfoFromList(glist){
 }
 
 gotimer();
+
+
+function handleSenkaReply(content,gid,qq,callback){
+  content=content.trim();
+  var nn = new Date();
+  var now = nn.getTime();
+  var year = nn.getFullYear();
+  var month = nn.getMonth()+1;
+  var dateno = getRankDateNo(nn.getTime());
+  var keym = year+"_"+month;
+  var key = year+'_'+month+'_'+dateno;
+  var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
+  var cl_senka_8 = udb.collection("cl_senka_8");
+  var ca = content.split('-');
+  if(ca.length==2){
+    var cd = ca[1];
+    if(cd==1){
+
+    }else if(cd==2){
+
+    }else if(cd==3){
+
+    }else{
+      console.log('cd:'+cd)
+      cl_n_senka_8.find({n:new RegExp(cd)}).toArray(function(err,arr){
+        var m = {};
+        for(var i=0;i<arr.length;i++){
+          var name = arr[i].n;
+          if(m[name]){
+            m[name].push(arr[i])
+          }else{
+            m[name]=[arr[i]];
+          }
+        }
+        var namelist = Object.keys(m);
+        if(namelist.length==1){
+          console.log('11111');
+          var ranklist = m[namelist[0]];
+          ranklist.sort(function(a,b){
+            return parseInt(a._id.split('_')[0]) - parseInt(b._id.split('_')[0])
+          })
+          console.log(ranklist)
+          cl_senka_8.find({n:namelist[0]}).toArray(function(err2,arr2){
+            arr2.sort(function(a,b){return b.ts-a.ts})
+            var user = arr2[0];
+            console.log(user);
+            var userid = user._id;
+            var lsenka = ranklist[ranklist.length-1];
+            var td = lsenka.dd;
+            var ton = lsenka.no;
+            var tno = parseInt(lsenka._id.split('_')[0])
+            var tk
+            if(tno%2==0){
+              tk = keym+'_'+tno+'_1'
+            }else{
+              tk = keym+'_'+tno+'_13'
+            }
+            var thenexp = user.d[tk];
+            getUserInfo(userid,function(rrr){
+              var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
+              var ret = namelist[0]+'\n';
+              ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')】\n'
+              ret = ret + rrr.cmt + '\n';
+              ret = ret + rrr.ship + '\n';
+              callback(ret.trim());
+            })
+          })
+
+        }else{
+          var ret = '请选择\n';
+          for(var i=0;i<namelist.length;i++){
+            ret = ret + namelist[i]+'\n';
+          }
+          callback(ret.trim());
+        }
+      })
+    }
+  }else if(ca.length==1){
+    var query = {'_id':{'$gt':dateno+'','$lt':dateno+'~'}};
+    console.log(query);
+    cl_n_senka_8.find(query).toArray(function(err,arr){
+      var namemap = [];
+      for(var i=0;i<arr.length;i++){
+        namemap[arr[i].n]=1;
+      }
+      var namelist = Object.keys(namemap);
+      console.log(namelist);
+      var nnn = new  Date();
+      var k1;
+      var k2;
+      if(dateno%2==0){
+        nnn.setHours(2)
+        nnn.setMinutes(0);
+        nnn.setSeconds(0);
+        k1 = keym+'_'+dateno+'_'+1;
+        k2 = keym+'_'+dateno+'_'+2;
+      }else{
+        nnn.setHours(13)
+        nnn.setMinutes(0);
+        nnn.setSeconds(0);
+        k1 = keym+'_'+dateno+'_'+13;
+        k2 = keym+'_'+dateno+'_'+14;
+      }
+      cl_senka_8.find({n:{'$in':namelist},ts:{'$gt':nnn.getTime()}}).toArray(function(err2,arr2){
+        var m = {};
+        console.log('ssssssss'+arr2.length)
+        for(var i=0;i<arr2.length;i++){
+          var sd = arr2[i].d;
+          if(sd[k1]&&sd[k2]){
+            m[arr2[i].n]=((sd[k2]-sd[k1])/10000*7).toFixed(1);
+          }
+        }
+        for(var i=0;i<arr.length;i++){
+          if(m[arr[i].n]){
+            arr[i].ns = arr[i].dd + parseFloat(m[arr[i].n])
+          }else{
+            arr[i].ns = arr[i].dd
+          }
+        }
+        arr.sort(function(a,b){return b.ns-a.ns});
+        var ret = '';
+        var r1,r5,r20,r100,r500=0
+        for(var i=0;i<arr.length;i++){
+          if(arr[i].no==1){
+            r1=arr[i].dd;
+          }
+          if(arr[i].no==5){
+            r5=arr[i].dd;
+          }
+          if(arr[i].no==20){
+            r20=arr[i].dd;
+          }
+          if(arr[i].no==100){
+            r100=arr[i].dd;
+          }
+          if(arr[i].no==500){
+            r500=arr[i].dd;
+          }
+        }
+        ret = ret + '\t\t【榜单】\t【当前】\t【预测】\n'
+        ret = ret + '\t1位【'+r1+'】\t【'+arr[0].ns+'】\t【0】\n';
+        ret = ret + '\t5位【'+r5+'】\t【'+arr[4].ns+'】\t【0】\n';
+        ret = ret + '\t20位【'+r20+'】\t【'+arr[19].ns+'】\t【0】\n';
+        ret = ret + '\t100位【'+r100+'】\t【'+arr[99].ns+'】\t【0】\n';
+        ret = ret + '\t500位【'+r500+'】\t【'+arr[499].ns+'】\t【0】\n';
+        ret = ret + '统计时间：'+new Date(arr[0].ts).toLocaleString();
+        callback(ret.trim())
+      })
+    });
+  }
+}
+setTimeout(function(){
+  handleSenkaReply('z8','','',function(r){console.log(r)})
+},200)
+
+module.exports={
+  handleSenkaReply
+}
+
+
+
+
+
+
+
+
 
 
 
