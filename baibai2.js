@@ -148,6 +148,7 @@ const { searchEquipUpgrade } = require('./ai/mabinogi/ItemUpgrade/index')
 const {handleDSReply,handleVoteReply} = require('./ai/games/ds/dsmain')
 
 const { renderChatPersonas } = require('./ai/chat/personas/index')
+const { renderGroupCount } = require('./ai/chat/groupCount/index')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -1104,6 +1105,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(con == '群关键词' || con == 'hawk') {
 		renderChatPersonas(groupid, callback)
+  }
+  if(con == '群水笔' || con == '群水比' || con == '群发言排行') {
+		renderGroupCount(groupid, callback)
   }
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)
