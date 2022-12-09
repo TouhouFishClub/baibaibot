@@ -142,24 +142,24 @@ module.exports={
 }
 
 
-function go(){
-  setTimeout(function(){
-    getUserInfo(8172923
-      ,function(r){
+// function go(){
+//   setTimeout(function(){
+//     getUserInfo(8172923
+//       ,function(r){
+//
+//       })
+//     getUserInfo(8177405
+//       ,function(r){
+//
+//       })
+//   },2000)
+// }
 
-      })
-    getUserInfo(8177405
-      ,function(r){
-
-      })
-  },2000)
-}
-
-function rk(){
-  setTimeout(function(){
-    getRank(1,[]);
-  },2000);
-}
+// function rk(){
+//   setTimeout(function(){
+//     getRank(1,[]);
+//   },2000);
+// }
 
 
 function rd(x){
@@ -333,7 +333,6 @@ function EA2(max,min){
   }
 }
 
-//gotimer();
 
 function gotimer(){
   var left = (43200000 - new Date().getTime()%43200000 + 3600000*5)%43200000+5000
@@ -341,6 +340,17 @@ function gotimer(){
   console.log('leftmin:'+leftmin);
   setTimeout(function(){
     timer();
+  },left)
+
+
+  var left2 = (43200000 - new Date().getTime()%43200000 + 3600000*6)%43200000+5000
+  var leftmin2 = left2/60000;
+  console.log('leftmin2:'+leftmin2);
+  setTimeout(function(){
+    getRank(1,[]);
+    setTimeout(function(){
+      timer();
+    },60000);
   },left)
 
 }
@@ -395,9 +405,7 @@ function getInfoFromList(glist){
     });
 }
 
-setTimeout(function(){
-  timer()
-},2000)
+gotimer();
 
 
 
