@@ -286,11 +286,11 @@ function nr(rd,nn,magic){
     if (arr && arr[0]) {
       var odd = arr[0].d;
       odd[dateno] = senka;
-      cl_n_senka_8.updateOne({'_id': id}, {'$set': {d: odd, cmt: cmt}});
+      cl_n_senka_8.updateOne({'_id': id}, {'$set': {d: odd, cmt: cmt,dd:senka,no:no,ts: now, tse: nn}});
     } else {
       var dd = {}
       dd[dateno] = senka;
-      var init = {'_id': id, n: name, d: dd, cmt: cmt, ts: now, tse: nn};
+      var init = {'_id': id, n: name, d: dd,dd:senka,no:no, cmt: cmt, ts: now, tse: nn};
       console.log(init);
       cl_n_senka_8.insert(init);
     }
@@ -419,7 +419,9 @@ function getInfoFromList(glist){
     });
 }
 
-gotimer();
+setTimeout(function(){
+  getRank(1,[]);
+},2000)
 
 
 
