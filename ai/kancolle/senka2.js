@@ -25,9 +25,12 @@ var shipid2name=["","睦月","如月","","","","長月","三日月","","吹雪",
 
 var token = 'bd9b2ad4d983ce330bbdf14e5ebc098c4af4e148';
 
-function getUserInfo(id,callback){
-  console.log('now:'+id);
-  var uud = id;
+function getUserInfo(uuid,callback){
+  if(!uuid){
+    return;
+  }
+  console.log('now:'+uuid);
+  var uud = uuid;
   var nn = new Date();
   var year = nn.getFullYear();
   var month = nn.getMonth()+1;
@@ -45,7 +48,7 @@ function getUserInfo(id,callback){
           'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
       },
       proxy:'http://192.168.17.236:2346',
-      body:'api_token='+token+'&api_verno=1&api_member_id='+id
+      body:'api_token='+token+'&api_verno=1&api_member_id='+uuid
   }, function(error, response, body){
       if(error&&error.code){
         console.log('pipe error catched!')
@@ -84,8 +87,8 @@ function getUserInfo(id,callback){
           })
           var shipstr = '';
           for(var i=0;i<ships.length;i++){
-            var id = ships[i].api_id;
-            if(id>0){
+            var shipid = ships[i].api_id;
+            if(shipid>0){
               shipstr=shipstr+shipid2name[ships[i].api_ship_id]+" \t Lv:"+ships[i].api_level+"\n"
             }
           }
@@ -99,7 +102,10 @@ function getUserInfo(id,callback){
           ret = ret + shipstr;
           callback(ret);
         }catch(e){
-
+          console.log('error!!!!'+uuid)
+          console.log(body);
+          console.log(e);
+          callback('error')
         }
 
       }
@@ -423,7 +429,7 @@ function getInfoFromList(glist){
     });
 }
 
-gotimer()
+gotimer();
 
 
 
