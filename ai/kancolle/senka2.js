@@ -362,11 +362,15 @@ function gotimer(){
     if(nowdate==monthOfDay[nowmonth]){
       var nowhour = new Date().getHours();
       if(nowhour>=15&&nowhour<=22){
+        console.log('hour task:ok')
         timer();
+      }else{
+        console.log('hour task:no1')
       }
+    }else{
+      console.log('hour task:no2')
     }
   },left)
-
 }
 
 function timer(){
@@ -419,9 +423,7 @@ function getInfoFromList(glist){
     });
 }
 
-setTimeout(function(){
-  getRank(1,[]);
-},2000)
+gotimer()
 
 
 
