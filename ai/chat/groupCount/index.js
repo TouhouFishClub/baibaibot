@@ -22,7 +22,8 @@ const analysisChatData = data => {
 			}
 		}
 	})
-	return Object.keys(accountCount).map(uid => {return {uid, count: accountCount[uid]}}).sort((a, b) => b.count - a.count)
+	// return Object.keys(accountCount).map(uid => {return {uid, count: accountCount[uid]}}).sort((a, b) => b.count - a.count)
+	return accountCount
 }
 
 const fetchGroupData = async groupId => {
