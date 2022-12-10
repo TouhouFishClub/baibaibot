@@ -25,7 +25,7 @@ var shipid2name=["","睦月","如月","","","","長月","三日月","","吹雪",
 
 var token = 'bd9b2ad4d983ce330bbdf14e5ebc098c4af4e148';
 
-function getUserInfo(uuid,callback){
+function getUserInfo(uuid,callback,noproxy){
   if(!uuid){
     return;
   }
@@ -39,7 +39,8 @@ function getUserInfo(uuid,callback){
   var key = year+'_'+month+'_'+dateno+'_'+hour;
   var now = nn.getTime();
   var url = 'http://203.104.209.199/kcsapi/api_req_member/get_practice_enemyinfo';
-  request({
+    
+  var req = {
       url: url,
       method: "POST",
       headers:{
@@ -47,9 +48,13 @@ function getUserInfo(uuid,callback){
           'Referer':'http://203.104.209.199/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
           'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
       },
-      proxy:'http://192.168.17.236:2346',
       body:'api_token='+token+'&api_verno=1&api_member_id='+uuid
-  }, function(error, response, body){
+  }    
+  if(!noproxy){
+    req.proxy = 'http://192.168.17.236:2346'
+  }
+    
+  request(req, function(error, response, body){
       if(error&&error.code){
         console.log('pipe error catched!')
         console.log(error);
@@ -58,6 +63,16 @@ function getUserInfo(uuid,callback){
           body=body.substring(7);
         }
         try {
+            try
+                eval('('+body+')')
+            catch(ee){
+                if(noproxy){
+                    callback({})
+                }else{
+                    getUserInfo(uuid,callback,1)
+                }
+                return;
+            }
           var dat = eval('('+body+')');
           var data = dat.api_data;
           var uid = data.api_member_id;
