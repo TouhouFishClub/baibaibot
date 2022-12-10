@@ -63,8 +63,9 @@ function getUserInfo(uuid,callback,noproxy){
           body=body.substring(7);
         }
         try {
-            try
+            try{
                 eval('('+body+')')
+            }
             catch(ee){
                 if(noproxy){
                     callback({})
