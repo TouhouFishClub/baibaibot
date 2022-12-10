@@ -485,6 +485,12 @@ function handleSenkaReply(content,gid,qq,callback){
           }
         }
         var namelist = Object.keys(m);
+        for(var i=0;i<namelist.length;i++){
+            if(namelist[i]==cd){
+                namelist = [cd];
+                break;
+            }
+        }
         if(namelist.length==1){
           console.log('11111');
           var ranklist = m[namelist[0]];
