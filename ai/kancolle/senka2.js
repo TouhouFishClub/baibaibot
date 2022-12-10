@@ -560,7 +560,11 @@ function handleSenkaReply(content,gid,qq,callback){
         nnn.setHours(2)
         nnn.setMinutes(0);
         nnn.setSeconds(0);
-        k1 = keym+'_'+dateno+'_'+1;
+          if(nn.getHours==13){
+        k1 = keym+'_'+dateno+'_'+13;
+          }else{
+        k1 = keym+'_'+dateno+'_'+1;      
+          }
         k2 = keym+'_'+dateno+'_'+2;
       }else{
         nnn.setHours(13)
