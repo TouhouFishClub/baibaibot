@@ -59,6 +59,13 @@ function getUserInfo(uuid,callback,noproxy){
       if(error&&error.code){
         console.log('pipe error catched!')
         console.log(error);
+        if(noproxy==2){
+            callback({})
+        }else if(noproxy==1){
+            getUserInfo(uuid,callback,2)
+        }else{
+            getUserInfo(uuid,callback,1)
+        }
       }else{
         if(body.startsWith("svdata=")){
           body=body.substring(7);
