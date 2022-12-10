@@ -39,7 +39,6 @@ function getUserInfo(uuid,callback,noproxy){
   var key = year+'_'+month+'_'+dateno+'_'+hour;
   var now = nn.getTime();
   var url = 'http://203.104.209.199/kcsapi/api_req_member/get_practice_enemyinfo';
-    
   var req = {
       url: url,
       method: "POST",
@@ -50,8 +49,10 @@ function getUserInfo(uuid,callback,noproxy){
       },
       body:'api_token='+token+'&api_verno=1&api_member_id='+uuid
   }    
-  if(!noproxy){
+  if(noproxy==1){
     req.proxy = 'http://192.168.17.236:2346'
+  }else if(noproxy==2){
+    req.proxy = 'http://192.168.17.241:2346'
   }
     
   request(req, function(error, response, body){
@@ -67,8 +68,10 @@ function getUserInfo(uuid,callback,noproxy){
                 eval('('+body+')')
             }
             catch(ee){
-                if(noproxy){
+                if(noproxy==2){
                     callback({})
+                }else if(noproxy==1){
+                    getUserInfo(uuid,callback,2)
                 }else{
                     getUserInfo(uuid,callback,1)
                 }
@@ -125,7 +128,7 @@ function getUserInfo(uuid,callback,noproxy){
           console.log('error!!!!'+uuid)
           console.log(body);
           console.log(e);
-          callback('error')
+          callback({})
         }
 
       }
