@@ -29,7 +29,7 @@ function getUserInfo(uuid,callback,noproxy){
   if(!uuid){
     return;
   }
-  console.log('now:'+uuid);
+  console.log('now:'+uuid+':'+noproxy);
   var uud = uuid;
   var nn = new Date();
   var year = nn.getFullYear();
@@ -254,7 +254,7 @@ function getRank(page,retarr,proxy){
       var rret = rarr[0].d;
       saveRank(rret,nn);
     }else{
-      request({
+        var req = {
         url: url,
         method: "POST",
         headers:{
@@ -262,9 +262,16 @@ function getRank(page,retarr,proxy){
           'Referer':'http://203.104.209.199/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
           'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
         },
-        proxy:'http://192.168.17.236:2346',
         body:"api%5Fpageno="+page+"&api%5Fverno=1&api%5Franking="+ranking+"&api%5Ftoken="+token
-      }, function(error, response, body) {
+      },
+      if(proxy==1){
+        req.proxy = 'http://192.168.17.236:2346'
+      }else if(proxy==2){
+        req.proxy = 'http://192.168.17.241:2346'
+      }else{
+          
+      }
+      request(req, function(error, response, body) {
         if (error && error.code) {
           console.log('pipe error catched!')
           console.log(error);
