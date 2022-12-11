@@ -59,13 +59,15 @@ function getUserInfo(uuid,callback,noproxy){
       if(error&&error.code){
         console.log('pipe error catched!')
         console.log(error);
-        if(noproxy==2){
-            callback({})
-        }else if(noproxy==1){
-            getUserInfo(uuid,callback,2)
-        }else{
-            getUserInfo(uuid,callback,1)
-        }
+          setTimeout(function(){
+                if(noproxy==2){
+                    callback({})
+                }else if(noproxy==1){
+                    getUserInfo(uuid,callback,2)
+                }else{
+                    getUserInfo(uuid,callback,1)
+                }
+          },1000);
       }else{
         if(body.startsWith("svdata=")){
           body=body.substring(7);
@@ -75,13 +77,15 @@ function getUserInfo(uuid,callback,noproxy){
                 eval('('+body+')')
             }
             catch(ee){
-                if(noproxy==2){
-                    callback({})
-                }else if(noproxy==1){
-                    getUserInfo(uuid,callback,2)
-                }else{
-                    getUserInfo(uuid,callback,1)
-                }
+                setTimeout(function(){
+                    if(noproxy==2){
+                        callback({})
+                    }else if(noproxy==1){
+                        getUserInfo(uuid,callback,2)
+                    }else{
+                        getUserInfo(uuid,callback,1)
+                    }                
+                },1000);
                 return;
             }
           var dat = eval('('+body+')');
@@ -230,7 +234,7 @@ function generateRankKey(userid){
 
 
 var MAGIC_R_NUMS = [ 8931, 1201, 1156, 5061, 4569, 4732, 3779, 4568, 5695, 4619, 4912, 5669, 6586 ];
-function getRank(page,retarr){
+function getRank(page,retarr,proxy){
 
   var url = 'http://203.104.209.199/kcsapi/api_req_ranking/mxltvkpyuklh';
   var nn = new Date();
@@ -264,11 +268,35 @@ function getRank(page,retarr){
         if (error && error.code) {
           console.log('pipe error catched!')
           console.log(error);
+            setTimeout(function(){
+                if(noproxy==2){
+                    
+                }else if(noproxy==1){
+                    getRank(page,retarr,2)
+                }else{
+                    getRank(page,retarr,1)
+                }
+            },1000);
         } else {
           if (body.startsWith("svdata=")) {
             body = body.substring(7);
           }
           //console.log(body);
+            try{
+                eval('('+body+')');
+            }catch(ee){
+                        
+                setTimeout(function(){
+                    if(noproxy==2){
+
+                    }else if(noproxy==1){
+                        getRank(page,retarr,2)
+                    }else{
+                        getRank(page,retarr,1)
+                    }
+                },1000);
+                return;
+            }
           var data = eval('('+body+')');
           var list = data.api_data.api_list;
           var rret = retarr.concat(list);
