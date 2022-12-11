@@ -294,9 +294,9 @@ function getRank(page,retarr,proxy){
             }catch(ee){
                         
                 setTimeout(function(){
-                    if(noproxy==2){
+                    if(proxy==2){
 
-                    }else if(noproxy==1){
+                    }else if(proxy==1){
                         getRank(page,retarr,2)
                     }else{
                         getRank(page,retarr,1)
