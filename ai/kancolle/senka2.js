@@ -255,15 +255,15 @@ function getRank(page,retarr,proxy){
       saveRank(rret,nn);
     }else{
         var req = {
-        url: url,
-        method: "POST",
-        headers:{
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Referer':'http://203.104.209.199/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
-          'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
-        },
-        body:"api%5Fpageno="+page+"&api%5Fverno=1&api%5Franking="+ranking+"&api%5Ftoken="+token
-      },
+            url: url,
+            method: "POST",
+            headers:{
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Referer':'http://203.104.209.199/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
+              'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
+            },
+            body:"api%5Fpageno="+page+"&api%5Fverno=1&api%5Franking="+ranking+"&api%5Ftoken="+token
+      };
       if(proxy==1){
         req.proxy = 'http://192.168.17.236:2346'
       }else if(proxy==2){
