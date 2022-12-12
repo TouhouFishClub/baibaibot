@@ -25,9 +25,12 @@ var shipid2name=["","睦月","如月","","","","長月","三日月","","吹雪",
 
 var token = 'bd9b2ad4d983ce330bbdf14e5ebc098c4af4e148';
 
-function getUserInfo(id,callback){
-  console.log('now:'+id);
-  var uud = id;
+function getUserInfo(uuid,callback,noproxy){
+  if(!uuid){
+    return;
+  }
+  console.log('now:'+uuid+':'+noproxy);
+  var uud = uuid;
   var nn = new Date();
   var year = nn.getFullYear();
   var month = nn.getMonth()+1;
@@ -36,7 +39,7 @@ function getUserInfo(id,callback){
   var key = year+'_'+month+'_'+dateno+'_'+hour;
   var now = nn.getTime();
   var url = 'http://203.104.209.199/kcsapi/api_req_member/get_practice_enemyinfo';
-  request({
+  var req = {
       url: url,
       method: "POST",
       headers:{
@@ -44,17 +47,47 @@ function getUserInfo(id,callback){
           'Referer':'http://203.104.209.199/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
           'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
       },
-      proxy:'http://192.168.17.236:2346',
-      body:'api_token='+token+'&api_verno=1&api_member_id='+id
-  }, function(error, response, body){
+      body:'api_token='+token+'&api_verno=1&api_member_id='+uuid
+  }    
+  if(noproxy==1){
+    req.proxy = 'http://192.168.17.236:2346'
+  }else if(noproxy==2){
+    req.proxy = 'http://192.168.17.241:2346'
+  }
+    
+  request(req, function(error, response, body){
       if(error&&error.code){
         console.log('pipe error catched!')
         console.log(error);
+          setTimeout(function(){
+                if(noproxy==2){
+                    callback({})
+                }else if(noproxy==1){
+                    getUserInfo(uuid,callback,2)
+                }else{
+                    getUserInfo(uuid,callback,1)
+                }
+          },1000);
       }else{
         if(body.startsWith("svdata=")){
           body=body.substring(7);
         }
         try {
+            try{
+                eval('('+body+')')
+            }
+            catch(ee){
+                setTimeout(function(){
+                    if(noproxy==2){
+                        callback({})
+                    }else if(noproxy==1){
+                        getUserInfo(uuid,callback,2)
+                    }else{
+                        getUserInfo(uuid,callback,1)
+                    }                
+                },1000);
+                return;
+            }
           var dat = eval('('+body+')');
           var data = dat.api_data;
           var uid = data.api_member_id;
@@ -72,7 +105,7 @@ function getUserInfo(id,callback){
                 cl_senka_8.updateOne({'_id':uid},{'$set':{e:exp,cmt:cmt,ts:now,tse:nn}});
               }else{
                 dd[key]=exp;
-                cl_senka_8.updateOne({'_id':uid},{'$set':{d:dd,e:exp,cmt:cmt}});
+                cl_senka_8.updateOne({'_id':uid},{'$set':{d:dd,e:exp,cmt:cmt,ts:now,tse:nn}});
               }
             }else{
               var dd = {};
@@ -84,22 +117,29 @@ function getUserInfo(id,callback){
           })
           var shipstr = '';
           for(var i=0;i<ships.length;i++){
-            var id = ships[i].api_id;
-            if(id>0){
+            var shipid = ships[i].api_id;
+            if(shipid>0){
               shipstr=shipstr+shipid2name[ships[i].api_ship_id]+" \t Lv:"+ships[i].api_level+"\n"
             }
           }
           shipstr+shipstr.trim();
           var ret = '';
           //ret = ret + name + "  【ID:"+data.api_member_id+"】\n";
+          var rrr = {};
+          rrr.exp=exp;
+          rrr.ship=shipstr;
+          rrr.cmt=cmt;
           ret = ret + name + "  \n";
 
           ret = ret + '经验值：【'+exp+'】\t 经验战果值：【'+exps+'】\n'
           ret = ret + cmt + '\n';
           ret = ret + shipstr;
-          callback(ret);
+          callback(rrr);
         }catch(e){
-
+          console.log('error!!!!'+uuid)
+          console.log(body);
+          console.log(e);
+          callback({})
         }
 
       }
@@ -194,8 +234,8 @@ function generateRankKey(userid){
 
 
 var MAGIC_R_NUMS = [ 8931, 1201, 1156, 5061, 4569, 4732, 3779, 4568, 5695, 4619, 4912, 5669, 6586 ];
-function getRank(page,retarr){
-
+function getRank(page,retarr,proxy){
+  console.log('will get rank:'+page+':'+proxy);
   var url = 'http://203.104.209.199/kcsapi/api_req_ranking/mxltvkpyuklh';
   var nn = new Date();
   var now = new Date().getTime();
@@ -214,25 +254,56 @@ function getRank(page,retarr){
       var rret = rarr[0].d;
       saveRank(rret,nn);
     }else{
-      request({
-        url: url,
-        method: "POST",
-        headers:{
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Referer':'http://203.104.209.199/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
-          'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
-        },
-        proxy:'http://192.168.17.236:2346',
-        body:"api%5Fpageno="+page+"&api%5Fverno=1&api%5Franking="+ranking+"&api%5Ftoken="+token
-      }, function(error, response, body) {
+        var req = {
+            url: url,
+            method: "POST",
+            headers:{
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Referer':'http://203.104.209.199/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
+              'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
+            },
+            body:"api%5Fpageno="+page+"&api%5Fverno=1&api%5Franking="+ranking+"&api%5Ftoken="+token
+      };
+      if(proxy==1){
+        req.proxy = 'http://192.168.17.236:2346'
+      }else if(proxy==2){
+        req.proxy = 'http://192.168.17.241:2346'
+      }else{
+          
+      }
+      request(req, function(error, response, body) {
         if (error && error.code) {
           console.log('pipe error catched!')
           console.log(error);
+            setTimeout(function(){
+                if(noproxy==2){
+                    
+                }else if(noproxy==1){
+                    getRank(page,retarr,2)
+                }else{
+                    getRank(page,retarr,1)
+                }
+            },1000);
         } else {
           if (body.startsWith("svdata=")) {
             body = body.substring(7);
           }
           //console.log(body);
+            try{
+                eval('('+body+')');
+            }catch(ee){
+                        
+                setTimeout(function(){
+                    if(proxy==2){
+
+                    }else if(proxy==1){
+                        getRank(page,retarr,2)
+                    }else{
+                        getRank(page,retarr,1)
+                    }
+                },1000);
+                return;
+            }
           var data = eval('('+body+')');
           var list = data.api_data.api_list;
           var rret = retarr.concat(list);
@@ -350,7 +421,7 @@ function gotimer(){
     setTimeout(function(){
       timer();
     },60000);
-  },left)
+  },left2)
 
 
   var left3 = 3600000 - new Date().getTime()%3600000+10000
@@ -370,7 +441,7 @@ function gotimer(){
     }else{
       console.log('hour task:no2')
     }
-  },left)
+  },left3)
 }
 
 function timer(){
@@ -423,7 +494,181 @@ function getInfoFromList(glist){
     });
 }
 
-gotimer()
+gotimer();
+
+
+function handleSenkaReply(content,gid,qq,callback){
+  content=content.trim();
+  var nn = new Date();
+  var now = nn.getTime();
+  var year = nn.getFullYear();
+  var month = nn.getMonth()+1;
+  var dateno = getRankDateNo(nn.getTime());
+  var keym = year+"_"+month;
+  var key = year+'_'+month+'_'+dateno;
+  var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
+  var cl_senka_8 = udb.collection("cl_senka_8");
+  var ca = content.split('-');
+  if(ca.length==2){
+    var cd = ca[1];
+    if(cd==1){
+
+    }else if(cd==2){
+
+    }else if(cd==3){
+
+    }else{
+      console.log('cd:'+cd)
+      cl_n_senka_8.find({n:new RegExp(cd)}).toArray(function(err,arr){
+        var m = {};
+        for(var i=0;i<arr.length;i++){
+          var name = arr[i].n;
+          if(m[name]){
+            m[name].push(arr[i])
+          }else{
+            m[name]=[arr[i]];
+          }
+        }
+        var namelist = Object.keys(m);
+        for(var i=0;i<namelist.length;i++){
+            if(namelist[i]==cd){
+                namelist = [cd];
+                break;
+            }
+        }
+        if(namelist.length==1){
+          console.log('11111');
+          var ranklist = m[namelist[0]];
+          ranklist.sort(function(a,b){
+            return parseInt(a._id.split('_')[0]) - parseInt(b._id.split('_')[0])
+          })
+          console.log(ranklist)
+          cl_senka_8.find({n:namelist[0]}).toArray(function(err2,arr2){
+            arr2.sort(function(a,b){return b.ts-a.ts})
+            var user = arr2[0];
+            console.log(user);
+            var userid = user._id;
+            var lsenka = ranklist[ranklist.length-1];
+            var td = lsenka.dd;
+            var ton = lsenka.no;
+            var tno = parseInt(lsenka._id.split('_')[0])
+            var tk
+            if(tno%2==0){
+              tk = keym+'_'+tno+'_1'
+            }else{
+              tk = keym+'_'+tno+'_13'
+            }
+            var thenexp = user.d[tk];
+            getUserInfo(userid,function(rrr){
+              var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
+              var ret = namelist[0]+'\n';
+              ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')】\n'
+              ret = ret + rrr.cmt + '\n';
+              ret = ret + rrr.ship + '\n';
+              callback(ret.trim());
+            })
+          })
+
+        }else{
+          var ret = '请选择\n';
+          for(var i=0;i<namelist.length;i++){
+            ret = ret + namelist[i]+'\n';
+          }
+          callback(ret.trim());
+        }
+      })
+    }
+  }else if(ca.length==1){
+    var query = {'_id':{'$gt':dateno+'','$lt':dateno+'~'}};
+    console.log(query);
+    cl_n_senka_8.find(query).toArray(function(err,arr){
+      var namemap = [];
+      for(var i=0;i<arr.length;i++){
+        namemap[arr[i].n]=1;
+      }
+      var namelist = Object.keys(namemap);
+      console.log(namelist);
+      var nnn = new  Date();
+      var k1;
+      var k2;
+      if(dateno%2==0){
+        nnn.setHours(2)
+        nnn.setMinutes(0);
+        nnn.setSeconds(0);
+          if(nn.getHours()==13){
+        k1 = keym+'_'+dateno+'_'+1;
+              k2 = keym+'_'+dateno+'_'+13;
+          }else{
+        k1 = keym+'_'+dateno+'_'+1; 
+              k2 = keym+'_'+dateno+'_'+2;
+          }
+      }else{
+        nnn.setHours(13)
+        nnn.setMinutes(0);
+        nnn.setSeconds(0);
+        k1 = keym+'_'+dateno+'_'+13;
+        k2 = keym+'_'+dateno+'_'+14;
+      }
+      cl_senka_8.find({n:{'$in':namelist},ts:{'$gt':nnn.getTime()}}).toArray(function(err2,arr2){
+        var m = {};
+        console.log('ssssssss'+arr2.length)
+        for(var i=0;i<arr2.length;i++){
+          var sd = arr2[i].d;
+          if(sd[k1]&&sd[k2]){
+            m[arr2[i].n]=((sd[k2]-sd[k1])/10000*7).toFixed(1);
+          }
+        }
+        for(var i=0;i<arr.length;i++){
+          if(m[arr[i].n]){
+            arr[i].ns = arr[i].dd + parseFloat(m[arr[i].n])
+          }else{
+            arr[i].ns = arr[i].dd
+          }
+        }
+        arr.sort(function(a,b){return b.ns-a.ns});
+        var ret = '';
+        var r1,r5,r20,r100,r500=0
+        for(var i=0;i<arr.length;i++){
+          if(arr[i].no==1){
+            r1=arr[i].dd;
+          }
+          if(arr[i].no==5){
+            r5=arr[i].dd;
+          }
+          if(arr[i].no==20){
+            r20=arr[i].dd;
+          }
+          if(arr[i].no==100){
+            r100=arr[i].dd;
+          }
+          if(arr[i].no==500){
+            r500=arr[i].dd;
+          }
+        }
+        ret = ret + '\t\t【榜单】\t【当前】\t【预测】\n'
+        ret = ret + '\t1位【'+r1+'】\t【'+arr[0].ns+'】\t【0】\n';
+        ret = ret + '\t5位【'+r5+'】\t【'+arr[4].ns+'】\t【0】\n';
+        ret = ret + '\t20位【'+r20+'】\t【'+arr[19].ns+'】\t【0】\n';
+        ret = ret + '\t100位【'+r100+'】\t【'+arr[99].ns+'】\t【0】\n';
+        ret = ret + '\t500位【'+r500+'】\t【'+arr[499].ns+'】\t【0】\n';
+        ret = ret + '统计时间：'+new Date(arr[0].ts).toLocaleString();
+        callback(ret.trim())
+      })
+    });
+  }
+}
+
+module.exports={
+  handleSenkaReply
+}
+
+
+
+
+
+
+
+
 
 
 

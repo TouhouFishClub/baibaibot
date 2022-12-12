@@ -51,7 +51,7 @@ const rua = require('./ai/mabinogi/ruawork')
 const {baiduVoice} = require('./ai/voice/baiduvoice')
 const {saveChat} = require('./ai/chat/collect');
 const {getFoodRate} = require('./ai/kancolle/food');
-require('./ai/kancolle/senka2');
+const {handleSenkaReply} = require('./ai/kancolle/senka2');
 const {descryptReply} = require('./ai/image/qqspeak');
 const rp = require('./ai/rp');
 const {G21Boss} = require('./ai/mabinogi/G21Boss');
@@ -787,6 +787,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.trim().substring(0,3).toLocaleLowerCase()=='zng'){
     handleDSReply(content.substring(3),groupid,from,name,callback,port);
     return;
+  }
+  if(content.startsWith('z8')){
+    handleSenkaReply(content.trim(),groupid,from,callback);
   }
 
 
