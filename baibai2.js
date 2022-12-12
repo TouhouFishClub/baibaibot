@@ -149,6 +149,7 @@ const {handleDSReply,handleVoteReply} = require('./ai/games/ds/dsmain')
 
 const { renderChatPersonas } = require('./ai/chat/personas/index')
 const { renderGroupCount } = require('./ai/chat/groupCount/index')
+const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -185,52 +186,67 @@ var botlist = [
   {
     qq:1,
     port:23334,
-    wsport:23335
+    wsport:23335,
+		configs: {}
   },
   {
     qq:1,
     port:24334,
-    wsport:24335
+    wsport:24335,
+		configs: {}
   },
   {
     qq:1,
     port:25334,
-    wsport:25335
+    wsport:25335,
+		configs: {}
   },
   {
     qq:1,
     port:26334,
-    wsport:26335
+    wsport:26335,
+		configs: {}
   },
   {
     qq:1,
     port:27334,
-    wsport:27335
+    wsport:27335,
+		configs: {}
   },
   {
     qq:1,
     port:28334,
-    wsport:28335
+    wsport:28335,
+		configs: {}
   },
   {
     qq:1,
     port:29334,
-    wsport:29335
+    wsport:29335,
+		configs: {}
   },
   {
     qq:1,
     port:30004,
-    wsport:30005
+    wsport:30005,
+		configs: {}
   },
   {
     qq:1,
     port:30014,
-    wsport:30015
+    wsport:30015,
+		configs: {}
   },
   {
     qq:1,
     port:30024,
-    wsport:30025
+    wsport:30025,
+		configs: {
+			enableMatchKeywords: [
+				'^opt',
+				'^mbi',
+			]
+		}
   }
 
 ]
@@ -238,14 +254,18 @@ var botlist = [
 
 init();
 function init(){
-  for(var i=0;i<botlist.length;i++){
-    var port = botlist[i].port;
-    var wsport = botlist[i].wsport;
-    initBotWS(port,wsport);
-  }
+  // for(var i=0;i<botlist.length;i++){
+  //   var port = botlist[i].port;
+  //   var wsport = botlist[i].wsport;
+  //   initBotWS(port,wsport);
+  // }
+	botlist.forEach(bot => {
+		let { port, wsport, configs } = bot
+		initBotWS(port, wsport)
+	})
 }
 
-function initBotWS(port,wsport){
+function initBotWS(port,wsport, configs){
   var WebSocketClient = require('websocket').client;
 
   var client = new WebSocketClient();
@@ -266,7 +286,7 @@ function initBotWS(port,wsport){
     });
     connection.on('message', function(message) {
       if (message.type === 'utf8') {
-        handleMsg(JSON.parse(message.utf8Data),port)
+        handleMsg(JSON.parse(message.utf8Data),port, configs)
       }
     });
   });
@@ -327,15 +347,15 @@ const formatSize = (byte) => {
   return `${(t * 1024).toFixed(2)}${sizeOpt[i - 1]}`
 }
 
-function handleMsg(msgObj,port){
+function handleMsg(msgObj,port, configs){
   try{
-    handleMsg_D0(msgObj,port);
+    handleMsg_D0(msgObj,port, configs);
   }catch(e){
     console.log(e);
   }
 }
 
-function handleMsg_D0(msgObj,port){
+function handleMsg_D0(msgObj,port, configs){
 
   //TODO: 目前百百会接受自己的发言，暂时先这样处理
   if(new Set([
@@ -374,10 +394,10 @@ function handleMsg_D0(msgObj,port){
     content = simplized(content);
     msgObj.message=content;
   }
-  handleMsg_D(msgObj,port);
+  handleMsg_D(msgObj,port, configs);
 }
 
-function handleMsg_D(msgObj,port) {
+function handleMsg_D(msgObj,port, configs) {
 
 
 
@@ -438,24 +458,6 @@ function handleMsg_D(msgObj,port) {
   }else{
     content = content.substring(6).trim();
   }
-
-	//TODO: 洛奇官群屏蔽其他功能
-	if(
-		msgObj.group_id === 760946387 &&
-		!(
-			msgObj.message.trim().startsWith('opt') ||
-			msgObj.message.trim().startsWith('meu') ||
-			msgObj.message.trim().startsWith('mbi') ||
-			msgObj.message.trim().startsWith('洛奇') ||
-			msgObj.message.trim().startsWith('走私') ||
-			msgObj.message.trim().startsWith('rua') ||
-			msgObj.message.trim().startsWith('boss')
-		)
-	) {
-		if(msgObj.user_id != 799018865) {
-			return
-		}
-	}
 
   if(getMsgCount(port)>1500){
     return;
@@ -558,6 +560,25 @@ function handleMsg_D(msgObj,port) {
 	// console.log('=====================\n\n\n\n')
 
   saveChat(groupid, from, name, content,port, msgObj);
+
+	//TODO: 洛奇交易群屏蔽功能，但是记录群内语句
+	if(
+		msgObj.group_id === 704773457 &&
+		!(
+			msgObj.message.trim().startsWith('opt')
+			// || msgObj.message.trim().startsWith('meu')
+			// || msgObj.message.trim().startsWith('mbi')
+			// || msgObj.message.trim().startsWith('洛奇')
+			// || msgObj.message.trim().startsWith('走私')
+			// || msgObj.message.trim().startsWith('rua')
+			// || msgObj.message.trim().startsWith('boss')
+		)
+	) {
+		if(msgObj.user_id != 799018865) {
+			return
+		}
+	}
+
   callback = function (res, blank) {
     if (res.trim().length > 0) {
       addSendQueue(groupid,res,port);
@@ -1110,21 +1131,30 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(con.toLowerCase() == 'bosswork' || con.toLowerCase() == 'boss时间表') {
 		BossWork(from, groupid, callback)
+		return
   }
   if(con == '群关键词' || con == 'hawk') {
 		renderChatPersonas(groupid, callback)
+		return
   }
   if(con == '群水笔' || con == '群水比' || con == '群发言排行') {
 		renderGroupCount(port, groupid, callback)
+		return
+  }
+  if(con.startsWith('gcs')) {
+		searchGroupChat(from, con.substring(3).trim(), port, groupid, callback)
+		return
   }
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)
+		return
   }
   if(/^打开\d+次财富密码$/.test(con)) {
   	let pt = parseInt(con.split('次')[0].substring(2))
 		if(pt <=5)  {
 			raffle(content, from, groupid, callback, pt)
 		}
+		return
   }
   if(con.endsWith('吃什么')) {
     chishenme(from, con.substring(0, con.length - 2), callback)
@@ -1313,7 +1343,6 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie == 'meu'){
-		
     searchEquipUpgrade(from, groupid, con.substring(3).trim(), callback);
     return;
   }
