@@ -77,6 +77,7 @@ const searchGroupChat = async (from, content, port, groupId, callback, type = 'i
 	}
 
 	let groupChatData = await fetchGroupData(port, groupId, content)
+	console.log(from, content, port, groupId)
 	console.log('===== group chat data =====\n\n\n')
 	console.log(groupChatData)
 	console.log('\n\n\n===== group chat data =====')
