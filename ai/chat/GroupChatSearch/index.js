@@ -43,7 +43,7 @@ const fetchGroupUsers = (groupid, port) =>
 		})
 	})
 
-const fetchGroupData = async (port, content, groupId) => {
+const fetchGroupData = async (port, groupId, content) => {
 	let users = await fetchGroupUsers(groupId, port)
 	let userMap = {}
 	users.forEach(x => {
