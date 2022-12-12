@@ -459,24 +459,6 @@ function handleMsg_D(msgObj,port, configs) {
     content = content.substring(6).trim();
   }
 
-	//TODO: 洛奇官群屏蔽其他功能
-	if(
-		msgObj.group_id === 704773457 &&
-		!(
-			msgObj.message.trim().startsWith('opt')
-			// || msgObj.message.trim().startsWith('meu')
-			// || msgObj.message.trim().startsWith('mbi')
-			// || msgObj.message.trim().startsWith('洛奇')
-			// || msgObj.message.trim().startsWith('走私')
-			// || msgObj.message.trim().startsWith('rua')
-			// || msgObj.message.trim().startsWith('boss')
-		)
-	) {
-		if(msgObj.user_id != 799018865) {
-			return
-		}
-	}
-
   if(getMsgCount(port)>1500){
     return;
   }
@@ -578,6 +560,25 @@ function handleMsg_D(msgObj,port, configs) {
 	// console.log('=====================\n\n\n\n')
 
   saveChat(groupid, from, name, content,port, msgObj);
+
+	//TODO: 洛奇交易群屏蔽功能，但是记录群内语句
+	if(
+		msgObj.group_id === 704773457 &&
+		!(
+			msgObj.message.trim().startsWith('opt')
+			// || msgObj.message.trim().startsWith('meu')
+			// || msgObj.message.trim().startsWith('mbi')
+			// || msgObj.message.trim().startsWith('洛奇')
+			// || msgObj.message.trim().startsWith('走私')
+			// || msgObj.message.trim().startsWith('rua')
+			// || msgObj.message.trim().startsWith('boss')
+		)
+	) {
+		if(msgObj.user_id != 799018865) {
+			return
+		}
+	}
+
   callback = function (res, blank) {
     if (res.trim().length > 0) {
       addSendQueue(groupid,res,port);
