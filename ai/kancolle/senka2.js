@@ -4,6 +4,13 @@ var request = require('request');
 var Axios = require('axios');
 var fs = require('fs');
 var http = require('http');
+var gm = require('gm')
+var imageMagick = gm.subClass({ imageMagick : true });
+var {sendGmImage} = require('../../cq/sendImage');
+var path = require('path');
+//var {sendGmImage} = require('../../../cq/sendImage');
+
+
 var monthOfDay=[31,28,31,30,31,30,31,31,30,31,30,31];
 var u = {};
 var c = {};
@@ -562,6 +569,7 @@ function handleSenkaReply(content,gid,qq,callback){
               var eo=(culist[i].sk-culist[i-1].sk) - Math.round((culist[i].exp-culist[i-1].exp)/10000*7)
 
               culist[i].eo=eo;
+              culist[i].es=((culist[i].exp-culist[i-1].exp)/10000*7).toFixed(1)
               if(eo>3){
                 eostr = eostr + Math.ceil(culist[i].rd/2)+'日'+(culist[i].rd%2==0?'下午':'上午')+':'+eo+'\n';
               }
@@ -587,13 +595,9 @@ function handleSenkaReply(content,gid,qq,callback){
               var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
               var ret = namelist[0]+'\n';
               ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')】\n'
-              if(eostr.length>2){
-                ret = ret + '战果炮：\n'+eostr.trim()+'\n'
-              }
-
-              ret = ret + rrr.cmt + '\n';
               ret = ret + rrr.ship + '\n';
-              callback(ret.trim());
+
+              generateImage(culist,ret.trim(),callback);
             })
           })
 
@@ -690,8 +694,93 @@ module.exports={
   handleSenkaReply
 }
 
+
+var weekStr = '日一二三四五六';
+function generateImage(arr,str,callback){
+  var img1 = new imageMagick("static/blank.png");
+  img1.autoOrient()
+    .resize(900,900,'!')
+    .fontSize(25)
+    .fill('blue')
+    .font('./font/STXIHEI.TTF')
+
+  var nn = new Date();
+  nn.setDate(1)
+  nn.setHours(10);
+  var day = nn.getDay();
+  var ed = monthOfDay[nn.getMonth()];
+  var wd = 120;
+  var hd = 100
+  var m={};
+  var mx={};
+  for(var i=0;i<arr.length;i++){
+    var rd = arr[i].rd;
+    var da = Math.ceil(rd/2);
+    if(m[da]){
+      m[da]=m[da].trim()+'\n'+arr[i].es;
+    }else{
+      m[da]=arr[i].es;
+    }
+    if(arr[i].eo){
+      console.log('333');
+      console.log(mx);
+      if(mx[da]){
+        mx[da]=mx[da]+'\n'+arr[i].eo;
+      }else{
+        mx[da]=arr[i].eo;
+      }
+    }
+
+  }
+  console.log(m)
+  for(var i=0;i<7;i++){
+    img1.drawText(50+i*wd,30,weekStr[i],'NorthWest')
+  }
+  img1.drawLine(0,65,1200,65)
+  for(var i=day;i<7;i++){
+    img1.fontSize(25)
+    img1.fill('blue')
+    img1.drawText(50+i*wd,80,i,'NorthWest')
+    if(m[i]){
+      img1.fontSize(15)
+      img1.fill('red')
+      img1.drawText(50+i*wd + 50,30,m[i],'NorthWest')
+    }
+  }
+  //img1.drawLine(0,110,1000,110)
+  for(var i=7;i<=ed;i++){
+    var x = i%7;
+    var y = Math.floor(i/7);
+    img1.fontSize(25)
+    img1.fill('blue')
+    img1.drawText(50+x*wd,80+hd*y,i,'NorthWest')
+    if(m[i]){
+      img1.fontSize(15)
+      img1.fill('red')
+      img1.drawText(50+x*wd-30,110+hd*y,m[i],'NorthWest')
+    }
+    if(mx[i]){
+      img1.fontSize(15)
+      img1.fill('dark')
+      img1.drawText(50+x*wd+30 ,110+hd*y,mx[i],'NorthWest')
+    }
+  }
+
+  img1.fontSize(25)
+  img1.fill('blue')
+  img1.drawText(50,550,str,'NorthWest')
+  sendGmImage(img1,'',callback);
+}
+
+
+
+
+
+
+
+
 setTimeout(function(){
-  //handleSenkaReply('z8-神主','','',function(r){console.log(r)})
+  handleSenkaReply('z8-神主','','',function(r){console.log(r)})
 },1000)
 
 
