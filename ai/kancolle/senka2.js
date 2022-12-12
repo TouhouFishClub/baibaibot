@@ -547,6 +547,30 @@ function handleSenkaReply(content,gid,qq,callback){
             arr2.sort(function(a,b){return b.ts-a.ts})
             var user = arr2[0];
             console.log(user);
+
+            var ud = user.d;
+            var culist = [];
+            for(var i=0;i<ranklist.length;i++){
+              var rankDateNo = ranklist[i]._id.split('_')[0];
+              var uk = keym+'_'+rankDateNo+'_'+(rankDateNo%2==0?1:13);
+              if(ud[uk]){
+                culist.push({rd:parseInt(rankDateNo),exp:ud[uk],sk:ranklist[i].dd});
+              }
+            }
+            var eostr = '';
+            for(var i=1;i<culist.length;i++){
+              var eo=(culist[i].sk-culist[i-1].sk) - Math.round((culist[i].exp-culist[i-1].exp)/10000*7)
+
+              culist[i].eo=eo;
+              if(eo>3){
+                eostr = eostr + Math.ceil(culist[i].rd/2)+'日'+(culist[i].rd%2==0?'下午':'上午')+':'+eo+'\n';
+              }
+            }
+
+            //console.log(culist);
+
+
+
             var userid = user._id;
             var lsenka = ranklist[ranklist.length-1];
             var td = lsenka.dd;
@@ -563,6 +587,10 @@ function handleSenkaReply(content,gid,qq,callback){
               var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
               var ret = namelist[0]+'\n';
               ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')】\n'
+              if(eostr.length>2){
+                ret = ret + '战果炮：\n'+eostr.trim()+'\n'
+              }
+
               ret = ret + rrr.cmt + '\n';
               ret = ret + rrr.ship + '\n';
               callback(ret.trim());
@@ -661,6 +689,10 @@ function handleSenkaReply(content,gid,qq,callback){
 module.exports={
   handleSenkaReply
 }
+
+setTimeout(function(){
+  //handleSenkaReply('z8-神主','','',function(r){console.log(r)})
+},1000)
 
 
 
