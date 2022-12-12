@@ -149,6 +149,7 @@ const {handleDSReply,handleVoteReply} = require('./ai/games/ds/dsmain')
 
 const { renderChatPersonas } = require('./ai/chat/personas/index')
 const { renderGroupCount } = require('./ai/chat/groupCount/index')
+const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -1129,21 +1130,30 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(con.toLowerCase() == 'bosswork' || con.toLowerCase() == 'boss时间表') {
 		BossWork(from, groupid, callback)
+		return
   }
   if(con == '群关键词' || con == 'hawk') {
 		renderChatPersonas(groupid, callback)
+		return
   }
   if(con == '群水笔' || con == '群水比' || con == '群发言排行') {
 		renderGroupCount(port, groupid, callback)
+		return
+  }
+  if(con.startsWith('gcs')) {
+		searchGroupChat(from, con.substring(3).trim(), port, groupid, callback)
+		return
   }
   if(con == '打开财富密码') {
 		raffle(content, from, groupid, callback)
+		return
   }
   if(/^打开\d+次财富密码$/.test(con)) {
   	let pt = parseInt(con.split('次')[0].substring(2))
 		if(pt <=5)  {
 			raffle(content, from, groupid, callback, pt)
 		}
+		return
   }
   if(con.endsWith('吃什么')) {
     chishenme(from, con.substring(0, con.length - 2), callback)
@@ -1332,7 +1342,6 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie == 'meu'){
-		
     searchEquipUpgrade(from, groupid, con.substring(3).trim(), callback);
     return;
   }
