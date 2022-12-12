@@ -226,6 +226,11 @@ var botlist = [
     qq:1,
     port:30014,
     wsport:30015
+  },
+  {
+    qq:1,
+    port:30024,
+    wsport:30025
   }
 
 ]
