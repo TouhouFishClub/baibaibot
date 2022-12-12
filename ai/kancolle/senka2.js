@@ -587,7 +587,10 @@ function handleSenkaReply(content,gid,qq,callback){
               var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
               var ret = namelist[0]+'\n';
               ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')】\n'
-              ret = ret + '放炮详情：\n'+eostr.trim()+'\n'
+              if(eostr.length>2){
+                ret = ret + '战果炮：\n'+eostr.trim()+'\n'
+              }
+
               ret = ret + rrr.cmt + '\n';
               ret = ret + rrr.ship + '\n';
               callback(ret.trim());
