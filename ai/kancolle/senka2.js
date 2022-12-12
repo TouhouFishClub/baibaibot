@@ -235,7 +235,7 @@ function generateRankKey(userid){
 
 var MAGIC_R_NUMS = [ 8931, 1201, 1156, 5061, 4569, 4732, 3779, 4568, 5695, 4619, 4912, 5669, 6586 ];
 function getRank(page,retarr,proxy){
-
+  console.log('will get rank:'+page+':'+proxy);
   var url = 'http://203.104.209.199/kcsapi/api_req_ranking/mxltvkpyuklh';
   var nn = new Date();
   var now = new Date().getTime();
