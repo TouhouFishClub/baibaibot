@@ -780,7 +780,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-神主','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-神主','','',function(r){console.log(r)})
 },1000)
 
 
