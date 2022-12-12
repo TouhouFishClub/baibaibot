@@ -721,7 +721,7 @@ function generateImage(arr,str,callback){
     }else{
       m[da]=arr[i].es;
     }
-    if(arr[i].eo){
+    if(arr[i].eo&&arr[i].eo>3){
       console.log('333');
       console.log(mx);
       if(mx[da]){
