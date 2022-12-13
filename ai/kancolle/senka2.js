@@ -60,21 +60,27 @@ function getUserInfo(uuid,callback,noproxy){
     req.proxy = 'http://192.168.17.236:2346'
   }else if(noproxy==2){
     req.proxy = 'http://192.168.17.241:2346'
+  }else if(noproxy==4){
+    req.proxy = 'http://192.168.17.236:2346'
+  }else if(noproxy==5){
+    req.proxy = 'http://192.168.17.241:2346'
+  }else if(noproxy==6){
+    callback({});
+    return;
   }
     
   request(req, function(error, response, body){
       if(error&&error.code){
         console.log('pipe error catched!')
         console.log(error);
-          setTimeout(function(){
-                if(noproxy==2){
-                    callback({})
-                }else if(noproxy==1){
-                    getUserInfo(uuid,callback,2)
-                }else{
-                    getUserInfo(uuid,callback,1)
-                }
-          },1000);
+        var delay = noproxy?(1000*noproxy+2000):1000
+        setTimeout(function(){
+          getUserInfo(uuid,callback,noproxy+1)
+          if(noproxy>6){
+            callback({})
+            return;
+          }
+        },delay);
       }else{
         if(body.startsWith("svdata=")){
           body=body.substring(7);
@@ -84,16 +90,14 @@ function getUserInfo(uuid,callback,noproxy){
                 eval('('+body+')')
             }
             catch(ee){
+                var delay = noproxy?(1000*noproxy+2000):1000
                 console.log('bdy:\n'+body)
                 setTimeout(function(){
-                    if(noproxy==2){
+                    getUserInfo(uuid,callback,noproxy+1)
+                    if(noproxy>6){
                         callback({})
-                    }else if(noproxy==1){
-                        getUserInfo(uuid,callback,2)
-                    }else{
-                        getUserInfo(uuid,callback,1)
-                    }                
-                },1000);
+                    }
+                },delay);
                 return;
             }
           var dat = eval('('+body+')');
@@ -277,22 +281,22 @@ function getRank(page,retarr,proxy){
         req.proxy = 'http://192.168.17.236:2346'
       }else if(proxy==2){
         req.proxy = 'http://192.168.17.241:2346'
+      }else if(proxy==4){
+        req.proxy = 'http://192.168.17.236:2346'
+      }else if(proxy==5){
+        req.proxy = 'http://192.168.17.241:2346'
+      }else if(proxy>=6){
+        return;
       }else{
           
       }
       request(req, function(error, response, body) {
         if (error && error.code) {
           console.log('pipe error catched!')
-          console.log(error);
-            setTimeout(function(){
-                if(proxy==2){
-                    return
-                }else if(proxy==1){
-                    getRank(page,retarr,2)
-                }else{
-                    getRank(page,retarr,1)
-                }
-            },3000);
+          var delay = proxy?(2000*proxy+3000):2000
+          setTimeout(function(){
+            getRank(page,retarr,proxy+1)
+          },delay);
         } else {
           if (body.startsWith("svdata=")) {
             body = body.substring(7);
@@ -301,19 +305,13 @@ function getRank(page,retarr,proxy){
             try{
                 eval('('+body+')');
             }catch(ee){
-                 console.log('err bdy:\n'+body)
+                var delay = proxy?(2000*proxy+3000):2000
+                if(proxy>6){
+                  return;
+                }
                 setTimeout(function(){
-                    if(proxy==3){
-                      return;
-                    }else if(proxy==2){
-                      getRank(page,retarr,3)
-                    }else if(proxy==1){
-                        getRank(page,retarr,2)
-                    }else{
-                        getRank(page,retarr,1)
-                    }
-                },3000);
-                return;
+                  getRank(page,retarr,proxy+1)
+                },delay);
             }
           var data = eval('('+body+')');
           var list = data.api_data.api_list;
