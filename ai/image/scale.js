@@ -16,6 +16,8 @@ function ImgScale(content,gid,qq,callback){
     if (n2 > 0) {
       var n3 = image.indexOf("?");
       var url = image.substring(n2, n3);
+      scaletask(url,callback)
+      return;
       var now = new Date();
       var rd = Math.floor(Math.random() * 8888 + 1000);
       var filename = "../coolq-data/cq/data/image/send/tmp/" + now.getTime() + rd + ".png";
