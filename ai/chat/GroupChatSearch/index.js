@@ -5,6 +5,9 @@ const { mongourl, IMAGE_DATA, myip} = require('../../../baibaiConfigs')
 const nodeHtmlToImage = require('node-html-to-image')
 const path = require("path");
 const http = require("http");
+const font2base64 = require('node-font2base64')
+//FONTS
+const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'hk4e_zh-cn.ttf'))
 
 let personasLimit = {}
 
@@ -79,15 +82,96 @@ const analysisData = (data, targetArr) => {
 	data.filter(x => !(x.d.startsWith('gcs') || x.uid === 1561267174) && (x.d.indexOf('出') > -1 || x.d.indexOf('收') > -1)).forEach(msg => {
 		if(!userTargetSet.has(msg.uid)) {
 			let desc = searchDesc(msg.d, targetArr)
+			let descReplace = desc
+			targetArr.forEach(target => {
+				descReplace.replace(new RegExp(target), `<strong>${target}</strong>`)
+			})
 			let msgObj = Object.assign(msg, {
 				desc,
-				targetArr
+				targetArr,
+				descReplace
 			})
 			out.push(msgObj)
 			userTargetSet.add(msg.uid)
 		}
 	})
 	return out
+}
+
+const renderData = (data, targetArr, groupId, callback) => {
+	// console.log(groupCountObj)
+	let fileName = `${groupId}_${targetArr.join('_')}_img.png`
+	let output = path.join(IMAGE_DATA, 'other', fileName)
+	// let output = path.join(`${groupId}.png`)
+
+	nodeHtmlToImage({
+		output,
+		html: `
+			<html>
+			<head>
+				<meta charSet="utf-8">
+				<style>
+					@font-face {
+						font-family: 'HANYIWENHEI';
+						src: url(${HANYIWENHEI}) format('truetype');
+					}
+					* {
+						border: 0;
+						padding: 0;
+						margin: 0;
+						font-size: 14px;
+						line-height: 1.4;
+					}
+					body {
+						padding: 20px;
+						background: #fff;
+						font-family: HANYIWENHEI;
+					}
+					.main-container {
+						width: 400px;
+						min-height: 20px;
+					}
+					.main-container .chat-info-item{
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						padding-top: 15px;
+						padding-bottom: 15px;				
+					}
+					.main-container .chat-info-item + .chat-info-item{
+						border-top: 1px solid #999;					
+					}
+				</style>
+			</head>
+			<body>
+			<div class="main-container">
+				${
+					data.map(item => `
+						<div class="chat-info-item">
+							<div class="time">${item.ts}</div>
+							<div class="user-info">
+								<div class="user-id">${item.uid}</div>
+								<div class="user-nick">${item.n}</div>
+							</div>
+							<div class="desc">
+								${
+									item.descReplace.split('\n').map(line => line.trim()).join('<br>')
+								}
+							</div>
+						</div>
+					`)
+				}
+			</div>
+			</body>
+			</html>
+		`
+	})
+		.then(() => {
+			console.log(`保存${fileName}成功！`)
+			let imgMsg = `[CQ:image,file=${join('send', 'other', fileName)}]`
+			// personasLimit[groupId] = Date.now() + 30 * 60 * 1000
+			callback(imgMsg)
+		})
 }
 
 const searchGroupChat = async (from, content, port, groupId, callback, type = 'img') => {
@@ -123,6 +207,7 @@ const searchGroupChat = async (from, content, port, groupId, callback, type = 'i
 	console.log(`count: ${res.length}`)
 	console.log(res)
 	console.log('\n\n\n===== group chat data =====')
+	renderData(res, targetArr, groupId, callback)
 }
 
 module.exports = {
