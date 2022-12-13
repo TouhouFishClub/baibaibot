@@ -41,7 +41,7 @@ const fetchGroupUsers = (groupid, port) =>
 		})
 	})
 
-const fetchGroupData = async (port, groupId, content) => {
+const fetchGroupData = async (port, groupId, targetArr) => {
 	let users = await fetchGroupUsers(groupId, port)
 	let userMap = {}
 	users.forEach(x => {
@@ -50,20 +50,38 @@ const fetchGroupData = async (port, groupId, content) => {
 	let groupData = await client.db('db_bot').collection('cl_chat').find({
 		_id: { $gt: new Date(Date.now() - 1000*60*60*24*3) },
 		gid: groupId,
-		d: new RegExp(content)
+		'$and': targetArr.map(w => {
+			return {
+				'd': new RegExp(w)
+			}
+		})
 	}).toArray()
 	console.log(`===> group data length: ${groupData.length}`)
 	return groupData
 }
 
-const analysisData = async (data, target) => {
+const searchDesc = (msg, targetArray, offsetStart = 10, offsetEnd = 10) => {
+	let st = msg.length, ed = 0
+	targetArray.forEach(target => {
+		let s = msg.indexOf(target)
+		if(s < st) {
+			st = s
+		}
+		if(s + target.length > ed) {
+			ed = target.length
+		}
+	})
+	return msg.substring(st - offsetStart, ed + offsetEnd)
+}
+
+const analysisData = (data, targetArr) => {
 	let userTargetSet = new Set(), out = []
 	data.filter(x => !(x.d.startsWith('gcs') || x.uid === 1561267174)).forEach(msg => {
 		if(!userTargetSet.has(msg.uid)) {
-			let desc = msg.d.split('\n').map(x => x.trim()).filter(x => x.indexOf(target) > -1)
+			let desc = searchDesc(msg.d, targetArr)
 			let msgObj = Object.assign(msg, {
 				desc,
-				target
+				targetArr
 			})
 			out.push(msgObj)
 			userTargetSet.add(msg.uid)
@@ -89,13 +107,18 @@ const searchGroupChat = async (from, content, port, groupId, callback, type = 'i
 		callback('不允许数字开头&不允许查询数字')
 		return
 	}
+	let targetArr = content.split(' ').filter(x => x)
+	if(targetArr.length > 3) {
+		callback('不允许超过3关键词')
+		return
+	}
 
-	let groupChatData = await fetchGroupData(port, groupId, content)
+	let groupChatData = await fetchGroupData(port, groupId, targetArr)
 	console.log(from, content, port, groupId)
 	// console.log('===== group chat data =====\n\n\n')
 	// console.log(groupChatData)
 	// console.log('\n\n\n===== group chat data =====')
-	let res = await analysisData(groupChatData, content)
+	let res = await analysisData(groupChatData, targetArr)
 	console.log('===== analysis group chat data =====\n\n\n')
 	console.log(`count: ${res.length}`)
 	console.log(res)
