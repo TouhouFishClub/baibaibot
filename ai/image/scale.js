@@ -88,6 +88,7 @@ function scaletask(imgurl,callback){
         var geturl = d1.urls.get;
         setTimeout(function(){
           console.log('get result now');
+          console.log(apikey);
           request({
             url: geturl,
             method: "GET",
