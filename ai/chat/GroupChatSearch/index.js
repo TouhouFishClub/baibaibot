@@ -98,6 +98,8 @@ const analysisData = (data, targetArr) => {
 	return out
 }
 
+const formatTime = ts => `${new Date(ts).getMonth() + 1}-${new Date(ts).getDate()} ${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}:${addZero(new Date(ts).getSeconds())}`
+
 const renderData = (data, targetArr, groupId, callback) => {
 	// console.log(groupCountObj)
 	let fileName = `${groupId}_${targetArr.join('_')}_img.png`
@@ -132,6 +134,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 						min-height: 20px;
 					}
 					.main-container .chat-info-item{
+						width: 600px;
 						display: flex;
 						align-items: center;
 						justify-content: space-between;
@@ -141,6 +144,18 @@ const renderData = (data, targetArr, groupId, callback) => {
 					.main-container .chat-info-item + .chat-info-item{
 						border-top: 1px solid #999;					
 					}
+					.main-container .chat-info-item .time{
+						width: 150px;		
+					}
+					.main-container .chat-info-item .user-info{
+						width: 150px;
+					}
+					.main-container .chat-info-item .desc{
+						flex-grow: 1;
+					}
+					.main-container .chat-info-item .desc strong{
+						color: #f00;
+					}
 				</style>
 			</head>
 			<body>
@@ -148,7 +163,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 				${
 					data.map(item => `
 						<div class="chat-info-item">
-							<div class="time">${item.ts}</div>
+							<div class="time">${formatTime(item.ts)}</div>
 							<div class="user-info">
 								<div class="user-id">${item.uid}</div>
 								<div class="user-nick">${item.n}</div>
@@ -159,7 +174,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 								}
 							</div>
 						</div>
-					`)
+					`).join('')
 				}
 			</div>
 			</body>
