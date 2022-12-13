@@ -791,7 +791,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-ぶるぱち','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-ぶるぱち','','',function(r){console.log(r)})
 },500)
 
 
