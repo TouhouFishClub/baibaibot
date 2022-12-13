@@ -63,7 +63,7 @@ const fetchGroupData = async (port, groupId, targetArr) => {
 	return groupData
 }
 
-const searchDesc = (msg, targetArray, offsetStart = 10, offsetEnd = 10) => {
+const searchDesc = (msg, targetArray, offsetStart = 20, offsetEnd = 20) => {
 	let st = msg.length, ed = 0
 	targetArray.forEach(target => {
 		let s = msg.indexOf(target)
@@ -153,6 +153,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 						padding-right: 15px;
 						box-sizing: border-box;
 						text-align: center;
+						flex-shrink: 0;
 					}
 					.main-container .chat-info-item .user-info{
 						width: 200px;
@@ -160,6 +161,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 						padding-right: 15px;
 						box-sizing: border-box;
 						text-align: center;
+						flex-shrink: 0;
 					}
 					.main-container .chat-info-item .desc{
 						flex-grow: 1;
@@ -236,7 +238,11 @@ const searchGroupChat = async (from, content, port, groupId, callback, type = 'i
 	console.log(`count: ${res.length}`)
 	console.log(res)
 	console.log('\n\n\n===== group chat data =====')
-	renderData(res, targetArr, groupId, callback)
+	if(res.length) {
+		renderData(res, targetArr, groupId, callback)
+	} else {
+		callback('没有查到记录')
+	}
 }
 
 module.exports = {
