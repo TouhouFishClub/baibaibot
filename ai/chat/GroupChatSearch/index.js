@@ -76,7 +76,7 @@ const searchDesc = (msg, targetArray, offsetStart = 10, offsetEnd = 10) => {
 
 const analysisData = (data, targetArr) => {
 	let userTargetSet = new Set(), out = []
-	data.filter(x => !(x.d.startsWith('gcs') || x.uid === 1561267174)).forEach(msg => {
+	data.filter(x => !(x.d.startsWith('gcs') || x.uid === 1561267174) && (x.d.indexOf('出') > -1 || x.d.indexOf('收') > -1)).forEach(msg => {
 		if(!userTargetSet.has(msg.uid)) {
 			let desc = searchDesc(msg.d, targetArr)
 			let msgObj = Object.assign(msg, {
