@@ -84,6 +84,7 @@ function getUserInfo(uuid,callback,noproxy){
                 eval('('+body+')')
             }
             catch(ee){
+                console.log('bdy:\n'+body)
                 setTimeout(function(){
                     if(noproxy==2){
                         callback({})
