@@ -98,6 +98,8 @@ const analysisData = (data, targetArr) => {
 	return out
 }
 
+const addZero = n => n < 10 ? ('0' + n) : n
+
 const formatTime = ts => `${new Date(ts).getMonth() + 1}-${new Date(ts).getDate()} ${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}:${addZero(new Date(ts).getSeconds())}`
 
 const renderData = (data, targetArr, groupId, callback) => {
