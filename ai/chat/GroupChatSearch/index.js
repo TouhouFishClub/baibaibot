@@ -60,7 +60,7 @@ const fetchGroupData = async (port, groupId, targetArr) => {
 	return groupData
 }
 
-const searchDesc = async (msg, targetArray, offsetStart = 10, offsetEnd = 10) => {
+const searchDesc = (msg, targetArray, offsetStart = 10, offsetEnd = 10) => {
 	let st = msg.length, ed = 0
 	targetArray.forEach(target => {
 		let s = msg.indexOf(target)
@@ -74,7 +74,7 @@ const searchDesc = async (msg, targetArray, offsetStart = 10, offsetEnd = 10) =>
 	return msg.substring(st - offsetStart, ed + offsetEnd)
 }
 
-const analysisData = async (data, targetArr) => {
+const analysisData = (data, targetArr) => {
 	let userTargetSet = new Set(), out = []
 	data.filter(x => !(x.d.startsWith('gcs') || x.uid === 1561267174)).forEach(msg => {
 		if(!userTargetSet.has(msg.uid)) {
