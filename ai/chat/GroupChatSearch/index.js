@@ -6,8 +6,6 @@ const nodeHtmlToImage = require('node-html-to-image')
 const path = require("path");
 const http = require("http");
 
-let echart = readFileSync(join(__dirname, '..', 'libs', 'echart.min.js'), 'utf-8')
-let echartWordcloud = readFileSync(join(__dirname, '..', 'libs', 'echart-wordcloud.js'), 'utf-8')
 let personasLimit = {}
 
 let client
@@ -58,6 +56,16 @@ const fetchGroupData = async (port, groupId, content) => {
 	return groupData
 }
 
+const analysisData = async data => {
+	let userTargetSet = new Set(), out = []
+	data.filter(x => !x.d.startsWith('gsc') || x.uid !== 1561267174).forEach(msg => {
+		if(!userTargetSet.has(msg.uid)) {
+			out.push(msg)
+		}
+	})
+	return out
+}
+
 const searchGroupChat = async (from, content, port, groupId, callback, type = 'img') => {
 	if(!client) {
 		try {
@@ -78,8 +86,12 @@ const searchGroupChat = async (from, content, port, groupId, callback, type = 'i
 
 	let groupChatData = await fetchGroupData(port, groupId, content)
 	console.log(from, content, port, groupId)
-	console.log('===== group chat data =====\n\n\n')
-	console.log(groupChatData)
+	// console.log('===== group chat data =====\n\n\n')
+	// console.log(groupChatData)
+	// console.log('\n\n\n===== group chat data =====')
+	let res = await analysisData(groupChatData)
+	console.log('===== analysis group chat data =====\n\n\n')
+	console.log(res)
 	console.log('\n\n\n===== group chat data =====')
 }
 
