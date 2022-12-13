@@ -146,6 +146,7 @@ function getUserInfo(uuid,callback,noproxy){
           console.log('error!!!!'+uuid)
           console.log(body);
           console.log(e);
+
           callback({})
         }
 
@@ -299,7 +300,7 @@ function getRank(page,retarr,proxy){
             try{
                 eval('('+body+')');
             }catch(ee){
-                        
+                 console.log('err bdy:\n'+body)
                 setTimeout(function(){
                     if(proxy==2){
 
@@ -308,7 +309,7 @@ function getRank(page,retarr,proxy){
                     }else{
                         getRank(page,retarr,1)
                     }
-                },1000);
+                },1500);
                 return;
             }
           var data = eval('('+body+')');
@@ -596,7 +597,7 @@ function handleSenkaReply(content,gid,qq,callback){
               var ret = namelist[0]+'\n';
               ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')】\n'
               ret = ret + rrr.ship + '\n';
-
+              culist[culist.length] = {rd:tno+1,exp:rrr.exp,sk:-1,eo:0,es:addsenka};
               generateImage(culist,ret.trim(),callback);
             })
           })
@@ -737,30 +738,41 @@ function generateImage(arr,str,callback){
     img1.drawText(50+i*wd,30,weekStr[i],'NorthWest')
   }
   img1.drawLine(0,65,1200,65)
-  for(var i=day;i<7;i++){
-    img1.fontSize(25)
-    img1.fill('blue')
-    img1.drawText(50+i*wd,80,i,'NorthWest')
-    if(m[i]){
-      img1.fontSize(15)
-      img1.fill('red')
-      img1.drawText(50+i*wd + 50,30,m[i],'NorthWest')
+  img1.drawLine(0,165,1200,165)
+  img1.drawLine(0,265,1200,265)
+  img1.drawLine(0,365,1200,365)
+  img1.drawLine(0,465,1200,465)
+  img1.drawLine(0,565,1200,565)
+
+  img1.drawLine(160,0,160,565)
+  img1.drawLine(280,0,280,565)
+  img1.drawLine(400,0,400,565)
+  img1.drawLine(520,0,520,565)
+  img1.drawLine(640,0,640,565)
+  img1.drawLine(760,0,760,565)
+
+
+  for(var i=-day+1;i<=ed;i++){
+    if(i<1){
+      continue;
     }
-  }
-  //img1.drawLine(0,110,1000,110)
-  for(var i=7;i<=ed;i++){
-    var x = i%7;
-    var y = Math.floor(i/7);
+    var ii = i+day-1;
+    var x = ii%7;
+    var y = Math.floor(ii/7);
     img1.fontSize(25)
     img1.fill('blue')
     img1.drawText(50+x*wd,80+hd*y,i,'NorthWest')
     if(m[i]){
-      img1.fontSize(15)
+      img1.fontSize(18)
       img1.fill('red')
-      img1.drawText(50+x*wd-30,110+hd*y,m[i],'NorthWest')
+      if(mx[i]) {
+        img1.drawText(50 + x * wd - 30, 110 + hd * y, m[i], 'NorthWest')
+      }else{
+        img1.drawText(50 + x * wd, 110 + hd * y, m[i], 'NorthWest')
+      }
     }
     if(mx[i]){
-      img1.fontSize(15)
+      img1.fontSize(18)
       img1.fill('dark')
       img1.drawText(50+x*wd+30 ,110+hd*y,mx[i],'NorthWest')
     }
@@ -768,8 +780,9 @@ function generateImage(arr,str,callback){
 
   img1.fontSize(25)
   img1.fill('blue')
-  img1.drawText(50,550,str,'NorthWest')
-  sendGmImage(img1,'',callback);
+  img1.drawText(50,570,str,'NorthWest')
+  img1.write('5.png',function(){});
+  //sendGmImage(img1,'',callback);
 }
 
 
@@ -780,7 +793,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  //handleSenkaReply('z8-神主','','',function(r){console.log(r)})
+  handleSenkaReply('z8-神主','','',function(r){console.log(r)})
 },1000)
 
 
