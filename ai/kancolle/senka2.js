@@ -781,8 +781,8 @@ function generateImage(arr,str,callback){
   img1.fontSize(25)
   img1.fill('blue')
   img1.drawText(50,570,str,'NorthWest')
-  img1.write('5.png',function(){});
-  //sendGmImage(img1,'',callback);
+  //img1.write('5.png',function(){});
+  sendGmImage(img1,'',callback);
 }
 
 
@@ -794,7 +794,7 @@ function generateImage(arr,str,callback){
 
 setTimeout(function(){
   handleSenkaReply('z8-神主','','',function(r){console.log(r)})
-},1000)
+},5000)
 
 
 
