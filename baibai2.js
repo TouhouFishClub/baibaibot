@@ -566,7 +566,8 @@ function handleMsg_D(msgObj,port, configs) {
 		msgObj.group_id === 704773457 &&
 		!(
 			msgObj.message.trim().startsWith('opt')
-			// || msgObj.message.trim().startsWith('meu')
+			|| msgObj.message.trim().startsWith('gcs')
+			|| msgObj.message.trim().startsWith('meu')
 			// || msgObj.message.trim().startsWith('mbi')
 			// || msgObj.message.trim().startsWith('洛奇')
 			// || msgObj.message.trim().startsWith('走私')

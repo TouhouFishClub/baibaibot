@@ -128,6 +128,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 					}
 					body {
 						width: 640px;
+						min-height: 30px;
 						padding: 20px;
 						background: #fff;
 						font-family: HANYIWENHEI;
@@ -147,7 +148,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 						border-top: 1px solid #999;					
 					}
 					.main-container .chat-info-item .time{
-						width: 120px;
+						width: 150px;
 						padding-left: 15px;
 						padding-right: 15px;
 						box-sizing: border-box;
