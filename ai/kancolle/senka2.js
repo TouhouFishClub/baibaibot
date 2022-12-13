@@ -744,12 +744,10 @@ function generateImage(arr,str,callback){
   img1.drawLine(0,465,1200,465)
   img1.drawLine(0,565,1200,565)
 
-  img1.drawLine(160,0,160,565)
-  img1.drawLine(280,0,280,565)
-  img1.drawLine(400,0,400,565)
-  img1.drawLine(520,0,520,565)
-  img1.drawLine(640,0,640,565)
-  img1.drawLine(760,0,760,565)
+  for(var i=0;i<6;i++){
+    img1.drawLine(130+i*wd,0,130+i*wd,565)
+  }
+
 
 
   for(var i=-day+1;i<=ed;i++){
@@ -793,8 +791,8 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-神主','','',function(r){console.log(r)})
-},5000)
+  handleSenkaReply('z8-ぶるぱち','','',function(r){console.log(r)})
+},500)
 
 
 
