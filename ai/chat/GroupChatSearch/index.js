@@ -56,11 +56,17 @@ const fetchGroupData = async (port, groupId, content) => {
 	return groupData
 }
 
-const analysisData = async data => {
+const analysisData = async (data, target) => {
 	let userTargetSet = new Set(), out = []
 	data.filter(x => !x.d.startsWith('gcs') || x.uid !== 1561267174).forEach(msg => {
 		if(!userTargetSet.has(msg.uid)) {
-			out.push(msg)
+			let desc = msg.split('\n').map(x => x.trim()).filter(x => x.indexOf(target) > -1)
+			let msgObj = Object.assign(msg, {
+				desc,
+				target
+			})
+			out.push(msgObj)
+			userTargetSet.add(msg.uid)
 		}
 	})
 	return out
@@ -86,10 +92,10 @@ const searchGroupChat = async (from, content, port, groupId, callback, type = 'i
 
 	let groupChatData = await fetchGroupData(port, groupId, content)
 	console.log(from, content, port, groupId)
-	console.log('===== group chat data =====\n\n\n')
-	console.log(groupChatData)
-	console.log('\n\n\n===== group chat data =====')
-	let res = await analysisData(groupChatData)
+	// console.log('===== group chat data =====\n\n\n')
+	// console.log(groupChatData)
+	// console.log('\n\n\n===== group chat data =====')
+	let res = await analysisData(groupChatData, content)
 	console.log('===== analysis group chat data =====\n\n\n')
 	console.log(res)
 	console.log('\n\n\n===== group chat data =====')
