@@ -284,14 +284,14 @@ function getRank(page,retarr,proxy){
           console.log('pipe error catched!')
           console.log(error);
             setTimeout(function(){
-                if(noproxy==2){
-                    
-                }else if(noproxy==1){
+                if(proxy==2){
+                    return
+                }else if(proxy==1){
                     getRank(page,retarr,2)
                 }else{
                     getRank(page,retarr,1)
                 }
-            },1000);
+            },3000);
         } else {
           if (body.startsWith("svdata=")) {
             body = body.substring(7);
@@ -302,14 +302,16 @@ function getRank(page,retarr,proxy){
             }catch(ee){
                  console.log('err bdy:\n'+body)
                 setTimeout(function(){
-                    if(proxy==2){
-
+                    if(proxy==3){
+                      return;
+                    }else if(proxy==2){
+                      getRank(page,retarr,3)
                     }else if(proxy==1){
                         getRank(page,retarr,2)
                     }else{
                         getRank(page,retarr,1)
                     }
-                },1500);
+                },3000);
                 return;
             }
           var data = eval('('+body+')');
