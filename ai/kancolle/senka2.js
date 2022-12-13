@@ -308,10 +308,12 @@ function getRank(page,retarr,proxy){
                 var delay = proxy?(2000*proxy+3000):2000
                 if(proxy>6){
                   return;
+                }else{
+                  setTimeout(function(){
+                    getRank(page,retarr,proxy+1)
+                  },delay);
                 }
-                setTimeout(function(){
-                  getRank(page,retarr,proxy+1)
-                },delay);
+                return;
             }
           var data = eval('('+body+')');
           var list = data.api_data.api_list;
