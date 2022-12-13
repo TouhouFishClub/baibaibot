@@ -68,7 +68,7 @@ const searchDesc = (msg, targetArray, offsetStart = 10, offsetEnd = 10) => {
 			st = s
 		}
 		if(s + target.length > ed) {
-			ed = target.length
+			ed = s + target.length
 		}
 	})
 	return msg.substring(st - offsetStart, ed + offsetEnd)

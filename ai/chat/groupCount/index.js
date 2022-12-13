@@ -186,6 +186,7 @@ const renderGroupCount = async (port, groupId, callback, type = 'img') => {
 
 	let groupCountObj = await fetchGroupData(port, groupId)
 	// console.log(extractArr)
+	console.log(Object.keys(groupCountObj).map(nick => {return {nick, count: groupCountObj[nick]}}).sort((a, b) => b.count - a.count).splice(0, 10).map(x => `${x.nick} : ${x.count}`))
 
 	switch(type) {
 		case 'img':
