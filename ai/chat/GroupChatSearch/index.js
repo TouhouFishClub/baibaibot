@@ -84,7 +84,7 @@ const analysisData = (data, targetArr) => {
 			let desc = searchDesc(msg.d, targetArr)
 			let descReplace = desc
 			targetArr.forEach(target => {
-				descReplace.replace(new RegExp(target), `<strong>${target}</strong>`)
+				descReplace = descReplace.replace(new RegExp(target), `<strong>${target}</strong>`)
 			})
 			let msgObj = Object.assign(msg, {
 				desc,
@@ -127,12 +127,12 @@ const renderData = (data, targetArr, groupId, callback) => {
 						line-height: 1.4;
 					}
 					body {
+						width: 640px;
 						padding: 20px;
 						background: #fff;
 						font-family: HANYIWENHEI;
 					}
 					.main-container {
-						width: 400px;
 						min-height: 20px;
 					}
 					.main-container .chat-info-item{
@@ -147,13 +147,24 @@ const renderData = (data, targetArr, groupId, callback) => {
 						border-top: 1px solid #999;					
 					}
 					.main-container .chat-info-item .time{
-						width: 150px;		
+						width: 120px;
+						padding-left: 15px;
+						padding-right: 15px;
+						box-sizing: border-box;
+						text-align: center;
 					}
 					.main-container .chat-info-item .user-info{
-						width: 150px;
+						width: 200px;
+						padding-left: 15px;
+						padding-right: 15px;
+						box-sizing: border-box;
+						text-align: center;
 					}
 					.main-container .chat-info-item .desc{
 						flex-grow: 1;
+						padding-left: 15px;
+						padding-right: 15px;
+						box-sizing: border-box;
 					}
 					.main-container .chat-info-item .desc strong{
 						color: #f00;
