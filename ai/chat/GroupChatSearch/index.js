@@ -58,7 +58,7 @@ const fetchGroupData = async (port, groupId, content) => {
 
 const analysisData = async data => {
 	let userTargetSet = new Set(), out = []
-	data.filter(x => !x.d.startsWith('gsc') || x.uid !== 1561267174).forEach(msg => {
+	data.filter(x => !x.d.startsWith('gcs') || x.uid !== 1561267174).forEach(msg => {
 		if(!userTargetSet.has(msg.uid)) {
 			out.push(msg)
 		}
@@ -86,9 +86,9 @@ const searchGroupChat = async (from, content, port, groupId, callback, type = 'i
 
 	let groupChatData = await fetchGroupData(port, groupId, content)
 	console.log(from, content, port, groupId)
-	// console.log('===== group chat data =====\n\n\n')
-	// console.log(groupChatData)
-	// console.log('\n\n\n===== group chat data =====')
+	console.log('===== group chat data =====\n\n\n')
+	console.log(groupChatData)
+	console.log('\n\n\n===== group chat data =====')
 	let res = await analysisData(groupChatData)
 	console.log('===== analysis group chat data =====\n\n\n')
 	console.log(res)
