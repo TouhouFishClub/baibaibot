@@ -60,21 +60,27 @@ function getUserInfo(uuid,callback,noproxy){
     req.proxy = 'http://192.168.17.236:2346'
   }else if(noproxy==2){
     req.proxy = 'http://192.168.17.241:2346'
+  }else if(noproxy==4){
+    req.proxy = 'http://192.168.17.236:2346'
+  }else if(noproxy==5){
+    req.proxy = 'http://192.168.17.241:2346'
+  }else if(noproxy==6){
+    callback({});
+    return;
   }
     
   request(req, function(error, response, body){
       if(error&&error.code){
         console.log('pipe error catched!')
         console.log(error);
-          setTimeout(function(){
-                if(noproxy==2){
-                    callback({})
-                }else if(noproxy==1){
-                    getUserInfo(uuid,callback,2)
-                }else{
-                    getUserInfo(uuid,callback,1)
-                }
-          },1000);
+        var delay = noproxy?(1000*noproxy+2000):1000
+        setTimeout(function(){
+          getUserInfo(uuid,callback,noproxy+1)
+          if(noproxy>6){
+            callback({})
+            return;
+          }
+        },delay);
       }else{
         if(body.startsWith("svdata=")){
           body=body.substring(7);
@@ -84,15 +90,14 @@ function getUserInfo(uuid,callback,noproxy){
                 eval('('+body+')')
             }
             catch(ee){
+                var delay = noproxy?(1000*noproxy+2000):1000
+                console.log('bdy:\n'+body)
                 setTimeout(function(){
-                    if(noproxy==2){
+                    getUserInfo(uuid,callback,noproxy+1)
+                    if(noproxy>6){
                         callback({})
-                    }else if(noproxy==1){
-                        getUserInfo(uuid,callback,2)
-                    }else{
-                        getUserInfo(uuid,callback,1)
-                    }                
-                },1000);
+                    }
+                },delay);
                 return;
             }
           var dat = eval('('+body+')');
@@ -146,6 +151,7 @@ function getUserInfo(uuid,callback,noproxy){
           console.log('error!!!!'+uuid)
           console.log(body);
           console.log(e);
+
           callback({})
         }
 
@@ -275,22 +281,22 @@ function getRank(page,retarr,proxy){
         req.proxy = 'http://192.168.17.236:2346'
       }else if(proxy==2){
         req.proxy = 'http://192.168.17.241:2346'
+      }else if(proxy==4){
+        req.proxy = 'http://192.168.17.236:2346'
+      }else if(proxy==5){
+        req.proxy = 'http://192.168.17.241:2346'
+      }else if(proxy>=6){
+        return;
       }else{
           
       }
       request(req, function(error, response, body) {
         if (error && error.code) {
           console.log('pipe error catched!')
-          console.log(error);
-            setTimeout(function(){
-                if(noproxy==2){
-                    
-                }else if(noproxy==1){
-                    getRank(page,retarr,2)
-                }else{
-                    getRank(page,retarr,1)
-                }
-            },1000);
+          var delay = proxy?(2000*proxy+3000):2000
+          setTimeout(function(){
+            getRank(page,retarr,proxy+1)
+          },delay);
         } else {
           if (body.startsWith("svdata=")) {
             body = body.substring(7);
@@ -299,17 +305,13 @@ function getRank(page,retarr,proxy){
             try{
                 eval('('+body+')');
             }catch(ee){
-                        
+                var delay = proxy?(2000*proxy+3000):2000
+                if(proxy>6){
+                  return;
+                }
                 setTimeout(function(){
-                    if(proxy==2){
-
-                    }else if(proxy==1){
-                        getRank(page,retarr,2)
-                    }else{
-                        getRank(page,retarr,1)
-                    }
-                },1000);
-                return;
+                  getRank(page,retarr,proxy+1)
+                },delay);
             }
           var data = eval('('+body+')');
           var list = data.api_data.api_list;
@@ -439,8 +441,17 @@ function gotimer(){
     var nowmonth = new Date().getMonth();
     if(nowdate==monthOfDay[nowmonth]){
       var nowhour = new Date().getHours();
-      if(nowhour>=15&&nowhour<=22){
-        console.log('hour task:ok')
+      if(nowhour>=15&&nowhour<=20){
+        console.log('hour task:ok15')
+        timer();
+      }else if(nowhour==21){
+        console.log('hour task:ok21')
+        timer();
+      }else if(nowhour==22){
+        console.log('hour task:ok22')
+        timer();
+      }else if(nowhour==23){
+        console.log('hour task:ok23')
         timer();
       }else{
         console.log('hour task:no1')
@@ -458,28 +469,38 @@ function timer(){
   var month = nn.getMonth()+1;
   var dateno = getRankDateNo(nn.getTime());
   var keym = year+"_"+month;
+  var kml = year+'_'+(month-1);
+  if(month==1){
+    kml = (year-1)+'_'+12;
+  }
   var key = year+'_'+month+'_'+dateno;
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
+  var cl_n_senka_8_l = udb.collection("cl_n_8_senka_"+kml);
   var cl_senka_8 = udb.collection("cl_senka_8");
   cl_n_senka_8.find().toArray(function(err,arr){
-    var nl = {};
-    for(var i=0;i<arr.length;i++){
-      nl[arr[i].n]=1
-    }
-    var nk = Object.keys(nl);
-    console.log(nk);
-    cl_senka_8.find({n:{'$in':nk}}).toArray(function(err2,arr2){
-      var glist = [];
-      for(var i=0;i<arr2.length;i++){
-        var e = arr2[i].e;
-        var nt = (now - arr2[i].ts)/500
-        if(e+nt>4000000){
-          glist.push(arr2[i]._id);
-        }
+    cl_n_senka_8_l.find().toArray(function(err3,arr3){
+      var nl = {};
+      for(var i=0;i<arr.length;i++){
+        nl[arr[i].n]=1
       }
-      console.log('============nlist:'+nk.length+'===========glist:'+glist.length+'============');
-      getInfoFromListA(glist);
-    })
+      for(var i=0;i<arr3.length;i++){
+        nl[arr3[i].n]=1
+      }
+      var nk = Object.keys(nl);
+      console.log(nk);
+      cl_senka_8.find({n:{'$in':nk}}).toArray(function(err2,arr2){
+        var glist = [];
+        for(var i=0;i<arr2.length;i++){
+          var e = arr2[i].e;
+          var nt = (now - arr2[i].ts)/500
+          if(e+nt>4000000){
+            glist.push(arr2[i]._id);
+          }
+        }
+        console.log('============nlist:'+nk.length+'===========glist:'+glist.length+'============');
+        getInfoFromListA(glist);
+      })
+    });
   })
 }
 
@@ -596,7 +617,7 @@ function handleSenkaReply(content,gid,qq,callback){
               var ret = namelist[0]+'\n';
               ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')】\n'
               ret = ret + rrr.ship + '\n';
-
+              culist[culist.length] = {rd:tno+1,exp:rrr.exp,sk:-1,eo:0,es:addsenka};
               generateImage(culist,ret.trim(),callback);
             })
           })
@@ -737,30 +758,39 @@ function generateImage(arr,str,callback){
     img1.drawText(50+i*wd,30,weekStr[i],'NorthWest')
   }
   img1.drawLine(0,65,1200,65)
-  for(var i=day;i<7;i++){
-    img1.fontSize(25)
-    img1.fill('blue')
-    img1.drawText(50+i*wd,80,i,'NorthWest')
-    if(m[i]){
-      img1.fontSize(15)
-      img1.fill('red')
-      img1.drawText(50+i*wd + 50,30,m[i],'NorthWest')
-    }
+  img1.drawLine(0,165,1200,165)
+  img1.drawLine(0,265,1200,265)
+  img1.drawLine(0,365,1200,365)
+  img1.drawLine(0,465,1200,465)
+  img1.drawLine(0,565,1200,565)
+
+  for(var i=0;i<6;i++){
+    img1.drawLine(130+i*wd,0,130+i*wd,565)
   }
-  //img1.drawLine(0,110,1000,110)
-  for(var i=7;i<=ed;i++){
-    var x = i%7;
-    var y = Math.floor(i/7);
+
+
+
+  for(var i=-day+1;i<=ed;i++){
+    if(i<1){
+      continue;
+    }
+    var ii = i+day-1;
+    var x = ii%7;
+    var y = Math.floor(ii/7);
     img1.fontSize(25)
     img1.fill('blue')
     img1.drawText(50+x*wd,80+hd*y,i,'NorthWest')
     if(m[i]){
-      img1.fontSize(15)
+      img1.fontSize(18)
       img1.fill('red')
-      img1.drawText(50+x*wd-30,110+hd*y,m[i],'NorthWest')
+      if(mx[i]) {
+        img1.drawText(50 + x * wd - 30, 110 + hd * y, m[i], 'NorthWest')
+      }else{
+        img1.drawText(50 + x * wd, 110 + hd * y, m[i], 'NorthWest')
+      }
     }
     if(mx[i]){
-      img1.fontSize(15)
+      img1.fontSize(18)
       img1.fill('dark')
       img1.drawText(50+x*wd+30 ,110+hd*y,mx[i],'NorthWest')
     }
@@ -768,7 +798,8 @@ function generateImage(arr,str,callback){
 
   img1.fontSize(25)
   img1.fill('blue')
-  img1.drawText(50,550,str,'NorthWest')
+  img1.drawText(50,570,str,'NorthWest')
+  //img1.write('5.png',function(){});
   sendGmImage(img1,'',callback);
 }
 
@@ -780,8 +811,8 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  //handleSenkaReply('z8-神主','','',function(r){console.log(r)})
-},1000)
+  //handleSenkaReply('z8-ぶるぱち','','',function(r){console.log(r)})
+},500)
 
 
 
