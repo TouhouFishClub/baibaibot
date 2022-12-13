@@ -442,8 +442,17 @@ function gotimer(){
     var nowmonth = new Date().getMonth();
     if(nowdate==monthOfDay[nowmonth]){
       var nowhour = new Date().getHours();
-      if(nowhour>=15&&nowhour<=22){
-        console.log('hour task:ok')
+      if(nowhour>=15&&nowhour<=20){
+        console.log('hour task:ok15')
+        timer();
+      }else if(nowhour==21){
+        console.log('hour task:ok21')
+        timer();
+      }else if(nowhour==22){
+        console.log('hour task:ok22')
+        timer();
+      }else if(nowhour==23){
+        console.log('hour task:ok23')
         timer();
       }else{
         console.log('hour task:no1')
@@ -461,28 +470,38 @@ function timer(){
   var month = nn.getMonth()+1;
   var dateno = getRankDateNo(nn.getTime());
   var keym = year+"_"+month;
+  var kml = year+'_'+(month-1);
+  if(month==1){
+    kml = (year-1)+'_'+12;
+  }
   var key = year+'_'+month+'_'+dateno;
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
+  var cl_n_senka_8_l = udb.collection("cl_n_8_senka_"+kml);
   var cl_senka_8 = udb.collection("cl_senka_8");
   cl_n_senka_8.find().toArray(function(err,arr){
-    var nl = {};
-    for(var i=0;i<arr.length;i++){
-      nl[arr[i].n]=1
-    }
-    var nk = Object.keys(nl);
-    console.log(nk);
-    cl_senka_8.find({n:{'$in':nk}}).toArray(function(err2,arr2){
-      var glist = [];
-      for(var i=0;i<arr2.length;i++){
-        var e = arr2[i].e;
-        var nt = (now - arr2[i].ts)/500
-        if(e+nt>4000000){
-          glist.push(arr2[i]._id);
-        }
+    cl_n_senka_8_l.find().toArray(function(err3,arr3){
+      var nl = {};
+      for(var i=0;i<arr.length;i++){
+        nl[arr[i].n]=1
       }
-      console.log('============nlist:'+nk.length+'===========glist:'+glist.length+'============');
-      getInfoFromListA(glist);
-    })
+      for(var i=0;i<arr3.length;i++){
+        nl[arr3[i].n]=1
+      }
+      var nk = Object.keys(nl);
+      console.log(nk);
+      cl_senka_8.find({n:{'$in':nk}}).toArray(function(err2,arr2){
+        var glist = [];
+        for(var i=0;i<arr2.length;i++){
+          var e = arr2[i].e;
+          var nt = (now - arr2[i].ts)/500
+          if(e+nt>4000000){
+            glist.push(arr2[i]._id);
+          }
+        }
+        console.log('============nlist:'+nk.length+'===========glist:'+glist.length+'============');
+        getInfoFromListA(glist);
+      })
+    });
   })
 }
 
