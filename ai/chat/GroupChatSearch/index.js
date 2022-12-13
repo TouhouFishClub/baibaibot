@@ -60,7 +60,7 @@ const analysisData = async (data, target) => {
 	let userTargetSet = new Set(), out = []
 	data.filter(x => !x.d.startsWith('gcs') || x.uid !== 1561267174).forEach(msg => {
 		if(!userTargetSet.has(msg.uid)) {
-			let desc = msg.split('\n').map(x => x.trim()).filter(x => x.indexOf(target) > -1)
+			let desc = msg.d.split('\n').map(x => x.trim()).filter(x => x.indexOf(target) > -1)
 			let msgObj = Object.assign(msg, {
 				desc,
 				target
