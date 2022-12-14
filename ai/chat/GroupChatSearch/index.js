@@ -81,12 +81,17 @@ const analysisData = (data, targetArr) => {
 	let userTargetSet = new Set(), out = []
 	data.filter(x => !(x.d.startsWith('gcs') || x.uid === 1561267174) && (x.d.indexOf('出') > -1 || x.d.indexOf('收') > -1)).forEach(msg => {
 		if(!userTargetSet.has(msg.uid)) {
-			let desc = searchDesc(msg.d, targetArr)
+			let content = msg.d.split('[CQ:').map((x, i) => i ? x.split(']')[1]: x).filter(x => x.trim()).join('')
+			let desc = searchDesc(content, targetArr)
+			if(!desc) {
+				return
+			}
 			let descReplace = desc
 			targetArr.forEach(target => {
 				descReplace = descReplace.replace(new RegExp(target), `<strong>${target}</strong>`)
 			})
 			let msgObj = Object.assign(msg, {
+				content,
 				desc,
 				targetArr,
 				descReplace
@@ -125,7 +130,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 						margin: 0;
 					}
 					body {
-      			width: 1040px;
+      			width: 640px;
 						min-height: 20px;
 						padding: 20px;
 						box-sizing: border-box;
@@ -135,7 +140,10 @@ const renderData = (data, targetArr, groupId, callback) => {
 						font-family: HANYIWENHEI;
 					}
 					.main-container {
+						min-height: 20px;
 						background-color: #999;
+						display: flex;
+						flex-direction: column;
 					}
 					.main-container .chat-info-item{
 						width: 600px;
