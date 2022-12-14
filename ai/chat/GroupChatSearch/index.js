@@ -90,7 +90,7 @@ const analysisData = (data, targetArr) => {
 			}
 			let descReplace = desc
 			targetArr.forEach(target => {
-				descReplace = descReplace.replace(new RegExp(target), `<strong>${target}</strong>`)
+				descReplace = descReplace.replace(new RegExp(target, 'g'), `<strong>${target}</strong>`)
 			})
 			let msgObj = Object.assign(msg, {
 				content,
@@ -171,6 +171,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 		.main-container .chat-info-item .user-chat-info .time{
 			font-size: 14px;
 			flex-shrink: 0;
+			margin-left: 15px;
 		}
 		.main-container .chat-info-item .chat-info-bubble{
 			box-sizing: border-box;
