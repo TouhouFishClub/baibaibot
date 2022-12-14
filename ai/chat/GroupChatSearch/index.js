@@ -123,14 +123,15 @@ const renderData = (data, targetArr, groupId, callback) => {
 						border: 0;
 						padding: 0;
 						margin: 0;
-						font-size: 14px;
-						line-height: 1.4;
 					}
 					body {
 						width: 640px;
-						min-height: 30px;
+						min-height: 20px;
 						padding: 20px;
+						box-sizing: border-box;
 						background: #fff;
+						font-size: 14px;
+						line-height: 1.4;
 						font-family: HANYIWENHEI;
 					}
 					.main-container {
