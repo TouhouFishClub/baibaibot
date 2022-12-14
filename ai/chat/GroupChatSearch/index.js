@@ -239,6 +239,8 @@ const renderData = (data, targetArr, groupId, callback) => {
 			align-items: center;
 			justify-content: center;
 			color: #fff;
+			border-bottom-right-radius: 10px;
+			border-top-right-radius: 10px;
 		}
 		.main-container .chat-info-item .chat-info-bubble .state.state-0{
 			background-color: #999;
