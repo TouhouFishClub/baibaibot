@@ -132,7 +132,6 @@ const renderData = (data, targetArr, groupId, callback) => {
 			margin: 0;
 		}
 		body {
-			width: 640px;
 			min-height: 20px;
 			padding: 20px;
 			box-sizing: border-box;
@@ -146,7 +145,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 		}
 		.main-container .chat-info-item{
 			padding-left: 10px;
-			width: 600px;
+			width: 400px;
 			background-color: #00d000;
 		}
 		.main-container .chat-info-item + .chat-info-item{
