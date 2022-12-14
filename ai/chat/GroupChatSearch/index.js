@@ -148,7 +148,6 @@ const renderData = (data, targetArr, groupId, callback) => {
 			padding-left: 10px;
 			box-sizing: border-box;
 			width: 400px;
-			background-color: #00d000;
 		}
 		.main-container .chat-info-item + .chat-info-item{
 			margin-top: 20px;		
@@ -200,6 +199,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 			padding-left: 15px;
 			padding-right: 15px;
 			box-sizing: border-box;
+			font-size: 24px;
 		}
 		.main-container .chat-info-item .desc strong{
 			color: #f00;
