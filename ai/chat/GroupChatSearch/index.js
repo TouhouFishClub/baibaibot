@@ -74,7 +74,9 @@ const searchDesc = (msg, targetArray, offsetStart = 20, offsetEnd = 20) => {
 			ed = s + target.length
 		}
 	})
-	return msg.substring(st - offsetStart, ed + offsetEnd)
+	let out = msg.substring(st - offsetStart, ed + offsetEnd)
+	out = out.split('\n').map(x => x.trim()).filter(x => x.length > 2).join('\n')
+	return out
 }
 
 const analysisData = (data, targetArr) => {
@@ -132,7 +134,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 			margin: 0;
 		}
 		body {
-			width: 440px;
+			width: 540px;
 			min-height: 20px;
 			padding: 20px;
 			box-sizing: border-box;
@@ -147,10 +149,10 @@ const renderData = (data, targetArr, groupId, callback) => {
 		.main-container .chat-info-item{
 			padding-left: 10px;
 			box-sizing: border-box;
-			width: 400px;
+			width: 500px;
 		}
 		.main-container .chat-info-item + .chat-info-item{
-			margin-top: 20px;		
+			margin-top: 20px;
 		}
 		.main-container .chat-info-item .user-chat-info{
 			height: 30px;
@@ -162,9 +164,13 @@ const renderData = (data, targetArr, groupId, callback) => {
 		}
 		.main-container .chat-info-item .user-chat-info .user-nick{
 			font-size: 18px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		.main-container .chat-info-item .user-chat-info .time{
 			font-size: 14px;
+			flex-shrink: 0;
 		}
 		.main-container .chat-info-item .chat-info-bubble{
 			box-sizing: border-box;
