@@ -116,73 +116,94 @@ const renderData = (data, targetArr, groupId, callback) => {
 	nodeHtmlToImage({
 		output,
 		html: `
-			<html>
-			<head>
-				<meta charSet="utf-8">
-				<style>
-					@font-face {
-						font-family: 'HANYIWENHEI';
-						src: url(${HANYIWENHEI}) format('truetype');
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Title</title>
+	<meta charSet="utf-8">
+	<style>
+		@font-face {
+			font-family: 'HANYIWENHEI';
+			src: url(${HANYIWENHEI}) format('truetype');
+		}
+		* {
+			border: 0;
+			padding: 0;
+			margin: 0;
+		}
+		body {
+			width: 640px;
+			min-height: 20px;
+			padding: 20px;
+			box-sizing: border-box;
+			background: #fff;
+			font-size: 14px;
+			line-height: 1.4;
+			font-family: HANYIWENHEI;
+		}
+		.main-container {
+			background-color: #999;
+		}
+		.main-container .chat-info-item{
+			width: 600px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-top: 15px;
+			padding-bottom: 15px;				
+		}
+		.main-container .chat-info-item + .chat-info-item{
+			border-top: 1px solid #999;					
+		}
+		.main-container .chat-info-item .time{
+			width: 150px;
+			padding-left: 15px;
+			padding-right: 15px;
+			box-sizing: border-box;
+			text-align: center;
+			flex-shrink: 0;
+		}
+		.main-container .chat-info-item .user-info{
+			width: 200px;
+			padding-left: 15px;
+			padding-right: 15px;
+			box-sizing: border-box;
+			text-align: center;
+			flex-shrink: 0;
+		}
+		.main-container .chat-info-item .desc{
+			flex-grow: 1;
+			padding-left: 15px;
+			padding-right: 15px;
+			box-sizing: border-box;
+		}
+		.main-container .chat-info-item .desc strong{
+			color: #f00;
+		}
+	</style>
+</head>
+<body>
+<div class="main-container">
+	${
+		data.map(item => `
+			<div class="chat-info-item">
+				<div class="time">${formatTime(item.ts)}</div>
+				<div class="user-info">
+					<div class="user-id">${item.uid}</div>
+					<div class="user-nick">${item.n}</div>
+				</div>
+				<div class="desc">
+					${
+						item.descReplace.split('\n').map(line => line.trim()).join('<br>')
 					}
-					* {
-						border: 0;
-						padding: 0;
-						margin: 0;
-					}
-					body {
-      			width: 640px;
-						min-height: 20px;
-						padding: 20px;
-						box-sizing: border-box;
-						background: #fff;
-						font-size: 14px;
-						line-height: 1.4;
-						font-family: HANYIWENHEI;
-					}
-					.main-container {
-						background-color: #999;
-					}
-					.main-container .chat-info-item{
-						width: 600px;
-						display: flex;
-						align-items: center;
-						justify-content: space-between;
-						padding-top: 15px;
-						padding-bottom: 15px;				
-					}
-					.main-container .chat-info-item + .chat-info-item{
-						border-top: 1px solid #999;					
-					}
-					.main-container .chat-info-item .time{
-						width: 150px;
-						padding-left: 15px;
-						padding-right: 15px;
-						box-sizing: border-box;
-						text-align: center;
-						flex-shrink: 0;
-					}
-					.main-container .chat-info-item .user-info{
-						width: 200px;
-						padding-left: 15px;
-						padding-right: 15px;
-						box-sizing: border-box;
-						text-align: center;
-						flex-shrink: 0;
-					}
-					.main-container .chat-info-item .desc{
-						flex-grow: 1;
-						padding-left: 15px;
-						padding-right: 15px;
-						box-sizing: border-box;
-					}
-					.main-container .chat-info-item .desc strong{
-						color: #f00;
-					}
-				</style>
-			</head>
-			<body>
-			</body>
-			</html>
+				</div>
+			</div>
+		`).join('')
+	}
+	<hr/>
+</div>
+</body>
+</html>
 		`
 	})
 		.then(() => {
