@@ -132,6 +132,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 			margin: 0;
 		}
 		body {
+			min-width: 20px;
 			min-height: 20px;
 			padding: 20px;
 			box-sizing: border-box;
