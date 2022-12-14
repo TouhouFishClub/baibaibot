@@ -92,11 +92,14 @@ const analysisData = (data, targetArr) => {
 			targetArr.forEach(target => {
 				descReplace = descReplace.replace(new RegExp(target, 'g'), `<strong>${target}</strong>`)
 			})
+			//0:无收无出 1:收 2: 出 3:有收有出
+			let state = descReplace.match(/[收|买]/) ? (descReplace.match(/[出|卖]/) ? 3: 1) : (descReplace.match(/[出|卖]/) ? 2: 0)
 			let msgObj = Object.assign(msg, {
 				content,
 				desc,
 				targetArr,
-				descReplace
+				descReplace,
+				state
 			})
 			out.push(msgObj)
 			userTargetSet.add(msg.uid)
@@ -176,7 +179,9 @@ const renderData = (data, targetArr, groupId, callback) => {
 		.main-container .chat-info-item .chat-info-bubble{
 			box-sizing: border-box;
 			padding: 20px;
+			padding-top: 30px;
 			padding-left: 80px;
+			padding-right: 40px;
 			border: 2px solid #999;
 			border-radius: 10px;
 			position: relative;
@@ -223,12 +228,36 @@ const renderData = (data, targetArr, groupId, callback) => {
 		.main-container .chat-info-item .desc strong{
 			color: #f00;
 		}
+		.main-container .chat-info-item .chat-info-bubble .state{
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			width: 30px;
+			font-size: 14px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #fff;
+		}
+		.main-container .chat-info-item .chat-info-bubble .state.state-0{
+			background-color: #999;
+		}
+		.main-container .chat-info-item .chat-info-bubble .state.state-1{
+			background-color: #d2322d;
+		}
+		.main-container .chat-info-item .chat-info-bubble .state.state-2{
+			background-color: #009b00;
+		}
+		.main-container .chat-info-item .chat-info-bubble .state.state-3{
+			background-color: #ffad00;
+		}
 	</style>
 </head>
 <body>
 <div class="main-container">
 	${
-		data.map(item => `
+			data.map(item => `
 			<div class="chat-info-item">
 				<div class="user-chat-info">
 					<div class="user-nick">${item.n}</div>
@@ -241,13 +270,16 @@ const renderData = (data, targetArr, groupId, callback) => {
 					</div>
 					<div class="desc">
 						${
-							item.descReplace.split('\n').map(line => line.trim()).join('<br>')
-						}
+				item.descReplace.split('\n').map(line => line.trim()).join('<br>')
+			}
+					</div>
+					<div class="state state-${item.state}">
+						${['未知', '收', '出', '有收有出'][item.state].split('').join('<br/>')}
 					</div>
 				</div>
 			</div>
 		`).join('')
-	}
+		}
 	<hr/>
 </div>
 </body>
