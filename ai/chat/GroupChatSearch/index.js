@@ -193,6 +193,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 						</div>
 					`).join('')
 				}
+				<hr/>
 			</div>
 			</body>
 			</html>
