@@ -178,10 +178,22 @@ const renderData = (data, targetArr, groupId, callback) => {
 			padding: 20px;
 			padding-left: 80px;
 			border: 2px solid #999;
-			border-radius: 5px;
+			border-radius: 10px;
 			position: relative;
 			background-color: #fff;
 			box-shadow: 2px 2px 3px rgba(0,0,0,.2);
+		}
+		.main-container .chat-info-item .chat-info-bubble .user-id{
+			position: absolute;
+			font-size: 14px;
+			line-height: 20px;
+			top: 0;
+			left: 0;
+			background-color: #333;
+			color: #fff;
+			padding-left: 80px;
+			padding-right: 10px;
+			border-bottom-right-radius: 10px;
 		}
 		.main-container .chat-info-item .chat-info-bubble .user-avatar{
 			position: absolute;
@@ -223,6 +235,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 					<div class="time">${formatTime(item.ts)}</div>
 				</div>
 				<div class="chat-info-bubble">
+					<div class="user-id">${item.uid}</div>
 					<div class="user-avatar">
 						<img src="http://q1.qlogo.cn/g?b=qq&nk=${item.uid}&s=100" class="avatar">
 					</div>
