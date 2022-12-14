@@ -168,6 +168,8 @@ const renderData = (data, targetArr, groupId, callback) => {
 			height: 120px;
 			border-radius: 60px;
 			border: 2px solid #999;
+			top: -40px;
+			left: -20px;
 			background-color: #fff;
 			display: flex;
 			align-items: center;
