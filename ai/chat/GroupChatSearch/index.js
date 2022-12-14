@@ -136,24 +136,47 @@ const renderData = (data, targetArr, groupId, callback) => {
 			min-height: 20px;
 			padding: 20px;
 			box-sizing: border-box;
-			background: #fff;
+			background: #FAFAFA;
 			font-size: 14px;
 			line-height: 1.4;
 			font-family: HANYIWENHEI;
 		}
 		.main-container {
-			background-color: #999;
+		
 		}
 		.main-container .chat-info-item{
+			padding-top: 40px;
+			padding-left: 20px;
 			width: 600px;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			padding-top: 15px;
-			padding-bottom: 15px;				
 		}
 		.main-container .chat-info-item + .chat-info-item{
-			border-top: 1px solid #999;					
+			margin-top: 20px;		
+		}
+		.main-container .chat-info-item .chat-info-bubble{
+			width: 580px;
+			box-sizing: border-box;
+			padding: 20px;
+			border: 2px solid #999;
+			border-radius: 5px;
+			position: relative;
+			background-color: #fff;
+			box-shadow: 2px 2px 3px rgba(0,0,0,.2);
+		}
+		.main-container .chat-info-item .chat-info-bubble .user-avatar{
+			position: absolute;
+			width: 120px;
+			height: 120px;
+			border-radius: 60px;
+			border: 2px solid #999;
+			background-color: #fff;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.main-container .chat-info-item .chat-info-bubble .user-avatar .avatar{
+			width: 100px;
+			height: 100px;
+			border-radius: 50px;
 		}
 		.main-container .chat-info-item .time{
 			width: 150px;
@@ -187,15 +210,20 @@ const renderData = (data, targetArr, groupId, callback) => {
 	${
 		data.map(item => `
 			<div class="chat-info-item">
-				<div class="time">${formatTime(item.ts)}</div>
-				<div class="user-info">
-					<div class="user-id">${item.uid}</div>
-					<div class="user-nick">${item.n}</div>
-				</div>
-				<div class="desc">
-					${
-						item.descReplace.split('\n').map(line => line.trim()).join('<br>')
-					}
+				<div class="chat-info-bubble">
+					<div class="user-avatar">
+						<img src="http://q1.qlogo.cn/g?b=qq&nk=${item.uid}&s=100" class="avatar">
+					</div>
+					<div class="time">${formatTime(item.ts)}</div>
+					<div class="user-info">
+						<div class="user-id">${item.uid}</div>
+						<div class="user-nick">${item.n}</div>
+					</div>
+					<div class="desc">
+						${
+							item.descReplace.split('\n').map(line => line.trim()).join('<br>')
+						}
+					</div>
 				</div>
 			</div>
 		`).join('')
