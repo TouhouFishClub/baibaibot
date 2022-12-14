@@ -140,10 +140,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 						font-family: HANYIWENHEI;
 					}
 					.main-container {
-						min-height: 20px;
 						background-color: #999;
-						display: flex;
-						flex-direction: column;
 					}
 					.main-container .chat-info-item{
 						width: 600px;
@@ -184,25 +181,6 @@ const renderData = (data, targetArr, groupId, callback) => {
 				</style>
 			</head>
 			<body>
-			<div class="main-container">
-				${
-					data.map(item => `
-						<div class="chat-info-item">
-							<div class="time">${formatTime(item.ts)}</div>
-							<div class="user-info">
-								<div class="user-id">${item.uid}</div>
-								<div class="user-nick">${item.n}</div>
-							</div>
-							<div class="desc">
-								${
-									item.descReplace.split('\n').map(line => line.trim()).join('<br>')
-								}
-							</div>
-						</div>
-					`).join('')
-				}
-				<hr/>
-			</div>
 			</body>
 			</html>
 		`
