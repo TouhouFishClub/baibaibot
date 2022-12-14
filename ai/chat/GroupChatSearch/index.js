@@ -137,7 +137,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 			padding: 20px;
 			box-sizing: border-box;
 			background: #FAFAFA;
-			font-size: 14px;
+			font-size: 16px;
 			line-height: 1.4;
 			font-family: HANYIWENHEI;
 		}
@@ -145,15 +145,27 @@ const renderData = (data, targetArr, groupId, callback) => {
 		
 		}
 		.main-container .chat-info-item{
-			padding-top: 30px;
 			padding-left: 10px;
 			width: 600px;
 		}
 		.main-container .chat-info-item + .chat-info-item{
 			margin-top: 20px;		
 		}
+		.main-container .chat-info-item .user-chat-info{
+			height: 30px;
+			box-sizing: border-box;
+			padding-left: 90px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		.main-container .chat-info-item .user-chat-info .user-nick{
+			font-size: 18px;
+		}
+		.main-container .chat-info-item .user-chat-info .time{
+			font-size: 14px;
+		}
 		.main-container .chat-info-item .chat-info-bubble{
-			width: 580px;
 			box-sizing: border-box;
 			padding: 20px;
 			padding-left: 80px;
@@ -181,22 +193,6 @@ const renderData = (data, targetArr, groupId, callback) => {
 			height: 70px;
 			border-radius: 35px;
 		}
-		.main-container .chat-info-item .time{
-			width: 150px;
-			padding-left: 15px;
-			padding-right: 15px;
-			box-sizing: border-box;
-			text-align: center;
-			flex-shrink: 0;
-		}
-		.main-container .chat-info-item .user-info{
-			width: 200px;
-			padding-left: 15px;
-			padding-right: 15px;
-			box-sizing: border-box;
-			text-align: center;
-			flex-shrink: 0;
-		}
 		.main-container .chat-info-item .desc{
 			flex-grow: 1;
 			padding-left: 15px;
@@ -213,14 +209,13 @@ const renderData = (data, targetArr, groupId, callback) => {
 	${
 		data.map(item => `
 			<div class="chat-info-item">
+				<div class="user-chat-info">
+					<div class="user-nick">${item.n}</div>
+					<div class="time">${formatTime(item.ts)}</div>
+				</div>
 				<div class="chat-info-bubble">
 					<div class="user-avatar">
 						<img src="http://q1.qlogo.cn/g?b=qq&nk=${item.uid}&s=100" class="avatar">
-					</div>
-					<div class="time">${formatTime(item.ts)}</div>
-					<div class="user-info">
-						<div class="user-id">${item.uid}</div>
-						<div class="user-nick">${item.n}</div>
 					</div>
 					<div class="desc">
 						${
