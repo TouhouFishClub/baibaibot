@@ -145,8 +145,8 @@ const renderData = (data, targetArr, groupId, callback) => {
 		
 		}
 		.main-container .chat-info-item{
-			padding-top: 40px;
-			padding-left: 20px;
+			padding-top: 30px;
+			padding-left: 10px;
 			width: 600px;
 		}
 		.main-container .chat-info-item + .chat-info-item{
@@ -156,6 +156,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 			width: 580px;
 			box-sizing: border-box;
 			padding: 20px;
+			padding-left: 80px;
 			border: 2px solid #999;
 			border-radius: 5px;
 			position: relative;
@@ -164,21 +165,21 @@ const renderData = (data, targetArr, groupId, callback) => {
 		}
 		.main-container .chat-info-item .chat-info-bubble .user-avatar{
 			position: absolute;
-			width: 120px;
-			height: 120px;
-			border-radius: 60px;
+			width: 80px;
+			height: 80px;
+			border-radius: 40px;
 			border: 2px solid #999;
-			top: -40px;
-			left: -20px;
+			top: -30px;
+			left: -10px;
 			background-color: #fff;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 		}
 		.main-container .chat-info-item .chat-info-bubble .user-avatar .avatar{
-			width: 100px;
-			height: 100px;
-			border-radius: 50px;
+			width: 70px;
+			height: 70px;
+			border-radius: 35px;
 		}
 		.main-container .chat-info-item .time{
 			width: 150px;
