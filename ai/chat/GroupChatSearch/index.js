@@ -134,7 +134,7 @@ const renderData = (data, targetArr, groupId, callback) => {
 						font-family: HANYIWENHEI;
 					}
 					.main-container {
-						min-height: 20px;
+						background-color: #999;
 					}
 					.main-container .chat-info-item{
 						width: 600px;
