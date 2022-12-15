@@ -420,7 +420,9 @@ function gotimer(){
   var leftmin = left/60000;
   console.log('leftmin:'+leftmin);
   setTimeout(function(){
-    timer();
+      try{
+      timer();
+      }catch(e){}
   },left)
 
 
@@ -428,9 +430,14 @@ function gotimer(){
   var leftmin2 = left2/60000;
   console.log('leftmin2:'+leftmin2);
   setTimeout(function(){
-    getRank(1,[]);
+            try{
+      getRank(1,[]);
+      }catch(e){}
+    
     setTimeout(function(){
+      try{
       timer();
+      }catch(e){}
     },60000);
   },left2)
 
