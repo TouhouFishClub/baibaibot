@@ -608,16 +608,24 @@ function handleSenkaReply(content,gid,qq,callback){
             var ton = lsenka.no;
             var tno = parseInt(lsenka._id.split('_')[0])
             var tk
+            var tk2;
             if(tno%2==0){
               tk = keym+'_'+tno+'_1'
+                tk2 = keym+'_'+tno+'_2'
             }else{
               tk = keym+'_'+tno+'_13'
+                tk2 = keym+'_'+tno+'_14'
             }
             var thenexp = user.d[tk];
+              var ddstr =''
+              if(!thenexp){
+                  ddstr = '?'
+                thenexp = user.d[tk2];
+              }
             getUserInfo(userid,function(rrr){
               var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
               var ret = namelist[0]+'\n';
-              ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')】\n'
+              ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')'+ddstr+'】\n'
               ret = ret + rrr.ship + '\n';
               culist[culist.length] = {rd:tno+1,exp:rrr.exp,sk:-1,eo:0,es:addsenka};
               generateImage(culist,ret.trim(),callback);
