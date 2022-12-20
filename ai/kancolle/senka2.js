@@ -579,9 +579,18 @@ function handleSenkaReply(content,gid,qq,callback){
           ranklist.sort(function(a,b){
             return parseInt(a._id.split('_')[0]) - parseInt(b._id.split('_')[0])
           })
-          console.log(ranklist)
+          var lstrk = ranklist[ranklist.length-1];
+          var rkcmt = lstrk.cmt;
           cl_senka_8.find({n:namelist[0]}).toArray(function(err2,arr2){
-            arr2.sort(function(a,b){return b.ts-a.ts})
+            arr2.sort(function(a,b){
+                if(b.cmt&&b.cmt==rkcmt){
+                    return 1;
+                }
+                if(a.cmt&&a.cmt==rkcmt){
+                    return -1;
+                }
+                return b.ts-a.ts
+            })
             var user = arr2[0];
             console.log(user);
 
