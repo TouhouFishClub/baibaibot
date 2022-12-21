@@ -414,8 +414,7 @@ function EA2(max,min){
   }
 }
 
-
-function gotimer(){
+function timer1(){
   var left = (43200000 - new Date().getTime()%43200000 + 3600000*5)%43200000+5000
   var leftmin = left/60000;
   console.log('leftmin:'+leftmin);
@@ -423,9 +422,13 @@ function gotimer(){
       try{
       timer();
       }catch(e){}
+      setTimeout(function(){
+        timer1();
+      },100000)
   },left)
+}
 
-
+function timer2(){
   var left2 = (43200000 - new Date().getTime()%43200000 + 3600000*6)%43200000+5000
   var leftmin2 = left2/60000;
   console.log('leftmin2:'+leftmin2);
@@ -439,9 +442,15 @@ function gotimer(){
       timer();
       }catch(e){}
     },60000);
+      
+          
+    setTimeout(function(){
+      timer2();
+    },200000)  
   },left2)
+}
 
-
+function timer3(){
   var left3 = 3600000 - new Date().getTime()%3600000+10000
   var leftmin3 = left3/60000;
   console.log('leftmin3:'+leftmin3);
@@ -468,7 +477,18 @@ function gotimer(){
     }else{
       console.log('hour task:no2')
     }
+      
+    setTimeout(function(){
+      timer3();
+    },200000)        
   },left3)
+}
+
+
+function gotimer(){
+    timer1();
+    timer2();
+    timer3();
 }
 
 function timer(){
