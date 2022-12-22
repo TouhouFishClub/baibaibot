@@ -663,7 +663,7 @@ function handleSenkaReply(content,gid,qq,callback){
               var ret = namelist[0]+'\n';
               ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')'+ddstr+'】'
               if(rrr.exp>200000000){
-                ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
+                //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
               }
               ret = ret + '\n'
               ret = ret + rrr.ship + '\n';
