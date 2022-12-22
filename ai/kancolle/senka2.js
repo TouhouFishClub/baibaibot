@@ -661,7 +661,11 @@ function handleSenkaReply(content,gid,qq,callback){
             getUserInfo(userid,function(rrr){
               var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
               var ret = namelist[0]+'\n';
-              ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')'+ddstr+'】\n'
+              ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')'+ddstr+'】'
+              if(rrr.exp>200000000){
+                ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
+              }
+              ret = ret + '\n'
               ret = ret + rrr.ship + '\n';
               culist[culist.length] = {rd:tno+1,exp:rrr.exp,sk:-1,eo:0,es:addsenka};
               generateImage(culist,ret.trim(),callback);
