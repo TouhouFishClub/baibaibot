@@ -464,7 +464,7 @@ function timer3(){
         timer();
       }else if(nowhour==21){
         console.log('hour task:ok21')
-        timer();
+        monthCollect();
       }else if(nowhour==22){
         console.log('hour task:ok22')
         timer();
@@ -506,8 +506,10 @@ function timer(){
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
   var cl_n_senka_8_l = udb.collection("cl_n_8_senka_"+kml);
   var cl_senka_8 = udb.collection("cl_senka_8");
+  var cl_lst = udb.collection("cl_lst");
   cl_n_senka_8.find().toArray(function(err,arr){
     cl_n_senka_8_l.find().toArray(function(err3,arr3){
+      cl_lst.save({'_id':1,ts:now,tse:nn});
       var nl = {};
       for(var i=0;i<arr.length;i++){
         nl[arr[i].n]=1
@@ -527,16 +529,31 @@ function timer(){
           }
         }
         console.log('============nlist:'+nk.length+'===========glist:'+glist.length+'============');
+
         getInfoFromListA(glist);
       })
     });
   })
 }
 
+
+
+
 function getInfoFromListA(glist){
   var thread = glist.length/300+1;
   for(var i=0;i<thread;i++){
     var galist = glist.slice(i*300,(i+1)*300);
+    getInfoFromList(galist);
+  }
+}
+
+function getInfoFromListB(glist){
+  console.log('all:'+glist.length)
+  var maxthread = 8;
+  var listperthread = Math.floor(glist.length/8);
+  for(var i=0;i<maxthread;i++){
+    var galist = glist.slice(i*listperthread,(i+1)*listperthread);
+    console.log(galist.length);
     getInfoFromList(galist);
   }
 }
@@ -552,6 +569,38 @@ function getInfoFromList(glist){
 }
 
 gotimer();
+
+function monthCollect(){
+  var nn = new Date();
+  var now = nn.getTime();
+  var year = nn.getFullYear();
+  var month = nn.getMonth()+1;
+  var dateno = getRankDateNo(nn.getTime());
+  var keym = year+"_"+month;
+  var kml = year+'_'+(month-1);
+  if(month==1){
+    kml = (year-1)+'_'+12;
+  }
+  var key = year+'_'+month+'_'+dateno;
+  var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
+  var cl_n_senka_8_l = udb.collection("cl_n_8_senka_"+kml);
+  var cl_senka_8 = udb.collection("cl_senka_8");
+  cl_senka_8.find({e:{'$gt':4000000}}).toArray(function(err,arr){
+    var alllist = [];
+    for(var i=0;i<arr.length;i++){
+      alllist.push(arr[i]._id);
+    }
+    getInfoFromListB(alllist);
+  })
+}
+
+
+
+
+
+
+
+
 
 
 function handleSenkaReply(content,gid,qq,callback){
@@ -686,11 +735,14 @@ function handleSenkaReply(content,gid,qq,callback){
     console.log(query);
     cl_n_senka_8.find(query).toArray(function(err,arr){
       var namemap = [];
+      var rankmap = {};
       for(var i=0;i<arr.length;i++){
         namemap[arr[i].n]=1;
+        var rno = arr[i]._id.split('_')[1];
+        rankmap[parseInt(rno)]=arr[i];
       }
       var namelist = Object.keys(namemap);
-      console.log(namelist);
+      //console.log(namemap);
       var nnn = new  Date();
       var k1;
       var k2;
@@ -712,54 +764,116 @@ function handleSenkaReply(content,gid,qq,callback){
         k1 = keym+'_'+dateno+'_'+13;
         k2 = keym+'_'+dateno+'_'+14;
       }
-      cl_senka_8.find({n:{'$in':namelist},ts:{'$gt':nnn.getTime()}}).toArray(function(err2,arr2){
-        var m = {};
-        console.log('ssssssss'+arr2.length)
-        for(var i=0;i<arr2.length;i++){
-          var sd = arr2[i].d;
-          if(sd[k1]&&sd[k2]){
-            m[arr2[i].n]=((sd[k2]-sd[k1])/10000*7).toFixed(1);
-          }
+      var cl_lst = udb.collection("cl_lst");
+      cl_lst.find({'_id':1}).toArray(function(err3,arr3){
+        if(arr3&&arr3[0]){
+          var lst = arr3[0].ts;
+          var lnn = new Date(lst);
+          var lh = lnn.getHours();
+          var lno = getDateNo(lnn);
+          var kk = keym + '_' + lno + '_' + lh;
+
+          cl_senka_8.find({n:{'$in':namelist}}).toArray(function(err2,arr2){
+            var emap = {};
+            for(var i=0;i<arr2.length;i++){
+              if(emap[arr2[i].n]){
+                emap[arr2[i].n] = emap[arr2[i].n].concat([arr2[i]]);
+              }else{
+                emap[arr2[i].n]=[arr2[i]]
+              }
+            }
+            //console.log(emap);
+            //console.log(rankmap);
+            for(var i=1;i<990;i++){
+              var rk = rankmap[i];
+              var rkn = rk.n;
+              var rkea = emap[rkn];
+              var rkcmt = rk.cmt;
+              var rke;
+              if(rkea.length==1){
+                rke = rkea[0]
+              }else{
+                rkea.sort(function(a,b){
+                  if(a.cmt==rkcmt){
+                    return -1;
+                  }else if(b.cmt==rkcmt){
+                    return 1;
+                  }else{
+                    return b.ts-a.ts;
+                  }
+                })
+                rke = rkea[0];
+              }
+              if(rke.d[k1]&&rke.d[kk]){
+                rk.rss = (rke.d[kk] - rke.d[k1])/10000*7 + rk.dd
+              }else{
+                rk.rss=rk.dd;
+              }
+            }
+            var rks = Object.keys(rankmap);
+            rks.sort(function(a,b){
+              return rankmap[b].rss-rankmap[a].rss
+            })
+
+            var m = {};
+            var ret = '';
+            var r1,r5,r20,r100,r500=0
+            for(var i=0;i<arr.length;i++){
+              if(arr[i].no==1){
+                r1=arr[i].dd;
+              }
+              if(arr[i].no==5){
+                r5=arr[i].dd;
+              }
+              if(arr[i].no==20){
+                r20=arr[i].dd;
+              }
+              if(arr[i].no==100){
+                r100=arr[i].dd;
+              }
+              if(arr[i].no==500){
+                r500=arr[i].dd;
+              }
+            }
+            ret = ret + '\t\t【榜单】\t【当前】\t\n'
+            ret = ret + '\t1位【'+r1+'】\t【'+rankmap[rks[0]].rss+'】\t\n';
+            ret = ret + '\t5位【'+r5+'】\t【'+rankmap[rks[4]].rss+'】\t\n';
+            ret = ret + '\t20位【'+r20+'】\t【'+rankmap[rks[19]].rss+'】\t\n';
+            ret = ret + '\t100位【'+r100+'】\t【'+rankmap[rks[99]].rss+'】\t\n';
+            ret = ret + '\t500位【'+r500+'】\t【'+rankmap[rks[499]].rss+'】\t\n';
+            ret = ret + '统计时间：'+new Date(lst).toLocaleString();
+            callback(ret.trim())
+          })
         }
-        for(var i=0;i<arr.length;i++){
-          if(m[arr[i].n]){
-            arr[i].ns = arr[i].dd + parseFloat(m[arr[i].n])
-          }else{
-            arr[i].ns = arr[i].dd
-          }
-        }
-        arr.sort(function(a,b){return b.ns-a.ns});
-        var ret = '';
-        var r1,r5,r20,r100,r500=0
-        for(var i=0;i<arr.length;i++){
-          if(arr[i].no==1){
-            r1=arr[i].dd;
-          }
-          if(arr[i].no==5){
-            r5=arr[i].dd;
-          }
-          if(arr[i].no==20){
-            r20=arr[i].dd;
-          }
-          if(arr[i].no==100){
-            r100=arr[i].dd;
-          }
-          if(arr[i].no==500){
-            r500=arr[i].dd;
-          }
-        }
-        ret = ret + '\t\t【榜单】\t【当前】\t【预测】\n'
-        ret = ret + '\t1位【'+r1+'】\t【'+arr[0].ns+'】\t【0】\n';
-        ret = ret + '\t5位【'+r5+'】\t【'+arr[4].ns+'】\t【0】\n';
-        ret = ret + '\t20位【'+r20+'】\t【'+arr[19].ns+'】\t【0】\n';
-        ret = ret + '\t100位【'+r100+'】\t【'+arr[99].ns+'】\t【0】\n';
-        ret = ret + '\t500位【'+r500+'】\t【'+arr[499].ns+'】\t【0】\n';
-        ret = ret + '统计时间：'+new Date(arr[0].ts).toLocaleString();
-        callback(ret.trim())
-      })
+      });
     });
   }
 }
+
+setTimeout(function(){
+  //getUserInfo(8134131,function(){},1)
+  handleSenkaReply('z8','gid','qq',function(r){console.log(r)})
+  //fixCollect(8000001);
+},2000)
+
+function fixCollect(id){
+  //console.log('id:'+id)
+  var cl_senka_8=udb.collection("cl_senka_8");
+  cl_senka_8.find({'_id':id}).toArray(function(err,arr){
+    if(arr&&arr[0]){
+      //console.log('ok:'+id)
+      fixCollect(id+1)
+    }else{
+      console.log('no:'+id)
+      getUserInfo(id,function(r){
+        console.log(r)
+        fixCollect(id+1)
+      },1);
+    }
+
+  })
+}
+
 
 module.exports={
   handleSenkaReply
