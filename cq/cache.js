@@ -2,6 +2,7 @@ var https=require('https');
 var http = require('http');
 var cache = {};
 var namecache = {};
+const { LOCALE_IP } = require('../baibaiConfigs')
 
 function getGroupMemInfo(gid){
   return cache[gid];
@@ -183,7 +184,7 @@ function banUserInGroup(qq,groupid,seconds,port){
     port=23334;
   }
   var options = {
-    host: '192.168.17.236',
+    host: LOCALE_IP,
     port: port,
     path: '/set_group_ban?group_id='+groupid+'&user_id='+qq+'&duration='+seconds,
     method: 'GET',
