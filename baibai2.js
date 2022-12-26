@@ -1161,7 +1161,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     chishenme(from, con.substring(0, con.length - 2), callback)
 		return
   }
-  if(con.endsWith('什么') && con.match('吃').length) {
+  if(con.endsWith('什么') && con.match('吃') && con.match('吃').length) {
     chishenme(from, con.substring(0, con.length - 2), callback, false)
 		return
   }
