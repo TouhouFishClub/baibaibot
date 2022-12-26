@@ -683,7 +683,17 @@ function handleSenkaReply(content,gid,qq,callback){
               }
             }
 
-            //console.log(culist);
+            culist.sort(function(a,b){return a.rd-b.rd});
+
+            var fcu = culist[0];
+            var lcu = culist[culist.length-1];
+            var addsk = lcu.sk-fcu.sk;
+            var addexp = lcu.exp-fcu.exp;
+            var allex = Math.round(addsk - addexp*7/10000);
+            var fdt = Math.floor((fcu.rd+1)/2)
+            var edt = Math.floor((lcu.rd+1)/2);
+            var exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
+
 
 
 
@@ -710,7 +720,8 @@ function handleSenkaReply(content,gid,qq,callback){
             getUserInfo(userid,function(rrr){
               var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
               var ret = namelist[0]+'\n';
-              ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')'+ddstr+'】'
+              ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')'+ddstr+'】\n'
+              ret = ret + 'EX:'+exstr+'\n';
               if(rrr.exp>200000000){
                 //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
               }
@@ -850,11 +861,7 @@ function handleSenkaReply(content,gid,qq,callback){
   }
 }
 
-setTimeout(function(){
-  //getUserInfo(8134131,function(){},1)
-  handleSenkaReply('z8','gid','qq',function(r){console.log(r)})
-  //fixCollect(8000001);
-},2000)
+
 
 function fixCollect(id){
   //console.log('id:'+id)
@@ -884,7 +891,7 @@ var weekStr = '日一二三四五六';
 function generateImage(arr,str,callback){
   var img1 = new imageMagick("static/blank.png");
   img1.autoOrient()
-    .resize(900,900,'!')
+    .resize(900,950,'!')
     .fontSize(25)
     .fill('blue')
     .font('./font/STXIHEI.TTF')
@@ -975,8 +982,8 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  //handleSenkaReply('z8-ぶるぱち','','',function(r){console.log(r)})
-},500)
+  //timer();
+},1500)
 
 
 
