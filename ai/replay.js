@@ -32,7 +32,7 @@ function replayReply(content,userName,groupuin,callback,qq,port){
       console.log("c:"+c);
 
       var botrole = getUserRoleInGroupByCache(2375373419,groupuin);
-      if(groupuin==205700800||groupuin==616147379||groupuin==964358164){
+      if(groupuin==205700800||groupuin==616147379||groupuin==964358164||groupuin==629965211){
         botrole = 'admin';
       }
       if((botrole=='admin'||botrole=='owner')&&list.length>3+Math.random()*3){
