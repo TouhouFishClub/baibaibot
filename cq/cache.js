@@ -183,7 +183,7 @@ function banUserInGroup(qq,groupid,seconds,port){
     port=23334;
   }
   var options = {
-    host: '192.168.17.52',
+    host: '192.168.17.236',
     port: port,
     path: '/set_group_ban?group_id='+groupid+'&user_id='+qq+'&duration='+seconds,
     method: 'GET',
