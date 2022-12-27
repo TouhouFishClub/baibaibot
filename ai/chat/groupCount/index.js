@@ -195,7 +195,18 @@ const renderGroupCount = async (port, groupId, callback, type = 'img') => {
 	}
 }
 
+const randomGroupUser = async (port, groupId, callback, at = false) => {
+	let users = await fetchGroupUsers(groupId, port)
+	let target = users[Math.random() * users.length]
+	if(at) {
+		callback(`你抽到了 [CQ:at,qq=${target.uid}]`)
+	} else {
+		callback(`你抽到了 ${target.nid}`)
+	}
+}
+
 module.exports = {
-	renderGroupCount
+	renderGroupCount,
+	randomGroupUser
 }
 // renderChatPersonas(205700800)
