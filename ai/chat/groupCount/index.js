@@ -110,7 +110,7 @@ const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
 				for (var name in keywords) {
 					data.push({
 						name: name,
-						value: keywords[name]
+						value: Math.sqrt(keywords[name])
 					})
 				}
 			
@@ -119,7 +119,7 @@ const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
 						type: 'wordCloud',
 						width: '100%',
 						height: '100%',
-						sizeRange: [4, 80],
+						sizeRange: [2, 60],
 						rotationRange: [0, 0],
 						// rotationRange: [-90, 90],
 						// rotationStep: 15,
