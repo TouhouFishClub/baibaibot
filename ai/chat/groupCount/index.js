@@ -119,7 +119,7 @@ const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
 						type: 'wordCloud',
 						width: '100%',
 						height: '100%',
-						sizeRange: [4, 100],
+						sizeRange: [4, 80],
 						rotationRange: [0, 0],
 						// rotationRange: [-90, 90],
 						// rotationStep: 15,
