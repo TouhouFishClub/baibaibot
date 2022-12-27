@@ -74,7 +74,7 @@ const fetchGroupData = async (port, groupId) => {
 }
 
 const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
-	console.log(groupCountObj)
+	// console.log(groupCountObj)
 
 	let output = path.join(IMAGE_DATA, 'other', `${groupId}_count_img.png`)
 	// let output = path.join(`${groupId}.png`)
@@ -119,7 +119,7 @@ const renderGroupCountChart = async (groupCountObj, groupId, callback) => {
 						type: 'wordCloud',
 						width: '100%',
 						height: '100%',
-						sizeRange: [4, 150],
+						sizeRange: [4, 100],
 						rotationRange: [0, 0],
 						// rotationRange: [-90, 90],
 						// rotationStep: 15,
