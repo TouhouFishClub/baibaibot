@@ -707,15 +707,22 @@ function handleSenkaReply(content,gid,qq,callback){
             if(tno%2==0){
               tk = keym+'_'+tno+'_1'
                 tk2 = keym+'_'+tno+'_2'
+                tk3 = keym+'_'+tno+'_19'
             }else{
               tk = keym+'_'+tno+'_13'
                 tk2 = keym+'_'+tno+'_14'
+                tk3 = keym+'_'+tno+'_19'
             }
             var thenexp = user.d[tk];
               var ddstr =''
               if(!thenexp){
                   ddstr = '?'
                 thenexp = user.d[tk2];
+                                
+                  if(!thenexp){
+                    ddstr = '?'
+                    thenexp = user.d[tk3];
+                    }
               }
             getUserInfo(userid,function(rrr){
               var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
