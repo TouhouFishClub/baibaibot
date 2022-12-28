@@ -39,9 +39,14 @@ const fetchGroupUsers = (groupid, port) =>
 				try {
 					const parsedData = JSON.parse(rawData);
 					const groupUsers = parsedData.data.map(x => {
+						let nid = x.card || x.nickname, alias = nid
+						if(nid.length > 7) {
+							alias = `${nid.substring(0, 7)}...`
+						}
 						return {
 							uid: x.user_id,
-							nid: x.card || x.nickname
+							nid,
+							alias
 						}
 					})
 					// console.log('===============')
@@ -63,7 +68,7 @@ const fetchGroupData = async (port, groupId) => {
 	let users = await fetchGroupUsers(groupId, port)
 	let userMap = {}
 	users.forEach(x => {
-		userMap[x.uid] = x.nid
+		userMap[x.uid] = x.alias
 	})
 	let groupData = await client.db('db_bot').collection('cl_chat').find({
 		_id: { $gt: new Date(Date.now() - 1000*60*60*24) },
