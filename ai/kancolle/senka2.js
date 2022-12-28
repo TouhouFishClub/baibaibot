@@ -462,6 +462,12 @@ function timer3(){
       if(nowhour>=15&&nowhour<=20){
         console.log('hour task:ok15')
         timer();
+      }else if(nowhour==7){
+        console.log('hour task:ok7')
+        timer();
+      }else if(nowhour==11){
+        console.log('hour task:ok11')
+        timer();
       }else if(nowhour==21){
         console.log('hour task:ok21')
         monthCollect();
@@ -693,6 +699,7 @@ function handleSenkaReply(content,gid,qq,callback){
             var fdt = Math.floor((fcu.rd+1)/2)
             var edt = Math.floor((lcu.rd+1)/2);
             var exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
+            var dailystr = (addexp*2 / (lcu.rd-fcu.rd) *7/10000).toFixed(1);
 
 
 
@@ -728,7 +735,7 @@ function handleSenkaReply(content,gid,qq,callback){
               var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
               var ret = namelist[0]+'\n';
               ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')'+ddstr+'】\n'
-              ret = ret + 'EX:'+exstr+'\n';
+              ret = ret + 'EX:'+exstr+'  日均:【'+dailystr+'】\n';
               if(rrr.exp>200000000){
                 //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
               }
@@ -989,7 +996,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  //timer();
+  handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
 },1500)
 
 
