@@ -630,8 +630,9 @@ function handleSenkaReply(content,gid,qq,callback){
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
   var cl_senka_8 = udb.collection("cl_senka_8");
   var ca = content.split('-');
-  if(ca.length==2){
-    var cd = ca[1];
+  var cd = ca[1];
+  var cf = ca[0];
+  if(ca.length==2&&cd!=1){
     if(cd==1){
 
     }else if(cd==2){
@@ -676,7 +677,6 @@ function handleSenkaReply(content,gid,qq,callback){
                 return b.ts-a.ts
             })
             var user = arr2[0];
-            console.log(user);
 
             var ud = user.d;
             var culist = [];
@@ -740,19 +740,25 @@ function handleSenkaReply(content,gid,qq,callback){
                     thenexp = user.d[tk3];
                     }
               }
-            getUserInfo(userid,function(rrr){
-              var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
-              var ret = namelist[0]+'\n';
-              ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')'+ddstr+'】\n'
-              ret = ret + 'EX:'+exstr+'  日均:【'+dailystr+'】\n';
-              if(rrr.exp>200000000){
-                //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
+              if(cf.startsWith("s")){
+                callback({o:ton,ex:exstr,dly:dailystr})
+              }else{
+                getUserInfo(userid,function(rrr){
+                  var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
+                  var ret = namelist[0]+'\n';
+                  ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')'+ddstr+'】\n'
+                  ret = ret + 'EX:'+exstr+'  日均:【'+dailystr+'】\n';
+                  if(rrr.exp>200000000){
+                    //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
+                  }
+                  ret = ret + '\n'
+                  ret = ret + rrr.ship + '\n';
+                  culist[culist.length] = {rd:tno+1,exp:rrr.exp,sk:-1,eo:0,es:addsenka};
+                  generateImage(culist,ret.trim(),callback);
+                })
               }
-              ret = ret + '\n'
-              ret = ret + rrr.ship + '\n';
-              culist[culist.length] = {rd:tno+1,exp:rrr.exp,sk:-1,eo:0,es:addsenka};
-              generateImage(culist,ret.trim(),callback);
-            })
+
+
           })
 
         }else{
@@ -764,9 +770,8 @@ function handleSenkaReply(content,gid,qq,callback){
         }
       })
     }
-  }else if(ca.length==1){
+  }else if(ca.length==1||(ca.length==2&&cd==1)){
     var query = {'_id':{'$gt':dateno+'','$lt':dateno+'~'}};
-    console.log(query);
     cl_n_senka_8.find(query).toArray(function(err,arr){
       var namemap = [];
       var rankmap = {};
@@ -816,8 +821,6 @@ function handleSenkaReply(content,gid,qq,callback){
                 emap[arr2[i].n]=[arr2[i]]
               }
             }
-            //console.log(emap);
-            //console.log(rankmap);
             for(var i=1;i<990;i++){
               var rk = rankmap[i];
               var rkn = rk.n;
@@ -869,6 +872,15 @@ function handleSenkaReply(content,gid,qq,callback){
                 r500=arr[i].dd;
               }
             }
+            if(cd==1){
+              var rlist = [];
+              for(var i=0;i<25;i++){
+                rlist.push(rankmap[rks[i]])
+              }
+              loopFront(rlist,[],callback,lst);
+              return;
+            }
+
             ret = ret + '\t\t【榜单】\t【当前】\t\n'
             ret = ret + '\t1位【'+r1+'】\t【'+rankmap[rks[0]].rss+'】\t\n';
             ret = ret + '\t5位【'+r5+'】\t【'+rankmap[rks[4]].rss+'】\t\n';
@@ -883,6 +895,52 @@ function handleSenkaReply(content,gid,qq,callback){
     });
   }
 }
+
+function loopFront(list,ret,callback,lst){
+  if(list.length==0){
+    ret.sort(function(a,b){return b.rss-a.rss});
+    var rr = '';
+    var img1 = new imageMagick("static/blank.png");
+    img1.autoOrient()
+      .resize(1000,880,'!')
+      .fontSize(20)
+      .fill('blue')
+      .font('./font/STXIHEI.TTF')
+
+    img1.drawText(50, 0, '榜单排名', 'NorthWest')
+    img1.drawText(150, 0, '提督', 'NorthWest')
+    img1.drawText(400, 0, '榜单战果', 'NorthWest')
+    img1.drawText(500, 0, '当前排名', 'NorthWest')
+    img1.drawText(600, 0, '当前战果', 'NorthWest')
+    img1.drawText(700, 0, 'EX', 'NorthWest')
+    img1.drawText(900, 0, '日均', 'NorthWest')
+    for(var i=0;i<ret.length;i++){
+      var rd=ret[i];
+      img1.drawText(50, 50+i*30, rd.no+'位', 'NorthWest')
+      img1.drawText(150, 50+i*30, rd.n, 'NorthWest')
+      img1.drawText(400, 50+i*30, rd.dd, 'NorthWest')
+      img1.drawText(500, 50+i*30, (i+1)+'位', 'NorthWest')
+      img1.drawText(600, 50+i*30, rd.rss, 'NorthWest')
+      img1.drawText(700, 50+i*30, rd.ex, 'NorthWest')
+      img1.drawText(900, 50+i*30, rd.dly, 'NorthWest')
+    }
+    img1.drawText(50, 80+ret.length*30, '统计时间：'+new Date(lst).toLocaleString(), 'NorthWest')
+    sendGmImage(img1,'',callback);
+  }else{
+    var m = list[0];
+    var slist = list.slice(1);
+    var nm = m.n;
+    handleSenkaReply('s8-'+nm,'','',function(r){
+      m.o=r.o;
+      m.ex=r.ex;
+      m.dly=r.dly;
+      var nret = ret.concat([m]);
+      loopFront(slist,nret,callback,lst);
+    })
+  }
+}
+
+
 
 
 
@@ -900,7 +958,6 @@ function fixCollect(id){
         fixCollect(id+1)
       },1);
     }
-
   })
 }
 
@@ -1005,7 +1062,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  //handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
+  handleSenkaReply('z8-1','','',function(r){console.log(r)})
   //timer();
 },1500)
 
