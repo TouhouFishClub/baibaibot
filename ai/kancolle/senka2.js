@@ -73,6 +73,9 @@ function getUserInfo(uuid,callback,noproxy){
       if(error&&error.code){
         console.log('pipe error catched!')
         console.log(error);
+        if(noproxy==undefined){
+          noproxy=0;
+        }
         var delay = noproxy?(1000*noproxy+2000):1000
         setTimeout(function(){
           getUserInfo(uuid,callback,noproxy+1)
@@ -90,6 +93,9 @@ function getUserInfo(uuid,callback,noproxy){
                 eval('('+body+')')
             }
             catch(ee){
+                if(noproxy==undefined){
+                  noproxy=0;
+                }
                 var delay = noproxy?(1000*noproxy+2000):1000
                 console.log('bdy:\n'+body)
                 setTimeout(function(){
@@ -277,6 +283,9 @@ function getRank(page,retarr,proxy){
             },
             body:"api%5Fpageno="+page+"&api%5Fverno=1&api%5Franking="+ranking+"&api%5Ftoken="+token
       };
+      if(proxy==undefined){
+        proxy=0;
+      }
       if(proxy==1){
         req.proxy = 'http://192.168.17.236:2346'
       }else if(proxy==2){
@@ -996,7 +1005,8 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
+  timer();
 },1500)
 
 
