@@ -771,7 +771,7 @@ function handleSenkaReply(content,gid,qq,callback){
         }
       })
     }
-  }else if(ca.length==1||(ca.length==2&&pcd)){
+  }else if(ca.length==1||(ca.length==2&&pcd&&pcd<25)){
     var query = {'_id':{'$gt':dateno+'','$lt':dateno+'~'}};
     cl_n_senka_8.find(query).toArray(function(err,arr){
       var namemap = [];
@@ -874,7 +874,7 @@ function handleSenkaReply(content,gid,qq,callback){
               }
             }
             console.log('p:'+pcd)
-            if(pcd>=1&&pcd<=9){
+            if(pcd>=1&&pcd<=25){
               var rlist = [];
               for(var i=(pcd-1)*25;i<pcd*25;i++){
                 rlist.push(rankmap[rks[i]])
@@ -1061,8 +1061,8 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-7','','',function(r){console.log(r)})
-  //timer();
+  //handleSenkaReply('z8-7','','',function(r){console.log(r)})
+  timer();
 },1500)
 
 
