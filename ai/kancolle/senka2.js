@@ -1062,7 +1062,7 @@ function generateImage(arr,str,callback){
 
 setTimeout(function(){
   //handleSenkaReply('z8-7','','',function(r){console.log(r)})
-  timer();
+  //timer();
 },1500)
 
 
