@@ -698,6 +698,10 @@ function handleSenkaReply(content,gid,qq,callback){
                 eostr = eostr + Math.ceil(culist[i].rd/2)+'日'+(culist[i].rd%2==0?'下午':'上午')+':'+eo+'\n';
               }
             }
+              if(cf.startsWith("s")&&culist.length==0){
+                callback({o:0,ex:0,dly:0})
+                  return;
+              }
 
             culist.sort(function(a,b){return a.rd-b.rd});
 
