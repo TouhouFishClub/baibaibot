@@ -633,7 +633,7 @@ function handleSenkaReply(content,gid,qq,callback){
   var cd = ca[1];
   var pcd = parseInt(cd);
   var cf = ca[0];
-  if(ca.length==2&&!pcd){
+  if(ca.length>=2&&!pcd){
     console.log(pcd);
     if(cd==1){
 
