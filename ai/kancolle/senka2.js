@@ -479,6 +479,7 @@ function timer3(){
         timer();
       }else if(nowhour==21){
         console.log('hour task:ok21')
+        timer();
         monthCollect();
       }else if(nowhour==22){
         console.log('hour task:ok22')
@@ -564,7 +565,7 @@ function getInfoFromListA(glist){
 
 function getInfoFromListB(glist){
   console.log('all:'+glist.length)
-  var maxthread = 8;
+  var maxthread = 6;
   var listperthread = Math.floor(glist.length/8);
   for(var i=0;i<maxthread;i++){
     var galist = glist.slice(i*listperthread,(i+1)*listperthread);
