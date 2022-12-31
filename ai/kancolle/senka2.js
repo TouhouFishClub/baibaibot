@@ -596,6 +596,10 @@ function monthCollect(){
   if(month==1){
     kml = (year-1)+'_'+12;
   }
+    
+  var cl_lst = udb.collection("cl_lst");
+  cl_lst.save({'_id':1,ts:now,tse:nn});
+    
   var key = year+'_'+month+'_'+dateno;
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
   var cl_n_senka_8_l = udb.collection("cl_n_8_senka_"+kml);
