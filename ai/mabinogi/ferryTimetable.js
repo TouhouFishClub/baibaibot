@@ -133,6 +133,7 @@ const calcOffset = (time1, time2, intervalArray) => {
 const I18N = {
 	'cn': {
 		'Eavan': '伊文',
+		'Irusan': '伊鲁夏',
 		'Altam': '亚特',
 		'Pihne': '潘妮',
 		'Port Sella': '塞拉港口(巨人港)',
@@ -152,6 +153,7 @@ const I18N = {
 	},
 	'en': {
 		'Eavan': 'Eavan',
+		'Irusan': 'Irusan',
 		'Altam': 'Altam',
 		'Pihne': 'Pihne',
 		'Port Sella': 'Port Sella',
@@ -171,6 +173,7 @@ const I18N = {
 	},
 	'jp': {
 		'Eavan': 'Eavan',
+		'Irusan': 'Irusan',
 		'Altam': 'Altam',
 		'Pihne': 'Pihne',
 		'Port Sella': 'Port Sella',
@@ -192,24 +195,24 @@ const I18N = {
 
 
 const BaseTime = {
-	'Eavan': {
-		base: {
-			Iria: {
-				// timeStr: '2022-08-04 01:39:32',
-				// timeStr: '2022-08-11 01:56:46',
-				timeStr: '2022-08-18 01:03:01',
-				interval: [5*60*1000, 6*60*1000, 4*60*1000], //等待到港时间，等待开船时间，等待到目的地时间
-			},
-			Belvast: {
-				// timeStr: '2022-08-11 01:56:46',
-				timeStr: '2022-08-17 22:34:00',
-				interval: [(2*60+30)*1000, (3*60+30)*1000, 2*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
-			}
-		},
-		// channelOffset: [-6, -77, -12, -21, 14, -6, -15, -14, 7, 0]
-		// channelOffset: [-12, -136, -30, -31, -1, -17, -27, -22, -56, 0]
-		channelOffset: [-300, -70, -25, -10, -55, 0, -21, -10, 0, 0]
-	},
+	// 'Eavan': {
+	// 	base: {
+	// 		Iria: {
+	// 			// timeStr: '2022-08-04 01:39:32',
+	// 			// timeStr: '2022-08-11 01:56:46',
+	// 			timeStr: '2022-08-18 01:03:01',
+	// 			interval: [5*60*1000, 6*60*1000, 4*60*1000], //等待到港时间，等待开船时间，等待到目的地时间
+	// 		},
+	// 		Belvast: {
+	// 			// timeStr: '2022-08-11 01:56:46',
+	// 			timeStr: '2022-08-17 22:34:00',
+	// 			interval: [(2*60+30)*1000, (3*60+30)*1000, 2*60*1000] //等待到港时间，等待开船时间，等待到目的地时间
+	// 		}
+	// 	},
+	// 	// channelOffset: [-6, -77, -12, -21, 14, -6, -15, -14, 7, 0]
+	// 	// channelOffset: [-12, -136, -30, -31, -1, -17, -27, -22, -56, 0]
+	// 	channelOffset: [-300, -70, -25, -10, -55, 0, -21, -10, 0, 0]
+	// },
 	'Altam': {
 		base: {
 			Iria: {
@@ -223,7 +226,20 @@ const BaseTime = {
 		},
 		channelOffset: [160, 143, 151, 2, -15, -9, -26, -68, -5, 0]
 	},
-	'Pihne': {
+	// 'Pihne': {
+	// 	base: {
+	// 		Iria: {
+	// 			timeStr: '2022-08-04 01:42:27',
+	// 			interval: [5*60*1000, 6*60*1000, 4*60*1000],
+	// 		},
+	// 		Belvast: {
+	// 			timeStr: '2022-08-04 03:07:35',
+	// 			interval: [(2*60+30)*1000, (3*60+30)*1000, 2*60*1000]
+	// 		}
+	// 	},
+	// 	channelOffset: [8, 14, 15, 11, 147, 32, 0]
+	// },
+	'Irusan': {
 		base: {
 			Iria: {
 				timeStr: '2022-08-04 01:42:27',
@@ -234,7 +250,7 @@ const BaseTime = {
 				interval: [(2*60+30)*1000, (3*60+30)*1000, 2*60*1000]
 			}
 		},
-		channelOffset: [8, 14, 15, 11, 147, 32, 0]
+		channelOffset: [-300, -70, -25, -10, -55, 0, -21, -10, 0, 0]
 	}
 }
 
@@ -578,7 +594,7 @@ const FerryTimetable = (content, qq, groupId, callback) => {
 	// if(!(groupId == 577587780 || qq == 799018865)) {
 	// 	return
 	// }
-	let server = 'Eavan', channel = 9, language = 'en'
+	let server = 'Irusan', channel = 9, language = 'en'
 	content = content.trim()
 	switch(content.substring(0, 2).toUpperCase()) {
 		case 'CN':
@@ -595,21 +611,34 @@ const FerryTimetable = (content, qq, groupId, callback) => {
 			break
 	}
 	content = content.trim()
-	switch(content.substring(0, 2).toUpperCase()) {
-		case 'YW':
-			server = 'Eavan'
-			channel = 9
-			break
-		case 'YT':
-			server = 'Altam'
-			channel = 9
-			break
-		case 'PN':
-			server = 'Pihne'
-			channel = 6
-			break
+	if(content.toUpperCase().startsWith('YT')){
+		server = 'Altam'
+		channel = 9
+		content = content.substring(2)
+	} else if(content.toUpperCase().startsWith('YLX')) {
+		server = 'Irusan'
+		channel = 9
+		content = content.substring(3)
 	}
-	let ct = content.substring(2, 4)
+	// switch(content.substring(0, 2).toUpperCase()) {
+	// 	// case 'YW':
+	// 	// 	server = 'Eavan'
+	// 	// 	channel = 9
+	// 	// 	break
+	// 	case 'YT':
+	// 		server = 'Altam'
+	// 		channel = 9
+	// 		break
+	// 	// case 'PN':
+	// 	// 	server = 'Pihne'
+	// 	// 	channel = 6
+	// 	// 	break
+	// 	case 'PN':
+	// 		server = 'Irusan'
+	// 		channel = 6
+	// 		break
+	// }
+	let ct = content.substring(0, 2)
 	if(/\d{2}/.test(ct) || ct == 10){
 		channel = 9
 	} else {
@@ -618,9 +647,9 @@ const FerryTimetable = (content, qq, groupId, callback) => {
 			channel = ct - 1
 		}
 	}
-	if(server == 'Pihne' && channel > 6) {
-		server = 6
-	}
+	// if(server == 'Pihne' && channel > 6) {
+	// 	server = 6
+	// }
 	let now = Date.now()
 	let info = Array.from(new Set(Ferry.map(x => x.from))).map(port => {
 		return {
