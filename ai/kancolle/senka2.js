@@ -632,7 +632,7 @@ function handleSenkaReply(content,gid,qq,callback){
   var dateno = getRankDateNo(nn.getTime());
   var keym = year+"_"+month;
   var key = year+'_'+month+'_'+dateno;
-  var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
+  var keylm = (month==12)?(month)  var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
   var cl_senka_8 = udb.collection("cl_senka_8");
   var ca = content.split('-');
   var cd = ca[1];
@@ -686,6 +686,13 @@ function handleSenkaReply(content,gid,qq,callback){
 
             var ud = user.d;
             var culist = [];
+            var startk;
+            if(month==1){
+                startk = (year-1)+'_'+12+'_'+61+'_'+21;
+            }else{
+                startk = year + '_' + (month-1) + '_' + monthOfDay[month-1] + '_' + 21;
+            }
+            console.log(startk);
             for(var i=0;i<ranklist.length;i++){
               var rankDateNo = ranklist[i]._id.split('_')[0];
               var uk = keym+'_'+rankDateNo+'_'+(rankDateNo%2==0?1:13);
@@ -1070,7 +1077,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  //handleSenkaReply('z8-7','','',function(r){console.log(r)})
+  handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
   //timer();
 },1500)
 
