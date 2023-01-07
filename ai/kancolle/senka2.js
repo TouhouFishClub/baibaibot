@@ -692,7 +692,11 @@ function handleSenkaReply(content,gid,qq,callback){
             }else{
                 startk = year + '_' + (month-1) + '_' + monthOfDay[month-1] + '_' + 21;
             }
-            console.log(startk);
+            var sexp = 0;
+            if(ud[startk]){
+                sexp=ud[startk]
+            };
+
             for(var i=0;i<ranklist.length;i++){
               var rankDateNo = ranklist[i]._id.split('_')[0];
               var uk = keym+'_'+rankDateNo+'_'+(rankDateNo%2==0?1:13);
@@ -726,7 +730,16 @@ function handleSenkaReply(content,gid,qq,callback){
             var edt = Math.floor((lcu.rd+1)/2);
             var exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
             var dailystr = (addexp*2 / (lcu.rd-fcu.rd) *7/10000).toFixed(1);
-
+            if(sexp>0){
+                if(month==1){
+                    addsk = lcu.sk;
+                    addexp = lcu.exp-sexp;
+                    allex = Math.round(addsk - addexp*7/10000);
+                    fdt = 1;
+                    edt = Math.floor((lcu.rd+1)/2);
+                    exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
+                }
+            }
 
 
 
