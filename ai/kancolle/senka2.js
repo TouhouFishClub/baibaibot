@@ -726,8 +726,8 @@ function handleSenkaReply(content,gid,qq,callback){
             var addsk = lcu.sk-fcu.sk;
             var addexp = lcu.exp-fcu.exp;
             var allex = Math.round(addsk - addexp*7/10000);
-            var fdt = Math.floor((fcu.rd+2)/2)
-            var edt = Math.floor((lcu.rd+2)/2);
+            var fdt = Math.floor((fcu.rd+1)/2)
+            var edt = Math.floor((lcu.rd+1)/2);
             var exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
             var dailystr = (addexp*2 / (lcu.rd-fcu.rd) *7/10000).toFixed(1);
             if(sexp>0){
@@ -735,7 +735,7 @@ function handleSenkaReply(content,gid,qq,callback){
                     addsk = lcu.sk;
                     addexp = lcu.exp-sexp;
                     allex = Math.round(addsk - addexp*7/10000);
-                    fdt = 0;
+                    fdt = ' ';
                     edt = Math.floor((lcu.rd+1)/2);
                     exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
                 }
