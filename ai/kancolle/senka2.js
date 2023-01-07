@@ -632,7 +632,7 @@ function handleSenkaReply(content,gid,qq,callback){
   var dateno = getRankDateNo(nn.getTime());
   var keym = year+"_"+month;
   var key = year+'_'+month+'_'+dateno;
-  var keylm = (month==12)?(month)  var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
+  var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
   var cl_senka_8 = udb.collection("cl_senka_8");
   var ca = content.split('-');
   var cd = ca[1];
