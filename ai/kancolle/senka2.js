@@ -643,6 +643,16 @@ function handleSenkaReply(content,gid,qq,callback){
   var cd = ca[1];
   var pcd = parseInt(cd);
   var cf = ca[0];
+
+  var mklist = [];
+  for(var i=0;i<64;i++){
+    if(i%2==0){
+      mklist.push(keym+'_'+i+'_'+1)
+    }else{
+      mklist.push(keym+'_'+i+'_'+13)
+    }
+  }
+
   if(ca.length>=2&&(!pcd||pcd>30)){
     console.log(pcd);
     if(cd==1){
@@ -731,6 +741,30 @@ function handleSenkaReply(content,gid,qq,callback){
             var edt = Math.floor((lcu.rd+1)/2);
             var exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
             var dailystr = (addexp*2 / (lcu.rd-fcu.rd) *7/10000).toFixed(1);
+
+            var fe=0
+            var fd=0;
+            var ee=0;
+            var ed=0;
+            for(var k=0;k<mklist.length;k++){
+              if(user.d[mklist[k]]){
+                if(fe==0){
+                  fe=user.d[mklist[k]];
+                  fd = mklist[k].split('_')[2];
+                }
+                ee=user.d[mklist[k]];
+                ed = mklist[k].split('_')[2];
+              }
+            }
+            var dlye = 0;
+            if(ed>fd){
+              dlye = (ee-fe)/(ed-fd)*14/10000
+            }
+            var dailystr = dlye.toFixed(1);
+
+
+
+
             if(sexp>0){
                 if(month==1){
                     addsk = lcu.sk;
@@ -852,14 +886,7 @@ function handleSenkaReply(content,gid,qq,callback){
                 emap[arr2[i].n]=[arr2[i]]
               }
             }
-            var mklist = [];
-            for(var i=0;i<64;i++){
-              if(i%2==0){
-                mklist.push(keym+'_'+i+'_'+1)
-              }else{
-                mklist.push(keym+'_'+i+'_'+13)
-              }
-            }
+
             for(var i=1;i<990;i++){
               var rk = rankmap[i];
               var rkn = rk.n;
@@ -937,7 +964,9 @@ function handleSenkaReply(content,gid,qq,callback){
                 rks.sort(function(a,b){
                   return rankmap[b].dly-rankmap[a].dly
                 })
+
               }
+
               var rlist = [];
               for(var i=(pcd-1)*25;i<pcd*25;i++){
                 rlist.push(rankmap[rks[i]])
@@ -1130,7 +1159,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-1s','','',function(r){console.log(r)})
+  handleSenkaReply('z8-10s','','',function(r){console.log(r)})
   //timer();
 },1500)
 
