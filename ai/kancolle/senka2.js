@@ -619,11 +619,17 @@ function monthCollect(){
 
 
 
-
-
-
-
 function handleSenkaReply(content,gid,qq,callback){
+  try{
+    handleSenkaReply_1(content,gid,qq,callback)
+  }catch (e){
+    console.log(e);
+  }
+}
+
+
+
+function handleSenkaReply_1(content,gid,qq,callback){
   var odp = 0;
   if(content.length<7&&content.endsWith("s")){
     odp=1;
@@ -643,6 +649,13 @@ function handleSenkaReply(content,gid,qq,callback){
   var cd = ca[1];
   var pcd = parseInt(cd);
   var cf = ca[0];
+
+  var startk;
+  if(month==1){
+    startk = (year-1)+'_'+12+'_'+61+'_'+21;
+  }else{
+    startk = year + '_' + (month-1) + '_' + monthOfDay[month-1] + '_' + 21;
+  }
 
   var mklist = [];
   for(var i=0;i<64;i++){
@@ -697,12 +710,7 @@ function handleSenkaReply(content,gid,qq,callback){
 
             var ud = user.d;
             var culist = [];
-            var startk;
-            if(month==1){
-                startk = (year-1)+'_'+12+'_'+61+'_'+21;
-            }else{
-                startk = year + '_' + (month-1) + '_' + monthOfDay[month-1] + '_' + 21;
-            }
+
             var sexp = 0;
             if(ud[startk]){
                 sexp=ud[startk]
@@ -746,6 +754,10 @@ function handleSenkaReply(content,gid,qq,callback){
             var fd=0;
             var ee=0;
             var ed=0;
+            if(user.d[startk]){
+              fe=user.d[startk];
+              fd=-3;
+            }
             for(var k=0;k<mklist.length;k++){
               if(user.d[mklist[k]]){
                 if(fe==0){
@@ -753,12 +765,12 @@ function handleSenkaReply(content,gid,qq,callback){
                   fd = parseInt(mklist[k].split('_')[2]);
                 }
                 ee=user.d[mklist[k]];
-                ed = parseInt(mklist[k].split('_')[2]);
+                ed = parseInt(mklist[k].split('_')[2])*12+(parseInt(mklist[k].split('_')[3])%12);
               }
             }
             var dlye = 0;
             if(ed>fd){
-              dlye = (ee-fe)/(ed-fd)*14/10000
+              dlye = (ee-fe)/(ed-fd)*24*7/10000
             }
             var dailystr = dlye.toFixed(1);
 
@@ -914,6 +926,10 @@ function handleSenkaReply(content,gid,qq,callback){
               var fd=0;
               var ee=0;
               var ed=0;
+              if(rke.d[startk]){
+                fe=rke.d[startk];
+                fd=-3;
+              }
               for(var k=0;k<mklist.length;k++){
                 if(rke.d[mklist[k]]){
                   if(fe==0){
@@ -921,12 +937,12 @@ function handleSenkaReply(content,gid,qq,callback){
                     fd = parseInt(mklist[k].split('_')[2]);
                   }
                   ee=rke.d[mklist[k]];
-                  ed = parseInt(mklist[k].split('_')[2]);
+                  ed = parseInt(mklist[k].split('_')[2])*12+(parseInt(mklist[k].split('_')[3])%12);
                 }
               }
               var dlye = 0;
               if(ed>fd){
-                dlye = (ee-fe)/(ed-fd)*14/10000
+                dlye = (ee-fe)/(ed-fd)*168/10000
               }
               rk.dly=dlye;
             }
@@ -1156,7 +1172,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-オノヨーコ','','',function(r){console.log(r)})
+  handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
   //timer();
 },1500)
 
