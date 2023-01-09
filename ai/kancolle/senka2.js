@@ -981,7 +981,7 @@ function handleSenkaReply_1(content,gid,qq,callback){
               }
 
               var rlist = [];
-              for(var i=(pcd-1)*25;i<pcd*25;i++){
+              for(var i=(pcd-1)*30;i<pcd*30;i++){
                 rlist.push(rankmap[rks[i]])
               }
               loopFront(rlist,[],callback,lst,pcd,odp);
@@ -1012,7 +1012,7 @@ function loopFront(list,ret,callback,lst,pcd,odp){
     var rr = '';
     var img1 = new imageMagick("static/blank.png");
     img1.autoOrient()
-      .resize(1000,880,'!')
+      .resize(1000,1050,'!')
       .fontSize(20)
       .fill('blue')
       .font('./font/STXIHEI.TTF')
@@ -1029,7 +1029,7 @@ function loopFront(list,ret,callback,lst,pcd,odp){
     img1.drawText(900, 0, '日均', 'NorthWest')
     for(var i=0;i<ret.length;i++){
       var rd=ret[i];
-      img1.drawText(50, 50+i*30, (pcd*25+i-24)+'位', 'NorthWest')
+      img1.drawText(50, 50+i*30, (pcd*30+i-29)+'位', 'NorthWest')
       img1.drawText(150, 50+i*30, rd.n, 'NorthWest')
       img1.drawText(400, 50+i*30, rd.rss.toFixed(1), 'NorthWest')
       img1.drawText(500, 50+i*30, rd.no+'位', 'NorthWest')
@@ -1172,7 +1172,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
+  handleSenkaReply('z8-5s','','',function(r){console.log(r)})
   //timer();
 },1500)
 
