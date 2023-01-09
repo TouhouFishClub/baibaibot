@@ -624,6 +624,11 @@ function monthCollect(){
 
 
 function handleSenkaReply(content,gid,qq,callback){
+  var odp = 0;
+  if(content.length<7&&content.endsWith("s")){
+    odp=1;
+    content=content.substring(0,content.length-1);
+  }
   content=content.trim();
   var nn = new Date();
   var now = nn.getTime();
@@ -641,10 +646,6 @@ function handleSenkaReply(content,gid,qq,callback){
   if(ca.length>=2&&(!pcd||pcd>30)){
     console.log(pcd);
     if(cd==1){
-
-    }else if(cd==2){
-
-    }else if(cd==3){
 
     }else{
       console.log('cd:'+cd)
@@ -851,6 +852,14 @@ function handleSenkaReply(content,gid,qq,callback){
                 emap[arr2[i].n]=[arr2[i]]
               }
             }
+            var mklist = [];
+            for(var i=0;i<64;i++){
+              if(i%2==0){
+                mklist.push(keym+'_'+i+'_'+1)
+              }else{
+                mklist.push(keym+'_'+i+'_'+13)
+              }
+            }
             for(var i=1;i<990;i++){
               var rk = rankmap[i];
               var rkn = rk.n;
@@ -876,6 +885,26 @@ function handleSenkaReply(content,gid,qq,callback){
               }else{
                 rk.rss=rk.dd;
               }
+
+              var fe=0
+              var fd=0;
+              var ee=0;
+              var ed=0;
+              for(var k=0;k<mklist.length;k++){
+                if(rke.d[mklist[k]]){
+                  if(fe==0){
+                    fe=rke.d[mklist[k]];
+                    fd = mklist[k].split('_')[2];
+                  }
+                  ee=rke.d[mklist[k]];
+                  ed = mklist[k].split('_')[2];
+                }
+              }
+              var dlye = 0;
+              if(ed>fd){
+                dlye = (ee-fe)/(ed-fd)*14/10000
+              }
+              rk.dly=dlye;
             }
             var rks = Object.keys(rankmap);
             rks.sort(function(a,b){
@@ -904,11 +933,16 @@ function handleSenkaReply(content,gid,qq,callback){
             }
             console.log('p:'+pcd)
             if(pcd>=1&&pcd<=25){
+              if(odp==1){
+                rks.sort(function(a,b){
+                  return rankmap[b].dly-rankmap[a].dly
+                })
+              }
               var rlist = [];
               for(var i=(pcd-1)*25;i<pcd*25;i++){
                 rlist.push(rankmap[rks[i]])
               }
-              loopFront(rlist,[],callback,lst,pcd);
+              loopFront(rlist,[],callback,lst,pcd,odp);
               return;
             }
 
@@ -927,9 +961,12 @@ function handleSenkaReply(content,gid,qq,callback){
   }
 }
 
-function loopFront(list,ret,callback,lst,pcd){
+function loopFront(list,ret,callback,lst,pcd,odp){
   if(list.length==0){
     ret.sort(function(a,b){return b.rss-a.rss});
+    if(odp==1){
+      ret.sort(function(a,b){return b.dly-a.dly});
+    }
     var rr = '';
     var img1 = new imageMagick("static/blank.png");
     img1.autoOrient()
@@ -937,8 +974,11 @@ function loopFront(list,ret,callback,lst,pcd){
       .fontSize(20)
       .fill('blue')
       .font('./font/STXIHEI.TTF')
-
-    img1.drawText(50, 0, '当前排名', 'NorthWest')
+    if(odp==1){
+      img1.drawText(50, 0, '日均排名', 'NorthWest')
+    }else{
+      img1.drawText(50, 0, '当前排名', 'NorthWest')
+    }
     img1.drawText(150, 0, '提督', 'NorthWest')
     img1.drawText(400, 0, '当前战果', 'NorthWest')
     img1.drawText(500, 0, '榜单排名', 'NorthWest')
@@ -966,7 +1006,7 @@ function loopFront(list,ret,callback,lst,pcd){
       m.ex=r.ex;
       m.dly=r.dly;
       var nret = ret.concat([m]);
-      loopFront(slist,nret,callback,lst,pcd);
+      loopFront(slist,nret,callback,lst,pcd,odp);
     })
   }
 }
@@ -1090,7 +1130,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
+  handleSenkaReply('z8-1s','','',function(r){console.log(r)})
   //timer();
 },1500)
 
