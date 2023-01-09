@@ -561,6 +561,12 @@ function handleMsg_D(msgObj,port, configs) {
 
   saveChat(groupid, from, name, content,port, msgObj);
 
+	callback = function (res, blank) {
+		if (res.trim().length > 0) {
+			addSendQueue(groupid,res,port);
+		}
+	}
+
 	//TODO: 洛奇交易群屏蔽功能，但是记录群内语句
 	if(
 		msgObj.group_id === 704773457 &&
@@ -569,23 +575,21 @@ function handleMsg_D(msgObj,port, configs) {
 			|| msgObj.message.trim().startsWith('释放查询')
 			|| msgObj.message.trim().startsWith('gcs')
 			|| msgObj.message.trim().startsWith('meu')
-			// || msgObj.message.trim().startsWith('mbi')
-			// || msgObj.message.trim().startsWith('洛奇')
-			// || msgObj.message.trim().startsWith('走私')
+			|| msgObj.message.trim().startsWith('mbi')
+			|| msgObj.message.trim().startsWith('洛奇')
+			|| msgObj.message.trim().startsWith('菜单')
+			|| msgObj.message.trim().startsWith('menu')
 			// || msgObj.message.trim().startsWith('rua')
 			// || msgObj.message.trim().startsWith('boss')
 		)
 	) {
-		if(msgObj.user_id != 799018865) {
-			return
-		}
+		answer(content,name,groupName,callback,groupid,from);
+		return
+		// if(msgObj.user_id != 799018865) {
+		// 	return
+		// } else {
+		// }
 	}
-
-  callback = function (res, blank) {
-    if (res.trim().length > 0) {
-      addSendQueue(groupid,res,port);
-    }
-  }
   handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group',port)
 }
 
