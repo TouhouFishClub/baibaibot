@@ -895,6 +895,9 @@ function handleSenkaReply_1(content,gid,qq,callback){
                 emap[arr2[i].n]=[arr2[i]]
               }
             }
+            if(rankmap[989]==undefined){
+              return;
+            }
 
             for(var i=1;i<990;i++){
               var rk = rankmap[i];
