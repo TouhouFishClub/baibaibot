@@ -11,3 +11,8 @@ package-lock.json
 test/
 public/fh
 public/bangumi
+tmp/
+public
+*.log
+*.sh
+4df/

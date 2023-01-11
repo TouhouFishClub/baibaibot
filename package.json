@@ -20,7 +20,7 @@
     "basic-auth": "^2.0.1",
     "body-parser": "1.19.2",
     "bosonnlp": "0.1.0",
-    "canvas": "2.9.0",
+    "canvas": "^2.9.0",
     "cheerio": "^1.0.0-rc.3",
     "express": "4.17.3",
     "express-ws": "^4.0.0",
