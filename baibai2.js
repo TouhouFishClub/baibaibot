@@ -151,7 +151,7 @@ const { renderChatPersonas } = require('./ai/chat/personas/index')
 const { renderGroupCount, randomGroupUser } = require('./ai/chat/groupCount/index')
 const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 
-const { BanUser } = require('./ai/chat/banUser')
+const { BanUser, checkBanMap } = require('./ai/chat/banUser')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -504,6 +504,7 @@ function handleMsg_D(msgObj,port, configs) {
 		case 'group_recall':
 			console.log(`\n\n\n\n\n===============`)
 			console.log(msgObj)
+			checkBanMap(msgObj.message_id)
 			break
   }
 
