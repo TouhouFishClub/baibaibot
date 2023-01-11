@@ -14,6 +14,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@napi-rs/pinyin": "^1.7.1",
     "axios": "0.26.0",
     "baidu-aip-sdk": "4.15.8",
     "basic-auth": "^2.0.1",

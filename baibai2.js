@@ -151,6 +151,8 @@ const { renderChatPersonas } = require('./ai/chat/personas/index')
 const { renderGroupCount, randomGroupUser } = require('./ai/chat/groupCount/index')
 const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 
+const { BanUser } = require('./ai/chat/banUser')
+
 let globalConfig = {
 	FLASH_RESEND : false
 }
@@ -1520,27 +1522,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     )
     return
   }
-  if(content == '离子血糖') {
-    cov(
-      '离子血糖',
-      callback,
-      true,
-      ['现在浓度', '今日新增浓度', '饭后浓度', '疑似浓度', '饭中浓度'],
-      {
-        name: '离子血糖',
-        type: 'other',
-      },
-      {
-        confirmedCount: [~~(8 * Math.random()), ~~(4 * Math.random())],
-        curedCount: [~~(200 * Math.random()), ~~(100 * Math.random())],
-        currentConfirmedCount: [~~(4 * Math.random()), ~~(2 * Math.random())],
-        deadCount: [~~(4 * Math.random()), ~~(2 * Math.random())],
-        suspectedCount: [~~(200 * Math.random()), ~~(100 * Math.random())]
-      },
-      '离子血糖',
-    )
-    return
-  }
+
+	if(content.match('管理')) {
+		BanUser(content, from, groupid, port, callback)
+	}
 
   if(n>1&&n<10&&rcontent.length==n+2){
     var city = content.substring(0,n).trim();
