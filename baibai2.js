@@ -592,14 +592,10 @@ function handleMsg_D(msgObj,port, configs) {
 		// } else {
 		// }
 	}
-  handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group',port)
+  handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group',port,msgObj)
 }
 
-function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType,port){
-
-
-
-
+function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType,port,msgObjSource){
 
   content=content.trim();
 
@@ -1524,6 +1520,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
 	if(content.match('管理')) {
+		console.log(`\n\n\n\n====================`)
+		console.log(msgObjSource)
 		BanUser(content, from, groupid, port, callback)
 	}
 
