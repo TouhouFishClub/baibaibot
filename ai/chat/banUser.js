@@ -6,7 +6,7 @@ const BanUserRandom = (qq, groupId, port, callback, critical = false) => {
 	const options = {
 		host: LOCALE_IP,
 		port: port,
-		path: `/set_group_ban?group_id=${groupId}&user_id=${qq}&duration=${(~~(Math.random() * 5) + (critical ? 3 : 1)) * 60}`,
+		path: `/set_group_ban?group_id=${groupId}&user_id=${qq}&duration=${((~~(Math.random() * 5) + 1) * 60) * (critical ? 2 : 1)}`,
 		method: 'GET',
 		headers: {}
 	}
