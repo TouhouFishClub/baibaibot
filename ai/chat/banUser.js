@@ -17,7 +17,9 @@ const BanUserRandom = (qq, groupId, port, callback, critical = false) => {
 			resdata = resdata + chunk;
 		})
 		res.on('end', () => {
-			callback(`[CQ:at,qq=${qq}] 哎呦，你很勇哦`)
+			if(critical) {
+				callback(`[CQ:at,qq=${qq}] 哎呦，你很勇哦`)
+			}
 		})
 		res.on('error', () => {
 
