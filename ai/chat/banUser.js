@@ -57,6 +57,9 @@ const analysisPinYin = content => {
 	if(py.match('sapi')) {
 		return true
 	}
+	if(py.match('shadiao')) {
+		return true
+	}
 	return false
 }
 
