@@ -41,6 +41,7 @@ function replayReply(content,userName,groupuin,callback,qq,port){
         if(Math.random()<1){
           var delay = Math.floor(Math.random()*1000*120)+1000;
           var txt;
+          memory[groupuin].c=0;
           if(Math.random()<0.5){
             txt = '发现大量复读姬出没！\n下面百百要选择一名复读姬塞上口球\n到底是哪位小朋友这么幸运呢？\n就决定是你了◾️◾️◾️◾️◾️\n';
             txt = txt + '口球将于'+Math.floor(delay/1000)+'秒后飞入◾️◾️◾️◾️◾️的嘴里';
