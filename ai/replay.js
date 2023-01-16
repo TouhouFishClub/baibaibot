@@ -42,6 +42,7 @@ function replayReply(content,userName,groupuin,callback,qq,port){
           var delay = Math.floor(Math.random()*1000*120)+1000;
           var txt;
           memory[groupuin].c=0;
+          memory[groupuin].lx=[];
           if(Math.random()<0.5){
             txt = '发现大量复读姬出没！\n下面百百要选择一名复读姬塞上口球\n到底是哪位小朋友这么幸运呢？\n就决定是你了◾️◾️◾️◾️◾️\n';
             txt = txt + '口球将于'+Math.floor(delay/1000)+'秒后飞入◾️◾️◾️◾️◾️的嘴里';
@@ -61,6 +62,7 @@ function replayReply(content,userName,groupuin,callback,qq,port){
             },uban)
           },delay);
         }else{
+          memory[groupuin].c=0;
           callback('发现大量复读姬出没！\n下面百百要选择一名复读姬黑了他\n到底是哪位小朋友这么幸运呢？\n就决定是你了[CQ:at,qq='+banqq+']');
           banUserInGroup(banqq,groupuin,time,port);
           memory[groupuin].lx=[banqq];
