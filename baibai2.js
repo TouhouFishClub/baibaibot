@@ -1527,7 +1527,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	if(content.match('管理')) {
 		console.log(`\n\n\n\n====================`)
 		console.log(msgObjSource)
-		BanUser(content, from, groupid, port, callback)
+		BanUser(content, from, groupid, port, msgObjSource, callback)
 	}
 
   if(n>1&&n<10&&rcontent.length==n+2){
