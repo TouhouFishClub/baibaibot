@@ -107,8 +107,11 @@ function saveBan(qq,gid,dur,callback,port){
               for (var i = 0; i < count; i++) {
                 time = time + 200 + Math.floor(Math.random() * 200);
               }
-              callback('[CQ:at,qq=' + qq + ']本日已被口球' + count + '次,将额外塞' + count + '个口球封住他的嘴');
-              cban(qq, gid, count - 1, callback,port);
+              var ncount = Math.floor((count+5*Math.random())*0.4);
+              if(!nowcbanmap[qq]){
+                callback('[CQ:at,qq=' + qq + ']本日已被口球' + ncount + '次,将额外塞' + ncount + '个口球封住他的嘴');
+                cban(qq, gid, ncount - 1, callback,port);
+              }
             }, dur + 1000);
           }
         }
@@ -117,12 +120,16 @@ function saveBan(qq,gid,dur,callback,port){
   })
 }
 
+
+var nowcbanmap = {};
 function cban(banqq,gid,c,callback,port){
+  cbanmap[banqq]=1;
   var time = 100 + Math.floor(Math.random() * (20000/(c*10+100)));
   banUserInGroup(banqq, gid, time,port);
   var uban = Math.floor(Math.random() * time * 1000);
   console.log(banqq+'next:'+uban+":"+c);
   if(c<=0){
+    delete(cbanmap[banqq]);
     return;
   }
   setTimeout(function () {
