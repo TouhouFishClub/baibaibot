@@ -717,10 +717,10 @@ function handleSenkaReply_1(content,gid,qq,callback){
           var rkcmt = lstrk.cmt;
           cl_senka_8.find({n:namelist[0]}).toArray(function(err2,arr2){
             arr2.sort(function(a,b){
-                if(b.cmt&&b.cmt==rkcmt){
+                if(rkcmt!=''&b.cmt&&b.cmt==rkcmt){
                     return 1;
                 }
-                if(a.cmt&&a.cmt==rkcmt){
+                if(rkcmt!=''&a.cmt&&a.cmt==rkcmt){
                     return -1;
                 }
                 return b.e-a.e
@@ -934,9 +934,9 @@ function handleSenkaReply_1(content,gid,qq,callback){
                 rke = rkea[0]
               }else{
                 rkea.sort(function(a,b){
-                  if(a.cmt==rkcmt){
+                  if(rkcmt!=''&&a.cmt==rkcmt){
                     return -1;
-                  }else if(b.cmt==rkcmt){
+                  }else if(rkcmt!=''&&b.cmt==rkcmt){
                     return 1;
                   }else{
                     return b.ts-a.ts;
@@ -948,6 +948,9 @@ function handleSenkaReply_1(content,gid,qq,callback){
                 rk.rss = (rke.d[kk] - rke.d[k1])/10000*7 + rk.dd
               }else{
                 rk.rss=rk.dd;
+              }
+              if(rke.n=='カオス'){
+                console.log(rke);
               }
 
               var fe=0
