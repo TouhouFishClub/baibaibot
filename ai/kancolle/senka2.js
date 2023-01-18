@@ -636,6 +636,7 @@ function handleSenkaReply_1(content,gid,qq,callback){
     content=content.substring(0,content.length-1);
   }
   content=content.trim();
+  var ca = content.split('-');
   var nn = new Date();
   var now = nn.getTime();
   var year = nn.getFullYear();
@@ -643,9 +644,22 @@ function handleSenkaReply_1(content,gid,qq,callback){
   var dateno = getRankDateNo(nn.getTime());
   var keym = year+"_"+month;
   var key = year+'_'+month+'_'+dateno;
+  if(ca[0].endsWith("l")){
+    if(month==1){
+      keym = (year-1)+"_"+12;
+      dateno = 61;
+      year = year-1;
+      month = 12;
+    }else{
+      keym = year+"_"+(month-1);
+      dateno = monthOfDay[month-1]*2-1;
+      month = month - 1;
+    }
+
+  }
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
   var cl_senka_8 = udb.collection("cl_senka_8");
-  var ca = content.split('-');
+
   var cd = ca[1];
   var pcd = parseInt(cd);
   var cf = ca[0];
@@ -671,7 +685,12 @@ function handleSenkaReply_1(content,gid,qq,callback){
     if(cd==1){
 
     }else{
-      console.log('cd:'+cd)
+      if(ca.length==3){
+        cd = ca[1]+'-'+ca[2];
+      }
+      if(ca.length==4){
+        cd = ca[1]+'-'+ca[2]+'-'+ca[3];
+      }
       cl_n_senka_8.find({n:new RegExp(cd)}).toArray(function(err,arr){
         var m = {};
         for(var i=0;i<arr.length;i++){
@@ -762,7 +781,7 @@ function handleSenkaReply_1(content,gid,qq,callback){
               if(user.d[mklist[k]]){
                 if(fe==0){
                   fe=user.d[mklist[k]];
-                  fd = parseInt(mklist[k].split('_')[2]);
+                  fd = parseInt(mklist[k].split('_')[2])*12+(parseInt(mklist[k].split('_')[3])%12);
                 }
                 ee=user.d[mklist[k]];
                 ed = parseInt(mklist[k].split('_')[2])*12+(parseInt(mklist[k].split('_')[3])%12);
@@ -794,6 +813,7 @@ function handleSenkaReply_1(content,gid,qq,callback){
             var tno = parseInt(lsenka._id.split('_')[0])
             var tk
             var tk2;
+            var tk3;
             if(tno%2==0){
               tk = keym+'_'+tno+'_1'
                 tk2 = keym+'_'+tno+'_2'
@@ -815,7 +835,12 @@ function handleSenkaReply_1(content,gid,qq,callback){
                     }
               }
               if(cf.startsWith("s")){
-                callback({o:ton,ex:exstr,dly:dailystr})
+                  callback({o:ton,ex:exstr,dly:dailystr})
+              }else if(ca[0].endsWith("l")){
+                var ret = year + '年' + month +'月\n';
+                ret = ret + namelist[0]+'\n';
+                ret = ret + 'EX:'+exstr+'  日均:【'+dailystr+'】\n';
+                generateImage(culist,ret,callback);
               }else{
                 getUserInfo(userid,function(rrr){
                   var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
@@ -1015,7 +1040,7 @@ function loopFront(list,ret,callback,lst,pcd,odp){
     var rr = '';
     var img1 = new imageMagick("static/blank.png");
     img1.autoOrient()
-      .resize(1000,1050,'!')
+      .resize(1200,1050,'!')
       .fontSize(20)
       .fill('blue')
       .font('./font/STXIHEI.TTF')
@@ -1030,6 +1055,7 @@ function loopFront(list,ret,callback,lst,pcd,odp){
     img1.drawText(600, 0, '榜单战果', 'NorthWest')
     img1.drawText(700, 0, 'EX', 'NorthWest')
     img1.drawText(900, 0, '日均', 'NorthWest')
+    img1.drawText(1000, 0, '上月EX', 'NorthWest')
     for(var i=0;i<ret.length;i++){
       var rd=ret[i];
       img1.drawText(50, 50+i*30, (pcd*30+i-29)+'位', 'NorthWest')
@@ -1039,6 +1065,7 @@ function loopFront(list,ret,callback,lst,pcd,odp){
       img1.drawText(600, 50+i*30, rd.dd, 'NorthWest')
       img1.drawText(700, 50+i*30, rd.ex, 'NorthWest')
       img1.drawText(900, 50+i*30, rd.dly, 'NorthWest')
+      img1.drawText(1000, 50+i*30, rd.lex, 'NorthWest')
     }
     img1.drawText(50, 80+ret.length*30, '统计时间：'+new Date(lst).toLocaleString(), 'NorthWest')
     sendGmImage(img1,'',callback);
@@ -1050,8 +1077,11 @@ function loopFront(list,ret,callback,lst,pcd,odp){
       m.o=r.o;
       m.ex=r.ex;
       m.dly=r.dly;
-      var nret = ret.concat([m]);
-      loopFront(slist,nret,callback,lst,pcd,odp);
+      handleSenkaReply('s8l-'+nm,'','',function(rl){
+        m.lex=rl.ex;
+        var nret = ret.concat([m]);
+        loopFront(slist,nret,callback,lst,pcd,odp);
+      });
     })
   }
 }
@@ -1175,7 +1205,8 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-5s','','',function(r){console.log(r)})
+  handleSenkaReply('z8-1s','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-l-m','','',function(r){console.log(r)})
   //timer();
 },1500)
 
