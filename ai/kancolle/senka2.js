@@ -817,11 +817,11 @@ function handleSenkaReply_1(content,gid,qq,callback){
             if(tno%2==0){
               tk = keym+'_'+tno+'_1'
                 tk2 = keym+'_'+tno+'_2'
-                tk3 = keym+'_'+tno+'_19'
+                tk3 = keym+'_'+tno+'_20'
             }else{
               tk = keym+'_'+tno+'_13'
                 tk2 = keym+'_'+tno+'_14'
-                tk3 = keym+'_'+tno+'_19'
+                tk3 = keym+'_'+tno+'_20'
             }
             var thenexp = user.d[tk];
               var ddstr =''
