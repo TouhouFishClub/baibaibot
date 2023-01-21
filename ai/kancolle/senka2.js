@@ -691,7 +691,13 @@ function handleSenkaReply_1(content,gid,qq,callback){
       if(ca.length==4){
         cd = ca[1]+'-'+ca[2]+'-'+ca[3];
       }
-      cl_n_senka_8.find({n:new RegExp(cd)}).toArray(function(err,arr){
+      var query;
+      if(cf.startsWith("s")){
+        query = {n:cd};   
+      }else{
+        query = {n:new RegExp(cd)};
+      }
+      cl_n_senka_8.find(query).toArray(function(err,arr){
         var m = {};
         for(var i=0;i<arr.length;i++){
           var name = arr[i].n;
