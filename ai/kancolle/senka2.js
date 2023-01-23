@@ -635,7 +635,9 @@ function handleSenkaReply_1(content,gid,qq,callback){
     odp=1;
     content=content.substring(0,content.length-1);
   }
-  content=content.trim();
+  if(content.startsWith('z')){
+     content=content.trim();
+  }
   var ca = content.split('-');
   var nn = new Date();
   var now = nn.getTime();
