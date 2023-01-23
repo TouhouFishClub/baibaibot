@@ -1042,9 +1042,9 @@ function handleSenkaReply_1(content,gid,qq,callback){
 
 function loopFront(list,ret,callback,lst,pcd,odp){
   if(list.length==0){
-    ret.sort(function(a,b){return b.rss-a.rss});
+    //ret.sort(function(a,b){return b.rss-a.rss});
     if(odp==1){
-      ret.sort(function(a,b){return parseFloat(b.dly)-parseFloat(a.dly)});
+      //ret.sort(function(a,b){return parseFloat(b.dly)-parseFloat(a.dly)});
     }
     var rr = '';
     var img1 = new imageMagick("static/blank.png");
