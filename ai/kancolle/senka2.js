@@ -663,6 +663,19 @@ function handleSenkaReply_1(content,gid,qq,callback){
   var cl_senka_8 = udb.collection("cl_senka_8");
 
   var cd = ca[1];
+  if(ca.length==3){
+    cd = ca[1]+'-'+ca[2];
+  }
+  if(ca.length==4){
+    cd = ca[1]+'-'+ca[2]+'-'+ca[3];
+  }
+  if(ca.length==5){
+    cd = ca[1]+'-'+ca[2]+'-'+ca[3]+'-'+ca[4]
+  }
+  if(ca.length==6){
+    cd = ca[1]+'-'+ca[2]+'-'+ca[3]+'-'+ca[4]+'-'+ca[5]
+  }
+
   var pcd = parseInt(cd);
   var cf = ca[0];
 
@@ -687,16 +700,12 @@ function handleSenkaReply_1(content,gid,qq,callback){
     if(cd==1){
 
     }else{
-      if(ca.length==3){
-        cd = ca[1]+'-'+ca[2];
-      }
-      if(ca.length==4){
-        cd = ca[1]+'-'+ca[2]+'-'+ca[3];
-      }
+
       var query;
       if(cf.startsWith("s")){
         query = {n:cd};   
       }else{
+        cd = cd.replace(/\(/g,"\\(")
         query = {n:new RegExp(cd)};
       }
       cl_n_senka_8.find(query).toArray(function(err,arr){
@@ -1216,7 +1225,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-1s','','',function(r){console.log(r)})
+  handleSenkaReply('z8-1','','',function(r){console.log(r)})
   //handleSenkaReply('z8-l-m','','',function(r){console.log(r)})
   //timer();
 },1500)
