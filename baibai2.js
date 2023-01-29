@@ -153,6 +153,8 @@ const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 
 const { BanUser, checkBanMap } = require('./ai/chat/banUser')
 
+const {getChatgptReplay} = require('./ai/chat/openai');
+
 let globalConfig = {
 	FLASH_RESEND : false
 }
@@ -768,6 +770,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ret = ret + "捉内鬼【捉内鬼】\n";
     ret = ret + ""
     callback(ret.trim());
+    return;
+  }
+
+  if(content.startsWith('c\n')){
+    content=content.substring(1).trim();
+    getChatgptReplay(content,groupid,from,callback);
     return;
   }
 

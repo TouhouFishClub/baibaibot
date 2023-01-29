@@ -1,5 +1,5 @@
 const OpenAI = require('openai-api');
-var secret = require('../../secret');
+const {secret} = require('../../secret');
 const OPENAI_API_KEY =  secret.u5;
 const openai = new OpenAI(OPENAI_API_KEY);
 
@@ -7,7 +7,7 @@ async function getai(content) {
   const gptResponse = await openai.complete({
     engine: 'text-davinci-003',
     prompt: content,
-    maxTokens: 800,
+    maxTokens: 700,
     temperature: 0.7,
     topP: 1,
     presencePenalty: 0,
@@ -15,21 +15,22 @@ async function getai(content) {
     bestOf: 1,
     n: 1,
     stream: false,
-    stop: ['\n']
+    stop: ['tttt']
   });
   return gptResponse.data;
 
 }
 
-function getChatgptReplay(content,gid,qq,callback){
-  content = content.trim();
-  var rd = getai(content);
-  var choices = rd.choices;
-  var ret = choices.join('\n');
-  console.log(ret);
+async function getChatgptReplay(content,gid,qq,callback){
+  if(qq.startsWith("35747")){
+    content = content.trim();
+    var rd = await getai(content);
+    var txt = rd.choices[0].text;
+    var ret = txt;
+    callback(ret);
+  }
 }
 
-getChatgptReplay('讲个笑话吧','ss','ww',function(r){console.log(r)})
 
 module.exports={
   getChatgptReplay
