@@ -773,7 +773,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(content.startsWith('c\n')){
+  if(content.startsWith('c ')){
     content=content.substring(1).trim();
     getChatgptReplay(content,groupid,from,callback);
     return;
