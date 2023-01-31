@@ -295,9 +295,26 @@ async function getMagicConfigDB(qq){
 }
 
 
+var cf = {};
 async function naifu(callback,content,novelaitoken,gid,qq){
   var magicCfg = await getMagicConfigDB(qq);
   content=content.substring(4).trim();
+  var now = new Date().getTime();
+  if(cf[qq]){
+    if(cf[qq].ts>now){
+      var sub = Math.ceil((cf[qq].ts-now)/60000);
+      callback('请'+sub+'分钟后再试');
+      return;
+    }else{
+      cf[qq].c=cf[qq].c+1;
+      if(cf[qq].c>3){
+        cf[qq].ts = now + 600000;
+        cf[qq].c=0;
+      }
+    }
+  }else{
+    cf[qq] = {c:1};
+  }
   var naifuurl = secret.u3;
   var url;
   if(novelaitoken){
