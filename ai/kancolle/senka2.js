@@ -1300,7 +1300,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-1','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-1','','',function(r){console.log(r)})
   //handleSenkaReply('z8-l-m','','',function(r){console.log(r)})
   //timer();
 },1500)
