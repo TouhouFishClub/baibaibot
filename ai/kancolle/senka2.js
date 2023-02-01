@@ -630,6 +630,7 @@ function handleSenkaReply(content,gid,qq,callback){
 
 
 function handleSenkaReply_1(content,gid,qq,callback){
+  console.log('e:'+content)
   var odp = 0;
   if(content.length<7&&content.endsWith("s")){
     odp=1;
@@ -680,11 +681,13 @@ function handleSenkaReply_1(content,gid,qq,callback){
   var cf = ca[0];
 
   var startk;
+  var yeark = (year-1)+'_'+12+'_'+61+'_'+21;
   if(month==1){
     startk = (year-1)+'_'+12+'_'+61+'_'+21;
   }else{
-    startk = year + '_' + (month-1) + '_' + monthOfDay[month-1] + '_' + 21;
+    startk = year + '_' + (month-1) + '_' + (monthOfDay[month]*2-1) + '_' + 21;
   }
+  console.log(startk)
 
   var mklist = [];
   for(var i=0;i<64;i++){
@@ -700,7 +703,6 @@ function handleSenkaReply_1(content,gid,qq,callback){
     if(cd==1){
 
     }else{
-
       var query;
       if(cf.startsWith("s")){
         query = {n:cd};   
@@ -751,6 +753,10 @@ function handleSenkaReply_1(content,gid,qq,callback){
             if(ud[startk]){
                 sexp=ud[startk]
             };
+            var yexp = 0;
+            if(ud[yeark]){
+              yexp = ud[yeark];
+            }
 
             for(var i=0;i<ranklist.length;i++){
               var rankDateNo = ranklist[i]._id.split('_')[0];
@@ -810,18 +816,6 @@ function handleSenkaReply_1(content,gid,qq,callback){
             }
             var dailystr = dlye.toFixed(1);
 
-            if(sexp>0){
-                if(month==1){
-                    addsk = lcu.sk;
-                    addexp = lcu.exp-sexp;
-                    allex = Math.round(addsk - addexp*7/10000);
-                    fdt = ' ';
-                    edt = Math.floor((lcu.rd+1)/2);
-                    exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
-                }
-            }
-
-
 
             var userid = user._id;
             var lsenka = ranklist[ranklist.length-1];
@@ -833,46 +827,111 @@ function handleSenkaReply_1(content,gid,qq,callback){
             var tk3;
             if(tno%2==0){
               tk = keym+'_'+tno+'_1'
-                tk2 = keym+'_'+tno+'_2'
-                tk3 = keym+'_'+tno+'_20'
+              tk2 = keym+'_'+tno+'_2'
+              tk3 = keym+'_'+tno+'_20'
             }else{
               tk = keym+'_'+tno+'_13'
-                tk2 = keym+'_'+tno+'_14'
-                tk3 = keym+'_'+tno+'_20'
+              tk2 = keym+'_'+tno+'_14'
+              tk3 = keym+'_'+tno+'_20'
             }
             var thenexp = user.d[tk];
-              var ddstr =''
+            var ddstr =''
+            if(!thenexp){
+              ddstr = '?'
+              thenexp = user.d[tk2];
+
               if(!thenexp){
-                  ddstr = '?'
-                thenexp = user.d[tk2];
-                                
-                  if(!thenexp){
-                    ddstr = '?'
-                    thenexp = user.d[tk3];
-                    }
+                ddstr = '?'
+                thenexp = user.d[tk3];
               }
-              if(cf.startsWith("s")){
-                  callback({o:ton,ex:exstr,dly:dailystr})
-              }else if(ca[0].endsWith("l")){
-                var ret = year + '年' + month +'月\n';
-                ret = ret + namelist[0]+'\n';
-                ret = ret + 'EX:'+exstr+'  日均:【'+dailystr+'】\n';
-                generateImage(culist,ret,callback);
-              }else{
-                getUserInfo(userid,function(rrr){
-                  var addsenka = ((rrr.exp-thenexp)/10000*7).toFixed(1);
-                  var ret = namelist[0]+'\n';
-                  ret = ret + '当前战果：【'+ton+'位】【'+td+'(+'+addsenka+')'+ddstr+'】\n'
-                  ret = ret + 'EX:'+exstr+'  日均:【'+dailystr+'】\n';
-                  if(rrr.exp>200000000){
-                    //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
-                  }
+            }
+
+            var lasenka = 0;
+            if(month==1) {
+              addsk = lcu.sk;
+              addexp = lcu.exp - sexp;
+              allex = Math.round(addsk - addexp * 7 / 10000);
+              fdt = ' ';
+              edt = Math.floor((lcu.rd + 1) / 2);
+              exstr = '【' + allex + '】【' + fdt + '~' + edt + '日】';
+
+              if (cf.startsWith("s")) {
+                callback({o: ton, ex: exstr, dly: dailystr})
+              } else if (ca[0].endsWith("l")) {
+                var ret = year + '年' + month + '月\n';
+                ret = ret + namelist[0] + '\n';
+                ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                generateImage(culist, ret, callback);
+              } else {
+                getUserInfo(userid, function (rrr) {
+                  var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
+                  var ret = namelist[0] + '\n';
+                  ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'  \t  继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
+                  ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
                   ret = ret + '\n'
                   ret = ret + rrr.ship + '\n';
-                  culist[culist.length] = {rd:tno+1,exp:rrr.exp,sk:-1,eo:0,es:addsenka};
-                  generateImage(culist,ret.trim(),callback);
+                  culist[culist.length] = {rd: tno + 1, exp: rrr.exp, sk: -1, eo: 0, es: addsenka};
+                  console.log(ret);
+                  generateImage(culist, ret.trim(), callback);
                 })
               }
+
+
+            }else {
+              if (sexp > 0 && yexp > 0) {
+                var lesenka = (sexp - yexp) / 50000;
+                console.log('l:' + lesenka);
+                handleSenkaReply('s8l-' + namelist[0], gid, qq, function (rm) {
+                  console.log(3333333333);
+                  var lexstr = rm.ex;
+                  var lex = 0;
+                  if (lexstr.length > 0) {
+                    lex = parseInt(lexstr.substring(1))
+                  }
+                  lasenka = lesenka + lex / 35;
+
+                  addsk = lcu.sk;
+                  addexp = lcu.exp - sexp;
+                  allex = Math.round(addsk - lasenka - addexp * 7 / 10000);
+                  fdt = ' ';
+                  edt = Math.floor((lcu.rd + 1) / 2);
+                  exstr = '【' + allex + '】【' + fdt + '~' + edt + '日】';
+
+
+                  if (cf.startsWith("s")) {
+                    callback({o: ton, ex: exstr, dly: dailystr})
+                  } else if (ca[0].endsWith("l")) {
+                    var ret = year + '年' + month + '月\n';
+                    ret = ret + namelist[0] + '\n';
+                    ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                    generateImage(culist, ret, callback);
+                  } else {
+
+
+
+
+                    getUserInfo(userid, function (rrr) {
+                      var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
+                      var ret = namelist[0] + '\n';
+                      ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
+                      ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                      if (rrr.exp > 200000000) {
+                        //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
+                      }
+                      ret = ret + '\n'
+                      ret = ret + rrr.ship + '\n';
+                      culist[culist.length] = {rd: tno + 1, exp: rrr.exp, sk: -1, eo: 0, es: addsenka};
+                      console.log(ret);
+                      generateImage(culist, ret.trim(), callback);
+                    })
+                  }
+
+
+                })
+              }
+            }
+
+
 
 
           })
@@ -1225,7 +1284,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-1','','',function(r){console.log(r)})
+  handleSenkaReply('z8-彼方','','',function(r){console.log(r)})
   //handleSenkaReply('z8-l-m','','',function(r){console.log(r)})
   //timer();
 },1500)
