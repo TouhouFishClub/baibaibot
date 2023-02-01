@@ -114,7 +114,7 @@ function diffuseReply(content,gid,qq,callback,waifu){
 
 function novelAI(callback,content){
   var hostid = '39ba0e372e60e97a';
-  var url = 'https://'+hostid+'.gradio.app/api/predict/';
+  var url = 'https://'+hostid+'.gradio.app/run/predict/';
   var bd = {"fn_index":12,"data":[content.substring(4).trim(),"","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}
   request({
     url: url,
