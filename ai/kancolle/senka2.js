@@ -782,16 +782,18 @@ function handleSenkaReply_1(content,gid,qq,callback){
               }
 
             culist.sort(function(a,b){return a.rd-b.rd});
-
-            var fcu = culist[0];
-            var lcu = culist[culist.length-1];
-            var addsk = lcu.sk-fcu.sk;
-            var addexp = lcu.exp-fcu.exp;
-            var allex = Math.round(addsk - addexp*7/10000);
-            var fdt = Math.floor((fcu.rd+1)/2)
-            var edt = Math.floor((lcu.rd+1)/2);
-            var exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
-            //var dailystr = (addexp*2 / (lcu.rd-fcu.rd) *7/10000).toFixed(1);
+            var allex = 0;
+            var exstr = '0';
+            if(culist.length>0){
+              var fcu = culist[0];
+              var lcu = culist[culist.length-1];
+              var addsk = lcu.sk-fcu.sk;
+              var addexp = lcu.exp-fcu.exp;
+              allex = Math.round(addsk - addexp*7/10000);
+              var fdt = Math.floor((fcu.rd+1)/2)
+              var edt = Math.floor((lcu.rd+1)/2);
+              exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
+            }
 
             var fe=0
             var fd=0;
@@ -855,10 +857,7 @@ function handleSenkaReply_1(content,gid,qq,callback){
               fdt = ' ';
               edt = Math.floor((lcu.rd + 1) / 2);
               exstr = '【' + allex + '】【' + fdt + '~' + edt + '日】';
-
               if (cf.startsWith("s")) {
-
-
                 callback({o: ton, ex: exstr, dly: dailystr})
               } else if (ca[0].endsWith("l")) {
                 var ret = year + '年' + month + '月\n';
@@ -878,14 +877,13 @@ function handleSenkaReply_1(content,gid,qq,callback){
                   generateImage(culist, ret.trim(), callback);
                 })
               }
-
-
             }else {
               if (sexp > 0 && yexp > 0) {
                 var lesenka = (sexp - yexp) / 50000;
                 console.log('l:' + lesenka);
                 handleSenkaReply('s8l-' + namelist[0], gid, qq, function (rm) {
-                  console.log(3333333333);
+                  console.log(namelist[0]);
+                  console.log(rm);
                   var lexstr = rm.ex;
                   var lex = 0;
                   if (lexstr.length > 0) {
@@ -899,8 +897,6 @@ function handleSenkaReply_1(content,gid,qq,callback){
                   fdt = ' ';
                   edt = Math.floor((lcu.rd + 1) / 2);
                   exstr = '【' + allex + '】【' + fdt + '~' + edt + '日】';
-
-
                   if (cf.startsWith("s")) {
                     callback({o: ton, ex: exstr, dly: dailystr})
                   } else if (ca[0].endsWith("l")) {
@@ -924,11 +920,8 @@ function handleSenkaReply_1(content,gid,qq,callback){
                       generateImage(culist, ret.trim(), callback);
                     })
                   }
-
-
                 })
               }else{
-
                 if (cf.startsWith("s")) {
                   callback({o: ton, ex: exstr, dly: dailystr})
                 } else if (ca[0].endsWith("l")) {
@@ -952,23 +945,19 @@ function handleSenkaReply_1(content,gid,qq,callback){
                     generateImage(culist, ret.trim(), callback);
                   })
                 }
-
-
-
               }
             }
-
-
-
-
           })
-
         }else{
-          var ret = '请选择\n';
-          for(var i=0;i<namelist.length;i++){
-            ret = ret + namelist[i]+'\n';
+          if(cf.startsWith("s")){
+            callback({o: 0, ex: 0, dly: 0})
+          }else{
+            var ret = '请选择\n';
+            for(var i=0;i<namelist.length;i++){
+              ret = ret + namelist[i]+'\n';
+            }
+            callback(ret.trim());
           }
-          callback(ret.trim());
         }
       })
     }
