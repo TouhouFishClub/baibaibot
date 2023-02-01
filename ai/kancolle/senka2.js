@@ -734,6 +734,7 @@ function handleSenkaReply_1(content,gid,qq,callback){
           })
           var lstrk = ranklist[ranklist.length-1];
           var rkcmt = lstrk.cmt;
+
           cl_senka_8.find({n:namelist[0]}).toArray(function(err2,arr2){
             arr2.sort(function(a,b){
                 if(rkcmt!=''&b.cmt&&b.cmt==rkcmt){
@@ -856,6 +857,8 @@ function handleSenkaReply_1(content,gid,qq,callback){
               exstr = '【' + allex + '】【' + fdt + '~' + edt + '日】';
 
               if (cf.startsWith("s")) {
+
+
                 callback({o: ton, ex: exstr, dly: dailystr})
               } else if (ca[0].endsWith("l")) {
                 var ret = year + '年' + month + '月\n';
@@ -906,10 +909,6 @@ function handleSenkaReply_1(content,gid,qq,callback){
                     ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
                     generateImage(culist, ret, callback);
                   } else {
-
-
-
-
                     getUserInfo(userid, function (rrr) {
                       var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
                       var ret = namelist[0] + '\n';
@@ -928,6 +927,34 @@ function handleSenkaReply_1(content,gid,qq,callback){
 
 
                 })
+              }else{
+
+                if (cf.startsWith("s")) {
+                  callback({o: ton, ex: exstr, dly: dailystr})
+                } else if (ca[0].endsWith("l")) {
+                  var ret = year + '年' + month + '月\n';
+                  ret = ret + namelist[0] + '\n';
+                  ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                  generateImage(culist, ret, callback);
+                } else {
+                  getUserInfo(userid, function (rrr) {
+                    var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
+                    var ret = namelist[0] + '\n';
+                    ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
+                    ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                    if (rrr.exp > 200000000) {
+                      //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
+                    }
+                    ret = ret + '\n'
+                    ret = ret + rrr.ship + '\n';
+                    culist[culist.length] = {rd: tno + 1, exp: rrr.exp, sk: -1, eo: 0, es: addsenka};
+                    console.log(ret);
+                    generateImage(culist, ret.trim(), callback);
+                  })
+                }
+
+
+
               }
             }
 
@@ -1284,7 +1311,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-彼方','','',function(r){console.log(r)})
+  handleSenkaReply('z8-1','','',function(r){console.log(r)})
   //handleSenkaReply('z8-l-m','','',function(r){console.log(r)})
   //timer();
 },1500)
