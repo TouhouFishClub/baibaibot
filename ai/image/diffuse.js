@@ -139,9 +139,25 @@ bd.data=dt;
       console.log(error);
     } else {
       var data = eval('('+resbody+')');
-      var base64 = data.data[0][0].substring(22);
-      console.log(base64.substring(0,300));
+      var fn = data.data[0][0].name;
+      var imgurl = 'http://'+hostid+'.gradio.app/file='+fn;
       var now = new Date().getTime();
+      var filename = "../coolq-data/cq/data/image/send/diffuse/" + now;
+      var imgreq = request({
+        url: imgurl,
+        method: "GET",
+        proxy: 'http://192.168.17.241:2346',
+      }, function (error, response, body) {
+        if (error && error.code) {
+          console.log('pipe error catched!')
+          console.log(error);
+        }
+      }).pipe(fs.createWriteStream(filename));
+      imgreq.on('close', function () {
+        var ret = '[CQ:'+'image'+',file=send/diffuse/' + now+"_"+content + ']';
+        callback(content+'\n'+ret);
+      });
+
       let dataBuffer = new Buffer(base64,'base64');
       sendImageMsgBuffer(dataBuffer, 'coin_'+new Date().getTime(), 'coin', msg => {
         callback(msg)
