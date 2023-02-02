@@ -156,7 +156,7 @@ bd.data=dt;
       }).pipe(fs.createWriteStream(filename));
       imgreq.on('close', function () {
         var ret = '[CQ:'+'image'+',file=send/diffuse/' + now+']';
-        callback(content+'\n'+ret);
+        callback(content.substring(4)+'\n'+ret);
       });
     }
   });
