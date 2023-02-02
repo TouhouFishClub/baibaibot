@@ -113,9 +113,17 @@ function diffuseReply(content,gid,qq,callback,waifu){
 }
 
 function novelAI(callback,content){
-  var hostid = '39ba0e372e60e97a';
+  var hostid = 'a1028354bdce4a00';
   var url = 'https://'+hostid+'.gradio.app/run/predict/';
-  var bd = {"fn_index":12,"data":[content.substring(4).trim(),"","None","None",20,"Euler a",false,false,1,1,7,-1,-1,0,0,0,false,512,512,false,false,0.7,"None",false,false,null,"","Seed","","Nothing","",true,false,null,"",""],"session_hash":"goaf491shp"}
+  var negetiveStr = '((part of the head)), ((((mutated hands and fingers)))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, bad hands, text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, fat, obese, chubby, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render, unity, unreal, maya, photorealistic';
+
+  var dt = ['cute girl', '', 'None', 'None', 30, 'Euler a', false, false, 1, 1, 7, -1, -1, 0, 0, 0, false, 768, 512, false, 0.7, 0, 0, 'None', false, 'LoRA', 'None', 1, 'LoRA', 'None', 1, 'LoRA', 'None', 1, 'LoRA', 'None', 1, 'LoRA', 'None', 1, 'Refresh models', false, false, false, false, '', '', 'Seed', '', 'Nothing', '', true, false, false, null, '', '', ''];
+var bd = {}
+bd.fn_index=123;
+bd.session_hash="goaf491shp";
+dt[0]=content.substring(4).trim();
+dt[1]=negetiveStr;
+bd.data=dt;
   request({
     url: url,
     method: "POST",
