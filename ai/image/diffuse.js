@@ -113,7 +113,7 @@ function diffuseReply(content,gid,qq,callback,waifu){
 }
 
 function novelAI(callback,content){
-  var hostid = 'a1028354bdce4a00';
+  var hostid = '9485989ce2cab654';
   var url = 'https://'+hostid+'.gradio.app/run/predict/';
   var negetiveStr = '((part of the head)), ((((mutated hands and fingers)))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, bad hands, text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, fat, obese, chubby, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render, unity, unreal, maya, photorealistic';
 
@@ -140,6 +140,7 @@ bd.data=dt;
     } else {
       var data = eval('('+resbody+')');
       var fn = data.data[0][0].name;
+      console.log(fn);
       var imgurl = 'http://'+hostid+'.gradio.app/file='+fn;
       var now = new Date().getTime();
       var filename = "../coolq-data/cq/data/image/send/diffuse/" + now;
@@ -154,18 +155,13 @@ bd.data=dt;
         }
       }).pipe(fs.createWriteStream(filename));
       imgreq.on('close', function () {
-        var ret = '[CQ:'+'image'+',file=send/diffuse/' + now+"_"+content + ']';
+        var ret = '[CQ:'+'image'+',file=send/diffuse/' + now+']';
         callback(content+'\n'+ret);
       });
-
-      let dataBuffer = new Buffer(base64,'base64');
-      sendImageMsgBuffer(dataBuffer, 'coin_'+new Date().getTime(), 'coin', msg => {
-        callback(msg)
-      },content,'MF');
     }
   });
 }
-//novelAI(function(r){console.log(r)})
+//novelAI(function(r){console.log(r)},'cat girl');
 
 var udb;
 var cl_magic_config;
