@@ -619,9 +619,9 @@ function monthCollect(){
 
 
 
-function handleSenkaReply(content,gid,qq,callback){
+function handleSenkaReply(content,gid,qq,callback,uidd){
   try{
-    handleSenkaReply_1(content,gid,qq,callback)
+    handleSenkaReply_1(content,gid,qq,callback,uidd)
   }catch (e){
     console.log(e);
   }
@@ -629,8 +629,8 @@ function handleSenkaReply(content,gid,qq,callback){
 
 
 
-function handleSenkaReply_1(content,gid,qq,callback){
-  console.log('e:'+content)
+function handleSenkaReply_1(content,gid,qq,callback,uidd){
+  console.log('e:'+content+':'+uidd);
   var odp = 0;
   if(content.length<7&&content.endsWith("s")){
     odp=1;
@@ -687,7 +687,6 @@ function handleSenkaReply_1(content,gid,qq,callback){
   }else{
     startk = year + '_' + (month-1) + '_' + (monthOfDay[month]*2-1) + '_' + 21;
   }
-  console.log(startk)
 
   var mklist = [];
   for(var i=0;i<64;i++){
@@ -699,7 +698,6 @@ function handleSenkaReply_1(content,gid,qq,callback){
   }
 
   if(ca.length>=2&&(!pcd||pcd>30)){
-    console.log(pcd);
     if(cd==1){
 
     }else{
@@ -729,24 +727,29 @@ function handleSenkaReply_1(content,gid,qq,callback){
         }
         if(namelist.length==1){
           var ranklist = m[namelist[0]];
+          //console.log(ranklist);
           ranklist.sort(function(a,b){
             return parseInt(a._id.split('_')[0]) - parseInt(b._id.split('_')[0])
           })
           var lstrk = ranklist[ranklist.length-1];
           var rkcmt = lstrk.cmt;
-
-          cl_senka_8.find({n:namelist[0]}).toArray(function(err2,arr2){
+          var skq;
+          if(uidd){
+            skq = {'_id':uidd};
+          }else{
+            skq = {n:namelist[0]}
+          }
+          cl_senka_8.find(skq).toArray(function(err2,arr2){
             arr2.sort(function(a,b){
-                if(rkcmt!=''&b.cmt&&b.cmt==rkcmt){
+                if(rkcmt!=''&&b.cmt&&b.cmt==rkcmt){
                     return 1;
                 }
-                if(rkcmt!=''&a.cmt&&a.cmt==rkcmt){
+                if(rkcmt!=''&&a.cmt&&a.cmt==rkcmt){
                     return -1;
                 }
                 return b.e-a.e
             })
             var user = arr2[0];
-
             var ud = user.d;
             var culist = [];
 
@@ -880,10 +883,7 @@ function handleSenkaReply_1(content,gid,qq,callback){
             }else {
               if (sexp > 0 && yexp > 0) {
                 var lesenka = (sexp - yexp) / 50000;
-                console.log('l:' + lesenka);
                 handleSenkaReply('s8l-' + namelist[0], gid, qq, function (rm) {
-                  console.log(namelist[0]);
-                  console.log(rm);
                   var lexstr = rm.ex;
                   var lex = 0;
                   if (lexstr.length > 0) {
@@ -920,7 +920,7 @@ function handleSenkaReply_1(content,gid,qq,callback){
                       generateImage(culist, ret.trim(), callback);
                     })
                   }
-                })
+                },userid)
               }else{
                 if (cf.startsWith("s")) {
                   callback({o: ton, ex: exstr, dly: dailystr})
@@ -1041,7 +1041,7 @@ function handleSenkaReply_1(content,gid,qq,callback){
               }else{
                 rk.rss=rk.dd;
               }
-              if(rke.n=='カオス'){
+              if(rke.n=='しゅう'){
                 console.log(rke);
               }
 
@@ -1100,7 +1100,6 @@ function handleSenkaReply_1(content,gid,qq,callback){
                 rks.sort(function(a,b){
                   return rankmap[b].dly-rankmap[a].dly
                 })
-
               }
 
               var rlist = [];
@@ -1300,7 +1299,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  //handleSenkaReply('z8-1','','',function(r){console.log(r)})
+  handleSenkaReply('z8-しゅう','','',function(r){console.log(r)})
   //handleSenkaReply('z8-l-m','','',function(r){console.log(r)})
   //timer();
 },1500)
