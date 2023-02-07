@@ -16,35 +16,50 @@ function ImgScale(content,gid,qq,callback){
     if (n2 > 0) {
       var n3 = image.indexOf("?");
       var url = image.substring(n2, n3);
-      scaletask(url,callback)
-      return;
-      var now = new Date();
-      var rd = Math.floor(Math.random() * 8888 + 1000);
-      var filename = "../coolq-data/cq/data/image/send/tmp/" + now.getTime() + rd + ".png";
-      var req = request({
-        url: url,
-        method: "GET"
-      }, function (error, response, body) {
-        if (error && error.code) {
-          console.log('pipe error catched!')
-          console.log(error);
-        }
-      }).pipe(fs.createWriteStream(filename));
-      req.on('close', function () {
-        realesrgan(filename, callback)
-      });
+      scaletask(url,callback);
     }
   }
 }
 
+// function realesrganByHuggingface(filename,callback){
+//   var b64 = fs.readFileSync(filename,'base64');
+//   var dt = [];
+//   dt[0]='data:image/jpeg;base64,'+b64;
+//   dt[1]='anime';
+//   var bd = {fn_index: 0, data: dt, session_hash: "vzrx9clggr"};
+//   var url = 'https://akhaliq-real-esrgan.hf.space/api/predict/';
+//   console.log(bd)
+//   request({
+//     url: url,
+//     method: "POST",
+//     proxy: 'http://192.168.17.241:2346',
+//     headers:{
+//       'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+//       'content-type':'application/json',
+//       'referer': 'https://akhaliq-real-esrgan.hf.space/?__theme=light'
+//     },
+//     body:JSON.stringify(bd)
+//   }, function(error, response, resbody) {
+//     if (error && error.code) {
+//       console.log('pipe error catched!')
+//       console.log(error);
+//     } else {
+//       console.log(resbody);
+//       var data = eval('('+resbody+')');
+//       console.log(data);
+//     }
+//   });
+// }
+// realesrganByHuggingface('/home/ter/i/111.png',function(r){console.log(r)})
+
 function realesrgan(filepath,callback){
-  var url = 'https://replicate.com/api/models/xinntao/realesrgan/files'
+  var url = 'https://replicate.com/api/upload/a10.png?content_type=image%2Fpng'
   request({
     method : 'POST',
     url : url,
     proxy: 'http://192.168.17.241:2346',
     headers : { 'Content-Type' : 'multipart/form-data' },
-    formData : {file:fs.createReadStream(filepath)}
+    body:'content_type=image%2Fpng'
   },function (error, response, resbody) {
     if (error && error.code) {
       console.log('pipe error catched!')
@@ -52,8 +67,6 @@ function realesrgan(filepath,callback){
     } else {
       console.log(resbody);
       var data = eval('('+resbody+')');
-      var imgurl = data.file_url;
-      scaletask(imgurl,callback);
     }
   });
 }
@@ -62,8 +75,8 @@ function scaletask(imgurl,callback){
   var apikeylist = secret.u2;
   var apikey = apikeylist[Math.floor(Math.random()*apikeylist.length)];
   var url = 'https://api.replicate.com/v1/predictions'
-  var version = "1b976a4d456ed9e4d1a846597b7614e79eadad3032e9124fa63859db0fd59b56"
-  var body0 = {version:version,input:{"scale":2,"version":"Anime - anime6B","tile":0,"img": imgurl}}
+  var version = "42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b"
+  var body0 = {version:version,input:{"scale":2,"img": imgurl}};
   var body1 = JSON.stringify(body0);
   request({
     url: url,
