@@ -71,19 +71,20 @@ function realesrgan(filepath,callback){
   });
 }
 
+scaletask('https://gchat.qpic.cn/gchatpic_new/357474405/4111698514-2726882018-511E04E321410E11C49706E4A1802B33/0',function(r){console.log(r)})
+
 function scaletask(imgurl,callback){
   var apikeylist = secret.u2;
   var apikey = apikeylist[Math.floor(Math.random()*apikeylist.length)];
   var url = 'https://api.replicate.com/v1/predictions'
   var version = "42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b"
-  var body0 = {version:version,input:{"scale":2,"img": imgurl}};
+  var body0 = {version:version,input:{"image": imgurl,"scale":2,}};
   var body1 = JSON.stringify(body0);
   request({
     url: url,
     method: "POST",
     proxy:'http://192.168.17.241:2346',
     headers:{
-      'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
       'Authorization': 'Token '+apikey,
       'Content-Type':'application/json'
     },
@@ -95,6 +96,7 @@ function scaletask(imgurl,callback){
     } else {
       console.log('task ok,will get result');
       var d1 = eval('(' + resbody + ')');
+      console.log(resbody);
       if(!(d1&&d1.urls&&d1.urls.get)){
         callback('failed');
       }else{
