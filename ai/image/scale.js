@@ -71,7 +71,6 @@ function realesrgan(filepath,callback){
   });
 }
 
-scaletask('https://gchat.qpic.cn/gchatpic_new/357474405/4111698514-2726882018-511E04E321410E11C49706E4A1802B33/0',function(r){console.log(r)})
 
 function scaletask(imgurl,callback){
   var apikeylist = secret.u2;
