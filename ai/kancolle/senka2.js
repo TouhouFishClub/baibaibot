@@ -710,8 +710,15 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
       }
       cl_n_senka_8.find(query).toArray(function(err,arr){
         var m = {};
+        arr.sort(function(a,b){return b.dd-a.dd});
+        var mx = {};
         for(var i=0;i<arr.length;i++){
           var name = arr[i].n;
+          var ttn = parseInt(arr[i]._id.split('_')[0]);
+          if(mx[ttn]){
+            continue;
+          }
+          mx[ttn]=1;
           if(m[name]){
             m[name].push(arr[i])
           }else{
@@ -727,7 +734,6 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
         }
         if(namelist.length==1){
           var ranklist = m[namelist[0]];
-          //console.log(ranklist);
           ranklist.sort(function(a,b){
             return parseInt(a._id.split('_')[0]) - parseInt(b._id.split('_')[0])
           })
@@ -1299,7 +1305,7 @@ function generateImage(arr,str,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-しゅう','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-御坂美琴','','',function(r){console.log(r)})
   //handleSenkaReply('z8-l-m','','',function(r){console.log(r)})
   //timer();
 },1500)
