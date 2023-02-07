@@ -77,7 +77,7 @@ function scaletask(imgurl,callback){
   var apikey = apikeylist[Math.floor(Math.random()*apikeylist.length)];
   var url = 'https://api.replicate.com/v1/predictions'
   var version = "42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b"
-  var body0 = {version:version,input:{"image": imgurl,"scale":2,}};
+  var body0 = {version:version,input:{"image": imgurl,"face_enhance": false,"scale":2,}};
   var body1 = JSON.stringify(body0);
   request({
     url: url,
