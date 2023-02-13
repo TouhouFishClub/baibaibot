@@ -1215,7 +1215,7 @@ module.exports={
 
 var weekStr = '日一二三四五六';
 function generateImage(arr,str,callback,month){
-  console.log('m:'+month)
+  //console.log('m:'+month)
   var img1 = new imageMagick("static/blank.png");
   img1.autoOrient()
     .resize(900,950,'!')
@@ -1227,7 +1227,7 @@ function generateImage(arr,str,callback,month){
   nn.setMonth(month-1)
   nn.setDate(1)
   nn.setHours(10);
-  console.log(nn)
+  //console.log(nn)
   var day = nn.getDay();
   var ed = monthOfDay[nn.getMonth()];
   var wd = 120;
@@ -1308,7 +1308,7 @@ function generateImage(arr,str,callback,month){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
+  //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
   //handleSenkaReply('z8-l-m','','',function(r){console.log(r)})
   //timer();
 },1500)
