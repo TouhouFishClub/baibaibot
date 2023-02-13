@@ -872,7 +872,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 var ret = year + '年' + month + '月\n';
                 ret = ret + namelist[0] + '\n';
                 ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
-                generateImage(culist, ret, callback);
+                generateImage(culist, ret, callback,month);
               } else {
                 getUserInfo(userid, function (rrr) {
                   var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
@@ -883,7 +883,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   ret = ret + rrr.ship + '\n';
                   culist[culist.length] = {rd: tno + 1, exp: rrr.exp, sk: -1, eo: 0, es: addsenka};
                   console.log(ret);
-                  generateImage(culist, ret.trim(), callback);
+                  generateImage(culist, ret.trim(), callback,month);
                 })
               }
             }else {
@@ -1214,7 +1214,7 @@ module.exports={
 
 
 var weekStr = '日一二三四五六';
-function generateImage(arr,str,callback){
+function generateImage(arr,str,callback,month){
   var img1 = new imageMagick("static/blank.png");
   img1.autoOrient()
     .resize(900,950,'!')
@@ -1223,6 +1223,7 @@ function generateImage(arr,str,callback){
     .font('./font/STXIHEI.TTF')
 
   var nn = new Date();
+  nn.setMonth(month)
   nn.setDate(1)
   nn.setHours(10);
   var day = nn.getDay();
