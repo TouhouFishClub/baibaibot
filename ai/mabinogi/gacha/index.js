@@ -127,7 +127,7 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) =
 		str += `其中D级有：\n${items.filter(x => x.rare == 'D').map(x => x.item).sort().join('\n')}`
 	}
 
-	str += `-------------------\n`
+	str += `\n-------------------\n`
 
 	str += `${matchInfo.join('\n')}\n`
 
@@ -148,7 +148,7 @@ const randomGacha = (gachaInfo, count) => {
 	for(let i = 0; i < count; i++) {
 		let targetRare = rareTag[~~(Math.random() * rareTag.length)]
 		let target = gachaInfo.rare[targetRare][2][~~(Math.random() * gachaInfo.rare[targetRare][2].length)]
-		let reRandomInfo = matchItemWeight.filter(x => target.match(x))[0], rd = Math.random()
+		let reRandomInfo = matchItemWeight.filter(x => target.match(x.regexp))[0], rd = Math.random()
 		if(reRandomInfo && reRandomInfo.rare) {
 			if(rd > reRandomInfo.rare) {
 				i --
