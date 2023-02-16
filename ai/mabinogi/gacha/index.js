@@ -41,6 +41,13 @@ const groupWhiteList = new Set([
 	1011153915
 ])
 
+const matchItemWeight = [
+	{regexp: new RegExp('亡灵'), rare: 0.1},
+	{regexp: new RegExp('惊悚'), rare: 0.3},
+	{regexp: new RegExp('阴沉'), rare: 0.3},
+	{regexp: new RegExp('战栗'), rare: 0.3}
+]
+
 const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) => {
 	if(!(user == 799018865 || groupWhiteList.has(groupId))) {
 		return
@@ -137,6 +144,11 @@ const randomGacha = (gachaInfo, count) => {
 	for(let i = 0; i < count; i++) {
 		let targetRare = rareTag[~~(Math.random() * rareTag.length)]
 		let target = gachaInfo.rare[targetRare][2][~~(Math.random() * gachaInfo.rare[targetRare][2].length)]
+		let reRandomInfo = matchItemWeight.filter(x => target.match(x))[0]
+		if(reRandomInfo && reRandomInfo.rare && Math.random() > reRandomInfo.rare) {
+			i --
+			continue
+		}
 		items.push({
 			rare: targetRare,
 			item: target
