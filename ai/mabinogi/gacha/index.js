@@ -353,7 +353,7 @@ const Test = async testCount => {
 	}
 }
 
-Test(1000000)
+// Test(1000000)
 
 module.exports = {
 	mabiGacha,
