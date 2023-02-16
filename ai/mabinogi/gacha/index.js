@@ -45,12 +45,12 @@ const groupWhiteList = new Set([
 ])
 
 const matchItemWeight = [
-	{regexp: new RegExp('亡灵'), rare: 0.025},
-	{regexp: new RegExp('惊悚'), rare: 0.05},
-	{regexp: new RegExp('阴沉'), rare: 0.05},
-	{regexp: new RegExp('战栗'), rare: 0.05},
-	{regexp: new RegExp('特殊恶'), rare: 0.5},
-	{regexp: new RegExp('PLUS辅助'), rare: 0.5},
+	{regexp: new RegExp('亡灵'), rare: 0.9},
+	{regexp: new RegExp('惊悚'), rare: 0.95},
+	{regexp: new RegExp('阴沉'), rare: 0.95},
+	{regexp: new RegExp('战栗'), rare: 0.95},
+	{regexp: new RegExp('特殊恶'), rare: 0.97},
+	{regexp: new RegExp('PLUS辅助'), rare: 0.97},
 ]
 
 const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) => {
@@ -336,6 +336,24 @@ const splitStr = (str, start, end, ignoreSearch = false) => {
 	}
 	return subStr
 }
+
+const Test = async testCount => {
+	if(!gachaInfo.length) {
+		let o = await loadGachaGroup(1, true)
+		console.log(o.filter(x => x.rareTag == 'S').length)
+	}
+	let count = 0
+	for(let i = 0; i < testCount; i ++) {
+		let { items } = randomGacha(gachaInfo[0], 1)
+		count ++
+		if(items[0].item.match('亡灵')) {
+			console.log(`第${i + 1}(${count})发抽到了${items[0].item}(${(1 / count).toFixed(7)})`)
+			count = 0
+		}
+	}
+}
+
+Test(1000000)
 
 module.exports = {
 	mabiGacha,
