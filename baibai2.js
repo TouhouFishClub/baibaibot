@@ -1038,7 +1038,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(con.startsWith('jrrp') || con.startsWith('今日运势')){
-    if(port == 29334 || port == 26334){
+    if(port == 29334){
       return
     }
     let s = con.substring(4).trim()
