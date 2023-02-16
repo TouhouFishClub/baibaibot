@@ -152,10 +152,10 @@ const randomGacha = (gachaInfo, count) => {
 		if(reRandomInfo && reRandomInfo.rare) {
 			if(rd > reRandomInfo.rare) {
 				i --
-				matchInfo.push(`一个 ${target}(${targetRare}) 炸掉了(${rd.toFixed(3)}/${reRandomInfo.rare})`)
+				matchInfo.push(`${target} 炸掉了(${rd.toFixed(3)}/${reRandomInfo.rare})`)
 				continue
 			} else {
-				matchInfo.push(`一个 ${target}(${targetRare}) 获得了(${rd.toFixed(3)}/${reRandomInfo.rare})`)
+				matchInfo.push(`${target} 获得了(${rd.toFixed(3)}/${reRandomInfo.rare})`)
 			}
 		}
 		items.push({
