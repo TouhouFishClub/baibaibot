@@ -84,7 +84,7 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) =
 		default:
 			point = 0
 	}
-	let items = randomGacha(gacha, gachaCount)
+	let { items, matchInfo } = randomGacha(gacha, gachaCount)
 
 	// console.log(point)
 
@@ -127,6 +127,10 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) =
 		str += `其中D级有：\n${items.filter(x => x.rare == 'D').map(x => x.item).sort().join('\n')}`
 	}
 
+	str += `-------------------\n`
+
+	str += `${matchInfo.join('\n')}\n`
+
 	str += `\n你已经用了${userPointCount.get(user)}点`
 
 	// console.log(str)
@@ -140,21 +144,26 @@ const randomGacha = (gachaInfo, count) => {
 		new Array(~~(gachaInfo.rare['B'][1] * 100)).fill('B'),
 		new Array(~~(gachaInfo.rare['C'][1] * 100)).fill('C'),
 		new Array(~~(gachaInfo.rare['D'][1] * 100)).fill('D')
-	)
+	), matchInfo = []
 	for(let i = 0; i < count; i++) {
 		let targetRare = rareTag[~~(Math.random() * rareTag.length)]
 		let target = gachaInfo.rare[targetRare][2][~~(Math.random() * gachaInfo.rare[targetRare][2].length)]
-		let reRandomInfo = matchItemWeight.filter(x => target.match(x))[0]
-		if(reRandomInfo && reRandomInfo.rare && Math.random() > reRandomInfo.rare) {
-			i --
-			continue
+		let reRandomInfo = matchItemWeight.filter(x => target.match(x))[0], rd = Math.random()
+		if(reRandomInfo && reRandomInfo.rare) {
+			if(rd > reRandomInfo.rare) {
+				i --
+				matchInfo.push(`一个${target}(${targetRare})炸掉了(${rd.toFixed(3)})`)
+				continue
+			} else {
+				matchInfo.push(`一个${target}(${targetRare})获得了(${rd.toFixed(3)})`)
+			}
 		}
 		items.push({
 			rare: targetRare,
 			item: target
 		})
 	}
-	return items
+	return { items, matchInfo }
 }
 
 const loadGachaGroup = async (page = 1, source = false) => {
