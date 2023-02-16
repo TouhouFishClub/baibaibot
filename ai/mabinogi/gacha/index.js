@@ -42,10 +42,10 @@ const groupWhiteList = new Set([
 ])
 
 const matchItemWeight = [
-	{regexp: new RegExp('亡灵'), rare: 0.01},
-	{regexp: new RegExp('惊悚'), rare: 0.03},
-	{regexp: new RegExp('阴沉'), rare: 0.03},
-	{regexp: new RegExp('战栗'), rare: 0.03}
+	{regexp: new RegExp('亡灵'), rare: 0.025},
+	{regexp: new RegExp('惊悚'), rare: 0.05},
+	{regexp: new RegExp('阴沉'), rare: 0.05},
+	{regexp: new RegExp('战栗'), rare: 0.05}
 ]
 
 const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) => {
