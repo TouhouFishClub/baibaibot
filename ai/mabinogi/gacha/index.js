@@ -160,7 +160,7 @@ const randomGacha = (gachaInfo, count) => {
 				matchInfo.push(`${target} 炸掉了(${rd.toFixed(3)}/${reRandomInfo.rare})`)
 				continue
 			} else {
-				matchInfo.push(`${target} 获得了(${rd.toFixed(3)}/${reRandomInfo.rare})`)
+				// matchInfo.push(`${target} 获得了(${rd.toFixed(3)}/${reRandomInfo.rare})`)
 			}
 		}
 		items.push({
