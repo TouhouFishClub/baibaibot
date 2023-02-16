@@ -42,10 +42,10 @@ const groupWhiteList = new Set([
 ])
 
 const matchItemWeight = [
-	{regexp: new RegExp('亡灵'), rare: 0.1},
-	{regexp: new RegExp('惊悚'), rare: 0.3},
-	{regexp: new RegExp('阴沉'), rare: 0.3},
-	{regexp: new RegExp('战栗'), rare: 0.3}
+	{regexp: new RegExp('亡灵'), rare: 0.01},
+	{regexp: new RegExp('惊悚'), rare: 0.03},
+	{regexp: new RegExp('阴沉'), rare: 0.03},
+	{regexp: new RegExp('战栗'), rare: 0.03}
 ]
 
 const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) => {
@@ -152,10 +152,10 @@ const randomGacha = (gachaInfo, count) => {
 		if(reRandomInfo && reRandomInfo.rare) {
 			if(rd > reRandomInfo.rare) {
 				i --
-				matchInfo.push(`一个${target}(${targetRare})炸掉了(${rd.toFixed(3)})`)
+				matchInfo.push(`一个 ${target}(${targetRare}) 炸掉了(${rd.toFixed(3)}/${reRandomInfo.rare})`)
 				continue
 			} else {
-				matchInfo.push(`一个${target}(${targetRare})获得了(${rd.toFixed(3)})`)
+				matchInfo.push(`一个 ${target}(${targetRare}) 获得了(${rd.toFixed(3)}/${reRandomInfo.rare})`)
 			}
 		}
 		items.push({
