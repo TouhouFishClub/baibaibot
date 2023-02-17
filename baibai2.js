@@ -579,6 +579,7 @@ function handleMsg_D(msgObj,port, configs) {
 	//TODO: 洛奇交易群屏蔽功能，但是记录群内语句
 	if(
 		msgObj.group_id === 704773457 &&
+		msgObj.user_id != 799018865 &&
 		!(
 			msgObj.message.trim().startsWith('opt')
 			|| msgObj.message.trim().startsWith('释放查询')
