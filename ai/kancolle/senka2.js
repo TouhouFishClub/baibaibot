@@ -885,7 +885,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 callback({o: ton, ex: exstr, dly: dailystr})
               } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
                 var ret = year + '年' + month + '月\n';
-                ret = ret + namelist[0] + '\n';
+                ret = ret + namelist[0] + '【'+lcu.sk+'】'+'\n';
                 ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
                 generateImage(culist, ret, callback,month);
               } else {
@@ -922,7 +922,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     callback({o: ton, ex: exstr, dly: dailystr})
                   } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
                     var ret = year + '年' + month + '月\n';
-                    ret = ret + namelist[0] + '\n';
+                    ret = ret + namelist[0] + '【'+lcu.sk+'】'+'\n';
                     ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
                     generateImage(culist, ret, callback,month);
                   } else {
@@ -947,7 +947,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   callback({o: ton, ex: exstr, dly: dailystr})
                 } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
                   var ret = year + '年' + month + '月\n';
-                  ret = ret + namelist[0] + '\n';
+                  ret = ret + namelist[0] + '【'+lcu.sk+'】'+'\n';
                   ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
                   generateImage(culist, ret, callback,month);
                 } else {
@@ -1231,6 +1231,11 @@ module.exports={
 var weekStr = '日一二三四五六';
 function generateImage(arr,str,callback,month){
   //console.log('m:'+month)
+  var nn = new Date();
+  var nnm = nn.getMonth()+1
+  if(nnm!=month){
+    str = '\n\n\n'+str
+  }
   var img1 = new imageMagick("static/blank.png");
   img1.autoOrient()
     .resize(900,950,'!')
