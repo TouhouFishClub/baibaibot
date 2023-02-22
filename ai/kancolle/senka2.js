@@ -1234,7 +1234,6 @@ function generateImage(arr,str,callback,month){
   var nn = new Date();
   var nnm = nn.getMonth()+1
   if(nnm!=month){
-    str = '\n\n\n'+str
   }
   var img1 = new imageMagick("static/blank.png");
   img1.autoOrient()
@@ -1315,7 +1314,12 @@ function generateImage(arr,str,callback,month){
 
   img1.fontSize(25)
   img1.fill('blue')
-  img1.drawText(50,570,str,'NorthWest')
+  if(nnm!=month){
+    img1.drawText(50,670,str,'NorthWest')
+  }else{
+    img1.drawText(50,570,str,'NorthWest')
+  }
+
   //img1.write('5.png',function(){});
   sendGmImage(img1,'',callback);
 }
