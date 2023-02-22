@@ -474,9 +474,10 @@ function timer3(){
       }else if(nowhour==7){
         console.log('hour task:ok7')
         timer();
-      }else if(nowhour==11){
-        console.log('hour task:ok11')
+      }else if(nowhour==10){
+        console.log('hour task:ok10')
         timer();
+        monthCollect();
       }else if(nowhour==21){
         console.log('hour task:ok21')
         timer();
