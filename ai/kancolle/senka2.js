@@ -670,7 +670,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
       year = year-1;
       month = tgm;
     }else{
-      keym = year+"_"+(tgm;
+      keym = year+"_"+tgm;
       dateno = monthOfDay[tgm]*2-1;
       month = tgm;
     }
