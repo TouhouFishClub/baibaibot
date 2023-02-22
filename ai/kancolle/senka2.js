@@ -659,7 +659,21 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
       dateno = monthOfDay[month-1]*2-1;
       month = month - 1;
     }
+  }
+  if(ca[0].indexOf('m')==2){
+    var tgm = parseInt(ca[0].substring(3));
+    if(tgm==month){
 
+    }else if(tgm > month){
+      keym = (year-1)+"_"+tgm;
+      dateno = monthOfDay[tgm]*2-1;
+      year = year-1;
+      month = tgm;
+    }else{
+      keym = year+"_"+(tgm;
+      dateno = monthOfDay[tgm]*2-1;
+      month = tgm;
+    }
   }
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
   var cl_senka_8 = udb.collection("cl_senka_8");
@@ -869,7 +883,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               exstr = '【' + allex + '】【' + fdt + '~' + edt + '日】';
               if (cf.startsWith("s")) {
                 callback({o: ton, ex: exstr, dly: dailystr})
-              } else if (ca[0].endsWith("l")) {
+              } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
                 var ret = year + '年' + month + '月\n';
                 ret = ret + namelist[0] + '\n';
                 ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
@@ -906,7 +920,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   exstr = '【' + allex + '】【' + fdt + '~' + edt + '日】';
                   if (cf.startsWith("s")) {
                     callback({o: ton, ex: exstr, dly: dailystr})
-                  } else if (ca[0].endsWith("l")) {
+                  } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
                     var ret = year + '年' + month + '月\n';
                     ret = ret + namelist[0] + '\n';
                     ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
@@ -931,7 +945,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               }else{
                 if (cf.startsWith("s")) {
                   callback({o: ton, ex: exstr, dly: dailystr})
-                } else if (ca[0].endsWith("l")) {
+                } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
                   var ret = year + '年' + month + '月\n';
                   ret = ret + namelist[0] + '\n';
                   ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
