@@ -410,7 +410,7 @@ function handleMsg_D(msgObj,port, configs) {
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
-  var nn0 = content.toLowerCase().indexOf('%rd');
+  var nn0 = content.toLowerCases().indexOf('%rd');
   if(nn0>0){
     var rdx = parseInt(content.substring(nn0+3));
     var ft = content.substring(0,nn0);
