@@ -415,7 +415,7 @@ function handleMsg_D(msgObj,port, configs) {
     if(nn0>0){
       var rdx = parseInt(content.substring(nn0+3));
       var ft = content.substring(0,nn0);
-      var et = content.substring(nn0+3+length(''+rdx))
+      var et = content.substring(nn0+3+(''+rdx).length)
       var rdn = Math.floor(Math.random()*rdx)+1;
       content = ft+rdn+et;
     }
