@@ -466,11 +466,12 @@ function timer3(){
   setTimeout(function(){
     var nowdate = new Date().getDate();
     var nowmonth = new Date().getMonth();
-    if(nowdate==monthOfDay[nowmonth]){
+    if(nowdate==monthOfDay[nowmonth]||nowdate==1){
       var nowhour = new Date().getHours();
-      if(nowhour>=15&&nowhour<=20){
+      if(nowhour>=0&&nowhour<=7){
         console.log('hour task:ok15')
-        timer();
+        monthCollect();
+        //timer();
       }else if(nowhour==7){
         console.log('hour task:ok7')
         timer();
@@ -480,14 +481,14 @@ function timer3(){
         monthCollect();
       }else if(nowhour==21){
         console.log('hour task:ok21')
-        timer();
-        monthCollect();
+        //timer();
+        //monthCollect();
       }else if(nowhour==22){
         console.log('hour task:ok22')
-        timer();
+        monthCollect();
       }else if(nowhour==23){
         console.log('hour task:ok23')
-        timer();
+        monthCollect();
       }else{
         console.log('hour task:no1')
       }
