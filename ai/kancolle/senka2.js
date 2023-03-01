@@ -781,6 +781,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               ud['2023_2_55_21']=ud['2023_3_0_5'];
               ud['2023_3_0_1']=ud['2023_3_0_5'];
             }
+            console.log(ud)
             var culist = [];
             var sexp = 0;
             if(ud[startk]){
@@ -901,9 +902,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
                   var ret = namelist[0] + '\n';
                   var lesenka = '';
-                  if(fcu.rd==0&&month==3&&year==2023){
-                    lasenka = fcu.dd;
-                  }
+
                   ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'  \t  继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
                   ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
                   ret = ret + '\n'
@@ -924,7 +923,10 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     lex = parseInt(lexstr.substring(1))
                   }
                   lasenka = lesenka + lex / 35;
-
+                  console.log(fcu)
+                  if(fcu.rd==0&&month==3&&year==2023){
+                    lasenka = fcu.sk;
+                  }
                   addsk = lcu.sk;
                   addexp = lcu.exp - sexp;
                   allex = Math.round(addsk - lasenka - addexp * 7 / 10000);
@@ -1357,7 +1359,7 @@ function generateImage(arr,str,callback,month){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
+  handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
   //timer();
 },1500)
 
