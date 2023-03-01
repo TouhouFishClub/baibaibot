@@ -698,7 +698,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
   if(month==1){
     startk = (year-1)+'_'+12+'_'+61+'_'+21;
   }else{
-    startk = year + '_' + (month-1) + '_' + (monthOfDay[month]*2-1) + '_' + 21;
+    startk = year + '_' + (month-1) + '_' + (monthOfDay[month-2]*2-1) + '_' + 21;
   }
 
   var mklist = [];
@@ -771,17 +771,17 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             var user = arr2[0];
             var ud = user.d;
             if(ud['2023_2_54_10']){
+              console.log(11111)
               ud['2023_2_55_21']=ud['2023_2_54_10'];
               ud['2023_3_0_1']=ud['2023_2_54_10'];
             }else if(ud['2023_3_0_4']){
-              ud['2023_2_55_21']=ud['2023_2_54_10'];
-              ud['2023_3_0_1']=ud['2023_2_54_10'];
+              ud['2023_2_55_21']=ud['2023_3_0_4'];
+              ud['2023_3_0_1']=ud['2023_3_0_4'];
             }else if(ud['2023_3_0_5']){
-              ud['2023_2_55_21']=ud['2023_2_54_10'];
-              ud['2023_3_0_1']=ud['2023_2_54_10'];
+              ud['2023_2_55_21']=ud['2023_3_0_5'];
+              ud['2023_3_0_1']=ud['2023_3_0_5'];
             }
             var culist = [];
-
             var sexp = 0;
             if(ud[startk]){
                 sexp=ud[startk]
@@ -900,6 +900,10 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 getUserInfo(userid, function (rrr) {
                   var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
                   var ret = namelist[0] + '\n';
+                  var lesenka = '';
+                  if(fcu.rd==0&&month==3&&year==2023){
+                    lasenka = fcu.dd;
+                  }
                   ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'  \t  继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
                   ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
                   ret = ret + '\n'
@@ -1353,7 +1357,7 @@ function generateImage(arr,str,callback,month){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8-1','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
   //timer();
 },1500)
 
