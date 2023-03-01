@@ -781,7 +781,6 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               ud['2023_2_55_21']=ud['2023_3_0_5'];
               ud['2023_3_0_1']=ud['2023_3_0_5'];
             }
-            console.log(ud)
             var culist = [];
             var sexp = 0;
             if(ud[startk]){
@@ -1359,7 +1358,7 @@ function generateImage(arr,str,callback,month){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
   //timer();
 },1500)
 
