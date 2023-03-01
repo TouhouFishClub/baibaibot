@@ -770,6 +770,16 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             })
             var user = arr2[0];
             var ud = user.d;
+            if(ud['2023_2_54_10']){
+              ud['2023_2_55_21']=ud['2023_2_54_10'];
+              ud['2023_3_0_1']=ud['2023_2_54_10'];
+            }else if(ud['2023_3_0_4']){
+              ud['2023_2_55_21']=ud['2023_2_54_10'];
+              ud['2023_3_0_1']=ud['2023_2_54_10'];
+            }else if(ud['2023_3_0_5']){
+              ud['2023_2_55_21']=ud['2023_2_54_10'];
+              ud['2023_3_0_1']=ud['2023_2_54_10'];
+            }
             var culist = [];
 
             var sexp = 0;
@@ -1025,11 +1035,24 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
           cl_senka_8.find({n:{'$in':namelist}}).toArray(function(err2,arr2){
             var emap = {};
             for(var i=0;i<arr2.length;i++){
+
+              if(arr2[i].d['2023_2_54_10']){
+                arr2[i].d['2023_2_55_21']=arr2[i].d['2023_2_54_10'];
+                arr2[i].d['2023_3_0_1']=arr2[i].d['2023_2_54_10'];
+              }else if(arr2[i].d['2023_3_0_4']){
+                arr2[i].d['2023_2_55_21']=arr2[i].d['2023_2_54_10'];
+                arr2[i].d['2023_3_0_1']=arr2[i].d['2023_2_54_10'];
+              }else if(arr2[i].d['2023_3_0_5']){
+                arr2[i].d['2023_2_55_21']=arr2[i].d['2023_2_54_10'];
+                arr2[i].d['2023_3_0_1']=arr2[i].d['2023_2_54_10'];
+              }
+
               if(emap[arr2[i].n]){
                 emap[arr2[i].n] = emap[arr2[i].n].concat([arr2[i]]);
               }else{
                 emap[arr2[i].n]=[arr2[i]]
               }
+
             }
             if(rankmap[989]==undefined){
               return;
@@ -1055,13 +1078,11 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 })
                 rke = rkea[0];
               }
+
               if(rke.d[k1]&&rke.d[kk]){
                 rk.rss = (rke.d[kk] - rke.d[k1])/10000*7 + rk.dd
               }else{
                 rk.rss=rk.dd;
-              }
-              if(rke.n=='しゅう'){
-                console.log(rke);
               }
 
               var fe=0
