@@ -912,7 +912,8 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             }else {
               if (sexp > 0 && yexp > 0) {
                 var lesenka = (sexp - yexp) / 50000;
-                handleSenkaReply('s8l-' + namelist[0], gid, qq, function (rm) {
+                var frt = 's8m'+(month-1);
+                handleSenkaReply(frt+'-' + namelist[0], gid, qq, function (rm) {
                   var lexstr = rm.ex;
                   var lex = 0;
                   if (lexstr.length > 0) {
@@ -1352,7 +1353,7 @@ function generateImage(arr,str,callback,month){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8-l-m','','',function(r){console.log(r)})
+  handleSenkaReply('z8-1','','',function(r){console.log(r)})
   //timer();
 },1500)
 
