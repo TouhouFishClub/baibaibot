@@ -225,7 +225,7 @@ function rd(x){
 }
 
 
-var PORT_API_SEED = [3068, 9401, 4719, 8273, 8698, 2071, 2507, 7894, 7438, 6057]
+var PORT_API_SEED = [6430, 9819, 2870, 6007, 9711, 7358, 7712, 3032, 2011, 4563]
 function generateRankKey(userid){
   var t=userid;
   var e = PORT_API_SEED[t%10];
@@ -466,29 +466,26 @@ function timer3(){
   setTimeout(function(){
     var nowdate = new Date().getDate();
     var nowmonth = new Date().getMonth();
-    if(nowdate==monthOfDay[nowmonth]||nowdate==1){
+    if(nowdate==monthOfDay[nowmonth]){
       var nowhour = new Date().getHours();
-      if(nowhour>=0&&nowhour<=7){
+      if(nowhour>=15&&nowhour<=20){
         console.log('hour task:ok15')
-        monthCollect();
-        //timer();
+        timer();
       }else if(nowhour==7){
         console.log('hour task:ok7')
         timer();
       }else if(nowhour==10){
         console.log('hour task:ok10')
         timer();
-        monthCollect();
       }else if(nowhour==21){
         console.log('hour task:ok21')
-        //timer();
-        //monthCollect();
-      }else if(nowhour==22){
-        console.log('hour task:ok22')
+        timer();
         monthCollect();
+      }else if(nowhour==22){
+
       }else if(nowhour==23){
         console.log('hour task:ok23')
-        monthCollect();
+        timer();
       }else{
         console.log('hour task:no1')
       }
