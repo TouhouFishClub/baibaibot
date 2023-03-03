@@ -657,20 +657,25 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
       dateno = monthOfDay[month-1]*2-1;
       month = month - 1;
     }
+    if(year==2023&&month==2){
+      dateno=54
+    }
   }
   if(ca[0].indexOf('m')==2){
     var tgm = parseInt(ca[0].substring(3));
     if(tgm==month){
-
     }else if(tgm > month){
       keym = (year-1)+"_"+tgm;
-      dateno = monthOfDay[tgm]*2-1;
+      dateno = monthOfDay[tgm-1]*2-1;
       year = year-1;
       month = tgm;
     }else{
       keym = year+"_"+tgm;
-      dateno = monthOfDay[tgm]*2-1;
+      dateno = monthOfDay[tgm-1]*2-1;
       month = tgm;
+    }
+    if(year==2023&&month==2){
+      dateno=54
     }
   }
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
@@ -790,7 +795,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             if(ud[yeark]){
               yexp = ud[yeark];
             }
-
+            var adl=0;
             for(var i=0;i<ranklist.length;i++){
               var rankDateNo = ranklist[i]._id.split('_')[0];
               var uk = keym+'_'+rankDateNo+'_'+(rankDateNo%2==0?1:13);
@@ -845,10 +850,16 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 ed = parseInt(mklist[k].split('_')[2])*12+(parseInt(mklist[k].split('_')[3])%12);
               }
             }
+            if(ca[0].endsWith("l")||ca[0].indexOf('m')==2){
+              var kk = keym + '_' + (monthOfDay[month-1]*2-1) + '_' + 21;
+              ee=user.d[kk];
+              ed = parseInt(kk.split('_')[2]);
+            }
             var dlye = 0;
             if(ed>fd){
               dlye = (ee-fe)/(ed-fd)*24*7/10000
             }
+
             var dailystr = dlye.toFixed(1);
 
 
@@ -892,8 +903,16 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               if (cf.startsWith("s")) {
                 callback({o: ton, ex: exstr, dly: dailystr})
               } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
+
+                var uuk = keym+'_'+(monthOfDay[month-1]*2-1)+'_'+21;
+                var addssk = 0;
+                if(ud[uuk]){
+                  var addssk = ((ud[uuk] - thenexp) / 10000 * 7).toFixed(1);
+                  culist[culist.length] = {rd: monthOfDay[month-1]*2-1, exp: ud[uuk], sk: -1, eo: 0, es: addssk};
+                }
+
                 var ret = year + '年' + month + '月\n';
-                ret = ret + namelist[0] + '【'+lcu.sk+'】'+'\n';
+                ret = ret + namelist[0] + '【'+lcu.sk+'(+'+addssk+')】'+'\n';
                 ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
                 generateImage(culist, ret, callback,month);
               } else {
@@ -921,6 +940,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   if (lexstr.length > 0) {
                     lex = parseInt(lexstr.substring(1))
                   }
+                  console.log('lex:'+lex)
                   lasenka = lesenka + lex / 35;
                   console.log(fcu)
                   if(fcu.rd==0&&month==3&&year==2023){
@@ -935,8 +955,15 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   if (cf.startsWith("s")) {
                     callback({o: ton, ex: exstr, dly: dailystr})
                   } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
+
+                    var uuk = keym+'_'+(monthOfDay[month-1]*2-1)+'_'+21;
+                    var addssk = 0;
+                    if(ud[uuk]){
+                      var addssk = ((ud[uuk] - thenexp) / 10000 * 7).toFixed(1);
+                      culist[culist.length] = {rd: monthOfDay[month-1]*2-1, exp: ud[uuk], sk: -1, eo: 0, es: addssk};
+                    }
                     var ret = year + '年' + month + '月\n';
-                    ret = ret + namelist[0] + '【'+lcu.sk+'】'+'\n';
+                    ret = ret + namelist[0] + '【'+lcu.sk+'(+'+addssk+')】'+'\n';
                     ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
                     generateImage(culist, ret, callback,month);
                   } else {
@@ -960,8 +987,16 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 if (cf.startsWith("s")) {
                   callback({o: ton, ex: exstr, dly: dailystr})
                 } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
+
+                  var uuk = keym+'_'+(monthOfDay[month-1]*2-1)+'_'+21;
+                  var addssk = 0;
+                  if(ud[uuk]){
+                    var addssk = ((ud[uuk] - thenexp) / 10000 * 7).toFixed(1);
+                    culist[culist.length] = {rd:monthOfDay[month-1]*2-1, exp: ud[uuk], sk: -1, eo: 0, es: addssk};
+                  }
+
                   var ret = year + '年' + month + '月\n';
-                  ret = ret + namelist[0] + '【'+lcu.sk+'】'+'\n';
+                  ret = ret + namelist[0] + '【'+lcu.sk+'(+'+addssk+')】'+'\n';
                   ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
                   generateImage(culist, ret, callback,month);
                 } else {
@@ -976,7 +1011,6 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     ret = ret + '\n'
                     ret = ret + rrr.ship + '\n';
                     culist[culist.length] = {rd: tno + 1, exp: rrr.exp, sk: -1, eo: 0, es: addsenka};
-                    console.log(ret);
                     generateImage(culist, ret.trim(), callback,month);
                   })
                 }
@@ -1037,6 +1071,10 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
           var lh = lnn.getHours();
           var lno = getDateNo(lnn);
           var kk = keym + '_' + lno + '_' + lh;
+          if(ca[0].endsWith("l")||ca[0].indexOf('m')==2){
+            kk = keym + '_' + (monthOfDay[month-1]*2-1) + '_' + 21;
+          }
+          console.log(k1,k2,kk)
 
           cl_senka_8.find({n:{'$in':namelist}}).toArray(function(err2,arr2){
             var emap = {};
@@ -1058,7 +1096,6 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               }else{
                 emap[arr2[i].n]=[arr2[i]]
               }
-
             }
             if(rankmap[989]==undefined){
               return;
@@ -1109,6 +1146,10 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   ed = parseInt(mklist[k].split('_')[2])*12+(parseInt(mklist[k].split('_')[3])%12);
                 }
               }
+              if(ca[0].endsWith("l")||ca[0].indexOf('m')==2){
+                ee=rke.d[kk];
+                ed =  parseInt(kk.split('_')[2])*12+(parseInt(kk.split('_')[3])%12);
+              }
               var dlye = 0;
               if(ed>fd){
                 dlye = (ee-fe)/(ed-fd)*168/10000
@@ -1117,8 +1158,12 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             }
             var rks = Object.keys(rankmap);
             rks.sort(function(a,b){
+
               return rankmap[b].rss-rankmap[a].rss
             })
+
+
+
 
             var m = {};
             var ret = '';
@@ -1147,6 +1192,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   return rankmap[b].dly-rankmap[a].dly
                 })
               }
+
 
               var rlist = [];
               for(var i=(pcd-1)*30;i<pcd*30;i++){
@@ -1216,7 +1262,7 @@ function loopFront(list,ret,callback,lst,pcd,odp){
     handleSenkaReply('s8-'+nm,'','',function(r){
       m.o=r.o;
       m.ex=r.ex;
-      m.dly=r.dly;
+      m.dly=m.dly.toFixed(1);
       handleSenkaReply('s8l-'+nm,'','',function(rl){
         m.lex=rl.ex;
         var nret = ret.concat([m]);
@@ -1358,7 +1404,7 @@ function generateImage(arr,str,callback,month){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8-Apate','','',function(r){console.log(r)})
+  handleSenkaReply('z8m2-1','','',function(r){console.log(r)})
   //timer();
 },1500)
 
