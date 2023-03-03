@@ -134,7 +134,7 @@ const { searchMabiRecipe } = require('./ai/mabinogi/recipe/searchRecipe')
 
 
 const { ergo } = require('./ai/mabinogi/ergo')
-const { mabiGacha } = require('./ai/mabinogi/gacha/index')
+const { mabiGacha, selectGachaGroup } = require('./ai/mabinogi/gacha/index')
 
 const { menu } = require('./ai/menu')
 const { ygo } = require('./ai/ygo/ygo')
@@ -979,10 +979,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.match(/^尔格\d{1,2}突破\d{1,5}手$/)) {
     ergo(from, content, callback)
   }
-  if(content == '洛奇来一发') {
-    mabiGacha(from, groupid, callback, 1)
-    return;
-  }
+	if(content.startsWith('洛奇蛋池')) {
+		selectGachaGroup(from, groupid, callback, content.substring(4).trim())
+		return;
+	}
+	if(content == '洛奇来一发') {
+		mabiGacha(from, groupid, callback, 1)
+		return;
+	}
   if(content == '洛奇来十连') {
     mabiGacha(from, groupid, callback, 11)
     return;
