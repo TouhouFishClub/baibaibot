@@ -15,6 +15,9 @@ let userGachaLimit = {}
 let gachaInfo = [
 
 ]
+let userSelectGacha = {
+
+}
 
 let client
 
@@ -53,14 +56,18 @@ const matchItemWeight = [
 	{regexp: new RegExp('PLUS辅助'), rare: 0.97},
 ]
 
+const checkWriteList = (user, groupId) => {
+	return user == 799018865 || groupWhiteList.has(groupId)
+}
+
 const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) => {
-	if(!(user == 799018865 || groupWhiteList.has(groupId))) {
+	if(!checkWriteList(user, groupId)) {
 		return
 	}
 	if(!gachaInfo.length) {
 		await loadGachaGroup()
 	}
-	let gacha = gachaInfo[0], isHunDan = false
+	let gacha = gachaInfo[userSelectGacha[user] || 0], isHunDan = false
 	if(gacha.rare['C'][2].length == 0 && gacha.rare['D'][2].length == 0) {
 		isHunDan = true
 	}
@@ -140,6 +147,25 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) =
 
 	// console.log(str)
 	drawTxtImage(`[CQ:at,qq=${user}]`, str, callback, {color: 'black', font: 'STXIHEI.TTF'})
+}
+
+const selectGachaGroup = async (user, groupId, callback, select) => {
+	if(!checkWriteList(user, groupId)) {
+		return
+	}
+	if(!gachaInfo.length) {
+		await loadGachaGroup()
+	}
+	if(select) {
+		if(select - 1 < gachaInfo.length) {
+			userSelectGacha[user] = select
+			callback(`选择成功`)
+		} else {
+			callback(`选择失败`)
+		}
+	} else {
+		callback(gachaInfo.map((x, i) => `${(userSelectGacha[user] && userSelectGacha[user] == i) ? '→': ' ' }洛奇蛋池${i} | ${x.name}`).join(`\n`))
+	}
 }
 
 const randomGacha = (gachaInfo, count) => {
@@ -358,5 +384,6 @@ const Test = async testCount => {
 module.exports = {
 	mabiGacha,
 	fetchData,
-	loadGachaGroup
+	loadGachaGroup,
+	selectGachaGroup
 }
