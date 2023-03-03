@@ -22,7 +22,7 @@ async function getai(content) {
 }
 
 async function getChatgptReplay(content,gid,qq,callback){
-  if((qq+"").startsWith("35747")){
+  if((qq+"").startsWith("35747") || (qq+"").startsWith("79901")){
     content = content.trim();
     var rd = await getai(content);
     var txt = rd.choices[0].text;
