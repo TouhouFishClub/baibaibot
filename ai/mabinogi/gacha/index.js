@@ -157,9 +157,9 @@ const selectGachaGroup = async (user, groupId, callback, select) => {
 		await loadGachaGroup()
 	}
 	if(select) {
-		if(select - 1 < gachaInfo.length) {
+		if(select < gachaInfo.length) {
 			userSelectGacha[user] = select
-			callback(`选择 ${gachaInfo[select - 1].name} 成功`)
+			callback(`选择 ${gachaInfo[select].name} 成功`)
 		} else {
 			callback(`选择失败`)
 		}
