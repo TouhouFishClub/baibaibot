@@ -164,7 +164,7 @@ const selectGachaGroup = async (user, groupId, callback, select) => {
 			callback(`选择失败`)
 		}
 	} else {
-		callback(gachaInfo.map((x, i) => `请选择蛋池\n洛奇蛋池${i} | ${x.name}${(userSelectGacha[user] && userSelectGacha[user] == i) ? '（√）': (i == 0 ? '（√）' : '') }`).join(`\n`))
+		callback(`请选择蛋池\n${gachaInfo.map((x, i) => `洛奇蛋池${i} | ${x.name}${(userSelectGacha[user] && userSelectGacha[user] == i) ? '（√）': (i == 0 ? '（√）' : '') }`).join(`\n`)}`)
 	}
 }
 
