@@ -20,7 +20,7 @@ var ex_wav = 0;
 
 
 function ysVoiceReply(content,gid,qq,callback){
-  if(!(qq+"").startsWith("35747") || !(qq+"").startsWith("79901")|| !(gid+"").startsWith("20570")) {
+  if(!(qq+"").startsWith("35747") && !(qq+"").startsWith("79901")&&!(gid+"").startsWith("20570")) {
     return;
   }
   content=content.substring(2);
