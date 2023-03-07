@@ -154,6 +154,7 @@ const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 const { BanUser, checkBanMap } = require('./ai/chat/banUser')
 
 const {getChatgptReplay} = require('./ai/chat/openai');
+const {ysVoiceReply} = require('./ai/voice/ysvoice')
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -917,6 +918,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.trim() === '摸鱼日历'){
     tapFish(callback)
     return
+  }
+  if(content.trim().startsWith("yv")){
+    ysVoiceReply(content,groupid,from,callback);
+    return;
   }
 
   if(content.trim() === '走私查询'){
