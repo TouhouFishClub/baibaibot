@@ -28,12 +28,16 @@ function ysVoiceReply(content,gid,qq,callback){
   content= content.replace(/ /g,'')
   content= content.replace(/\r/g,'。')
   content= content.replace(/\n/g,'。')
-  var ca = content.split(':');
-  if(ca.length!=2){
-    return;
+  var n=content.indexOf(':');
+  var ct='派蒙';
+  var txt='派蒙';
+  if(n==-1||n>5){
+    ct = Math.floor(Math.random()*genshinSpeakers.length);
+    txt = content;
+  }else{
+    ct = content.substring(0,n);
+    txt=content.substring(n+1);
   }
-  var ct = ca[0];
-  var txt = ca[1];
   let text = content.split("")
   const num = { "1": "一", "2": "二", "3": "三", "4": "四", "5": "五", "6": "六", "7": "七", "8": "八", "9": "九", "0": "零" }
   for (let i = 0; i < text.length; i++) {
