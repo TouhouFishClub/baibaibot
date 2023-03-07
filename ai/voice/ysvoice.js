@@ -20,7 +20,14 @@ var ex_wav = 0;
 
 
 function ysVoiceReply(content,gid,qq,callback){
+  if(!(qq+"").startsWith("35747") || !(qq+"").startsWith("79901")|| !(gid+"").startsWith("20570")) {
+    return;
+  }
   content=content.substring(2);
+  content= content.replace(/：/g,':')
+  content= content.replace(/ /g,'')
+  content= content.replace(/\r/g,'。')
+  content= content.replace(/\n/g,'。')
   var ca = content.split(':');
   if(ca.length!=2){
     return;
