@@ -20,6 +20,13 @@ var ex_wav = 0;
 
 
 function ysVoiceReply(content,gid,qq,callback){
+  content=content.substring(2);
+  var ca = content.split(':');
+  if(ca.length!=2){
+    return;
+  }
+  var ct = ca[0];
+  var txt = ca[1];
   let text = content.split("")
   const num = { "1": "一", "2": "二", "3": "三", "4": "四", "5": "五", "6": "六", "7": "七", "8": "八", "9": "九", "0": "零" }
   for (let i = 0; i < text.length; i++) {
@@ -28,24 +35,31 @@ function ysVoiceReply(content,gid,qq,callback){
   }
   content = text.join("")
 
-  var ct = '派蒙'
+  var characternum = -1;
   for (let i = 0; i < genshinSpeakers.length; i++) {
     if (ct == genshinSpeakers[i]) {
-      var characternum = i;
+      characternum = i;
       break;
     }
   }
   console.log("输出角色序号:"+characternum)
-
-
+  if(characternum==-1){
+    return;
+  }
+  var nowts = new Date().getTime();
   var py='run_new.py'
-  var cmdStr = 'python3.8 ../plugins/vits-yunzai-Plugin/vits/'+ py +' --character=' + characternum + ' --text=' + content;
+  var cmdStr = '../plugin/Python-3.8.16/python ../plugin/vits_yunzai_plugin/vits/'+ py +' --character=' + characternum + ' --text=' + txt +' --out=../coolq-data/cq/data/record/send/'+nowts+'.wav';
 
   exec(cmdStr, async function (error, stdout, stderr) {
     if (error) {
       console.log("生成失败", stderr);
     } else {
-
+      ret = '[CQ:record,file=send/'+nowts+'.wav]'
+      callback(ret)
     }
   })
+}
+
+module.exports={
+  ysVoiceReply
 }
