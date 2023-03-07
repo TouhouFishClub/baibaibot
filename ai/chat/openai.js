@@ -33,7 +33,7 @@ async function NNNgetChatgptReplay(content,gid,qq,callback){
 }
 
 function getChatgptReplay(content,gid,qq,callback){
-  if((qq+"").startsWith("35747") || (qq+"").startsWith("79901")) {
+  if((qq+"").startsWith("35747") || (qq+"").startsWith("79901")|| (gid+"").startsWith("20570")) {
     var url = 'https://api.openai.com/v1/chat/completions'
     var bd = {
       "model": "gpt-3.5-turbo",
