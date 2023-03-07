@@ -32,7 +32,7 @@ function ysVoiceReply(content,gid,qq,callback){
   var ct='派蒙';
   var txt='派蒙';
   if(n==-1||n>5){
-    ct = Math.floor(Math.random()*genshinSpeakers.length);
+    ct = genshinSpeakers[Math.floor(Math.random()*genshinSpeakers.length)];
     txt = content;
   }else{
     ct = content.substring(0,n);
