@@ -38,13 +38,13 @@ function ysVoiceReply(content,gid,qq,callback){
     ct = content.substring(0,n);
     txt=content.substring(n+1);
   }
-  let text = content.split("")
+  let text = txt.split("")
   const num = { "1": "一", "2": "二", "3": "三", "4": "四", "5": "五", "6": "六", "7": "七", "8": "八", "9": "九", "0": "零" }
   for (let i = 0; i < text.length; i++) {
     if ((/\d/g).test(text[i]))
       text[i] = num[text[i]]
   }
-  content = text.join("")
+  txt = text.join("")
 
   var characternum = -1;
   for (let i = 0; i < genshinSpeakers.length; i++) {
