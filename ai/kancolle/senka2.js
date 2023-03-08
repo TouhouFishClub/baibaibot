@@ -901,7 +901,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               edt = Math.floor((lcu.rd + 1) / 2);
               exstr = '【' + allex + '】【' + fdt + '~' + edt + '日】';
               if (cf.startsWith("s")) {
-                callback({o: ton, ex: exstr, dly: dailystr})
+                callback({o: ton, ex: exstr, dly: dailystr,lask:lasenka})
               } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
 
                 var uuk = keym+'_'+(monthOfDay[month-1]*2-1)+'_'+21;
@@ -953,7 +953,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   edt = Math.floor((lcu.rd + 1) / 2);
                   exstr = '【' + allex + '】【' + fdt + '~' + edt + '日】';
                   if (cf.startsWith("s")) {
-                    callback({o: ton, ex: exstr, dly: dailystr})
+                    callback({o: ton, ex: exstr, dly: dailystr,lask:lasenka})
                   } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
 
                     var uuk = keym+'_'+(monthOfDay[month-1]*2-1)+'_'+21;
@@ -985,7 +985,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 },userid)
               }else{
                 if (cf.startsWith("s")) {
-                  callback({o: ton, ex: exstr, dly: dailystr})
+                  callback({o: ton, ex: exstr, dly: dailystr,lask:lasenka})
                 } else if (ca[0].endsWith("l")||ca[0].indexOf('m')==2) {
 
                   var uuk = keym+'_'+(monthOfDay[month-1]*2-1)+'_'+21;
@@ -1019,7 +1019,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
           })
         }else{
           if(cf.startsWith("s")){
-            callback({o: 0, ex: 0, dly: 0})
+            callback({o: 0, ex: 0, dly: 0,lask:0})
           }else{
             var ret = '请选择\n';
             for(var i=0;i<namelist.length;i++){
@@ -1226,7 +1226,7 @@ function loopFront(list,ret,callback,lst,pcd,odp){
     var rr = '';
     var img1 = new imageMagick("static/blank.png");
     img1.autoOrient()
-      .resize(1200,1050,'!')
+      .resize(1300,1050,'!')
       .fontSize(20)
       .fill('blue')
       .font('./font/STXIHEI.TTF')
@@ -1241,7 +1241,8 @@ function loopFront(list,ret,callback,lst,pcd,odp){
     img1.drawText(600, 0, '榜单战果', 'NorthWest')
     img1.drawText(700, 0, 'EX', 'NorthWest')
     img1.drawText(900, 0, '日均', 'NorthWest')
-    img1.drawText(1000, 0, '上月EX', 'NorthWest')
+    img1.drawText(1000, 0, '继承', 'NorthWest')
+    img1.drawText(1100, 0, '上月EX', 'NorthWest')
     for(var i=0;i<ret.length;i++){
       var rd=ret[i];
       img1.drawText(50, 50+i*30, (pcd*30+i-29)+'位', 'NorthWest')
@@ -1251,7 +1252,8 @@ function loopFront(list,ret,callback,lst,pcd,odp){
       img1.drawText(600, 50+i*30, rd.dd, 'NorthWest')
       img1.drawText(700, 50+i*30, rd.ex, 'NorthWest')
       img1.drawText(900, 50+i*30, rd.dly, 'NorthWest')
-      img1.drawText(1000, 50+i*30, rd.lex, 'NorthWest')
+      img1.drawText(1000, 50+i*30, rd.lask, 'NorthWest')
+      img1.drawText(1100, 50+i*30, rd.lex, 'NorthWest')
     }
     img1.drawText(50, 80+ret.length*30, '统计时间：'+new Date(lst).toLocaleString(), 'NorthWest')
     sendGmImage(img1,'',callback);
@@ -1263,6 +1265,7 @@ function loopFront(list,ret,callback,lst,pcd,odp){
       m.o=r.o;
       m.ex=r.ex;
       m.dly=m.dly.toFixed(1);
+      m.lask=r.lask;
       handleSenkaReply('s8l-'+nm,'','',function(rl){
         m.lex=rl.ex;
         var nret = ret.concat([m]);
@@ -1404,7 +1407,7 @@ function generateImage(arr,str,callback,month){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  handleSenkaReply('z8m2-1','','',function(r){console.log(r)})
+  handleSenkaReply('z8-1s','','',function(r){console.log(r)})
   //timer();
 },1500)
 
