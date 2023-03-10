@@ -233,7 +233,7 @@ function itemMarket(itemid,itemname,callback,cookie){
                 s: cells[1].textContent.trim(),
                 p: cells[5].textContent.trim(),
                 n: cells[6].textContent.trim(),
-                m: cells[9].textContent.trim()
+                m: cells[8].textContent.trim()
               };
               if(c==1){
                 pricelist.push(item)
