@@ -240,12 +240,12 @@ function itemMarket(itemid,itemname,callback,cookie){
                 pricelist.push(item)
               }
 
-              if(c==2){
+              if(c==3){
                 var item = {
                   s: cells[1].textContent.trim(),
-                  p: cells[5].textContent.trim(),
-                  n: cells[6].textContent.trim(),
-                  m: cells[9].textContent.trim()
+                  p: cells[4].textContent.trim(),
+                  n: cells[5].textContent.trim(),
+                  t: cells[8].textContent.trim()
                 };
                 his.push(item)
               }
