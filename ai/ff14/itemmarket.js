@@ -222,7 +222,7 @@ function itemMarket(itemid,itemname,callback,cookie){
           const dom = new JSDOM(body);
           const tables = dom.window.document.querySelectorAll('div.product_table table');
           var pricelist = [];
-          const data = [];
+          var his = [];
           var c=0
           tables.forEach(table => {
             c++;
@@ -235,11 +235,20 @@ function itemMarket(itemid,itemname,callback,cookie){
                   s: cells[1].textContent.trim(),
                   p: cells[5].textContent.trim(),
                   n: cells[6].textContent.trim(),
-                  m: cells[8].textContent.trim()
+                  m: cells[9].textContent.trim()
                 };
                 pricelist.push(item)
               }
-              data.push(item);
+
+              if(c==2){
+                var item = {
+                  s: cells[1].textContent.trim(),
+                  p: cells[5].textContent.trim(),
+                  n: cells[6].textContent.trim(),
+                  m: cells[9].textContent.trim()
+                };
+                his.push(item)
+              }
             }
           });
 
