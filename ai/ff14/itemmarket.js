@@ -253,7 +253,7 @@ function itemMarket(itemid,itemname,callback,cookie){
           });
 
 
-          renderImage(itemname, [], pricelist, [], [], [] ,false, function(r){callback(itemname+"\n"+r)})
+          renderImage(itemname, [], pricelist, his, [], [] ,false, function(r){callback(itemname+"\n"+r)})
           return
         }
     })
