@@ -7,7 +7,7 @@ const fs = require('fs'),
   path = require('path'),
 //  {createCanvas, loadImage} = require('canvas'),
   { sendImageMsgBuffer } = require('../../cq/sendImage')
-
+const { JSDOM } = require('jsdom');
 const GLOBAL_MARGIN = 20
 const TABLE_WIDTH = [100, 100, 50, 150]
 const TABLE_HEIGHT = 30
