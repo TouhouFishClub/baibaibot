@@ -225,8 +225,11 @@ function itemMarket(itemid,itemname,callback,cookie){
           var his = [];
           var c=0
           var hisc = 2;
-          if(body.indexOf('<h2>Cheapest NQ</h2>')>0){
-            hisc=3;
+          if(body.indexOf('该物品没有HQ版本')>0){
+            hisc=2;
+          }
+          if(body.indexOf('Item has no HQ variant')>0){
+            hisc=2;
           }
           tables.forEach(table => {
             c++;
@@ -243,7 +246,6 @@ function itemMarket(itemid,itemname,callback,cookie){
                 };
                 pricelist.push(item)
               }
-              console.log('hisc:'+hisc)
               if(c==hisc){
                 var item = {
                   s: cells[1].textContent.trim(),
