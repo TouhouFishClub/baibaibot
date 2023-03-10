@@ -219,7 +219,7 @@ function itemMarket(itemid,itemname,callback,cookie){
         }else{
 
 
-          const dom = new JSDOM(html);
+          const dom = new JSDOM(body);
           const tables = dom.window.document.querySelectorAll('div.product_table table');
           var pricelist = [];
           const data = [];
