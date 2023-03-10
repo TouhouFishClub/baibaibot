@@ -244,6 +244,9 @@ function itemMarket(itemid,itemname,callback,cookie){
                   n: cells[6].textContent.trim(),
                   m: cells[9].textContent.trim()
                 };
+                if(pricelist.length>12){
+                  break;
+                }
                 pricelist.push(item)
               }
               if(c==hisc){
@@ -253,6 +256,9 @@ function itemMarket(itemid,itemname,callback,cookie){
                   n: cells[5].textContent.trim(),
                   t: cells[9].textContent.trim()
                 };
+                if(his.length>12){
+                  break;
+                }
                 his.push(item)
               }
             }
