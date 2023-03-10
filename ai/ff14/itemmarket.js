@@ -243,7 +243,7 @@ function itemMarket(itemid,itemname,callback,cookie){
                 };
                 pricelist.push(item)
               }
-
+              console.log('hisc:'+hisc)
               if(c==hisc){
                 var item = {
                   s: cells[1].textContent.trim(),
