@@ -1,12 +1,11 @@
 var request=require('request');
-const phantom = require('phantom');
 const {baiduocr} = require('../image/baiduocr');
 var gm = require('gm')
 var imageMagick = gm.subClass({ imageMagick : true });
 var {sendGmImage} = require('../../cq/sendImage');
 const fs = require('fs'),
   path = require('path'),
-  {createCanvas, loadImage} = require('canvas'),
+//  {createCanvas, loadImage} = require('canvas'),
   { sendImageMsgBuffer } = require('../../cq/sendImage')
 
 const GLOBAL_MARGIN = 20
@@ -197,11 +196,11 @@ function searchID(str,callback,cookie){
     });
 }
 
-
+itemMarket(27874,'mmm',function(){},cookiecat);
 
 function itemMarket(itemid,itemname,callback,cookie){
   if(!itemid){
-    itemid=29495;
+    itemid=27874;
   }
   var url = 'https://universalis.app/market/'+itemid;
     request({
@@ -218,223 +217,34 @@ function itemMarket(itemid,itemname,callback,cookie){
             console.log('pipe error catched!')
             console.log(error);
         }else{
-          var x1 = body.indexOf('<title>');
-          var y1 = body.substring(x1+1);
-          var x2 = y1.indexOf('>');
-          var y2 = y1.substring(x2+1);
-          var x3 = y2.indexOf(' ');
-          itemname = y2.substring(0,x3).trim();
 
-          var m1 = body.indexOf('class="market_update_times"');
-          var f1 = body.substring(m1+1);
-          var m2 = f1.indexOf('<h4>');
-          var updatelist = [];
-          for(var i=0;i<10;i++){
-            if(m2>100||m2==-1){
-              break;
-            }else{
-              var f2 = f1.substring(m2+4);
-              //console.log(f2.substring(0,200)+"\n\n111\n\n");
-              var m3 = f2.indexOf('<');
-              var server = f2.substring(0,m3);
-              var f3 = f2.substring(m3+1);
-              var m4 = f3.indexOf('<div>');
-              var f4 = f3.substring(m4+5);
-              var m5 = f4.indexOf('<');
-              var updatetime = f4.substring(0,m5);
-              f1 = f4.substring(m5+1);
-              m2 = f1.indexOf('<h4>');
-              updatelist.push({s:server,t:updatetime});
-            }
-          }
-          var nq=false;
+
+          const dom = new JSDOM(html);
+          const tables = dom.window.document.querySelectorAll('div.product_table table');
           var pricelist = [];
-          var pricelistnq = [];
-
-
-          var n1 = body.indexOf('<td class="price-num tac');
-          var s1 = body.substring(n1+1);
-          var ne = s1.indexOf('</table>');
-          var sq = s1.substring(ne+1);
-          var s2 = s1.substring(0,ne);
-          var s3 = s2;
-          var n0 = s3.indexOf('</tr>');
-
-          while(n0>0){
-            var s4 = s3.substring(0,n0);
-            var n5 = s4.indexOf('class="price-server"');
-            var s5 = s4.substring(n5+1);
-            var n6 = s5.indexOf('<strong>');
-            var s6 = s5.substring(n6+1);
-            var n7 = s6.indexOf('<');
-            var server = s6.substring(7,n7);
-            var s7 = s6.substring(n7+1);
-            var n8 = s7.indexOf('class="price-current"');
-            var s8 = s7.substring(n8+1);
-            var n9 = s8.indexOf('data-sort-value="');
-            var s9 = s8.substring(n9+17);
-            var n10 = s9.indexOf('"');
-            var price = s9.substring(0,n10);
-            var s10 = s9.substring(n10+1);
-            var n11 = s10.indexOf('class="price-qty"');
-            var s11 = s10.substring(n11+1);
-            var n12 = s11.indexOf('data-sort-value="');
-            var s12 = s11.substring(n12+17);
-            var n13 = s12.indexOf('"');
-            var num = s12.substring(0,n13);
-            var s13 = s12.substring(n13+1);
-            var n14 = s13.indexOf('class="price-retainer">');
-            var s14 = s13.substring(n14+23);
-            var n15 = s14.indexOf('<');
-            var name = s14.substring(0,n15).trim();
-            pricelist.push({s:server,p:price,n:num,m:name});
-            s3 = s3.substring(n0+1);
-            n0 = s3.indexOf('</tr>')
-          }
-
-          var m1 = sq.indexOf('<h6>NQ 价格');
-          if(m1>0){
-              nq = true;
-              var n1 = sq.indexOf('<td class="price-num tac');
-              var s1 = sq.substring(n1+1);
-              var ne = s1.indexOf('</table>');
-              var s2 = s1.substring(0,ne);
-              var s3 = s2;
-              var n0 = s3.indexOf('</tr>');
-
-              while(n0>0){
-                  var s4 = s3.substring(0,n0);
-                  var n5 = s4.indexOf('class="price-server"');
-                  var s5 = s4.substring(n5+1);
-                  var n6 = s5.indexOf('<strong>');
-                  var s6 = s5.substring(n6+1);
-                  var n7 = s6.indexOf('<');
-                  var server = s6.substring(7,n7);
-                  var s7 = s6.substring(n7+1);
-                  var n8 = s7.indexOf('class="price-current"');
-                  var s8 = s7.substring(n8+1);
-                  var n9 = s8.indexOf('data-sort-value="');
-                  var s9 = s8.substring(n9+17);
-                  var n10 = s9.indexOf('"');
-                  var price = s9.substring(0,n10);
-                  var s10 = s9.substring(n10+1);
-                  var n11 = s10.indexOf('class="price-qty"');
-                  var s11 = s10.substring(n11+1);
-                  var n12 = s11.indexOf('data-sort-value="');
-                  var s12 = s11.substring(n12+17);
-                  var n13 = s12.indexOf('"');
-                  var num = s12.substring(0,n13);
-                  var s13 = s12.substring(n13+1);
-                  var n14 = s13.indexOf('class="price-retainer">');
-                  var s14 = s13.substring(n14+23);
-                  var n15 = s14.indexOf('<');
-                  var name = s14.substring(0,n15).trim();
-                  pricelistnq.push({s:server,p:price,n:num,m:name,q:"NQ"});
-                  s3 = s3.substring(n0+1);
-                  n0 = s3.indexOf('</tr>')
+          const data = [];
+          var c=0
+          tables.forEach(table => {
+            c++;
+            const rows = table.querySelectorAll('tr');
+            for (let i = 1; i < rows.length; i++) {
+              const cells = rows[i].querySelectorAll('td');
+              const item = {
+                s: cells[1].textContent.trim(),
+                p: cells[5].textContent.trim(),
+                n: cells[6].textContent.trim(),
+                m: cells[9].textContent.trim()
+              };
+              if(c==1){
+                pricelist.push(item)
               }
-          }
-
-
-
-
-          var ss1 = s1.substring(ne);
-          var nn1 = ss1.indexOf('交易记录');
-          var ss2 = ss1.substring(nn1+1);
-          var nn22 = ss2.indexOf('<tbody>');
-          var ss22 = ss2.substring(nn22+1);
-          var nne = ss22.indexOf('</table>');
-          var ssq = ss22.substring(nne+1);
-          var ss3 = ss22.substring(0,nne);
-          var nn0 = ss3.indexOf('</tr>');
-          var his = [];
-          var hisnq = [];
-
-
-        while(nn0>0){
-            var s4 = ss3.substring(0,nn0);
-            var n5 = s4.indexOf('class="price-server"');
-            var s5 = s4.substring(n5+1);
-            var n6 = s5.indexOf('<strong>');
-            var s6 = s5.substring(n6+1);
-            var n7 = s6.indexOf('<');
-            var server = s6.substring(7,n7);
-            var s7 = s6.substring(n7+1);
-            var n8 = s7.indexOf('class="price-current"');
-            var s8 = s7.substring(n8+1);
-            var n9 = s8.indexOf('data-sort-value="');
-            var s9 = s8.substring(n9+17);
-            var n10 = s9.indexOf('"');
-            var price = s9.substring(0,n10);
-            var s10 = s9.substring(n10+1);
-            var n11 = s10.indexOf('class="price-qty"');
-            var s11 = s10.substring(n11+1);
-            var n12 = s11.indexOf('data-sort-value="');
-            var s12 = s11.substring(n12+17);
-            var n13 = s12.indexOf('"');
-            var num = s12.substring(0,n13);
-            var s13 = s12.substring(n13+1);
-            var n14 = s13.indexOf('class="price-date"');
-            var s14 = s13.substring(n14+17);
-            var n15 = s14.indexOf('>');
-            var s15 = s14.substring(n15+1);
-            var n16 = s15.indexOf('<')
-            var time = s15.substring(0,n16).trim();
-            his.push({s:server,p:price,n:num,t:time});
-            ss3 = ss3.substring(nn0+1);
-            nn0 = ss3.indexOf('</tr>')
-        }
-
-            console.log("nq:"+nq)
-        if(nq){
-
-            var nn22 = ssq.indexOf('<tbody>');
-            var ss22 = ssq.substring(nn22+1);
-            var nne = ss22.indexOf('</table>');
-            var ss3 = ss22.substring(0,nne);
-            var nn0 = ss3.indexOf('</tr>');
-            while(nn0>0){
-                var s4 = ss3.substring(0,nn0);
-                var n5 = s4.indexOf('class="price-server"');
-                var s5 = s4.substring(n5+1);
-                var n6 = s5.indexOf('<strong>');
-                var s6 = s5.substring(n6+1);
-                var n7 = s6.indexOf('<');
-                var server = s6.substring(7,n7);
-                var s7 = s6.substring(n7+1);
-                var n8 = s7.indexOf('class="price-current"');
-                var s8 = s7.substring(n8+1);
-                var n9 = s8.indexOf('data-sort-value="');
-                var s9 = s8.substring(n9+17);
-                var n10 = s9.indexOf('"');
-                var price = s9.substring(0,n10);
-                var s10 = s9.substring(n10+1);
-                var n11 = s10.indexOf('class="price-qty"');
-                var s11 = s10.substring(n11+1);
-                var n12 = s11.indexOf('data-sort-value="');
-                var s12 = s11.substring(n12+17);
-                var n13 = s12.indexOf('"');
-                var num = s12.substring(0,n13);
-                var s13 = s12.substring(n13+1);
-                var n14 = s13.indexOf('class="price-date"');
-                var s14 = s13.substring(n14+17);
-                var n15 = s14.indexOf('>');
-                var s15 = s14.substring(n15+1);
-                var n16 = s15.indexOf('<')
-                var time = s15.substring(0,n16).trim();
-                hisnq.push({s:server,p:price,n:num,t:time,q:"NQ"});
-                ss3 = ss3.substring(nn0+1);
-                nn0 = ss3.indexOf('</tr>')
+              data.push(item);
             }
-        }
+          });
 
 
-
-          renderImage(itemname, updatelist, pricelist, his, pricelistnq, hisnq, nq, function(r){callback(itemname+"\n"+r)})
+          renderImage(itemname, [], pricelist, [], [], [] ,false, function(r){callback(itemname+"\n"+r)})
           return
-            drawMarketImage(updatelist,pricelist,his,itemname,callback,pricelistnq,hisnq,nq);
-
-
         }
     })
 }
