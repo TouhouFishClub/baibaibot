@@ -224,6 +224,10 @@ function itemMarket(itemid,itemname,callback,cookie){
           var pricelist = [];
           var his = [];
           var c=0
+          var hisc = 2;
+          if(body.indexOf('<h2>Cheapest NQ</h2>')>0){
+            hisc=3;
+          }
           tables.forEach(table => {
             c++;
             const rows = table.querySelectorAll('tr');
@@ -240,7 +244,7 @@ function itemMarket(itemid,itemname,callback,cookie){
                 pricelist.push(item)
               }
 
-              if(c==3){
+              if(c==hisc){
                 var item = {
                   s: cells[1].textContent.trim(),
                   p: cells[4].textContent.trim(),
