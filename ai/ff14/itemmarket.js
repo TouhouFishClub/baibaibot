@@ -229,13 +229,14 @@ function itemMarket(itemid,itemname,callback,cookie){
             const rows = table.querySelectorAll('tr');
             for (let i = 1; i < rows.length; i++) {
               const cells = rows[i].querySelectorAll('td');
-              const item = {
-                s: cells[1].textContent.trim(),
-                p: cells[5].textContent.trim(),
-                n: cells[6].textContent.trim(),
-                m: cells[8].textContent.trim()
-              };
+
               if(c==1){
+                var item = {
+                  s: cells[1].textContent.trim(),
+                  p: cells[5].textContent.trim(),
+                  n: cells[6].textContent.trim(),
+                  m: cells[8].textContent.trim()
+                };
                 pricelist.push(item)
               }
               data.push(item);
