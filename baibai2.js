@@ -1179,12 +1179,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		renderGroupCount(port, groupid, callback)
 		return
   }
-  if(con == '抽一个群友') {
-		randomGroupUser(port, groupid, callback)
+  if(con.startsWith('抽一个群友')) {
+		randomGroupUser(con.substring(5).trim(), port, groupid, callback)
 		return
   }
-  if(con == '抽一个群友点草') {
-		randomGroupUser(port, groupid, callback, true)
+  if(con.startsWith('点草一个群友')) {
+		randomGroupUser(con.substring(6).trim(), port, groupid, callback, true)
 		return
   }
   if(con.startsWith('gcs')) {

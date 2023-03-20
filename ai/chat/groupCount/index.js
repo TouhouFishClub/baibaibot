@@ -200,13 +200,14 @@ const renderGroupCount = async (port, groupId, callback, type = 'img') => {
 	}
 }
 
-const randomGroupUser = async (port, groupId, callback, at = false) => {
+const randomGroupUser = async (content, port, groupId, callback, at = false) => {
 	let users = await fetchGroupUsers(groupId, port)
 	let target = users[~~(Math.random() * users.length)]
+	content = content.replace(/我/g, '你')
 	if(at) {
-		callback(`你抽到了 [CQ:at,qq=${target.uid}]`)
+		callback(`你抽到了 [CQ:at,qq=${target.uid}]${content}`)
 	} else {
-		callback(`你抽到了 ${target.nid}`)
+		callback(`你抽到了 ${target.nid}${content}`)
 	}
 }
 
