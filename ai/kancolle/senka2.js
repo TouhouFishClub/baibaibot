@@ -1252,7 +1252,7 @@ function loopFront(list,ret,callback,lst,pcd,odp){
       img1.drawText(600, 50+i*30, rd.dd, 'NorthWest')
       img1.drawText(700, 50+i*30, rd.ex, 'NorthWest')
       img1.drawText(900, 50+i*30, rd.dly, 'NorthWest')
-      img1.drawText(1000, 50+i*30, rd.lask, 'NorthWest')
+      img1.drawText(1000, 50+i*30, Math.round(rd.lask), 'NorthWest')
       img1.drawText(1100, 50+i*30, rd.lex, 'NorthWest')
     }
     img1.drawText(50, 80+ret.length*30, '统计时间：'+new Date(lst).toLocaleString(), 'NorthWest')
