@@ -294,7 +294,7 @@ function getRank(page,retarr,proxy){
         req.proxy = 'http://192.168.17.236:2346'
       }else if(proxy==5){
         req.proxy = 'http://192.168.17.241:2346'
-      }else if(proxy>=6){
+      }else if(proxy>=7){
         return;
       }else{
           
@@ -1098,6 +1098,11 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               }
             }
             if(rankmap[989]==undefined){
+              if((new Date().getHours()==2||new Date().getHours()==14)&&nn.getMinutes()<8){
+
+              }else{
+                getRank(1,[]);
+              }
               return;
             }
 
