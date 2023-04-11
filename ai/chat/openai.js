@@ -132,13 +132,14 @@ function getBaibaiReplay(content,gid,qq,callback){
         console.log(error);
       } else {
         var data = eval('(' + resbody + ')');
-        console.log(data.choices[0])
-        var txt = data.choices[0].message.content;
-        var ret = txt;
-        sm.push({"role": "user", "content": content,ts:now})
-        sm.push({"role": "assistant", "content": txt,ts:now})
-        save[gid]=sm
-        callback(ret);
+        if(data.choices&&data.choices[0]){
+          var txt = data.choices[0].message.content;
+          var ret = txt;
+          sm.push({"role": "user", "content": content,ts:now})
+          sm.push({"role": "assistant", "content": txt,ts:now})
+          save[gid]=sm
+          callback(ret);
+        }
       }
     });
   }
