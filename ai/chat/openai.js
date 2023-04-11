@@ -87,6 +87,7 @@ function getBaibaiReplay(content,gid,qq,callback){
       content = "/cmd "+content;
     }
     if(sm==undefined){
+      sm=[]
       pm = tmp.concat([{"role": "user", "content": content}])
     }else{
       var wc = 0;
@@ -134,6 +135,7 @@ function getBaibaiReplay(content,gid,qq,callback){
         var ret = txt;
         sm.push({"role": "user", "content": content,ts:now})
         sm.push({"role": "assistant", "content": txt,ts:now})
+        save[gid]=sm
         callback(ret);
       }
     });
