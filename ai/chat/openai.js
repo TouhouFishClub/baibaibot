@@ -130,6 +130,7 @@ function getBaibaiReplay(content,gid,qq,callback){
         console.log(error);
       } else {
         var data = eval('(' + resbody + ')');
+        console.log(data);
         console.log(data.choices[0])
         var txt = data.choices[0].message.content;
         var ret = txt;
