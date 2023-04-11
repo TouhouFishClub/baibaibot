@@ -1412,7 +1412,7 @@ function generateImage(arr,str,callback,month){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  handleSenkaReply('z8-1s','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-1s','','',function(r){console.log(r)})
   //timer();
 },1500)
 
