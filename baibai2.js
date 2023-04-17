@@ -153,7 +153,7 @@ const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 
 const { BanUser, checkBanMap } = require('./ai/chat/banUser')
 
-const {getChatgptReplay,getBaibaiReplay} = require('./ai/chat/openai');
+const {handleCustomChatgptReplay,getChatgptReplay,getBaibaiReplay} = require('./ai/chat/openai');
 const {ysVoiceReply} = require('./ai/voice/ysvoice')
 
 let globalConfig = {
@@ -789,6 +789,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.startsWith('c ')){
     content=content.substring(1).trim();
     getChatgptReplay(content,groupid,from,callback);
+    return;
+  }
+  if(content.startsWith('s ')){
+    content=content.trim();
+    handleCustomChatgptReplay(content,groupid,from,callback);
     return;
   }
   if(content.startsWith('百百 ')){

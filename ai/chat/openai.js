@@ -194,10 +194,34 @@ function loadsv(qq){
   return arr;
 }
 
-function handleCustomChatgptReplay(content,gid,qq,callback){
-  if(content.startsWith("s")){
-    content=content.substring(1).trim();
+function showsvReply(content,gid,qq,callback){
+  var r = '';
+  var sd = sv[qq];
+  for(var p in sd){
+    r = r + p + ':' + sd[p] + '\n';
   }
+  callback(r.trim());
+}
+
+function handleCustomChatgptReplay(content,gid,qq,callback){
+  if(content=="s"){
+    var r = '查看配置：s1\n';
+    r = r + '添加名字：s name:名字\n';
+    r = r + '添加用户引导：s u序号:对话\n';
+    r = r + '添加机器引导：s a序号:对话\n';
+    r = r + '删除引导：s a/u序号:\n';
+    callback(r);
+    return;
+  }
+  if(content=="s1"){
+    showsvReply(content,gid,qq,callback)
+    return;
+  }
+
+  if(content.startsWith("s")) {
+    content = content.substring(1).trim();
+  }
+
   var ca = content.split(':');
   if(ca.length==2){
     savesv(content,gid,qq,callback)
@@ -209,7 +233,7 @@ function handleCustomChatgptReplay(content,gid,qq,callback){
     var bd = {
       "model": "gpt-3.5-turbo",
       "messages": arr
-    }
+    };
     request({
       url: url,
       method: "POST",
@@ -232,6 +256,7 @@ function handleCustomChatgptReplay(content,gid,qq,callback){
         callback(ret);
       }
     });
+
 }
 
 
