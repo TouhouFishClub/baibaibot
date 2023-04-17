@@ -194,7 +194,7 @@ function loadsv(qq){
     var uk = 'u'+i;
     var ak = 'a'+i;
     if(sd[uk]){
-      var xx = {"role":"user","content":"/CMD" + sd[uk]}
+      var xx = {"role":"user","content":"/CMD " + sd[uk]}
       arr.push(xx);
     }else if(sd[ak]){
       var xx = {"role":"assistant","content":sd[ak]}
