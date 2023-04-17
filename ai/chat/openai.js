@@ -173,6 +173,9 @@ function savesv(content,gid,qq,callback){
 
 function loadsv(qq){
   var sd = sv[qq];
+  if(!sd){
+    sd={}
+  }
   var arr = [];
   var n = sd.name;
   arr.push(xx1);
@@ -197,6 +200,10 @@ function loadsv(qq){
 function showsvReply(content,gid,qq,callback){
   var r = '';
   var sd = sv[qq];
+  var sd = sv[qq];
+  if(!sd){
+    sd={}
+  }
   for(var p in sd){
     r = r + p + ':' + sd[p] + '\n';
   }
