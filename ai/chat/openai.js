@@ -169,6 +169,7 @@ function savesv(content,gid,qq,callback){
   }else{
     sv[qq][k] = v;
   }
+  showsvReply(content,gid,qq,callback)
 }
 
 function loadsv(qq){
@@ -198,7 +199,7 @@ function loadsv(qq){
 }
 
 function showsvReply(content,gid,qq,callback){
-  var r = '';
+  var r = '当前配置：\n';
   var sd = sv[qq];
   var sd = sv[qq];
   if(!sd){
