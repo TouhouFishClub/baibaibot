@@ -161,7 +161,7 @@ function savesv(content,gid,qq,callback){
     k = ca[0].trim();
     v = ca[1].trim();
   }
-  if(sv[qq]){
+  if(!sv[qq]){
     sv[qq]={}
   }
   if(v==0){
@@ -211,6 +211,7 @@ function showsvReply(content,gid,qq,callback){
 }
 
 function handleCustomChatgptReplay(content,gid,qq,callback){
+  content = content.replace(/：/g,':');
   if(content=="s"){
     var r = '查看配置：s1\n';
     r = r + '添加名字：s name:名字\n';
