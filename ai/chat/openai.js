@@ -242,6 +242,11 @@ function handleCustomChatgptReplay(content,gid,qq,callback){
     showsvReply(content,gid,357474405,callback)
     return;
   }
+  if(content=="s3"){
+    sn[qq]=[]
+    callback('已删除聊天记录')
+    return;
+  }
 
   if(content.startsWith("s")) {
     content = content.substring(1).trim();
