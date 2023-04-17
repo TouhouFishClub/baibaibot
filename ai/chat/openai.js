@@ -263,6 +263,7 @@ function handleCustomChatgptReplay(content,gid,qq,callback){
       }
     }
   }else{
+    sc = [];
     sn[qq]=[]
   }
 
@@ -293,6 +294,7 @@ function handleCustomChatgptReplay(content,gid,qq,callback){
         var ret = txt;
         sc.push({"role":"user","content":content})
         sc.push({"role":"assistant","content":txt})
+        sn[qq]=sc;
         callback(ret);
       }
     });
