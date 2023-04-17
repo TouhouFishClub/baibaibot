@@ -274,7 +274,7 @@ function handleCustomChatgptReplay(content,gid,qq,callback){
     sn[qq]=[]
   }
 
-  arr.push({"role":"user","content":"/CMD" + content});
+  arr.push({"role":"user","content":"/CMD " + content});
   console.log(arr);
     var url = 'https://api.openai.com/v1/chat/completions'
     var bd = {
