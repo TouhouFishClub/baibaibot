@@ -791,7 +791,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     getChatgptReplay(content,groupid,from,callback);
     return;
   }
-  if(content.startsWith('s ')){
+  if(content.startsWith('s')){
     content=content.trim();
     handleCustomChatgptReplay(content,groupid,from,callback);
     return;
