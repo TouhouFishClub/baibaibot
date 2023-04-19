@@ -4,6 +4,10 @@ var request = require('request')
 //const OpenAI = require('openai-api');
 //const openai = new OpenAI(OPENAI_API_KEY);
 
+let groupLimit = {
+
+}
+
 async function getai(content) {
   const gptResponse = await openai.complete({
     engine: 'text-davinci-003',
@@ -78,6 +82,27 @@ var save = {}
 
 
 function getBaibaiReplay(content,gid,qq,callback){
+	if(groupLimit[gid]) {
+		groupLimit[gid] = {
+			count: groupLimit[gid].count + 1,
+			expire: groupLimit[gid].expire
+		}
+	} else {
+		groupLimit[gid] = {
+			count: 1,
+			expire: Date.now() + 10 * 60 * 10000
+		}
+	}
+	if(groupLimit[gid].count > 10) {
+		if(groupLimit[gid].expire > Date.now()) {
+			return
+		} else {
+			groupLimit[gid] = {
+				count: 1,
+				expire: Date.now() + 10 * 60 * 10000
+			}
+		}
+	}
   var now = new Date().getTime();
   if(content.startsWith("百百 ")) {
     content=content.substring(3).trim();
