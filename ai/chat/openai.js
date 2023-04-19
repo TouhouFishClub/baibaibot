@@ -82,26 +82,13 @@ var save = {}
 
 
 function getBaibaiReplay(content,gid,qq,callback){
-	if(groupLimit[gid]) {
-		groupLimit[gid] = {
-			count: groupLimit[gid].count + 1,
-			expire: groupLimit[gid].expire
-		}
-	} else {
-		groupLimit[gid] = {
-			count: 1,
-			expire: Date.now() + 10 * 60 * 10000
-		}
+	if(groupLimit[gid] && groupLimit[gid].length > 10) {
+		return
 	}
-	if(groupLimit[gid].count > 10) {
-		if(groupLimit[gid].expire > Date.now()) {
-			return
-		} else {
-			groupLimit[gid] = {
-				count: 1,
-				expire: Date.now() + 10 * 60 * 10000
-			}
-		}
+	if(groupLimit[gid]) {
+		groupLimit[gid] = groupLimit[gid].concat(Date.now() + 10 * 60 * 1000).filter(x => x > Date.now())
+	} else {
+		groupLimit[gid] = [Date.now() + 10 * 60 * 1000]
 	}
   var now = new Date().getTime();
   if(content.startsWith("百百 ")) {
