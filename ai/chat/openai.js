@@ -95,6 +95,7 @@ function getBaibaiReplay(content,gid,qq,callback){
   var now = new Date().getTime();
   if(content.startsWith("百百 ")) {
     content=content.substring(3).trim();
+  }
     var url = 'https://api.openai.com/v1/chat/completions'
 
     var sm = save[gid];
@@ -156,7 +157,7 @@ function getBaibaiReplay(content,gid,qq,callback){
         }
       }
     });
-  }
+  
 }
 
 
