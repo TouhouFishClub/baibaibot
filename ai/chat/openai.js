@@ -84,7 +84,7 @@ var save = {}
 
 
 function getBaibaiReplay(content,gid,qq,callback){
-	if(groupLimit[gid] && groupLimit[gid].length > 10) {
+	if(groupLimit[gid] && groupLimit[gid].length > 20) {
 		return
 	}
 	if(groupLimit[gid]) {
