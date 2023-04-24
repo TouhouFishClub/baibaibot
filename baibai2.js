@@ -796,7 +796,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     handleCustomChatgptReplay(content,groupid,from,callback);
     return;
   }
-  if(content.startsWith('百百 ')){
+  if(content.startsWith('百百 ') && !(new Set([30004]).has(port))){
     content=content.trim();
     getBaibaiReplay(content,groupid,from,callback);
     return;
