@@ -797,6 +797,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   if(content.startsWith('百百 ')){
+		if(new Set([30004]).has(port)) {
+			return
+		}
+		if(new Set([74276571]).has(groupid)) {
+			return
+		}
     content=content.trim();
     getBaibaiReplay(content,groupid,from,callback);
     return;
