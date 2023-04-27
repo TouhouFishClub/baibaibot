@@ -86,7 +86,7 @@ var save = {}
 function getBaibaiReplay(content,gid,qq,callback){
   var now = new Date().getTime();
   if(groupLimit[gid] ){
-    groupLimit[gid] = groupLimit[gid].concat(Date.now() + 10 * 60 * 1000).filter(x => x > Date.now())
+    groupLimit[gid] = groupLimit[gid].filter(x => x > Date.now())
   }
 
   if(groupLimit[gid] && groupLimit[gid].length > 15) {
