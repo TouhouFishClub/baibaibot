@@ -85,7 +85,10 @@ var save = {}
 
 function getBaibaiReplay(content,gid,qq,callback){
   var now = new Date().getTime();
-  groupLimit[gid] = groupLimit[gid].concat(Date.now() + 10 * 60 * 1000).filter(x => x > Date.now())
+  if(groupLimit[gid] ){
+    groupLimit[gid] = groupLimit[gid].concat(Date.now() + 10 * 60 * 1000).filter(x => x > Date.now())
+  }
+
   if(groupLimit[gid] && groupLimit[gid].length > 15) {
       var left = now - groupLimit[gid][0] + 600000;
       callback('哥哥，百百想休息一会，请'+Math.round(left/60000)+'分钟后再和百百聊哦。')
