@@ -1,160 +1,280 @@
+let rc = 0
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 var http=require('http');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 var https=require('https');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 var tls = require('tls');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 var fs = require('fs');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 var request = require('request');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 let onlineObj = {}
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const {diffuseReply,novelAI,naifu,novelAIDiffuse,HDdiffuse,saveMagicPrefer} = require('./ai/image/diffuse')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {ImgScale} = require('./ai/image/scale');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { myip } = require('./baibaiConfigs')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 var path = require('path');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 //const { QQ, MsgHandler } = require('./qqlib');
 
 const{saveTxt,answer,getMsgCount} = require(path.join(__dirname, '/lib/mongo.js'))
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { drawTxtImage } = require('./cq/drawImageBytxt')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const xchange = require('./ai/xchange')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {cal} = require('./ai/calculator');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {getWeatherByCity} = require('./ai/weather');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {tulingMsg,getLike,getQAIresponse} = require('./ai/tuling');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {translateMsg}=require('./ai/translate');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {money} = require('./ai/money');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {route} = require('./ai/map');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {searchSongByName} = require('./ai/song');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const kce = require('./ai/kanColleEquip')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const kcq = require('./ai/kanColleQuest')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {fight,useMagicOrItem} = require('./ai/favour/battle');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {handleUserOperation} = require('./ai/chess/road');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const {pairReply}=require('./ai/pairAI');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {getShip} = require('./ai/kancolle/ship');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const roulette = require('./ai/Roulette')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {copperReply} = require('./ai/games/card/copper');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 require('./ai/push');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 
 const {beautyReply} = require('./ai/ff14/beauty');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const {replayReply} = require('./ai/replay');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {getUserNameInGroup,getUserNickInGroupByCache,getGroupName,getGroupMemberNum,banUserRandom} = require('./cq/cache');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {lottoryReply} = require('./ai/lottory');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const smuggler = require('./ai/mabinogi/smuggler')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { createEchoStone, echoStoneEventSwitch } = require('./ai/mabinogi/echostone')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {drawNameCard} = require('./ai/games/card/draw');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const op = require('./ai/mabinogi/optionset')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {googleImageSearch} = require('./ai/image/google');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const rua = require('./ai/mabinogi/ruawork')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {baiduVoice} = require('./ai/voice/baiduvoice')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {saveChat} = require('./ai/chat/collect');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {getFoodRate} = require('./ai/kancolle/food');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {handleSenkaReply} = require('./ai/kancolle/senka2');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {descryptReply} = require('./ai/image/qqspeak');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const rp = require('./ai/rp');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {G21Boss} = require('./ai/mabinogi/G21Boss');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const checkIgnoreUser = require('./ai/ignoreUser');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {searchMHW} = require('./ai/mhw/index');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {searchFeChara} = require('./ai/fe/feChara');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {replyKancolleRoute} = require('./ai/kancolle/map_new');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {searchFF14Item} = require('./ai/ff14/item');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {searchQuest} = require('./ai/ff14/strategy');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const rd = require('./ai/randomDice')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {zodiac,saveMyZodiac} = require('./ai/zodiac')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const {saveAlarm} = require('./ai/private/alerm');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {poemReply} = require('./ai/image/xiaobing');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const {simplized,traditionalized,qqlized} = require('./lib/chs_cht');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 
 const {fflogsReply} = require('./ai/ff14/fflogs');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {fflogs2Reply} = require('./ai/ff14/fflogs2');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const gf = require('./ai/girlsfrontline/index')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {handleGun} = require('./ai/games/survival/main');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const bomberman = require('./ai/games/Bomberman/main');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {handleFF14weatherReply} = require('./ai/ff14/ff14weather');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const anr = require('./ai/arknights/arkNightsRecruit')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const ans = require('./ai/arknights/arkNightsCharacter')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const anc = require('./ai/arknights/arkNightsCalc')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const and = require('./ai/arknights/arkNightsBuildingTheme')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const anchan = require('./ai/arknights/arkNightsChallenge')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const anp = require('./ai/arknights/arkNightsCharacterCompare')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { arkCalendar } = require('./ai/arknights/arkNightsCalendar')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { mabiCalendar } = require('./ai/mabinogi/mabiCalendar')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {runsetu} = require('./ai/games/card/setu');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 //const { wfp } = require('./ai/worldflipper/BossBattlePushing')
 const {calAttr} = require('./ai/ff14/attr');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 require('./ai/ff14/activity')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { raffle } = require('./ai/spinach/RedBlueBall')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 // const cov = require('./ai/CoV2020')
 const { cov } = require('./ai/CoV2019ByTianApi')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const chp = require('./ai/chp')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { morse } = require('./ai/MorseCode')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const {actp} = require('./ai/AnimalCrossing/TurnipProphet')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { saveDTCPrice } = require('./ai/AnimalCrossing/priceRecord');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { discord } = require('./ai/PrincessConnect/discord')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { cherugo } = require('./ai/PrincessConnect/cherugo')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { guildRankSearch } = require('./ai/PrincessConnect/guildRank')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { schedule } = require('./ai/PrincessConnect/schedule')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { chishenme } = require('./ai/chishenme')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {ff14MarketReply} = require('./ai/ff14/itemmarket');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {catreply} = require('./ai/games/card/cat');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const {handleFlyindReply} = require('./ai/games/flying/flight_chess');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { drawBubble } = require('./ai/chat/drawBubble')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { fiveThousandTrillionYen } = require('./ai/chat/5000choyen')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { flashHandler } = require('./MsgHandler/flash')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { testGif } = require('./gif/test')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { Reliquary } = require('./ai/GenshinImpact/Reliquary')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { composition, groupCompositionRank } = require('./ai/composition')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { tapFish } = require('./ai/tapfish')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {handleSweepReply} = require('./ai/games/sweeping/sweepmain');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { calendar } = require('./ai/calendar.js')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {handleGaReply,handleMazeReply} = require('./ai/image/gimage');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { renderColorBoard } = require('./ai/mabinogi/renderColor')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { trade, tradeOcr } = require('./ai/mabinogi/trade')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { searchMabiRecipe } = require('./ai/mabinogi/recipe/searchRecipe')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 
 const { ergo } = require('./ai/mabinogi/ergo')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { mabiGacha, selectGachaGroup } = require('./ai/mabinogi/gacha/index')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { menu } = require('./ai/menu')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { ygo } = require('./ai/ygo/ygo')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 // const { carrot } = require('./ai/mabinogi/carrot')
 
 const { FerryTimetable } = require('./ai/mabinogi/ferryTimetable')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { BossWork } = require('./ai/mabinogi/BossWork/BossWork')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { searchEquipUpgrade } = require('./ai/mabinogi/ItemUpgrade/index')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const {handleDSReply,handleVoteReply} = require('./ai/games/ds/dsmain')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { renderChatPersonas } = require('./ai/chat/personas/index')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { renderGroupCount, randomGroupUser } = require('./ai/chat/groupCount/index')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const { BanUser, checkBanMap } = require('./ai/chat/banUser')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const {handleCustomChatgptReplay,getChatgptReplay,getBaibaiReplay} = require('./ai/chat/openai');
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 const {ysVoiceReply} = require('./ai/voice/ysvoice')
+console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 let globalConfig = {
 	FLASH_RESEND : false
