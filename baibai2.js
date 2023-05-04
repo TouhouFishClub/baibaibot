@@ -268,8 +268,8 @@ console.log(`====== [${rc++}] : ${Date.now()}======`)
 const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 console.log(`====== [${rc++}] : ${Date.now()}======`)
 
-const { BanUser, checkBanMap } = require('./ai/chat/banUser')
-console.log(`====== [${rc++}] : ${Date.now()}======`)
+// const { BanUser, checkBanMap } = require('./ai/chat/banUser')
+// console.log(`====== [${rc++}] : ${Date.now()}======`)
 
 const {handleCustomChatgptReplay,getChatgptReplay,getBaibaiReplay} = require('./ai/chat/openai');
 console.log(`====== [${rc++}] : ${Date.now()}======`)
