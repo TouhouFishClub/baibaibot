@@ -521,6 +521,9 @@ function handleMsg_D(msgObj,port, configs) {
 
 
   if (type == 'private') {
+		console.log('\n\n\n\n===== 这是私聊 =====')
+		console.log(msgObj)
+		console.log('===== 这是私聊 =====\n\n\n\n')
     var userid = msgObj.user_id;
     callback = function (res) {
       return;
