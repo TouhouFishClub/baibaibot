@@ -2,7 +2,7 @@ const fs = require('fs-extra')
 const path = require("path-extra")
 const request = require('request')
 
-const targetPath = path.join(__dirname, '../coolq-data/cq/data/image/send/tapFish/')
+const targetPath = path.join(__dirname, '..', '../coolq-data/cq/data/image/send/tapFish/')
 
 const fetchImage = filename => new Promise((resolve, reject) => {
 	const reqs = request({
