@@ -56,7 +56,7 @@ function generageAIImage(kw,callback){
   })
 }
 
-generageAIImage();
+//generageAIImage();
 //draw()
 
 module.exports={
