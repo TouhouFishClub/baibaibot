@@ -9,11 +9,17 @@ function AIdraw(content,gid,qq,callback){
     console.log(r);
     var ra = r.split('\n');
     var engkw = ra[ra.length-1];
-    console.log(engkw);
+    var rr = '';
+    for(var i=0;i<ra.length-1;i++){
+      if(ra[i].trim().length>0){
+        rr = rr + ra[i].trim()+'\n';
+      }
+    }
+    rr = rr.trim();
     var now = new Date().getTime();
     var fn = now+'.png';
     generageAIImage(engkw,function(imgbuffer){
-      sendImageMsgBuffer(imgbuffer,fn,'aicard',callback,r,'IF');
+      sendImageMsgBuffer(imgbuffer,fn,'aicard',callback,rr,'IF');
     })
   })
 }
