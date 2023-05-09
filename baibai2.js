@@ -791,11 +791,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     getChatgptReplay(content,groupid,from,callback);
     return;
   }
-  if(content.startsWith('s ')||content.startsWith('s1')||content.startsWith('s2')||content.startsWith('s3')){
-    content=content.trim();
-    handleCustomChatgptReplay(content,groupid,from,callback);
-    return;
-  }
+  // if(content.startsWith('s ')||content.startsWith('s1')||content.startsWith('s2')||content.startsWith('s3')){
+  //   content=content.trim();
+  //   handleCustomChatgptReplay(content,groupid,from,callback);
+  //   return;
+  // }
   if(content.startsWith('百百 ')){
 		if(new Set([30004]).has(port)) {
 			return
