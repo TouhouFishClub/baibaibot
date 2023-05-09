@@ -153,6 +153,8 @@ const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 
 const {handleCustomChatgptReplay,getChatgptReplay,getBaibaiReplay} = require('./ai/chat/openai');
 const {ysVoiceReply} = require('./ai/voice/ysvoice')
+const {AIdraw} = require('./ai/games/card2/AIDraw')
+
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -1463,6 +1465,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     }
   }
 
+  if(rcontent.startsWith("抽抽卡")){
+    AIdraw(content,groupid,from,callback)
+    return;
+  }
 
   if(rcontent.startsWith("抽卡")){
     if(new Set([23334, 29334, 26334, 28334, 30004, 30014]).has(port)){
