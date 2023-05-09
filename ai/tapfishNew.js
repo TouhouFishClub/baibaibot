@@ -2,6 +2,7 @@ const fs = require('fs-extra')
 const path = require("path-extra")
 const request = require('request')
 
+let expire = 0
 const targetPath = path.join(__dirname, '..', '../coolq-data/cq/data/image/send/tapFish/')
 
 const fetchImage = filename => new Promise((resolve, reject) => {
@@ -26,7 +27,7 @@ const fetchImage = filename => new Promise((resolve, reject) => {
 const tapFish = async callback => {
 	let d = new Date(), filename = `${d.getFullYear()}_${d.getMonth() + 1}_${d.getDate()}.png`
 	fs.ensureDirSync(targetPath, 0o2777)
-	if(fs.existsSync(path.join(targetPath, filename))) {
+	if(fs.existsSync(path.join(targetPath, filename)) && Date.now() < expire) {
 		console.log('=============== 已经下载过文件，直接发送')
 	} else {
 		console.log('=============== 未下载过文件，先启用下载')
@@ -36,6 +37,7 @@ const tapFish = async callback => {
 			console.log(e)
 			return
 		}
+		expire = Date.now() + 30*60*1000
 	}
 	callback(`[CQ:image,file=send/tapFish/${filename}]`)
 }
