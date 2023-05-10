@@ -1465,7 +1465,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     }
   }
 
-  if(rcontent.startsWith("抽抽卡")){
+  if(rcontent.startsWith("抽卡")){
     AIdraw(content,groupid,from,callback)
     return;
   }

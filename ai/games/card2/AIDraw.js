@@ -19,13 +19,15 @@ function AIdraw(content,gid,qq,callback){
       limit[qq].c=limit[qq].c+1;
     }
   }
-  if(limit[qq].c>2){
-    var left = Math.round((limit[qq].ts-now)/60000);
-    callback('请在'+left+'分钟后再试哦');
-    return;
+  if((qq+"").startsWith("35747")||(qq+"").startsWith("79901")){
+
+  }else{
+    if(limit[qq].c>1){
+      var left = Math.round((limit[qq].ts-now)/60000);
+      callback('请在'+left+'分钟后再试哦');
+      return;
+    }
   }
-
-
 
   var promptchat  = '写一个幻想世界的女主角人设，并写出至少20个外貌关键词，按照如下格式\n  第一行名字，第二行写故事背景，第三行写人物介绍，人物介绍不少于100字，第四行写中文关键词，第五行把对应的关键词翻译成英语。关键词用逗号隔开，其余地方不准出现换行符';
   getChatgptReplay(promptchat,205700,357474,function(r){
