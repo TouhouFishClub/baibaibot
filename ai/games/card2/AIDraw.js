@@ -3,7 +3,7 @@ var request = require('request');
 var fs = require('fs')
 const { sendImageMsgBuffer } = require('../../../cq/sendImage')
 function AIdraw(content,gid,qq,callback){
-  var promptchat  = '写一个幻想世界的女主角人设，并写出至少20个外貌关键词，按照如下格式\n  第一行名字，第二行写故事背景，第三行写介绍，第四行写中文关键词，第五行把对应的关键词翻译成英语。关键词用逗号隔开，其余地方不准出现换行符';
+  var promptchat  = '写一个幻想世界的女主角人设，并写出至少20个外貌关键词，按照如下格式\n  第一行名字，第二行写故事背景，第三行写人物介绍，人物介绍不少于100字，第四行写中文关键词，第五行把对应的关键词翻译成英语。关键词用逗号隔开，其余地方不准出现换行符';
   getChatgptReplay(promptchat,205700,357474,function(r){
     r = r.trim();
     console.log(r);
@@ -11,8 +11,13 @@ function AIdraw(content,gid,qq,callback){
     var engkw = ra[ra.length-1];
     var rr = '';
     for(var i=0;i<ra.length-1;i++){
-      if(ra[i].trim().length>0){
-        rr = rr + ra[i].trim()+'\n';
+      var rd = ra[i].trim();
+      var n=rd.indexOf('：')
+      if(n>0&&n<10){
+        rd = rd.substring(n+1);
+      }
+      if(rd.length>0){
+        rr = rr + rd+'\n';
       }
     }
     rr = rr.trim();
