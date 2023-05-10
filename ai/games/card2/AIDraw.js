@@ -41,13 +41,16 @@ function AIdraw(content,gid,qq,callback){
     }
   }
   var main = mainlist[Math.floor(Math.random()*mainlist.length)];
-  console.log(main);
   var promptchat  = '写一个'+main+'的女主角人设，按照如下格式\n  第一行名字。第二行写故事背景和人物介绍，不少于150字。第三行为她写一句符合人设的台词。第四行为她写20个符合人设的中文关键词。第五行把上一行的关键词翻译成英语，关键词用逗号隔开。只写这些就够了，其余地方不准出现换行符。';
   getChatgptReplay(promptchat,205700,357474,function(r){
     r = r.trim();
-    console.log(r);
+    r = r.replace(/:/g,'：');
     var ra = r.split('\n');
     var engkw = ra[ra.length-1];
+    var nn=engkw.indexOf('：')
+    if(nn>0&&nn<10){
+      engkw = engkw.substring(nn+1);
+    }
     var rr = '';
     for(var i=0;i<ra.length-1;i++){
       var rd = ra[i].trim();
@@ -61,7 +64,10 @@ function AIdraw(content,gid,qq,callback){
     }
     rr = rr.trim();
 
-    var fn = now+'.png';
+    console.log(main)
+    console.log(rr)
+    console.log(engkw)
+
     generageAIImage(engkw,rr,callback)
   })
 }
@@ -82,7 +88,6 @@ function generageAIImage(kw,detail,callback){
     "width":500,
     height:800
   };
-  console.log(bd)
   var imgreq = request({
     url: "http://192.168.17.235:7993/sdapi/v1/txt2img",
     method: "POST",
