@@ -72,8 +72,8 @@ function generageAIImage(kw,detail,callback){
     "prompt": "masterpiece, best quality, fully detailed,1girl,"+kw,
     "negative_prompt":"((part of the head)), ((((mutated hands and fingers)))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, bad hands, text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, fat, obese, chubby, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render,maya,EasyNegative,badhandv4",
     "steps": 20,
-    "width":512,
-    height:768
+    "width":500,
+    height:800
   };
   console.log(bd)
   var imgreq = request({
@@ -124,7 +124,7 @@ function generateWordImage(chapath,uw,callback){
   console.log(ur);
   var img1 = new imageMagick("static/blank.png");
   var fn1 = 'static/'+now+"_blank.jpg";
-  img1.resize(512, 768,'!') //加('!')强行把图片缩放成对应尺寸150*150！
+  img1.resize(512, 800,'!') //加('!')强行把图片缩放成对应尺寸150*150！
     .autoOrient()
     .fontSize(22)
     .fill('blue')
