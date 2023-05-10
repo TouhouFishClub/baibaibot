@@ -37,7 +37,7 @@ function AIdraw(content,gid,qq,callback){
     }
   }
   var main = Math.floor(Math.random()*mainlist.length);
-  var promptchat  = '写一个'+main+'的女主角人设，并写出至少20个外貌关键词，按照如下格式\n  第一行名字，第二行写故事背景和人物介绍，不少于150字，第三行写中文关键词，第四行把对应的关键词翻译成英语。关键词用逗号隔开，其余地方不准出现换行符';
+  var promptchat  = '写一个'+main+'的女主角人设，按照如下格式\n  第一行名字。第二行写故事背景和人物介绍，不少于150字，并在最后为她写一句符合人设的台词。第三行写中文关键词，其中要有发型，发色，脸型等外貌关键词，不少于20个关键词。第四行把上一行的关键词翻译成英语。关键词用逗号隔开，其余地方不准出现换行符。';
   getChatgptReplay(promptchat,205700,357474,function(r){
     r = r.trim();
     console.log(r);
