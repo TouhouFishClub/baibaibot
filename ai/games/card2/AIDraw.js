@@ -2,7 +2,7 @@ const {getChatgptReplay} = require('../../chat/openai');
 var request = require('request');
 var fs = require('fs')
 const { sendImageMsgBuffer } = require('../../../cq/sendImage')
-var {sendGmImage} = require('../../cq/sendImage');
+var {sendGmImage} = require('../../../cq/sendImage');
 var gm = require('gm')
 var imageMagick = gm.subClass({ imageMagick : true });
 
