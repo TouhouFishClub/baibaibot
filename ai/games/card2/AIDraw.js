@@ -69,7 +69,7 @@ function AIdraw(content,gid,qq,callback){
 function generageAIImage(kw,detail,callback){
   var now = new Date().getTime();
   var bd = {
-    "prompt": "masterpiece, best quality, fully detailed,1girl,"+kw,
+    "prompt": "masterpiece, best quality, fully detailed,((((((1girl)))))),"+kw,
     "negative_prompt":"((part of the head)), ((((mutated hands and fingers)))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, bad hands, text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, fat, obese, chubby, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render,maya,EasyNegative,badhandv4",
     "steps": 20,
     "width":500,
