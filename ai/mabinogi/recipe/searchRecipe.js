@@ -9,12 +9,16 @@ const searchMabiRecipe = (content, callback, showDesc = false) => {
       targets.push(ItemIdToItemDetail.get(parseInt(content)).name)
     }
   } else {
-    ItemNameToItemId.forEach((id, name) => {
-      // console.log(name)
-      if(name.match(new RegExp(content))) {
-        targets.push(name)
-      }
-    })
+		targets = Array.from(ItemNameToItemId.keys())
+		content.replace(/[， ]/g, ',').split(',').filter(x => x).forEach(keyword => {
+			targets = targets.filter(name => name.match(new RegExp(keyword)))
+		})
+    // ItemNameToItemId.forEach((id, name) => {
+    //   // console.log(name)
+    //   if(name.match(new RegExp(content))) {
+    //     targets.push(name)
+    //   }
+    // })
   }
   if(targets.length) {
     if(targets.length == 1) {
