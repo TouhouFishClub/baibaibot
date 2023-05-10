@@ -9,11 +9,15 @@ var imageMagick = gm.subClass({ imageMagick : true });
 var limit = {};
 
 var mainlist = [
-  "幻想魔法世界",
+  "幻想世界",
+  "奇幻世界",
+  "以星际旅行为主题",
+  "以名侦探为主题",
   "以乡村田园生活为主题",
   "童话世界",
   "高科技未来世界",
-  "校园生活"
+  "幻想魔法学园",
+  "高中校园生活"
 ]
 
 function AIdraw(content,gid,qq,callback){
