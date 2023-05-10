@@ -9,9 +9,11 @@ var imageMagick = gm.subClass({ imageMagick : true });
 var limit = {};
 
 var mainlist = [
-  "幻想世界",
-  "乡村田园",
-  "青春校园"
+  "幻想魔法世界",
+  "以乡村田园生活为主题",
+  "童话世界",
+  "高科技未来世界",
+  "校园生活"
 ]
 
 function AIdraw(content,gid,qq,callback){
@@ -35,7 +37,7 @@ function AIdraw(content,gid,qq,callback){
     }
   }
   var main = Math.floor(Math.random()*mainlist.length);
-  var promptchat  = '写一个'+main+'的女主角人设，并写出至少20个外貌关键词，按照如下格式\n  第一行名字，第二行写故事背景，第三行写人物介绍，人物介绍不少于100字，第四行写中文关键词，第五行把对应的关键词翻译成英语。关键词用逗号隔开，其余地方不准出现换行符';
+  var promptchat  = '写一个'+main+'的女主角人设，并写出至少20个外貌关键词，按照如下格式\n  第一行名字，第二行写故事背景和人物介绍，不少于150字，第三行写中文关键词，第四行把对应的关键词翻译成英语。关键词用逗号隔开，其余地方不准出现换行符';
   getChatgptReplay(promptchat,205700,357474,function(r){
     r = r.trim();
     console.log(r);

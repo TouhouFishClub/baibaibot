@@ -1470,7 +1470,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(rcontent.startsWith("抽卡")){
+  if(rcontent.startsWith("抽抽卡")){
     if(new Set([23334, 29334, 26334, 28334, 30004, 30014]).has(port)){
       return
     }

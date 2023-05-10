@@ -90,14 +90,14 @@ function getBaibaiReplay(content,gid,qq,callback){
   }
 
   if(groupLimit[gid] && groupLimit[gid].length > 8) {
-      var left = now - groupLimit[gid][0] + 600000;
+      var left = now - groupLimit[gid][0] + 120 * 60 * 1000;
       callback('哥哥，百百想休息一会，请'+Math.round(left/60000)+'分钟后再和百百聊哦。')
       return
   }
   if(groupLimit[gid]) {
-      groupLimit[gid] = groupLimit[gid].concat(Date.now() + 10 * 60 * 1000).filter(x => x > Date.now())
+      groupLimit[gid] = groupLimit[gid].concat(Date.now() + 120 * 60 * 1000).filter(x => x > Date.now())
   } else {
-      groupLimit[gid] = [Date.now() + 10 * 60 * 1000]
+      groupLimit[gid] = [Date.now() + 120 * 60 * 1000]
   }
 
   if(content.startsWith("百百 ")) {
