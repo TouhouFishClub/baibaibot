@@ -76,7 +76,7 @@ function AIdraw(content,gid,qq,callback){
     }
 
     rr = rr.trim();
-
+    console.log(ra);
     console.log(main)
     console.log(rr)
     console.log(engkw)
