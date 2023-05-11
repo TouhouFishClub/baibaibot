@@ -42,28 +42,39 @@ function AIdraw(content,gid,qq,callback){
   }
   var main = mainlist[Math.floor(Math.random()*mainlist.length)];
   var promptchat1  = '写一个'+main+'的女主角人设，按照如下格式\n  第一行名字。第二行写故事背景和人物介绍，不少于150字。第三行为她写一句符合人设的台词。第四行为她写20个符合人设的中文关键词。第五行把上一行的关键词翻译成英语，关键词用逗号隔开。只写这些就够了，其余地方不准出现换行符。';
-  var promptchat2  = '随机挑选一个二次元动漫的女主角，并描述她的人设，按照如下格式\n  第一行名字。第二行写故事背景和人物介绍，不少于150字。第三行为她写一句符合人设的台词。第四行为她写20个符合人设的中文关键词。第五行把上一行的关键词翻译成英语，关键词用逗号隔开。只写这些就够了，其余地方不准出现换行符。';
+  var promptchat2  = '随机挑选一个二次元动漫的女主角，并描述她的人设，按照如下格式\n  第一行写中文的名字。第二行写故事背景和人物介绍，不少于150字。第三行为她写一句符合人设的台词。第四行为她写20个符合人设的中文关键词。第五行把上一行的关键词翻译成英语，关键词用逗号隔开。第六行写该人物的英文名，然后在大括号{}内写该人物的出处的英文名。请一定要严格按照我说的格式去写，不许在其他地方出现换行符。';
   var promptchat = promptchat2;
   getChatgptReplay(promptchat,205700,357474,function(r){
     r = r.trim();
     r = r.replace(/:/g,'：');
-    var ra = r.split('\n');
-    var engkw = ra[ra.length-1];
-    var nn=engkw.indexOf('：')
-    if(nn>0&&nn<10){
-      engkw = engkw.substring(nn+1);
+    var rda = r.split('\n');
+    var ra = [];
+    for(var i=0;i<ra.length;i++){
+      if(rda[i].trim().length>2){
+        ra.push(rda[i]);
+      }
     }
+    var kk = 1;
+    if(ra.length>=6){
+      kk = ra.length-4;
+    }
+
+    var engkw = '';
     var rr = '';
-    for(var i=0;i<ra.length-1;i++){
+    for(var i=0;i<ra.length;i++){
       var rd = ra[i].trim();
       var n=rd.indexOf('：')
       if(n>0&&n<10){
         rd = rd.substring(n+1);
       }
-      if(rd.length>0){
+      ra[i]=rd;
+      if(rd.length>0&&i<ra.length-kk){
         rr = rr + rd+'\n';
+      }else{
+        engkw = engkw + ',' + rd;
       }
     }
+
     rr = rr.trim();
 
     console.log(main)
