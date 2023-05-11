@@ -49,7 +49,7 @@ function AIdraw(content,gid,qq,callback){
     r = r.replace(/:/g,'：');
     var rda = r.split('\n');
     var ra = [];
-    for(var i=0;i<ra.length;i++){
+    for(var i=0;i<rda.length;i++){
       if(rda[i].trim().length>2){
         ra.push(rda[i]);
       }
