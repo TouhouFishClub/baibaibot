@@ -58,7 +58,6 @@ function AIdraw(content,gid,qq,callback){
     if(ra.length>=6){
       kk = ra.length-4;
     }
-
     var engkw = '';
     var rr = '';
     for(var i=0;i<ra.length;i++){
@@ -68,17 +67,22 @@ function AIdraw(content,gid,qq,callback){
         rd = rd.substring(n+1);
       }
       ra[i]=rd;
+      if(i==5){
+        rd = '((((('+rd+')))))';
+      }
       if(rd.length>0&&i<ra.length-kk){
         rr = rr + rd+'\n';
       }else{
         engkw = engkw + ',' + rd;
       }
     }
-
     rr = rr.trim();
+    if(engkw.startsWith(",")){
+      engkw = engkw.substring(1);
+    }
     console.log(ra);
     console.log(main)
-    console.log(rr)
+    console.log(rr+"\n\n")
     console.log(engkw)
 
     generageAIImage(engkw,rr,callback)
