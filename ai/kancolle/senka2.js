@@ -65,7 +65,11 @@ function getUserInfo(uuid,callback,noproxy){
   }else if(noproxy==5){
     req.proxy = 'http://192.168.17.241:2346'
   }else if(noproxy==6){
-    callback({});
+
+  }else if(noproxy==7){
+
+  }else if(noproxy==8){
+    callback({})
     return;
   }
     
@@ -79,7 +83,7 @@ function getUserInfo(uuid,callback,noproxy){
         var delay = noproxy?(1000*noproxy+2000):1000
         setTimeout(function(){
           getUserInfo(uuid,callback,noproxy+1)
-          if(noproxy>6){
+          if(noproxy>7){
             callback({})
             return;
           }
@@ -96,11 +100,11 @@ function getUserInfo(uuid,callback,noproxy){
                 if(noproxy==undefined){
                   noproxy=0;
                 }
-                var delay = noproxy?(1000*noproxy+2000):1000
+                var delay = noproxy?(1500*noproxy+2000):1000
                 console.log('bdy:\n'+body)
                 setTimeout(function(){
                     getUserInfo(uuid,callback,noproxy+1)
-                    if(noproxy>6){
+                    if(noproxy>7){
                         callback({})
                     }
                 },delay);
