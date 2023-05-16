@@ -9,11 +9,15 @@ var imageMagick = gm.subClass({ imageMagick : true });
 var limit = {};
 
 var mainlist = [
-  "幻想魔法世界",
+  "幻想世界",
+  "奇幻世界",
+  "以星际旅行为主题",
+  "以名侦探为主题",
   "以乡村田园生活为主题",
   "童话世界",
   "高科技未来世界",
-  "校园生活"
+  "幻想魔法学园",
+  "高中校园生活"
 ]
 
 function AIdraw(content,gid,qq,callback){
@@ -37,27 +41,62 @@ function AIdraw(content,gid,qq,callback){
     }
   }
   var main = mainlist[Math.floor(Math.random()*mainlist.length)];
-  console.log(main);
-  var promptchat  = '写一个'+main+'的女主角人设，按照如下格式\n  第一行名字。第二行写故事背景和人物介绍，不少于150字。第三行为她写一句符合人设的台词。第四行为她写20个符合人设的中文关键词。第五行把上一行的关键词翻译成英语，关键词用逗号隔开。只写这些就够了，其余地方不准出现换行符。';
+  var promptchat1  = '写一个'+main+'的女主角人设，按照如下格式\n  第一行名字。第二行写故事背景和人物介绍，不少于150字。第三行为她写一句符合人设的台词。第四行为她写20个符合人设的中文关键词。第五行把上一行的关键词翻译成英语，关键词用逗号隔开。只写这些就够了，其余地方不准出现换行符。';
+  var promptchat2  = '随机挑选一个二次元动漫的女主角，并描述她的人设，按照如下格式\n  第一行写中文的名字。第二行描述故事背景和人物介绍，不少于150字。第三行为她写一句符合人设的台词。第四行为她写20个符合人设的中文关键词。第五行写该人物的英文名，然后在大括号{}内写该人物的出处的英文名。只写这些就够了，其余地方不准出现换行符。';
+  var promptchat;
+  if(content=='抽卡1'){
+    promptchat = promptchat1;
+  }else if(content=='抽卡2'){
+    promptchat = promptchat2;
+  }else{
+    if(Math.random()<0.5){
+      promptchat = promptchat1;
+    }else{
+      promptchat = promptchat2;
+    }
+  }
+
   getChatgptReplay(promptchat,205700,357474,function(r){
     r = r.trim();
-    console.log(r);
-    var ra = r.split('\n');
-    var engkw = ra[ra.length-1];
+    r = r.replace(/:/g,'：');
+    var rda = r.split('\n');
+    var ra = [];
+    for(var i=0;i<rda.length;i++){
+      if(rda[i].trim().length>2){
+        ra.push(rda[i]);
+      }
+    }
+    var kk = 1;
+    if(ra.length>=6){
+      kk = ra.length-4;
+    }
+    var engkw = '';
     var rr = '';
-    for(var i=0;i<ra.length-1;i++){
+    for(var i=0;i<ra.length;i++){
       var rd = ra[i].trim();
       var n=rd.indexOf('：')
       if(n>0&&n<10){
         rd = rd.substring(n+1);
       }
-      if(rd.length>0){
+      ra[i]=rd;
+      if(i==5){
+        rd = '((((('+rd+')))))';
+      }
+      if(rd.length>0&&i<ra.length-kk){
         rr = rr + rd+'\n';
+      }else{
+        engkw = engkw + ',' + rd;
       }
     }
     rr = rr.trim();
+    if(engkw.startsWith(",")){
+      engkw = engkw.substring(1);
+    }
+    console.log(ra);
+    console.log(main)
+    console.log(rr+"\n\n")
+    console.log(engkw)
 
-    var fn = now+'.png';
     generageAIImage(engkw,rr,callback)
   })
 }
@@ -78,9 +117,8 @@ function generageAIImage(kw,detail,callback){
     "width":500,
     height:800
   };
-  console.log(bd)
   var imgreq = request({
-    url: "http://192.168.17.235:7993/sdapi/v1/txt2img",
+    url: "http://192.168.17.235:7992/sdapi/v1/txt2img",
     method: "POST",
     headers:{
       'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
