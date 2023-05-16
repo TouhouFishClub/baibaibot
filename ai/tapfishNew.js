@@ -30,9 +30,14 @@ const vvhanApi = async filename => {
 }
 
 const tuotuodeApi = async filename => {
+	console.log(`\n\n\n\n\n=== tuotuode api ===`)
 	let res = await requestPromise(`https://j4u.ink/moyuya`)
-	let d = JSON.parse(res.body)
-	await fetchImage(d.data.moyu_url, filename)
+	let d = JSON.parse(res.body), sourceUrl = d.data.moyu_url
+	console.log(sourceUrl)
+	let res2 = await requestPromise(`https://j4u.ink/moyuya`)
+	console.log('===')
+	console.log(res2.body)
+	// await fetchImage(d.data.moyu_url, filename)
 }
 
 const tapFish = async callback => {
