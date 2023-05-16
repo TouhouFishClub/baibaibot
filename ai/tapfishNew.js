@@ -13,7 +13,8 @@ const fetchImage = (url, filename) => new Promise((resolve, reject) => {
 		method: "GET",
 		headers:{
 			'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
-		}
+		},
+		followRedirect: true
 	}, (error, response, body) => {
 		if(error && error.code){
 			console.log('tap fish load image fail!')
@@ -33,12 +34,12 @@ const tuotuodeApi = async filename => {
 	console.log(`\n\n\n\n\n=== tuotuode api ===`)
 	let res = await requestPromise(`https://j4u.ink/moyuya`)
 	let d = JSON.parse(res.body), sourceUrl = d.data.moyu_url
-	console.log(sourceUrl)
-	let res2 = await requestPromise(sourceUrl)
-	console.log('===')
-	console.log(res2)
-	return false
-	// await fetchImage(d.data.moyu_url, filename)
+	// console.log(sourceUrl)
+	// let res2 = await requestPromise(sourceUrl)
+	// console.log('===')
+	// console.log(res2)
+	// return false
+	await fetchImage(sourceUrl, filename)
 }
 
 const tapFish = async callback => {
