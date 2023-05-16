@@ -25,13 +25,14 @@ const fetchImage = (url, filename) => new Promise((resolve, reject) => {
 	})
 })
 
-const vvhanApi = async filename => await fetchImage(`http://api.vvhan.com/api/moyu`, filename)
+const vvhanApi = async filename => {
+	await fetchImage(`http://api.vvhan.com/api/moyu`, filename)
+}
 
 const tuotuodeApi = async filename => {
 	let res = await requestPromise(`https://j4u.ink/moyuya`)
-	console.log(`\n\n\n\n\n=== tuotuodeApi ===`)
 	let d = JSON.parse(res.body)
-	console.log(d.data.moyu_url)
+	await fetchImage(d.data.moyu_url, filename)
 }
 
 const tapFish = async callback => {
