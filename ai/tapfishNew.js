@@ -36,7 +36,8 @@ const tuotuodeApi = async filename => {
 	console.log(sourceUrl)
 	let res2 = await requestPromise(sourceUrl)
 	console.log('===')
-	console.log(res2.body)
+	console.log(res2)
+	return false
 	// await fetchImage(d.data.moyu_url, filename)
 }
 
