@@ -34,7 +34,7 @@ const tuotuodeApi = async filename => {
 	let res = await requestPromise(`https://j4u.ink/moyuya`)
 	let d = JSON.parse(res.body), sourceUrl = d.data.moyu_url
 	console.log(sourceUrl)
-	let res2 = await requestPromise(`https://j4u.ink/moyuya`)
+	let res2 = await requestPromise(sourceUrl)
 	console.log('===')
 	console.log(res2.body)
 	// await fetchImage(d.data.moyu_url, filename)
