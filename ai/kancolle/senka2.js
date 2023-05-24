@@ -755,7 +755,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             }
         }
         if(namelist.length==0){
-          var md = { "_id" : "0_1000", "n" : cd, "d" : { "0" : 0 }, "dd" : 0, "no" :  1000, "cmt" : "", "ts" : now, "tse" : nn };
+          var md = { "_id" : "0_10000", "n" : cd, "d" : { "0" : 0 }, "dd" : 0, "no" :  10000, "cmt" : "", "ts" : now, "tse" : nn };
           m[cd]=[md];
           namelist = [cd];
         }
