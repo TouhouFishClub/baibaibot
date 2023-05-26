@@ -884,11 +884,11 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             if(tno%2==0){
               tk = keym+'_'+tno+'_1'
               tk2 = keym+'_'+tno+'_2'
-              tk3 = keym+'_'+tno+'_20'
+              tk3 = keym+'_'+tno+'_18'
             }else{
               tk = keym+'_'+tno+'_13'
               tk2 = keym+'_'+tno+'_14'
-              tk3 = keym+'_'+tno+'_20'
+              tk3 = keym+'_'+tno+'_18'
             }
             var thenexp = user.d[tk];
             var ddstr =''
@@ -1422,7 +1422,7 @@ function generateImage(arr,str,callback,month){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  handleSenkaReply('z8-Clearlove','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-Clearlove','','',function(r){console.log(r)})
   //timer();
 },1500)
 
