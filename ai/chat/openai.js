@@ -104,21 +104,6 @@ function getBaibaiReplay(content,gid,qq,callback){
     }
   }
 
-
-  if(groupLimit[gid] ){
-    groupLimit[gid] = groupLimit[gid].filter(x => x > Date.now())
-  }
-
-  if(groupLimit[gid] && groupLimit[gid].length > 8) {
-
-      return
-  }
-  if(groupLimit[gid]) {
-      groupLimit[gid] = groupLimit[gid].concat(Date.now() + 120 * 60 * 1000).filter(x => x > Date.now())
-  } else {
-      groupLimit[gid] = [Date.now() + 120 * 60 * 1000]
-  }
-
   if(content.startsWith("百百 ")) {
     content=content.substring(3).trim();
   }
