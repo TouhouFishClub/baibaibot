@@ -88,7 +88,7 @@ function getBaibaiReplay(content,gid,qq,callback){
   if(!groupLimit[gid] ){
     groupLimit[gid]={c:1,ts:now+120*60*1000}
   }else{
-    if(groupLimit[gid].ts>now){
+    if(groupLimit[gid].ts<now){
       groupLimit[gid]={c:1,ts:now+120*60*1000}
     }else{
       if(groupLimit[gid].c>8){
