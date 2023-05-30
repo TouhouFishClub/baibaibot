@@ -10,15 +10,25 @@ var limit = {};
 
 var mainlist = [
   "幻想世界",
-  "奇幻世界",
   "以星际旅行为主题",
-  "以名侦探为主题",
   "以乡村田园生活为主题",
   "童话世界",
   "高科技未来世界",
+  "穿越异界为主题",
+  "虚拟网游为主题",
   "幻想魔法学园",
   "高中校园生活"
 ]
+
+
+function yishijie(content,gid,qq,callback){
+  var promptchat = 'c 以我转生到异世界写一段小故事，故事要包括转生方式，转生到的异世界名称，该异世界的世界观（可以是幻想魔法，也可以是未来科技，也可能是古代田园，请自由发挥），转生后我的身份（可以是人类，也可以是妖怪或小动物，也可以是一把剑或其他物体，也请你自由发挥）。故事要包括以上要素，大约200字'
+  getChatgptReplay(promptchat,205700,357474,function(r){
+
+    callback(r);
+  });
+
+}
 
 function AIdraw(content,gid,qq,callback){
   var now = new Date().getTime();
@@ -183,5 +193,6 @@ function generateWordImage(chapath,uw,callback){
 //draw()
 
 module.exports={
-  AIdraw
+  AIdraw,
+  yishijie
 }

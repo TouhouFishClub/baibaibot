@@ -229,7 +229,7 @@ function rd(x){
 }
 
 
-var PORT_API_SEED = [6136, 8927, 7265, 5621, 4149, 7562, 2286, 8561, 2711, 7218]
+var PORT_API_SEED = [9081, 2038, 7291, 6220, 5777, 4614, 8318, 6279, 4420, 3057]
 function generateRankKey(userid){
   var t=userid;
   var e = PORT_API_SEED[t%10];
@@ -754,8 +754,14 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 break;
             }
         }
+        if(namelist.length==0){
+          var md = { "_id" : "0_10000", "n" : cd, "d" : { "0" : 0 }, "dd" : 0, "no" :  10000, "cmt" : "", "ts" : now, "tse" : nn };
+          m[cd]=[md];
+          namelist = [cd];
+        }
         if(namelist.length==1){
           var ranklist = m[namelist[0]];
+          console.log(ranklist)
           ranklist.sort(function(a,b){
             return parseInt(a._id.split('_')[0]) - parseInt(b._id.split('_')[0])
           })
@@ -878,11 +884,11 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             if(tno%2==0){
               tk = keym+'_'+tno+'_1'
               tk2 = keym+'_'+tno+'_2'
-              tk3 = keym+'_'+tno+'_20'
+              tk3 = keym+'_'+tno+'_18'
             }else{
               tk = keym+'_'+tno+'_13'
               tk2 = keym+'_'+tno+'_14'
-              tk3 = keym+'_'+tno+'_20'
+              tk3 = keym+'_'+tno+'_18'
             }
             var thenexp = user.d[tk];
             var ddstr =''
@@ -1416,7 +1422,7 @@ function generateImage(arr,str,callback,month){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8-1s','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-Clearlove','','',function(r){console.log(r)})
   //timer();
 },1500)
 

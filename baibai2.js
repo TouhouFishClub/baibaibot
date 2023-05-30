@@ -153,7 +153,7 @@ const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 
 const {handleCustomChatgptReplay,getChatgptReplay,getBaibaiReplay} = require('./ai/chat/openai');
 const {ysVoiceReply} = require('./ai/voice/ysvoice')
-const {AIdraw} = require('./ai/games/card2/AIDraw')
+const {AIdraw,yishijie} = require('./ai/games/card2/AIDraw')
 
 
 let globalConfig = {
@@ -1469,6 +1469,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       diffuseReply(rcontent.substring(2),groupid,from,callback,true);
       return;
     }
+  }
+
+  if(rcontent.startsWith("我要转生")||rcontent.startsWith("异世界")){
+    yishijie(content,groupid,from,callback)
+    return;
   }
 
   if(rcontent.startsWith("抽卡")){
