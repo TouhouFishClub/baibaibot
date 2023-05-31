@@ -578,6 +578,11 @@ function handleMsg_D(msgObj,port, configs) {
 		}
 	}
 
+  //暂时屏蔽30014 30024端口的消息发送
+  if(msgObj.user_id != 799018865 && new Set([30014, 30024]).has(port)) {
+    return
+  }
+
 	//TODO: 洛奇交易群屏蔽功能，但是记录群内语句
 	if(
 		msgObj.group_id === 704773457 &&
