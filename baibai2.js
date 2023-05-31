@@ -528,8 +528,8 @@ function handleMsg_D(msgObj,port, configs) {
 		console.log('===== 这是私聊 =====\n\n\n\n')
     var userid = msgObj.user_id;
     callback = function (res) {
+	    console.log('private res:'+res);
       if (res.trim().length > 0) {
-        setTimeout(function () {
           var options = {
             host: ''+myip+'',
             port: port,
@@ -544,7 +544,6 @@ function handleMsg_D(msgObj,port, configs) {
             console.log(err);
           });
           req.end();
-        }, 1000);
       }
     }
 	getChatgptReplay(content,357470,357570,callback);
