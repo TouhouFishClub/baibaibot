@@ -549,16 +549,7 @@ function handleMsg_D(msgObj,port, configs) {
         }, 1000);
       }
     }
-    if (saveAlarm(content, userid, callback)) {
-    } else {
-      //TODO
-      var from = userid;
-      var groupid = 999999999;
-      var groupName = 'private_group_name';
-      var name = 'n';
-      var nickname = 'n'
-      handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'private',port)
-    }
+	getChatgptReplay(content,35747,35757,callback);
     return;
   }
   if (type != 'group') {
