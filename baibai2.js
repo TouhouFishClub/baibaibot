@@ -546,7 +546,7 @@ function handleMsg_D(msgObj,port, configs) {
           req.end();
       }
     }
-	getChatgptReplay(content,357470,357570,callback);
+	getChatgptReplay(content,357470,357470,callback);
     return;
   }
   if (type != 'group') {
