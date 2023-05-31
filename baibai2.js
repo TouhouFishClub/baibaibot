@@ -528,8 +528,6 @@ function handleMsg_D(msgObj,port, configs) {
 		console.log('===== 这是私聊 =====\n\n\n\n')
     var userid = msgObj.user_id;
     callback = function (res) {
-      return;
-
       if (res.trim().length > 0) {
         setTimeout(function () {
           var options = {
@@ -549,7 +547,7 @@ function handleMsg_D(msgObj,port, configs) {
         }, 1000);
       }
     }
-	getChatgptReplay(content,35747,35757,callback);
+	getChatgptReplay(content,357470,357570,callback);
     return;
   }
   if (type != 'group') {
