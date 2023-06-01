@@ -528,10 +528,8 @@ function handleMsg_D(msgObj,port, configs) {
 		console.log('===== 这是私聊 =====\n\n\n\n')
     var userid = msgObj.user_id;
     callback = function (res) {
-      return;
-
+	    console.log('private res:'+res);
       if (res.trim().length > 0) {
-        setTimeout(function () {
           var options = {
             host: ''+myip+'',
             port: port,
@@ -546,19 +544,9 @@ function handleMsg_D(msgObj,port, configs) {
             console.log(err);
           });
           req.end();
-        }, 1000);
       }
     }
-    if (saveAlarm(content, userid, callback)) {
-    } else {
-      //TODO
-      var from = userid;
-      var groupid = 999999999;
-      var groupName = 'private_group_name';
-      var name = 'n';
-      var nickname = 'n'
-      handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'private',port)
-    }
+	getChatgptReplay(content,357470,357470,callback);
     return;
   }
   if (type != 'group') {
@@ -589,6 +577,11 @@ function handleMsg_D(msgObj,port, configs) {
 			addSendQueue(groupid,res,port);
 		}
 	}
+
+  //暂时屏蔽30014 30024端口的消息发送
+  if(msgObj.user_id != 799018865 && new Set([30014, 30024]).has(port)) {
+    return
+  }
 
 	//TODO: 洛奇交易群屏蔽功能，但是记录群内语句
 	if(
