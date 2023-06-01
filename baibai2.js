@@ -933,8 +933,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     tapFish(callback)
     return
   }
-  if(content.trim().startsWith("yv")){
-    ysVoiceReply(content,groupid,from,callback);
+
+
+  if(content.trim()=="杂鱼"){
+
+    ret = '[CQ:record,file=send/c/paimoe_zayu.mp3]'
+    callback(ret)
     return;
   }
 
