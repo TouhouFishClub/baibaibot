@@ -613,9 +613,9 @@ function handleMsg_D(msgObj,port, configs) {
 			// 添加自定义后缀
 			if(new Set([30004,30014,30024]).has(port)) {
 				if(Math.random() < 0.5) {
-					res = `${rdmPerpend[~~(rdmPerpend.length * Math.random())]}${res}`
+					res = `${rdmPerpend[~~(rdmPerpend.length * Math.random())]} ${res}`
 				} else {
-					res = `${res}${rdmAppend[~~(rdmAppend.length * Math.random())]}`
+					res = `${res} ${rdmAppend[~~(rdmAppend.length * Math.random())]}`
 				}
 			}
 			addSendQueue(groupid,res,port);
