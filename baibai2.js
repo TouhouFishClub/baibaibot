@@ -481,40 +481,43 @@ function handleMsg_D(msgObj,port, configs) {
 
   switch(msgObj.notice_type) {
     case 'group_increase':
-      if(new Set([
-        2375373419, 3291864216, 1840239061, 981069482, 914853856, 2771362647, 760946387,
-        '2375373419', '3291864216', '1840239061', '981069482', '914853856', '2771362647', '760946387',
-      ]).has(msgObj.user_id)){
-        return
-      }
-      // 加群操作
-      let wellcome
-      switch(groupid){
-        case 96681597:
-          wellcome = `欢迎新人[CQ:at,qq=${msgObj.user_id}]，入服教程：https://bbs.gugu6.info/forum.php?mod=viewthread&tid=95#lastpost`
-					addSendQueue(groupid,wellcome,port);
-          break
-        case 672926817:
-          wellcome = `看！新内鬼[CQ:at,qq=${msgObj.user_id}]`
-					addSendQueue(groupid,wellcome,port);
-          break
-        default:
-          // wellcome = `欢迎[CQ:at,qq=${msgObj.user_id}]加群`
-          break
-      }
+			// 暂时屏蔽欢迎提示
+      // if(new Set([
+      //   2375373419, 3291864216, 1840239061, 981069482, 914853856, 2771362647, 760946387,
+      //   '2375373419', '3291864216', '1840239061', '981069482', '914853856', '2771362647', '760946387',
+      // ]).has(msgObj.user_id)){
+      //   return
+      // }
+      // // 加群操作
+      // let wellcome
+      // switch(groupid){
+      //   case 96681597:
+      //     wellcome = `欢迎新人[CQ:at,qq=${msgObj.user_id}]，入服教程：https://bbs.gugu6.info/forum.php?mod=viewthread&tid=95#lastpost`
+			// 		addSendQueue(groupid,wellcome,port);
+      //     break
+      //   case 672926817:
+      //     wellcome = `看！新内鬼[CQ:at,qq=${msgObj.user_id}]`
+			// 		addSendQueue(groupid,wellcome,port);
+      //     break
+      //   default:
+      //     // wellcome = `欢迎[CQ:at,qq=${msgObj.user_id}]加群`
+      //     break
+      // }
       return
     case 'group_decrease':
-      if(msgObj.sub_type == 'kick') {
-        addSendQueue(groupid,`${msgObj.user_id}被踹走了`,port);
-      } else {
-        addSendQueue(groupid,`${msgObj.user_id}溜走了`,port);
-      }
+			// 暂时屏蔽离群提示
+      // if(msgObj.sub_type == 'kick') {
+      //   addSendQueue(groupid,`${msgObj.user_id}被踹走了`,port);
+      // } else {
+      //   addSendQueue(groupid,`${msgObj.user_id}溜走了`,port);
+      // }
       return
     case 'group_upload':
-      if(new Set([672926817, 577587780, '672926817', '577587780']).has(msgObj.group_id)) {
-        addSendQueue(groupid, `[CQ:at,qq=${msgObj.user_id}] 倒了群垃圾！\n ${msgObj.file.name}(${formatSize(msgObj.file.size || 0)})` ,port);
-        return
-      }
+			// 暂时屏蔽上传文件提示
+      // if(new Set([672926817, 577587780, '672926817', '577587780']).has(msgObj.group_id)) {
+      //   addSendQueue(groupid, `[CQ:at,qq=${msgObj.user_id}] 倒了群垃圾！\n ${msgObj.file.name}(${formatSize(msgObj.file.size || 0)})` ,port);
+      //   return
+      // }
       break
 		case 'group_recall':
 			console.log(`\n\n\n\n\n===============`)
@@ -573,8 +576,48 @@ function handleMsg_D(msgObj,port, configs) {
 
   saveChat(groupid, from, name, content,port, msgObj);
 
+	var rdmPerpend = [
+		'::>_<::',
+		'୧(๑•̀ɜ•́๑)૭✧',
+		'( •︠ˍ•︡ )',
+		'(๑•̀ㅂ•́)و✧',
+		'٩(•̤̀ᵕ•̤́๑)',
+		'ฅ՞•ﻌ•՞ฅ',
+		'(ฅ∀<`๑)',
+		'(๑˘ ³˘๑)/',
+		'վ\'ᴗ\' ի',
+		'(>_<)',
+		'就是',
+		'那',
+		'这个',
+	],
+	rdmAppend = [
+		'::>_<::',
+		'୧(๑•̀ɜ•́๑)૭✧',
+		'( •︠ˍ•︡ )',
+		'(๑•̀ㅂ•́)و✧',
+		'٩(•̤̀ᵕ•̤́๑)',
+		'ฅ՞•ﻌ•՞ฅ',
+		'(ฅ∀<`๑)',
+		'(๑˘ ³˘๑)/',
+		'վ\'ᴗ\' ի',
+		'(>_<)',
+		'捏',
+		'的说',
+		'？',
+		'没了',
+		'是吧',
+	]
 	callback = function (res, blank) {
 		if (res.trim().length > 0) {
+			// 添加自定义后缀
+			if(new Set([30004,30014,30024].has(port))) {
+				if(Math.random() < 0.5) {
+					res = `${rdmPerpend[~~(rdmPerpend.length * Math.random())]}${res}`
+				} else {
+					res = `${res}${rdmAppend[~~(rdmAppend.length * Math.random())]}`
+				}
+			}
 			addSendQueue(groupid,res,port);
 		}
 	}
