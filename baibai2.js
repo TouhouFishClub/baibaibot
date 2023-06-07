@@ -256,6 +256,7 @@ var botlist = [
 
 ]
 
+const groupExpire = new Map()
 
 init();
 function init(){
@@ -578,10 +579,24 @@ function handleMsg_D(msgObj,port, configs) {
 		}
 	}
 
-  //暂时屏蔽30014 30024端口的消息发送
-  if(msgObj.user_id != 799018865 && new Set([30014, 30024]).has(port)) {
+  if(msgObj.user_id != 799018865 && (groupExpire.get(msgObj.group_id) || 0) > Date.now()) {
     return
   }
+
+	switch(port) {
+		case 30004:
+			// 20 + 10分钟随机
+			groupExpire.set(msgObj.group_id, Date.now() + (20*60+~~(10*60*Math.random()))*1000)
+			break
+		case 30014:
+			// 5 + 3分钟随机
+			groupExpire.set(msgObj.group_id, Date.now() + (5*60+~~(3*60*Math.random()))*1000)
+			break
+		case 30024:
+			// 3 + 2分钟随机
+			groupExpire.set(msgObj.group_id, Date.now() + (3*60+~~(2*60*Math.random()))*1000)
+			break
+	}
 
 	//TODO: 洛奇交易群屏蔽功能，但是记录群内语句
 	if(
