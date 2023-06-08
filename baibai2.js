@@ -611,7 +611,7 @@ function handleMsg_D(msgObj,port, configs) {
 	callback = function (res, blank) {
 		if (res.trim().length > 0) {
 			// 添加自定义后缀
-			if(new Set([30014,30024]).has(port)) {
+			if(new Set([30024]).has(port)) {
 				if(Math.random() < 0.5) {
 					res = `${rdmPerpend[~~(rdmPerpend.length * Math.random())]} ${res}`
 				} else {
@@ -636,8 +636,8 @@ function handleMsg_D(msgObj,port, configs) {
 			groupExpire.set(msgObj.group_id, Date.now() + (~~(15*Math.random()))*1000)
 			break
 		case 30014:
-			// 5 + 3分钟随机
-			groupExpire.set(msgObj.group_id, Date.now() + (5*60+~~(3*60*Math.random()))*1000)
+			// 15秒随机
+			groupExpire.set(msgObj.group_id, Date.now() + (~~(15*Math.random()))*1000)
 			break
 		case 30024:
 			// 3 + 2分钟随机
