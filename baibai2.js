@@ -627,6 +627,10 @@ function handleMsg_D(msgObj,port, configs) {
   }
 
 	switch(port) {
+		case 29334:
+			// 15秒随机
+			groupExpire.set(msgObj.group_id, Date.now() + (~~(15*Math.random()))*1000)
+			break
 		case 30004:
 			// 20 + 10分钟随机
 			groupExpire.set(msgObj.group_id, Date.now() + (20*60+~~(10*60*Math.random()))*1000)
