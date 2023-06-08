@@ -623,6 +623,7 @@ function handleMsg_D(msgObj,port, configs) {
 	}
 
   if(msgObj.user_id != 799018865 && (groupExpire.get(msgObj.group_id) || 0) > Date.now()) {
+    console.log(`该群在${(groupExpire.get(msgObj.group_id) - Date.now()) / 1000}秒后可发消息`)
     return
   }
 
