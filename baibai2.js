@@ -618,6 +618,26 @@ function handleMsg_D(msgObj,port, configs) {
 					res = `${res} ${rdmAppend[~~(rdmAppend.length * Math.random())]}`
 				}
 			}
+
+			switch(port) {
+				case 29334:
+					// 5秒随机
+					groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
+					break
+				case 30004:
+					// 5秒随机
+					groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
+					break
+				case 30014:
+					// 5秒随机
+					groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
+					break
+				case 30024:
+					// 3 + 2分钟随机
+					groupExpire.set(msgObj.group_id, Date.now() + (3*60+~~(2*60*Math.random()))*1000)
+					break
+			}
+
 			addSendQueue(groupid,res,port);
 		}
 	}
@@ -626,25 +646,6 @@ function handleMsg_D(msgObj,port, configs) {
     console.log(`该群在${(groupExpire.get(msgObj.group_id) - Date.now()) / 1000}秒后可发消息`)
     return
   }
-
-	switch(port) {
-		case 29334:
-			// 5秒随机
-			groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
-			break
-		case 30004:
-			// 5秒随机
-			groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
-			break
-		case 30014:
-			// 5秒随机
-			groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
-			break
-		case 30024:
-			// 3 + 2分钟随机
-			groupExpire.set(msgObj.group_id, Date.now() + (3*60+~~(2*60*Math.random()))*1000)
-			break
-	}
 
 	//TODO: 洛奇交易群屏蔽功能，但是记录群内语句
 	if(
