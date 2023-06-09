@@ -1000,9 +1000,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(content.trim()=="杂鱼"){
 
-    ret = '[CQ:record,file=send/c/paimoe_zayu.mp3]'
-    callback(ret)
-    return;
+    //ret = '[CQ:record,file=send/c/paimoe_zayu.mp3]'
+    //callback(ret)
+    //return;
   }
 
   if(content.trim() === '走私查询'){
