@@ -629,16 +629,16 @@ function handleMsg_D(msgObj,port, configs) {
 
 	switch(port) {
 		case 29334:
-			// 15秒随机
-			groupExpire.set(msgObj.group_id, Date.now() + (~~(15*Math.random()))*1000)
+			// 5秒随机
+			groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
 			break
 		case 30004:
-			// 15秒随机
-			groupExpire.set(msgObj.group_id, Date.now() + (~~(15*Math.random()))*1000)
+			// 5秒随机
+			groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
 			break
 		case 30014:
-			// 15秒随机
-			groupExpire.set(msgObj.group_id, Date.now() + (~~(15*Math.random()))*1000)
+			// 5秒随机
+			groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
 			break
 		case 30024:
 			// 3 + 2分钟随机
