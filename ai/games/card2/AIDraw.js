@@ -128,7 +128,7 @@ function generageAIImage(kw,detail,callback){
     height:800
   };
   var imgreq = request({
-    url: "http://192.168.17.235:7992/sdapi/v1/txt2img",
+    url: "http://192.168.17.235:6201/sdapi/v1/txt2img",
     method: "POST",
     headers:{
       'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
