@@ -611,7 +611,7 @@ function handleMsg_D(msgObj,port, configs) {
 	callback = function (res, blank) {
 		if (res.trim().length > 0) {
 			// 添加自定义后缀
-			if(new Set([30024]).has(port)) {
+			if(new Set([99999]).has(port)) {
 				if(Math.random() < 0.5) {
 					res = `${rdmPerpend[~~(rdmPerpend.length * Math.random())]} ${res}`
 				} else {
