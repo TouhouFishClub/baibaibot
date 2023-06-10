@@ -633,8 +633,8 @@ function handleMsg_D(msgObj,port, configs) {
 					groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
 					break
 				case 30024:
-					// 3 + 2分钟随机
-					groupExpire.set(msgObj.group_id, Date.now() + (3*60+~~(2*60*Math.random()))*1000)
+          // 5秒随机
+          groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
 					break
 			}
 
