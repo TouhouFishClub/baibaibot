@@ -1028,7 +1028,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(content == 'test' && from == 799018865) {
-		callback(`testtest\n[CQ:share,url=http://live.bilibili.com/27921417,title=华恋型芙兰,content=关注主播谢谢喵,image=https://i0.hdslb.com/bfs/face/502d8074fffd1d254c6f60c3f4c40100f6e9d15b.jpg]`)
+		callback(`[CQ:share,url=http://live.bilibili.com/27921417,title=华恋型芙兰,content=关注主播谢谢喵,image=https://i0.hdslb.com/bfs/face/502d8074fffd1d254c6f60c3f4c40100f6e9d15b.jpg]`)
   }
 
   if(content == '今日专家' || content == '今日专家地下城') {
