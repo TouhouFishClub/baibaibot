@@ -106,13 +106,18 @@ const jrrp = async (qq, groupId, port, callback, other) => {
   <head>
     <title></title>
     <style>
+			* {
+				border: 0;
+				padding: 0;
+				margin: 0;
+			}
     	@font-face {
         font-family: 'Corp_Bold';
         src: url(${Corp_Bold}) format('opentype');
       }
     	body {
     		width: 800px;
-      	height: 114px;
+      	min-height: 20px;
 				box-sizing: border-box;
     		font-family: Corp_Bold;
     	}
