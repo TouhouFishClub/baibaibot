@@ -150,7 +150,7 @@ const jrrp = async (qq, groupId, port, callback, other) => {
 	})
 		.then(() => {
 			console.log(`保存${qq}_jrrp.png成功！`)
-			let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `${qq}_jrrp.png`)}]`
+			let imgMsg = `[CQ:image,file=${path.join('send', 'rp', `${qq}_jrrp.png`)}]`
 			callback(imgMsg)
 		})
 
