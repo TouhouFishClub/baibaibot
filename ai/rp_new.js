@@ -102,8 +102,9 @@ const jrrp = async (qq, groupId, port, callback, other) => {
 	nodeHtmlToImage({
 		output,
 		html: `
-<html>
+<html lang="en">
   <head>
+  	<meta charset="UTF-8">
     <title></title>
     <style>
 			* {
@@ -120,6 +121,7 @@ const jrrp = async (qq, groupId, port, callback, other) => {
       	min-height: 20px;
 				box-sizing: border-box;
     		font-family: Corp_Bold;
+    		overflow: hidden;
     	}
     	.main-container {
     		padding: 10px 20px;
