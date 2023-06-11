@@ -113,7 +113,6 @@ const jrrp = async (qq, groupId, port, callback, other) => {
     	body {
     		width: 800px;
       	height: 85px;
-				padding: 20px;
 				box-sizing: border-box;
     		font-family: Corp_Bold;
     	}
