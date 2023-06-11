@@ -113,9 +113,12 @@ const jrrp = async (qq, groupId, port, callback, other) => {
     	body {
     		width: 800px;
       	min-height: 20px;
+				padding: 20px;
+				box-sizing: border-box;
+    		font-family: Corp_Bold;
     	}
     	.main-container {
-    		padding: 30px;
+    		padding: 20px 30px;
     		position: relative;
     	}
     	.main-container .user-nick{
