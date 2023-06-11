@@ -88,15 +88,15 @@ const jrrp = async (qq, groupId, port, callback, other) => {
 
 	let output = path.join(IMAGE_DATA, 'rp', `${qq}_jrrp.png`)
 
-	let progressColor = '#f00'
+	let progressColor = '#b20000'
 	if(rp > 30) {
-		progressColor = '#ff0'
+		progressColor = '#ffd500'
 	}
 	if(rp > 60) {
-		progressColor = '#0ff'
+		progressColor = '#007aa6'
 	}
 	if(rp > 90) {
-		progressColor = '#0f0'
+		progressColor = '#008200'
 	}
 
 	nodeHtmlToImage({
@@ -111,7 +111,8 @@ const jrrp = async (qq, groupId, port, callback, other) => {
         src: url(${Corp_Bold}) format('opentype');
       }
     	body {
-    		width: 600px;
+    		width: 800px;
+      	min-height: 20px;
     	}
     	.main-container {
     		padding: 30px;
