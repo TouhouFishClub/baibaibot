@@ -1162,7 +1162,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
     if(s.startsWith('[CQ:at')){
       s = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
-      rp(from, callback, s)
+      // rp(from, callback, s)
+			jrrp(from, groupid, port, callback, s)
       return
     }
     let ignoreJrrpDestSet = new Set([
@@ -1171,10 +1172,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ])
 
     if(ignoreJrrpDestSet.has(groupid) || true) {
-      rp(from, callback, from)
+      // rp(from, callback, from)
+			jrrp(from, groupid, port, callback)
       return
     }
-    rp(from, callback)
+    // rp(from, callback)
     return
   }
 

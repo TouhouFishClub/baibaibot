@@ -78,13 +78,13 @@ const createUserRp = id => {
 
 const jrrp = async (qq, groupId, port, callback, other) => {
 	let userInfo = await searchUser(port, groupId, qq)
-	console.log(`====== jrrp =======`)
-	console.log(userInfo)
+	// console.log(`====== jrrp =======`)
+	// console.log(userInfo)
 	if(!userInfo) {
 		return
 	}
 	let rp = createUserRp(qq || other)
-	console.log(rp)
+	// console.log(rp)
 
 	let output = path.join(IMAGE_DATA, 'rp', `${qq}_jrrp.png`)
 
@@ -112,13 +112,13 @@ const jrrp = async (qq, groupId, port, callback, other) => {
       }
     	body {
     		width: 800px;
-      	min-height: 20px;
+      	height: 85px;
 				padding: 20px;
 				box-sizing: border-box;
     		font-family: Corp_Bold;
     	}
     	.main-container {
-    		padding: 20px 30px;
+    		padding: 10px 20px;
     		position: relative;
     	}
     	.main-container .user-nick{
