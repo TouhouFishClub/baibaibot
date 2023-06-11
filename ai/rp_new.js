@@ -45,7 +45,7 @@ const fetchGroupUsers = (groupid, port) =>
 
 const searchUser = async (port, groupId, qq) => {
 	let users = await fetchGroupUsers(groupId, port)
-	return users.find(x => x.uid === qq)[0]
+	return users.filter(x => x.uid === qq)[0]
 }
 
 const createUserRp = id => {
