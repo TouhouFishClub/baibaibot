@@ -78,10 +78,13 @@ const createUserRp = id => {
 
 const jrrp = async (qq, groupId, port, callback, other) => {
 	let userInfo = await searchUser(port, groupId, qq)
+	console.log(`====== jrrp =======`)
+	console.log(userInfo)
 	if(!userInfo) {
 		return
 	}
 	let rp = createUserRp(qq || other)
+	console.log(rp)
 
 	let output = path.join(IMAGE_DATA, 'rp', `${qq}_jrrp.png`)
 
