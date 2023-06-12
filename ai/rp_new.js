@@ -77,16 +77,17 @@ const createUserRp = id => {
 }
 
 const jrrp = async (qq, groupId, port, callback, other) => {
-	let userInfo = await searchUser(port, groupId, qq)
+	let target = other || qq
+	let userInfo = await searchUser(port, groupId, target)
 	// console.log(`====== jrrp =======`)
 	// console.log(userInfo)
 	if(!userInfo) {
 		return
 	}
-	let rp = createUserRp(qq || other)
+	let rp = createUserRp(target)
 	// console.log(rp)
 
-	let output = path.join(IMAGE_DATA, 'rp', `${qq}_jrrp.png`)
+	let output = path.join(IMAGE_DATA, 'rp', `${target}_jrrp.png`)
 
 	let progressColor = '#b20000'
 	if(rp > 30) {
@@ -161,7 +162,7 @@ const jrrp = async (qq, groupId, port, callback, other) => {
 	})
 		.then(() => {
 			console.log(`保存${qq}_jrrp.png成功！`)
-			let imgMsg = `[CQ:image,file=${path.join('send', 'rp', `${qq}_jrrp.png`)}]`
+			let imgMsg = `[CQ:image,file=${path.join('send', 'rp', `${target}_jrrp.png`)}]`
 			callback(imgMsg)
 		})
 
