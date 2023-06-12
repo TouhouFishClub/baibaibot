@@ -78,6 +78,7 @@ const createUserRp = id => {
 
 const jrrp = async (qq, groupId, port, callback, other) => {
 	let target = other || qq
+	console.log(`target ===> ${target}`)
 	let userInfo = await searchUser(port, groupId, target)
 	// console.log(`====== jrrp =======`)
 	// console.log(userInfo)

@@ -1161,6 +1161,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     //[CQ:at,qq=395338563]
 
     if(s.startsWith('[CQ:at')){
+			console.log('=== jrrp at ===')
       s = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
       // rp(from, callback, s)
 			jrrp(from, groupid, port, callback, s)
@@ -1173,6 +1174,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
     if(ignoreJrrpDestSet.has(groupid) || true) {
       // rp(from, callback, from)
+			console.log('=== jrrp normal ===')
 			jrrp(from, groupid, port, callback)
       return
     }
