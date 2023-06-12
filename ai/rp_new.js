@@ -80,13 +80,13 @@ const jrrp = async (qq, groupId, port, callback, other) => {
 	let target = other || qq
 	console.log(`target ===> ${target}`)
 	let userInfo = await searchUser(port, groupId, target)
-	// console.log(`====== jrrp =======`)
-	// console.log(userInfo)
+	console.log(`====== jrrp =======`)
+	console.log(userInfo)
 	if(!userInfo) {
 		return
 	}
 	let rp = createUserRp(target)
-	// console.log(rp)
+	console.log(rp)
 
 	let output = path.join(IMAGE_DATA, 'rp', `${target}_jrrp.png`)
 
@@ -162,7 +162,7 @@ const jrrp = async (qq, groupId, port, callback, other) => {
 `
 	})
 		.then(() => {
-			console.log(`保存${qq}_jrrp.png成功！`)
+			console.log(`保存${target}_jrrp.png成功！`)
 			let imgMsg = `[CQ:image,file=${path.join('send', 'rp', `${target}_jrrp.png`)}]`
 			callback(imgMsg)
 		})
