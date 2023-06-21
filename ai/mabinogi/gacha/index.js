@@ -68,31 +68,40 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) =
 	if(!gachaInfo.length) {
 		await loadGachaGroup()
 	}
-	let gacha = gachaInfo[userSelectGacha[user] || 0], isHunDan = false
+	let gacha = gachaInfo[userSelectGacha[user] || 0], isHunDan = false, isShengDi = false, otherCount = 0
 	if(gacha.rare['C'][2].length == 0 && gacha.rare['D'][2].length == 0) {
 		isHunDan = true
+	}
+	if(gacha.name.indexOf('圣地钥匙') > -1) {
+		isShengDi = true
 	}
 
 	let point = 0
 
 	switch(gachaCount) {
 		case 1:
-			point = isHunDan ? 500 : 50
+			point = isHunDan ? 500 : isShengDi ? 100 : 50
 			break
 		case 11:
 			if(isHunDan)
 				gachaCount = 11
-			point = isHunDan ? 5400 : 500
+			if(isShengDi)
+				otherCount = 1
+			point = isHunDan ? 5400 : isShengDi ? 1000 : 500
 			break
 		case 60:
 			if(isHunDan)
 				gachaCount = 11
-			point = isHunDan ? 5400 : 2640
+			if(isShengDi)
+				otherCount = 15
+			point = isHunDan ? 5400 : isShengDi ? 6000 : 2640
 			break
 		case 600:
 			if(isHunDan)
 				gachaCount = 110
-			point = isHunDan ? 54000 : 26400
+			if(isShengDi)
+				otherCount = 150
+			point = isHunDan ? 54000 : isShengDi ? 60000 : 26400
 			break
 		default:
 			point = 0
@@ -125,7 +134,6 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) =
 		userPointCount.set(user, point)
 	}
 
-
 	let str =  `你抽了${gachaCount}次${gacha.name}，其中(本次概率 / 官方概率)\nS级: ${items.filter(x => x.rare == 'S').length}次 (${(items.filter(x => x.rare == 'S').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['S'][1]}%)\nA级: ${items.filter(x => x.rare == 'A').length}次 (${(items.filter(x => x.rare == 'A').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['A'][1]}%)\nB级: ${items.filter(x => x.rare == 'B').length}次 (${(items.filter(x => x.rare == 'B').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['B'][1]}%)\nC级: ${items.filter(x => x.rare == 'C').length}次 (${(items.filter(x => x.rare == 'C').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['C'][1]}%)\nD级: ${items.filter(x => x.rare == 'D').length}次 (${(items.filter(x => x.rare == 'D').length / gachaCount * 100).toFixed(2)}% / ${gacha.rare['D'][1]}%)\n`
 
 	if(items.filter(x => x.rare == 'S').length > 0) {
@@ -141,6 +149,19 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) =
 	}
 
 	str += `\n-------------------\n`
+
+	if(isShengDi && otherCount) {
+		let oc = randomGacha(gacha, otherCount, new Set(['S', 'A']))
+
+		str +=  `你获得了${otherCount}次特殊礼包\n`
+
+		if(oc.items.filter(x => x.rare == 'S').length > 0) {
+			str += `其中S级有：\n${oc.items.filter(x => x.rare == 'S').map(x => x.item).sort().join('\n')}`
+		} else if(oc.items.filter(x => x.rare == 'A').length > 0) {
+			str += `其中A级有：\n${oc.items.filter(x => x.rare == 'A').map(x => x.item).sort().join('\n')}`
+		}
+
+	}
 
 	str += `${matchInfo.join('\n')}\n`
 
@@ -169,7 +190,7 @@ const selectGachaGroup = async (user, groupId, callback, select) => {
 	}
 }
 
-const randomGacha = (gachaInfo, count) => {
+const randomGacha = (gachaInfo, count, rareLimitSet) => {
 	let items = [], rareTag = _.concat(
 		new Array(~~(gachaInfo.rare['S'][1] * 100)).fill('S'),
 		new Array(~~(gachaInfo.rare['A'][1] * 100)).fill('A'),
@@ -179,6 +200,10 @@ const randomGacha = (gachaInfo, count) => {
 	), matchInfo = []
 	for(let i = 0; i < count; i++) {
 		let targetRare = rareTag[~~(Math.random() * rareTag.length)]
+		if(rareLimitSet && !rareLimitSet.has(targetRare)) {
+			i --;
+			continue
+		}
 		let target = gachaInfo.rare[targetRare][2][~~(Math.random() * gachaInfo.rare[targetRare][2].length)]
 		let reRandomInfo = matchItemWeight.filter(x => target.match(x.regexp))[0], rd = Math.random()
 		if(reRandomInfo && reRandomInfo.rare) {
