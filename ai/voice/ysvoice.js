@@ -53,6 +53,15 @@ function ysVoiceReply(content,gid,qq,callback) {
   content= content.replace(/ /g,'')
   content= content.replace(/\r/g,'。')
   content= content.replace(/\n/g,'。')
+  let text = content.split("")
+  const num = { "1": "一", "2": "二", "3": "三", "4": "四", "5": "五", "6": "六", "7": "七", "8": "八", "9": "九", "0": "零" }
+  for (let i = 0; i < text.length; i++) {
+    if ((/\d/g).test(text[i]))
+      text[i] = num[text[i]]
+  }
+  content = text.join("")
+
+
   var url = 'http://192.168.17.235:11188/voice?d='+encodeURIComponent(content);
   request({
     url: url,
