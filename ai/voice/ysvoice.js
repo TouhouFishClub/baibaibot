@@ -40,11 +40,9 @@ function ysVoiceReply(content,gid,qq,callback) {
     }else{
       var b64=body;
       var binary = Buffer.from(b64, 'base64')
-      const wavFile = WavFile.fromScratch(2, 44100, binary)
-      wavFile.pipe(fs.createWriteStream('output.wav'))
-      fs.writeFile('file.wav', binary, err => {
-        console.log('Saved!')
-      })
+      const wavEncoder = new WavEncoder(2, 44100, {bitDepth: 16})
+      const wavBuffers = wavEncoder.encode([binary])
+      fs.writeFileSync('output.wav', Buffer.concat(wavBuffers))
     }
   })
 }
