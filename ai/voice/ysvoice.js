@@ -64,10 +64,12 @@ function ysVoiceReply(content,gid,qq,callback) {
     }else{
       var b64=body;
       var binary = Buffer.from(b64, 'base64')
-
-      fs.writeFile('audio.wav', Buffer.concat([headerBuffer, binary]), err => {
+      var nowts = new Date().getTime();
+      fs.writeFile('../coolq-data/cq/data/record/send/'+nowts+'.mp3', Buffer.concat([binary]), err => {
         if (err) throw err;
         console.log('WAV 文件写入成功!');
+        ret = '[CQ:record,file=send/'+nowts+'.mp3]'
+        callback(ret)
       });
     }
   })
