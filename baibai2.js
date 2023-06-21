@@ -54,6 +54,7 @@ const {getFoodRate} = require('./ai/kancolle/food');
 const {handleSenkaReply} = require('./ai/kancolle/senka2');
 const {descryptReply} = require('./ai/image/qqspeak');
 const rp = require('./ai/rp');
+const { jrrp } = require('./ai/rp_new')
 const {G21Boss} = require('./ai/mabinogi/G21Boss');
 const checkIgnoreUser = require('./ai/ignoreUser');
 const {searchMHW} = require('./ai/mhw/index');
@@ -611,40 +612,41 @@ function handleMsg_D(msgObj,port, configs) {
 	callback = function (res, blank) {
 		if (res.trim().length > 0) {
 			// 添加自定义后缀
-			if(new Set([30024]).has(port)) {
+			if(new Set([99999]).has(port)) {
 				if(Math.random() < 0.5) {
 					res = `${rdmPerpend[~~(rdmPerpend.length * Math.random())]} ${res}`
 				} else {
 					res = `${res} ${rdmAppend[~~(rdmAppend.length * Math.random())]}`
 				}
 			}
+
+			switch(port) {
+				case 29334:
+					// 5秒随机
+					groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
+					break
+				case 30004:
+					// 5秒随机
+					groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
+					break
+				case 30014:
+					// 5秒随机
+					groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
+					break
+				case 30024:
+          // 5秒随机
+          groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
+					break
+			}
+
 			addSendQueue(groupid,res,port);
 		}
 	}
 
-  if(msgObj.user_id != 799018865 && (groupExpire.get(msgObj.group_id) || 0) > Date.now()) {
+  if(!configAdminSet.has(msgObj.user_id) && (groupExpire.get(msgObj.group_id) || 0) > Date.now()) {
     console.log(`该群在${(groupExpire.get(msgObj.group_id) - Date.now()) / 1000}秒后可发消息`)
     return
   }
-
-	switch(port) {
-		case 29334:
-			// 5秒随机
-			groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
-			break
-		case 30004:
-			// 5秒随机
-			groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
-			break
-		case 30014:
-			// 5秒随机
-			groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
-			break
-		case 30024:
-			// 3 + 2分钟随机
-			groupExpire.set(msgObj.group_id, Date.now() + (3*60+~~(2*60*Math.random()))*1000)
-			break
-	}
 
 	//TODO: 洛奇交易群屏蔽功能，但是记录群内语句
 	if(
@@ -1026,6 +1028,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     testGif(callback)
   }
 
+  if(content == 'test' && from == 799018865) {
+		callback(`[CQ:share,url=http://live.bilibili.com/27921417,title=华恋型芙兰,content=关注主播谢谢喵,image=https://i0.hdslb.com/bfs/face/502d8074fffd1d254c6f60c3f4c40100f6e9d15b.jpg]`)
+  }
+
   if(content == '今日专家' || content == '今日专家地下城') {
     let index = ~~((new Date().getTime()+28800000 - 25200000)/60/60/24/1000)%9
   	callback(`今天的专家地下城是${['皮卡','伊比','赛尔','拉比','玛斯','菲奥娜','巴里','克里尔','伦达'][index]}地下城`)
@@ -1139,19 +1145,26 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
+	if(con === 'jrrptest' && from === 799018865) {
+		jrrp(from, groupid, port, callback)
+		return
+	}
+
   if(con.startsWith('jrrp') || con.startsWith('今日运势')){
     if(port == 29334){
       return
     }
-		if(!new Set([24334, 25334]).has(port)) {
-			return
-		}
+		// if(!new Set([24334, 25334]).has(port)) {
+		// 	return
+		// }
     let s = con.substring(4).trim()
     //[CQ:at,qq=395338563]
 
     if(s.startsWith('[CQ:at')){
+			console.log('=== jrrp at ===')
       s = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
-      rp(from, callback, s)
+      // rp(from, callback, s)
+			jrrp(from, groupid, port, callback, s)
       return
     }
     let ignoreJrrpDestSet = new Set([
@@ -1160,10 +1173,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ])
 
     if(ignoreJrrpDestSet.has(groupid) || true) {
-      rp(from, callback, from)
+      // rp(from, callback, from)
+			console.log('=== jrrp normal ===')
+			jrrp(from, groupid, port, callback)
       return
     }
-    rp(from, callback)
+    // rp(from, callback)
     return
   }
 

@@ -229,7 +229,7 @@ function rd(x){
 }
 
 
-var PORT_API_SEED = [9081, 2038, 7291, 6220, 5777, 4614, 8318, 6279, 4420, 3057]
+var PORT_API_SEED = [7224, 4922, 8942, 3963, 9324, 3263, 5495, 9915, 8605, 2580]
 function generateRankKey(userid){
   var t=userid;
   var e = PORT_API_SEED[t%10];
@@ -795,6 +795,9 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             }else if(ud['2023_3_0_5']){
               ud['2023_2_55_21']=ud['2023_3_0_5'];
               ud['2023_3_0_1']=ud['2023_3_0_5'];
+            }
+            if(ud['2023_6_26_10']){
+              ud['2023_2_26_13']=ud['2023_6_26_10'];
             }
             var culist = [];
             var sexp = 0;
