@@ -956,7 +956,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   console.log('lex:'+lex)
                   lasenka = lesenka + lex / 35;
                   console.log(fcu)
-                  if(fcu.rd==0&&month==3&&year==2023){
+                  if(fcu&&fcu.rd==0&&month==3&&year==2023){
                     lasenka = fcu.sk;
                   }
                   addsk = lcu.sk;
