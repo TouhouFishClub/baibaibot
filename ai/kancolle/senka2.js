@@ -836,17 +836,20 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             var exstr = '0';
                 
               
-              var fcu;
-              var lcu;
             if(culist.length>0){
-              fcu = culist[0];
-              lcu = culist[culist.length-1];
+              var fcu = culist[0];
+              var lcu = culist[culist.length-1];
               var addsk = lcu.sk-fcu.sk;
               var addexp = lcu.exp-fcu.exp;
               allex = Math.round(addsk - addexp*7/10000);
               var fdt = Math.floor((fcu.rd+1)/2)
               var edt = Math.floor((lcu.rd+1)/2);
               exstr = '【'+allex+'】【'+fdt+'~'+edt+'日】';
+            }else{
+               var fcu = {sk:0,exp:0}
+               var lcu = {sk:0,exp:0}
+                allex = 0
+                exstr = ''
             }
 
             var fe=0
