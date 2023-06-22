@@ -834,9 +834,13 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             culist.sort(function(a,b){return a.rd-b.rd});
             var allex = 0;
             var exstr = '0';
+                
+              
+              var fcu;
+              var lcu;
             if(culist.length>0){
-              var fcu = culist[0];
-              var lcu = culist[culist.length-1];
+              fcu = culist[0];
+              lcu = culist[culist.length-1];
               var addsk = lcu.sk-fcu.sk;
               var addexp = lcu.exp-fcu.exp;
               allex = Math.round(addsk - addexp*7/10000);
