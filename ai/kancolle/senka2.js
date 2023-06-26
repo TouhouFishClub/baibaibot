@@ -807,6 +807,14 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             var yexp = 0;
             if(ud[yeark]){
               yexp = ud[yeark];
+            }else{
+              if(year==2023){
+                if(ud['2023_1_0_2']){
+                  yexp = ud['2023_1_0_2']
+                }else if(ud['2022_12_15']){
+                  yexp = ud['2022_12_15']
+                }
+              }
             }
             var adl=0;
             for(var i=0;i<ranklist.length;i++){
