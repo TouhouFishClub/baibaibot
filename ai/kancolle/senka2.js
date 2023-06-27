@@ -1235,14 +1235,66 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               return;
             }
 
-            ret = ret + '\t\t【榜单】\t【当前】\t\n'
-            ret = ret + '\t1位【'+r1+'】\t【'+rankmap[rks[0]].rss+'】\t\n';
-            ret = ret + '\t5位【'+r5+'】\t【'+rankmap[rks[4]].rss+'】\t\n';
-            ret = ret + '\t20位【'+r20+'】\t【'+rankmap[rks[19]].rss+'】\t\n';
-            ret = ret + '\t100位【'+r100+'】\t【'+rankmap[rks[99]].rss+'】\t\n';
-            ret = ret + '\t500位【'+r500+'】\t【'+rankmap[rks[499]].rss+'】\t\n';
-            ret = ret + '统计时间：'+new Date(lst).toLocaleString();
-            callback(ret.trim())
+
+
+            var r1str = r1;
+            var r5str = r5;
+            var r20str = r20;
+            var r100str = r100;
+            var r500str = r500;
+            var ll1 = dateno-1;
+            var ll2 = dateno-2;
+            var inq1 = [ll1+"_1",ll1+"_5",ll1+"_20",ll1+"_100",ll1+"_500"]
+            var inq2 = [ll2+"_1",ll2+"_5",ll2+"_20",ll2+"_100",ll2+"_500"]
+            var query11 = {'_id':{'$in':inq1}};
+            var query12 = {'_id':{'$in':inq2}};
+            cl_n_senka_8.find(query11).toArray(function(err,arr4){
+              cl_n_senka_8.find(query12).toArray(function(err,arr5){
+                for(var i=0;i<arr4.length;i++){
+                  var dno = arr4[i]._id.split('_')[1];
+                  var dd = arr4[i].dd;
+                  if(dno==1){
+                    r1str =  r1str + '(+'+(r1-dd)+')'
+                  }else if(dno==5){
+                    r5str =  r5str + '(+'+(r5-dd)+')'
+                  }else if(dno==20){
+                    r20str =  r20str + '(+'+(r20-dd)+')'
+                  }else if(dno==100){
+                    r100str =  r100str + '(+'+(r100-dd)+')'
+                  }else if(dno==500){
+                    r500str =  r500str + '(+'+(r500-dd)+')'
+                  }
+                }
+                for(var i=0;i<arr5.length;i++){
+                  var dno = arr5[i]._id.split('_')[1];
+                  var dd = arr5[i].dd;
+                  if(dno==1){
+                    r1str =  r1str + '(+'+(r1-dd)+')'
+                  }else if(dno==5){
+                    r5str =  r5str + '(+'+(r5-dd)+')'
+                  }else if(dno==20){
+                    r20str =  r20str + '(+'+(r20-dd)+')'
+                  }else if(dno==100){
+                    r100str =  r100str + '(+'+(r100-dd)+')'
+                  }else if(dno==500){
+                    r500str =  r500str + '(+'+(r500-dd)+')'
+                  }
+                }
+
+
+                ret = ret + '\t\t【榜单】\t【当前】\t\n'
+                ret = ret + '\t1位【'+r1str+'】\t【'+rankmap[rks[0]].rss+'】\t\n';
+                ret = ret + '\t5位【'+r5str+'】\t【'+rankmap[rks[4]].rss+'】\t\n';
+                ret = ret + '\t20位【'+r20str+'】\t【'+rankmap[rks[19]].rss+'】\t\n';
+                ret = ret + '\t100位【'+r100str+'】\t【'+rankmap[rks[99]].rss+'】\t\n';
+                ret = ret + '\t500位【'+r500str+'】\t【'+rankmap[rks[499]].rss+'】\t\n';
+                ret = ret + '统计时间：'+new Date(lst).toLocaleString();
+                callback(ret.trim())
+              });
+            });
+
+
+
           })
         }
       });
@@ -1440,7 +1492,7 @@ function generateImage(arr,str,callback,month){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8-Clearlove','','',function(r){console.log(r)})
+  //handleSenkaReply('z8','','',function(r){console.log(r)})
   //timer();
 },1500)
 
