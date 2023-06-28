@@ -485,6 +485,10 @@ app.get('/delBabyData',function(req,res) {
 app.post('/mabi/gachaPush', async (req, res) => {
 	const data = req.body.data  // 获取 data 数组
 
+	console.log('==== push data ====')
+	console.log(req.body)
+	console.log(data)
+
 	if (!Array.isArray(data)) {  // 校验 data 是否为数组
 		res.status(400).send({
 			code: 400,
