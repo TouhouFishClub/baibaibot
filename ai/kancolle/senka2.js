@@ -664,7 +664,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
     addShipUser(ca[1],callback);
     return;
   }
-  if(ca[0].endsWith("c")){
+  if(ca[0].endsWith("b")){
     addShipUser(ca[1],callback,1);
     return;
   }
