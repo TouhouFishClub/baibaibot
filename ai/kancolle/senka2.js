@@ -1573,6 +1573,7 @@ function addShipUser(name,callback){
           cl_p_senka_8.find({'_id':'p'}).toArray(function(err,arr) {
             if(arr.length==0){
               cl_p_senka_8.save({'_id':'p',d:[{u:uid,n:rname}]});
+              cl_p_senka_8.ensureIndex({n:1,ts:1});
               var ret = '当前监控列表：\n'
               ret = ret + rname;
               callback(ret);
@@ -1659,14 +1660,18 @@ function timer4(){
     if(nowdate<monthOfDay[nowmonth]-2){
       getShipInfo();
     }
-
-  },left4)
+    setTimeout(function(){
+      try{
+        timer();
+      }catch(e){}
+    },60000);
+  },left4+Math.floor(Math.random()*60000))
 }
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
   //handleSenkaReply('z8','','',function(r){console.log(r)})
-  //addShipUser('Apate',function(r){console.log(r)})
+  //addShipUser('Liberos',function(r){console.log(r)})
   //getShipInfo();
 },1500)
 
