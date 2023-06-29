@@ -664,6 +664,10 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
     addShipUser(ca[1],callback);
     return;
   }
+  if(ca[0].endsWith("c")){
+    addShipUser(ca[1],callback,1);
+    return;
+  }
   var nn = new Date();
   var now = nn.getTime();
   var year = nn.getFullYear();
