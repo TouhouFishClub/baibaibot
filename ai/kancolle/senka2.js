@@ -656,6 +656,14 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
      content=content.trim();
   }
   var ca = content.split('-');
+  if(ca[0].endsWith("c")){
+    searchShip(ca[1],callback);
+    return;
+  }
+  if(ca[0].endsWith("a")){
+    addShipUser(ca[1],callback);
+    return;
+  }
   var nn = new Date();
   var now = nn.getTime();
   var year = nn.getFullYear();
@@ -1510,6 +1518,21 @@ function addShipUser(name,callback){
   var cl_senka_8 = udb.collection("cl_senka_8");
   var cl_p_senka_8 = udb.collection("cl_p_8_senka_"+keym);
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
+  if(name==undefined){
+    cl_p_senka_8.find({'_id':'p'}).toArray(function(err,arr) {
+      if (arr.length == 0) {
+        callback('当前没有监控列表');
+      } else {
+        var list = arr[0].d;
+        var ret = '当前监控列表：\n'
+        for(var i=0;i<list.length;i++){
+          ret = ret + list[i].n+'\n';
+        }
+        callback(ret.trim());
+      }
+    });
+    return;
+  }
   var query;
   var cd = name;
   cd = cd.replace(/\(/g,"\\(")
@@ -1551,12 +1574,11 @@ function addShipUser(name,callback){
       callback(ret.trim());
       return;
     } else {
-      var sk = m[rname][0];
-      if (sk.dd < 4000) {
+      if (m[rname][0].dd < 4000) {
         callback('【' + rname + '】' + '无法加入监控列表');
         return
       } else {
-        console.log(rname+':已加入')
+        var sk = m[rname][0];
         var rkcmt = sk.cmt;
         cl_senka_8.find({n:rname}).toArray(function(err2,arr2) {
           arr2.sort(function (a, b) {
@@ -1668,11 +1690,61 @@ function timer4(){
   },left4+Math.floor(Math.random()*60000))
 }
 
+function searchShip(name,callback){
+  var nn = new Date();
+  var date = nn.getDate();
+  var year = nn.getFullYear();
+  var month = nn.getMonth()+1;
+  var keym = year+"_"+month;
+  var cl_senka_8 = udb.collection("cl_senka_8");
+  var cl_p_senka_8 = udb.collection("cl_p_8_senka_"+keym);
+  var cd = name;
+  cd = cd.replace(/\(/g,"\\(")
+  query = {n:new RegExp(cd),ts:{'$gt':nn.getTime()-43200000}};
+  cl_p_senka_8.find(query).toArray(function(err,arr) {
+    if(arr.length==0){
+      var ret = '未找到监控：'+name;
+      callback(ret)
+    }else{
+      var img1 = new imageMagick("static/blank.png");
+      var height = Math.min(arr.length*16+50,2000);
+      img1.autoOrient()
+        .resize(1000,height,'!')
+        .fontSize(14)
+        .fill('blue')
+        .font('./font/STXIHEI.TTF')
+      img1.drawText(20, 0, arr[0].n, 'NorthWest')
+      for(var i=0;i<arr.length;i++){
+        var ts = arr[i].ts;
+        var tse = new Date(ts);
+        var tsstr = (tse.getMonth()+1)+"-"+tse.getDate()+" "+tse.getHours()+":"+tse.getMinutes();
+        var addexp = 0;
+        if(arr[i+1]){
+          addexp = arr[i].e-arr[i+1].e;
+        }
+        var addsk = (addexp / 10000 * 7).toFixed(1)
+        var ship = arr[i].s.replace(/\t/g,' ');
+        img1.drawText(20, 20+i*16, tsstr, 'NorthWest')
+        img1.fill('red')
+        img1.drawText(100, 20+i*16, "+"+addsk, 'NorthWest')
+        img1.fill('blue')
+        img1.drawText(150, 20+i*16, ship, 'NorthWest')
+      }
+      sendGmImage(img1,'',callback);
+
+
+    }
+  });
+}
+
+
+
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8','','',function(r){console.log(r)})
+  //handleSenkaReply('z8c-Apwa','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getShipInfo();
+  //searchShip('Apate',function(r){console.log(r)})
 },1500)
 
 
