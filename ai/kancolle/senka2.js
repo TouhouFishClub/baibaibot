@@ -1662,7 +1662,7 @@ function timer4(){
     }
     setTimeout(function(){
       try{
-        timer();
+        timer4();
       }catch(e){}
     },60000);
   },left4+Math.floor(Math.random()*60000))
