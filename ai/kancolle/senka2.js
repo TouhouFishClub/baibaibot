@@ -1657,7 +1657,7 @@ function timer4(){
   setTimeout(function(){
     var nowdate = new Date().getDate();
     var nowmonth = new Date().getMonth();
-    if(nowdate<monthOfDay[nowmonth]-2){
+    if(nowdate>monthOfDay[nowmonth]-2){
       getShipInfo();
     }
     setTimeout(function(){
