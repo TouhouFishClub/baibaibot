@@ -1505,7 +1505,7 @@ function generateImage(arr,str,callback,month){
 }
 
 
-function addShipUser(name,callback){
+function addShipUser(name,callback,del){
   var nn = new Date();
   var date = nn.getDate();
   if(date<25){
@@ -1574,7 +1574,7 @@ function addShipUser(name,callback){
       callback(ret.trim());
       return;
     } else {
-      if (m[rname][0].dd < 4000) {
+      if (!del&&m[rname][0].dd < 4000) {
         callback('【' + rname + '】' + '无法加入监控列表');
         return
       } else {
@@ -1601,13 +1601,29 @@ function addShipUser(name,callback){
               callback(ret);
             }else{
               var list = arr[0].d;
-              cl_p_senka_8.updateOne({'_id':'p'},{'$addToSet':{d:{u:uid,n:rname}}});
-              var ret = '当前监控列表：\n'
-              ret = ret + rname + '\n';
-              for(var i=0;i<list.length;i++){
-                ret = ret + list[i].n+'\n';
+              if(del){
+                cl_p_senka_8.updateOne({'_id':'p'},{'$pull':{d:{u:uid,n:rname}}});
+              }else{
+                cl_p_senka_8.updateOne({'_id':'p'},{'$addToSet':{d:{u:uid,n:rname}}});
               }
-              callback(ret.trim())
+
+              if(del){
+                var ret = '当前监控列表：\n'
+                for(var i=0;i<list.length;i++){
+                  if(list[i].n!=name){
+                    ret = ret + list[i].n+'\n';
+                  }
+                }
+                callback(ret.trim())
+              }else{
+                var ret = '当前监控列表：\n'
+                ret = ret + rname + '\n';
+                for(var i=0;i<list.length;i++){
+                  ret = ret + list[i].n+'\n';
+                }
+                callback(ret.trim())
+              }
+
             }
           });
         });
