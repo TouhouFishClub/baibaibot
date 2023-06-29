@@ -15,6 +15,7 @@ const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
 const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
 const { myip } = require('./baibaiConfigs')
 const { analyzerMessage } = require('./ai/GenshinImpact/GenshinPush')
+const { getClient } = require('./mongo/index')
 const ports = new Set([
 	// 23334,
 	24334, // 2号机 3291864216
@@ -30,7 +31,7 @@ const ports = new Set([
 let PORT = 24334
 
 var bodyParser = require('body-parser');
-app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '10mb'}))
 var request = require("request");
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -481,4 +482,53 @@ app.get('/delBabyData',function(req,res) {
   })
 })
 
+app.post('/mabi/gachaPush', async (req, res) => {
+	const data = req.body  // 获取 data 数组
+
+	// console.log('==== push data ====')
+	// console.log(req.body)
+	// console.log(data)
+
+	if (!Array.isArray(data)) {  // 校验 data 是否为数组
+		res.status(400).send({
+			code: 400,
+			msg: 'data 必须为数组'
+		})
+		return
+	}
+
+	let client = await getClient(), err = []
+
+	// 校验每条数据是否完整
+	for (let i = 0; i < data.length; i++) {
+		const {uid, n, g, t, sv, so} = data[i]
+		if (uid && n && g && t && sv && so) {
+			await client.db('db_bot').collection('cl_mabinogi_gacha').save({
+				_id: `${so}_${uid}`,
+				customId: uid,
+				username: n,
+				gachaInfo: g,
+				ts: t,
+				serverId: sv,
+				source: so
+			})
+		} else {
+			err.push(data[i])
+		}
+	}
+
+	if(err.length) {
+		res.status(400).send({
+			code: 400,
+			msg: '数据不完整或重复',
+			err
+		})
+		return
+	}
+
+	res.send({
+		code: 200,
+		msg: '推送成功'
+	})
+})
 
