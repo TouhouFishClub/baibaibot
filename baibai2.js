@@ -1614,14 +1614,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  var n = content.indexOf('天气');
-  if(n==2){
-    var place = content.substring(0,2);
-    if((place.indexOf("风")>=0)||(place.indexOf("冰")>=0)||(place.indexOf("火")>=0)||(place.indexOf("水")>=0)){
-      handleFF14weatherReply(content,callback);
-      return;
-    }
-  }
+
 
   let co = content.indexOf('疫情')
   if(content.endsWith('疫情') && content.length <= 10 && content.length > 2) {
@@ -1649,7 +1642,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     )
     return
   }
-
+  var n = content.indexOf('天气');
   if(n>1&&n<10&&rcontent.length==n+2){
     var city = content.substring(0,n).trim();
     try{
