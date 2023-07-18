@@ -1421,7 +1421,7 @@ function generateImage(arr,str,callback,month){
   }
   var img1 = new imageMagick("static/blank.png");
   img1.autoOrient()
-    .resize(900,950,'!')
+    .resize(900,1050,'!')
     .fontSize(25)
     .fill('blue')
     .font('./font/STXIHEI.TTF')
