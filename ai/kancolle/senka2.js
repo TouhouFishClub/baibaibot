@@ -1469,7 +1469,7 @@ function generateImage(arr,str,callback,month){
   }
 
 
-
+  var l6=0;
   for(var i=-day+1;i<=ed;i++){
     if(i<1){
       continue;
@@ -1494,14 +1494,17 @@ function generateImage(arr,str,callback,month){
       img1.fill('dark')
       img1.drawText(50+x*wd+30 ,110+hd*y,mx[i],'NorthWest')
     }
+    if(y==5){
+      l6=1;
+    }
   }
 
   img1.fontSize(25)
   img1.fill('blue')
   if(nnm!=month){
-    img1.drawText(50,670,str,'NorthWest')
+    img1.drawText(50,670+l6*100,str,'NorthWest')
   }else{
-    img1.drawText(50,570,str,'NorthWest')
+    img1.drawText(50,570+l6*100,str,'NorthWest')
   }
 
   //img1.write('5.png',function(){});
@@ -1761,7 +1764,7 @@ function searchShip(name,callback){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8c-Apwa','','',function(r){console.log(r)})
+  //handleSenkaReply('z8m6-Apa','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getShipInfo();
   //searchShip('Apate',function(r){console.log(r)})
