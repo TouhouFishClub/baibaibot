@@ -1469,7 +1469,6 @@ function generateImage(arr,str,callback,month){
   }
 
 
-  var l6=0;
   for(var i=-day+1;i<=ed;i++){
     if(i<1){
       continue;
@@ -1477,6 +1476,9 @@ function generateImage(arr,str,callback,month){
     var ii = i+day-1;
     var x = ii%7;
     var y = Math.floor(ii/7);
+    if(y==5){
+      y=0;
+    }
     img1.fontSize(25)
     img1.fill('blue')
     img1.drawText(50+x*wd,80+hd*y,i,'NorthWest')
@@ -1494,17 +1496,15 @@ function generateImage(arr,str,callback,month){
       img1.fill('dark')
       img1.drawText(50+x*wd+30 ,110+hd*y,mx[i],'NorthWest')
     }
-    if(y==5){
-      l6=1;
-    }
+
   }
 
   img1.fontSize(25)
   img1.fill('blue')
   if(nnm!=month){
-    img1.drawText(50,670+l6*100,str,'NorthWest')
+    img1.drawText(50,670,str,'NorthWest')
   }else{
-    img1.drawText(50,570+l6*100,str,'NorthWest')
+    img1.drawText(50,570,str,'NorthWest')
   }
 
   //img1.write('5.png',function(){});
