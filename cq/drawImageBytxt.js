@@ -51,7 +51,7 @@ function drawTxtImage(words,txt,callback,options = {}){
     */
     .font(`./static/${options.font || 'dfgw.ttf'}`)
     .drawText(0,0,uw,'NorthWest');
-	return renderGmImage(img1);
+  sendGmImage(img1,words,callback);
 }
 
 function renderTxtImage(txt, options = {}){
@@ -100,7 +100,7 @@ function renderTxtImage(txt, options = {}){
     */
     .font(`./static/${options.font || 'dfgw.ttf'}`)
     .drawText(0,0,uw,'NorthWest');
-  sendGmImage(img1);
+	return renderGmImage(img1);
 }
 
 module.exports={
