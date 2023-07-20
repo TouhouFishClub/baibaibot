@@ -14,7 +14,7 @@ var path = require('path');
 //const { QQ, MsgHandler } = require('./qqlib');
 
 const{saveTxt,answer,getMsgCount} = require(path.join(__dirname, '/lib/mongo.js'))
-const { drawTxtImage } = require('./cq/drawImageBytxt')
+const { drawTxtImage, renderTxtImage } = require('./cq/drawImageBytxt')
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
@@ -304,27 +304,53 @@ var queue = []
 var xqueue = []
 function addSendQueue(groupid,msg,port){
   var gidstr = groupid+"";
-    msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-    msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-    msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
-    var bdy = {"group_id": groupid, message: msg};
-    console.log("send:"+groupid+":"+msg);
-    request({
-        headers:{
-            "Content-Type":"application/json"
-        },
-        method: "POST",
-        url: 'http://'+myip+':'+port+'/send_group_msg',
-        body: JSON.stringify(bdy)
-    }, function(error, response, body) {
-        if (error && error.code) {
-            console.log('pipe error catched!')
-            console.log(error);
-        } else {
-            console.log('ok1');
-        }
-        saveChat(groupid, 981069482, "百百", msg,port);
-    });
+	msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+	msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+	msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+
+	let msgSource = msg
+
+	let sp = msg.split('[CQ:')
+	msg = sp.map((current, index) => {
+		if(index) {
+			if(current.trim()) {
+				return renderTxtImage(current.trim())
+			} else {
+				return ''
+			}
+		} else {
+			let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
+			if(normalText.trim()) {
+				normalText = renderTxtImage(normalText.trim())
+			} else {
+				normalText = ''
+			}
+			return [`[CQ:${ssp[0]}]`, normalText]
+		}
+	}).filter(x => x).join('\n')
+
+	console.log(`======== 已被图片化 ========`)
+	console.log(msg)
+
+
+	var bdy = {"group_id": groupid, message: msg};
+	console.log("send:"+groupid+":"+msgSource);
+	request({
+			headers:{
+					"Content-Type":"application/json"
+			},
+			method: "POST",
+			url: 'http://'+myip+':'+port+'/send_group_msg',
+			body: JSON.stringify(bdy)
+	}, function(error, response, body) {
+			if (error && error.code) {
+					console.log('pipe error catched!')
+					console.log(error);
+			} else {
+					console.log('ok1');
+			}
+			saveChat(groupid, 981069482, "百百", msgSource,port);
+	});
 }
 
 const formatMsg = msg => {
