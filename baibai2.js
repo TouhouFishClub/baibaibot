@@ -328,15 +328,15 @@ async function addSendQueue(groupid,msg,port){
 			}
 		}
 		msg = output.filter(x => x).join('\n')
+
+		console.log(`======== 已被图片化 ========`)
+		console.log(sp)
+		console.log(msg)
 	}
 
 	msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
 	msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
 	msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
-
-	console.log(`======== 已被图片化 ========`)
-	console.log(sp)
-	console.log(msg)
 
 
 	var bdy = {"group_id": groupid, message: msg};
