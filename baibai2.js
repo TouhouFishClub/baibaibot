@@ -310,24 +310,43 @@ async function addSendQueue(groupid,msg,port){
 
 	let msgSource = msg
 
-	let sp = msg.split('[CQ:')
-	msg = _.flattenDeep(sp.map((current, index) => {
+	let sp = msg.split('[CQ:'), output = []
+	for(let index = 0 ; index < sp.length; index ++) {
+		let current = sp[index]
+
 		if(index) {
 			let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
 			if(normalText.trim()) {
-				normalText = renderTxtImage(normalText.trim())
+				normalText = await renderTxtImage(normalText.trim())
 			} else {
 				normalText = ''
 			}
-			return [`[CQ:${ssp[0]}]`, normalText]
+			output.push(`[CQ:${ssp[0]}]`, normalText)
 		} else {
 			if(current.trim()) {
-				return renderTxtImage(current.trim())
-			} else {
-				return ''
+				output.push(renderTxtImage(current.trim()))
 			}
 		}
-	})).filter(x => x).join('\n')
+	}
+	msg = output.filter(x => x).join('\n')
+	
+	// msg = _.flattenDeep(sp.map((current, index) => {
+	// 	if(index) {
+	// 		let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
+	// 		if(normalText.trim()) {
+	// 			normalText = renderTxtImage(normalText.trim())
+	// 		} else {
+	// 			normalText = ''
+	// 		}
+	// 		return [`[CQ:${ssp[0]}]`, normalText]
+	// 	} else {
+	// 		if(current.trim()) {
+	// 			return renderTxtImage(current.trim())
+	// 		} else {
+	// 			return ''
+	// 		}
+	// 	}
+	// })).filter(x => x).join('\n')
 
 	console.log(`======== 已被图片化 ========`)
 	console.log(sp)
