@@ -313,12 +313,6 @@ function addSendQueue(groupid,msg,port){
 	let sp = msg.split('[CQ:')
 	msg = sp.map((current, index) => {
 		if(index) {
-			if(current.trim()) {
-				return renderTxtImage(current.trim())
-			} else {
-				return ''
-			}
-		} else {
 			let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
 			if(normalText.trim()) {
 				normalText = renderTxtImage(normalText.trim())
@@ -326,6 +320,12 @@ function addSendQueue(groupid,msg,port){
 				normalText = ''
 			}
 			return [`[CQ:${ssp[0]}]`, normalText]
+		} else {
+			if(current.trim()) {
+				return renderTxtImage(current.trim())
+			} else {
+				return ''
+			}
 		}
 	}).filter(x => x).join('\n')
 
