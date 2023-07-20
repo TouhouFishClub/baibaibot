@@ -302,7 +302,7 @@ function initBotWS(port,wsport, configs){
 
 var queue = []
 var xqueue = []
-function addSendQueue(groupid,msg,port){
+async function addSendQueue(groupid,msg,port){
   var gidstr = groupid+"";
 	msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
 	msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")

@@ -54,7 +54,7 @@ function drawTxtImage(words,txt,callback,options = {}){
   sendGmImage(img1,words,callback);
 }
 
-function renderTxtImage(txt, options = {}){
+async function renderTxtImage(txt, options = {}){
   var wa = txt.split('\n');
   var maxwd = 0;
   var uwd = 29;
@@ -100,7 +100,7 @@ function renderTxtImage(txt, options = {}){
     */
     .font(`./static/${options.font || 'dfgw.ttf'}`)
     .drawText(0,0,uw,'NorthWest');
-	return renderGmImage(img1);
+	return await renderGmImage(img1)
 }
 
 module.exports={
