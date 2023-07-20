@@ -5,7 +5,7 @@ var fs = require('fs');
 var request = require('request');
 let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
-
+const _ = require('lodash')
 const {diffuseReply,novelAI,naifu,novelAIDiffuse,HDdiffuse,saveMagicPrefer} = require('./ai/image/diffuse')
 const {ImgScale} = require('./ai/image/scale');
 const { myip } = require('./baibaiConfigs')
@@ -311,7 +311,7 @@ function addSendQueue(groupid,msg,port){
 	let msgSource = msg
 
 	let sp = msg.split('[CQ:')
-	msg = sp.map((current, index) => {
+	msg = _.flattenDeep(sp.map((current, index) => {
 		if(index) {
 			let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
 			if(normalText.trim()) {
@@ -327,7 +327,7 @@ function addSendQueue(groupid,msg,port){
 				return ''
 			}
 		}
-	}).filter(x => x).join('\n')
+	})).filter(x => x).join('\n')
 
 	console.log(`======== 已被图片化 ========`)
 	console.log(sp)
