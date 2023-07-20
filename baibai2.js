@@ -330,6 +330,7 @@ function addSendQueue(groupid,msg,port){
 	}).filter(x => x).join('\n')
 
 	console.log(`======== 已被图片化 ========`)
+	console.log(sp)
 	console.log(msg)
 
 
