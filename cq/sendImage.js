@@ -29,7 +29,7 @@ function sendGmImage(gmObj,words='',callback,order){
 }
 
 function renderGmImage(gmObj){
-	return Promise(resolve => {
+	return new Promise(resolve => {
 		var imgname2 = new Date().getTime()+"";
 		var now = new Date();
 		var year = now.getFullYear();
