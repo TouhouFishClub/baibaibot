@@ -314,40 +314,22 @@ async function addSendQueue(groupid,msg,port){
 		if(index) {
 			let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
 			if(normalText.trim()) {
-				normalText = await renderTxtImage(normalText.trim())
+				normalText = await renderTxtImage(normalText.trim(), {color: 'black', font: 'STXIHEI.TTF'})
 			} else {
 				normalText = ''
 			}
 			output.push(`[CQ:${ssp[0]}]`, normalText)
 		} else {
 			if(current.trim()) {
-				output.push(await renderTxtImage(current.trim()))
+				output.push(await renderTxtImage(current.trim(), {color: 'black', font: 'STXIHEI.TTF'}))
 			}
 		}
 	}
 	msg = output.filter(x => x).join('\n')
-	
+
 	msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
 	msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
 	msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
-
-	// msg = _.flattenDeep(sp.map((current, index) => {
-	// 	if(index) {
-	// 		let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
-	// 		if(normalText.trim()) {
-	// 			normalText = renderTxtImage(normalText.trim())
-	// 		} else {
-	// 			normalText = ''
-	// 		}
-	// 		return [`[CQ:${ssp[0]}]`, normalText]
-	// 	} else {
-	// 		if(current.trim()) {
-	// 			return renderTxtImage(current.trim())
-	// 		} else {
-	// 			return ''
-	// 		}
-	// 	}
-	// })).filter(x => x).join('\n')
 
 	console.log(`======== 已被图片化 ========`)
 	console.log(sp)
