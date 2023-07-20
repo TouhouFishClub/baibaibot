@@ -304,9 +304,6 @@ var queue = []
 var xqueue = []
 async function addSendQueue(groupid,msg,port){
   var gidstr = groupid+"";
-	msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-	msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-	msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
 
 	let msgSource = msg
 
@@ -329,6 +326,10 @@ async function addSendQueue(groupid,msg,port){
 		}
 	}
 	msg = output.filter(x => x).join('\n')
+	
+	msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+	msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+	msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
 
 	// msg = _.flattenDeep(sp.map((current, index) => {
 	// 	if(index) {
