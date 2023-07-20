@@ -324,12 +324,12 @@ async function addSendQueue(groupid,msg,port){
 			output.push(`[CQ:${ssp[0]}]`, normalText)
 		} else {
 			if(current.trim()) {
-				output.push(renderTxtImage(current.trim()))
+				output.push(await renderTxtImage(current.trim()))
 			}
 		}
 	}
 	msg = output.filter(x => x).join('\n')
-	
+
 	// msg = _.flattenDeep(sp.map((current, index) => {
 	// 	if(index) {
 	// 		let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
