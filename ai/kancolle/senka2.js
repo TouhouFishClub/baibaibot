@@ -1327,9 +1327,9 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 img1.drawText(220, 0, '【当前】', 'NorthWest')
                 img1.drawText(320, 0, '【半日】', 'NorthWest')
                 img1.drawText(420, 0, '【一日】', 'NorthWest')
-                img1.drawText(520, 0, ''+(month-1)+'月'+date+'日', 'NorthWest')
-                img1.drawText(620, 0, ''+(month-2)+'月'+date+'日', 'NorthWest')
-                img1.drawText(720, 0, ''+(month-3)+'月'+date+'日', 'NorthWest')
+                img1.drawText(520, 0, ''+(month-1)+'月'+'', 'NorthWest')
+                img1.drawText(620, 0, ''+(month-2)+'月'+'', 'NorthWest')
+                img1.drawText(720, 0, ''+(month-3)+'月'+'', 'NorthWest')
                 img1.drawText(20, 50, '【1位】', 'NorthWest')
                 img1.drawText(20, 100, '【5位】', 'NorthWest')
                 img1.drawText(20, 150, '【20位】', 'NorthWest')
@@ -1382,22 +1382,45 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
 
                 getlm(1,function(ret){
                   img1.drawText(520, 50, ret[1], 'NorthWest')
+
+
                   img1.drawText(520, 100, ret[5], 'NorthWest')
                   img1.drawText(520, 150, ret[20], 'NorthWest')
                   img1.drawText(520, 200, ret[100], 'NorthWest')
                   img1.drawText(520, 250, ret[500], 'NorthWest')
+                  img1.fontSize(20)             .fill('red')
+                  img1.drawText(530, 70, ret[1001], 'NorthWest')
+                  img1.drawText(530, 120, ret[1005], 'NorthWest')
+                  img1.drawText(530, 170, ret[1020], 'NorthWest')
+                  img1.drawText(530, 220, ret[1100], 'NorthWest')
+                  img1.drawText(530, 270, ret[1500], 'NorthWest')
+                  img1.fontSize(25)             .fill('blue')
                   getlm(2,function(ret){
                     img1.drawText(620, 50, ret[1], 'NorthWest')
                     img1.drawText(620, 100, ret[5], 'NorthWest')
                     img1.drawText(620, 150, ret[20], 'NorthWest')
                     img1.drawText(620, 200, ret[100], 'NorthWest')
                     img1.drawText(620, 250, ret[500], 'NorthWest')
+                    img1.fontSize(20)             .fill('red')
+                    img1.drawText(630, 70, ret[1001], 'NorthWest')
+                    img1.drawText(630, 120, ret[1005], 'NorthWest')
+                    img1.drawText(630, 170, ret[1020], 'NorthWest')
+                    img1.drawText(630, 220, ret[1100], 'NorthWest')
+                    img1.drawText(630, 270, ret[1500], 'NorthWest')
+                    img1.fontSize(25)             .fill('blue')
                     getlm(3,function(ret){
                       img1.drawText(720, 50, ret[1], 'NorthWest')
                       img1.drawText(720, 100, ret[5], 'NorthWest')
                       img1.drawText(720, 150, ret[20], 'NorthWest')
                       img1.drawText(720, 200, ret[100], 'NorthWest')
                       img1.drawText(720, 250, ret[500], 'NorthWest')
+                      img1.fontSize(20)             .fill('red')
+                      img1.drawText(730, 70, ret[1001], 'NorthWest')
+                      img1.drawText(730, 120, ret[1005], 'NorthWest')
+                      img1.drawText(730, 170, ret[1020], 'NorthWest')
+                      img1.drawText(730, 220, ret[1100], 'NorthWest')
+                      img1.drawText(730, 270, ret[1500], 'NorthWest')
+                      img1.fontSize(25)             .fill('blue')
                       sendGmImage(img1,'',callback);
                     })
                   })
@@ -1425,14 +1448,21 @@ function getlm(skip,callback){
   var keym = year+"_"+month;
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
   var rankDateNo = (date * 2 - 2) + (hour>13?1:0);
-  var list = [rankDateNo+"_1",rankDateNo+"_5",rankDateNo+"_20",rankDateNo+"_100",rankDateNo+"_500"]
+  var endDateNo = monthOfDay[month-1] *2 - 1;
+  var list = [rankDateNo+"_1",rankDateNo+"_5",rankDateNo+"_20",rankDateNo+"_100",rankDateNo+"_500",endDateNo+"_1",endDateNo+"_5",endDateNo+"_20",endDateNo+"_100",endDateNo+"_500"]
   var query = {'_id':{'$in':list}};
   cl_n_senka_8.find(query).toArray(function(err,arr){
     var ret = {};
     for(var i=0;i<arr.length;i++){
+      var id = arr[i]._id;
+      var dateno = id.split("_")[0];
       var dd = arr[i].dd;
       var no = arr[i].no;
-      ret[no] = dd;
+      if(dateno==rankDateNo){
+        ret[no] = dd;
+      }else{
+        ret[parseInt(no)+1000] = dd;
+      }
     }
     callback(ret);
   });
