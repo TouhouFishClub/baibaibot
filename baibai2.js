@@ -5,7 +5,7 @@ var fs = require('fs');
 var request = require('request');
 let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
-
+const _ = require('lodash')
 const {diffuseReply,novelAI,naifu,novelAIDiffuse,HDdiffuse,saveMagicPrefer} = require('./ai/image/diffuse')
 const {ImgScale} = require('./ai/image/scale');
 const { myip } = require('./baibaiConfigs')
@@ -14,7 +14,7 @@ var path = require('path');
 //const { QQ, MsgHandler } = require('./qqlib');
 
 const{saveTxt,answer,getMsgCount} = require(path.join(__dirname, '/lib/mongo.js'))
-const { drawTxtImage } = require('./cq/drawImageBytxt')
+const { drawTxtImage, renderTxtImage } = require('./cq/drawImageBytxt')
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
@@ -302,29 +302,61 @@ function initBotWS(port,wsport, configs){
 
 var queue = []
 var xqueue = []
-function addSendQueue(groupid,msg,port){
+async function addSendQueue(groupid,msg,port){
   var gidstr = groupid+"";
-    msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-    msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-    msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
-    var bdy = {"group_id": groupid, message: msg};
-    console.log("send:"+groupid+":"+msg);
-    request({
-        headers:{
-            "Content-Type":"application/json"
-        },
-        method: "POST",
-        url: 'http://'+myip+':'+port+'/send_group_msg',
-        body: JSON.stringify(bdy)
-    }, function(error, response, body) {
-        if (error && error.code) {
-            console.log('pipe error catched!')
-            console.log(error);
-        } else {
-            console.log('ok1');
-        }
-        saveChat(groupid, 981069482, "百百", msg,port);
-    });
+
+	let msgSource = msg
+
+	if(port === 29334) {
+		// 限制某些端口强制使用图片发送文字
+		let sp = msg.split('[CQ:'), output = []
+		for(let index = 0 ; index < sp.length; index ++) {
+			let current = sp[index]
+
+			if(index) {
+				let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
+				if(normalText.trim()) {
+					normalText = await renderTxtImage(normalText.trim(), {color: 'black', font: 'STXIHEI.TTF'})
+				} else {
+					normalText = ''
+				}
+				output.push(`[CQ:${ssp[0]}]`, normalText)
+			} else {
+				if(current.trim()) {
+					output.push(await renderTxtImage(current.trim(), {color: 'black', font: 'STXIHEI.TTF'}))
+				}
+			}
+		}
+		msg = output.filter(x => x).join('\n')
+
+		console.log(`======== 已被图片化 ========`)
+		console.log(sp)
+		console.log(msg)
+	}
+
+	msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+	msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+	msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+
+
+	var bdy = {"group_id": groupid, message: msg};
+	console.log("send:"+groupid+":"+msgSource);
+	request({
+			headers:{
+					"Content-Type":"application/json"
+			},
+			method: "POST",
+			url: 'http://'+myip+':'+port+'/send_group_msg',
+			body: JSON.stringify(bdy)
+	}, function(error, response, body) {
+			if (error && error.code) {
+					console.log('pipe error catched!')
+					console.log(error);
+			} else {
+					console.log('ok1');
+			}
+			saveChat(groupid, 981069482, "百百", msgSource,port);
+	});
 }
 
 const formatMsg = msg => {
