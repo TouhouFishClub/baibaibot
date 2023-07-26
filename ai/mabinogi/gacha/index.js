@@ -337,6 +337,7 @@ const loadGachaGroup = async (page = 1, source = false) => {
 						} else {
 							await col.save({
 								_id: rareList[j],
+								alias: rareList[j].replace(/[()（）]/g, ''),
 								info: [
 									{
 										pool: info.name,
