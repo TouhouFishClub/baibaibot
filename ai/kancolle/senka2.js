@@ -1313,19 +1313,162 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 ret = ret + '\t20位【'+r20str+'】\t【'+rankmap[rks[19]].rss+'】\t\n';
                 ret = ret + '\t100位【'+r100str+'】\t【'+rankmap[rks[99]].rss+'】\t\n';
                 ret = ret + '\t500位【'+r500str+'】\t【'+rankmap[rks[499]].rss+'】\t\n';
+
                 ret = ret + '统计时间：'+new Date(lst).toLocaleString();
-                callback(ret.trim())
+                var date = nn.getDate();
+                var img1 = new imageMagick("static/blank.png");
+                img1.autoOrient()
+                  .resize(850,350,'!')
+                  .fontSize(20)
+                  .fill('blue')
+                  .font('./font/STXIHEI.TTF')
+
+                img1.drawText(120, 0, '【榜单】', 'NorthWest')
+                img1.drawText(220, 0, '【当前】', 'NorthWest')
+                img1.drawText(320, 0, '【半日】', 'NorthWest')
+                img1.drawText(420, 0, '【一日】', 'NorthWest')
+                img1.drawText(520, 0, ''+(month-1)+'月'+'', 'NorthWest')
+                img1.drawText(620, 0, ''+(month-2)+'月'+'', 'NorthWest')
+                img1.drawText(720, 0, ''+(month-3)+'月'+'', 'NorthWest')
+                img1.drawText(20, 50, '【1位】', 'NorthWest')
+                img1.drawText(20, 100, '【5位】', 'NorthWest')
+                img1.drawText(20, 150, '【20位】', 'NorthWest')
+                img1.drawText(20, 200, '【100位】', 'NorthWest')
+                img1.drawText(20, 250, '【500位】', 'NorthWest')
+
+                img1.drawText(120, 50, r1, 'NorthWest')
+                img1.drawText(120, 100, r5, 'NorthWest')
+                img1.drawText(120, 150, r20, 'NorthWest')
+                img1.drawText(120, 200, r100, 'NorthWest')
+                img1.drawText(120, 250, r500, 'NorthWest')
+
+                img1.drawText(220, 50, rankmap[rks[0]].rss.toFixed(1), 'NorthWest')
+                img1.drawText(220, 100, rankmap[rks[4]].rss.toFixed(1), 'NorthWest')
+                img1.drawText(220, 150, rankmap[rks[19]].rss.toFixed(1), 'NorthWest')
+                img1.drawText(220, 200, rankmap[rks[99]].rss.toFixed(1), 'NorthWest')
+                img1.drawText(220, 250, rankmap[rks[499]].rss.toFixed(1), 'NorthWest')
+                img1.drawText(30, 300, '统计时间：'+new Date(lst).toLocaleString(), 'NorthWest')
+                for(var i=0;i<arr4.length;i++){
+                  var dno = arr4[i]._id.split('_')[1];
+                  var dd = arr4[i].dd;
+                  if(dno==1){
+                    img1.drawText(320, 50, '+'+(r1-dd), 'NorthWest')
+                  }else if(dno==5){
+                    img1.drawText(320, 100, '+'+(r5-dd), 'NorthWest')
+                  }else if(dno==20){
+                    img1.drawText(320, 150, '+'+(r20-dd), 'NorthWest')
+                  }else if(dno==100){
+                    img1.drawText(320, 200, '+'+(r100-dd), 'NorthWest')
+                  }else if(dno==500){
+                    img1.drawText(320, 250, '+'+(r500-dd), 'NorthWest')
+                  }
+                }
+
+                for(var i=0;i<arr5.length;i++){
+                  var dno = arr5[i]._id.split('_')[1];
+                  var dd = arr5[i].dd;
+                  if(dno==1){
+                    img1.drawText(420, 50, '+'+(r1-dd), 'NorthWest')
+                  }else if(dno==5){
+                    img1.drawText(420, 100, '+'+(r5-dd), 'NorthWest')
+                  }else if(dno==20){
+                    img1.drawText(420, 150, '+'+(r20-dd), 'NorthWest')
+                  }else if(dno==100){
+                    img1.drawText(420, 200, '+'+(r100-dd), 'NorthWest')
+                  }else if(dno==500){
+                    img1.drawText(420, 250, '+'+(r500-dd), 'NorthWest')
+                  }
+                }
+
+                getlm(1,function(ret){
+                  img1.drawText(520, 50, ret[1], 'NorthWest')
+
+
+                  img1.drawText(520, 100, ret[5], 'NorthWest')
+                  img1.drawText(520, 150, ret[20], 'NorthWest')
+                  img1.drawText(520, 200, ret[100], 'NorthWest')
+                  img1.drawText(520, 250, ret[500], 'NorthWest')
+                  img1.fontSize(20)             .fill('red')
+                  img1.drawText(530, 70, ret[1001], 'NorthWest')
+                  img1.drawText(530, 120, ret[1005], 'NorthWest')
+                  img1.drawText(530, 170, ret[1020], 'NorthWest')
+                  img1.drawText(530, 220, ret[1100], 'NorthWest')
+                  img1.drawText(530, 270, ret[1500], 'NorthWest')
+                  img1.fontSize(25)             .fill('blue')
+                  getlm(2,function(ret){
+                    img1.drawText(620, 50, ret[1], 'NorthWest')
+                    img1.drawText(620, 100, ret[5], 'NorthWest')
+                    img1.drawText(620, 150, ret[20], 'NorthWest')
+                    img1.drawText(620, 200, ret[100], 'NorthWest')
+                    img1.drawText(620, 250, ret[500], 'NorthWest')
+                    img1.fontSize(20)             .fill('red')
+                    img1.drawText(630, 70, ret[1001], 'NorthWest')
+                    img1.drawText(630, 120, ret[1005], 'NorthWest')
+                    img1.drawText(630, 170, ret[1020], 'NorthWest')
+                    img1.drawText(630, 220, ret[1100], 'NorthWest')
+                    img1.drawText(630, 270, ret[1500], 'NorthWest')
+                    img1.fontSize(25)             .fill('blue')
+                    getlm(3,function(ret){
+                      img1.drawText(720, 50, ret[1], 'NorthWest')
+                      img1.drawText(720, 100, ret[5], 'NorthWest')
+                      img1.drawText(720, 150, ret[20], 'NorthWest')
+                      img1.drawText(720, 200, ret[100], 'NorthWest')
+                      img1.drawText(720, 250, ret[500], 'NorthWest')
+                      img1.fontSize(20)             .fill('red')
+                      img1.drawText(730, 70, ret[1001], 'NorthWest')
+                      img1.drawText(730, 120, ret[1005], 'NorthWest')
+                      img1.drawText(730, 170, ret[1020], 'NorthWest')
+                      img1.drawText(730, 220, ret[1100], 'NorthWest')
+                      img1.drawText(730, 270, ret[1500], 'NorthWest')
+                      img1.fontSize(25)             .fill('blue')
+                      sendGmImage(img1,'',callback);
+                    })
+                  })
+                })
+
+
               });
             });
-
-
-
           })
         }
       });
     });
   }
 }
+
+function getlm(skip,callback){
+  var nn = new Date();
+  var date = nn.getDate();
+  var year = nn.getFullYear();
+  var month = nn.getMonth()+1-skip;
+  if(month<1){
+    callback({});
+  }
+  var hour = nn.getHours();
+  var keym = year+"_"+month;
+  var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
+  var rankDateNo = (date * 2 - 2) + (hour>13?1:0);
+  var endDateNo = monthOfDay[month-1] *2 - 1;
+  var list = [rankDateNo+"_1",rankDateNo+"_5",rankDateNo+"_20",rankDateNo+"_100",rankDateNo+"_500",endDateNo+"_1",endDateNo+"_5",endDateNo+"_20",endDateNo+"_100",endDateNo+"_500"]
+  var query = {'_id':{'$in':list}};
+  cl_n_senka_8.find(query).toArray(function(err,arr){
+    var ret = {};
+    for(var i=0;i<arr.length;i++){
+      var id = arr[i]._id;
+      var dateno = id.split("_")[0];
+      var dd = arr[i].dd;
+      var no = arr[i].no;
+      if(dateno==rankDateNo){
+        ret[no] = dd;
+      }else{
+        ret[parseInt(no)+1000] = dd;
+      }
+    }
+    callback(ret);
+  });
+}
+
+
 
 function loopFront(list,ret,callback,lst,pcd,odp){
   if(list.length==0){
@@ -1764,7 +1907,7 @@ function searchShip(name,callback){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8m6-Apa','','',function(r){console.log(r)})
+  //handleSenkaReply('z8','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getShipInfo();
   //searchShip('Apate',function(r){console.log(r)})
