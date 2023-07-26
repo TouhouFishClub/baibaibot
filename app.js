@@ -482,6 +482,13 @@ app.get('/delBabyData',function(req,res) {
   })
 })
 
+
+const addZero = num => num < 10 ? ('0' + num) : num
+const formatDate = ts => {
+	let date = new Date(ts)
+	return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`
+}
+
 app.post('/mabi/gachaPush', async (req, res) => {
 	const data = req.body  // 获取 data 数组
 
@@ -502,6 +509,11 @@ app.post('/mabi/gachaPush', async (req, res) => {
 	// 校验每条数据是否完整
 	for (let i = 0; i < data.length; i++) {
 		const {uid, n, g, t, sv, so} = data[i]
+		let target = await client.db('db_bot').collection('cl_mabinogi_gacha_info').findOne({alias: g.replace(/[()（）]/g, '')})
+		let from = 'unknown'
+		if(target && target.info && target.info.length) {
+			from = target.info[target.info.length - 1].pool
+		}
 		if (uid && n && g && t && sv && so) {
 			await client.db('db_bot').collection('cl_mabinogi_gacha').save({
 				_id: `${so}_${uid}`,
@@ -509,6 +521,8 @@ app.post('/mabi/gachaPush', async (req, res) => {
 				username: n,
 				gachaInfo: g,
 				ts: t,
+				time: formatDate(t),
+				from,
 				serverId: sv,
 				source: so
 			})
