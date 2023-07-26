@@ -256,10 +256,10 @@ const loadGachaGroup = async (page = 1, source = false) => {
 			let formatName = t.name
 			formatName = formatName.substring(formatName.indexOf('>') + 1)
 			if(formatName.indexOf('[') > -1) {
-				formatName = formatName.substring(formatName.indexOf('['))
+				formatName = formatName.substring(0, formatName.indexOf('['))
 			}
 			if(formatName.indexOf('<') > -1) {
-				formatName = formatName.substring(formatName.indexOf('<'))
+				formatName = formatName.substring(0, formatName.indexOf('<'))
 			}
 			info.name = formatName
 			let data = await fetchData(t.link)
