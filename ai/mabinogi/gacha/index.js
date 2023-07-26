@@ -252,7 +252,16 @@ const loadGachaGroup = async (page = 1, source = false) => {
 		for(let j = 0; j < target.length; j++) {
 			let info = {}
 			let t = target[j]
-			info.name = t.name
+			/* 处理不合适的名称 */
+			let formatName = t.name
+			formatName = formatName.substring(formatName.indexOf('>') + 1)
+			if(formatName.indexOf('[') > -1) {
+				formatName = formatName.substring(formatName.indexOf('['))
+			}
+			if(formatName.indexOf('<') > -1) {
+				formatName = formatName.substring(formatName.indexOf('<'))
+			}
+			info.name = formatName
 			let data = await fetchData(t.link)
 			// let sp = splitStr(data, '<body', '</body>')
 			// console.log(splitStr(data, 'var pl', '}'))
@@ -303,7 +312,7 @@ const loadGachaGroup = async (page = 1, source = false) => {
 						console.log(e)
 					}
 				}
-				let col = client.collection('cl_mabinogi_gacha_info'), rareKeys = Object.keys(raremap)
+				let col = client.db('db_bot').collection('cl_mabinogi_gacha_info'), rareKeys = Object.keys(raremap)
 				for(let i = 0; i < rareKeys.length; i ++) {
 					let rareInfo = raremap[rareKeys[i]]
 					let [color, rare, rareList] = rareInfo
