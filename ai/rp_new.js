@@ -175,11 +175,11 @@ const render = (target, userInfo, output, callback) => {
 		})
 }
 
-let output = path.join('./', `test_jrrp.png`)
-render('123456789', {nid: 'abc'}, output, (d) => {
-	console.log(d)
-})
+// let output = path.join('./', `test_jrrp.png`)
+// render('123456789', {nid: 'abc'}, output, (d) => {
+// 	console.log(d)
+// })
 
-// module.exports = {
-// 	jrrp
-// }
+module.exports = {
+	jrrp
+}
