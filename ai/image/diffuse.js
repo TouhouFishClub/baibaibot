@@ -445,7 +445,7 @@ async function naifu(callback,content,novelaitoken,gid,qq){
 }
 
 var novelAIToken = undefined;
-async function ZnovelAIDiffuse(content,gid,qq,callback){
+async function novelAIDiffuse(content,gid,qq,callback){
   if(novelAIToken)  {
     naifu(callback, content, novelAIToken,gid,qq)
   }else {
