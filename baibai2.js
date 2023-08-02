@@ -486,13 +486,12 @@ function handleMsg_D(msgObj,port, configs) {
     }
     if((
         gidstr.startsWith("22169")||
+        gidstr.startsWith("20570")||
         gidstr.startsWith("xxxxx")
-
-      )&&port==25334){
+      )&&port!=25334){
       return;
     }
     if((
-        gidstr.startsWith("20570")||
         gidstr.startsWith("57758")||
         gidstr.startsWith("xxxxx")
       )&&port!=24334){
