@@ -7,7 +7,10 @@ const { mabiGacha, fetchData, loadGachaGroup } = require('./index');
 		// 	let res = await loadGachaGroup(i, true)
 		// 	console.log(res)
 		// }
-		let d = await fetchData('https://luoqi.tiancity.com/homepage/event/2022/0817shsmpl/')
+		// let d = await fetchData('https://luoqi.tiancity.com/homepage/article/2023/07/18/63354.html')
+		// let d = await fetchData('https://luoqi.tiancity.com/homepage/article/2023/07/12/63331.html')
+		// let d = await fetchData('https://luoqi.tiancity.com/homepage/article/2023/07/12/63330.html')
+		let d = await fetchData('https://luoqi.tiancity.com/homepage/article/2023/07/11/63323.html')
 		console.log(d)
 		// await mabiGacha(799018865, d => {
 		// 	console.log(d)

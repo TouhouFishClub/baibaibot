@@ -85,10 +85,17 @@ const jrrp = async (qq, groupId, port, callback, other) => {
 	if(!userInfo) {
 		return
 	}
+	let output = path.join(IMAGE_DATA, 'rp', `${target}_jrrp.png`)
+
+	render(target, userInfo, output, callback)
+
+
+}
+
+const render = (target, userInfo, output, callback) => {
+
 	let rp = createUserRp(target)
 	console.log(rp)
-
-	let output = path.join(IMAGE_DATA, 'rp', `${target}_jrrp.png`)
 
 	let progressColor = '#b20000'
 	if(rp > 30) {
@@ -166,9 +173,12 @@ const jrrp = async (qq, groupId, port, callback, other) => {
 			let imgMsg = `[CQ:image,file=${path.join('send', 'rp', `${target}_jrrp.png`)}]`
 			callback(imgMsg)
 		})
-
-
 }
+
+// let output = path.join('./', `test_jrrp.png`)
+// render('123456789', {nid: 'abc'}, output, (d) => {
+// 	console.log(d)
+// })
 
 module.exports = {
 	jrrp
