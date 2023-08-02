@@ -498,7 +498,6 @@ function handleMsg_D(msgObj,port, configs) {
       return;
     }
     if((
-        gidstr.startsWith("57758")||
         gidstr.startsWith("xxxxx")
       )&&port!=24334){
       return;
@@ -507,6 +506,11 @@ function handleMsg_D(msgObj,port, configs) {
         gidstr.startsWith("25032")||
         gidstr.startsWith("xxxxx")
       )&&port!=30004){
+      return;
+    }
+    if((
+				gidstr.startsWith("57758")
+      )&&port!=30034){
       return;
     }
   }else{
