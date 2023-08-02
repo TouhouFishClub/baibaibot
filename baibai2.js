@@ -253,6 +253,12 @@ var botlist = [
 				'^mbi',
 			]
 		}
+  },
+  {
+    qq:1,
+    port:30034,
+    wsport:30035,
+		configs: {}
   }
 
 ]
