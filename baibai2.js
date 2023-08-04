@@ -347,7 +347,7 @@ async function addSendQueue(groupid,msg,port,from){
 
 	var bdy = {"group_id": groupid, message: msg};
 	console.log("send:"+groupid+":"+msgSource);
-	if(port==25334){
+	if(port==25334&&(!groupid.startsWith("20570"))&&(!from.startsWith("35747"))){
       var bdy2 = {"user_id": from, message: msg};
       request({
         headers:{
