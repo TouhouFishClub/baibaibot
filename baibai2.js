@@ -308,7 +308,7 @@ function initBotWS(port,wsport, configs){
 
 var queue = []
 var xqueue = []
-async function addSendQueue(groupid,msg,port){
+async function addSendQueue(groupid,msg,port,from){
   var gidstr = groupid+"";
 
 	let msgSource = msg
@@ -347,22 +347,42 @@ async function addSendQueue(groupid,msg,port){
 
 	var bdy = {"group_id": groupid, message: msg};
 	console.log("send:"+groupid+":"+msgSource);
-	request({
-			headers:{
-					"Content-Type":"application/json"
-			},
-			method: "POST",
-			url: 'http://'+myip+':'+port+'/send_group_msg',
-			body: JSON.stringify(bdy)
-	}, function(error, response, body) {
-			if (error && error.code) {
-					console.log('pipe error catched!')
-					console.log(error);
-			} else {
-					console.log('ok1');
-			}
-			saveChat(groupid, 981069482, "百百", msgSource,port);
-	});
+	if(port==25334){
+      request({
+        headers:{
+          "Content-Type":"application/json"
+        },
+        method: "POST",
+        url: 'http://'+myip+':'+port+'/send_private_msg',
+        var bdy2 = {"user_id": from, message: msg};
+        body: JSON.stringify(bdy2 )
+      }, function(error, response, body) {
+        if (error && error.code) {
+          console.log('pipe error catched!')
+          console.log(error);
+        } else {
+          console.log('ok1');
+        }
+        saveChat(groupid, 981069482, "百百", msgSource,port);
+      });
+    }else{
+      request({
+        headers:{
+          "Content-Type":"application/json"
+        },
+        method: "POST",
+        url: 'http://'+myip+':'+port+'/send_group_msg',
+        body: JSON.stringify(bdy)
+      }, function(error, response, body) {
+        if (error && error.code) {
+          console.log('pipe error catched!')
+          console.log(error);
+        } else {
+          console.log('ok1');
+        }
+        saveChat(groupid, 981069482, "百百", msgSource,port);
+      });
+    }
 }
 
 const formatMsg = msg => {
@@ -680,7 +700,7 @@ function handleMsg_D(msgObj,port, configs) {
 					break
 			}
 
-			addSendQueue(groupid,res,port);
+			addSendQueue(groupid,res,port,from);
 		}
 	}
 
