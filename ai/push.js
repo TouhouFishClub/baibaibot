@@ -76,17 +76,17 @@ function pushToGroup(type) {
     var callback = function (res, blank) {
 
       var msg = res.trim();
-      var port = 24334;
+      var port = 25334;
       if (res.trim().length > 0) {
           res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-          var bdy = {"group_id": groupid, message: res};
+          var bdy = {"user_id": 357474405, message: res};
           console.log("send:" + res);
           request({
               headers:{
                   "Content-Type":"application/json"
               },
               method: "POST",
-              url: 'http://'+require('../baibaiConfigs').myip+':'+24334+'/send_group_msg',
+              url: 'http://'+require('../baibaiConfigs').myip+':'+25334+'/send_private_msg',
               body: JSON.stringify(bdy)
           }, function(error, response, body) {
               if (error && error.code) {
