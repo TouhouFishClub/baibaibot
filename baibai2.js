@@ -348,13 +348,14 @@ async function addSendQueue(groupid,msg,port,from){
 	var bdy = {"group_id": groupid, message: msg};
 	console.log("send:"+groupid+":"+msgSource);
 	if(port==25334){
+      var bdy2 = {"user_id": from, message: msg};
       request({
         headers:{
           "Content-Type":"application/json"
         },
         method: "POST",
         url: 'http://'+myip+':'+port+'/send_private_msg',
-        var bdy2 = {"user_id": from, message: msg};
+
         body: JSON.stringify(bdy2 )
       }, function(error, response, body) {
         if (error && error.code) {
