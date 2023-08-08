@@ -340,9 +340,7 @@ async function addSendQueue(groupid,msg,port,from){
 	// 	console.log(msg)
 	// }
 
-	msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-	msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-	msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+
 
 
 	var bdy = {"group_id": groupid, message: msg};
@@ -588,41 +586,38 @@ function handleMsg_D(msgObj,port, configs) {
 			break
   }
 
+/*
+
+ {"post_type":"message","message_type":"private","time":1691471876,"self_id":1840239061,"sub_type":"friend","message_id":143434411,"user_id":357474405,"target_id":1840239061,"message":"111","raw_message":"111","font":0,"sender":{"age":0,"nickname":"⑩空.blue","sex":"unknown","user_id":357474405}}
+
+ {"post_type":"message","message_type":"private","time":1691471976,"self_id":1840239061,"sub_type":"group","temp_source":0,"message_id":34453,"user_id":981069482,"message":"222","raw_message":"222","font":0,"sender":{"age":0,"group_id":205700800,"nickname":"百百","sex":"unknown","user_id":981069482}}
+
+
+ */
+
+  if (!(type == 'group' || type == 'private')) {
+    return;
+  }
+  var from;
+  var name;
+  var nickname;
+  if(type == 'group'){
+    from = msgObj.user_id;
+    name = getUserNameInGroup(from, groupid,port);
+    nickname = getUserNickInGroupByCache(from, groupid);
+  }
 
   if (type == 'private') {
-		console.log('\n\n\n\n===== 这是私聊 =====')
-		console.log(msgObj)
-		console.log('===== 这是私聊 =====\n\n\n\n')
-    var userid = msgObj.user_id;
-    callback = function (res) {
-	    console.log('private res:'+res);
-      if (res.trim().length > 0) {
-          var options = {
-            host: ''+myip+'',
-            port: port,
-            path: '/send_private_msg?user_id=' + userid + '&message=' + encodeURIComponent(res),
-            method: 'GET',
-            headers: {}
-          };
-          console.log("priv:" + userid + ":" + content + ":" + res);
-          var req = http.request(options);
-          req.on('error', function (err) {
-            console.log('req err:');
-            console.log(err);
-          });
-          req.end();
-      }
-    }
-	getChatgptReplay(content,357470,357470,callback);
-    return;
+    console.log('\n\n\n\n===== 这是私聊 =====')
+    console.log(msgObj)
+    console.log('===== 这是私聊 =====\n\n\n\n')
+    var from = msgObj.user_id;
+    var sender = msgObj.sender;
+    var name = sender.nickname;
+    groupid = "0"
   }
-  if (type != 'group') {
-    return;
-  }
-  var from = msgObj.user_id;
 
-  var name = getUserNameInGroup(from, groupid,port);
-  var nickname = getUserNickInGroupByCache(from, groupid);
+
   console.log(groupid + ":" + name + ":" + content)
   if (name == null) {
     name = nickname;
@@ -682,6 +677,7 @@ function handleMsg_D(msgObj,port, configs) {
 				}
 			}
 
+
 			switch(port) {
 				case 29334:
 					// 5秒随机
@@ -700,8 +696,32 @@ function handleMsg_D(msgObj,port, configs) {
           groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
 					break
 			}
+          var msg = res;
+          msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+          msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+          msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+          if(type=='private'){
+            var bdy2 = {"user_id": from, message: msg};
+            request({
+              headers:{
+                "Content-Type":"application/json"
+              },
+              method: "POST",
+              url: 'http://'+myip+':'+port+'/send_private_msg',
 
-			addSendQueue(groupid,res,port,from);
+              body: JSON.stringify(bdy2 )
+            }, function(error, response, body) {
+              if (error && error.code) {
+                console.log('pipe error catched!')
+                console.log(error);
+              } else {
+                console.log('ok1');
+              }
+              saveChat(groupid, 981069482, "百百", msg,port);
+          }else if(type=='group'){
+            addSendQueue(groupid,msg,port,from);
+          }
+
 		}
 	}
 
