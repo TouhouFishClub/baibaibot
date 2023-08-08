@@ -345,13 +345,13 @@ async function addSendQueue(groupid,msg,port,from){
 
 	var bdy = {"group_id": groupid, message: msg};
 	console.log("send:"+groupid+":"+msgSource);
-    //if(port==25334&&(!(groupid+"").startsWith("20570"))&&(!(groupid+"").startsWith("69738"))&&(!(groupid+"").startsWith("67096"))&&(!(from+"").startsWith("35747"))){
-    if(true){
+    if(port==25334&&(!(groupid+"").startsWith("20570"))&&(!(groupid+"").startsWith("69738"))&&(!(groupid+"").startsWith("67096"))&&(!(from+"").startsWith("35747"))){
+    //if(true){
       var bdy2 = {"user_id": from, message: msg};
       var str = 'CQ:image,file=file:'
       var n = msg.indexOf(str);
 
-      if(n>0){
+      if(n>9999990){
         var s1 = msg.substring(n+str.length);
         var n1 = s1.indexOf(']');
         console.log('n11111111111111111:'+s1);
