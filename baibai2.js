@@ -354,7 +354,7 @@ async function addSendQueue(groupid,msg,port,from){
       if(n>0){
         var s1 = msg.substring(n+str.length);
         var n1 = s1.indexOf(',');
-        console.log('n11111111111111111:'+n1);
+        console.log('n11111111111111111:'+s1);
         var filename = s1.substring(0,n1);
         var now = new Date().getTime();
         var bdy3 = {"group_id":groupid,"name":now+".jpg","file":filename};
