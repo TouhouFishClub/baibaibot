@@ -350,10 +350,11 @@ async function addSendQueue(groupid,msg,port,from){
       var bdy2 = {"user_id": from, message: msg};
       var str = 'CQ:image,file=file:'
       var n = msg.indexOf(str);
-      console.log('n11111111111111111:'+n);
+
       if(n>0){
         var s1 = msg.substring(n+str.length);
-        var n1 = s1.indexOf('"');
+        var n1 = s1.indexOf(',');
+        console.log('n11111111111111111:'+n1);
         var filename = s1.substring(0,n1);
         var now = new Date().getTime();
         var bdy3 = {"group_id":groupid,"name":now+".jpg","file":filename};
