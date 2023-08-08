@@ -347,23 +347,53 @@ async function addSendQueue(groupid,msg,port,from){
 	console.log("send:"+groupid+":"+msgSource);
 	if(port==25334&&(!(groupid+"").startsWith("20570"))&&(!(groupid+"").startsWith("69738"))&&(!(groupid+"").startsWith("67096"))&&(!(from+"").startsWith("35747"))){
       var bdy2 = {"user_id": from, message: msg};
-      request({
-        headers:{
-          "Content-Type":"application/json"
-        },
-        method: "POST",
-        url: 'http://'+myip+':'+port+'/send_private_msg',
+      var str = 'CQ:image,file=file:'
+      var n = msg.indexOf(str);
+      if(n>0){
+        var s1 = msg.substring(n+str.length);
+        var n1 = s1.indexOf('"');
+        var filename = s1.substring(0,n1);
+        var now = new Date().getTime();
+        var bdy3 = {"group_id":groupid,"name":now+".jpg","file":filename};
+        console.log(bdy);
+        request({
+          headers:{
+            "Content-Type":"application/json"
+          },
+          method: "POST",
+          url: 'http://'+myip+':'+port+'/upload_group_file',
+          body: JSON.stringify(bdy3)
+        }, function(error, response, body) {
+          if (error && error.code) {
+            console.log('pipe error catched!')
+            console.log(error);
+          } else {
+            console.log('ok1');
+          }
+          saveChat(groupid, 981069482, "百百", msgSource,port);
+        });
+      }else{
+        request({
+          headers:{
+            "Content-Type":"application/json"
+          },
+          method: "POST",
+          url: 'http://'+myip+':'+port+'/send_private_msg',
 
-        body: JSON.stringify(bdy2 )
-      }, function(error, response, body) {
-        if (error && error.code) {
-          console.log('pipe error catched!')
-          console.log(error);
-        } else {
-          console.log('ok1');
-        }
-        saveChat(groupid, 981069482, "百百", msgSource,port);
-      });
+          body: JSON.stringify(bdy2 )
+        }, function(error, response, body) {
+          if (error && error.code) {
+            console.log('pipe error catched!')
+            console.log(error);
+          } else {
+            console.log('ok1');
+          }
+          saveChat(groupid, 981069482, "百百", msgSource,port);
+        });
+      }
+
+
+
     }else{
       request({
         headers:{
