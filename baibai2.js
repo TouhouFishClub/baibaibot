@@ -717,7 +717,8 @@ function handleMsg_D(msgObj,port, configs) {
               } else {
                 console.log('ok1');
               }
-              saveChat(groupid, 981069482, "百百", msg,port);
+            });
+            saveChat(groupid, 981069482, "百百", msg,port);
           }else if(type=='group'){
             addSendQueue(groupid,msg,port,from);
           }
