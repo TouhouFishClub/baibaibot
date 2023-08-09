@@ -59,11 +59,11 @@ function getUserInfo(uuid,callback,noproxy,shipsave){
   if(noproxy==1){
     req.proxy = 'http://192.168.17.236:2346'
   }else if(noproxy==2){
-    req.proxy = 'http://192.168.17.241:2346'
+    req.proxy = 'http://192.168.17.243:2346'
   }else if(noproxy==4){
     req.proxy = 'http://192.168.17.236:2346'
   }else if(noproxy==5){
-    req.proxy = 'http://192.168.17.241:2346'
+    req.proxy = 'http://192.168.17.243:2346'
   }else if(noproxy==6){
 
   }else if(noproxy==7){
@@ -297,11 +297,11 @@ function getRank(page,retarr,proxy){
       if(proxy==1){
         req.proxy = 'http://192.168.17.236:2346'
       }else if(proxy==2){
-        req.proxy = 'http://192.168.17.241:2346'
+        req.proxy = 'http://192.168.17.243:2346'
       }else if(proxy==4){
         req.proxy = 'http://192.168.17.236:2346'
       }else if(proxy==5){
-        req.proxy = 'http://192.168.17.241:2346'
+        req.proxy = 'http://192.168.17.243:2346'
       }else if(proxy>=7){
         return;
       }else{
