@@ -233,7 +233,7 @@ function rd(x){
 }
 
 
-var PORT_API_SEED = [2613, 6116, 4534, 3627, 6394, 8454, 7245, 8092, 4417, 2612]
+var PORT_API_SEED = [3986, 4588, 3767, 3319, 2405, 3246, 6702, 3932, 6419, 6186]
 function generateRankKey(userid){
   var t=userid;
   var e = PORT_API_SEED[t%10];
