@@ -3,7 +3,7 @@ const path = require("path-extra")
 const util = require('node:util')
 const request = require('request')
 const requestPromise = util.promisify(request)
-const {IMAGE_DATA} = require('./baibaiConfigs');
+const {IMAGE_DATA} = require('../baibaiConfigs');
 let expire = 0
 const targetPath = path.join(__dirname, '..', IMAGE_DATA+'/tapFish/')
 
