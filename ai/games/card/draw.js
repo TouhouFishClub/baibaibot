@@ -14,6 +14,7 @@ const {saveBan} = require ('../../replay')
 const {banUserInGroup,getUserRoleInGroupByCache} = require('../../../cq/cache')
 const {drawPixiv} = require('./pixiv')
 const {fetchYande} = require('./yande');
+const {IMAGE_DATA,RECORD_DATA} = require('../../../baibaiConfigs');
 
 
 var bmap = {};
@@ -634,7 +635,7 @@ let getPic = async ( path,username ,callback) => {
     await lateTime( 500 );
     //输出页面到当前目录下
     var now = new Date();
-    var filename = "../coolq-data/cq/data/image/send/bangumi/"+now.getTime()+".png";
+    var filename = IMAGE_DATA+"/bangumi/"+now.getTime()+".png";
     //filename="1.png";
     console.log(filename);
     await page.render(filename);

@@ -5,6 +5,7 @@ var mongourl = require('../../../baibaiConfigs').mongourl;
 var fs = require('fs');
 var request = require('request');
 const {checknsfw} = require('./checkNSFW');
+const {IMAGE_DATA,RECORD_DATA} = require('../../../baibaiConfigs');
 
 
 var udb;
@@ -18,7 +19,7 @@ function initDB(){
 }
 
 function fetchYande(id,callback){
-  var filename = "../coolq-data/cq/data/image/send/ydb/"+id+".png";
+  var filename = IMAGE_DATA+"/ydb/"+id+".png";
   var exist = fs.existsSync(filename);
   if(exist){
     callback('[CQ:image,file=send/ydb/'+id+'.png]\nYandeID:'+id);
@@ -30,7 +31,7 @@ function fetchYande(id,callback){
     var imgurl = 'http://192.168.17.52:10086/ydb/'+id;
     checknsfw(imgurl,function(ret){
       if(ret!=0){
-        var desfilename = "../coolq-data/cq/data/image/send/ydb/"+id+"";
+        var desfilename = IMAGE_DATA+"/ydb/"+id+"";
         fs.rename(filename,desfilename,function(){
           callback('[CQ:image,file=send/ydb/'+id+']');
         })
@@ -88,7 +89,7 @@ function fetchYande(id,callback){
             var imgurl = 'http://192.168.17.52:10086/ydb/'+id;
             checknsfw(imgurl,function(ret){
               if(ret!=0){
-                var desfilename = "../coolq-data/cq/data/image/send/ydb/"+id+"";
+                var desfilename = IMAGE_DATA+"/ydb/"+id+"";
                 fs.rename(filename,desfilename,function(){
                   callback('[CQ:image,file=send/ydb/'+id+']');
                 })

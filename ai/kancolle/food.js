@@ -1,6 +1,7 @@
 var fs = require('fs');
 var https = require('https');
 var phantom = require('phantom')
+const {IMAGE_DATA,RECORD_DATA} = require('../../baibaiConfigs');
 
 var mem = 0
 
@@ -104,7 +105,7 @@ let getPic = async ( path,tag ,callback) => {
     await lateTime( 500 );
     //输出页面到当前目录下
     var now = new Date();
-    var filename = "../coolq-data/cq/data/image/send/kancolle/"+now.getTime()+".png";
+    var filename = IMAGE_DATA+"/kancolle/"+now.getTime()+".png";
     console.log(filename);
     await page.render(filename);
     //销毁实例

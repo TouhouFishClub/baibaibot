@@ -119,7 +119,6 @@ function getnames(){
 let saveImage = function(url,filename){
   var now = new Date();
   // var rd = Math.floor(Math.random()*8888+1000);
-  // var filename = "../coolq-data/cq/data/image/send/save/"+now.getTime()+rd+".png";
   filename = 'monsters/'+filename;
   console.log(url);
   var req = request({

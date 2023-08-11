@@ -13,9 +13,13 @@ let personasLimit = {}
 
 let client
 
-load({
-	userDict: join(__dirname, 'user.dict.utf8'),
-})
+setTimeout(function(){
+  load({
+    userDict: join(__dirname, 'user.dict.utf8'),
+  })
+
+},5000)
+
 
 const analysisChatData = data => {
 	let msgList = []

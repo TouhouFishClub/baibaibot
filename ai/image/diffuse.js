@@ -8,6 +8,7 @@ const { sendImageMsgBuffer } = require(path.join(__dirname, '../../cq/sendImage.
 const {realesrgan} = require('./scale');
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = require('../../baibaiConfigs').mongourl;
+const {IMAGE_DATA,RECORD_DATA} = require('../../baibaiConfigs');
 
 
 
@@ -42,7 +43,6 @@ function diffuseReply(content,gid,qq,callback,waifu){
     } else {
       // resbody = imgurl;
       // var now = new Date().getTime();
-      // var filename = "../coolq-data/cq/data/image/send/diffuse/" + now+"_"+content;
       // var imgreq = request({
       //   url: imgurl,
       //   method: "GET"
@@ -83,11 +83,11 @@ function diffuseReply(content,gid,qq,callback,waifu){
               var imgurl = d2.output[0];
 
               var now = new Date().getTime();
-              var filename = "../coolq-data/cq/data/image/send/diffuse/" + now+"_"+content;
+              var filename = IMAGE_DATA+"/diffuse/" + now+"_"+content;
               var imgreq = request({
                 url: imgurl,
                 method: "GET",
-                proxy: 'http://192.168.17.241:2346',
+                proxy: 'http://192.168.17.243:2346',
               }, function (error, response, body) {
                 if (error && error.code) {
                   console.log('pipe error catched!')
@@ -143,7 +143,7 @@ bd.data=dt;
       console.log(fn);
       var imgurl = 'http://'+hostid+'.gradio.app/file='+fn;
       var now = new Date().getTime();
-      var filename = "../coolq-data/cq/data/image/send/diffuse/" + now;
+      var filename = IMAGE_DATA+"/diffuse/" + now;
       var imgreq = request({
         url: imgurl,
         method: "GET",
@@ -529,3 +529,95 @@ module.exports={
   novelAIDiffuse,
   saveMagicPrefer
 }
+
+
+
+//masterpiece, best quality,((very close to viewers)),solo focus,1girl,child,((child face)),(round face),(((cat ears))),(smile),cute,straight-on,close up,upper body,huge breasts,((blue sky)),grassland,green grass,white flowers,((long river with blue water)),((on the river)),(greco-roman architecture),beautiful,(((light white blue hair))),long hair,blue eyes,neat bangs,(((naked))),(((((spread legs))))), (((((spread pussy))))), (((peeing))),(((squat))),(((visible pussy))),pussy juice, (((cum string)))
+
+/*
+
+
+ masterpiece,best quality,very close to viewers,8k wallpaper, pussy focus,lower body,
+ long hair,neat bangs,(((((baby face))))),fang,exposed navel, short body,pure hair,silver hair,
+ couch,grassland,flowers,moonlight,lake,(((castle))),stars,outdoors, night,
+ fellatio,cum in pussy,cum on breasts,light on pussy,nipples, vampire, red moon,
+ ((child)),(child size),(((baby))),loli,lolita fashion, lolita hairband, naked, small chest,spread legs, spread pussy,visible pussy
+
+
+ masterpiece,best quality,very close to viewers,8k wallpaper, pussy focus,lower body,
+ long hair,neat bangs,((baby face)),light smile,shy,red face,brown skin,green ribbon,leaf on head,
+ bedroom,bed,love hotel,cute,window,gothic architecture,castle,moon,night,window,twintails,
+ fellatio,(((female masturbation))),cum in pussy,cum on breasts,light on pussy,vulva,(((sharp nipples))),
+ (((child))),(child size),(((loli))),lolita fashion,naked,(((small breasts))),(((flat chest))),spread legs, spread pussy,visible pussy,pubic hair,
+
+
+ masterpiece,best quality,very close to viewers,8k wallpaper, pussy focus,lower body,
+ long hair,neat bangs,((baby face)),blue eyes,twintails,
+ bedroom,bed,sunlight,blue sky,window,
+ fellatio,(((female masturbation))),cum in pussy,cum on breasts,light on pussy,vulva,nipples,
+ child,(child size),loli,lolita fashion,naked, small breasts,spread legs, spread pussy,visible pussy
+
+
+
+ masterpiece,best quality,photorealistic,(((very close to viewers))),facing front,((ice))
+ long hair,neat bangs,((baby face)),light smile,shy,red face,brown skin,green ribbon,flowers,
+ (((hotel))),(((((European architecture))))),fountain,(((((swimming poll))))),(((stand))),
+ ((((one girl)))),child,naked,cute,beautiful,swimming suit,transparent panties,
+
+
+ masterpiece,best quality,very close to viewers,8k wallpaper, pussy focus,lower body,
+ long hair,neat bangs,((baby face)),light smile,shy,red face,brown skin,green ribbon,leaf on head,blue eyes,
+ hotel,pool, swimming pool,fountain, european architecture, (((((stand))))),in the water,the water slide,
+ fellatio,(((female masturbation))),cum in pussy,cum on breasts,light on pussy,vulva,(((sharp nipples))),transparent panties, transparent pantyhose,
+ (((child))),(child size),(((loli))),lolita fashion,naked,(((small breasts))),(((flat chest))),visible pussy,pubic hair,
+
+
+
+ masterpiece,best quality,very close to viewers,8k wallpaper, pussy focus,lower body,
+ girl,long hair,neat bangs,((baby face)),light smile,shy,red face,(((white ribbon))),(((blue eyes))),((ribbon on chest)),cat ears,
+ street,european architecture,on the roof,
+ fellatio,(((female masturbation))),light on pussy,vulva,(((sharp nipples))),
+ (((child))),(child size),((((baby)))),(((loli))),lolita fashion,naked,(((small breasts))),(((flat chest))),visible pussy,
+
+
+
+ masterpiece,best quality,very close to viewers,8k wallpaper, pussy focus,lower body,
+ girl,long hair,neat bangs,((baby face)),light smile,shy,red face,(((white ribbon))),(((blue eyes))),((ribbon on chest)),cat ears,
+ classical ribbon,breasts ribbon,transparent ribbon,(miko),((light smile)),shy,
+ chinese classical cloth,cute,transparent pantymtransparent pantyhose,transparent socks,
+ fellatio,(((female masturbation))),light on pussy,(((sharp nipples))),
+ (((child))),(child size),(((loli))),lolita fashion,(((small breasts))),(((flat chest))),
+
+((part of the head)), ((((mutated hands and fingers)))), deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, blurry, floating limbs, disconnected limbs, malformed hands, blur, out of focus, long neck, long body, Octane renderer,lowres, bad anatomy, bad hands, text, missing fingers, worst quality, low quality, normal quality, signature, watermark, blurry,ugly, fat, obese, chubby, (((deformed))), [blurry], bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), messy drawing, morbid, mutilated, tranny, trans, trannsexual, [out of frame], (bad proportions), octane render,maya
+
+
+
+
+
+ from google.colab import drive
+ drive.mount('/content/drive')
+
+ !apt-get -y install -qq aria2
+ !pip install -q https://github.com/camenduru/stable-diffusion-webui-colab/releases/download/0.0.16/xformers-0.0.16+814314d.d20230118-cp38-cp38-linux_x86_64.whl
+ !pip install -q --pre triton
+
+ !git clone -b v1.6 https://github.com/camenduru/stable-diffusion-webui
+ !wget https://raw.githubusercontent.com/camenduru/stable-diffusion-webui-scripts/main/run_n_times.py -O /content/stable-diffusion-webui/scripts/run_n_times.py
+ !git clone -b v1.6 https://github.com/camenduru/deforum-for-automatic1111-webui /content/stable-diffusion-webui/extensions/deforum-for-automatic1111-webui
+ !git clone -b v1.6 https://github.com/camenduru/stable-diffusion-webui-images-browser /content/stable-diffusion-webui/extensions/stable-diffusion-webui-images-browser
+ !git clone -b v1.6 https://github.com/camenduru/stable-diffusion-webui-huggingface /content/stable-diffusion-webui/extensions/stable-diffusion-webui-huggingface
+ !git clone https://github.com/d8ahazard/sd_dreambooth_extension.git /content/stable-diffusion-webui/extensions/sd_dreambooth_extension
+ !git clone -b v1.6 https://github.com/camenduru/sd-civitai-browser /content/stable-diffusion-webui/extensions/sd-civitai-browser
+ !git clone -b v1.6 https://github.com/camenduru/sd-webui-additional-networks /content/stable-diffusion-webui/extensions/sd-webui-additional-networks
+ %cd /content/stable-diffusion-webui
+
+ !aria2c --console-log-level=error -c -x 16 -s 16 -k 1M '' -d /content/stable-diffusion-webui/models/Stable-diffusion -o Counterfeit-V2.0fp16.safetensors
+ !aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co/ckpt/anything-v3.0/resolve/main/Anything-V3.0.vae.pt -d /content/stable-diffusion-webui/models/Stable-diffusion -o Anything-V3.0.vae.pt
+
+ !sed -i -e '''/prepare_environment()/a\    os.system\(f\"""sed -i -e ''\"s/self.logvar\\[t\\]/self.logvar\\[t.item()\\]/g\"'' /content/stable-diffusion-webui/repositories/stable-diffusion-stability-ai/ldm/models/diffusion/ddpm.py""")''' /content/stable-diffusion-webui/launch.py
+ !sed -i -e '''/prepare_environment()/a\    os.system\(f\"""sed -i -e ''\"s/dict()))/dict())).cuda()/g\"'' /content/stable-diffusion-webui/repositories/stable-diffusion-stability-ai/ldm/util.py""")''' /content/stable-diffusion-webui/launch.py
+ !sed -i '$a fastapi==0.90.0' requirements_versions.txt
+ !python launch.py --share --xformers --enable-insecure-extension-access
+
+
+  ×、

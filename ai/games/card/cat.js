@@ -1,6 +1,6 @@
 var request = require('request');
 var fs = require('fs');
-
+const {IMAGE_DATA,RECORD_DATA} = require('../../../baibaiConfigs');
 function catreply(content,qq,callback){
     var url = 'https://api.thecatapi.com/v1/images/search?mime_types=jpg';
     if(content.startsWith("2")){
@@ -29,7 +29,7 @@ function catreply(content,qq,callback){
             }else{
                 suffix="";
             }
-            var filename = "../coolq-data/cq/data/image/send/cat/"+now+suffix;
+            var filename = IMAGE_DATA+"/cat/"+now+suffix;
             var imgreq = request({
                 url: caturl,
                 method: "GET"

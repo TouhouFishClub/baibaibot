@@ -4,7 +4,7 @@ var timer = 0;
 var path = require('path');
 var fs = require('fs');
 var request = require('request');
-
+const {IMAGE_DATA} = require('./baibaiConfigs');
 const {cm,combine} = require(path.join(__dirname, '/coin/market.js'))
 const {getStock} = require(path.join(__dirname, '/coin/stock.js'))
 

@@ -2,6 +2,7 @@ var http = require('http');
 var https = require('https');
 var fs = require('fs');
 const phantom = require('phantom');
+const {IMAGE_DATA,RECORD_DATA} = require('../../baibaiConfigs');
 
 function getShip(content,callback){
   var options = {
@@ -74,7 +75,7 @@ let getPic = async ( path,tag ,callback) => {
     await lateTime( 500 );
     //输出页面到当前目录下
     var now = new Date();
-    var filename = "../coolq-data/cq/data/image/send/ship/"+now.getTime()+".png";
+    var filename = IMAGE_DATA+"/ship/"+now.getTime()+".png";
     console.log(filename);
     await page.render(filename);
     //销毁实例

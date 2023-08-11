@@ -1,3 +1,6 @@
+const {IMAGE_DATA} = require('../baibaiConfigs');
+
+
 const list = [
   "馄饨",
   "拉面",
@@ -101,7 +104,7 @@ const chishenme = (qq, st, callback, hasMine = true) => {
       }
       callback(r)
     }else{
-      fs.readdir('../coolq-data/cq/data/image/send/food/', function (err, files) {
+      fs.readdir(IMAGE_DATA+'/food/', function (err, files) {
         var len = files.length;
         var rdfile = files[Math.floor(Math.random() * len)];
         var imgret = '' + '[CQ:'+'image'+',file=send/food/' + rdfile + ']';

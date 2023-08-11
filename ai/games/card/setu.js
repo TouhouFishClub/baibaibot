@@ -2,6 +2,7 @@ var http = require('http');
 var https = require('https');
 var request = require('request');
 var fs = require('fs');
+const {IMAGE_DATA,RECORD_DATA} = require('../../../baibaiConfigs');
 
 var MongoClient = require('mongodb').MongoClient;
 var mongourl = require('../../../baibaiConfigs').mongourl;
@@ -78,7 +79,7 @@ function runsetu(content,gid,qq,callback,port){
   }
 
   if(true){
-    fs.readdir('../coolq-data/cq/data/image/send/setu/', function (err, files) {
+    fs.readdir(IMAGE_DATA+'/setu/', function (err, files) {
       var len = files.length;
       var rdfile = files[Math.floor(Math.random() * len)];
       var ret = '' + '[CQ:'+imgtype+',file=send/setu/' + rdfile + ']';
@@ -109,7 +110,7 @@ function runsetu(content,gid,qq,callback,port){
     } else {
         var data = eval('(' + body + ')');
         if (data.code == 429) {
-            fs.readdir('../coolq-data/cq/data/image/send/setu/', function (err, files) {
+            fs.readdir(IMAGE_DATA+'/setu/', function (err, files) {
                 var len = files.length;
                 var rdfile = files[Math.floor(Math.random() * len)];
                 var ret = '' + '[CQ:'+imgtype+',file=send/setu/' + rdfile + ']';
@@ -125,7 +126,7 @@ function runsetu(content,gid,qq,callback,port){
                     console.log('mongo error2:!!!!!!!!!');
                     console.log(err);
                 } else {
-                    var filename = "../coolq-data/cq/data/image/send/setu/" + imgdata.pid;
+                    var filename = IMAGE_DATA+"/setu/" + imgdata.pid;
                     if (data) {
                         if (fs.existsSync(filename)) {
                             var ret = '[CQ:'+imgtype+',file=send/setu/' + imgdata.pid + ']';
@@ -146,7 +147,7 @@ function runsetu(content,gid,qq,callback,port){
                                     var ret = '[CQ:'+imgtype+',file=send/setu/' + imgdata.pid + ']';
                                     callback(ret);
                                 } else {
-                                    fs.readdir('../coolq-data/cq/data/image/send/setu/', function (err, files) {
+                                    fs.readdir(IMAGE_DATA+'/setu/', function (err, files) {
                                         var len = files.length;
                                         var rdfile = files[Math.floor(Math.random() * len)];
                                         var ret = '' + '[CQ:'+imgtype+',file=send/setu/' + rdfile + ']';
@@ -174,7 +175,7 @@ function runsetu(content,gid,qq,callback,port){
                               var ret = '' + '[CQ:'+imgtype+',file=send/setu/' + imgdata.pid + ']';
                               callback(ret);
                             } else {
-                              fs.readdir('../coolq-data/cq/data/image/send/setu/', function (err, files) {
+                              fs.readdir(IMAGE_DATA+'/setu/', function (err, files) {
                                 var len = files.length;
                                 var rdfile = files[Math.floor(Math.random() * len)];
                                 var ret = '' + '[CQ:'+imgtype+',file=send/setu/' + rdfile + ']';
@@ -183,7 +184,7 @@ function runsetu(content,gid,qq,callback,port){
                             }
                           });
                         }else{
-                          fs.readdir('../coolq-data/cq/data/image/send/setu/', function (err, files) {
+                          fs.readdir(IMAGE_DATA+'/setu/', function (err, files) {
                             var len = files.length;
                             var rdfile = files[Math.floor(Math.random() * len)];
                             var ret = '' + '[CQ:'+imgtype+',file=send/setu/' + rdfile + ']';

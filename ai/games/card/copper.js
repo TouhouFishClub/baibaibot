@@ -1,6 +1,7 @@
 var fs = require('fs');
 
 var cache = {};
+const {IMAGE_DATA,RECORD_DATA} = require('../../../baibaiConfigs');
 
 function copperReply(content,gid,qq,callback,nextfolder,port){
 
@@ -40,10 +41,10 @@ function copperReply(content,gid,qq,callback,nextfolder,port){
   if(!sets){
     sets=2;
   }
-  fs.readdir('../coolq-data/cq/data/image/send/copper'+sets+nextfolder,function(err,files){
+  fs.readdir(IMAGE_DATA+'/copper'+sets+nextfolder,function(err,files){
     var len = files.length;
     var rdfile = files[Math.floor(Math.random()*len)];
-    var fileStat = fs.lstatSync('../coolq-data/cq/data/image/send/copper'+sets+nextfolder+rdfile);
+    var fileStat = fs.lstatSync(IMAGE_DATA+'/copper'+sets+nextfolder+rdfile);
     if(fileStat.isDirectory()){
       copperReply(content,gid,qq,callback,nextfolder+rdfile+'/')
     }else{
