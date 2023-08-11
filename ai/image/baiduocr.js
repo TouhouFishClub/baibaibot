@@ -45,7 +45,7 @@ function baiduocrb64(base64,callback){
 function test(){
   tencentOcr()
 }
-test()
+//test()
 
 const tencentcloud = require("tencentcloud-sdk-nodejs");
 
