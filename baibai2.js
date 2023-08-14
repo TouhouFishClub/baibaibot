@@ -339,6 +339,7 @@ async function addSendQueue(groupid,msg,port,from){
 		console.log(sp)
 		console.log(msg)
 	}
+	msg = formatDir(msg)
 
 
 
@@ -730,9 +731,8 @@ function handleMsg_D(msgObj,port, configs) {
 					break
 			}
           var msg = res;
-          msg = msg.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-          msg = msg.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-          msg = msg.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+					msg = formatDir(msg)
+
           if(type=='private'){
             var bdy2 = {"user_id": from, message: msg};
             request({
@@ -1861,6 +1861,12 @@ function reply(content,userName,callback,groupid,from,groupName,nickname,port){
     translateMsg(content,'zh-CHS',callback)
   }
 }
+
+const formatDir = msg =>
+	msg
+		.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+		.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+		.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
 
 
 
