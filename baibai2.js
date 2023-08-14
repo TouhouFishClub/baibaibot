@@ -313,32 +313,32 @@ async function addSendQueue(groupid,msg,port,from){
 
 	let msgSource = msg
 
-	// if(port === 29334) {
-	// 	// 限制某些端口强制使用图片发送文字
-	// 	let sp = msg.split('[CQ:'), output = []
-	// 	for(let index = 0 ; index < sp.length; index ++) {
-	// 		let current = sp[index]
-	//
-	// 		if(index) {
-	// 			let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
-	// 			if(normalText.trim()) {
-	// 				normalText = await renderTxtImage(normalText.trim(), {color: 'black', font: 'STXIHEI.TTF'})
-	// 			} else {
-	// 				normalText = ''
-	// 			}
-	// 			output.push(`[CQ:${ssp[0]}]`, normalText)
-	// 		} else {
-	// 			if(current.trim()) {
-	// 				output.push(await renderTxtImage(current.trim(), {color: 'black', font: 'STXIHEI.TTF'}))
-	// 			}
-	// 		}
-	// 	}
-	// 	msg = output.filter(x => x).join('\n')
-	//
-	// 	console.log(`======== 已被图片化 ========`)
-	// 	console.log(sp)
-	// 	console.log(msg)
-	// }
+	if(port === 29334) {
+		// 限制某些端口强制使用图片发送文字
+		let sp = msg.split('[CQ:'), output = []
+		for(let index = 0 ; index < sp.length; index ++) {
+			let current = sp[index]
+
+			if(index) {
+				let ssp = current.split(']'), normalText = ssp.splice(1).join(']')
+				if(normalText.trim()) {
+					normalText = await renderTxtImage(normalText.trim(), {color: 'black', font: 'STXIHEI.TTF'})
+				} else {
+					normalText = ''
+				}
+				output.push(`[CQ:${ssp[0]}]`, normalText)
+			} else {
+				if(current.trim()) {
+					output.push(await renderTxtImage(current.trim(), {color: 'black', font: 'STXIHEI.TTF'}))
+				}
+			}
+		}
+		msg = output.filter(x => x).join('\n')
+
+		console.log(`======== 已被图片化 ========`)
+		console.log(sp)
+		console.log(msg)
+	}
 
 
 
