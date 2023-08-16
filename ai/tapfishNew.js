@@ -5,7 +5,7 @@ const request = require('request')
 const requestPromise = util.promisify(request)
 const {IMAGE_DATA} = require('../baibaiConfigs');
 let expire = 0
-const targetPath = path.join(__dirname, '..', IMAGE_DATA+'/tapFish/')
+const targetPath = path.join(IMAGE_DATA, 'tapFish')
 
 const fetchImage = (url, filename) => new Promise((resolve, reject) => {
 	const reqs = request({
