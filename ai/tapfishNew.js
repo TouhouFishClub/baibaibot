@@ -47,6 +47,7 @@ const tapFish = async callback => {
 	fs.ensureDirSync(targetPath, 0o2777)
 	if(fs.existsSync(path.join(targetPath, filename)) && Date.now() < expire) {
 		console.log('=============== 已经下载过文件，直接发送')
+		console.log(`dir: ${path.join(targetPath, filename)}`)
 	} else {
 		console.log('=============== 未下载过文件，先启用下载')
 		try {
