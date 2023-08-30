@@ -5,19 +5,14 @@ let tmp = {}
 const BA_Schedule = async (server , callback) => {
 	let NOW_DATE = new Date()
   if(tmp.updateData && new Date(tmp.updateData).getDate() == new Date().getDate()) {
-    renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(tmp.data), `_ba_${server}`)
+    renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(tmp.data, server), `_ba_${server}`)
   } else {
 		let { now, next} = createNowAndNextMonthTs()
 		let res = await Promise.all([now, next].map(x => fetchData(x)))
 		let merge = mergeAllData(res)
 		tmp.updateData = Date.now()
 		tmp.data = merge
-
-		console.log(`=============\n\n\n\n\n`)
-		console.log(formatData(merge))
-		console.log(`\n\n\n\n\n=============`)
-
-		renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(merge), `_ba_${server}`)
+		renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(merge, server), `_ba_${server}`)
   }
 }
 
