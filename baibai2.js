@@ -156,6 +156,8 @@ const {handleCustomChatgptReplay,getChatgptReplay,getBaibaiReplay} = require('./
 const {ysVoiceReply} = require('./ai/voice/ysvoice')
 const {AIdraw,yishijie} = require('./ai/games/card2/AIDraw')
 
+const {BA_Schedule} = require('./ai/BlueArchive/schedule')
+
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -1431,6 +1433,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(con == 'pcr日程') {
     schedule('jp', callback)
   }
+	if(con == 'ba日程') {
+		BA_Schedule('国服', callback)
+	}
   if(con == 'chp' || con == '彩虹屁') {
     chp(callback)
   }
