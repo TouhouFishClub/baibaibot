@@ -21,7 +21,7 @@ const BA_Schedule = async (server, callback) => {
   }
 }
 
-const formatData = data => data.map(x => Object.assign(x, {name: x.title, start_time: `${x.begin_at}000`, end_time: `${x.end_at}000`}))
+const formatData = data => data.map(x => Object.assign(x, {name: x.title, start_time: parseInt(`${x.begin_at}000`), end_time: parseInt(`${x.end_at}000`)}))
 
 const mergeAllData = monthData => {
 	let out = [], idSet = new Set([])
