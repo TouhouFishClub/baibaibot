@@ -2,10 +2,10 @@ const https = require('https')
 const { renderCalendar } = require('../calendar/index')
 let tmp = {}
 
-const BA_Schedule = async (server , callback) => {
+const BA_Schedule = async (server, callback) => {
 	let NOW_DATE = new Date()
   if(tmp.updateData && new Date(tmp.updateData).getDate() == new Date().getDate()) {
-    renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(tmp.data, server), `_ba_${server}`)
+    renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(tmp.data).filter(x => x.pub_area == server), `_ba_${server}`)
   } else {
 		let { now, next} = createNowAndNextMonthTs()
 		let res = await Promise.all([now, next].map(x => fetchData(x)))
@@ -20,13 +20,11 @@ const BA_Schedule = async (server , callback) => {
 		console.log(formatData(merge))
 		console.log(`\n\n\n\n\n=============`)
 
-		renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(merge, server), `_ba_${server}`)
+		renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(merge).filter(x => x.pub_area == server), `_ba_${server}`)
   }
 }
 
-const formatData = (data, server) => {
-	return data.map(x => Object.assign(x, {name: x.title, start_time: `${x.begin_at}000`, end_time: `${x.end_at}000`})).filter(x => x.pub_area == server)
-}
+const formatData = data => data.map(x => Object.assign(x, {name: x.title, start_time: `${x.begin_at}000`, end_time: `${x.end_at}000`}))
 
 const mergeAllData = monthData => {
 	let out = [], idSet = new Set([])
