@@ -14,6 +14,9 @@ const BA_Schedule = async (server , callback) => {
 		tmp.data = merge
 
 		console.log(`=============\n\n\n\n\n`)
+		console.log(merge)
+		console.log(`\n\n\n\n\n=============`)
+		console.log(`=============\n\n\n\n\n`)
 		console.log(formatData(merge))
 		console.log(`\n\n\n\n\n=============`)
 
