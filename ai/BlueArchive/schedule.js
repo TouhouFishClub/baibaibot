@@ -3,16 +3,16 @@ const { renderCalendar } = require('../calendar/index')
 let tmp = {}
 
 const BA_Schedule = async (server , callback) => {
+	let NOW_DATE = new Date()
   if(tmp.updateData && new Date(tmp.updateData).getDate() == new Date().getDate()) {
-    let now = new Date()
-    renderCalendar(now.getFullYear(), now.getMonth() + 1, callback, formatData(tmp.data), `_ba_${server}`)
+    renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(tmp.data), `_ba_${server}`)
   } else {
 		let { now, next} = createNowAndNextMonthTs()
 		let res = await Promise.all([now, next].map(x => fetchData(x)))
 		let merge = mergeAllData(res)
 		tmp.updateData = Date.now()
 		tmp.data = merge
-		renderCalendar(now.getFullYear(), now.getMonth() + 1, callback, formatData(merge), `_ba_${server}`)
+		renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(merge), `_ba_${server}`)
   }
 }
 
