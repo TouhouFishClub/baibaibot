@@ -5,7 +5,7 @@ let tmp = {}
 const BA_Schedule = async (server, callback) => {
 	let NOW_DATE = new Date()
   if(tmp.updateData && new Date(tmp.updateData).getDate() == new Date().getDate()) {
-    renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(tmp.data).filter(x => x.pub_area == server), `_ba_${server}`)
+    renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(tmp.data).filter(x => x.pub_area == '国服'), `_ba_${server}`)
   } else {
 		let { now, next} = createNowAndNextMonthTs()
 		let res = await Promise.all([now, next].map(x => fetchData(x)))
@@ -14,13 +14,10 @@ const BA_Schedule = async (server, callback) => {
 		tmp.data = merge
 
 		console.log(`=============\n\n\n\n\n`)
-		console.log(merge)
-		console.log(`\n\n\n\n\n=============`)
-		console.log(`=============\n\n\n\n\n`)
-		console.log(formatData(merge))
+		console.log(formatData(merge).filter(x => x.pub_area == server))
 		console.log(`\n\n\n\n\n=============`)
 
-		renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(merge).filter(x => x.pub_area == server), `_ba_${server}`)
+		renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(merge).filter(x => x.pub_area == '国服'), `_ba_${server}`)
   }
 }
 
