@@ -2,26 +2,38 @@ const https = require('https')
 const { renderCalendar } = require('../calendar/index')
 let tmp = {}
 
-const BA_Schedule = async (server, callback) => {
+const BA_Schedule = async (server, callback, getData = false) => {
 	let NOW_DATE = new Date()
-  if(tmp.updateData && new Date(tmp.updateData).getDate() == new Date().getDate()) {
-    renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(tmp.data).filter(x => x.pub_area == '国服'), `_ba_${server}`)
-  } else {
+  if(!(tmp.updateData && new Date(tmp.updateData).getDate() == new Date().getDate())) {
 		let { now, next} = createNowAndNextMonthTs()
 		let res = await Promise.all([now, next].map(x => fetchData(x)))
 		let merge = mergeAllData(res)
 		tmp.updateData = Date.now()
 		tmp.data = merge
-
-		console.log(`=============\n\n\n\n\n`)
-		console.log(formatData(merge).filter(x => x.pub_area == server))
-		console.log(`\n\n\n\n\n=============`)
-
-		renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, formatData(merge).filter(x => x.pub_area == '国服'), `_ba_${server}`)
   }
+	let out = formatData(tmp.data, server)
+	if(getData) {
+		callback(out)
+		return
+	}
+	renderCalendar(NOW_DATE.getFullYear(), NOW_DATE.getMonth() + 1, callback, out, `_ba_${server}`)
 }
 
-const formatData = data => data.map(x => Object.assign(x, {name: x.title, start_time: parseInt(`${x.begin_at}000`), end_time: parseInt(`${x.end_at}000`)}))
+const formatData = (data, server) => {
+	let out = data.map(x => {
+		let name = x.title
+		name = name.replace(new RegExp(`【${server}.*?】`, 'g'), '')
+		let start_time = parseInt(`${x.begin_at}000`)
+		let end_time = parseInt(`${x.end_at}000`)
+		return Object.assign(x, {
+			name,
+			start_time,
+			end_time
+		})
+	})
+	out = out.filter(x => x.pub_area == server && !x.importance)
+	return out
+}
 
 const mergeAllData = monthData => {
 	let out = [], idSet = new Set([])
@@ -79,6 +91,10 @@ const fetchData = startTs => new Promise(resolve => {
 		resolve('ERROR')
 	})
 })
+
+// BA_Schedule('国服', d => {
+// 	console.log(d)
+// }, true)
 
 module.exports = {
 	BA_Schedule

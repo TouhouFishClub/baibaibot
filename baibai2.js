@@ -1436,6 +1436,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	if(con == 'ba日程') {
 		BA_Schedule('国服', callback)
 	}
+	if(con == 'ba国际服日程') {
+		BA_Schedule('国际服', callback)
+	}
+	if(con == 'ba日服日程') {
+		BA_Schedule('日服', callback)
+	}
   if(con == 'chp' || con == '彩虹屁') {
     chp(callback)
   }
