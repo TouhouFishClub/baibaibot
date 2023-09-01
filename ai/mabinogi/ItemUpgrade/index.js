@@ -203,6 +203,9 @@ const matchEquipUpgrade = async (Category, maxUpgrade) => {
 }
 
 const searchEquipUpgrade = async (qq, group, content, callback) => {
+	if(!content.trim()) {
+		return
+	}
 	if(Object.keys(filterDataStorage).length === 0) {
 		filterDataStorage = await filterItem()
 	}

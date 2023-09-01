@@ -2,6 +2,9 @@ const { renderRecipeImage } = require('./renderRecipe')
 const { getItems } = require('./source')
 
 const searchMabiRecipe = (content, callback, showDesc = false) => {
+	if(!content.trim()) {
+		return
+	}
   let { ItemNameToItemId, ItemIdToItemDetail } = getItems()
   let targets = []
   if(/^\d+$/.test(content)){
