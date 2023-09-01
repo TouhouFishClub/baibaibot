@@ -4,6 +4,7 @@ const xml2js = require('xml2js')
 const nodeHtmlToImage = require('node-html-to-image')
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', '..', 'baibaiConfigs.js'))
 const font2base64 = require('node-font2base64')
+const {renderRecipeImage} = require("../recipe/renderRecipe");
 //FONTS
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'hk4e_zh-cn.ttf'))
 
@@ -218,7 +219,10 @@ const searchEquipUpgrade = async (qq, group, content, callback) => {
 	if(/^\d+$/.test(content)) {
 		filterEq = filterDataStorage[content] ? [filterDataStorage[content]] : []
 	} else {
-		filterEq = Object.values(filterDataStorage).filter(x => new RegExp(content).test(x.localeNameCn))
+		filterEq = Object.values(filterDataStorage)
+		content.replace(/[， ]/g, ',').split(',').filter(x => x).forEach(keyword => {
+			filterEq = filterEq.filter(x => x.localeNameCn.match(new RegExp(keyword)))
+		})
 	}
 	if(filterEq.length === 1) {
 		let meu = await matchEquipUpgrade(filterEq[0].Category, filterEq[0].Par_UpgradeMax - 1)
@@ -231,7 +235,15 @@ const searchEquipUpgrade = async (qq, group, content, callback) => {
 		callback(`未找到${content}`)
 		return
 	}
-	callback(filterEq.splice(0, 10).map(x => `meu ${x.ID} | ${x.localeNameCn}`).join('\n'))
+
+	let em = filterEq.filter(x => x.localeNameCn == content)
+	if(em.length) {
+		let meu = await matchEquipUpgrade(em[0].Category, em[0].Par_UpgradeMax - 1)
+		renderImage(em[0], meu, callback, `找到${filterEq.length}\n${filterEq.splice(0, 10).map(x => `meu ${x.ID} | ${x.localeNameCn}`).join('\n')}\n已为您定位到${em[0].localeNameCn}`)
+		return
+	}
+
+	callback(`找到${filterEq.length}\n${filterEq.splice(0, 10).map(x => `meu ${x.ID} | ${x.localeNameCn}`).join('\n')}\n可使用多关键词查找，多关键词用空格或逗号分割。`)
 }
 
 // 定义武器升级详细信息, 返回HTML
@@ -339,7 +351,7 @@ const renderRandomInfo = targetItem => {
 	}).join('')
 }
 
-const renderImage = (targetItem, upgradeInfos, callback) => {
+const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 	console.log(upgradeInfos.map(x => `[${x.id}]（${x.upgraded_min} ~ ${x.upgraded_max}）${x.localnameCn}: ${x.descCn}`).join('\n'))
 	console.log(upgradeInfos.length)
 	let normalUpgrade = [], gemUpgrade = []
@@ -579,7 +591,7 @@ const renderImage = (targetItem, upgradeInfos, callback) => {
 	})
 		.then(() => {
 			console.log(`保存MabiItemUpgrade.png成功！`)
-			let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiItemUpgrade.png`)}]`
+			let imgMsg = `${otherMsg}[CQ:image,file=${path.join('send', 'mabi_other', `MabiItemUpgrade.png`)}]`
 			callback(imgMsg)
 		})
 
