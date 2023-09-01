@@ -315,7 +315,7 @@ async function addSendQueue(groupid,msg,port,from){
 
 	let msgSource = msg
 
-	if(port === 29334 && Math.random > 0.4) {
+	if(port === 29334 && Math.random() > 0.4) {
 		// 限制某些端口强制使用图片发送文字(概率60%)
 		let sp = msg.split('[CQ:'), output = []
 		for(let index = 0 ; index < sp.length; index ++) {
