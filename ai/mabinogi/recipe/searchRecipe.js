@@ -21,15 +21,17 @@ const searchMabiRecipe = (content, callback, showDesc = false) => {
     // })
   }
   if(targets.length) {
-		let em = targets.filter(name => content == name)
-		if(em.length) {
-			targets = [em[0]]
+		if(targets.length == 1) {
+			renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(targets[0])).html, targets[0], showDesc, callback)
+		} else {
+			let em = targets.filter(name => content == name)
+			if(em.length) {
+				callback()
+				renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(em[0])).html, em[0], showDesc, callback, `找到${targets.length}\n${targets.slice(0, 10).map(x => `mbi ${ItemNameToItemId.get(x)} | ${x}`).join('\n')}\n已为您定位到${em[0].name}`, 'MF')
+			} else {
+				callback(`找到${targets.length}\n${targets.slice(0, 10).map(x => `mbi ${ItemNameToItemId.get(x)} | ${x}`).join('\n')}`)
+			}
 		}
-    if(targets.length == 1) {
-      renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(targets[0])).html, targets[0], showDesc, callback)
-    } else {
-      callback(`找到${targets.length}\n${targets.slice(0, 10).map(x => `mbi ${ItemNameToItemId.get(x)} | ${x}`).join('\n')}`)
-    }
   } else {
     callback(`未找到${content}`)
   }
