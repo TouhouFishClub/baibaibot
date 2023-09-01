@@ -21,6 +21,10 @@ const searchMabiRecipe = (content, callback, showDesc = false) => {
     // })
   }
   if(targets.length) {
+		let em = targets.filter(name => content == name)
+		if(em.length) {
+			targets = [em[0]]
+		}
     if(targets.length == 1) {
       renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(targets[0])).html, targets[0], showDesc, callback)
     } else {
