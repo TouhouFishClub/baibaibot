@@ -157,6 +157,7 @@ const {ysVoiceReply} = require('./ai/voice/ysvoice')
 const {AIdraw,yishijie} = require('./ai/games/card2/AIDraw')
 
 const {BA_Schedule} = require('./ai/BlueArchive/schedule')
+const {BaRaidRanking} = require('./ai/BlueArchive/RaidRanking')
 
 
 let globalConfig = {
@@ -1433,6 +1434,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(con == 'pcr日程') {
     schedule('jp', callback)
   }
+	if(con == 'ba总力战') {
+		BaRaidRanking(callback)
+	}
 	if(con == 'ba日程') {
 		BA_Schedule('国服', callback)
 	}
