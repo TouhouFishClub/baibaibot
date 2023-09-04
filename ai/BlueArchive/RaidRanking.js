@@ -147,7 +147,7 @@ const render = (data, output, callback) => {
     	}
     	.main-container .rank-item .info-box .date-info{
     		font-size: 24px;
-    		width: 150px;
+    		width: 155px;
     		text-align: left;
     		color: #999;
     	}
@@ -158,6 +158,7 @@ const render = (data, output, callback) => {
     	.main-container .rank-item .info-box .point-info span{
     		font-size: 18px;
     		color: #8a0000;
+    		margin-left: 5px;
     	}
     </style>
   </head>
@@ -181,7 +182,7 @@ const render = (data, output, callback) => {
 							<div class="point-info">${rank.yesterday.point}<span>(${rank.yesterday.diff})</span></div>
 						</div>
 					</div>`
-		})}
+		}).join('')}
 		</div>
   </body>
 </html>
