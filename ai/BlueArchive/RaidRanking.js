@@ -53,7 +53,7 @@ const BaRaidRanking = async callback => {
 		let Rank20001 = analyzerData(res.data['20001'].filter(x => x[1]))
 		let Rank30001 = analyzerData(res.data['30001'].filter(x => x[1]))
 		tmpRank = {
-			update: res.lastUpdatedTime,
+			update: res.lastUpdatedTime * 1000,
 			data: [Rank1, Rank2001, Rank20001, Rank30001],
 			expire: Date.now() + 60*60*1000
 		}
@@ -135,7 +135,7 @@ const render = (data, output, callback) => {
     		color: #999;
     	}
     	.main-container .rank-item + .rank-item {
-    		margin-top: 30px;
+    		margin-top: 10px;
     	}
     	.main-container .rank-item .rank-title{
     		font-size: 36px;
@@ -147,6 +147,8 @@ const render = (data, output, callback) => {
     	}
     	.main-container .rank-item .info-box .date-info{
     		font-size: 24px;
+    		width: 150px;
+    		text-align: left;
     		color: #999;
     	}
     	.main-container .rank-item .info-box .point-info{
