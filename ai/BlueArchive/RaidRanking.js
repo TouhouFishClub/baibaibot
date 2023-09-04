@@ -1,9 +1,9 @@
 const http = require('http')
+const path = require("path-extra");
 
 const nodeHtmlToImage = require('node-html-to-image')
 const { IMAGE_DATA, myip } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'))
 const font2base64 = require('node-font2base64')
-const path = require("path-extra");
 
 const Corp_Bold = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', 'font', 'Corp-Bold.otf'))
 
