@@ -82,7 +82,7 @@ const analyzerData = data => {
 		diff: (prev[1] || 0) - (now[1] || 0)
 	}
 	let nowDateSt = ns(now[0]||0)
-	let yesterday = data.filter(x => x[0] < nowDateSt)
+	let yesterday = data.filter(x => x[0] <= nowDateSt)
 	yesterday = yesterday[yesterday.length - 1]
 	out.yesterday = {
 		point: yesterday[1] || 0,
