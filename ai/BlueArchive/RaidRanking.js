@@ -42,7 +42,7 @@ const fetchData = () => new Promise(resolve => {
 })
 
 const BaRaidRanking = async callback => {
-	if(Date.now() > tmpRank.expire) {
+	if(Date.now() > (tmpRank.expire || 0)) {
 		let res = await fetchData()
 		if(res == 'ERROR') {
 			callback('获取数据错误')
@@ -59,6 +59,7 @@ const BaRaidRanking = async callback => {
 		}
 	}
 	let output = path.join(IMAGE_DATA, 'other', `ba_raid.png`)
+	console.log(tmpRank)
 	render(tmpRank, output, callback)
 }
 
