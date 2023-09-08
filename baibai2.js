@@ -158,6 +158,7 @@ const {AIdraw,yishijie} = require('./ai/games/card2/AIDraw')
 
 const {BA_Schedule} = require('./ai/BlueArchive/schedule')
 const {BaRaidRanking} = require('./ai/BlueArchive/RaidRanking')
+const {autoVoteSend} = require('./ai/mabinogi/2023_vote_rank')
 
 
 let globalConfig = {
@@ -1615,21 +1616,25 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(fie == 'opt' && fi != 'opts'){
     op(from, name, con.substring(3).trim(), 'image', callback);
+    autoVoteSend(groupid, callback)
     return;
   }
 
   if(fie == 'meu'){
     searchEquipUpgrade(from, groupid, con.substring(3).trim(), callback);
+    autoVoteSend(groupid, callback)
     return;
   }
 
   if(fie == 'mbi'){
     searchMabiRecipe(con.substring(3).trim(), callback);
+    autoVoteSend(groupid, callback)
     return;
   }
 
   if(fie == 'mbd'){
     searchMabiRecipe(con.substring(3).trim(), callback, true);
+    autoVoteSend(groupid, callback)
     return;
   }
 
