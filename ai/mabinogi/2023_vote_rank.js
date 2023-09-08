@@ -116,13 +116,13 @@ const autoVoteSend = async (groupId, callback) => {
 		return
 	}
 	if(listData && listData.length) {
-		if(GroupExpire[groupId] && Date.now() > GroupExpire[groupId]){
-			let {page, line, index} = searchTarget(listData, 'Flandre')
-			GroupExpire[groupId] = Date.now() + 2*60*60*1000
-			callback(`麻烦大家每天帮百百妈投票喵~\nhttps://evt05.tiancity.com/luoqi/51724/home/index.php\n首次投票先选择人气，翻到第${page}页找到第${line}排第${index}个（大概）\n然后，点击小星星收藏后就不用每天找得那么辛苦喵\n一天可以投一票，谢谢大家了喵~`)
-		} else {
+		if(GroupExpire[groupId] && Date.now() < GroupExpire[groupId]){
 			console.log('==============> 群发送还在cd')
+			return
 		}
+		let {page, line, index} = searchTarget(listData, 'Flandre')
+		GroupExpire[groupId] = Date.now() + 2*60*60*1000
+		callback(`麻烦大家每天帮百百妈投票喵~\nhttps://evt05.tiancity.com/luoqi/51724/home/index.php\n首次投票先选择人气，翻到第${page}页找到第${line}排第${index}个（大概）\n然后，点击小星星收藏后就不用每天找得那么辛苦喵\n一天可以投一票，谢谢大家了喵~`)
 	} else {
 		console.log('==============> 没有数据')
 	}
