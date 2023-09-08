@@ -70,23 +70,23 @@ const searchTarget = (listData, targetName) => {
 	return {page, line, index}
 }
 
-const init = async () => {
-	let listData = []
-	for(let i = 1; i < 5; i ++) {
-		let d = await getVoteData(i,1,2)
-		try {
-			d = JSON.parse(d)
-			listData = listData.concat(d.data.lists)
-		} catch(e) {
-			console.log(e)
-		}
-	}
-	listData.sort((a, b) => b.count - a.count)
-	let {page, line, index} = searchTarget(listData, 'Flandre')
-	console.log(`目标在第${page}页，第${line}行，第${index}个`)
-	console.log(listData.map(x => `[${fixStrLength(4, x.id)}][${['亚特  ','伊鲁夏'][x.server - 1]}]${fixStrLength(12, x.name)}: 《${x.content}》(${x.count})`).join('\n'))
-}
-init()
+// const init = async () => {
+// 	let listData = []
+// 	for(let i = 1; i < 5; i ++) {
+// 		let d = await getVoteData(i,1,2)
+// 		try {
+// 			d = JSON.parse(d)
+// 			listData = listData.concat(d.data.lists)
+// 		} catch(e) {
+// 			console.log(e)
+// 		}
+// 	}
+// 	listData.sort((a, b) => b.count - a.count)
+// 	let {page, line, index} = searchTarget(listData, 'Flandre')
+// 	console.log(`目标在第${page}页，第${line}行，第${index}个`)
+// 	console.log(listData.map(x => `[${fixStrLength(4, x.id)}][${['亚特  ','伊鲁夏'][x.server - 1]}]${fixStrLength(12, x.name)}: 《${x.content}》(${x.count})`).join('\n'))
+// }
+// init()
 
 const fetchAllData = async () => {
 	let listData = []
@@ -112,6 +112,7 @@ const autoVoteSend = async (groupId, callback) => {
 		listData = await fetchAllData()
 	}
 	if(Math.random() > 0.9) {
+		console.log('==============> 未触发随机值')
 		return
 	}
 	if(listData && listData.length) {
@@ -119,7 +120,11 @@ const autoVoteSend = async (groupId, callback) => {
 			let {page, line, index} = searchTarget(listData, 'Flandre')
 			GroupExpire[groupId] = Date.now() + 2*60*60*1000
 			callback(`麻烦大家每天帮百百妈投票喵~\nhttps://evt05.tiancity.com/luoqi/51724/home/index.php\n首次投票先选择人气，翻到第${page}页找到第${line}排第${index}个（大概）\n然后，点击小星星收藏后就不用每天找得那么辛苦喵\n一天可以投一票，谢谢大家了喵~`)
+		} else {
+			console.log('==============> 群发送还在cd')
 		}
+	} else {
+		console.log('==============> 没有数据')
 	}
 }
 
