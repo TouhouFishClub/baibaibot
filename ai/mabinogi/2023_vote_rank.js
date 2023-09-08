@@ -112,7 +112,7 @@ const autoVoteSend = async (groupId, callback) => {
 	if(Date.now() > DataExpire.expire) {
 		listData = await fetchAllData()
 	}
-	if(Math.random() > 0.3) {
+	if(Math.random() > 0.2) {
 		console.log('==============> 未触发随机值')
 		return
 	}
@@ -122,8 +122,10 @@ const autoVoteSend = async (groupId, callback) => {
 			return
 		}
 		let {page, line, index} = searchTarget(listData, 'Flandre')
-		GroupExpire[groupId] = Date.now() + 2*60*60*1000
-		callback(`麻烦大家每天帮百百妈投票喵~\nhttps://evt05.tiancity.com/luoqi/51724/home/index.php\n首次投票先选择人气，翻到第${page}页找到第${line}排第${index}个（大概）\n然后，点击小星星收藏后就不用每天找得那么辛苦喵\n一天可以投一票，谢谢大家了喵~\n[CQ:image,file=${path.join('send', 'other', `farm.jpg`)}]`)
+		GroupExpire[groupId] = Date.now() + 4*60*60*1000
+		setTimeout(() => {
+			callback(`麻烦大家每天帮百百妈投下票喵~\nhttps://evt05.tiancity.com/luoqi/51724/home/index.php\n首次投票先选择人气，翻到第${page}页找到第${line}排第${index}个（大概）\n然后，点击小星星收藏后就不用每天找得那么辛苦喵\n一天可以投一票，谢谢大家了喵~\n[CQ:image,file=${path.join('send', 'other', `farm.jpg`)}]`)
+		}, 20000)
 	} else {
 		console.log('==============> 没有数据')
 	}
