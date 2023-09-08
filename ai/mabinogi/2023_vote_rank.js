@@ -112,7 +112,7 @@ const autoVoteSend = async (groupId, callback) => {
 	if(Date.now() > DataExpire.expire) {
 		listData = await fetchAllData()
 	}
-	if(Math.random() > 0.3 && groupId != 577587780) {
+	if(Math.random() > 0.3) {
 		console.log('==============> 未触发随机值')
 		return
 	}
