@@ -128,7 +128,6 @@ const textFactory = (page, line, index) => {
 		`🌠 梦想需要你的支持！请点击链接，选择“人气”，找到第${page}页的第${line}排第${index}个（百百妈就是她），点亮小星星收藏。每天的一分钟，每一次的投票，都在为她的胜利添砖加瓦。感谢你的支持，让我们一同为百百妈的梦想努力！投票链接：https://evt05.tiancity.com/luoqi/51724/home/index.php`,
 	]
 	return chats[~~(Math.random() * chats.length)]
-
 }
 
 const autoVoteSend = async (groupId, callback) => {
@@ -136,7 +135,7 @@ const autoVoteSend = async (groupId, callback) => {
 	if(Date.now() > DataExpire.expire) {
 		listData = await fetchAllData()
 	}
-	if(Math.random() > 0.3) {
+	if(Math.random() > 0.2) {
 		console.log('==============> 未触发随机值')
 		return
 	}
@@ -146,7 +145,7 @@ const autoVoteSend = async (groupId, callback) => {
 			return
 		}
 		let {page, line, index} = searchTarget(listData, 'Flandre')
-		GroupExpire[groupId] = Date.now() + 2*60*60*1000
+		GroupExpire[groupId] = Date.now() + 4*60*60*1000
 		callback(`（以下文案由chatGPT生成）\n${textFactory(page, line, index)}\n[CQ:image,file=${path.join('send', 'other', `farm.jpg`)}]`)
 	} else {
 		console.log('==============> 没有数据')
