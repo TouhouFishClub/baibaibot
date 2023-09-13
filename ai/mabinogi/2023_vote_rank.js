@@ -146,7 +146,9 @@ const autoVoteSend = async (groupId, callback) => {
 		}
 		let {page, line, index} = searchTarget(listData, 'Flandre')
 		GroupExpire[groupId] = Date.now() + 4*60*60*1000
-		callback(`（以下文案由chatGPT生成）\n${textFactory(page, line, index)}\n[CQ:image,file=${path.join('send', 'other', `farm.jpg`)}]`)
+		setTimeout(() => {
+			callback(`（以下文案由chatGPT生成）\n${textFactory(page, line, index)}\n[CQ:image,file=${path.join('send', 'other', `farm.jpg`)}]`)
+		}, ~~(Math.random() * 15000) + 5000)
 	} else {
 		console.log('==============> 没有数据')
 	}
