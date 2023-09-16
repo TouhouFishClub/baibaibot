@@ -10,11 +10,11 @@ const Corp_Bold = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..
 let tmpRank = {}
 
 const fetchData = () => new Promise(resolve => {
-// https://ba.gamekee.com/v1/activity/query?active_at=1693497600
+// http://ba.gamerhub.cn/#/raid-rank-data/s3
 	http.get({
-		host: '47.122.25.206',
-		port: 8250,
-		path: `/api/get_ba_raid_ranking_data?ranking=1,2001,20001,30001`,
+		host: 'ba.gamerhub.cn',
+		port: 80,
+		path: `/api/get_ba_raid_ranking_data?season=3&ranking=1,2001,20001,30001`,
 		method: 'GET',
 		rejectUnauthorized: false,
 		headers: {
