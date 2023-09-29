@@ -1798,13 +1798,15 @@ function getShipInfo(){
   //cl_p_senka_8.updateOne({'_id':p},{'$set':{ts:nn.getTime(),tse:nn}});
   cl_p_senka_8.findOneAndUpdate({'_id':'p'},{'$set':{ts:nn.getTime(),tse:nn}},function(err,resultr){
     var result = resultr.value;
-    var lastts = result.ts;
-    if(nn.getTime() - lastts < 300000){
-      cl_p_senka_8.updateOne({'_id':'p'},{'$set':{ts:lastts,tse:result.tse}});
-      return;
-    }else{
-      var list = result.d;
-      collectShipInfo(list)
+    if(result){
+        var lastts = result.ts;
+        if(nn.getTime() - lastts < 300000){
+          cl_p_senka_8.updateOne({'_id':'p'},{'$set':{ts:lastts,tse:result.tse}});
+          return;
+        }else{
+          var list = result.d;
+          collectShipInfo(list)
+        }
     }
   })
 }
