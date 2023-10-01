@@ -14,7 +14,7 @@ const fetchData = () => new Promise(resolve => {
 	http.get({
 		host: 'ba.gamerhub.cn',
 		port: 80,
-		path: `/api/get_ba_raid_ranking_data?season=3&ranking=1,2001,20001,30001`,
+		path: `/api/get_ba_raid_ranking_data?season=4&ranking=1,2001,20001,30001`,
 		method: 'GET',
 		rejectUnauthorized: false,
 		headers: {
