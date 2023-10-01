@@ -66,6 +66,7 @@ const BaRaidRanking = async callback => {
 const ns = dateTs => new Date(~~((dateTs+14400000)/86400000)*86400000-14400000)
 
 const analyzerData = data => {
+	console.log(data)
 	let out = {}
 	let now = data[data.length - 1]
 	out.now = {
