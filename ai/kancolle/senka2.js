@@ -1024,7 +1024,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                       var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
                       var ret = namelist[0] + '\n';
                       ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
-                      ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                      ret = ret + '经验值【'+rrr.exp+'】 \t EX:' + exstr + '  日均:【' + dailystr + '】\n';
                       if (rrr.exp > 200000000) {
                         //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
                       }
@@ -1057,7 +1057,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
                     var ret = namelist[0] + '\n';
                     ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
-                    ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                    ret = ret + '经验值【'+rrr.exp+'】 \t EX:' + exstr + '  日均:【' + dailystr + '】\n';
                     if (rrr.exp > 200000000) {
                       //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
                     }
