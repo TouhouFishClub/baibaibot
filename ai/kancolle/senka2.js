@@ -975,7 +975,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   var lesenka = '';
 
                   ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'  \t  继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
-                  ret = ret + 'EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                  ret = ret + '经验值【'+rrr.exp+'】 \t EX:' + exstr + '  日均:【' + dailystr + '】\n';
                   ret = ret + '\n'
                   ret = ret + rrr.ship + '\n';
                   culist[culist.length] = {rd: tno + 1, exp: rrr.exp, sk: -1, eo: 0, es: addsenka};
