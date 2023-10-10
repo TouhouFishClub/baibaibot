@@ -72,30 +72,38 @@ const BaRaidRanking = async callback => {
 const ns = dateTs => new Date(~~((dateTs+14400000)/86400000)*86400000-14400000)
 
 const analyzerData = data => {
-	console.log(data)
-	let out = {}
-	let now = data[data.length - 1]
-	out.now = {
-		point: now[1] || 0,
-		ts: now[0] || 0
-	}
-	let prev = now
-	if(data.length - 2 > -1) {
-		prev = data[data.length - 2]
-	}
-	out.prev = {
-		point: prev[1] || 0,
-		ts: prev[0] || 0,
-		diff: (prev[1] || 0) - (now[1] || 0)
-	}
-	let nowDateSt = ns(now[0]||0)
-	let yesterday = data.filter(x => x[0] <= nowDateSt)
-	yesterday = yesterday[yesterday.length - 1]
-	out.yesterday = {
-		point: yesterday[1] || 0,
-		ts: yesterday[0] || 0,
-		diff: (yesterday[1] || 0) - (now[1] || 0)
-	}
+	// console.log(data)
+  let out = {}
+  if(data && data.length) {
+    let now = data[data.length - 1]
+    out.now = {
+      point: now[1] || 0,
+      ts: now[0] || 0
+    }
+    let prev = now
+    if(data.length - 2 > -1) {
+      prev = data[data.length - 2]
+    }
+    out.prev = {
+      point: prev[1] || 0,
+      ts: prev[0] || 0,
+      diff: (prev[1] || 0) - (now[1] || 0)
+    }
+    let nowDateSt = ns(now[0]||0)
+    let yesterday = data.filter(x => x[0] <= nowDateSt)
+    yesterday = yesterday[yesterday.length - 1]
+    out.yesterday = {
+      point: yesterday[1] || 0,
+      ts: yesterday[0] || 0,
+      diff: (yesterday[1] || 0) - (now[1] || 0)
+    }
+  } else {
+    out = {
+      now: {
+        point: ''
+      }
+    }
+  }
 	return out
 }
 
@@ -176,18 +184,26 @@ const render = (data, output, callback) => {
 			return `
 					<div class="rank-item">
 						<div class="rank-title">第${[1, 2001, 20001, 30001][index]}名</div>
-						<div class="info-box now-info">
-							<div class="date-info">${formatTime(rank.now.ts)}</div>
-							<div class="point-info">${rank.now.point}</div>
-						</div>
-						<div class="info-box prev-info">
-							<div class="date-info">${formatTime(rank.prev.ts)}</div>
-							<div class="point-info">${rank.prev.point}<span>(${rank.prev.diff})</span></div>
-						</div>
-						<div class="info-box yesterday-info">
-							<div class="date-info">${formatTime(rank.yesterday.ts)}</div>
-							<div class="point-info">${rank.yesterday.point}<span>(${rank.yesterday.diff})</span></div>
-						</div>
+						${
+              rank.now.point ? `
+                <div class="info-box now-info">
+                  <div class="date-info">${formatTime(rank.now.ts)}</div>
+                  <div class="point-info">${rank.now.point}</div>
+                </div>
+                <div class="info-box prev-info">
+                  <div class="date-info">${formatTime(rank.prev.ts)}</div>
+                  <div class="point-info">${rank.prev.point}<span>(${rank.prev.diff})</span></div>
+                </div>
+                <div class="info-box yesterday-info">
+                  <div class="date-info">${formatTime(rank.yesterday.ts)}</div>
+                  <div class="point-info">${rank.yesterday.point}<span>(${rank.yesterday.diff})</span></div>
+                </div>
+              ` : `
+                <div class="info-box now-info">
+                  <div class="point-info">未获取数据</div>
+                </div>
+              `
+            }
 					</div>`
 		}).join('')}
 		</div>
