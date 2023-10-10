@@ -3,6 +3,7 @@ const path = require('path')
 const formatOptionset = require(path.join(__dirname, '/tools/formatOptionset'))
 const { optionsetWhere, optionsetWhereCn, optionsetWhereCnHandler, searchWhereCn } = require(path.join(__dirname, '/tools/optionsetWhere'))
 const optionsetImage = require(path.join(__dirname, '/tools/optionsetImage'))
+const { optionsetHtmlImage } = require(path.join(__dirname, '/tools/optionsetHtmlImage'))
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
 let optionSetObj = []
@@ -339,17 +340,24 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
 			    optionsetInfo = Object.assign({where: 'TW'}, optionsetInfo)
 		    }
 	    }
-      if(type == 'image'){
-				optionsetImage(optionsetInfo, wheres, 'mabi', str => {
-					callback(str)
-				})
-      } else {
-				str = `${finalArr[0].LocalName.trim()}(Rank ${finalArr[0].Level})\n[${finalArr[0].Usage}]\n${finalArr[0].Buff.length ? (finalArr[0].Buff.join('\n') + '\n') : ''}${finalArr[0].Debuff.join('\n')}`
-				if(wheres.length){
-					// console.log(wheres)
-					str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
-				}
-				callback(str)
+      switch(type) {
+        case 'image':
+          optionsetImage(optionsetInfo, wheres, 'mabi', str => {
+            callback(str)
+          })
+          break
+        case 'html':
+          optionsetHtmlImage(optionsetInfo, wheres, str => {
+            callback(str)
+          })
+          break
+        default:
+          str = `${finalArr[0].LocalName.trim()}(Rank ${finalArr[0].Level})\n[${finalArr[0].Usage}]\n${finalArr[0].Buff.length ? (finalArr[0].Buff.join('\n') + '\n') : ''}${finalArr[0].Debuff.join('\n')}`
+          if(wheres.length){
+            // console.log(wheres)
+            str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
+          }
+          callback(str)
       }
     }
     if(finalArr.length > 1){
@@ -388,17 +396,24 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
             optionsetInfo = Object.assign({where: 'TW'}, optionsetInfo)
           }
         }
-        if(type == 'image'){
-          optionsetImage(optionsetInfo, wheres, 'mabi', callbackStr => {
-            callback(str + callbackStr)
-          })
-        } else {
-          str += `${finalArr[0].LocalName.trim()}(Rank ${optionsetInfo.Level})\n[${optionsetInfo.Usage}]\n${optionsetInfo.Buff.length ? (optionsetInfo.Buff.join('\n') + '\n') : ''}${optionsetInfo.Debuff.join('\n')}`
-          if(wheres.length){
-            // console.log(wheres)
-            str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
-          }
-          callback(str)
+        switch (type) {
+          case 'image':
+            optionsetImage(optionsetInfo, wheres, 'mabi', callbackStr => {
+              callback(str + callbackStr)
+            })
+            break
+          case 'html':
+            optionsetHtmlImage(optionsetInfo, wheres, 'mabi', callbackStr => {
+              callback(str + callbackStr)
+            })
+            break
+          default:
+            str += `${finalArr[0].LocalName.trim()}(Rank ${optionsetInfo.Level})\n[${optionsetInfo.Usage}]\n${optionsetInfo.Buff.length ? (optionsetInfo.Buff.join('\n') + '\n') : ''}${optionsetInfo.Debuff.join('\n')}`
+            if(wheres.length){
+              // console.log(wheres)
+              str += `\n[取得方式]\n${wheres.map(where => `${where.article} → ${where.where}`).join('\n')}`
+            }
+            callback(str)
         }
       } else {
         callback(str)

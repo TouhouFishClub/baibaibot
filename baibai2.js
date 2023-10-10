@@ -1613,6 +1613,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     saveDTCPrice(con.substring(3),from,groupid,callback);
     return;
   }
+  if(fi == 'opts') {
+    op(from, name, con.substring(4).trim(), 'html', callback);
+    return
+  }
 
   if(fie == 'opt' && fi != 'opts'){
     op(from, name, con.substring(3).trim(), 'image', callback);

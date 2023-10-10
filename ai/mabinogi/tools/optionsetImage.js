@@ -85,6 +85,7 @@ const renderTextBox = (ctx, left, top, width, height, radius, title) => {
 }
 
 module.exports = function(obj, wheres, __dir = 'mabi', callback){
+  let now = Date.now();
   let canvasTmp = createCanvas(400, 2000)
     , ctxTmp = canvasTmp.getContext('2d');
   ctxTmp.font = `20px ${fontFamily}`
@@ -165,7 +166,8 @@ module.exports = function(obj, wheres, __dir = 'mabi', callback){
   let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
   let dataBuffer = new Buffer(base64Data, 'base64')
   sendImageMsgBuffer(dataBuffer, obj.ID, __dir, msg => {
-    callback(msg)
+    // callback(`${msg}\nrender time: ${~~((Date.now() - now)/1000)}s`)
+    callback(`${msg}`)
   })
 
   // fs.writeFile(path.join(__dirname, '/test/image.png'), dataBuffer, function(err) {
