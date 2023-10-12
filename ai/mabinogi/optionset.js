@@ -35,6 +35,14 @@ const delOptionsetWhere = (userId, author, callback) => {
 }
 
 module.exports = function(userId, nickname, context, type = 'normal', callback) {
+  console.log('\n====================\n\n\n\n\n\n\n\n\n')
+  console.log(userId)
+  console.log(content)
+  console.log(type)
+  console.log('\n\n\n\n\n\n\n\n\n====================\n')
+
+
+
   const _initSearch = async () => {
     const maxKeywords = 6, maxSearch = 10
     let ctx = context.trim()
