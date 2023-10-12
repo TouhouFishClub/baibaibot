@@ -112,6 +112,6 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     })
 }
 
-module.export = {
+module.exports = {
   optionsetHtmlImage
 }
