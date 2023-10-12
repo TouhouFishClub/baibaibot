@@ -82,6 +82,7 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     		font-size: 12px;
     	}
     	.main-container .text-box{
+    	  width: 100%;
     	  position: relative;
     	  border: 1px solid rgba(204,204,204,1);
     	  border-radius: 10px;
