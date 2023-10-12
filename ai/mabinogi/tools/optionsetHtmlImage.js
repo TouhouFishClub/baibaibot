@@ -72,6 +72,8 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     		display: flex;
     		flex-direction: column;
     		align-items: center;
+    		justify-content: stretch;
+    		text-align: left;
     	}
     	.main-container .title{
     		font-size: 20px;
@@ -109,6 +111,9 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     	.main-container .text-box .buff-item.debuff{
     	  color: rgba(251,0,7,1);
     	}
+    	.main-container .text-box .where-item.small{
+    	  font-size: 14px;
+    	}
     </style>
   </head>
   <body>
@@ -125,7 +130,7 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
   	  <div class="text-box" style="display: ${whereArr.length ? 'block' : 'none'}">
   	    <div class="label">卷轴出处[${obj.where == 'CN' ? '国服' : '台服'}]</div>
   	    ${whereArr.map(item => `
-  	      <div class="where-item">${item}</div>
+  	      <div class="where-item ${item.startsWith('author') ? 'small' : ''}">${item}</div>
   	    `).join('')}
       </div>
 		</div>
