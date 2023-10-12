@@ -3,7 +3,7 @@ const path = require('path')
 const formatOptionset = require(path.join(__dirname, '/tools/formatOptionset'))
 const { optionsetWhere, optionsetWhereCn, optionsetWhereCnHandler, searchWhereCn } = require(path.join(__dirname, '/tools/optionsetWhere'))
 const optionsetImage = require(path.join(__dirname, '/tools/optionsetImage'))
-const { optionsetHtmlImage } = require(path.join(__dirname, '/tools/optionsetHtmlImage'))
+const { optionsetHtmlImage } = require('./tools/optionsetHtmlImage')
 const { drawTxtImage } = require('../../cq/drawImageBytxt')
 
 let optionSetObj = []
