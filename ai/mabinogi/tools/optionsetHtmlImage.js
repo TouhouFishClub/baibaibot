@@ -107,7 +107,7 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
   })
     .then(() => {
       console.log(`保存ba_raid.png成功！`)
-      let imgMsg = `[CQ:image,file=${path.join('send', 'other', `ba_raid.png`)}]`
+      let imgMsg = `[CQ:image,file=${path.join('send', 'mabi', `${obj.ID}.png`)}]`
       callback(imgMsg)
     })
 }
