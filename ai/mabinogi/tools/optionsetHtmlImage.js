@@ -72,8 +72,6 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     		display: flex;
     		flex-direction: column;
     		align-items: center;
-    		justify-content: stretch;
-    		text-align: left;
     	}
     	.main-container .title{
     		font-size: 20px;
