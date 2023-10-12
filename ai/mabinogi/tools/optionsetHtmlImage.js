@@ -137,7 +137,7 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
       console.log(`保存ba_raid.png成功！`)
       let imgMsg = `[CQ:image,file=${path.join('send', 'mabi', `${obj.ID}.png`)}]`
       // callback(imgMsg)
-      callback(`${imgMsg}\nrender time: ${~~((Date.now() - now)/1000)}s`)
+      callback(`${imgMsg}\nrender time: ${((Date.now() - now)/1000)}s`)
     })
 }
 
