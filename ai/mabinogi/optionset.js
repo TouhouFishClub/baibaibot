@@ -35,11 +35,11 @@ const delOptionsetWhere = (userId, author, callback) => {
 }
 
 module.exports = function(userId, nickname, context, type = 'normal', callback) {
-  console.log('\n====================\n\n\n\n\n\n\n\n\n')
-  console.log(userId)
-  console.log(context)
-  console.log(type)
-  console.log('\n\n\n\n\n\n\n\n\n====================\n')
+  // console.log('\n====================\n\n\n\n\n\n\n\n\n')
+  // console.log(userId)
+  // console.log(context)
+  // console.log(type)
+  // console.log('\n\n\n\n\n\n\n\n\n====================\n')
 
 
 

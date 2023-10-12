@@ -48,12 +48,14 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
 				box-sizing: border-box;
     		font-family: Corp_Bold;
     		overflow: hidden;
-    		background: rgba(0,0,0,0.5);
+    		background: rgba(0,0,20,0.9);
     	}
     	.main-container {
-    		padding: 30px 12px;
+    		padding: 10px 12px;
     		font-size: 20px;
     		color: #fff;
+    		display: flex;
+    		flex-direction: column;
     	}
     	.main-container .title{
     		font-size: 20px;
@@ -65,7 +67,7 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     	  position: relative;
     	  border: 1px solid rgba(204,204,204,1);
     	  border-radius: 10px;
-    	  padding: 50px 25px 10px;
+    	  padding: 18px 13px 5px;
     	  margin-top: 20px;
     	}
     	.main-container .text-box .label{
@@ -76,7 +78,7 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     	  padding: 0 5px;
     	  position: absolute;
     	  top: -14px;
-    	  left: 30px;
+    	  left: 15px;
     	}
     	.main-container .text-box .buff-item{
     	  line-height: 25px;
