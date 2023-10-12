@@ -8,6 +8,7 @@ const font2base64 = require('node-font2base64')
 const Corp_Bold = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'Corp-Bold.otf'))
 
 const optionsetHtmlImage = (obj, wheres, callback) => {
+  let now = Date.now()
   let output = path.join(IMAGE_DATA, 'mabi', `${obj.ID}.png`)
   /* 预处理属性 */
   let desc = obj.OptionDesc.split('\\n'), objArr = []
@@ -23,6 +24,20 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     objArr.push({text: str, buff: buff})
   })
   let isPersonal = objArr.filter(x => x.text.match(/专用/) && !x.buff).length
+
+  let whereArr = []
+
+  if(wheres.length){
+    wheres.forEach(where => {
+      let whereText
+      if(obj.where == 'CN') {
+        whereText = where
+      } else {
+        whereText = `${where.article} → ${where.where}`
+      }
+      whereArr.push(whereText)
+    })
+  }
 
   nodeHtmlToImage({
     output,
@@ -56,6 +71,7 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     		color: #fff;
     		display: flex;
     		flex-direction: column;
+    		align-items: center;
     	}
     	.main-container .title{
     		font-size: 20px;
@@ -70,6 +86,9 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     	  padding: 18px 13px 5px;
     	  margin-top: 20px;
     	}
+    	.main-container .text-box + .text-box{
+    	  margin-top: 20px;
+    	}
     	.main-container .text-box .label{
     	  display: block;
     	  color: rgba(238,78,7,1);
@@ -80,7 +99,8 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     	  top: -14px;
     	  left: 15px;
     	}
-    	.main-container .text-box .buff-item{
+    	.main-container .text-box .buff-item,
+    	.main-container .text-box .where-item{
     	  line-height: 25px;
     	}
     	.main-container .text-box .buff-item.buff{
@@ -102,6 +122,12 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
   	      <div class="buff-item ${item.buff ? 'buff': 'debuff'}">${item.text}</div>
   	    `).join('')}
       </div>
+  	  <div class="text-box" style="display: ${whereArr.length ? 'block' : 'none'}">
+  	    <div class="label">卷轴出处[${obj.where == 'CN' ? '国服' : '台服'}]</div>
+  	    ${whereArr.map(item => `
+  	      <div class="where-item">${item}</div>
+  	    `).join('')}
+      </div>
 		</div>
   </body>
 </html>
@@ -110,7 +136,8 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     .then(() => {
       console.log(`保存ba_raid.png成功！`)
       let imgMsg = `[CQ:image,file=${path.join('send', 'mabi', `${obj.ID}.png`)}]`
-      callback(imgMsg)
+      // callback(imgMsg)
+      callback(`${imgMsg}\nrender time: ${~~((Date.now() - now)/1000)}s`)
     })
 }
 
