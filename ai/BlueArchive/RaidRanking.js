@@ -92,6 +92,7 @@ const analyzerData = data => {
     let nowDateSt = ns(now[0]||0)
     let yesterday = data.filter(x => x[0] <= nowDateSt)
 		yesterday = yesterday[yesterday.length - 1]
+		console.log(`\n\n\n\n\n=============> ${yesterday}\n\n\n\n\n`)
 		if(yesterday.length > 1) {
 			out.yesterday = {
 				point: yesterday[1] || 0,
