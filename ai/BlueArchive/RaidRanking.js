@@ -72,7 +72,7 @@ const BaRaidRanking = async callback => {
 const ns = dateTs => new Date(~~((dateTs+14400000)/86400000)*86400000-14400000)
 
 const analyzerData = data => {
-	// console.log(data)
+	console.log(data)
   let out = {}
   if(data && data.length) {
     let now = data[data.length - 1]
@@ -91,12 +91,20 @@ const analyzerData = data => {
     }
     let nowDateSt = ns(now[0]||0)
     let yesterday = data.filter(x => x[0] <= nowDateSt)
-    yesterday = yesterday[yesterday.length - 1]
-    out.yesterday = {
-      point: yesterday[1] || 0,
-      ts: yesterday[0] || 0,
-      diff: (yesterday[1] || 0) - (now[1] || 0)
-    }
+		yesterday = yesterday[yesterday.length - 1]
+		if(yesterday.length > 1) {
+			out.yesterday = {
+				point: yesterday[1] || 0,
+				ts: yesterday[0] || 0,
+				diff: (yesterday[1] || 0) - (now[1] || 0)
+			}
+		} else {
+			out.yesterday = {
+				point: yesterday[0] || 0,
+				ts: yesterday[0] || 0,
+				diff: (yesterday[0] || 0) - (now[1] || 0)
+			}
+		}
   } else {
     out = {
       now: {
