@@ -254,7 +254,7 @@ var botlist = [
     qq:1,
     port:30014,
     wsport:30015,
-    reverseWs: true,
+    reverseWs: false,
 		configs: {}
   },
   {
