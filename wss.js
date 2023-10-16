@@ -43,5 +43,5 @@ wss.on('connection', (ws) => {
 
 // 启动 HTTP 服务器，监听指定端口
 server.listen(wsport, () => {
-  console.log(`HTTP server and WebSocket server are listening on port ${port}`);
+  console.log(`HTTP server and WebSocket server are listening on port ${wsport}`);
 });
