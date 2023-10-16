@@ -3,6 +3,7 @@ var https=require('https');
 var tls = require('tls');
 var fs = require('fs');
 var request = require('request');
+const WebSocket = require('ws');
 let onlineObj = {}
 const { DQCore, allGameAction } = require('./ai/DQ/DQgameCore')
 const _ = require('lodash')
@@ -197,60 +198,70 @@ var botlist = [
     qq:1,
     port:23334,
     wsport:23335,
+    reverseWs: false,
 		configs: {}
   },
   {
     qq:1,
     port:24334,
     wsport:24335,
+    reverseWs: false,
 		configs: {}
   },
   {
     qq:1,
     port:25334,
     wsport:25335,
+    reverseWs: false,
 		configs: {}
   },
   {
     qq:1,
     port:26334,
     wsport:26335,
+    reverseWs: false,
 		configs: {}
   },
   {
     qq:1,
     port:27334,
     wsport:27335,
+    reverseWs: false,
 		configs: {}
   },
   {
     qq:1,
     port:28334,
     wsport:28335,
+    reverseWs: false,
 		configs: {}
   },
   {
     qq:1,
     port:29334,
     wsport:29335,
+    reverseWs: false,
 		configs: {}
   },
   {
     qq:1,
     port:30004,
     wsport:30005,
+    reverseWs: false,
 		configs: {}
   },
   {
     qq:1,
     port:30014,
     wsport:30015,
+    reverseWs: true,
 		configs: {}
   },
   {
     qq:1,
     port:30024,
     wsport:30025,
+    reverseWs: false,
 		configs: {
 			enableMatchKeywords: [
 				'^opt',
@@ -262,6 +273,7 @@ var botlist = [
     qq:1,
     port:30034,
     wsport:30035,
+    reverseWs: false,
 		configs: {}
   }
 
@@ -277,9 +289,58 @@ function init(){
   //   initBotWS(port,wsport);
   // }
 	botlist.forEach(bot => {
-		let { port, wsport, configs } = bot
-		initBotWS(port, wsport)
+		let { port, wsport, reverseWs, configs } = bot
+    if(reverseWs) {
+      initReverseBotWs(wsport, configs)
+    } else {
+		  initBotWS(port, wsport, configs)
+    }
 	})
+}
+
+const initReverseBotWs = (wsport, configs) => {
+// 创建一个 HTTP 服务器
+  const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end(`[PORT: ${wsport}] WebSocket server is running.`);
+  });
+
+// 创建 WebSocket 服务器，将其与 HTTP 服务器关联
+  const wss = new WebSocket.Server({ server });
+
+// 事件处理：当 WebSocket 连接建立时
+  wss.on('connection', (ws) => {
+    console.log(`[PORT: ${wsport}] WebSocket connection established.`);
+
+    // 事件处理：当收到消息时
+    ws.on('message', (message) => {
+      // console.log(`Received message: ${message}`);
+      let context = JSON.parse(message.toString())
+
+      if(context.message == 'HELLO') {
+        console.log(`\n\n\n TARGET \n\n\n`)
+        ws.send(JSON.stringify({
+          "action": "send_message",
+          "params": {
+            "detail_type": "group",
+            "group_id": context.group_id,
+            "message": 'WORLD'
+          }
+        }));
+        return
+      }
+
+      handleMsg(context, wsport, Object.assign({
+        reverseWs: true,
+        ws,
+      }, configs))
+    });
+  });
+
+// 启动 HTTP 服务器，监听指定端口
+  server.listen(wsport, () => {
+    console.log(`[PORT: ${wsport}] HTTP server and WebSocket server are listening on port ${wsport}`);
+  });
 }
 
 function initBotWS(port,wsport, configs){
@@ -312,7 +373,7 @@ function initBotWS(port,wsport, configs){
 
 var queue = []
 var xqueue = []
-async function addSendQueue(groupid,msg,port,from){
+async function addSendQueue(groupid,msg,port,from, configs){
   var gidstr = groupid+"";
 
 	let msgSource = msg
@@ -399,26 +460,36 @@ async function addSendQueue(groupid,msg,port,from){
           saveChat(groupid, 981069482, "百百", msgSource,port);
         });
       }
-
-
-
     }else{
-      request({
-        headers:{
-          "Content-Type":"application/json"
-        },
-        method: "POST",
-        url: 'http://'+myip+':'+port+'/send_group_msg',
-        body: JSON.stringify(bdy)
-      }, function(error, response, body) {
-        if (error && error.code) {
-          console.log('pipe error catched!')
-          console.log(error);
-        } else {
-          console.log('ok1');
+      if(configs && configs.reverseWs) {
+        if(configs.ws) {
+          configs.ws.send(JSON.stringify({
+            "action": "send_message",
+            "params": {
+              "detail_type": "group",
+              "group_id": groupid,
+              "message": msg
+            }
+          }))
         }
-        saveChat(groupid, 981069482, "百百", msgSource,port);
-      });
+      } else {
+        request({
+          headers:{
+            "Content-Type":"application/json"
+          },
+          method: "POST",
+          url: 'http://'+myip+':'+port+'/send_group_msg',
+          body: JSON.stringify(bdy)
+        }, function(error, response, body) {
+          if (error && error.code) {
+            console.log('pipe error catched!')
+            console.log(error);
+          } else {
+            console.log('ok1');
+          }
+          saveChat(groupid, 981069482, "百百", msgSource,port);
+        });
+      }
     }
 }
 
@@ -757,7 +828,7 @@ function handleMsg_D(msgObj,port, configs) {
             });
             saveChat(groupid, 981069482, "百百", msg,port);
           }else if(type=='group'){
-            addSendQueue(groupid,msg,port,from);
+            addSendQueue(groupid,msg,port,from, configs);
           }
 
 		}
