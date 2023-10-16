@@ -281,23 +281,6 @@ var botlist = [
 
 const groupExpire = new Map()
 
-init();
-function init(){
-  // for(var i=0;i<botlist.length;i++){
-  //   var port = botlist[i].port;
-  //   var wsport = botlist[i].wsport;
-  //   initBotWS(port,wsport);
-  // }
-	botlist.forEach(bot => {
-		let { port, wsport, reverseWs, configs } = bot
-    if(reverseWs) {
-      initReverseBotWs(wsport, configs)
-    } else {
-		  initBotWS(port, wsport, configs)
-    }
-	})
-}
-
 const initReverseBotWs = (wsport, configs) => {
 // 创建一个 HTTP 服务器
   const server = http.createServer((req, res) => {
@@ -341,6 +324,23 @@ const initReverseBotWs = (wsport, configs) => {
   server.listen(wsport, () => {
     console.log(`[PORT: ${wsport}] HTTP server and WebSocket server are listening on port ${wsport}`);
   });
+}
+
+init();
+function init(){
+  // for(var i=0;i<botlist.length;i++){
+  //   var port = botlist[i].port;
+  //   var wsport = botlist[i].wsport;
+  //   initBotWS(port,wsport);
+  // }
+	botlist.forEach(bot => {
+		let { port, wsport, reverseWs, configs } = bot
+    if(reverseWs) {
+      initReverseBotWs(wsport, configs)
+    } else {
+		  initBotWS(port, wsport, configs)
+    }
+	})
 }
 
 function initBotWS(port,wsport, configs){
