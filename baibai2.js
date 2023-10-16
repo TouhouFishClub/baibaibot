@@ -283,13 +283,13 @@ const groupExpire = new Map()
 
 const initReverseBotWs = (wsport, configs) => {
 // 创建一个 HTTP 服务器
-  const server = http.createServer((req, res) => {
+  let server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('WebSocket server is running.');
+    res.end(`[PORT: ${wsport}] WebSocket server is running.`);
   });
 
 // 创建 WebSocket 服务器，将其与 HTTP 服务器关联
-  const wss = new WebSocket.Server({ server });
+  let wss = new WebSocket.Server({ server });
 
 // 事件处理：当 WebSocket 连接建立时
   wss.on('connection', (ws) => {
