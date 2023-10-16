@@ -285,7 +285,7 @@ const initReverseBotWs = (wsport, configs) => {
 // 创建一个 HTTP 服务器
   const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end(`[PORT: ${wsport}] WebSocket server is running.`);
+    res.end(`WebSocket server is running.`);
   });
 
 // 创建 WebSocket 服务器，将其与 HTTP 服务器关联
