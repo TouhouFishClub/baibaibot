@@ -89,9 +89,16 @@ app.ws('/c/*', function(ws, req) {
 
 app.ws('/shamrock/', (ws, req) => {
   var path = req.path.substring(1);
-  console.log(path);
+  console.log(`======================\n\npath: ${path}\n\n======================`);
   ws.on('message', (msg) => {
-    console.log(`[WS Message] ${msg}`)
+    let context = JSON.parse(msg.toString())
+    console.log(`\n\n[WS Message] ${msg}\n\n`)
+    handleMsg(context, 30015, Object.assign({
+      reverseWs: true,
+      callback(m) {
+        console.log(`======================\n\nwill send:\n${m}\n\n======================`);
+      },
+    }))
   })
   ws.on('close', () => {
     console.log('ws close')

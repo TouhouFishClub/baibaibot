@@ -281,51 +281,6 @@ var botlist = [
 
 const groupExpire = new Map()
 
-const initReverseBotWs = (wsport, configs) => {
-// 创建一个 HTTP 服务器
-  let server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end(`[PORT: ${wsport}] WebSocket server is running.`);
-  });
-
-// 创建 WebSocket 服务器，将其与 HTTP 服务器关联
-  let wss = new WebSocket.Server({ server });
-
-// 事件处理：当 WebSocket 连接建立时
-  wss.on('connection', (ws) => {
-    console.log(`[PORT: ${wsport}] WebSocket connection established.`);
-
-    // 事件处理：当收到消息时
-    ws.on('message', (message) => {
-      // console.log(`Received message: ${message}`);
-      let context = JSON.parse(message.toString())
-
-      if(context.message == 'HELLO') {
-        console.log(`\n\n\n TARGET \n\n\n`)
-        ws.send(JSON.stringify({
-          "action": "send_message",
-          "params": {
-            "detail_type": "group",
-            "group_id": context.group_id,
-            "message": 'WORLD'
-          }
-        }));
-        return
-      }
-
-      handleMsg(context, wsport, Object.assign({
-        reverseWs: true,
-        ws,
-      }, configs))
-    });
-  });
-
-// 启动 HTTP 服务器，监听指定端口
-  server.listen(wsport, () => {
-    console.log(`[PORT: ${wsport}] HTTP server and WebSocket server are listening on port ${wsport}`);
-  });
-}
-
 init();
 function init(){
   // for(var i=0;i<botlist.length;i++){
@@ -335,11 +290,7 @@ function init(){
   // }
 	botlist.forEach(bot => {
 		let { port, wsport, reverseWs, configs } = bot
-    if(reverseWs) {
-      initReverseBotWs(wsport, configs)
-    } else {
-		  initBotWS(port, wsport, configs)
-    }
+    initBotWS(port, wsport, configs)
 	})
 }
 
@@ -461,17 +412,8 @@ async function addSendQueue(groupid,msg,port,from, configs){
         });
       }
     }else{
-      if(configs && configs.reverseWs) {
-        if(configs.ws) {
-          configs.ws.send(JSON.stringify({
-            "action": "send_message",
-            "params": {
-              "detail_type": "group",
-              "group_id": groupid,
-              "message": msg
-            }
-          }))
-        }
+      if(configs && configs.reverseWs && configs.callback) {
+        configs.callback(msg)
       } else {
         request({
           headers:{
