@@ -87,6 +87,17 @@ app.ws('/c/*', function(ws, req) {
   });
 });
 
+app.ws('/shamrock/', (ws, req) => {
+  var path = req.path.substring(1);
+  console.log(path);
+  ws.on('message', (msg) => {
+    console.log(`[WS Message] ${msg}`)
+  })
+  ws.on('close', () => {
+    console.log('ws close')
+  })
+})
+
 
 app.listen('10086', () => {
   console.log('server started')
