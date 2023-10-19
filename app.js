@@ -16,6 +16,8 @@ const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
 const { myip } = require('./baibaiConfigs')
 const { analyzerMessage } = require('./ai/GenshinImpact/GenshinPush')
 const { getClient } = require('./mongo/index')
+const { analysisMessage } = require('./reverseWsUtils')
+
 const ports = new Set([
 	// 23334,
 	24334, // 2号机 3291864216
@@ -89,16 +91,16 @@ app.ws('/c/*', function(ws, req) {
 
 app.ws('/shamrock/', (ws, req) => {
   var path = req.path.substring(1);
-  console.log(`======================\n\npath: ${path}\n\n======================`);
+  // console.log(`======================\n\npath: ${path}\n\n======================`);
   ws.on('message', (msg) => {
-    let context = JSON.parse(msg.toString())
-    console.log(`\n\n[WS Message] ${msg}\n\n`)
-    handleMsg(context, 30015, Object.assign({
-      reverseWs: true,
-      callback(m) {
-        console.log(`======================\n\nwill send:\n${m}\n\n======================`);
-      },
-    }))
+    analysisMessage(msg, ws)
+    // let context = JSON.parse(msg.toString())
+    // handleMsg(context, 30015, Object.assign({
+    //   reverseWs: true,
+    //   callback(m) {
+    //     console.log(`======================\n\nwill send:\n${m}\n\n======================`);
+    //   },
+    // }))
   })
   ws.on('close', () => {
     console.log('ws close')
