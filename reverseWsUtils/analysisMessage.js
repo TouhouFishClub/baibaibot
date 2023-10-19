@@ -40,6 +40,8 @@ const mixinInfos = (context, ws) => {
     let { group_name } = mixin_group_info
     let { user_name } = mixin_user_info
 
+    console.log(`[ws message][${group_name}(${group_id})][${card || user_name}]${message}`)
+
     handle_msg_D2(message, user_id, card || user_name, group_id, message => {
       console.log(`===\nwill send\n${message}\n===`)
       ws.send(JSON.stringify({
