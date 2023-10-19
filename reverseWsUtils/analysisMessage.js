@@ -33,7 +33,7 @@ const mixinInfos = (context, ws) => {
   }
 
   if(context) {
-    console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
+    // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
     // (content,from,name,groupid,callback,groupName,nickname,msgType,port,msgObjSource)
     let { message, message_type, user_id, group_id, sender, mixin_group_info, mixin_user_info } = context
     let { card } = sender
