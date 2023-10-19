@@ -10,7 +10,54 @@ const {
   updateUserInfoResponse
 } = require('./updateUserInfo')
 
+const {
+  localImageToBase64
+} = require('../util/imageToBase64')
+
 const { handle_msg_D2 } = require('../baibai2');
+
+const replaceImageToBase64 = message =>
+  message.split('[CQ:image,file=file:').map((sp, index) => {
+    if(index) {
+      let tsp = sp.split(']'), url = tsp[0]
+      tsp[0] = localImageToBase64(url)
+      return tsp.join(']')
+    }
+    return sp
+  }).join('[CQ:image,file=base64://')
+
+const sendMessage = (context, ws) => {
+  // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
+  // (content,from,name,groupid,callback,groupName,nickname,msgType,port,msgObjSource)
+  let { message, message_type, user_id, group_id, sender, mixin_group_info, mixin_user_info } = context
+  let { card } = sender
+  let { group_name } = mixin_group_info
+  let { user_name } = mixin_user_info
+
+  console.log(`[ws message][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)
+
+  handle_msg_D2(message, user_id, card || user_name, group_id, msg => {
+    msg = msg
+      .replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+      .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+      .replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+
+    console.log(`===\nwill send\n${msg}\n===`)
+    let message = msg
+    if(msg.indexOf('[CQ:image,file')){
+      message = replaceImageToBase64(msg)
+      console.log(`检测到图片，转化为以下格式：\n${message}`)
+    }
+    ws.send(JSON.stringify({
+      "action": "send_message",
+      "params": {
+        "detail_type": "group",
+        "group_id": group_id,
+        "message": message
+      }
+    }));
+  }, group_name, user_name, message_type, 30015, context )
+}
 
 const mixinInfos = (context, ws) => {
   if(!context.mixin_group_info) {
@@ -31,28 +78,8 @@ const mixinInfos = (context, ws) => {
       return
     }
   }
-
   if(context) {
-    // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
-    // (content,from,name,groupid,callback,groupName,nickname,msgType,port,msgObjSource)
-    let { message, message_type, user_id, group_id, sender, mixin_group_info, mixin_user_info } = context
-    let { card } = sender
-    let { group_name } = mixin_group_info
-    let { user_name } = mixin_user_info
-
-    console.log(`[ws message][${group_name}(${group_id})][${card || user_name}]${message}`)
-
-    handle_msg_D2(message, user_id, card || user_name, group_id, message => {
-      console.log(`===\nwill send\n${message}\n===`)
-      ws.send(JSON.stringify({
-        "action": "send_message",
-        "params": {
-          "detail_type": "group",
-          "group_id": group_id,
-          "message": message
-        }
-      }));
-    }, group_name, user_name, message_type, 30015, context )
+    sendMessage(context, ws)
   }
 }
 
