@@ -94,13 +94,15 @@ app.ws('/shamrock/', (ws, req) => {
   // console.log(`======================\n\npath: ${path}\n\n======================`);
   ws.on('message', (msg) => {
     analysisMessage(msg, ws)
-    // let context = JSON.parse(msg.toString())
-    // handleMsg(context, 30015, Object.assign({
-    //   reverseWs: true,
-    //   callback(m) {
-    //     console.log(`======================\n\nwill send:\n${m}\n\n======================`);
-    //   },
-    // }))
+  })
+  ws.on('close', () => {
+    console.log('ws close')
+  })
+})
+
+app.ws('/api_proxy/', (ws, req) => {
+  ws.on('message', (msg) => {
+
   })
   ws.on('close', () => {
     console.log('ws close')
