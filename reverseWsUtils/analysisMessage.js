@@ -97,7 +97,7 @@ const analysisMessage = (message, ws) => {
         default:
       }
     } else {
-      console.log(`\n[UNKNOWN ACTION RESPONSE]\n[${context}]\n`)
+      console.log(`\n[UNKNOWN ACTION RESPONSE]\n[${JSON.stringify(context)}]\n`)
     }
     return
   }
