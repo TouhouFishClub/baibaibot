@@ -26,6 +26,8 @@ const checkAlias = async (project, groupId) => {
 
 
 const calendar = async (content, author, groupId, callback, type = 'add') => {
+  console.log(`========== CALENDAR ==========\n${content}`)
+
 	if(!client) {
 		try {
 			client = await MongoClient.connect(MONGO_URL)

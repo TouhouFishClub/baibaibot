@@ -46,7 +46,7 @@ const sendMessage = (context, ws) => {
     let message = msg
     if(msg.indexOf('[CQ:image,file') > -1){
       message = replaceImageToBase64(msg)
-      console.log(`检测到图片，转化为以下格式：\n${message}`)
+      // console.log(`检测到图片，转化为以下格式：\n${message}`)
     }
     ws.send(JSON.stringify({
       "action": "send_message",
