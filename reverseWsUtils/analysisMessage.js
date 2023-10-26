@@ -27,13 +27,11 @@ const replaceImageToBase64 = message =>
   }).join('[CQ:image,file=base64://')
 
 const sendMessage = (context, ws) => {
-  console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
-  let { message, message_type, user_id, group_id, sender, mixins } = context
+  // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
+  let { message, message_type, user_id, group_id, sender, mixin_group_info, mixin_user_info } = context
   let { card } = sender
-  let { group_info, user_info } = mixins
-  console.log(`\n\n\n====\n\n${mixins}\n\n\n${JSON.stringify(mixins)}\n\n====\n\n\n`)
-  let { group_name } = group_info
-  let { user_name } = user_info
+  let { group_name } = mixin_group_info
+  let { user_name } = mixin_user_info
 
   console.log(`[ws msg][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)
 
@@ -62,25 +60,19 @@ const sendMessage = (context, ws) => {
 }
 
 const mixinInfos = (context, ws) => {
-  if(!context?.mixins?.group_info) {
-    let group_info = getGroupInfo(context.group_id)
-    if(group_info) {
-      context.mixins = Object.assign(
-        context.mixins,
-        group_info
-      )
+  if(!context.mixin_group_info) {
+    let groupInfo = getGroupInfo(context.group_id)
+    if(groupInfo) {
+      context.mixin_group_info = groupInfo
     } else {
       updateGroupInfo(context, ws)
       return
     }
   }
-  if(!context?.mixins?.user_info) {
-    let user_info = getUserInfo(context.user_id)
-    if(user_info) {
-      context.mixins = Object.assign(
-        context.mixins,
-        user_info
-      )
+  if(!context.mixin_user_info) {
+    let userInfo = getUserInfo(context.user_id)
+    if(userInfo) {
+      context.mixin_user_info = userInfo
     } else {
       updateUserInfo(context, ws)
       return

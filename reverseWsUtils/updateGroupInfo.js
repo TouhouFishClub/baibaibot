@@ -24,14 +24,9 @@ const updateGroupInfoResponse = context => {
     data: context.data,
     expire: Date.now() + 30 * 60 * 1000
   }
-  return Object.assign(
-    context.echo.source,
-    Object.assign({}, {
-      mixins : {
-        group_info: context.data
-      }
-    })
-  )
+  return Object.assign(context.echo.source, {
+    mixin_group_info: context.data
+  })
 }
 
 module.exports = {
