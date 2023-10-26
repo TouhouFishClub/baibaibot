@@ -33,6 +33,7 @@ const sendMessage = (context, ws) => {
   let { group_info, user_info } = mixins
   let { group_name } = group_info
   let { user_name } = user_info
+  console.log(`\n\n\n====\n\n${mixins}\n\n\n${JSON.stringify(mixins)}\n\n====\n\n\n`)
 
   console.log(`[ws msg][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)
 
