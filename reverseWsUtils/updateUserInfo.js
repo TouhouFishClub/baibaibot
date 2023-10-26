@@ -18,15 +18,20 @@ const updateUserInfo = (context, ws) => {
     }
   }))
 }
-
 const updateUserInfoResponse = context => {
   userInfoHash[context.data.user_id] = {
     data: context.data,
     expire: Date.now() + 30 * 60 * 1000
   }
-  return Object.assign(context.echo.source, {
-    mixin_user_info: context.data
-  })
+
+  return Object.assign(
+    context.echo.source,
+    Object.assign({}, {
+      mixins : {
+        user_info: context.data
+      }
+    })
+  )
 }
 
 module.exports = {

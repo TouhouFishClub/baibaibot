@@ -1279,7 +1279,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
 	if(con === 'jrrptest' && from === 799018865) {
-		jrrp(from, groupid, port, callback)
+		jrrp(from, groupid, port, callback, msgObjSource)
 		return
 	}
 

@@ -27,14 +27,14 @@ const replaceImageToBase64 = message =>
   }).join('[CQ:image,file=base64://')
 
 const sendMessage = (context, ws) => {
-  // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
-  // (content,from,name,groupid,callback,groupName,nickname,msgType,port,msgObjSource)
-  let { message, message_type, user_id, group_id, sender, mixin_group_info, mixin_user_info } = context
+  console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
+  let { message, message_type, user_id, group_id, sender, mixins } = context
   let { card } = sender
-  let { group_name } = mixin_group_info
-  let { user_name } = mixin_user_info
+  let { group_info, user_info } = mixins
+  let { group_name } = group_info
+  let { user_name } = user_info
 
-  console.log(`[ws message][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)
+  console.log(`[ws msg][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)
 
   handle_msg_D2(message, user_id, card || user_name, group_id, msg => {
     msg = msg
@@ -42,7 +42,8 @@ const sendMessage = (context, ws) => {
       .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
       .replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
 
-    console.log(`===\nwill send\n${msg}\n===`)
+    // console.log(`===\nwill send\n${msg}\n===`)
+    console.log(`[ws send][${group_name}(${group_id})]${msg}`)
     let message = msg
     if(msg.indexOf('[CQ:image,file') > -1){
       message = replaceImageToBase64(msg)
@@ -60,19 +61,25 @@ const sendMessage = (context, ws) => {
 }
 
 const mixinInfos = (context, ws) => {
-  if(!context.mixin_group_info) {
-    let groupInfo = getGroupInfo(context.group_id)
-    if(groupInfo) {
-      context.mixin_group_info = groupInfo
+  if(!context?.mixins?.group_info) {
+    let group_info = getGroupInfo(context.group_id)
+    if(group_info) {
+      context.mixins = Object.assign(
+        context.mixins,
+        group_info
+      )
     } else {
       updateGroupInfo(context, ws)
       return
     }
   }
-  if(!context.mixin_user_info) {
-    let userInfo = getUserInfo(context.user_id)
-    if(userInfo) {
-      context.mixin_user_info = userInfo
+  if(!context?.mixins?.user_info) {
+    let user_info = getUserInfo(context.user_id)
+    if(user_info) {
+      context.mixins = Object.assign(
+        context.mixins,
+        user_info
+      )
     } else {
       updateUserInfo(context, ws)
       return
