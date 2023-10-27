@@ -99,7 +99,7 @@ app.ws('/shamrock/:port', (ws, req) => {
   console.log(`======================\n\nport: ${port}\n\n======================`)
   socketManager.set(port, ws)
   ws.on('message', (msg) => {
-    analysisMessage(msg, ws)
+    analysisMessage(msg, ws, port)
   })
   ws.on('close', () => {
     console.log('ws close')

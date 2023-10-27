@@ -11,6 +11,11 @@ const {
 } = require('./updateUserInfo')
 
 const {
+  createAction,
+  responseAction
+} = require('./manager/actionManager')
+
+const {
   localImageToBase64
 } = require('../util/imageToBase64')
 
@@ -83,25 +88,34 @@ const mixinInfos = (context, ws) => {
   }
 }
 
-const analysisMessage = (message, ws) => {
+const analysisMessage = (message, ws, port) => {
   let context = JSON.parse(message.toString())
   // 认为是上报信息
   if(context.post_type) {
     switch(context.post_type) {
       case 'message':
         console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
-        // mixinInfos(context, ws)
-        //
-        if(context.message == 'HELLO') {
-          console.log(`\n\n\n TARGET \n\n\n`)
-          ws.send(JSON.stringify({
-            "action": "send_message",
-            "params": {
-              "detail_type": "group",
-              "group_id": context.group_id,
-              "message": 'WORLD'
-            }
-          }));
+        // 暂时只处理群信息
+        if(context.message_type == 'group') {
+          // mixinInfos(context, ws)
+          //
+          if(context.message == 'HELLO') {
+            console.log(`\n\n\n TARGET \n\n\n`)
+            // ws.send(JSON.stringify({
+            //   "action": "send_message",
+            //   "params": {
+            //     "detail_type": "group",
+            //     "group_id": context.group_id,
+            //     "message": 'WORLD'
+            //   }
+            // }));
+            createAction({
+              "action": "get_group_info",
+              "params": {
+                "group_id": context.group_id
+              }
+            }, port)
+          }
         }
         break
       case 'meta_event':
@@ -110,26 +124,33 @@ const analysisMessage = (message, ws) => {
       default:
         console.log(`[ws info]\n[UNKNOWN POST TYPE]\n[${JSON.stringify(context)}]\n`)
     }
-
     return
   }
 
   // 认为是动作返回信息
   if(context.status) {
-    if(context.echo && context.echo.action) {
-      switch(context.echo.action) {
-        case 'get_group_info':
-          mixinInfos(updateGroupInfoResponse(context), ws)
-          break
-        case 'get_user_info':
-          mixinInfos(updateUserInfoResponse(context), ws)
-          break
-        default:
-      }
+    if(context?.echo?.action) {
+      responseAction(context)
     } else {
       console.log(`[ws info]\n[UNKNOWN ACTION RESPONSE]\n[${JSON.stringify(context)}]\n`)
     }
-    return
+
+
+
+    // if(context.echo && context.echo.action) {
+    //   switch(context.echo.action) {
+    //     case 'get_group_info':
+    //       mixinInfos(updateGroupInfoResponse(context), ws)
+    //       break
+    //     case 'get_user_info':
+    //       mixinInfos(updateUserInfoResponse(context), ws)
+    //       break
+    //     default:
+    //   }
+    // } else {
+    //   console.log(`[ws info]\n[UNKNOWN ACTION RESPONSE]\n[${JSON.stringify(context)}]\n`)
+    // }
+    // return
   }
 
   console.log(`[ws info]\n[UNKNOWN MESSAGE]\n${message}\n`)

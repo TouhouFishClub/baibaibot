@@ -15,11 +15,16 @@ const createAction = (actionObject, port) => {
         ts: Date.now()
       }
     })
-    actions.push(deepMerge(markedAction, { resolve }))
-    ws.send(markedAction)
+    // actions.push(deepMerge(markedAction, { resolve }))
+    ws.send(JSON.stringify(markedAction))
   })
 }
 
 const responseAction = data => {
+  console.log(data)
+}
 
+module.exports = {
+  createAction,
+  responseAction
 }
