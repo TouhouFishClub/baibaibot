@@ -1,3 +1,5 @@
+const deepMerge = require('./utils/deepMerge')
+
 const {
   getGroupInfo,
   updateGroupInfo,
@@ -33,35 +35,36 @@ const replaceImageToBase64 = message =>
 
 const sendMessage = (context, ws) => {
   // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
-  let { message, message_type, user_id, group_id, sender, mixin_group_info, mixin_user_info } = context
+  let { message, message_type, user_id, group_id, sender, mixins } = context
   let { card } = sender
-  let { group_name } = mixin_group_info
-  let { user_name } = mixin_user_info
+  let { group_info, user_info } = mixins
+  let { group_name } = group_info
+  let { user_name } = user_info
 
   console.log(`[ws msg][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)
 
-  handle_msg_D2(message, user_id, card || user_name, group_id, msg => {
-    msg = msg
-      .replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-      .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-      .replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
-
-    // console.log(`===\nwill send\n${msg}\n===`)
-    console.log(`[ws send][${group_name}(${group_id})]${msg}`)
-    let message = msg
-    if(msg.indexOf('[CQ:image,file') > -1){
-      message = replaceImageToBase64(msg)
-      // console.log(`检测到图片，转化为以下格式：\n${message}`)
-    }
-    ws.send(JSON.stringify({
-      "action": "send_message",
-      "params": {
-        "detail_type": "group",
-        "group_id": group_id,
-        "message": message
-      }
-    }));
-  }, group_name, user_name, message_type, 30015, context )
+  // handle_msg_D2(message, user_id, card || user_name, group_id, msg => {
+  //   msg = msg
+  //     .replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+  //     .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+  //     .replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+  //
+  //   // console.log(`===\nwill send\n${msg}\n===`)
+  //   console.log(`[ws send][${group_name}(${group_id})]${msg}`)
+  //   let message = msg
+  //   if(msg.indexOf('[CQ:image,file') > -1){
+  //     message = replaceImageToBase64(msg)
+  //     // console.log(`检测到图片，转化为以下格式：\n${message}`)
+  //   }
+  //   ws.send(JSON.stringify({
+  //     "action": "send_message",
+  //     "params": {
+  //       "detail_type": "group",
+  //       "group_id": group_id,
+  //       "message": message
+  //     }
+  //   }));
+  // }, group_name, user_name, message_type, 30015, context )
 }
 
 const mixinInfos = (context, ws) => {
@@ -98,25 +101,40 @@ const analysisMessage = async (message, ws, port) => {
         // 暂时只处理群信息
         if(context.message_type === 'group') {
           // mixinInfos(context, ws)
-          //
-          if(context.message === 'HELLO') {
-            console.log(`\n\n\n TARGET \n\n\n`)
-            // ws.send(JSON.stringify({
-            //   "action": "send_message",
-            //   "params": {
-            //     "detail_type": "group",
-            //     "group_id": context.group_id,
-            //     "message": 'WORLD'
-            //   }
-            // }));
-            let res = await createAction({
-              "action": "get_group_info",
-              "params": {
-                "group_id": context.group_id
-              }
-            }, port)
-            console.log(`==================\n[await ws action response]\n\n${JSON.stringify(res)}\n\n`)
+
+          let group_info = await createAction({
+            "action": "get_group_info",
+            "params": {
+              "group_id": context.group_id
+            }
+          }, port)
+
+          let user_info = await createAction({
+            "action": "get_user_info",
+            "params": {
+              "user_id": context.user_id
+            },
+          }, port)
+
+          context.mixins = {
+            group_info,
+            user_info
           }
+
+          sendMessage(context, ws)
+
+          // if(context.message === 'HELLO') {
+          //   console.log(`\n\n\n TARGET \n\n\n`)
+          //   // ws.send(JSON.stringify({
+          //   //   "action": "send_message",
+          //   //   "params": {
+          //   //     "detail_type": "group",
+          //   //     "group_id": context.group_id,
+          //   //     "message": 'WORLD'
+          //   //   }
+          //   // }));
+          //   console.log(`==================\n[await ws action response]\n\n${JSON.stringify(res)}\n\n`)
+          // }
         }
         break
       case 'meta_event':
@@ -135,9 +153,7 @@ const analysisMessage = async (message, ws, port) => {
     } else {
       console.log(`[ws info]\n[UNKNOWN ACTION RESPONSE]\n[${JSON.stringify(context)}]\n`)
     }
-
-
-
+    return
     // if(context.echo && context.echo.action) {
     //   switch(context.echo.action) {
     //     case 'get_group_info':
