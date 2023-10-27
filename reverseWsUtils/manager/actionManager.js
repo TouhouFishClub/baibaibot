@@ -24,7 +24,7 @@ const responseAction = res => {
   let { data, echo } = res
   let actionIndex = actions.findIndex(action => action?.echo?.action === echo.action && action?.echo?.ts === echo.ts)
   if(actionIndex > -1) {
-    let action = actions.splice(actionIndex, 1)
+    let action = actions.splice(actionIndex, 1)[0]
     action.resolve(data)
   }
 }
