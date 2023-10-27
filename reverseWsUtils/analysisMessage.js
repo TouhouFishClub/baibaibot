@@ -89,25 +89,26 @@ const analysisMessage = (message, ws) => {
   if(context.post_type) {
     switch(context.post_type) {
       case 'message':
-        mixinInfos(context, ws)
+        console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
+        // mixinInfos(context, ws)
         //
-        // if(context.message == 'HELLO') {
-        //   console.log(`\n\n\n TARGET \n\n\n`)
-        //   // ws.send(JSON.stringify({
-        //   //   "action": "send_message",
-        //   //   "params": {
-        //   //     "detail_type": "group",
-        //   //     "group_id": context.group_id,
-        //   //     "message": 'WORLD'
-        //   //   }
-        //   // }));
-        // }
+        if(context.message == 'HELLO') {
+          console.log(`\n\n\n TARGET \n\n\n`)
+          ws.send(JSON.stringify({
+            "action": "send_message",
+            "params": {
+              "detail_type": "group",
+              "group_id": context.group_id,
+              "message": 'WORLD'
+            }
+          }));
+        }
         break
       case 'meta_event':
-        console.log(`[WS META EVENT][${context.meta_event_type}][${JSON.stringify(context.status)}]`)
+        console.log(`[ws info][WS META EVENT][${context.meta_event_type}][${JSON.stringify(context.status)}]`)
         break
       default:
-        console.log(`\n[UNKNOWN POST TYPE]\n[${JSON.stringify(context)}]\n`)
+        console.log(`[ws info]\n[UNKNOWN POST TYPE]\n[${JSON.stringify(context)}]\n`)
     }
 
     return
@@ -126,12 +127,12 @@ const analysisMessage = (message, ws) => {
         default:
       }
     } else {
-      console.log(`\n[UNKNOWN ACTION RESPONSE]\n[${JSON.stringify(context)}]\n`)
+      console.log(`[ws info]\n[UNKNOWN ACTION RESPONSE]\n[${JSON.stringify(context)}]\n`)
     }
     return
   }
 
-  console.log(`\n[UNKNOWN MESSAGE]\n${message}\n`)
+  console.log(`[ws info]\n[UNKNOWN MESSAGE]\n${message}\n`)
 }
 
 module.exports = {

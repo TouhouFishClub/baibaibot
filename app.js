@@ -16,7 +16,10 @@ const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
 const { myip } = require('./baibaiConfigs')
 const { analyzerMessage } = require('./ai/GenshinImpact/GenshinPush')
 const { getClient } = require('./mongo/index')
-const { analysisMessage } = require('./reverseWsUtils')
+const {
+  analysisMessage,
+  socketManager
+} = require('./reverseWsUtils')
 
 const ports = new Set([
 	// 23334,
@@ -94,17 +97,9 @@ app.ws('/shamrock/:port', (ws, req) => {
   // console.log(`======================\n\npath: ${path}\n\n======================`);
   let port = req.params.port
   console.log(`======================\n\nport: ${port}\n\n======================`)
+  socketManager.set(port, ws)
   ws.on('message', (msg) => {
     analysisMessage(msg, ws)
-  })
-  ws.on('close', () => {
-    console.log('ws close')
-  })
-})
-
-app.ws('/api_proxy/', (ws, req) => {
-  ws.on('message', (msg) => {
-
   })
   ws.on('close', () => {
     console.log('ws close')
