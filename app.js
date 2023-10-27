@@ -89,9 +89,11 @@ app.ws('/c/*', function(ws, req) {
   });
 });
 
-app.ws('/shamrock/', (ws, req) => {
-  var path = req.path.substring(1);
+app.ws('/shamrock/:port', (ws, req) => {
+  // var path = req.path.substring(1);
   // console.log(`======================\n\npath: ${path}\n\n======================`);
+  let port = req.params.port
+  console.log(`======================\n\nport: ${port}\n\n======================`)
   ws.on('message', (msg) => {
     analysisMessage(msg, ws)
   })
