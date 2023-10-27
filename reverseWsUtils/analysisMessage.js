@@ -43,28 +43,28 @@ const sendMessage = (context, ws) => {
 
   console.log(`[ws msg][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)
 
-  // handle_msg_D2(message, user_id, card || user_name, group_id, msg => {
-  //   msg = msg
-  //     .replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-  //     .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-  //     .replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
-  //
-  //   // console.log(`===\nwill send\n${msg}\n===`)
-  //   console.log(`[ws send][${group_name}(${group_id})]${msg}`)
-  //   let message = msg
-  //   if(msg.indexOf('[CQ:image,file') > -1){
-  //     message = replaceImageToBase64(msg)
-  //     // console.log(`检测到图片，转化为以下格式：\n${message}`)
-  //   }
-  //   ws.send(JSON.stringify({
-  //     "action": "send_message",
-  //     "params": {
-  //       "detail_type": "group",
-  //       "group_id": group_id,
-  //       "message": message
-  //     }
-  //   }));
-  // }, group_name, user_name, message_type, 30015, context )
+  handle_msg_D2(message, user_id, card || user_name, group_id, msg => {
+    msg = msg
+      .replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+      .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+      .replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+
+    // console.log(`===\nwill send\n${msg}\n===`)
+    console.log(`[ws send][${group_name}(${group_id})]${msg}`)
+    let message = msg
+    if(msg.indexOf('[CQ:image,file') > -1){
+      message = replaceImageToBase64(msg)
+      // console.log(`检测到图片，转化为以下格式：\n${message}`)
+    }
+    ws.send(JSON.stringify({
+      "action": "send_message",
+      "params": {
+        "detail_type": "group",
+        "group_id": group_id,
+        "message": message
+      }
+    }));
+  }, group_name, user_name, message_type, 30015, context )
 }
 
 const mixinInfos = (context, ws) => {
