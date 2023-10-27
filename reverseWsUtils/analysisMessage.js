@@ -88,7 +88,7 @@ const mixinInfos = (context, ws) => {
   }
 }
 
-const analysisMessage = (message, ws, port) => {
+const analysisMessage = async (message, ws, port) => {
   let context = JSON.parse(message.toString())
   // 认为是上报信息
   if(context.post_type) {
@@ -96,10 +96,10 @@ const analysisMessage = (message, ws, port) => {
       case 'message':
         console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
         // 暂时只处理群信息
-        if(context.message_type == 'group') {
+        if(context.message_type === 'group') {
           // mixinInfos(context, ws)
           //
-          if(context.message == 'HELLO') {
+          if(context.message === 'HELLO') {
             console.log(`\n\n\n TARGET \n\n\n`)
             // ws.send(JSON.stringify({
             //   "action": "send_message",
@@ -109,12 +109,13 @@ const analysisMessage = (message, ws, port) => {
             //     "message": 'WORLD'
             //   }
             // }));
-            createAction({
+            let res = await createAction({
               "action": "get_group_info",
               "params": {
                 "group_id": context.group_id
               }
             }, port)
+            console.log(`==================\n[await ws action response]\n\n${JSON.stringify(res)}\n\n`)
           }
         }
         break
