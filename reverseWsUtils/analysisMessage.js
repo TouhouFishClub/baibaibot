@@ -97,7 +97,7 @@ const analysisMessage = async (message, ws, port) => {
   if(context.post_type) {
     switch(context.post_type) {
       case 'message':
-        console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
+        // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
         // 暂时只处理群信息
         if(context.message_type === 'group') {
           // mixinInfos(context, ws)
