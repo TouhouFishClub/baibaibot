@@ -1292,9 +1292,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		// }
     let s = con.substring(4).trim()
     let userInfo
-    if(msgObjSource?.mixins?.user_info) {
+    if(msgObjSource?.sender) {
       userInfo = {
-        nid: msgObjSource?.mixins?.user_info?.user_name || 'unknown'
+        nid: msgObjSource?.sender?.card || msgObjSource?.sender?.nickname || 'unknown'
       }
     }
     //[CQ:at,qq=395338563]
