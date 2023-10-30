@@ -808,7 +808,7 @@ function handleMsg_D(msgObj,port, configs) {
   handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group',port,msgObj)
 }
 
-function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType,port,msgObjSource){
+function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType,port, msgObjSource){
 
   content=content.trim();
 
@@ -1291,13 +1291,19 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		// 	return
 		// }
     let s = con.substring(4).trim()
+    let userInfo
+    if(msgObjSource?.mixins?.user_info) {
+      userInfo = {
+        nid: msgObjSource?.mixins?.user_info?.user_name || 'unknown'
+      }
+    }
     //[CQ:at,qq=395338563]
 
     if(s.startsWith('[CQ:at')){
 			console.log('=== jrrp at ===')
       s = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
       // rp(from, callback, s)
-			jrrp(from, groupid, port, callback, s)
+			jrrp(from, groupid, port, callback, s, userInfo)
       return
     }
     let ignoreJrrpDestSet = new Set([
@@ -1308,7 +1314,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     if(ignoreJrrpDestSet.has(groupid) || true) {
       // rp(from, callback, from)
 			console.log('=== jrrp normal ===')
-			jrrp(from, groupid, port, callback)
+			jrrp(from, groupid, port, callback, '', userInfo)
       return
     }
     // rp(from, callback)

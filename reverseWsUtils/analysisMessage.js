@@ -118,7 +118,8 @@ const analysisMessage = async (message, ws, port) => {
 
           context.mixins = {
             group_info,
-            user_info
+            user_info,
+            port
           }
 
           sendMessage(context, ws)
