@@ -96,7 +96,7 @@ app.ws('/shamrock/:port', (ws, req) => {
   // var path = req.path.substring(1);
   // console.log(`======================\n\npath: ${path}\n\n======================`);
   let port = req.params.port
-  console.log(`======================\n\nport: ${port}\n\n======================`)
+  console.log(`======================\n\nport: ${port}\nheaders: ${req.headers}\n\n======================`)
   socketManager.set(port, ws)
   ws.on('message', (msg) => {
     analysisMessage(msg, ws, port)
