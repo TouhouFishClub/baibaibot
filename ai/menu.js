@@ -9,6 +9,9 @@ let client
 
 const renderMenu = async (group, callback) => {
   let keywords = await client.db('db_bot').collection('cl_menu').find({g: group}).toArray()
+  if(!keywords.length) {
+    return
+  }
   let html = `<!DOCTYPE html>
 <html lang="en">
 <head>
