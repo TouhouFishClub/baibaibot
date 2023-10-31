@@ -372,7 +372,7 @@ async function addSendQueue(groupid,msg,port,from, configs){
         console.log('n11111111111111111:'+s1);
         var filename = s1.substring(0,n1);
         var now = new Date().getTime();
-        getGroupFolderId(groupid,function(foldid){
+        getGroupFolderId(groupid,port,function(foldid){
           var bdy3 = {"group_id":groupid,"name":now+".jpg","file":filename,folder:foldid};
           console.log(bdy3);
           request({
@@ -439,14 +439,13 @@ async function addSendQueue(groupid,msg,port,from, configs){
 
 
 var fidmap = {};
-function getGroupFolderId(groupid,callback){
+function getGroupFolderId(groupid,port,callback){
   if(fidmap[groupid]){
     callback(fidmap[groupid]);
   }else{
     request({
       method: "GET",
       url: 'http://'+myip+':'+port+'/get_group_root_files?group_id='+groupid,
-      body: JSON.stringify(bdy)
     }, function(error, response, body) {
       if (error && error.code) {
         console.log('pipe error catched!')
