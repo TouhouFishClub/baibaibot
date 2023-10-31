@@ -457,7 +457,7 @@ function getGroupFolderId(groupid,port,callback){
         var baibaifileid = "";
         for(var i=0;i<list.length;i++){
           var  filename = list[i].file_name;
-          var fileid = list[i].file_id;
+          var fileid = list[i].folder_id;
           if(filename=="baibaiimage"){
             baibaifileid = fileid;
           }
