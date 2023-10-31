@@ -373,7 +373,7 @@ async function addSendQueue(groupid,msg,port,from, configs){
         var filename = s1.substring(0,n1);
         var now = new Date().getTime();
         getGroupFolderId(groupid,port,function(foldid){
-          var bdy3 = {"group_id":groupid,"name":now+".jpg","file":filename,folder:''};
+          var bdy3 = {"group_id":groupid,"name":now+".jpg","file":filename,"folder":""};
           console.log(bdy3);
           request({
             headers:{
