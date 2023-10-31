@@ -462,6 +462,9 @@ function getGroupFolderId(groupid,port,callback){
             baibaifileid = fileid;
           }
         }
+        if(baibaifileid.startsWith("/")){
+          baibaifileid = baibaifileid.substring(1);
+        }
         if(baibaifileid==""){
           callback('');
         }else{
