@@ -441,6 +441,8 @@ async function addSendQueue(groupid,msg,port,from, configs){
 
 var fidmap = {};
 function getGroupFolderId(groupid,port,callback){
+  callback('');
+  return;
   if(fidmap[groupid]){
     callback(fidmap[groupid]);
   }else{
