@@ -372,7 +372,7 @@ async function addSendQueue(groupid,msg,port,from, configs){
         console.log('n11111111111111111:'+s1);
         var filename = s1.substring(0,n1);
         var now = new Date().getTime();
-        var bdy3 = {"group_id":groupid,"name":now+".jpg","file":filename};
+        var bdy3 = {"group_id":groupid,"name":"baibaiimage/"+now+".jpg","file":filename};
         console.log(bdy3);
         request({
           headers:{
