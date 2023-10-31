@@ -453,7 +453,7 @@ function getGroupFolderId(groupid,port,callback){
         callback("");
       } else {
         var data = eval('('+body+')');
-        var list = data.data.files;
+        var list = data.data.folders;
         var baibaifileid = "";
         for(var i=0;i<list.length;i++){
           var  filename = list[i].folder_name;
