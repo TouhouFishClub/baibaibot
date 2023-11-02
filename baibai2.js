@@ -392,26 +392,51 @@ async function addSendQueue(groupid,msg,port,from, configs){
             saveChat(groupid, 981069482, "百百", msgSource,port);
           });
         })
+      }
+      if(
+        (from+"").startsWith("35747")||(from+"").startsWith("79901")||
+        (groupid+"").startsWith("20570")||(groupid+"").startsWith("67096")||
+        (groupid+"").startsWith("96435")||(groupid+"").startsWith("xxxxx")
+      ){
+        var bdy4 = {group_id:groupid,message:msg}
+        request({
+          headers:{
+            "Content-Type":"application/json"
+          },
+          method: "POST",
+          url: 'http://'+myip+':'+port+'/send_group_msg',
 
+          body: JSON.stringify(bdy4 )
+        }, function(error, response, body) {
+          if (error && error.code) {
+            console.log('pipe error catched!')
+            console.log(error);
+          } else {
+            console.log('ok1');
+          }
+          saveChat(groupid, 981069482, "百百", msgSource,port);
+        });
+      }else{
+        request({
+          headers:{
+            "Content-Type":"application/json"
+          },
+          method: "POST",
+          url: 'http://'+myip+':'+port+'/send_private_msg',
+
+          body: JSON.stringify(bdy2 )
+        }, function(error, response, body) {
+          if (error && error.code) {
+            console.log('pipe error catched!')
+            console.log(error);
+          } else {
+            console.log('ok1');
+          }
+          saveChat(groupid, 981069482, "百百", msgSource,port);
+        });
       }
 
-      request({
-        headers:{
-          "Content-Type":"application/json"
-        },
-        method: "POST",
-        url: 'http://'+myip+':'+port+'/send_private_msg',
 
-        body: JSON.stringify(bdy2 )
-      }, function(error, response, body) {
-        if (error && error.code) {
-          console.log('pipe error catched!')
-          console.log(error);
-        } else {
-          console.log('ok1');
-        }
-        saveChat(groupid, 981069482, "百百", msgSource,port);
-      });
 
     }else{
       if(configs && configs.reverseWs && configs.callback) {
