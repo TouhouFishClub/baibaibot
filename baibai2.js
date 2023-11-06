@@ -1299,13 +1299,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     }
     //[CQ:at,qq=395338563]
 
-    if(s.startsWith('[CQ:at')){
-			console.log('=== jrrp at ===')
-      s = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
-      // rp(from, callback, s)
-			jrrp(from, groupid, port, callback, s, userInfo)
-      return
-    }
+    // if(s.startsWith('[CQ:at')){
+		// 	console.log('=== jrrp at ===')
+    //   s = s.substring(s.indexOf('qq=') + 3, s.indexOf(']'))
+    //   // rp(from, callback, s)
+		// 	jrrp(from, groupid, port, callback, s, userInfo)
+    //   return
+    // }
+
     let ignoreJrrpDestSet = new Set([
       577587780,
       1072617253

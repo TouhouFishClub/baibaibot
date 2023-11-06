@@ -35,7 +35,7 @@ const replaceImageToBase64 = message =>
 
 const sendMessage = (context, ws) => {
   // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
-  let { message, message_type, user_id, group_id, sender, mixins } = context
+  let { message, message_type, user_id, group_id, sender, mixins, time } = context
   let { card } = sender
   let { group_info, user_info } = mixins
   let { group_name } = group_info
@@ -95,6 +95,9 @@ const analysisMessage = async (message, ws, port) => {
   let context = JSON.parse(message.toString())
   // 认为是上报信息
   if(context.post_type) {
+    if(context.time * 1000 + 30000 < Date.now()){
+      return
+    }
     switch(context.post_type) {
       case 'message':
         // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
