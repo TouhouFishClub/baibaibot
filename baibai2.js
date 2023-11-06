@@ -362,27 +362,51 @@ async function addSendQueue(groupid,msg,port,from, configs){
 
 	var bdy = {"group_id": groupid, message: msg};
 	console.log("send:"+groupid+":"+msgSource);
-    if(port==25334&&(!(groupid+"").startsWith("20570"))&&(!(groupid+"").startsWith("69738"))&&(!(groupid+"").startsWith("31075"))&&(!(groupid+"").startsWith("67096"))&&(!(from+"").startsWith("35747"))){
-    //if(true){
+    if(port==25334){
       var bdy2 = {"user_id": from, message: msg};
       var str = 'CQ:image,file=file:'
       var n = msg.indexOf(str);
-
-      if(n>9999990){
+      if(n>0){
         var s1 = msg.substring(n+str.length);
         var n1 = s1.indexOf(']');
         console.log('n11111111111111111:'+s1);
         var filename = s1.substring(0,n1);
         var now = new Date().getTime();
-        var bdy3 = {"group_id":groupid,"name":now+".jpg","file":filename};
-        console.log(bdy3);
+        getGroupFolderId(groupid,port,function(foldid){
+          var bdy3 = {"group_id":groupid,"name":now+".jpg","file":filename,"folder":""};
+          console.log(bdy3);
+          request({
+            headers:{
+              "Content-Type":"application/json"
+            },
+            method: "POST",
+            url: 'http://'+myip+':'+port+'/upload_group_file',
+            body: JSON.stringify(bdy3)
+          }, function(error, response, body) {
+            if (error && error.code) {
+              console.log('pipe error catched!')
+              console.log(error);
+            } else {
+              console.log('ok1');
+            }
+            saveChat(groupid, 981069482, "百百", msgSource,port);
+          });
+        })
+      }
+      if(
+        (from+"").startsWith("35747")||(from+"").startsWith("79901")||
+        (groupid+"").startsWith("20570")||(groupid+"").startsWith("67096")||
+        (groupid+"").startsWith("96435")||(groupid+"").startsWith("xxxxx")
+      ){
+        var bdy4 = {group_id:groupid,message:msg}
         request({
           headers:{
             "Content-Type":"application/json"
           },
           method: "POST",
-          url: 'http://'+myip+':'+port+'/upload_group_file',
-          body: JSON.stringify(bdy3)
+          url: 'http://'+myip+':'+port+'/send_group_msg',
+
+          body: JSON.stringify(bdy4 )
         }, function(error, response, body) {
           if (error && error.code) {
             console.log('pipe error catched!')
@@ -411,6 +435,9 @@ async function addSendQueue(groupid,msg,port,from, configs){
           saveChat(groupid, 981069482, "百百", msgSource,port);
         });
       }
+
+
+
     }else{
       if(configs && configs.reverseWs && configs.callback) {
         configs.callback(msg)
@@ -434,6 +461,49 @@ async function addSendQueue(groupid,msg,port,from, configs){
       }
     }
 }
+
+
+var fidmap = {};
+function getGroupFolderId(groupid,port,callback){
+  callback('');
+  return;
+  if(fidmap[groupid]){
+    callback(fidmap[groupid]);
+  }else{
+    request({
+      method: "GET",
+      url: 'http://'+myip+':'+port+'/get_group_root_files?group_id='+groupid,
+    }, function(error, response, body) {
+      if (error && error.code) {
+        console.log('pipe error catched!')
+        console.log(error);
+        callback("");
+      } else {
+        var data = eval('('+body+')');
+        var list = data.data.folders;
+        var baibaifileid = "";
+        for(var i=0;i<list.length;i++){
+          var  filename = list[i].folder_name;
+          var fileid = list[i].folder_id;
+          if(filename=="baibaiimage"){
+            baibaifileid = fileid;
+          }
+        }
+        if(baibaifileid.startsWith("/")){
+          baibaifileid = baibaifileid.substring(1);
+        }
+        if(baibaifileid==""){
+          callback('');
+        }else{
+          fidmap[groupid]=baibaifileid;
+          callback(baibaifileid);
+        }
+      }
+    });
+  }
+
+}
+
 
 const formatMsg = msg => {
 	let out = []
