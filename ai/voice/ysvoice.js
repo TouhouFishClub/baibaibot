@@ -62,7 +62,7 @@ function ysVoiceReply(content,gid,qq,callback) {
   content = text.join("")
 
 
-  var url = 'http://192.168.17.235:11188/voice?d='+encodeURIComponent(content);
+  var url = 'http://192.168.17.236:11188/voice?d='+encodeURIComponent(content);
   request({
     url: url,
     method: "GET"
