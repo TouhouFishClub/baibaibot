@@ -191,7 +191,9 @@ const matchEquipUpgrade = async (Category, maxUpgrade) => {
 		}
 		for(let i = 0; i < item.filterArr.length; i ++) {
 			let tf = item.filterArr[i].split('/').filter(x => x && x !== '*')
-			if(Array.from(new Set(tf.concat(ca))).length === ca.length) {
+			// if(Array.from(new Set(tf.concat(ca))).length === ca.length) {
+      // GPT指导后变更
+			if(tf.every(item => ca.includes(item))) {
 				out.push(Object.assign(item, {
 					upgraded_max: item.upgraded_max > maxUpgrade ? maxUpgrade : item.upgraded_max
 				}))
