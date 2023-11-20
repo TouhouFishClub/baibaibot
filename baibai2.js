@@ -587,7 +587,7 @@ function handleMsg_D(msgObj,port, configs) {
 
   if(port == 30004) {
     console.log('\n\n\n\n\n======================')
-    console.log(msgObj)
+    console.log(JSON.stringify(msgObj, null, 2))
     console.log('======================\n\n\n\n\n')
   }
   var type = msgObj.message_type;
