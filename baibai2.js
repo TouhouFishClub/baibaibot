@@ -585,14 +585,17 @@ function handleMsg_D(msgObj,port, configs) {
 
 
 
-  if(port == 30004) {
-    console.log('\n\n\n\n\n======================')
-    console.log(JSON.stringify(msgObj, null, 2))
-    console.log('======================\n\n\n\n\n')
-  }
+  // if(port == 30004) {
+  //   console.log('\n\n\n\n\n======================')
+  //   console.log(JSON.stringify(msgObj, null, 2))
+  //   console.log('======================\n\n\n\n\n')
+  // }
   var type = msgObj.message_type;
   var groupid = msgObj.group_id;
   var content = msgObj.message;
+  if(typeof content != 'string') {
+    content = msgObj.raw_message
+  }
   if(content){
     var nn0 = content.toLowerCase().indexOf('%rd');
     if(nn0>0){
