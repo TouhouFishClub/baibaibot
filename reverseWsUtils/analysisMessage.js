@@ -22,6 +22,7 @@ const {
 } = require('../util/imageToBase64')
 
 const { handle_msg_D2 } = require('../baibai2');
+const { saveChat} = require("../ai/chat/collect");
 
 const replaceImageToBase64 = message =>
   message.split('[CQ:image,file=file:').map((sp, index) => {
@@ -37,11 +38,13 @@ const sendMessage = (context, ws) => {
   // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
   let { message, message_type, user_id, group_id, sender, mixins, time } = context
   let { card } = sender
-  let { group_info, user_info } = mixins
+  let { group_info, user_info, bot_name } = mixins
   let { group_name } = group_info
   let { user_name } = user_info
 
   console.log(`[ws msg][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)
+
+  saveChat(group_id, user_id, card || user_name, message, bot_name, context);
 
   handle_msg_D2(message, user_id, card || user_name, group_id, msg => {
     msg = msg
@@ -91,7 +94,7 @@ const mixinInfos = (context, ws) => {
   }
 }
 
-const analysisMessage = async (message, ws, port) => {
+const analysisMessage = async (message, ws, bot_name) => {
   let context = JSON.parse(message.toString())
   // 认为是上报信息
   if(context.post_type) {
@@ -110,19 +113,19 @@ const analysisMessage = async (message, ws, port) => {
             "params": {
               "group_id": context.group_id
             }
-          }, port)
+          }, bot_name)
 
           let user_info = await createAction({
             "action": "get_user_info",
             "params": {
               "user_id": context.user_id
             },
-          }, port)
+          }, bot_name)
 
           context.mixins = {
             group_info,
             user_info,
-            port
+            bot_name
           }
 
           sendMessage(context, ws)

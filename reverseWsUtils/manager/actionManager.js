@@ -3,8 +3,8 @@ const deepMerge = require('../utils/deepMerge')
 
 let actions = []
 
-const createAction = (actionObject, port) => {
-  let ws = socketManager.get(port)
+const createAction = (actionObject, bot_name) => {
+  let ws = socketManager.get(bot_name)
   if(!ws) {
     return false
   }

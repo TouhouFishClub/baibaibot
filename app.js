@@ -92,14 +92,14 @@ app.ws('/c/*', function(ws, req) {
   });
 });
 
-app.ws('/shamrock/:port', (ws, req) => {
+app.ws('/shamrock/:bot_name', (ws, req) => {
   // var path = req.path.substring(1);
   // console.log(`======================\n\npath: ${path}\n\n======================`);
-  let port = req.params.port
-  console.log(`======================\n\nport: ${port}\nheaders: ${JSON.stringify(req.headers, null, 2)}\n\n======================`)
-  socketManager.set(port, ws)
+  let bot_name = req.params.bot_name
+  console.log(`======================\n\nbot_name: ${bot_name}\nheaders: ${JSON.stringify(req.headers, null, 2)}\n\n======================`)
+  socketManager.set(bot_name, ws)
   ws.on('message', (msg) => {
-    analysisMessage(msg, ws, port)
+    analysisMessage(msg, ws, bot_name)
   })
   ws.on('close', () => {
     console.log('ws close')
