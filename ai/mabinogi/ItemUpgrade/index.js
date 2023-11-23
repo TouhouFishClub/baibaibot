@@ -76,11 +76,12 @@ const filterItem = async () => {
 					}
 					if(item.$.XML) {
 						try {
-							let d = await parser.parseStringPromise(item.$.XML)
-              console.log(`=============== parse XML`)
-              console.log(d)
+							let d = await parser.parseStringPromise(fixXMLKey(item.$.XML))
 							injectData['xmlParser'] = d.xml.$
+							injectData['xmlParserStatus'] = 'ok'
+              injectData['xmlParserSource'] = d
 						} catch (err) {
+              injectData['xmlParserStatus'] = 'err'
 							console.log(`FAILED TO ${item.$.ID}`)
 						}
 					}
@@ -91,6 +92,10 @@ const filterItem = async () => {
 	}
 
 	return filterData
+}
+
+const fixXMLKey = xmlString => {
+  return xmlString.replace(/(\d+=")/g, 'key$1');
 }
 
 const formatUpgradeInfo = async () => {
