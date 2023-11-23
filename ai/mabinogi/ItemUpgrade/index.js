@@ -77,6 +77,8 @@ const filterItem = async () => {
 					if(item.$.XML) {
 						try {
 							let d = await parser.parseStringPromise(item.$.XML)
+              console.log(`=============== parse XML`)
+              console.log(d)
 							injectData['xmlParser'] = d.xml.$
 						} catch (err) {
 							console.log(`FAILED TO ${item.$.ID}`)
