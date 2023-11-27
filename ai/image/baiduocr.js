@@ -47,7 +47,7 @@ function test(){
 }
 //test()
 
-const tencentcloud = require("tencentcloud-sdk-nodejs");
+// const tencentcloud = require("tencentcloud-sdk-nodejs");
 
 
 
@@ -67,7 +67,7 @@ const clientConfig = {
 };
 
 function tencentOcr(){
-  const tencentcloud = require("tencentcloud-sdk-nodejs");
+  // const tencentcloud = require("tencentcloud-sdk-nodejs");
   const OcrClient = tencentcloud.ocr.v20181119.Client;
   const client = new OcrClient(clientConfig);
   var image = fs.readFileSync("222").toString("base64");
