@@ -35,7 +35,7 @@ const createPool = async () => {
       connectionLimit: 10,
       database: 'dungeon_reward_records'
     },
-    fs.readJsonSync('./.secret.json')
+    fs.readJsonSync(path.join(__dirname, '.secret.json'))
   ))
   promisePool = pool.promise();
 }
