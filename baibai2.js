@@ -160,6 +160,7 @@ const {AIdraw,yishijie} = require('./ai/games/card2/AIDraw')
 const {BA_Schedule} = require('./ai/BlueArchive/schedule')
 const {BaRaidRanking} = require('./ai/BlueArchive/RaidRanking')
 // const {autoVoteSend} = require('./ai/mabinogi/2023_vote_rank')
+const {mabiTelevision} = require('./ai/mabinogi/Television/index')
 
 
 let globalConfig = {
@@ -1710,6 +1711,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(fie4 == 'opts') {
     op(from, name, con.substring(4).trim(), 'html', callback);
+    return
+  }
+  if(fie4 == 'mbtv') {
+    mabiTelevision(con.substring(4).trim(), callback);
     return
   }
 
