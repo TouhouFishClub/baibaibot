@@ -57,10 +57,23 @@ const BaRaidRanking = async callback => {
 		let Rank1 = analyzerData(res.data['1'].filter(x => x[1]))
 		let Rank2001 = analyzerData(res.data['2001'].filter(x => x[1]))
 		let Rank20001 = analyzerData(res.data['20001'].filter(x => x[1]))
-		let Rank30001 = analyzerData(res.data['30001'].filter(x => x[1]))
+		let Rank21001 = analyzerData(res.data['21001'].filter(x => x[1]))
+		let Rank22001 = analyzerData(res.data['22001'].filter(x => x[1]))
+		let Rank23001 = analyzerData(res.data['23001'].filter(x => x[1]))
+		let Rank24001 = analyzerData(res.data['24001'].filter(x => x[1]))
+		let Rank25001 = analyzerData(res.data['25001'].filter(x => x[1]))
 		tmpRank = {
 			update: res.lastUpdatedTime * 1000,
-			data: [Rank1, Rank2001, Rank20001, Rank30001],
+			data: [
+        Rank1,
+        Rank2001,
+        Rank20001,
+        Rank21001,
+        Rank22001,
+        Rank23001,
+        Rank24001,
+        Rank25001
+      ],
 			expire: Date.now() + 60*60*1000
 		}
 	}
@@ -191,7 +204,7 @@ const render = (data, output, callback) => {
   		${data.data.map((rank, index) => {
 			return `
 					<div class="rank-item">
-						<div class="rank-title">第${[1, 2001, 20001, 30001][index]}名</div>
+						<div class="rank-title">第${[1, 2001, 20001, 21001, 22001, 23001, 24001, 25001][index]}名</div>
 						${
               rank.now.point ? `
                 <div class="info-box now-info">
