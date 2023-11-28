@@ -103,6 +103,12 @@ const computedDungeon = dungeon_name => {
         dungeonGroup: '塔赫杜因'
       }
     default:
+      if(dungeon_name.indexOf('梦幻拉比') > -1) {
+        return {
+          dungeonColor: '#a60587',
+          dungeonGroup: '梦幻拉比'
+        }
+      }
       if(dungeon_name.indexOf('专家') > -1) {
         return {
           dungeonColor: '#042e83',
@@ -171,7 +177,15 @@ const analysisRows = rows => {
     )
   })
   out = _.groupBy(out, 'dungeonGroup')
-  out = Object.keys(out).map(groupName => {
+  let customOrder = {
+    '格伦贝尔纳': 1,
+    '科隆巴斯': 2,
+    '塔赫杜因': 3,
+    '专家': 4,
+    '梦幻拉比': 5,
+    '其他': 6
+  }
+  out = Object.keys(out).sort((a, b) => customOrder[a] - customOrder[b]).map(groupName => {
     let groupLines = Math.max(...out[groupName].map(x => x.line)) + 1
     return {
       groupName,
