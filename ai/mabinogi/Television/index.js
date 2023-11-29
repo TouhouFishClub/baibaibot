@@ -19,6 +19,7 @@ const ITEM_TIME_FONT_SIZE = 12
 const ITEM_LABEL_MARGIN = 5
 const ITEM_CHANNEL_WIDTH = 36
 const ITEM_INSET_BORDER = 1
+const ITEM_MIN_WIDTH = 60
 const GLOBAL_ITEM_MARGIN = 5
 const GLOBAL_LINE_HEIGHT = 1.4
 
@@ -123,11 +124,11 @@ const computedDungeon = dungeon_name => {
 }
 
 const calcItemWidth = rewardLabel =>
-  Math.ceil(ITEM_BORDER * 2 +
+  Math.max(Math.ceil(ITEM_BORDER * 2 +
   ITEM_LABEL_FONT_SIZE * rewardLabel.length +
   ITEM_LABEL_MARGIN * 2 +
   ITEM_CHANNEL_WIDTH +
-  ITEM_INSET_BORDER)
+  ITEM_INSET_BORDER), ITEM_MIN_WIDTH)
 
 const formatTime = ts => `${new Date(ts).getMonth() + 1}-${new Date(ts).getDate()} ${new Date(ts).getHours()}:${addZero(new Date(ts).getMinutes())}`
 
@@ -276,7 +277,7 @@ const renderImage = (data, callback, otherMsg = '') => {
     .group-container .item .item-infos .item-user{
       font-size: ${ITEM_USER_FONT_SIZE}px;
       border-bottom: ${ITEM_INSET_BORDER}px solid;
-      text-align: center;
+      text-align: left;
     }
     .group-container .item .item-infos .item-label{
       font-size: ${ITEM_LABEL_FONT_SIZE}px;
@@ -286,7 +287,8 @@ const renderImage = (data, callback, otherMsg = '') => {
     .group-container .item .item-infos .item-time{
       font-size: ${ITEM_TIME_FONT_SIZE}px;
       border-top: ${ITEM_INSET_BORDER}px solid;
-      text-align: center;
+      text-align: left;
+      color: #999;
     }
     .group-container .item .item-channel{
       width: ${ITEM_CHANNEL_WIDTH}px;
