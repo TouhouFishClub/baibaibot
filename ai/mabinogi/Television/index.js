@@ -19,7 +19,7 @@ const ITEM_TIME_FONT_SIZE = 12
 const ITEM_LABEL_MARGIN = 5
 const ITEM_CHANNEL_WIDTH = 36
 const ITEM_INSET_BORDER = 1
-const ITEM_MIN_WIDTH = 60
+const ITEM_MIN_WIDTH = 85
 const GLOBAL_ITEM_MARGIN = 5
 const GLOBAL_LINE_HEIGHT = 1.4
 
@@ -278,6 +278,7 @@ const renderImage = (data, callback, otherMsg = '') => {
       font-size: ${ITEM_USER_FONT_SIZE}px;
       border-bottom: ${ITEM_INSET_BORDER}px solid;
       text-align: left;
+      margin-left: ${ITEM_LABEL_MARGIN}px
     }
     .group-container .item .item-infos .item-label{
       font-size: ${ITEM_LABEL_FONT_SIZE}px;
@@ -289,6 +290,7 @@ const renderImage = (data, callback, otherMsg = '') => {
       border-top: ${ITEM_INSET_BORDER}px solid;
       text-align: left;
       color: #999;
+      margin-left: ${ITEM_LABEL_MARGIN}px
     }
     .group-container .item .item-channel{
       width: ${ITEM_CHANNEL_WIDTH}px;
