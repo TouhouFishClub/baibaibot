@@ -88,7 +88,7 @@ const computedDungeon = dungeon_name => {
   switch(dungeon_name){
     case '格伦贝尔纳':
       return {
-        dungeonColor: '#007a76',
+        dungeonColor: '#00768a',
         dungeonGroup: dungeon_name
       }
     case '科隆巴斯':
