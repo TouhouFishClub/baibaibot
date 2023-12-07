@@ -1,0 +1,1 @@
+var ManaFormingList = [65006,65007,65008],FireballManaFormingList = [65006],IceSpearManaFormingList = [65007],ThunderManaFormingList = [65008],ManaFormingItem65006 = [0,[65002,1]],ManaFormingItem65007 = [0,[65003,1]],ManaFormingItem65008 = [0,[65004,1]];

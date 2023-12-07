@@ -1,0 +1,1 @@
+var MiningItem51045=["石精灵的岩石"],MiningItem64010=["矿石"],MiningItem64002=["矿石"],MiningItem64004=["矿石"],MiningItem64006=["矿石"],MiningItem64008=["矿石"],MiningItem64010=["米斯里矿石"],MiningItem64053=["硫磺地带"],MiningItem73128=["硫磺地带"],MiningItem73129=["硫磺地带"];

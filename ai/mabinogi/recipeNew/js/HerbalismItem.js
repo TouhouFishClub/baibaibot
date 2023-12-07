@@ -1,0 +1,1 @@
+var HerbalismItem50040 = ["魔法豆"],HerbalismItem51101 = ["血红药草"],HerbalismItem51102 = ["魔法药草"],HerbalismItem51103 = ["阳光药草"],HerbalismItem51104 = ["基础药草"],HerbalismItem51105 = ["黄金药草"],HerbalismItem51107 = ["白色药草"],HerbalismItem51108 = ["解毒草"],HerbalismItem51109 = ["毒药草"],HerbalismItem51110 = ["曼德拉草"];
