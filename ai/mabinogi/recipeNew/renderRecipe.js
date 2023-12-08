@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', '..', 'baibaiConfigs.js'))
+const puppeteer = require('puppeteer');
 
 const renderRecipeImage = async (data, name, showDesc = false, callback, msg = '', order = 'IF') => {
   let {skillId, itemId} = data
