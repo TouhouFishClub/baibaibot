@@ -29,6 +29,8 @@ const renderRecipeImage = async (data, name, showDesc = false, callback, msg = '
 
   // 获取特定元素的位置和尺寸
   await page.addStyleTag({ content: '.MainTd { background-color: transparent; }' }); // 替换为你自定义的 CSS
+  await page.addStyleTag({ content: '#MainBodySpan::before { content: "数据来源：https://invisible-wings.github.io/\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0作者：隐翅"; margin-bottom: 10px; font-size: 16px; display:block;}' });
+  
   if(showDesc) {
     await page.addStyleTag({ content: '#MainBody { height: 20000px; }' }); // 替换为你自定义的 CSS
   }
