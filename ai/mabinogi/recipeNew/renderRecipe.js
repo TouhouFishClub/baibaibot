@@ -1,181 +1,70 @@
 const fs = require('fs')
 const path = require('path')
-const nodeHtmlToImage = require('node-html-to-image')
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', '..', 'baibaiConfigs.js'))
 
-let imgHash = {}
+const renderRecipeImage = async (data, name, showDesc = false, callback, msg = '', order = 'IF') => {
+  let {skillId, itemId} = data
 
-const analysisImgSrc = htmlData =>
-  htmlData.split("src='img/").map((domSplit, index) => {
-    if (index) {
-      let sp = domSplit.split("'")
-      let imageSrc = sp.shift()
-      if(fs.existsSync(path.join(__dirname, 'img', imageSrc))) {
-        if (!imgHash[imageSrc]) {
-          let image = fs.readFileSync(path.join(__dirname, 'img', imageSrc));
-          let base64Image = new Buffer.from(image).toString('base64');
-          imgHash[imageSrc] = 'data:image/jpeg;base64,' + base64Image
-        }
-      } else {
-        console.log('== error image ==')
-        imgHash[imageSrc] = ''
+  const browser = await puppeteer.launch(); // 启动浏览器
+  const page = await browser.newPage(); // 打开一个新页面
+
+  // 导航到本地网页
+  await page.goto(path.join(__dirname, 'ErinnFormula.html')); // 将路径替换为你的本地网页路径
+
+  // 等待一段时间，确保网页加载完成
+  await page.waitForTimeout(1000); // 可根据需要调整等待时间
+
+  // 查找页面中的某个元素，例如一个按钮，然后模拟点击它
+  await page.click(`#Skill${skillId}`); // 将选择器替换为你要点击的元素的实际选择器
+
+  // 等待一段时间，确保点击操作完成或页面加载完成
+  await page.waitForTimeout(500); // 可根据需要调整等待时间
+
+  // 查找页面中的某个元素，例如一个按钮，然后模拟点击它
+  await page.click(`#Cuisine${itemId}`); // 将选择器替换为你要点击的元素的实际选择器
+
+  // 等待一段时间，确保点击操作完成或页面加载完成
+  await page.waitForTimeout(500); // 可根据需要调整等待时间
+
+  // 获取特定元素的位置和尺寸
+  if(showDesc) {
+    await page.addStyleTag({ content: '#MainBody { height: 10000px; }' }); // 替换为你自定义的 CSS
+  }
+  const element = await page.$(showDesc ? '#MainBodySpan' : '#MainBody'); // 将选择器替换为你要截取的元素的选择器
+
+  const boundingBox = await element.boundingBox();
+
+  const output = path.join(IMAGE_DATA, 'mabi_recipe', `${name}.png`)
+
+  if (boundingBox) {
+    // 截取特定区域并保存为图片
+    await page.screenshot({
+      path: output,
+      clip: {
+        x: boundingBox.x,
+        y: boundingBox.y,
+        width: boundingBox.width,
+        height: boundingBox.height
       }
-      return `src='${imgHash[imageSrc]}'${sp.join("'")}`
-    } else {
-      return domSplit
+    });
+
+    console.log(`保存${name}.png成功！`)
+    let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_recipe', `${name}.png`)}]`, mixMsg = ''
+    switch(order){
+      case 'IF':
+        mixMsg = `${imgMsg}${msg.length ? `\n${msg}` : ''}`
+        break
+      case 'MF':
+        mixMsg = `${msg.length ? `${msg}\n` : ''}${imgMsg}`
+        break
     }
-  }).join('')
+    callback(mixMsg)
 
+  } else {
+    console.error('Element not found or not visible');
+  }
 
-const renderRecipeImage = (html, name, showDesc = false, callback, msg = '', order = 'IF') => {
-  // let output = path.join(IMAGE_DATA, 'mabi_recipe', `${name}.png`)
-  let output = path.join(`${name}.png`)
-  nodeHtmlToImage({
-    output,
-    html: `
-<html>
-  <head>
-    <title></title>
-    <style type="text/css">
-      body {
-        color: gold;
-        scrollbar-face-color: #000;
-        scrollbar-highlight-color: #000;
-        scrollbar-arrow-color: gold;
-        scrollbar-shadow-color: gold;
-        scrollbar-3dlight-color: #FFF;
-        scrollbar-base-color: gold;
-        scrollbar-dark-shadow-color: gold;
-        -moz-user-select: none;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-        -khtml-user-select: none;
-        user-select: none;
-        width: 921px;
-        background-color: #000;
-      }
-      .Overall {
-        width: 911px;
-        ${showDesc ? '' : 'height: 500px;overflow:hidden;'}
-        border: 5px solid gold;
-        /*position: relative;*/
-        margin：auto;
-        text-align: center
-      }
-      /*.ItemList {*/
-      /*  position: absolute;*/
-      /*  width: 0;*/
-      /*  height: 9px;*/
-      /*  top: -5;*/
-      /*  right: 911;*/
-      /*  border: 1px solid gold;*/
-      /*  overflow: auto;*/
-      /*  background-color: #000*/
-      /*}*/
-  
-      .MainBody {
-        /*position: absolute;*/
-        width: 899px;
-        /*height: 568px;*/
-        margin: 1px;
-        border: 5px solid gold;
-        overflow: hidden;
-        font-size: 12px;
-        text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
-      }
-  
-      #List Table {
-        border: 1px solid #000
-      }
-  
-      .MainTd {
-        background-color: #888;
-        animation: MainRun 1s infinite;
-        -webkit-animation: MainRun 1s infinite
-      }
-  
-      .ListTd {
-        border: 1px solid #000;
-        color: black;
-        background-color: gold;
-        text-shadow: #FFF 1px 0 0, #FFF 0 1px 0, #FFF -1px 0 0, #FFF 0 -1px 0;
-        -webkit-text-shadow: #FFF 1px 0 0, #FFF 0 1px 0, #FFF -1px 0 0, #FFF 0 -1px 0;
-        -moz-text-shadow: #FFF 1px 0 0, #FFF 0 1px 0, #FFF -1px 0 0, #FFF 0 -1px 0
-      }
-      
-      .EffectTd {
-        text-shadow: #DDD 1px 0 0, #DDD 0 1px 0, #DDD -1px 0 0, #DDD 0 -1px 0;
-        -webkit-text-shadow: #DDD 1px 0 0, #DDD 0 1px 0, #DDD -1px 0 0, #DDD 0 -1px 0;
-        -moz-text-shadow: #DDD 1px 0 0, #DDD 0 1px 0, #DDD -1px 0 0, #DDD 0 -1px 0
-      }
-      
-      /*#ItemLists td, #MaterialLists td, #Skill td {*/
-      /*  border: 1px solid #000*/
-      /*}*/
-      
-      /*#ItemLists td:hover, #Skill td:hover {*/
-      /*  border: 1px solid gold*/
-      /*}*/
-      
-      td {
-        padding: 1px
-      }
-      
-      /*.Skill {*/
-      /*  position: absolute;*/
-      /*  width: 378px;*/
-      /*  height: 574px;*/
-      /*  bottom: -5;*/
-      /*  left: 1;*/
-      /*  border: 5px solid gold;*/
-      /*  overflow: hidden;*/
-      /*  font-size: 15px;*/
-      /*  background-color: black;*/
-      /*  text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
-      /*  -webkit-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;*/
-      /*  -moz-text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0*/
-      /*}*/
-      .custom-td-container{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-      .chara-info {
-        color: gold;
-        font-size: 12px;
-        zoom: 0.65;
-        line-height: 1.3;
-        white-space: nowrap;
-      }
-      .chara-img {
-        display: block;
-        margin: 0 auto;
-      }
-    </style>
-  </head>
-  <body style="text-align:center;">
-    <h1>${name}</h1>
-    <div class="Overall">
-      <div class="MainBody" id="MainBody">${analysisImgSrc(html)}</div>
-    </div>
-  </body>
-</html>
-`
-  })
-    .then(() => {
-      console.log(`保存${name}.png成功！`)
-      let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_recipe', `${name}.png`)}]`, mixMsg = ''
-      switch(order){
-        case 'IF':
-          mixMsg = `${imgMsg}${msg.length ? `\n${msg}` : ''}`
-          break
-        case 'MF':
-          mixMsg = `${msg.length ? `${msg}\n` : ''}${imgMsg}`
-          break
-      }
-      callback(mixMsg)
-    })
+  await browser.close(); // 关闭浏览器
 }
 
 module.exports = {

@@ -50,6 +50,7 @@ const CreateSkillLists = () => {
   })
 }
 
+
 const FormatItems = (skillList, skillName, skillCode, skillId) => {
   skillList.forEach(itemId => {
     let item
@@ -62,38 +63,17 @@ const FormatItems = (skillList, skillName, skillCode, skillId) => {
         break;
       default:
         item = eval(`Item${itemId}`);
-        ItemNameToItemId.set(item[0], itemId)
-        ItemIdToItemDetail.set(itemId, {
-          itemSource: item,
-          name: item[0],
-          skillName,
-          skillCode,
-          skillId,
-          html: MainBodyRebuild(itemId, skillId)
-        })
     }
-
+    ItemNameToItemId.set(item[0], itemId)
+    ItemIdToItemDetail.set(itemId, {
+      itemSource: item,
+      name: item[0],
+      skillName,
+      skillCode,
+      skillId,
+      itemId
+    })
   })
-}
-
-// 重写方法
-const MainBodyRebuild = (Id, skillId) => {
-  let t = "";
-  let IdType = "";
-  if (skillId == 10030) t = ItemDissolution(Id);
-  TemporaryCuisine = [IdAmendJS(Id)];
-  if (ErgEnhanceList.includes(Id)) {
-    t += ErgEnhances(Id)
-  } else {
-    t += eval("Item(" + Id + ",1)");
-    IdType = "Item"
-  }
-  if (eval(IdType + Id + "[0].indexOf('兼职')==-1")) {
-    for (let i = 1; i < TemporaryCuisine.length; i++) {
-      t += eval("Item(" + TemporaryCuisine[i] + ")")
-    }
-  }
-  return t
 }
 
 const getItems = () => {
@@ -105,7 +85,6 @@ const getItems = () => {
     ItemIdToItemDetail
   }
 }
-
 
 module.exports = {
   getItems

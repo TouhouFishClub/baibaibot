@@ -132,7 +132,7 @@ const { renderColorBoard } = require('./ai/mabinogi/renderColor')
 
 const { trade, tradeOcr } = require('./ai/mabinogi/trade')
 
-const { searchMabiRecipe } = require('./ai/mabinogi/recipe/searchRecipe')
+const { searchMabiRecipe } = require('./ai/mabinogi/recipeNew/searchRecipe')
 
 
 const { ergo } = require('./ai/mabinogi/ergo')

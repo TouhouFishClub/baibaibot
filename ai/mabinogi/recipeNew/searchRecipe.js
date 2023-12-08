@@ -25,11 +25,12 @@ const searchMabiRecipe = (content, callback, showDesc = false) => {
   }
   if(targets.length) {
 		if(targets.length == 1) {
-			renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(targets[0])).html, targets[0], showDesc, callback)
+      console.log(ItemIdToItemDetail.get(ItemNameToItemId.get(targets[0])))
+			renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(targets[0])), targets[0], showDesc, callback)
 		} else {
 			let em = targets.filter(name => content == name)
 			if(em.length) {
-				renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(em[0])).html, em[0], showDesc, callback, `找到${targets.length}\n${targets.slice(0, 10).map(x => `mbi ${ItemNameToItemId.get(x)} | ${x}`).join('\n')}\n已为您定位到${em[0]}`, 'MF')
+				renderRecipeImage(ItemIdToItemDetail.get(ItemNameToItemId.get(em[0])), em[0], showDesc, callback, `找到${targets.length}\n${targets.slice(0, 10).map(x => `mbi ${ItemNameToItemId.get(x)} | ${x}`).join('\n')}\n已为您定位到${em[0]}`, 'MF')
 			} else {
 				callback(`找到${targets.length}\n${targets.slice(0, 10).map(x => `mbi ${ItemNameToItemId.get(x)} | ${x}`).join('\n')}\n可使用多关键词查找，多关键词用空格或逗号分割。`)
 			}
