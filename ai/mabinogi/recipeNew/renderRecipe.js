@@ -29,7 +29,7 @@ const renderRecipeImage = async (data, name, showDesc = false, callback, msg = '
 
   // 获取特定元素的位置和尺寸
   if(showDesc) {
-    await page.addStyleTag({ content: '#MainBody { height: 10000px; }' }); // 替换为你自定义的 CSS
+    await page.addStyleTag({ content: '#MainBody { height: 20000px; }' }); // 替换为你自定义的 CSS
   }
   const element = await page.$(showDesc ? '#MainBodySpan' : '#MainBody'); // 将选择器替换为你要截取的元素的选择器
 
