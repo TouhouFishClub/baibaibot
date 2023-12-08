@@ -10,7 +10,7 @@ const renderRecipeImage = async (data, name, showDesc = false, callback, msg = '
   const page = await browser.newPage(); // 打开一个新页面
 
   // 导航到本地网页
-  await page.goto(path.join(__dirname, 'ErinnFormula.html')); // 将路径替换为你的本地网页路径
+  await page.goto('file://' + __dirname + '/ErinnFormula.html'); // 将路径替换为你的本地网页路径
 
   // 等待一段时间，确保网页加载完成
   await page.waitForTimeout(1000); // 可根据需要调整等待时间
