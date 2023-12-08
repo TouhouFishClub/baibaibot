@@ -28,6 +28,7 @@ const renderRecipeImage = async (data, name, showDesc = false, callback, msg = '
   await page.waitForTimeout(500); // 可根据需要调整等待时间
 
   // 获取特定元素的位置和尺寸
+  await page.addStyleTag({ content: '.MainTd { background-color: transparent; }' }); // 替换为你自定义的 CSS
   if(showDesc) {
     await page.addStyleTag({ content: '#MainBody { height: 20000px; }' }); // 替换为你自定义的 CSS
   }
