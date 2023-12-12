@@ -19,12 +19,12 @@ var path = require('path');
 //const { QQ, MsgHandler } = require('./qqlib');
 
 
+console.log(333)
 const{saveTxt,answer,getMsgCount} = require(path.join(__dirname, '/lib/mongo.js'))
 console.log(222)
 const { drawTxtImage, renderTxtImage } = require('./cq/drawImageBytxt')
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
-console.log(333)
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
 const {getWeatherByCity} = require('./ai/weather');
 const {tulingMsg,getLike,getQAIresponse} = require('./ai/tuling');
