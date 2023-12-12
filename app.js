@@ -41,7 +41,7 @@ app.use(bodyParser.json({limit: '10mb'}))
 var request = require("request");
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+console.log(111)
 
 /* set public path */
 
