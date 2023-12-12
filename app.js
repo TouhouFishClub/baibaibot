@@ -1,20 +1,11 @@
-console.log(0)
 const express = require('express')
-console.log(1)
 const app = express();
-console.log(2)
 const http = require('http')
-console.log(3)
 const fs = require('fs')
-console.log(4)
 const path = require('path')
-console.log(5)
 const qs = require("querystring")
-console.log(6)
 const {handleMsg,handle_msg_D2} = require('./baibai2');
-console.log(7)
 const {getChat,saveChat,getImage} = require('./ai/chat/collect');
-console.log(8)
 const {checkError} = require('./tools/textCheck');
 const basicAuth = require('basic-auth');
 const {handlef1} = require("./route/f1")
