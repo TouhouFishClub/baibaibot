@@ -54,7 +54,7 @@ const CreateSkillLists = () => {
 const FormatItems = (skillList, skillName, skillCode, skillId) => {
   skillList.forEach(itemId => {
     let item
-    console.log(`=> ${skillId} | ${itemId}`)
+    // console.log(`=> ${skillId} | ${itemId}`)
     switch(skillId) {
       case 55100:
       case '55100':
