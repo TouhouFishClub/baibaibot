@@ -101,6 +101,11 @@ const analysisMessage = async (message, ws, bot_name) => {
     if(context.time * 1000 + 30000 < Date.now()){
       return
     }
+
+    console.log(`==========\n\n\n\n`)
+    console.log(context)
+    console.log(`\n\n\n\n==========`)
+
     switch(context.post_type) {
       case 'message':
         // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
