@@ -52,6 +52,8 @@ const rua = require('./ai/mabinogi/ruawork')
 const {baiduVoice} = require('./ai/voice/baiduvoice')
 const {saveChat} = require('./ai/chat/collect');
 const {getFoodRate} = require('./ai/kancolle/food');
+
+console.log(333)
 const {handleSenkaReply} = require('./ai/kancolle/senka2');
 console.log(111)
 
