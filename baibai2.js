@@ -15,6 +15,7 @@ const {diffuseReply,novelAI,naifu,novelAIDiffuse,HDdiffuse,saveMagicPrefer} = re
 const {ImgScale} = require('./ai/image/scale');
 const { myip } = require('./baibaiConfigs')
 
+console.log(222)
 var path = require('path');
 //const { QQ, MsgHandler } = require('./qqlib');
 
@@ -36,7 +37,6 @@ const kcq = require('./ai/kanColleQuest')
 const {fight,useMagicOrItem} = require('./ai/favour/battle');
 const {handleUserOperation} = require('./ai/chess/road');
 
-console.log(222)
 const {pairReply}=require('./ai/pairAI');
 const {getShip} = require('./ai/kancolle/ship');
 const roulette = require('./ai/Roulette')
