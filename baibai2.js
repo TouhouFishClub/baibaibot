@@ -18,12 +18,12 @@ const { myip } = require('./baibaiConfigs')
 var path = require('path');
 //const { QQ, MsgHandler } = require('./qqlib');
 
-console.log(333)
 
 const{saveTxt,answer,getMsgCount} = require(path.join(__dirname, '/lib/mongo.js'))
 const { drawTxtImage, renderTxtImage } = require('./cq/drawImageBytxt')
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
+console.log(333)
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
 const {getWeatherByCity} = require('./ai/weather');
 const {tulingMsg,getLike,getQAIresponse} = require('./ai/tuling');
@@ -36,6 +36,7 @@ const kcq = require('./ai/kanColleQuest')
 const {fight,useMagicOrItem} = require('./ai/favour/battle');
 const {handleUserOperation} = require('./ai/chess/road');
 
+console.log(222)
 const {pairReply}=require('./ai/pairAI');
 const {getShip} = require('./ai/kancolle/ship');
 const roulette = require('./ai/Roulette')
@@ -87,7 +88,6 @@ const gf = require('./ai/girlsfrontline/index')
 const {handleGun} = require('./ai/games/survival/main');
 const bomberman = require('./ai/games/Bomberman/main');
 const {handleFF14weatherReply} = require('./ai/ff14/ff14weather');
-console.log(222)
 const anr = require('./ai/arknights/arkNightsRecruit')
 const ans = require('./ai/arknights/arkNightsCharacter')
 const anc = require('./ai/arknights/arkNightsCalc')
