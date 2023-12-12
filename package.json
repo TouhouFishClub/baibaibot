@@ -43,12 +43,11 @@
     "node-xlsx": "^0.21.0",
     "nodejieba": "^2.6.0",
     "path-extra": "^4.2.0",
-    "phantom": "6.3.0",
+    "phantom": "^6.3.0",
     "replicate-api": "^0.1.5",
     "twitter": "1.7.1",
     "websocket": "1.0.34",
     "wx-voice": "0.2.1",
-    "xlsx": "^0.18.5",
     "xml2js": "^0.4.19",
     "xml2json": "^0.11.2"
   }
