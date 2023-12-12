@@ -1,7 +1,3 @@
-
-
-
-console.log(444)
 var http=require('http');
 var https=require('https');
 var tls = require('tls');
@@ -19,9 +15,7 @@ var path = require('path');
 //const { QQ, MsgHandler } = require('./qqlib');
 
 
-console.log(333)
 const{saveTxt,answer,getMsgCount} = require(path.join(__dirname, '/lib/mongo.js'))
-console.log(222)
 const { drawTxtImage, renderTxtImage } = require('./cq/drawImageBytxt')
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
@@ -60,7 +54,6 @@ const {baiduVoice} = require('./ai/voice/baiduvoice')
 const {saveChat} = require('./ai/chat/collect');
 const {getFoodRate} = require('./ai/kancolle/food');
 const {handleSenkaReply} = require('./ai/kancolle/senka2');
-console.log(111)
 
 const {descryptReply} = require('./ai/image/qqspeak');
 const rp = require('./ai/rp');
