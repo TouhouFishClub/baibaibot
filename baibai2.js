@@ -15,12 +15,12 @@ const {diffuseReply,novelAI,naifu,novelAIDiffuse,HDdiffuse,saveMagicPrefer} = re
 const {ImgScale} = require('./ai/image/scale');
 const { myip } = require('./baibaiConfigs')
 
-console.log(222)
 var path = require('path');
 //const { QQ, MsgHandler } = require('./qqlib');
 
 
 const{saveTxt,answer,getMsgCount} = require(path.join(__dirname, '/lib/mongo.js'))
+console.log(222)
 const { drawTxtImage, renderTxtImage } = require('./cq/drawImageBytxt')
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
