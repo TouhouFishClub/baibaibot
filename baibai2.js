@@ -20,7 +20,7 @@ const { drawTxtImage, renderTxtImage } = require('./cq/drawImageBytxt')
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
-const {getWeatherByCity} = require('./ai/weatherNew');
+const {getWeatherByCity} = require('./ai/weather');
 const {tulingMsg,getLike,getQAIresponse} = require('./ai/tuling');
 const {translateMsg}=require('./ai/translate');
 const {money} = require('./ai/money');
@@ -1866,8 +1866,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(n>1&&n<10&&rcontent.length==n+2){
     var city = content.substring(0,n).trim();
     try{
-      // getWeatherByCity(city,name,callback);
-      getWeatherByCity(city, callback);
+      getWeatherByCity(city,name,callback);
+      // getWeatherByCity(city, callback);
     }catch(e){
       console.log(e);
     }
