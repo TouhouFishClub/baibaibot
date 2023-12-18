@@ -45,24 +45,27 @@ const getWeatherByCity = async (content, callback) => {
 
     const output = path.join(IMAGE_DATA, 'weather', `${res}天气.png`)
     // const output = path.join(`./${res}天气.png`)
+    await page.screenshot({ path: output, fullPage: true });
+    let imgMsg = `[CQ:image,file=${path.join('send', 'weather', `${res}天气.png`)}]`
+    callback(imgMsg)
 
-    if (boundingBox) {
-      // 截取特定区域并保存为图片
-      await page.screenshot({
-        path: output,
-        clip: {
-          x: boundingBox.x,
-          y: boundingBox.y,
-          width: boundingBox.width,
-          height: boundingBox.height
-        }
-      });
-      console.log(`保存${res}天气.png成功！`)
-      let imgMsg = `[CQ:image,file=${path.join('send', 'weather', `${res}天气.png`)}]`
-      callback(imgMsg)
-    } else {
-      console.error('Element not found or not visible');
-    }
+    // if (boundingBox) {
+    //   // 截取特定区域并保存为图片
+    //   await page.screenshot({
+    //     path: output,
+    //     clip: {
+    //       x: boundingBox.x,
+    //       y: boundingBox.y,
+    //       width: boundingBox.width,
+    //       height: boundingBox.height
+    //     }
+    //   });
+    //   console.log(`保存${res}天气.png成功！`)
+    //   let imgMsg = `[CQ:image,file=${path.join('send', 'weather', `${res}天气.png`)}]`
+    //   callback(imgMsg)
+    // } else {
+    //   console.error('Element not found or not visible');
+    // }
     await browser.close(); // 关闭浏览器
   }
 }
