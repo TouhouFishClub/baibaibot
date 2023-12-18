@@ -37,7 +37,7 @@ const getWeatherByCity = async (content, callback) => {
     await page.click(`#cityNameHref`)
     await page.waitForTimeout(300)
     await page.type('#cityInput', res)
-    await page.waitForTimeout(300)
+    await page.waitForTimeout(500)
     await page.click(`.saveBtn`)
     await page.waitForTimeout(3000)
     const element = await page.$('.myWeather')
