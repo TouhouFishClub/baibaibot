@@ -199,7 +199,12 @@ const analysisRows = rows => {
 }
 
 const mabiTelevision = async (content = '', callback) => {
-  let rows = analysisRows(await search(content))
+  let rows
+  if(content == 'all') {
+    rows = analysisRows(await search('', 10000))
+  } else {
+    rows = analysisRows(await search(content))
+  }
   // console.log(JSON.stringify(rows, null, 2))
   // console.log(calcItemHeight)
   renderImage(rows, callback)

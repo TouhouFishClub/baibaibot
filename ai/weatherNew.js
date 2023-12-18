@@ -1,0 +1,4 @@
+
+const getWeatherByCity = (content, callback) => {
+
+}
