@@ -27,7 +27,7 @@ const fetchImage = (url, filename) => new Promise((resolve, reject) => {
 })
 
 const vvhanApi = async filename => {
-	await fetchImage(`http://api.vvhan.com/api/moyu`, filename)
+	await fetchImage(`https://api.vvhan.com/api/moyu`, filename)
 }
 
 const tuotuodeApi = async filename => {
