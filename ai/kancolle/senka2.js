@@ -233,7 +233,7 @@ function rd(x){
 }
 
 
-var PORT_API_SEED = [5186, 7444, 7645, 7905, 7484, 4112, 9646, 4427, 7238, 9067]
+var PORT_API_SEED = [4506, 3959, 4068, 8053, 4638, 3441, 4327, 4273, 4846, 6919]
 function generateRankKey(userid){
   var t=userid;
   var e = PORT_API_SEED[t%10];
@@ -1911,7 +1911,7 @@ setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
   //handleSenkaReply('z8','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
-  //getShipInfo();
+  //getRank(1,[]);
   //searchShip('Apate',function(r){console.log(r)})
 },1500)
 
