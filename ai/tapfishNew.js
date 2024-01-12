@@ -51,7 +51,7 @@ const tapFish = async callback => {
 	} else {
 		console.log('=============== 未下载过文件，先启用下载')
 		try {
-			await vvhanApi(filename)
+			await tuotuodeApi(filename)
 		} catch (e) {
 			console.log(e)
 			return
