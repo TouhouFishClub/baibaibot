@@ -351,6 +351,8 @@ function getRank(page,retarr,proxy){
                     /(?<=(_0x31a88c\[_0x5bdf83\(0x400\)\]=\[)).*(?=(\];var _0x37b311))/
                   )[0]
                   .split(",");
+                for (let _idx = 0; _idx < PORT_API_SEED.length; ++_idx)
+                  PORT_API_SEED[_idx] = Number(PORT_API_SEED[_idx]);
               }
             );
           }
