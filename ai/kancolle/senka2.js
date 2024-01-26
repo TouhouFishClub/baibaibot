@@ -333,7 +333,27 @@ function getRank(page,retarr,proxy){
                 return;
             }
           var data = eval('('+body+')');
-          var list = data.api_data.api_list;
+          try {
+            var list = data.api_data.api_list;
+          } catch {
+            request(
+              {
+                url: "http://203.104.209.199/kcs2/js/main.js",
+                method: "GET",
+                headers: {
+                  "User-Agent":
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36",
+                },
+              },
+              (error, response, body) => {
+                PORT_API_SEED = body
+                  .match(
+                    /(?<=(_0x31a88c\[_0x5bdf83\(0x400\)\]=\[)).*(?=(\];var _0x37b311))/
+                  )[0]
+                  .split(",");
+              }
+            );
+          }
           var rret = retarr.concat(list);
           if(page<100){
             getRank(page+1,rret);
