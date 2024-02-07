@@ -1,7 +1,7 @@
 const http = require('http')
 
 const PACKET_LIST = [
-  { time: '2024-2-7 11:20:0', item: '测试红包推送' },
+  { time: '2024-2-7 11:28:0', item: '测试红包推送' },
 
   { time: '2024-2-8 10:0:0', item: '支票2330000（策划君的大红包）' },
   { time: '2024-2-8 14:0:0', item: '至尊全技能修炼药水(1天)' },
@@ -104,8 +104,17 @@ const mabinogi_red_packet_remove = (groupId, port, callback) => {
   callback('已关闭活动提示')
 }
 
+const getNextPacketTimeLeft = () => {
+  for(let i = 0; i < PACKET_LIST.length; i ++){
+    let tar = PACKET_LIST[i]
+    if(Date.now() + 5 * 60 * 1000 < new Date(tar.time).getTime()) {
+      return new Date(tar.time).getTime() - Date.now()
+    }
+  }
+}
+
 const startTimeout = () => {
-  let timeLeft = 3600000 + 5 * 60 * 1000 - new Date().getTime() % 3600000
+  let timeLeft = getNextPacketTimeLeft()
   console.log(`\n\n\n\n ===\n${timeLeft}\n===\n\n\n\n`)
   setTimeout(() => {
     mabinogi_red_packet(res => {
