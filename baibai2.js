@@ -163,6 +163,9 @@ const {BaRaidRanking} = require('./ai/BlueArchive/RaidRanking')
 // const {autoVoteSend} = require('./ai/mabinogi/2023_vote_rank')
 const {mabiTelevision} = require('./ai/mabinogi/Television/index')
 
+const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
+
+
 
 let globalConfig = {
 	FLASH_RESEND : false
@@ -1304,6 +1307,27 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(content.startsWith('menu') || content.startsWith('菜单')) {
     menu(content, groupid, callback)
+    return
+  }
+
+
+  if(content == '开启活动提示') {
+    mabinogi_red_packet_set(groupid, port, callback)
+    return
+  }
+
+  if(content == '关闭活动提示') {
+    mabinogi_red_packet_remove(groupid, port, callback)
+    return
+  }
+
+  if(content == '查询红包活动') {
+    mabinogi_red_packet(callback)
+    return
+  }
+
+  if(content == '查询自动发送') {
+    mabinogi_red_packet_list(callback)
     return
   }
 
