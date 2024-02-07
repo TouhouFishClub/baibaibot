@@ -61,14 +61,14 @@ const PACKET_LIST = [
   { time: '2042-2-18 22:0:0', item: '活动结束' },
 ]
 
-let AUTO_SEND_GROUPS = [
+let AUTO_SEND_GROUPS = {
 
-]
+}
 
 const mabinogi_red_packet_list = callback => {
-  console.log(AUTO_SEND_GROUPS.filter(x => x))
-  console.log(JSON.stringify(AUTO_SEND_GROUPS.filter(x => x)))
-  callback(JSON.stringify(AUTO_SEND_GROUPS.filter(x => x)))
+  console.log(AUTO_SEND_GROUPS)
+  console.log(JSON.stringify(AUTO_SEND_GROUPS))
+  callback(JSON.stringify(AUTO_SEND_GROUPS))
 }
 
 const addZero = (num) => {
