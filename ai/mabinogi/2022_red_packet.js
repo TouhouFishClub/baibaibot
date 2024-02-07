@@ -106,6 +106,7 @@ const mabinogi_red_packet_remove = (groupId, port, callback) => {
 
 const startTimeout = () => {
   let timeLeft = 3600000 + 5 * 60 * 1000 - new Date().getTime() % 3600000
+  console.log(`\n\n\n\n ===\n${timeLeft}\n===\n\n\n\n`)
   setTimeout(() => {
     mabinogi_red_packet(res => {
       if(res.trim().length > 0){
