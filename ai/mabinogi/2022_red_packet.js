@@ -142,7 +142,7 @@ const startTimeout = () => {
   }, timeLeft)
 }
 
-startTimeout()
+// startTimeout()
 
 module.exports = {
   mabinogi_red_packet,
