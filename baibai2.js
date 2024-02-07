@@ -400,7 +400,7 @@ async function addSendQueue(groupid,msg,port,from, configs){
       }
       if(
         (from+"").startsWith("35747")||(from+"").startsWith("79901")||
-        (groupid+"").startsWith("20570")||(groupid+"").startsWith("67096")||
+        (groupid+"").startsWith("20570")||(groupid+"").startsWith("67096")||(groupid+"").startsWith("69983")||
         (groupid+"").startsWith("96435")||(groupid+"").startsWith("xxxxx")
       ){
         var bdy4 = {group_id:groupid,message:msg}
