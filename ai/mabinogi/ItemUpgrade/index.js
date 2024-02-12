@@ -131,9 +131,6 @@ const formatUpgradeInfo = async () => {
 	// console.log(output)
 	// console.log(xmlData.upgrade_db.effect)
 	let effectTmp = xmlData.upgrade_db.effect.map(x => x.$)
-	console.log(effectTmp)
-	console.log(effectTmp.find(x => x.id == '981'))
-	console.log(effectTmp.find(x => x.id == '981')[0]?.effect)
 
 	return [
 		xmlData.upgrade_db.upgrade.map(item => Object.assign(item.$, {
@@ -582,7 +579,7 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 					<div class="upgrade-desc">${x.descCn}</div>
 				</div>
 				<div class="item-col col-2">
-					${x.effect.split(';').map(ef => analyzerEffect(ef.trim())).join(' ')}
+					${x.effectDesc.split(';').map(ef => analyzerEffect(ef.trim())).join(' ')}
 				</div>
 				<div class="item-col col-3">
 					${x.need_ep}
