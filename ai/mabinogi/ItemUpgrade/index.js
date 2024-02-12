@@ -131,6 +131,7 @@ const formatUpgradeInfo = async () => {
 	// console.log(output)
 	// console.log(xmlData.upgrade_db.effect)
 	let effectTmp = xmlData.upgrade_db.effect.map(x => x.$)
+	console.log(effectTmp)
 
 	return [
 		xmlData.upgrade_db.upgrade.map(item => Object.assign(item.$, {
