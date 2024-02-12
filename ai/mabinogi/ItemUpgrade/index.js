@@ -368,6 +368,7 @@ const renderRandomInfo = targetItem => {
 }
 
 const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
+	console.log(itemUpgradeEffectData)
 	console.log(upgradeInfos.map(x => `[${x.id}]（${x.upgraded_min} ~ ${x.upgraded_max}）${x.localnameCn}: ${x.descCn}`).join('\n'))
 	console.log(upgradeInfos.length)
 	let normalUpgrade = [], gemUpgrade = []
