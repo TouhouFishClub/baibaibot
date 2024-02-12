@@ -135,7 +135,7 @@ const formatUpgradeInfo = async () => {
 			localnameCn: transform[item.$.localname].trim(),
 			descCn: transform[item.$.desc].trim(),
 			filterArr: item.$.item_filter.split('|').filter(x => x),
-			effectDesc: xmlData.upgrade_db.effect.find(x => x.id == item.$.effect).effect || ''
+			effectDesc: xmlData.upgrade_db.effect.find(x => x.id == item.$.effect)?.effect || ''
 		})),
 		xmlData.upgrade_db.effect.map(item => item.$)
 	]
