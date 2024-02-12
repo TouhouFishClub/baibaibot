@@ -140,7 +140,7 @@ const formatUpgradeInfo = async () => {
 			localnameCn: transform[item.$.localname].trim(),
 			descCn: transform[item.$.desc].trim(),
 			filterArr: item.$.item_filter.split('|').filter(x => x),
-			effectDesc: effectTmp.find(x => x.id == item.$.effect)[0]?.effect || item.$.effect || 'unknown'
+			effectDesc: effectTmp.find(x => x.id == item.$.effect)?.effect || item.$.effect || 'unknown'
 		})),
 		xmlData.upgrade_db.effect.map(item => item.$)
 	]
