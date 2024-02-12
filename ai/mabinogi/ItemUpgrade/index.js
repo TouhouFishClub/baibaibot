@@ -129,14 +129,15 @@ const formatUpgradeInfo = async () => {
 	// 	}
 	// })
 	// console.log(output)
-	console.log(xmlData.upgrade_db.effect)
+	// console.log(xmlData.upgrade_db.effect)
+	let effectTmp = xmlData.upgrade_db.effect.map(x => x.$)
 
 	return [
 		xmlData.upgrade_db.upgrade.map(item => Object.assign(item.$, {
 			localnameCn: transform[item.$.localname].trim(),
 			descCn: transform[item.$.desc].trim(),
 			filterArr: item.$.item_filter.split('|').filter(x => x),
-			effectDesc: xmlData.upgrade_db.effect.find(x => x.$.id == item.$.effect)[0]?.effect || item.$.effect || 'unknown'
+			effectDesc: effectTmp.find(x => x.id == item.$.effect)[0]?.effect || item.$.effect || 'unknown'
 		})),
 		xmlData.upgrade_db.effect.map(item => item.$)
 	]
