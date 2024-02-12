@@ -134,7 +134,8 @@ const formatUpgradeInfo = async () => {
 		xmlData.upgrade_db.upgrade.map(item => Object.assign(item.$, {
 			localnameCn: transform[item.$.localname].trim(),
 			descCn: transform[item.$.desc].trim(),
-			filterArr: item.$.item_filter.split('|').filter(x => x)
+			filterArr: item.$.item_filter.split('|').filter(x => x),
+			effectDesc: xmlData.upgrade_db.effect.find(x => x.id == item.$.effect)[0].effect || ''
 		})),
 		xmlData.upgrade_db.effect.map(item => item.$)
 	]
@@ -552,7 +553,7 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 					<div class="upgrade-desc">${x.descCn}</div>
 				</div>
 				<div class="item-col col-2">
-					${itemUpgradeEffectData.find(eItem => eItem.id === x.effect)[0].split(';').map(ef => analyzerEffect(ef.trim())).join(' ')}
+					${x.effectDesc.split(';').map(ef => analyzerEffect(ef.trim())).join(' ')}
 				</div>
 				<div class="item-col col-3">
 					${x.need_ep}
