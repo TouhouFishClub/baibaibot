@@ -15,7 +15,7 @@ let itemUpgradeEffectData = []
 let upgradeOptionsetHash = {}
 let npcInfoHash = {}
 let productionHash = {}
-let gemInfo = {}
+let gemInfo = []
 
 const readXmlParse = filePath => new Promise((resolve, reject) => {
 	console.log(`read file ${filePath}`)
@@ -53,10 +53,10 @@ const filterItem = async () => {
 		let data = xmlData[index]
 		for(let i = 0; i < data.Items.Mabi_Item.length; i ++) {
 			let item = data.Items.Mabi_Item[i]
-			if(item.$.Category && item.$.Category.startsWith('/jewel')) {
-				gemInfo[item.$.ID] = txtData[index][item.$.Text_Name1]
-				continue
-			}
+			// if(item.$.Category && item.$.Category.startsWith('/jewel')) {
+			// 	gemInfo[item.$.ID] = txtData[index][item.$.Text_Name1]
+			// 	continue
+			// }
 			if(item.$.Par_UpgradeMax && item.$.Par_UpgradeMax > 0 && (!item.$.Locale || item.$.Locale === 'china')) {
 				let localeNameCn = item.$.Text_Name1 ? txtData[index][item.$.Text_Name1] : 'NULL'
 				if(
@@ -139,7 +139,10 @@ const formatUpgradeInfo = async () => {
 			filterArr: item.$.item_filter.split('|').filter(x => x),
 			effectDesc: effectTmp.find(x => x.id == item.$.effect)?.effect || item.$.effect || 'unknown'
 		})),
-		xmlData.upgrade_db.effect.map(item => item.$)
+		xmlData.upgrade_db.effect.map(item => item.$),
+		xmlData.upgrade_db.gem.map(item => Object.assign(item.$, {
+			localnameCn: transform[item.$.name].trim()
+		}))
 	]
 }
 
@@ -195,7 +198,7 @@ const formatNpcInfo = async () => {
 
 const matchEquipUpgrade = async (Category, maxUpgrade) => {
 	if(itemUpgradeData.length === 0 || itemUpgradeEffectData.length === 0) {
-		[itemUpgradeData, itemUpgradeEffectData] = await formatUpgradeInfo()
+		[itemUpgradeData, itemUpgradeEffectData, gemInfo] = await formatUpgradeInfo()
 	}
 	let ca = Category.split('/').filter(x => x && x !== '*')
 	let out = []
@@ -593,7 +596,7 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 				<div class="need-gem">
 					${x.need_gem.split(';').map(gemItem => {
 						let [gemId, size] = gemItem.split(',').map(x => x.trim())
-						return `${gemInfo[gemId] || gemId}(${size})`
+						return `${gemInfo.find(x => x.id == gemId).localnameCn || gemId}(${size})`
 					}).join('<br/>')}
 				</div>
 			</div>
