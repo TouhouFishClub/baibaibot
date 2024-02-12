@@ -131,6 +131,8 @@ const formatUpgradeInfo = async () => {
 	// console.log(output)
 	// console.log(xmlData.upgrade_db.effect)
 	let effectTmp = xmlData.upgrade_db.effect.map(x => x.$)
+	console.log(effectTmp)
+	console.log(effectTmp.find(x => x.id == '981'))
 	console.log(effectTmp.find(x => x.id == '981')[0]?.effect)
 
 	return [
