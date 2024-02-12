@@ -11,6 +11,7 @@ const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '
 const parser = new xml2js.Parser()
 let filterDataStorage = {}
 let itemUpgradeData = []
+let itemUpgradeEffectData = []
 let upgradeOptionsetHash = {}
 let npcInfoHash = {}
 let productionHash = {}
@@ -129,11 +130,14 @@ const formatUpgradeInfo = async () => {
 	// })
 	// console.log(output)
 
-	return xmlData.upgrade_db.upgrade.map(item => Object.assign(item.$, {
-		localnameCn: transform[item.$.localname].trim(),
-		descCn: transform[item.$.desc].trim(),
-		filterArr: item.$.item_filter.split('|').filter(x => x)
-	}))
+	return [
+		xmlData.upgrade_db.upgrade.map(item => Object.assign(item.$, {
+			localnameCn: transform[item.$.localname].trim(),
+			descCn: transform[item.$.desc].trim(),
+			filterArr: item.$.item_filter.split('|').filter(x => x)
+		})),
+		xmlData.upgrade_db.effect.map(item => item.$)
+	]
 }
 
 const formatOptionset = async () => {
@@ -187,8 +191,8 @@ const formatNpcInfo = async () => {
 }
 
 const matchEquipUpgrade = async (Category, maxUpgrade) => {
-	if(itemUpgradeData.length === 0) {
-		itemUpgradeData = await formatUpgradeInfo()
+	if(itemUpgradeData.length === 0 || itemUpgradeEffectData.length === 0) {
+		[itemUpgradeData, itemUpgradeEffectData] = await formatUpgradeInfo()
 	}
 	let ca = Category.split('/').filter(x => x && x !== '*')
 	let out = []
@@ -547,7 +551,7 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 					<div class="upgrade-desc">${x.descCn}</div>
 				</div>
 				<div class="item-col col-2">
-					${x.effect.split(';').map(ef => analyzerEffect(ef.trim())).join(' ')}
+					${itemUpgradeEffectData.find(eItem => eItem.id === x.effect)[0].split(';').map(ef => analyzerEffect(ef.trim())).join(' ')}
 				</div>
 				<div class="item-col col-3">
 					${x.need_ep}
