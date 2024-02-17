@@ -333,7 +333,65 @@ function getRank(page,retarr,proxy){
                 return;
             }
           var data = eval('('+body+')');
-          var list = data.api_data.api_list;
+          try {
+            var list = data.api_data.api_list;
+          } catch {
+            let mvCur = (str, ind, regex) => {
+              for (let _i = 0; _i < ind - 1; ++_i) {
+                str = str.slice(str.search(regex) + 1);
+              }
+              return str.slice(str.search(regex));
+            };
+
+            request(
+              {
+                url: "http://203.104.209.199/kcs2/js/main.js",
+                method: "GET",
+                headers: {
+                  "User-Agent":
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36",
+                },
+              },
+              (error, response, body) => {
+                body = mvCur(body, 4, /function/);
+                body = mvCur(body, 1, /\[/);
+                rdlist = body.slice(1, body.search(/\]/)).split(",");
+
+                body = mvCur(body, 3, /function/);
+                body = mvCur(body, 2, /\(/);
+
+                let nobj = body.slice(1, body.search(/\)/));
+                nobj = Number(nobj);
+
+                // B2jQzwn0 对应键 object
+                let offset = nobj - rdlist.findIndex((e) => e == "'B2jQzwn0'");
+
+                // ue9svf9bueLFu0vfra 对应键 PORT_API_SEED
+                let nseed =
+                  (rdlist.findIndex((e) => e == "'ue9svf9bueLFu0vfra'") +
+                    offset +
+                    rdlist.length) %
+                  rdlist.length;
+
+                let reg = new RegExp(
+                  "\\(0x" + nseed.toString(16) + "\\)\\]=\\["
+                );
+                body = mvCur(body, 1, reg);
+                body = mvCur(body, 1, /\[/);
+
+                let res = body.slice(1, body.search(/\]/)).split(",");
+
+                for (let _i = 0; _i < res.length; ++_i) {
+                  res[_i] = Number(res[_i]);
+                }
+
+                // console.log(res);
+
+                PORT_API_SEED = res;
+              }
+            );
+            return;
+          }
           var rret = retarr.concat(list);
           if(page<100){
             getRank(page+1,rret);
