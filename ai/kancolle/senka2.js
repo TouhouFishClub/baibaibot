@@ -11,7 +11,7 @@ var path = require('path');
 //var {sendGmImage} = require('../../../cq/sendImage');
 
 
-var monthOfDay=[31,28,31,30,31,30,31,31,30,31,30,31];
+var monthOfDay=[31,29,31,30,31,30,31,31,30,31,30,31];
 var u = {};
 var c = {};
 var memory = {};
