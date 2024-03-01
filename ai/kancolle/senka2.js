@@ -233,7 +233,7 @@ function rd(x){
 }
 
 
-var PORT_API_SEED = [4644, 8817, 5202, 4153, 2317, 9682, 6101, 7767, 4468, 5218]
+var PORT_API_SEED = [7609, 7131, 9625, 4736, 6558, 9602, 6243, 7871, 6478, 4525]
 function generateRankKey(userid){
   var t=userid;
   var e = PORT_API_SEED[t%10];
@@ -335,7 +335,7 @@ function getRank(page,retarr,proxy){
           var data = eval('('+body+')');
           try {
             var list = data.api_data.api_list;
-          } catch {
+          } catch(ex) {
             let mvCur = (str, ind, regex) => {
               for (let _i = 0; _i < ind - 1; ++_i) {
                 str = str.slice(str.search(regex) + 1);
@@ -868,19 +868,9 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             })
             var user = arr2[0];
             var ud = user.d;
-            if(ud['2023_2_54_10']){
-              console.log(11111)
-              ud['2023_2_55_21']=ud['2023_2_54_10'];
-              ud['2023_3_0_1']=ud['2023_2_54_10'];
-            }else if(ud['2023_3_0_4']){
-              ud['2023_2_55_21']=ud['2023_3_0_4'];
-              ud['2023_3_0_1']=ud['2023_3_0_4'];
-            }else if(ud['2023_3_0_5']){
-              ud['2023_2_55_21']=ud['2023_3_0_5'];
-              ud['2023_3_0_1']=ud['2023_3_0_5'];
-            }
-            if(ud['2023_6_26_10']){
-              ud['2023_2_26_13']=ud['2023_6_26_10'];
+            if(ud['2024_2_56_10']){
+              ud['2024_2_57_21']=ud['2024_2_56_10'];
+              ud['2024_3_0_1']=ud['2024_2_56_10'];
             }
             var culist = [];
             var sexp = 0;
@@ -1191,15 +1181,9 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             var emap = {};
             for(var i=0;i<arr2.length;i++){
 
-              if(arr2[i].d['2023_2_54_10']){
-                arr2[i].d['2023_2_55_21']=arr2[i].d['2023_2_54_10'];
-                arr2[i].d['2023_3_0_1']=arr2[i].d['2023_2_54_10'];
-              }else if(arr2[i].d['2023_3_0_4']){
-                arr2[i].d['2023_2_55_21']=arr2[i].d['2023_2_54_10'];
-                arr2[i].d['2023_3_0_1']=arr2[i].d['2023_2_54_10'];
-              }else if(arr2[i].d['2023_3_0_5']){
-                arr2[i].d['2023_2_55_21']=arr2[i].d['2023_2_54_10'];
-                arr2[i].d['2023_3_0_1']=arr2[i].d['2023_2_54_10'];
+              if(arr2[i].d['2024_2_56_10']){
+                arr2[i].d['2024_2_57_21']=arr2[i].d['2024_2_56_10'];
+                arr2[i].d['2024_3_0_1']=arr2[i].d['2023_2_56_10'];
               }
 
               if(emap[arr2[i].n]){
