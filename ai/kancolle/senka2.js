@@ -337,54 +337,66 @@ function getRank(page,retarr,proxy){
             var list = data.api_data.api_list;
           } catch(ex) {
             let mvCur = (str, ind, regex) => {
-              for (let _i = 0; _i < ind - 1; ++_i) {
+              for (let _i = 0; _i < ind; ++_i) {
                 str = str.slice(str.search(regex) + 1);
               }
-              return str.slice(str.search(regex));
+              return str;
             };
-
+          
             request(
               {
                 url: "http://203.104.209.199/kcs2/js/main.js",
                 method: "GET",
                 headers: {
-                  "User-Agent":
-                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36",
+                  "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36",
                 },
               },
               (error, response, body) => {
-                body = mvCur(body, 4, /function/);
-                body = mvCur(body, 1, /\[/);
-                rdlist = body.slice(1, body.search(/\]/)).split(",");
-
-                body = mvCur(body, 3, /function/);
-                body = mvCur(body, 2, /\(/);
-
-                let nobj = body.slice(1, body.search(/\)/));
+                let rdlist = null, nobj = null;
+          
+                for (let __i = 0; __i < 10; ++__i) {
+                  // 预计 10 个 function 以内结束
+          
+                  body = mvCur(body, 1, /function/);
+          
+                  // 提取特征，特征类型越多越好
+                  b_str = body.slice(0, body.search(/\}/));
+                  var_cnt = [...b_str.matchAll(/var /g)].length
+                  for_cnt = [...b_str.matchAll(/for\(/g)].length
+                  while_cnt = [...b_str.matchAll(/while\(/g)].length
+                  if_cnt = [...b_str.matchAll(/if\(/g)].length
+                  typeof_cnt = [...b_str.matchAll(/typeof /g)].length
+                  return_cnt = [...b_str.matchAll(/return /g)].length
+                  if (var_cnt == 1 && for_cnt == 0 && while_cnt == 0 && if_cnt == 0 && typeof_cnt == 0 && return_cnt == 1) {
+                    body = mvCur(body, 1, /\[/);
+                    rdlist = body.slice(0, body.search(/\]/)).split(",");
+                  } else if (var_cnt == 1 && for_cnt == 0 && while_cnt == 0 && if_cnt == 0 && typeof_cnt > 2 && return_cnt == 0) {
+                    body = mvCur(body, 2, /\(/);
+                    nobj = body.slice(0, body.search(/\)/));
+                  }
+          
+                  if (rdlist != null && nobj != null) break;
+                }
+          
+                if (rdlist === null || nobj === null) {
+                  throw "update SEED failed!!!";
+                }
+          
                 nobj = Number(nobj);
-
-                // B2jQzwn0 对应键 object
                 let offset = nobj - rdlist.findIndex((e) => e == "'B2jQzwn0'");
-
-                // ue9svf9bueLFu0vfra 对应键 PORT_API_SEED
-                let nseed =
-                  (rdlist.findIndex((e) => e == "'ue9svf9bueLFu0vfra'") +
-                    offset +
-                    rdlist.length) %
-                  rdlist.length;
-
-                let reg = new RegExp(
-                  "\\(0x" + nseed.toString(16) + "\\)\\]=\\["
-                );
+          
+                let nseed = (rdlist.findIndex((e) => e == "'ue9svf9bueLFu0vfra'") + offset + rdlist.length) % rdlist.length;
+          
+                let reg = new RegExp("\\(0x" + nseed.toString(16) + "\\)\\]=\\[");
                 body = mvCur(body, 1, reg);
                 body = mvCur(body, 1, /\[/);
-
-                let res = body.slice(1, body.search(/\]/)).split(",");
-
+          
+                let res = body.slice(0, body.search(/\]/)).split(",");
+          
                 for (let _i = 0; _i < res.length; ++_i) {
                   res[_i] = Number(res[_i]);
                 }
-
+          
                 // console.log(res);
 
                 PORT_API_SEED = res;
