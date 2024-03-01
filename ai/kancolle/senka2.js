@@ -335,7 +335,7 @@ function getRank(page,retarr,proxy){
           var data = eval('('+body+')');
           try {
             var list = data.api_data.api_list;
-          } catch {
+          } catch(ex) {
             let mvCur = (str, ind, regex) => {
               for (let _i = 0; _i < ind; ++_i) {
                 str = str.slice(str.search(regex) + 1);
