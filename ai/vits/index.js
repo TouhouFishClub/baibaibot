@@ -9,8 +9,6 @@ const soVitsReply = (content, gid, qq, callback) => {
   if (!(qq + "").startsWith("79901")) {
     return;
   }
-  content = content.substring(2);
-  content = content.replace(/：/g,':')
   content = content.replace(/ /g,'')
   content = content.replace(/\r/g,'。')
   content = content.replace(/\n/g,'。')
