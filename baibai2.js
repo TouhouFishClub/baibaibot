@@ -661,7 +661,7 @@ function handleMsg_D(msgObj,port, configs) {
     }
     if((
 				gidstr.startsWith("57758")
-      )&&port!=30034){
+      )&&port!=30004){
       return;
     }
   }else{
