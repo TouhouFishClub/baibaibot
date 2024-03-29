@@ -164,6 +164,7 @@ const {BaRaidRanking} = require('./ai/BlueArchive/RaidRanking')
 const {mabiTelevision} = require('./ai/mabinogi/Television/index')
 
 const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
+const { soVitsReply } = require('./ai/vits/index.js')
 
 
 
@@ -1783,6 +1784,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(rcontent.startsWith("yv")){
     ysVoiceReply(content,groupid,from,callback)
     return;
+  }
+  if(rcontent.startsWith("夏夏说")){
+    soVitsReply(content, groupid, from, callback)
+    return
   }
 
 
