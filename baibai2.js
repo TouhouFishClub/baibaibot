@@ -1786,7 +1786,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   if(rcontent.startsWith("夏夏说")){
-    soVitsReply(content, groupid, from, callback)
+    soVitsReply(content.substring(3), groupid, from, callback)
     return
   }
 
