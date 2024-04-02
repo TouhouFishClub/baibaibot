@@ -16,6 +16,7 @@ let upgradeOptionsetHash = {}
 let npcInfoHash = {}
 let productionHash = {}
 let gemInfo = []
+let luckyUpgradeData = fs.readJsonSync(path.join(__dirname, 'luckyUpgrade.json'), 'utf-8')
 
 const readXmlParse = filePath => new Promise((resolve, reject) => {
 	console.log(`read file ${filePath}`)
@@ -312,7 +313,12 @@ const analyzerEffect = effectStr => {
 		return upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)] ? upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)].split('\\n').map(x => `<div class="effect-item" style="color: #57aeff">${x}</div>`).join('') : effectStr
 	}
 	if (effectStr.startsWith('luckyupgrade')) {
-		return `<div class="effect-item" style="color: #57aeff">铁匠改造数据[${effectStr.substring(13, effectStr.length - 1)}]</div>`
+		const target = luckyUpgradeData.filter(x => x.itemId == effectStr.substring(13, effectStr.length - 1))
+		if(target) {
+			return target.split('\n').map(text => `<div class="effect-item" style="color: #57aeff">${text}</div>`).join('')
+		} else {
+			return `<div class="effect-item" style="color: #57aeff">铁匠改造数据[${effectStr.substring(13, effectStr.length - 1)}]</div>`
+		}
 	}
 	if (effectStr.startsWith('personalize')) {
 		return `<div class="effect-item" style="color: #fb675f">装备专有化</div>`
