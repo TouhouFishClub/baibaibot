@@ -314,10 +314,10 @@ const analyzerEffect = effectStr => {
 	}
 	if (effectStr.startsWith('luckyupgrade')) {
 		console.log(`==========\n\n${luckyUpgradeData}\n\n${effectStr.substring(13, effectStr.length - 1)}`)
-		const target = luckyUpgradeData.filter(x => x.itemId == effectStr.substring(13, effectStr.length - 1))[0]
+		const target = luckyUpgradeData.filter(x => x.itemId == effectStr.substring(13, effectStr.length - 1))
 		console.log('===== target ======\n\n\n\n\n', target)
-		if(target) {
-			return target.split('\n').map(text => `<div class="effect-item" style="color: #57aeff">${text}</div>`).join('')
+		if(target && target.length > 0) {
+			return target[0].itemDesc.split('\n').map(text => `<div class="effect-item" style="color: #57aeff">${text}</div>`).join('')
 		} else {
 			return `<div class="effect-item" style="color: #57aeff">铁匠改造数据[${effectStr.substring(13, effectStr.length - 1)}]</div>`
 		}
