@@ -314,6 +314,7 @@ const analyzerEffect = effectStr => {
 	}
 	if (effectStr.startsWith('luckyupgrade')) {
 		const target = luckyUpgradeData.filter(x => x.itemId == effectStr.substring(13, effectStr.length - 1))[0]
+		console.log('===== target ======\n\n\n\n\n', target)
 		if(target) {
 			return target.split('\n').map(text => `<div class="effect-item" style="color: #57aeff">${text}</div>`).join('')
 		} else {
