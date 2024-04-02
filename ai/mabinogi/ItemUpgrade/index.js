@@ -200,14 +200,14 @@ const matchEquipUpgrade = async (Category, maxUpgrade) => {
 	if(itemUpgradeData.length === 0 || itemUpgradeEffectData.length === 0) {
 		[itemUpgradeData, itemUpgradeEffectData, gemInfo] = await formatUpgradeInfo()
 	}
-	let ca = Category.split('/').filter(x => x && x !== '*')
+	let ca = Category.split('/').filter(x => x && x.indexOf('*') == -1)
 	let out = []
 	itemUpgradeData.forEach(item => {
 		if(item.upgraded_min > maxUpgrade){
 			return
 		}
 		for(let i = 0; i < item.filterArr.length; i ++) {
-			let tf = item.filterArr[i].split('/').filter(x => x && x !== '*')
+			let tf = item.filterArr[i].split('/').filter(x => x && x.indexOf('*') == -1)
 			// if(Array.from(new Set(tf.concat(ca))).length === ca.length) {
       // GPT指导后变更
 			if(tf.every(item => ca.includes(item))) {
