@@ -313,9 +313,7 @@ const analyzerEffect = effectStr => {
 		return upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)] ? upgradeOptionsetHash[effectStr.substring(14, effectStr.length - 1)].split('\\n').map(x => `<div class="effect-item" style="color: #57aeff">${x}</div>`).join('') : effectStr
 	}
 	if (effectStr.startsWith('luckyupgrade')) {
-		console.log(`==========\n\n${luckyUpgradeData}\n\n${effectStr.substring(13, effectStr.length - 1)}`)
 		const target = luckyUpgradeData.filter(x => x.itemId == effectStr.substring(13, effectStr.length - 1))
-		console.log('===== target ======\n\n\n\n\n', target)
 		if(target && target.length > 0) {
 			return target[0].itemDesc.split('\n').map(text => `<div class="effect-item" style="color: #57aeff">${text}</div>`).join('')
 		} else {
