@@ -11,7 +11,7 @@ var path = require('path');
 //var {sendGmImage} = require('../../../cq/sendImage');
 
 
-var monthOfDay=[31,29,31,30,31,30,31,31,30,31,30,31];
+var monthOfDay=[31,28,31,30,31,30,31,31,30,31,30,31];
 var u = {};
 var c = {};
 var memory = {};
@@ -233,7 +233,16 @@ function rd(x){
 }
 
 
-var PORT_API_SEED = [7609, 7131, 9625, 4736, 6558, 9602, 6243, 7871, 6478, 4525]
+var PORT_API_SEED = [   4012,
+    6465,
+    6371,
+    7463,
+    5649,
+    9755,
+    7791,
+    7315,
+    9124,
+    6350]
 function generateRankKey(userid){
   var t=userid;
   var e = PORT_API_SEED[t%10];
