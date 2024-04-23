@@ -345,6 +345,7 @@ function getRank(page,retarr,proxy){
           try {
             var list = data.api_data.api_list;
           } catch(ex) {
+            console.log('seed error,will req);
             let mvCur = (str, ind, regex) => {
               for (let _i = 0; _i < ind; ++_i) {
                 str = str.slice(str.search(regex) + 1);
@@ -361,6 +362,7 @@ function getRank(page,retarr,proxy){
                 },
               },
               (error, response, body) => {
+                console.log('req ok');
                 let rdlist = null, nobj = null;
           
                 for (let __i = 0; __i < 10; ++__i) {
@@ -406,9 +408,11 @@ function getRank(page,retarr,proxy){
                   res[_i] = Number(res[_i]);
                 }
           
-                // console.log(res);
+                console.log(res);
 
                 PORT_API_SEED = res;
+                getRank(page,retarr,proxy+1);
+                return;
               }
             );
             return;
