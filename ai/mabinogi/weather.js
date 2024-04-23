@@ -32,16 +32,7 @@ const mabiWeather = async (content, callback) => {
     });
 
     console.log(`保存weather.png成功！`)
-    let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `weather.png`)}]`, mixMsg = ''
-    switch(order){
-      case 'IF':
-        mixMsg = `${imgMsg}${msg.length ? `\n${msg}` : ''}`
-        break
-      case 'MF':
-        mixMsg = `${msg.length ? `${msg}\n` : ''}${imgMsg}`
-        break
-    }
-    callback(mixMsg)
+    callback(`[CQ:image,file=${path.join('send', 'mabi_other', `weather.png`)}]`)
 
   } else {
     console.error('Element not found or not visible');
