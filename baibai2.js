@@ -165,6 +165,7 @@ const {mabiTelevision} = require('./ai/mabinogi/Television/index')
 
 const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
 const { soVitsReply } = require('./ai/vits/index.js')
+const {mabiWeather} = require('./ai/mabinogi/weather')
 
 
 
@@ -1304,6 +1305,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content == '洛奇来十单') {
     mabiGacha(from, groupid, callback, 600)
     return;
+  }
+  if(content == '洛奇火山天气') {
+    mabiWeather(content, callback)
+    return
   }
 
   if(content.startsWith('menu') || content.startsWith('菜单')) {
