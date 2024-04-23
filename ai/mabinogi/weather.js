@@ -11,6 +11,8 @@ const mabiWeather = async (content, callback) => {
   // 等待一段时间，确保网页加载完成
   await page.waitForTimeout(3000); // 可根据需要调整等待时间
 
+  await page.addStyleTag({ content: '.now_bg { background-color: transparent; border: 1px #f00 solid; }' }); // 替换为你自定义的 CSS
+
   const element = await page.$(".TbMainIE"); // 将选择器替换为你要截取的元素的选择器
 
   const boundingBox = await element.boundingBox();
