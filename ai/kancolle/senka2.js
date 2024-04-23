@@ -345,7 +345,7 @@ function getRank(page,retarr,proxy){
           try {
             var list = data.api_data.api_list;
           } catch(ex) {
-            console.log('seed error,will req);
+            console.log('seed error,will req');
             let mvCur = (str, ind, regex) => {
               for (let _i = 0; _i < ind; ++_i) {
                 str = str.slice(str.search(regex) + 1);
