@@ -62,8 +62,8 @@ const mabiTelevision = async (content, qq, callback) => {
   }).find(([key]) => content.startsWith(key))
 
   if(sv) {
-    sv = sv[1]
     content = content.substring(sv[0].length).trim()
+    sv = sv[1]
     await svc.save({_id: qq, sv})
   } else {
     const svInfo = await svc.findOne({_id: qq})
