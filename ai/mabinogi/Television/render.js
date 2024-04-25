@@ -76,12 +76,12 @@ const render = async (data, option) => {
       line-height: 40px;
       text-align: center;
     }
-    tbody > th,
-    tbody > td {
+    tbody th,
+    tbody td {
       padding-left: 25px;
       padding-right: 25px;
     }
-    tbody > td {
+    tbody td {
       text-align: right;
     }
   </style>
