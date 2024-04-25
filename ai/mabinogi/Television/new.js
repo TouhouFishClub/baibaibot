@@ -92,7 +92,7 @@ const mabiTelevision = async (content, qq, callback) => {
   // const outputDir = path.join(__dirname, 'text.jpg')
   const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiTV.png`)
   await render(row, {
-    title: 'TITLE',
+    title: `出货记录查询：${{'ylx': '猫服', 'yate': '亚特'}[sv]}`,
     output: outputDir,
     columns: [
       {

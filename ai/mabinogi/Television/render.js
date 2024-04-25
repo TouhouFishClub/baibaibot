@@ -45,6 +45,27 @@ const render = async (data, option) => {
 			font-family: HANYIWENHEI;
 			background: #D6D2C9;
     }
+    .header {
+      padding-top: 20px;
+      padding-left: 95px;
+      padding-right: 95px;
+      color: #49445A;
+      font-size: 36px;
+      line-height: 90px;
+    }
+    table {
+      font-size: 24px;
+    }
+    thead {
+      background: #49445A;
+      color: #D6D2C9;
+    }
+    tbody {
+      color: #49445A;
+    }
+    tbody > tr:nth-child(2n) {
+      background: #CAC5BF;
+    }
   </style>
 </head>
 <body>
