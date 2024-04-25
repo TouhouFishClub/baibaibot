@@ -42,13 +42,15 @@ const render = async (data, option) => {
       min-height: 20px;
       padding: 20px;
       box-sizing: border-box;
-			font-family: HANYIWENHEI;
 			background: #D6D2C9;
     }
     .header {
       padding-top: 20px;
       padding-left: 95px;
       padding-right: 95px;
+    }
+    .header .title {
+			font-family: HANYIWENHEI;
       color: #49445A;
       font-size: 36px;
       line-height: 90px;
@@ -69,13 +71,14 @@ const render = async (data, option) => {
     tbody > tr:nth-child(2n) {
       background: #CAC5BF;
     }
-    tr {
+    td {
       line-height: 40px;
       text-align: center;
     }
-    tbody > tr {
+    tbody > td {
       padding-left: 25px;
       padding-right: 25px;
+      text-align: right;
     }
   </style>
 </head>
