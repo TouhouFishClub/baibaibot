@@ -13,7 +13,7 @@ const createMysqlPool = async () => {
   const pool = mysql.createPool(Object.assign(
     {
       connectionLimit: 10,
-      database: 'dungeon_reward_records'
+      database: 'draw_reward_records'
     },
     fs.readJsonSync(path.join(__dirname, '.secret.json'))
   ))
@@ -45,7 +45,7 @@ const formatTime = ts => {
 }
 const addZero = n => n < 10 ? ('0' + n) : n
 
-const mabiTelevision = async (content, qq, callback) => {
+const mabiGachaTv = async (content, qq, callback) => {
   // if(!content.trim().length) {
   //   help(callback)
   //   return
@@ -77,8 +77,8 @@ const mabiTelevision = async (content, qq, callback) => {
     }
   }
   let table = {
-    'ylx': 'mabi_dungeon_reward_records',
-    'yate': 'mabi_dungeon_reward_records_yate'
+    'ylx': 'mabi_draw_reward_records',
+    'yate': 'mabi_draw_reward_records_yate'
   }[sv]
   const filter = content.trim()
   const limit = 20
@@ -87,8 +87,7 @@ const mabiTelevision = async (content, qq, callback) => {
     SELECT *
     FROM ${table}
     ${(filter && filter.length > 1) ? `
-    WHERE reward LIKE '%${filter}%'
-      OR dungeon_name LIKE '%${filter}%'
+    WHERE item_name LIKE '%${filter}%'
       OR character_name LIKE '%${filter}%'
     ` : ''}
     ORDER BY data_time DESC 
@@ -97,9 +96,9 @@ const mabiTelevision = async (content, qq, callback) => {
   const [row, fields] = await mysqlPool.query(query)
   // console.log(row)
   // const outputDir = path.join(__dirname, 'text.jpg')
-  const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiTV.png`)
+  const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiGC.png`)
   await render(row, {
-    title: `出货记录查询：${{'ylx': '猫服', 'yate': '亚特'}[sv]}`,
+    title: `抽蛋查询：${{'ylx': '猫服', 'yate': '亚特'}[sv]}`,
     output: outputDir,
     columns: [
       {
@@ -108,11 +107,7 @@ const mabiTelevision = async (content, qq, callback) => {
       },
       {
         label: '物品名称',
-        key: 'reward',
-      },
-      {
-        label: '地下城名称',
-        key: 'dungeon_name',
+        key: 'item_name',
       },
       {
         label: '时间',
@@ -120,17 +115,17 @@ const mabiTelevision = async (content, qq, callback) => {
         format: time => formatTime(new Date(time).getTime())
       },
       {
-        label: '频道',
-        key: 'channel',
+        label: '手帕名称',
+        key: 'draw_pool',
       },
     ]
   })
 
-  console.log(`保存MabiTV.png成功！`)
-  let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiTV.png`)}]`
+  console.log(`保存MabiGC.png成功！`)
+  let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiGC.png`)}]`
   callback(imgMsg)
 }
 
 module.exports = {
-  mabiTelevision
+  mabiGachaTv
 }

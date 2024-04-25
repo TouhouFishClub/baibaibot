@@ -162,6 +162,7 @@ const {BA_Schedule} = require('./ai/BlueArchive/schedule')
 const {BaRaidRanking} = require('./ai/BlueArchive/RaidRanking')
 // const {autoVoteSend} = require('./ai/mabinogi/2023_vote_rank')
 const {mabiTelevision} = require('./ai/mabinogi/Television/new')
+const {mabiGachaTv} = require('./ai/mabinogi/Television/gacha')
 
 const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
 const { soVitsReply } = require('./ai/vits/index.js')
@@ -1746,6 +1747,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(fie4 == 'mbtv') {
     mabiTelevision(con.substring(4).trim(), from, callback);
+    return
+  }
+  if(fie4 == 'mbcd') {
+    mabiGachaTv(con.substring(4).trim(), from, callback);
     return
   }
 
