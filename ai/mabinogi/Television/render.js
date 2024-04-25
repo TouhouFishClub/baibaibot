@@ -54,7 +54,9 @@ const render = async (data, option) => {
       line-height: 90px;
     }
     table {
-      font-size: 24px;
+      font-size: 20px;
+      border-collapse: collapse;
+      font-family: sans-serif;
     }
     thead {
       background: #49445A;
