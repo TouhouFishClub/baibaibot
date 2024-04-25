@@ -57,6 +57,7 @@ const render = async (data, option) => {
       font-size: 20px;
       border-collapse: collapse;
       font-family: sans-serif;
+			width: 100%;
     }
     thead {
       background: #49445A;
@@ -67,6 +68,14 @@ const render = async (data, option) => {
     }
     tbody > tr:nth-child(2n) {
       background: #CAC5BF;
+    }
+    tr {
+      line-height: 40px;
+      text-align: center;
+    }
+    tbody > tr {
+      padding-left: 25px;
+      padding-right: 25px;
     }
   </style>
 </head>
