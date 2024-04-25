@@ -71,13 +71,17 @@ const render = async (data, option) => {
     tbody > tr:nth-child(2n) {
       background: #CAC5BF;
     }
+    th,
     td {
       line-height: 40px;
       text-align: center;
     }
+    tbody > th,
     tbody > td {
       padding-left: 25px;
       padding-right: 25px;
+    }
+    tbody > td {
       text-align: right;
     }
   </style>
@@ -100,7 +104,7 @@ const render = async (data, option) => {
     <tbody>
       ${data.map(item => `
         <tr>
-          ${option.columns.map(col => `<td>${item[col.key]}</td>`).join('')}
+          ${option.columns.map(col => `<td>${col.format ? col.format(item[col.key]) : item[col.key]}</td>`).join('')}
         </tr>
       `).join('')}
     </tbody>

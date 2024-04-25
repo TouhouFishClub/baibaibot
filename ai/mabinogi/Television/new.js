@@ -38,11 +38,18 @@ const help = callback => {
   callback('这是帮助')
 }
 
+
+const formatTime = ts => {
+  let d = new Date(ts)
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}`
+}
+const addZero = n => n < 10 ? ('0' + n) : n
+
 const mabiTelevision = async (content, qq, callback) => {
-  if(!content.trim().length) {
-    help(callback)
-    return
-  }
+  // if(!content.trim().length) {
+  //   help(callback)
+  //   return
+  // }
   await checkLink()
   const svc = mgoClient.db('db_bot').collection('cl_mabinogi_user_server')
   let sv
@@ -110,6 +117,7 @@ const mabiTelevision = async (content, qq, callback) => {
       {
         label: '时间',
         key: 'data_time',
+        format: time => formatTime(new Date(time).getTime())
       },
       {
         label: '频道',
