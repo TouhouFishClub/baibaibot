@@ -82,7 +82,7 @@ const render = async (data, option) => {
       padding-right: 25px;
     }
     tbody td {
-      text-align: right;
+      text-align: left;
     }
   </style>
 </head>
