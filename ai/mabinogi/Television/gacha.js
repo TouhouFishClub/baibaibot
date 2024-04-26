@@ -86,7 +86,7 @@ const mabiGachaTv = async (content, qq, callback) => {
     `
     SELECT *
     FROM ${table}
-    ${(filter && filter.length > 1) ? `
+    ${(filter && filter.length > 0) ? `
     WHERE item_name LIKE '%${filter}%'
       OR character_name LIKE '%${filter}%'
     ` : ''}

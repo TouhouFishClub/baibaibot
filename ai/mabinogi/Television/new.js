@@ -84,7 +84,7 @@ const mabiTelevision = async (content, qq, callback) => {
     `
     SELECT *
     FROM ${table}
-    ${(filter && filter.length > 1) ? `
+    ${(filter && filter.length > 0) ? `
     WHERE reward LIKE '%${filter}%'
       OR dungeon_name LIKE '%${filter}%'
       OR character_name LIKE '%${filter}%'
