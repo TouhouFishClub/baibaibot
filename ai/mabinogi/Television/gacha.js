@@ -52,20 +52,18 @@ const mabiGachaTv = async (content, qq, callback) => {
   // }
   await checkLink()
   const svc = mgoClient.db('db_bot').collection('cl_mabinogi_user_server')
-  let sv
-  if(content.startsWith('ylx') || content.startsWith('伊鲁夏')) {
-    sv = 'ylx'
-    content = content.substring(3).trim()
-  }
-  if(content.startsWith('猫服')) {
-    sv = 'ylx'
-    content = content.substring(2).trim()
-  }
-  if(content.startsWith('yt') || content.startsWith('亚特')) {
-    sv = 'yate'
-    content = content.substring(2).trim()
-  }
+
+  let sv = Object.entries({
+    'ylx': 'ylx',
+    '伊鲁夏': 'ylx',
+    '猫服': 'ylx',
+    'yt': 'yate',
+    '亚特': 'yate',
+  }).find(([key]) => content.startsWith(key))
+
   if(sv) {
+    content = content.substring(sv[0].length).trim()
+    sv = sv[1]
     await svc.save({_id: qq, sv})
   } else {
     const svInfo = await svc.findOne({_id: qq})
@@ -76,26 +74,43 @@ const mabiGachaTv = async (content, qq, callback) => {
       sv = 'ylx'
     }
   }
+  if(content.length > 20) {
+    help(callback)
+    return
+  }
+
   let table = {
     'ylx': 'mabi_draw_reward_records',
     'yate': 'mabi_draw_reward_records_yate'
   }[sv]
   const filter = content.trim()
   const limit = 20
+  let queryParams = [];
+  let whereClause = '';
+
+  if(filter.length) {
+    if(filter.indexOf('-') > -1) {
+      let sp = filter.split('-')
+      let [itemFilter, nameFilter] = sp
+      if (itemFilter || nameFilter) {
+        whereClause = `WHERE${sp.map((x, i) => x && [' item_name LIKE ?', ' character_name LIKE ?'][i]).filter(x => x).join(' OR')}`
+        queryParams = sp.map(x => x && `%${x}%`).filter(x => x)
+      }
+    } else {
+      whereClause = `WHERE item_name LIKE ? OR character_name LIKE ?`;
+      queryParams = [`%${filter}%`, `%${filter}%`];
+    }
+  }
   const query =
     `
     SELECT *
     FROM ${table}
-    ${(filter && filter.length > 0) ? `
-    WHERE item_name LIKE '%${filter}%'
-      OR character_name LIKE '%${filter}%'
-    ` : ''}
+    ${whereClause}
     ORDER BY data_time DESC 
-    LIMIT ${limit}
+    LIMIT ?
     `
-  const [row, fields] = await mysqlPool.query(query)
-  // console.log(row)
-  // const outputDir = path.join(__dirname, 'text.jpg')
+  queryParams.push(limit)
+  const [row, fields] = await mysqlPool.query(query, queryParams)
   const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiGC.png`)
   await render(row, {
     title: `抽蛋查询：${{'ylx': '猫服', 'yate': '亚特'}[sv]}`,

@@ -1746,11 +1746,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
   if(fie4 == 'mbtv') {
-    mabiTelevision(con.substring(4).trim(), from, callback);
+    mabiTelevision(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
     return
   }
   if(fie4 == 'mbcd') {
-    mabiGachaTv(con.substring(4).trim(), from, callback);
+    mabiGachaTv(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
     return
   }
 

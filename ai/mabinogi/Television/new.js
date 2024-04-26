@@ -74,25 +74,42 @@ const mabiTelevision = async (content, qq, callback) => {
       sv = 'ylx'
     }
   }
+  if(content.length > 20 || content === 'help') {
+    help(callback)
+    return
+  }
   let table = {
     'ylx': 'mabi_dungeon_reward_records',
     'yate': 'mabi_dungeon_reward_records_yate'
   }[sv]
   const filter = content.trim()
   const limit = 20
+  let queryParams = [];
+  let whereClause = '';
+
+  if(filter.length) {
+    if(filter.indexOf('-') > -1) {
+      let sp = filter.split('-')
+      let [rewordFilter, nameFilter, dungeonFilter] = sp
+      if (rewordFilter || nameFilter || dungeonFilter) {
+        whereClause = `WHERE${sp.map((x, i) => x && [' reward LIKE ?', ' character_name LIKE ?', ' dungeon_name LIKE ?'][i]).filter(x => x).join(' OR')}`
+        queryParams = sp.map(x => x && `%${x}%`).filter(x => x)
+      }
+    } else {
+      whereClause = `WHERE reward LIKE ? OR character_name LIKE ? OR dungeon_name LIKE ?`;
+      queryParams = [`%${filter}%`, `%${filter}%`, `%${filter}%`];
+    }
+  }
   const query =
     `
     SELECT *
     FROM ${table}
-    ${(filter && filter.length > 0) ? `
-    WHERE reward LIKE '%${filter}%'
-      OR dungeon_name LIKE '%${filter}%'
-      OR character_name LIKE '%${filter}%'
-    ` : ''}
+    ${whereClause}
     ORDER BY data_time DESC 
-    LIMIT ${limit}
+    LIMIT ?
     `
-  const [row, fields] = await mysqlPool.query(query)
+  queryParams.push(limit)
+  const [row, fields] = await mysqlPool.query(query, queryParams)
   // console.log(row)
   // const outputDir = path.join(__dirname, 'text.jpg')
   const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiTV.png`)
