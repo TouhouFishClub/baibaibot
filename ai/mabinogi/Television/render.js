@@ -80,6 +80,7 @@ const render = async (data, option) => {
     td {
       line-height: 40px;
       text-align: center;
+      white-space: nowrap;
     }
     tbody th,
     tbody td {
