@@ -60,7 +60,7 @@ const render = async (data, option) => {
       font-size: 20px;
       border-collapse: collapse;
       font-family: sans-serif;
-			width: 100%;
+			/*width: 100%;*/
     }
     thead {
       /*background: #49445A;*/
