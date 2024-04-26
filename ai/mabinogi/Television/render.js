@@ -79,7 +79,7 @@ const render = async (data, option) => {
     th,
     td {
       line-height: 40px;
-      text-align: center;
+      text-align: left;
     }
     tbody th,
     tbody td {
