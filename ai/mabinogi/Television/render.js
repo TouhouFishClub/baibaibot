@@ -19,8 +19,11 @@ const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '
 * }
 */
 const render = async (data, option) => {
+  const width = option.columns.reduce((p, { key, format }) => {
+    p + Math.max(...data.map(x => (format ? format(x[key]) : x[key]).length))
+  }, 0) * 24 + 50 * option.columns.length
 
-  let html = `
+let html = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +41,7 @@ const render = async (data, option) => {
       line-height: 1.4;
     }
     body {
-      width: 1200px;
+      width: ${width}px;
       min-height: 20px;
       box-sizing: border-box;
 			/*background: #D6D2C9;*/
