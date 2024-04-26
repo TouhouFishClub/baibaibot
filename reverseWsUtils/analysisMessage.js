@@ -34,7 +34,7 @@ const replaceImageToBase64 = message =>
     return sp
   }).join('[CQ:image,file=base64://')
 
-const sendMessage = (context, ws) => {
+const sendMessage = (context, ws, bot_name) => {
   // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
   let { message, message_type, user_id, group_id, sender, mixins, time } = context
   let { card } = sender
@@ -67,7 +67,7 @@ const sendMessage = (context, ws) => {
         "message": message
       }
     }));
-  }, group_name, user_name, message_type, 30015, context )
+  }, group_name, user_name, message_type, bot_name || 30015, context )
 }
 
 const mixinInfos = (context, ws) => {
@@ -131,7 +131,7 @@ const analysisMessage = async (message, ws, bot_name) => {
             bot_name
           }
 
-          sendMessage(context, ws)
+          sendMessage(context, ws, bot_name)
 
           // if(context.message === 'HELLO') {
           //   console.log(`\n\n\n TARGET \n\n\n`)
