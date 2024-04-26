@@ -19,7 +19,7 @@ const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '
 * }
 */
 const render = async (data, option) => {
-  const width = option.columns.reduce((p, { key, format }) => p + Math.max(...data.map(x => (format ? format(x[key]) : x[key]).split('').reduce((sp, char) => sp + (/^[\u4E00-\u9FA5]$/.test(char) ? 24: 12), 0))), 0) + 50 * option.columns.length
+  const width = option.columns.reduce((p, { key, format }) => p + Math.max(...data.map(x => (format ? format(x[key]) : x[key]).split('').reduce((sp, char) => sp + (/^[\u4E00-\u9FA5]$/.test(char) ? 20: 10), 0))), 0) + 50 * option.columns.length
   console.log(`-----\n\n\n\n${width}\n\n\n\n-----`)
 
 let html = `
