@@ -38,7 +38,7 @@ const render = async (data, option) => {
       line-height: 1.4;
     }
     body {
-      /*width: 1183px;*/
+      width: 1200px;
       min-height: 20px;
       box-sizing: border-box;
 			/*background: #D6D2C9;*/
@@ -60,7 +60,7 @@ const render = async (data, option) => {
       font-size: 20px;
       border-collapse: collapse;
       font-family: sans-serif;
-			/*width: 100%;*/
+			width: 100%;
     }
     thead {
       /*background: #49445A;*/
