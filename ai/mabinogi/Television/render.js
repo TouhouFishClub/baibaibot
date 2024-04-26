@@ -40,9 +40,9 @@ const render = async (data, option) => {
     body {
       width: 1183px;
       min-height: 20px;
-      padding: 20px;
       box-sizing: border-box;
-			background: #D6D2C9;
+			/*background: #D6D2C9;*/
+			background: #1C1C1C
     }
     .header {
       padding-top: 20px;
@@ -51,7 +51,8 @@ const render = async (data, option) => {
     }
     .header .title {
 			font-family: HANYIWENHEI;
-      color: #49445A;
+      /*color: #49445A;*/
+      color: #eee;
       font-size: 36px;
       line-height: 90px;
     }
@@ -62,14 +63,18 @@ const render = async (data, option) => {
 			width: 100%;
     }
     thead {
-      background: #49445A;
-      color: #D6D2C9;
+      /*background: #49445A;*/
+      background: #434857;
+      /*color: #D6D2C9;*/
+      color: #eee;
     }
     tbody {
-      color: #49445A;
+      /*color: #49445A;*/
+      color: #eee;
     }
     tbody > tr:nth-child(2n) {
-      background: #CAC5BF;
+      /*background: #CAC5BF;*/
+      background: #393e4a;
     }
     th,
     td {
