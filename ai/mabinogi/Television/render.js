@@ -22,6 +22,7 @@ const render = async (data, option) => {
   const width = option.columns.reduce((p, { key, format }) => {
     p + Math.max(...data.map(x => (format ? format(x[key]) : x[key]).length))
   }, 0) * 24 + 50 * option.columns.length
+  console.log(`-----\n\n\n\n${width}\n\n\n\n-----`)
 
 let html = `
 <!DOCTYPE html>
