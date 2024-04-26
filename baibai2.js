@@ -337,7 +337,7 @@ async function addSendQueue(groupid,msg,port,from, configs){
 
 	let msgSource = msg
 
-	if(port === 29334 && Math.random() > 0.4) {
+	if(port === '29334' && Math.random() > 0.4) {
 		// 限制某些端口强制使用图片发送文字(概率60%)
 		let sp = msg.split('[CQ:'), output = []
 		for(let index = 0 ; index < sp.length; index ++) {
@@ -813,7 +813,7 @@ function handleMsg_D(msgObj,port, configs) {
 
 
 			switch(port) {
-				case 29334:
+				case '29334':
 					// 5秒随机
 					groupExpire.set(msgObj.group_id, Date.now() + (~~(5*Math.random()))*1000)
 					break
@@ -1392,7 +1392,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 	}
 
   if(con.startsWith('jrrp') || con.startsWith('今日运势')){
-    if(port == 29334){
+    if(port == '29334'){
       return
     }
 		// if(!new Set([24334, 25334]).has(port)) {
@@ -1826,7 +1826,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(rcontent.startsWith("抽抽卡")){
-    if(new Set([23334, 29334, 26334, 28334, 30004, 30014]).has(port)){
+    if(new Set([23334, '29334', 26334, 28334, 30004, 30014]).has(port)){
       return
     }
     drawNameCard(name,from,callback,groupid);
@@ -1835,14 +1835,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
   if(rcontent.startsWith("猫图")||rcontent.startsWith("吸猫")){
-    if(new Set([23334, 29334, 26334, 28334, 30004, 30014, 30024]).has(port) && from !== 799018865){
+    if(new Set([23334, '29334', 26334, 28334, 30004, 30014, 30024]).has(port) && from !== 799018865){
       return
     }
     catreply(rcontent.substring(2),from,callback);
     return;
   }
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
-    if(new Set([29334, 26334, 28334, 30004, 30014, 30024, 30015]).has(port) && from !== 799018865){
+    if(new Set(['29334', 26334, 28334, 30004, 30014, 30024, '30016']).has(port) && from !== 799018865){
       return
     }
     runsetu(rcontent,groupid,from,callback,port);
