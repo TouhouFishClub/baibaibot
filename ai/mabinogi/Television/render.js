@@ -81,8 +81,9 @@ const render = async (data, option) => {
       line-height: 40px;
       text-align: center;
       white-space: nowrap;
+      box-sizing: content-box;
     }
-    tbody th,
+    thead th,
     tbody td {
       padding-left: 25px;
       padding-right: 25px;

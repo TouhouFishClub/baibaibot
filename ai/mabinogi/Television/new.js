@@ -41,7 +41,7 @@ const help = callback => {
 
 const formatTime = ts => {
   let d = new Date(ts)
-  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}`
+  return `${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} ${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}`
 }
 const addZero = n => n < 10 ? ('0' + n) : n
 
