@@ -34,7 +34,7 @@ const replaceImageToBase64 = message =>
     return sp
   }).join('[CQ:image,file=base64://')
 
-const sendMessage = (context, ws, bot_name) => {
+const sendMessage = (context, ws, port) => {
   // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
   let { message, message_type, user_id, group_id, sender, mixins, time } = context
   let { card } = sender
@@ -67,7 +67,7 @@ const sendMessage = (context, ws, bot_name) => {
         "message": message
       }
     }));
-  }, group_name, user_name, message_type, bot_name || 30015, context )
+  }, group_name, user_name, message_type, port || 30015, context )
 }
 
 const mixinInfos = (context, ws) => {
