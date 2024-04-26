@@ -38,7 +38,7 @@ const render = async (data, option) => {
       line-height: 1.4;
     }
     body {
-      width: 1183px;
+      /*width: 1183px;*/
       min-height: 20px;
       box-sizing: border-box;
 			/*background: #D6D2C9;*/
@@ -79,7 +79,7 @@ const render = async (data, option) => {
     th,
     td {
       line-height: 40px;
-      text-align: left;
+      text-align: center;
     }
     tbody th,
     tbody td {
