@@ -52,20 +52,18 @@ const mabiTelevision = async (content, qq, callback) => {
   // }
   await checkLink()
   const svc = mgoClient.db('db_bot').collection('cl_mabinogi_user_server')
-  let sv
-  if(content.startsWith('ylx') || content.startsWith('伊鲁夏')) {
-    sv = 'ylx'
-    content = content.substring(3).trim()
-  }
-  if(content.startsWith('猫服')) {
-    sv = 'ylx'
-    content = content.substring(2).trim()
-  }
-  if(content.startsWith('yt') || content.startsWith('亚特')) {
-    sv = 'yate'
-    content = content.substring(2).trim()
-  }
+
+  let sv = Object.entries({
+    'ylx': 'ylx',
+    '伊鲁夏': 'ylx',
+    '猫服': 'ylx',
+    'yt': 'yate',
+    '亚特': 'yate',
+  }).find(([key]) => content.startsWith(key))
+
   if(sv) {
+    content = content.substring(sv[0].length).trim()
+    sv = sv[1]
     await svc.save({_id: qq, sv})
   } else {
     const svInfo = await svc.findOne({_id: qq})
