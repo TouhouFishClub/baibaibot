@@ -43,7 +43,7 @@ const tcArticle = async (callback) => {
     const ddAur = document.querySelector('dd.aur');
     const ddBur = document.querySelector('dd.bur');
     const ddCur = document.querySelector('dd.cur');
-    return ddAur.getBoundingClientRect().height + ddBur.getBoundingClientRect().height + ddCur.getBoundingClientRect().height;
+    return ddAur.getBoundingClientRect().height + ddBur.getBoundingClientRect().height + ddCur.getBoundingClientRect().height + 28 + 12;
   });
 
   // 将 dl.newCon 元素滚动到可视区域内
