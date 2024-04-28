@@ -31,12 +31,19 @@ const tcArticle = async (callback) => {
   await page.addStyleTag({ content: '.bur.cbur { display: none; }' }); // 替换为你自定义的 CSS
   await page.addStyleTag({ content: '.cur { min-height: 200px !important; height: auto; }' }); // 替换为你自定义的 CSS
   await page.addStyleTag({ content: '.dur { display: none; }' }); // 替换为你自定义的 CSS
+  await page.waitForTimeout(1000);
 
   // 获取 dl.newCon 元素的位置和大小
-  const { x, y, width, height } = await page.evaluate(() => {
+  const { x, y, width } = await page.evaluate(() => {
     const dlElement = document.querySelector('dl.newCon');
     const { x, y, width, height } = dlElement.getBoundingClientRect();
-    return { x, y, width, height };
+    return { x, y, width };
+  });
+  const height = await page.evaluate(() => {
+    const ddAur = document.querySelector('dd.aur');
+    const ddBur = document.querySelector('dd.bur');
+    const ddCur = document.querySelector('dd.cur');
+    return ddAur.getBoundingClientRect().height + ddBur.getBoundingClientRect().height + ddCur.getBoundingClientRect().height;
   });
 
   // 将 dl.newCon 元素滚动到可视区域内
