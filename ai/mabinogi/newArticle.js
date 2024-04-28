@@ -27,6 +27,10 @@ const tcArticle = async (callback) => {
   // 等待页面加载完成
   await page.waitForSelector('dl.newCon');
 
+  await page.addStyleTag({ content: '.mainDt { display: none; }' }); // 替换为你自定义的 CSS
+  await page.addStyleTag({ content: '.bur.cbur { display: none; }' }); // 替换为你自定义的 CSS
+  await page.addStyleTag({ content: '.dur { display: none; }' }); // 替换为你自定义的 CSS
+
   // 获取 dl.newCon 元素的位置和大小
   const { x, y, width, height } = await page.evaluate(() => {
     const dlElement = document.querySelector('dl.newCon');
