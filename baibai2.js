@@ -372,6 +372,11 @@ async function addSendQueue(groupid,msg,port,from, configs){
 	var bdy = {"group_id": groupid, message: msg};
 	console.log("send:"+groupid+":"+msgSource);
     if(port==25334){
+
+      /*
+      这些是上传文件
+
+
       var bdy2 = {"user_id": from, message: msg};
       var str = 'CQ:image,file=file:'
       var n = msg.indexOf(str);
@@ -402,10 +407,12 @@ async function addSendQueue(groupid,msg,port,from, configs){
           });
         })
       }
+      */
       if(
-        (from+"").startsWith("35747")||(from+"").startsWith("79901")||
-        (groupid+"").startsWith("20570")||(groupid+"").startsWith("67096")||(groupid+"").startsWith("69983")||
-        (groupid+"").startsWith("96435")||(groupid+"").startsWith("xxxxx")
+        true
+        // (from+"").startsWith("35747")||(from+"").startsWith("79901")||
+        // (groupid+"").startsWith("20570")||(groupid+"").startsWith("67096")||(groupid+"").startsWith("69983")||
+        // (groupid+"").startsWith("96435")||(groupid+"").startsWith("xxxxx")
       ){
         var bdy4 = {group_id:groupid,message:msg}
         request({
