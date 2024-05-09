@@ -226,13 +226,6 @@ var botlist = [
   },
   {
     qq:1,
-    port:25337,
-    wsport:25339,
-    reverseWs: false,
-    configs: {}
-  },
-  {
-    qq:1,
     port:26334,
     wsport:26335,
     reverseWs: false,
@@ -567,6 +560,10 @@ function handleMsg_D0(msgObj,port, configs){
     384901015
   ]).has(msgObj.user_id)) {
     return
+  }
+  if(port==25334){
+    console.log('sssssssssssssssssssssss:');
+    console.log(msgObj);
   }
 
   var content = msgObj.message;
