@@ -78,7 +78,7 @@ function pushToGroup(type) {
       var msg = res.trim();
       var port = 25334;
       if (res.trim().length > 0) {
-          res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+          res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=/home/flan/baibai/coolq-data/cq/data/image/sen")
           var bdy = {"user_id": 357474405, message: res};
           console.log("send:" + res);
           request({
