@@ -226,6 +226,13 @@ var botlist = [
   },
   {
     qq:1,
+    port:25337,
+    wsport:25339,
+    reverseWs: false,
+    configs: {}
+  },
+  {
+    qq:1,
     port:26334,
     wsport:26335,
     reverseWs: false,
