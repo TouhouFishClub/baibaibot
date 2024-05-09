@@ -373,7 +373,7 @@ async function addSendQueue(groupid,msg,port,from, configs){
 	console.log("send:"+groupid+":"+msgSource);
     if(port==25334){
 
-      msg = formatDirOneBot(msg)
+      msg = formatDirN(msg)
 
       /*
       这些是上传文件
