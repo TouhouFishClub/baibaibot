@@ -849,6 +849,9 @@ function handleMsg_D(msgObj,port, configs) {
 			}
           var msg = res;
 					msg = formatDir(msg)
+          if(port==25334){
+					  msg = formatDirN(msg);
+          }
 
           if(type=='private'){
             var bdy2 = {"user_id": from, message: msg};
