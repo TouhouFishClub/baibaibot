@@ -370,11 +370,11 @@ async function addSendQueue(groupid,msg,port,from, configs){
 
 
 	var bdy = {"group_id": groupid, message: msg};
-	console.log("send:"+groupid+":"+msgSource);
+
     if(port==25334){
 
       msg = formatDirN(msg)
-
+      console.log("send:"+groupid+":"+msg);
       /*
       这些是上传文件
 
