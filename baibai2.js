@@ -364,10 +364,7 @@ async function addSendQueue(groupid,msg,port,from, configs){
 		console.log(sp)
 		console.log(msg)
 	}
-
-  if(port!=25334) {
-    msg = formatDir(msg)
-  }
+	msg = formatDir(msg)
 
 
 
@@ -2037,11 +2034,11 @@ const formatDir = msg =>
 		.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
 
 
-const formatDirOneBot = msg =>
+const formatDirN = msg =>
   msg
-    .replace(/CQ:image,file=sen/gi, "CQ:image,file=/home/flan/baibai/coolq-data/cq/data/image/sen")
-    .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=/home/flan/baibai/coolq-data/cq/data/image/sen")
-    .replace(/CQ:record,file=sen/gi, "CQ:record,file=/home/flan/baibai/coolq-data/cq/data/record/sen")
+    .replace(/CQ:image,file=file/gi,'CQ:image,file=')
+    .replace(/CQ:cardimage,file=file/gi,'CQ:cardimage,file=')
+    .replace(/CQ:record,file=file/gi,'CQ:record,file=')
 
 
 
