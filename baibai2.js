@@ -2036,9 +2036,9 @@ const formatDir = msg =>
 
 const formatDirN = msg =>
   msg
-    .replace(/CQ:image,file=file/gi,'CQ:image,file=')
-    .replace(/CQ:cardimage,file=file/gi,'CQ:cardimage,file=')
-    .replace(/CQ:record,file=file/gi,'CQ:record,file=')
+    .replace(/CQ:image,file=file:/gi,'CQ:image,file=')
+    .replace(/CQ:cardimage,file=file:/gi,'CQ:cardimage,file=')
+    .replace(/CQ:record,file=file:/gi,'CQ:record,file=')
 
 
 
