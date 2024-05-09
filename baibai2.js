@@ -364,7 +364,10 @@ async function addSendQueue(groupid,msg,port,from, configs){
 		console.log(sp)
 		console.log(msg)
 	}
-	msg = formatDir(msg)
+
+  if(port!=25334) {
+    msg = formatDir(msg)
+  }
 
 
 
@@ -372,6 +375,8 @@ async function addSendQueue(groupid,msg,port,from, configs){
 	var bdy = {"group_id": groupid, message: msg};
 	console.log("send:"+groupid+":"+msgSource);
     if(port==25334){
+
+      msg = formatDirOneBot(msg)
 
       /*
       这些是上传文件
@@ -2030,6 +2035,13 @@ const formatDir = msg =>
 		.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
 		.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
 		.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+
+
+const formatDirOneBot = msg =>
+  msg
+    .replace(/CQ:image,file=sen/gi, "CQ:image,file=/home/flan/baibai/coolq-data/cq/data/image/sen")
+    .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=/home/flan/baibai/coolq-data/cq/data/image/sen")
+    .replace(/CQ:record,file=sen/gi, "CQ:record,file=/home/flan/baibai/coolq-data/cq/data/record/sen")
 
 
 
