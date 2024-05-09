@@ -567,6 +567,9 @@ function handleMsg_D0(msgObj,port, configs){
   }
 
   var content = msgObj.message;
+  if(port==25334){
+    content = msgObj.raw_message;
+  }
   if (content) {
     if (content.indexOf('&amp;') > -1) {
       content = content.replace(/&amp;/g, '&');
