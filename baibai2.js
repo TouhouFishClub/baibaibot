@@ -1312,8 +1312,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     mabiWeather(content, callback)
     return
   }
-  if(content.toUpperCase() == 'TC公告') {
-    tcArticle(callback)
+  if(content.toUpperCase().startsWith('TC公告')) {
+    tcArticle(content.substring(4), callback)
     return
   }
 
