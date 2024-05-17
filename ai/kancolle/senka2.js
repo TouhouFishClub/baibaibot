@@ -364,26 +364,45 @@ function getRank(page,retarr,proxy){
               (error, response, body) => {
                 console.log('req ok');
                 let rdlist = null, nobj = null;
+                let bak_body = body
           
-                for (let __i = 0; __i < 10; ++__i) {
-                  // 预计 10 个 function 以内结束
+                for (let __i = 0; __i < 5; ++__i) {
+                  // 预计 5 个 function 以内结束
           
-                  body = mvCur(body, 1, /function/);
+                  // 这个 b_patten 很脆弱！！！
+                  b_patten = /(?<!\')\{(?!\\x20)|(?<!\\x20)\}(?!\')/
+          
+                  body = body.slice(body.search(b_patten))
+                  let ref_body = body
+          
+                  let bracket_match = 0
+                  let pos, tpos = 0
+                  do {
+                    cur = body.match(b_patten);
+                    pos = body.search(b_patten);
+
+                    if (cur == "{") ++bracket_match;
+                    else --bracket_match;
+
+                    body = body.slice(pos + 1);
+                    tpos += pos + 1;
+                  } while (bracket_match != 0);
+          
+                  let b_str = ref_body.slice(0, tpos)
           
                   // 提取特征，特征类型越多越好
-                  b_str = body.slice(0, body.search(/\}/));
                   var_cnt = [...b_str.matchAll(/var /g)].length
                   for_cnt = [...b_str.matchAll(/for\(/g)].length
                   while_cnt = [...b_str.matchAll(/while\(/g)].length
                   if_cnt = [...b_str.matchAll(/if\(/g)].length
                   typeof_cnt = [...b_str.matchAll(/typeof /g)].length
                   return_cnt = [...b_str.matchAll(/return /g)].length
-                  if (var_cnt == 1 && for_cnt == 0 && while_cnt == 0 && if_cnt == 0 && typeof_cnt == 0 && return_cnt == 1) {
-                    body = mvCur(body, 1, /\[/);
-                    rdlist = body.slice(0, body.search(/\]/)).split(",");
+                  if (var_cnt == 1 && for_cnt == 0 && while_cnt == 0 && if_cnt == 0 && typeof_cnt == 0 && return_cnt == 2) {
+                    b_str = mvCur(b_str, 1, /\[/);
+                    rdlist = b_str.slice(0, b_str.search(/\]/)).split(",");
                   } else if (var_cnt == 1 && for_cnt == 0 && while_cnt == 0 && if_cnt == 0 && typeof_cnt > 2 && return_cnt == 0) {
-                    body = mvCur(body, 2, /\(/);
-                    nobj = body.slice(0, body.search(/\)/));
+                    b_str = mvCur(b_str, 1, /\(/);
+                    nobj = b_str.slice(0, b_str.search(/\)/));
                   }
           
                   if (rdlist != null && nobj != null) break;
@@ -399,10 +418,10 @@ function getRank(page,retarr,proxy){
                 let nseed = (rdlist.findIndex((e) => e == "'ue9svf9bueLFu0vfra'") + offset + rdlist.length) % rdlist.length;
           
                 let reg = new RegExp("\\(0x" + nseed.toString(16) + "\\)\\]=\\[");
-                body = mvCur(body, 1, reg);
-                body = mvCur(body, 1, /\[/);
+                bak_body = mvCur(bak_body, 1, reg);
+                bak_body = mvCur(bak_body, 1, /\[/);
           
-                let res = body.slice(0, body.search(/\]/)).split(",");
+                let res = bak_body.slice(0, bak_body.search(/\]/)).split(",");
           
                 for (let _i = 0; _i < res.length; ++_i) {
                   res[_i] = Number(res[_i]);

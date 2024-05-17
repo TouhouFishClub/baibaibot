@@ -370,8 +370,15 @@ async function addSendQueue(groupid,msg,port,from, configs){
 
 
 	var bdy = {"group_id": groupid, message: msg};
-	console.log("send:"+groupid+":"+msgSource);
+
     if(port==25334){
+
+      msg = formatDirN(msg)
+      console.log("send:"+groupid+":"+msg);
+      /*
+      这些是上传文件
+
+
       var bdy2 = {"user_id": from, message: msg};
       var str = 'CQ:image,file=file:'
       var n = msg.indexOf(str);
@@ -402,10 +409,12 @@ async function addSendQueue(groupid,msg,port,from, configs){
           });
         })
       }
+      */
       if(
-        (from+"").startsWith("35747")||(from+"").startsWith("79901")||
-        (groupid+"").startsWith("20570")||(groupid+"").startsWith("67096")||(groupid+"").startsWith("69983")||
-        (groupid+"").startsWith("96435")||(groupid+"").startsWith("xxxxx")
+        true
+        // (from+"").startsWith("35747")||(from+"").startsWith("79901")||
+        // (groupid+"").startsWith("20570")||(groupid+"").startsWith("67096")||(groupid+"").startsWith("69983")||
+        // (groupid+"").startsWith("96435")||(groupid+"").startsWith("xxxxx")
       ){
         var bdy4 = {group_id:groupid,message:msg}
         request({
@@ -561,8 +570,15 @@ function handleMsg_D0(msgObj,port, configs){
   ]).has(msgObj.user_id)) {
     return
   }
+  if(port==25334){
+    console.log('sssssssssssssssssssssss:');
+    console.log(msgObj);
+  }
 
   var content = msgObj.message;
+  if(port==25334){
+    content = msgObj.raw_message;
+  }
   if (content) {
     if (content.indexOf('&amp;') > -1) {
       content = content.replace(/&amp;/g, '&');
@@ -833,6 +849,9 @@ function handleMsg_D(msgObj,port, configs) {
 			}
           var msg = res;
 					msg = formatDir(msg)
+          if(port==25334){
+					  msg = formatDirN(msg);
+          }
 
           if(type=='private'){
             var bdy2 = {"user_id": from, message: msg};
@@ -2016,6 +2035,13 @@ const formatDir = msg =>
 		.replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
 		.replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
 		.replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+
+
+const formatDirN = msg =>
+  msg
+    .replace(/CQ:image,file=file:/gi,'CQ:image,file=')
+    .replace(/CQ:cardimage,file=file:/gi,'CQ:cardimage,file=')
+    .replace(/CQ:record,file=file:/gi,'CQ:record,file=')
 
 
 
