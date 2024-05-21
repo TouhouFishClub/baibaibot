@@ -136,7 +136,7 @@ const render = async list => {
       line-height: 1.4;
     }
     body {
-      width: 900px;
+      width: 1300px;
       min-height: 20px;
       box-sizing: border-box;
 			background: #1C1C1C
@@ -147,7 +147,8 @@ const render = async list => {
       overflow: hidden;
     }
     .item-box {
-      width: 200px;
+      width: 300px;
+      box-sizing: border-box;
       padding: 10px;
       border-radius: 10px;
       background-color: #fff;
@@ -156,7 +157,7 @@ const render = async list => {
       margin-bottom: 20px;
     }
     .key-frame {
-      width: 180px;
+      width: 280px;
       height: auto;
     }
     .key-frame img {
@@ -173,7 +174,7 @@ const render = async list => {
     }
     .nickname {
 			font-family: HANYIWENHEI;
-      font-size: 36px;
+      font-size: 28px;
       color: #333;
     }
     .area {
