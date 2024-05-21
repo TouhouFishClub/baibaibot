@@ -162,7 +162,7 @@ const render = async list => {
     }
     .key-frame img {
       display: block;
-      width: 180px;
+      width: 280px;
       height: auto;
     }
     .info-line {
@@ -174,7 +174,7 @@ const render = async list => {
     }
     .nickname {
 			font-family: HANYIWENHEI;
-      font-size: 28px;
+      font-size: 18px;
       color: #333;
     }
     .area {
