@@ -1239,6 +1239,9 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             for(var i=1;i<990;i++){
               var rk = rankmap[i];
               var rkn = rk.n;
+              if(parseInt(rkn)<1000){
+                continue;
+              }
               var rkea = emap[rkn];
               var rkcmt = rk.cmt;
               var rke;
