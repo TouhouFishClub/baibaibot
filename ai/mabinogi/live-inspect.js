@@ -158,12 +158,17 @@ const render = async list => {
     }
     .key-frame {
       width: 280px;
-      height: auto;
+      height: 158px;
+      background-color: #000;
+      position: relative;
     }
     .key-frame img {
       display: block;
-      width: 280px;
-      height: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
     .info-line {
       width: 100%;
