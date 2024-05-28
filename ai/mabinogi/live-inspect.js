@@ -161,6 +161,9 @@ const render = async list => {
       height: 158px;
       background-color: #000;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .key-frame img {
       display: block;
