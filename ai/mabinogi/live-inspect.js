@@ -169,6 +169,8 @@ const render = async list => {
       left: 0;
       right: 0;
       bottom: 0;
+      max-width: 100%;
+      max-height: 100%;
     }
     .info-line {
       width: 100%;
