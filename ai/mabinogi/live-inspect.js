@@ -160,18 +160,12 @@ const render = async list => {
       width: 280px;
       height: 158px;
       background-color: #000;
-      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .key-frame img {
       display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
       max-width: 100%;
       max-height: 100%;
     }
