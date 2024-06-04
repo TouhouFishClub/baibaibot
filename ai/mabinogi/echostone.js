@@ -126,7 +126,7 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
 	let stepWidth = CHART_WIDTH / levelArr.length, stepHeight = CHART_HEIGHT / 30, tmpS = 0
 	levelArr.forEach(({l, rare}, i) => {
     ctx.fillStyle = ['#efefef', '#d7d7d7', '#adadad'][rare]
-    ctx.fillRect(xt, ys, stepWidth, stepHeight)
+    ctx.fillRect(xt, ys-CHART_HEIGHT, stepWidth, CHART_HEIGHT)
 
 		if(tmpS == l) {
 			ctx.strokeStyle = '#6f6f6f'
