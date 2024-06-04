@@ -55,7 +55,7 @@ const echoStoneEventSwitch = (group, callback, isOpen) => {
 }
 
 const createEchoStone = (group, callback, refine = false, rare = 2, care = false) => {
-	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0, rsArr = new Array(24).fill(0)
+	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0, rsArr = new Array(24).fill(0), avgData = [], avgTmp = []
 	let levelArr = [{
     l: 1,
     rare
@@ -84,6 +84,13 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
 				drops[dropTmp] ++
 				dropTmp = 0
 			}
+      if(care && infos[list.length].drop) {
+        avgData.push(target.increase.reduce((p, e) => p + e, 0) / target.increase.length)
+        avgTmp.push(inc)
+        if(avgTmp.reduce((p, e) => p + e, 0) < avgData.reduce((p, e) => p + e, 0)) {
+          rare = 0
+        }
+      }
 		} else {
 			if(target.drop) {
 				list.pop()
@@ -91,6 +98,15 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
 				dropTmp ++
 			}
 			fail ++
+      if(care && avgTmp.length > 0) {
+        avgData.pop()
+        avgTmp.pop()
+        if(avgTmp.reduce((p, e) => p + e, 0) < avgData.reduce((p, e) => p + e, 0)) {
+          rare = 0
+        } else {
+          rare = 2
+        }
+      }
 		}
 		count ++
 		levelArr.push({
@@ -125,7 +141,7 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
 	let xt = xs, yt = ys
 	let stepWidth = CHART_WIDTH / levelArr.length, stepHeight = CHART_HEIGHT / 30, tmpS = 0
 	levelArr.forEach(({l, rare}, i) => {
-    ctx.fillStyle = ['#efefef', '#d7d7d7', '#adadad'][rare]
+    ctx.fillStyle = ['#adadad', '#d7d7d7', '#efefef'][rare]
     ctx.fillRect(xt, ys-CHART_HEIGHT, stepWidth, CHART_HEIGHT)
 
 		if(tmpS == l) {

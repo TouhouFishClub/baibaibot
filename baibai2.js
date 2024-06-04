@@ -1295,6 +1295,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		return
 	}
 
+  if(content == '来块精心呵护回音石') {
+    createEchoStone(groupid, callback, true, 2, true)
+    return
+  }
+
   if(content == '开启回音石活动') {
 	  echoStoneEventSwitch(groupid, callback, true)
 	  return
