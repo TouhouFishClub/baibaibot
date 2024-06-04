@@ -84,7 +84,7 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
 				drops[dropTmp] ++
 				dropTmp = 0
 			}
-      if(care && infos[list.length].drop) {
+      if(care && target.drop) {
         avgData.push(target.increase.reduce((p, e) => p + e, 0) / target.increase.length)
         avgTmp.push(inc)
         if(avgTmp.reduce((p, e) => p + e, 0) < avgData.reduce((p, e) => p + e, 0)) {
