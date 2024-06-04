@@ -54,9 +54,12 @@ const echoStoneEventSwitch = (group, callback, isOpen) => {
 	}
 }
 
-const createEchoStone = (group, callback, refine = false, rare = 2) => {
+const createEchoStone = (group, callback, refine = false, rare = 2, care = false) => {
 	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0, rsArr = new Array(24).fill(0)
-	let levelArr = [1]
+	let levelArr = [{
+    l: 1,
+    rare
+  }]
 	while (list.length < 30 && count < 30000) {
 		let target = infos[list.length - 1], ur = target.updateRare[rare]
 		if(eventSet.has(group)) {
@@ -90,7 +93,10 @@ const createEchoStone = (group, callback, refine = false, rare = 2) => {
 			fail ++
 		}
 		count ++
-		levelArr.push(list.length)
+		levelArr.push({
+      l: list.length,
+      rare
+    })
 	}
 
 
@@ -118,7 +124,10 @@ const createEchoStone = (group, callback, refine = false, rare = 2) => {
 	let xs = GLOBAL_MARGIN, ys = GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT + CHART_HEIGHT
 	let xt = xs, yt = ys
 	let stepWidth = CHART_WIDTH / levelArr.length, stepHeight = CHART_HEIGHT / 30, tmpS = 0
-	levelArr.forEach((l, i) => {
+	levelArr.forEach(({l, rare}, i) => {
+    ctx.fillStyle = ['#efefef', '#d7d7d7', '#adadad'][rare]
+    ctx.fillRect(xt, ys, stepWidth, stepHeight)
+
 		if(tmpS == l) {
 			ctx.strokeStyle = '#6f6f6f'
 		} else {
