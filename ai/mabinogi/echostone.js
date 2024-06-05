@@ -112,6 +112,7 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
     let level = list.length
     let ins = level > 28 ? [0] : infos[level - 1].increase
     let up = popTmp > 0 ? (0 - popTmp) : list[level - 1]
+    popTmp = 0
 		levelArr.push({
       l: level,
       min: ins[0],
