@@ -2,7 +2,7 @@ const path = require("path");
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'))
 const puppeteer = require('puppeteer');
 
-const tcArticle = async (callback) => {
+const tcArticle = async (content, callback) => {
   // 启动 Puppeteer
   const browser = await puppeteer.launch();
 

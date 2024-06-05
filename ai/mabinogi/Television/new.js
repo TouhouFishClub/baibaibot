@@ -74,7 +74,7 @@ const mabiTelevision = async (content, qq, callback) => {
       sv = 'ylx'
     }
   }
-  if(content.length > 20 || content === 'help') {
+  if(content.length > 20 || content.toLowerCase() === 'help' || content === '帮助') {
     help(callback)
     return
   }

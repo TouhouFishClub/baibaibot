@@ -168,6 +168,7 @@ const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set
 const { soVitsReply } = require('./ai/vits/index.js')
 const {mabiWeather} = require('./ai/mabinogi/weather')
 const {tcArticle} = require('./ai/mabinogi/newArticle')
+const {LiveInspect} = require('./ai/mabinogi/live-inspect')
 
 
 
@@ -1294,6 +1295,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 		return
 	}
 
+  if(content == '来块精心呵护回音石') {
+    createEchoStone(groupid, callback, true, 2, true)
+    return
+  }
+
   if(content == '开启回音石活动') {
 	  echoStoneEventSwitch(groupid, callback, true)
 	  return
@@ -1331,8 +1337,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     mabiWeather(content, callback)
     return
   }
-  if(content.toUpperCase() == 'TC公告') {
-    tcArticle(callback)
+  if(content.toUpperCase().startsWith('TC公告')) {
+    tcArticle(content.substring(4), callback)
     return
   }
 
@@ -1775,6 +1781,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(fie4 == 'mbcd') {
     mabiGachaTv(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
+    return
+  }
+  if(fie4 == '洛奇查房') {
+    LiveInspect(from, groupid, con.substring(4).trim(), callback).catch(err => {console.log(err)});
     return
   }
 

@@ -14,34 +14,34 @@ let eventSet = new Set()
 
 const infos = [
 	{ level: 1, updateRare: [1,1,1], increase : [1], drop : false},
-	{ level: 2, updateRare: [0.8,0.96,1], increase : [1], drop : false },
-	{ level: 3, updateRare: [0.6,0.72,0.9], increase : [1], drop : false },
-	{ level: 4, updateRare: [0.4,0.48,0.6], increase : [1], drop : false },
-	{ level: 5, updateRare: [0.385,0.462,0.5775], increase : [1], drop : false },
-	{ level: 6, updateRare: [0.375,0.45,0.5625], increase : [1], drop : false },
-	{ level: 7, updateRare: [0.365,0.438,0.5475], increase : [1,2], drop : false },
-	{ level: 8, updateRare: [0.355,0.426,0.5325], increase : [1,2], drop : false },
-	{ level: 9, updateRare: [0.345,0.414,0.5175], increase : [1,2], drop : false },
-	{ level: 10, updateRare: [0.335,0.402,0.5025], increase : [1,2,3], drop : false },
-	{ level: 11, updateRare: [0.325,0.39,0.4875], increase : [1,2,3], drop : false },
-	{ level: 12, updateRare: [0.315,0.378,0.4725], increase : [1,2,3], drop : false },
-	{ level: 13, updateRare: [0.305,0.366,0.4575], increase : [1,2,3,4], drop : false },
-	{ level: 14, updateRare: [0.295,0.354,0.4425], increase : [1,2,3,4], drop : false },
-	{ level: 15, updateRare: [0.285,0.342,0.4275], increase : [1,2,3,4], drop : false },
-	{ level: 16, updateRare: [0.275,0.33,0.4125], increase : [1,2,3,4,5], drop : false },
-	{ level: 17, updateRare: [0.265,0.318,0.3975], increase : [1,2,3,4,5], drop : false },
-	{ level: 18, updateRare: [0.26,0.312,0.39], increase : [1,2,3,4,5], drop : false },
-	{ level: 19, updateRare: [0.255,0.306,0.3825], increase : [1,2,3,4,5,6], drop : false },
-	{ level: 20, updateRare: [0.25,0.30,0.375], increase : [1,2,3,4,5,6], drop : false },
-	{ level: 21, updateRare: [0.245,0.294,0.3675], increase : [1,2,3,4,5,6], drop : false },
-	{ level: 22, updateRare: [0.24,0.288,0.36], increase : [1,2,3,4,5,6,7], drop : false },
-	{ level: 23, updateRare: [0.235,0.282,0.3525], increase : [1,2,3,4,5,6,7], drop : false },
-	{ level: 24, updateRare: [0.23,0.276,0.345], increase : [1,2,3,4,5,6,7], drop : false },
-	{ level: 25, updateRare: [0.225,0.27,0.3375], increase : [4,5,6,7,8], drop : true },
-	{ level: 26, updateRare: [0.22,0.264,0.33], increase : [4,5,6,7,8], drop : true },
-	{ level: 27, updateRare: [0.215,0.258,0.3225], increase : [4,5,6,7,8], drop : true },
-	{ level: 28, updateRare: [0.21,0.252,0.315], increase : [5,6,7,8,9], drop : true },
-	{ level: 29, updateRare: [0.2,0.24,0.3], increase : [5,6,7,8,9], drop : true },
+	{ level: 2, updateRare: [1,1,1], increase : [1], drop : false },
+	{ level: 3, updateRare: [1,1,1], increase : [1], drop : false },
+	{ level: 4, updateRare: [1,1,1], increase : [1], drop : false },
+	{ level: 5, updateRare: [1,1,1], increase : [1], drop : false },
+	{ level: 6, updateRare: [1,1,1], increase : [1], drop : false },
+	{ level: 7, updateRare: [1,1,1], increase : [1,2], drop : false },
+	{ level: 8, updateRare: [1,1,1], increase : [1,2], drop : false },
+	{ level: 9, updateRare: [1,1,1], increase : [1,2], drop : false },
+	{ level: 10, updateRare: [0.9,1,1], increase : [1,2,3], drop : false },
+	{ level: 11, updateRare: [0.9,1,1], increase : [1,2,3], drop : false },
+	{ level: 12, updateRare: [0.9,1,1], increase : [1,2,3], drop : false },
+	{ level: 13, updateRare: [0.8,0.96,1], increase : [1,2,3,4], drop : false },
+	{ level: 14, updateRare: [0.8,0.96,1], increase : [1,2,3,4], drop : false },
+	{ level: 15, updateRare: [0.8,0.96,1], increase : [1,2,3,4], drop : false },
+	{ level: 16, updateRare: [0.7,0.84,1], increase : [1,2,3,4,5], drop : false },
+	{ level: 17, updateRare: [0.7,0.84,1], increase : [1,2,3,4,5], drop : false },
+	{ level: 18, updateRare: [0.7,0.84,1], increase : [1,2,3,4,5], drop : false },
+	{ level: 19, updateRare: [0.6,0.72,0.9], increase : [1,2,3,4,5,6], drop : false },
+	{ level: 20, updateRare: [0.6,0.72,0.9], increase : [1,2,3,4,5,6], drop : false },
+	{ level: 21, updateRare: [0.6,0.72,0.9], increase : [1,2,3,4,5,6], drop : false },
+	{ level: 22, updateRare: [0.5,0.6,0.75], increase : [1,2,3,4,5,6,7], drop : false },
+	{ level: 23, updateRare: [0.5,0.6,0.75], increase : [1,2,3,4,5,6,7], drop : false },
+	{ level: 24, updateRare: [0.5,0.6,0.75], increase : [1,2,3,4,5,6,7], drop : false },
+	{ level: 25, updateRare: [0.3,0.36,0.45], increase : [4,5,6,7,8], drop : true },
+	{ level: 26, updateRare: [0.3,0.36,0.45], increase : [4,5,6,7,8], drop : true },
+	{ level: 27, updateRare: [0.3,0.36,0.45], increase : [4,5,6,7,8], drop : true },
+	{ level: 28, updateRare: [0.3,0.36,0.45], increase : [5,6,7,8,9], drop : true },
+	{ level: 29, updateRare: [0.3,0.36,0.45], increase : [5,6,7,8,9], drop : true },
 ]
 
 const echoStoneEventSwitch = (group, callback, isOpen) => {
@@ -54,9 +54,12 @@ const echoStoneEventSwitch = (group, callback, isOpen) => {
 	}
 }
 
-const createEchoStone = (group, callback, refine = false, rare = 2) => {
-	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0, rsArr = new Array(24).fill(0)
-	let levelArr = [1]
+const createEchoStone = (group, callback, refine = false, rare = 2, care = false) => {
+	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0, rsArr = new Array(24).fill(0), avgData = [], avgTmp = []
+	let levelArr = [{
+    l: 1,
+    rare
+  }]
 	while (list.length < 30 && count < 30000) {
 		let target = infos[list.length - 1], ur = target.updateRare[rare]
 		if(eventSet.has(group)) {
@@ -81,6 +84,13 @@ const createEchoStone = (group, callback, refine = false, rare = 2) => {
 				drops[dropTmp] ++
 				dropTmp = 0
 			}
+      if(care && target.drop) {
+        avgData.push(target.increase.reduce((p, e) => p + e, 0) / target.increase.length)
+        avgTmp.push(inc)
+        if(avgTmp.reduce((p, e) => p + e, 0) < avgData.reduce((p, e) => p + e, 0)) {
+          rare = 0
+        }
+      }
 		} else {
 			if(target.drop) {
 				list.pop()
@@ -88,9 +98,21 @@ const createEchoStone = (group, callback, refine = false, rare = 2) => {
 				dropTmp ++
 			}
 			fail ++
+      if(care && avgTmp.length > 0) {
+        avgData.pop()
+        avgTmp.pop()
+        if(avgTmp.reduce((p, e) => p + e, 0) < avgData.reduce((p, e) => p + e, 0)) {
+          rare = 0
+        } else {
+          rare = 2
+        }
+      }
 		}
 		count ++
-		levelArr.push(list.length)
+		levelArr.push({
+      l: list.length,
+      rare
+    })
 	}
 
 
@@ -118,7 +140,10 @@ const createEchoStone = (group, callback, refine = false, rare = 2) => {
 	let xs = GLOBAL_MARGIN, ys = GLOBAL_MARGIN * 2 + txts.length * TEXT_LINE_HEIGHT + CHART_HEIGHT
 	let xt = xs, yt = ys
 	let stepWidth = CHART_WIDTH / levelArr.length, stepHeight = CHART_HEIGHT / 30, tmpS = 0
-	levelArr.forEach((l, i) => {
+	levelArr.forEach(({l, rare}, i) => {
+    ctx.fillStyle = ['#adadad', '#d7d7d7', '#efefef'][rare]
+    ctx.fillRect(xt, ys-CHART_HEIGHT, stepWidth, CHART_HEIGHT)
+
 		if(tmpS == l) {
 			ctx.strokeStyle = '#6f6f6f'
 		} else {
