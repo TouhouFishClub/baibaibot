@@ -97,8 +97,8 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
 				drop ++
 				dropTmp ++
         if(care && avgTmp.length > 0) {
-          popTmp = avgData.pop()
-          avgTmp.pop()
+          avgData.pop()
+          popTmp = avgTmp.pop()
           if(avgTmp.reduce((p, e) => p + e, 0) < avgData.reduce((p, e) => p + e, 0)) {
             rare = 0
           } else {
