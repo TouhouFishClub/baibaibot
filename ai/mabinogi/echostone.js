@@ -109,7 +109,8 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
 			fail ++
 		}
 		count ++
-    console.log(infos[level - 1])
+    console.log(list.length)
+    console.log(infos[list.length - 1])
     let level = list.length, ins = infos[level - 1].increase, up = list[level - 1] - (level - 1 > 0 ? list[level - 2] : 0)
 		levelArr.push({
       l: level,
