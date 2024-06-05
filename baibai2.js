@@ -570,10 +570,10 @@ function handleMsg_D0(msgObj,port, configs){
   ]).has(msgObj.user_id)) {
     return
   }
-  if(port==25334){
-    console.log('sssssssssssssssssssssss:');
-    console.log(msgObj);
-  }
+  // if(port==25334){
+  //   console.log('sssssssssssssssssssssss:');
+  //   console.log(msgObj);
+  // }
 
   var content = msgObj.message;
   if(port==25334){
