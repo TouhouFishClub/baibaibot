@@ -96,17 +96,17 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
 				list.pop()
 				drop ++
 				dropTmp ++
+        if(care && avgTmp.length > 0) {
+          avgData.pop()
+          avgTmp.pop()
+          if(avgTmp.reduce((p, e) => p + e, 0) < avgData.reduce((p, e) => p + e, 0)) {
+            rare = 0
+          } else {
+            rare = 2
+          }
+        }
 			}
 			fail ++
-      if(care && avgTmp.length > 0) {
-        avgData.pop()
-        avgTmp.pop()
-        if(avgTmp.reduce((p, e) => p + e, 0) < avgData.reduce((p, e) => p + e, 0)) {
-          rare = 0
-        } else {
-          rare = 2
-        }
-      }
 		}
 		count ++
 		levelArr.push({
@@ -114,6 +114,7 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
       rare
     })
 	}
+  console.log(JSON.stringify(levelArr, null, 2))
 
 
 	let str = `=== 回音石属性${eventSet.has(group) ? '（活动开启中）':''} ===\n你刷了${count}次回音石，成功${success}次，失败${fail}次${drops.map((x, i) => { return {txt: '\n连续掉' + i + '级有' + x + '次', x}}).filter(x => x.x > 0).map(x => x.txt).join('')}\n回音石属性：${list.reduce((p, e) => p + e)}(24级属性：${list.slice(0, 24).reduce((p, e) => p + e)})${refine ? ('\n消耗精炼石' + refineStone + '块') : ''}`
