@@ -55,7 +55,7 @@ const echoStoneEventSwitch = (group, callback, isOpen) => {
 }
 
 const createEchoStone = (group, callback, refine = false, rare = 2, care = false) => {
-	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0, rsArr = new Array(24).fill(0), avgData = [], avgTmp = []
+	let count = 0, success = 0, fail = 0, list = [1], drop = 0, dropTmp = 0, drops = [0, 0, 0, 0, 0, 0], refineStone = 0, rsArr = new Array(24).fill(0), avgData = [], avgTmp = [], popTmp = 0
 	let levelArr = [{
     l: 1,
     rare
@@ -97,7 +97,7 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
 				drop ++
 				dropTmp ++
         if(care && avgTmp.length > 0) {
-          avgData.pop()
+          popTmp = avgData.pop()
           avgTmp.pop()
           if(avgTmp.reduce((p, e) => p + e, 0) < avgData.reduce((p, e) => p + e, 0)) {
             rare = 0
@@ -111,7 +111,7 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
 		count ++
     let level = list.length
     let ins = level > 28 ? [0] : infos[level - 1].increase
-    let up = list[level - 1] - (level - 1 > 0 ? list[level - 2] : 0)
+    let up = popTmp > 0 ? (0 - popTmp) : list[level - 1]
 		levelArr.push({
       l: level,
       min: ins[0],
@@ -121,7 +121,7 @@ const createEchoStone = (group, callback, refine = false, rare = 2, care = false
       rare
     })
 	}
-  console.log(levelArr.map(x => `${["简单","普通","困难"][x.rare]} (${x.min}-${x.max})\tlevel: ${x.l}\t${JSON.stringify(x.source)}`).join('\n'))
+  console.log(levelArr.map(x => `${["简单","普通","困难"][x.rare]} (${x.min}-${x.max})\t${x.up}\tlevel: ${x.l}`).join('\n'))
 
 
 	let str = `=== 回音石属性${eventSet.has(group) ? '（活动开启中）':''} ===\n你刷了${count}次回音石，成功${success}次，失败${fail}次${drops.map((x, i) => { return {txt: '\n连续掉' + i + '级有' + x + '次', x}}).filter(x => x.x > 0).map(x => x.txt).join('')}\n回音石属性：${list.reduce((p, e) => p + e)}(24级属性：${list.slice(0, 24).reduce((p, e) => p + e)})${refine ? ('\n消耗精炼石' + refineStone + '块') : ''}`
