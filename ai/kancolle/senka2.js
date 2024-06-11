@@ -836,7 +836,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
     }
   }
 
-  if(ca.length>=2&&(!pcd||pcd>30)){
+  if(ca.length>=2&&(isNaN(pcd)||pcd>30)){
     if(cd==1){
 
     }else{
@@ -1208,6 +1208,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             kk = keym + '_' + (monthOfDay[month-1]*2-1) + '_' + 21;
           }
           console.log(k1,k2,kk)
+          //console.log(namelist);
 
           cl_senka_8.find({n:{'$in':namelist}}).toArray(function(err2,arr2){
             var emap = {};
@@ -1233,10 +1234,12 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               return;
             }
 
+            //console.log(rankmap[5]);
+
             for(var i=1;i<990;i++){
               var rk = rankmap[i];
               var rkn = rk.n;
-              if(parseInt(rkn)<1000){
+              if(parseInt(rkn)<30){
                 continue;
               }
               var rkea = emap[rkn];
@@ -1256,6 +1259,8 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 })
                 rke = rkea[0];
               }
+
+
 
               if(rke.d[k1]&&rke.d[kk]){
                 rk.rss = (rke.d[kk] - rke.d[k1])/10000*7 + rk.dd
@@ -1398,6 +1403,11 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 ret = ret + '\t500位【'+r500str+'】\t【'+rankmap[rks[499]].rss+'】\t\n';
 
                 ret = ret + '统计时间：'+new Date(lst).toLocaleString();
+
+                //console.log(rankmap);
+                //console.log(rks[4]);
+                //console.log(rankmap[rks[4]]);
+
                 var date = nn.getDate();
                 var img1 = new imageMagick("static/blank.png");
                 img1.autoOrient()
@@ -1991,7 +2001,7 @@ function searchShip(name,callback){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8-4s','','',function(r){console.log(r)})
+  //handleSenkaReply('z8','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getRank(1,[]);
   //searchShip('Apate',function(r){console.log(r)})
