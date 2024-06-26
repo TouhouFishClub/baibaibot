@@ -92,7 +92,7 @@ const mabiTelevision = async (content, qq, callback) => {
       let sp = filter.split('-')
       let [rewordFilter, nameFilter, dungeonFilter] = sp
       if (rewordFilter || nameFilter || dungeonFilter) {
-        whereClause = `WHERE${sp.map((x, i) => x && [' reward LIKE ?', ' character_name LIKE ?', ' dungeon_name LIKE ?'][i]).filter(x => x).join(' OR')}`
+        whereClause = `WHERE${sp.map((x, i) => x && [' reward LIKE ?', ' character_name LIKE ?', ' dungeon_name LIKE ?'][i]).filter(x => x).join(' AND')}`
         queryParams = sp.map(x => x && `%${x}%`).filter(x => x)
       }
     } else {
