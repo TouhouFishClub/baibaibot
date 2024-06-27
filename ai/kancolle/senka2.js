@@ -1197,6 +1197,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
         k2 = keym+'_'+dateno+'_'+14;
       }
       var cl_lst = udb.collection("cl_lst");
+      console.log(11111111);
       cl_lst.find({'_id':1}).toArray(function(err3,arr3){
         if(arr3&&arr3[0]){
           var lst = arr3[0].ts;
@@ -1236,11 +1237,17 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
 
             //console.log(rankmap[5]);
 
+            //console.log(emap);
+
             for(var i=1;i<990;i++){
               var rk = rankmap[i];
               var rkn = rk.n;
+              //console.log(rkn);
               if(parseInt(rkn)<30){
-                continue;
+                if(rkn==parseInt(rkn)){
+                  continue;
+                }
+                console.log(rkn);
               }
               var rkea = emap[rkn];
               var rkcmt = rk.cmt;
@@ -1411,7 +1418,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 var date = nn.getDate();
                 var img1 = new imageMagick("static/blank.png");
                 img1.autoOrient()
-                  .resize(850,350,'!')
+                  .resize(950,350,'!')
                   .fontSize(20)
                   .fill('blue')
                   .font('./font/STXIHEI.TTF')
@@ -1423,6 +1430,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 img1.drawText(520, 0, ''+(month-1)+'月'+'', 'NorthWest')
                 img1.drawText(620, 0, ''+(month-2)+'月'+'', 'NorthWest')
                 img1.drawText(720, 0, ''+(month-3)+'月'+'', 'NorthWest')
+                img1.drawText(820, 0, ''+(year-1)+'年'+month+'月'+'', 'NorthWest')
                 img1.drawText(20, 50, '【1位】', 'NorthWest')
                 img1.drawText(20, 100, '【5位】', 'NorthWest')
                 img1.drawText(20, 150, '【20位】', 'NorthWest')
@@ -1514,7 +1522,21 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                       img1.drawText(730, 220, ret[1100], 'NorthWest')
                       img1.drawText(730, 270, ret[1500], 'NorthWest')
                       img1.fontSize(25)             .fill('blue')
-                      sendGmImage(img1,'',callback);
+                      getlm(12,function(ret){
+                        img1.drawText(820, 50, ret[1], 'NorthWest')
+                        img1.drawText(820, 100, ret[5], 'NorthWest')
+                        img1.drawText(820, 150, ret[20], 'NorthWest')
+                        img1.drawText(820, 200, ret[100], 'NorthWest')
+                        img1.drawText(820, 250, ret[500], 'NorthWest')
+                        img1.fontSize(20)             .fill('red')
+                        img1.drawText(830, 70, ret[1001], 'NorthWest')
+                        img1.drawText(830, 120, ret[1005], 'NorthWest')
+                        img1.drawText(830, 170, ret[1020], 'NorthWest')
+                        img1.drawText(830, 220, ret[1100], 'NorthWest')
+                        img1.drawText(830, 270, ret[1500], 'NorthWest')
+                        img1.fontSize(25)             .fill('blue')
+                        sendGmImage(img1,'',callback);
+                      })
                     })
                   })
                 })
@@ -1533,12 +1555,20 @@ function getlm(skip,callback){
   var nn = new Date();
   var date = nn.getDate();
   var year = nn.getFullYear();
-  var month = nn.getMonth()+1-skip;
-  if(month<1){
-    callback({});
+  var month = nn.getMonth() + 1;
+  if(skip==12){
+    year = year - 1
+
+  }else{
+    month = nn.getMonth()+1-skip;
+    if(month<1){
+      callback({});
+    }
   }
+
   var hour = nn.getHours();
   var keym = year+"_"+month;
+
   var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
   var rankDateNo = (date * 2 - 2) + (hour>13?1:0);
   var endDateNo = monthOfDay[month-1] *2 - 1;
@@ -2001,11 +2031,14 @@ function searchShip(name,callback){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8','','',function(r){console.log(r)})
+  handleSenkaReply('z8','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getRank(1,[]);
   //searchShip('Apate',function(r){console.log(r)})
+
 },1500)
+
+
 
 
 
