@@ -43,7 +43,7 @@ const sendMessage = (context, ws, port) => {
   let { group_name } = group_info
 
   console.log(`\n\n\n\n****user info*****\n\n${JSON.stringify(user_info)}\n\n********\n\n\n\n`)
-  let { user_name } = user_info
+  let { user_name } = user_info || {user_name: '未知'}
 
   console.log(`[ws msg][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)
 
