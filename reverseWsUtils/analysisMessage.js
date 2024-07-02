@@ -37,13 +37,13 @@ const replaceImageToBase64 = message =>
 const sendMessage = (context, ws, port, oneBotVersion) => {
   // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
   let { message, message_type, user_id, group_id, sender, mixins, time } = context
-  console.log(`\n\n\n\n****CONTEXT*****\n\n${JSON.stringify(context)}\n\n********\n\n\n\n`)
+  // console.log(`\n\n\n\n****CONTEXT*****\n\n${JSON.stringify(context)}\n\n********\n\n\n\n`)
   let { card } = sender
   let { group_info, user_info, bot_name } = mixins
-  console.log(`\n\n\n\n****MIXINS*****\n\n${JSON.stringify(mixins)}\n\n********\n\n\n\n`)
+  // console.log(`\n\n\n\n****MIXINS*****\n\n${JSON.stringify(mixins)}\n\n********\n\n\n\n`)
   let { group_name } = group_info
 
-  console.log(`\n\n\n\n****user info*****\n\n${JSON.stringify(user_info)}\n\n********\n\n\n\n`)
+  // console.log(`\n\n\n\n****user info*****\n\n${JSON.stringify(user_info)}\n\n********\n\n\n\n`)
   let { user_name } = user_info || {user_name: '未知'}
 
   console.log(`[ws msg][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)

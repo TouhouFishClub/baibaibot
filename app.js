@@ -111,7 +111,7 @@ app.ws('/lagrange/:bot_name', (ws, req) => {
   console.log(`======================\n\nbot_name: ${bot_name}\nheaders: ${JSON.stringify(req.headers, null, 2)}\n\n======================`)
   socketManager.set(bot_name, ws)
   ws.on('message', (msg) => {
-    console.log(`======================\n\n${msg}\n\n======================`)
+    // console.log(`======================\n\n${msg}\n\n======================`)
     analysisMessage(msg, ws, bot_name, 11)
   })
   ws.on('close', () => {
