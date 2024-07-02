@@ -37,6 +37,7 @@ const replaceImageToBase64 = message =>
 const sendMessage = (context, ws, port) => {
   // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
   let { message, message_type, user_id, group_id, sender, mixins, time } = context
+  console.log(`\n\n\n\n****CONTEXT*****\n\n${JSON.stringify(context)}\n\n********\n\n\n\n`)
   let { card } = sender
   let { group_info, user_info, bot_name } = mixins
   console.log(`\n\n\n\n****MIXINS*****\n\n${JSON.stringify(mixins)}\n\n********\n\n\n\n`)
