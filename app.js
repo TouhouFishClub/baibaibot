@@ -112,7 +112,7 @@ app.ws('/lagrange/:bot_name', (ws, req) => {
   socketManager.set(bot_name, ws)
   ws.on('message', (msg) => {
     console.log(`======================\n\n${msg}\n\n======================`)
-    analysisMessage(msg, ws, bot_name)
+    analysisMessage(msg, ws, bot_name, 11)
   })
   ws.on('close', () => {
     console.log('ws close')

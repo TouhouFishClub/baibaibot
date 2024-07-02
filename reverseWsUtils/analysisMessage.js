@@ -34,7 +34,7 @@ const replaceImageToBase64 = message =>
     return sp
   }).join('[CQ:image,file=base64://')
 
-const sendMessage = (context, ws, port) => {
+const sendMessage = (context, ws, port, oneBotVersion) => {
   // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
   let { message, message_type, user_id, group_id, sender, mixins, time } = context
   console.log(`\n\n\n\n****CONTEXT*****\n\n${JSON.stringify(context)}\n\n********\n\n\n\n`)
@@ -63,14 +63,27 @@ const sendMessage = (context, ws, port) => {
       message = replaceImageToBase64(msg)
       // console.log(`检测到图片，转化为以下格式：\n${message}`)
     }
-    ws.send(JSON.stringify({
-      "action": "send_message",
-      "params": {
-        "detail_type": "group",
-        "group_id": group_id,
-        "message": message
+    let sendBody
+    if(oneBotVersion === 12) {
+      sendBody = {
+        "action": "send_message",
+        "params": {
+          "detail_type": "group",
+          "group_id": group_id,
+          "message": message
+        }
       }
-    }));
+    } else {
+      sendBody = {
+        "action": "send_msg",
+        "params": {
+          "message_type": "group",
+          "group_id": group_id,
+          "message": message
+        }
+      }
+    }
+    ws.send(JSON.stringify(sendBody));
   }, group_name, user_name, message_type, port || 30015, context )
 }
 
@@ -98,7 +111,7 @@ const mixinInfos = (context, ws) => {
   }
 }
 
-const analysisMessage = async (message, ws, bot_name) => {
+const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
   let context = JSON.parse(message.toString())
   // 认为是上报信息
   if(context.post_type) {
@@ -123,7 +136,7 @@ const analysisMessage = async (message, ws, bot_name) => {
           }, bot_name)
 
           let user_info = await createAction({
-            "action": "get_user_info",
+            "action": oneBotVersion === 12 ? "get_user_info" : "get_stranger_info ",
             "params": {
               "user_id": context.user_id
             },
@@ -135,7 +148,7 @@ const analysisMessage = async (message, ws, bot_name) => {
             bot_name
           }
 
-          sendMessage(context, ws, bot_name)
+          sendMessage(context, ws, bot_name, oneBotVersion)
 
           // if(context.message === 'HELLO') {
           //   console.log(`\n\n\n TARGET \n\n\n`)
