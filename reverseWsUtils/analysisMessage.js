@@ -40,6 +40,8 @@ const sendMessage = (context, ws, port) => {
   let { card } = sender
   let { group_info, user_info, bot_name } = mixins
   let { group_name } = group_info
+
+  console.log(`\n\n\n\n****user info*****\n\n${JSON.stringify(user_info)}\n\n********\n\n\n\n`)
   let { user_name } = user_info
 
   console.log(`[ws msg][${group_name}(${group_id})][${card || user_name}(${user_id})]${message}`)
