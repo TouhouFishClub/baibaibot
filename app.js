@@ -104,6 +104,20 @@ app.ws('/shamrock/:bot_name', (ws, req) => {
   })
 })
 
+app.ws('/lagrange/:bot_name', (ws, req) => {
+  // var path = req.path.substring(1);
+  // console.log(`======================\n\npath: ${path}\n\n======================`);
+  let bot_name = req.params.bot_name
+  console.log(`======================\n\nbot_name: ${bot_name}\nheaders: ${JSON.stringify(req.headers, null, 2)}\n\n======================`)
+  socketManager.set(bot_name, ws)
+  ws.on('message', (msg) => {
+    console.log(`======================\n\n${msg}\n\n======================`)
+  })
+  ws.on('close', () => {
+    console.log('ws close')
+  })
+})
+
 
 app.listen('10086', () => {
   console.log('server started')
