@@ -108,6 +108,9 @@ const mabiGachaTv = async (content, qq, callback) => {
     ORDER BY data_time DESC 
   `
   const totalRow = await mysqlPool.query(base, queryParams)
+  console.log(`========TOTAL ROW=========\n\n\n
+  ${JSON.stringify(totalRow)}
+  \n\n\n\n==================`)
   const query =
     `
     ${base}
