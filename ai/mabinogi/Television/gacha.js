@@ -102,17 +102,21 @@ const mabiGachaTv = async (content, qq, callback) => {
     }
   }
   const base = `
-    SELECT *
     FROM ${table}
     ${whereClause}
     ORDER BY data_time DESC 
   `
-  const totalRow = await mysqlPool.query(base, queryParams)
+  const totalQuery = `
+    SELECT COUNT(*) as total
+    ${base}
+  `
+  const totalRow = await mysqlPool.query(totalQuery, queryParams)
   console.log(`========TOTAL ROW=========\n\n\n
   ${JSON.stringify(totalRow)}
   \n\n\n\n==================`)
   const query =
     `
+    SELECT *
     ${base}
     LIMIT ?
     `
