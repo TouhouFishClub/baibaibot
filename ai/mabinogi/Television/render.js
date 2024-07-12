@@ -66,7 +66,7 @@ let html = `
     .header .desc {
       font-family: HANYIWENHEI;
       font-size: 24px;
-      color: ccc;
+      color: #ccc;
       margin-left: 10px;
       line-height: 90px;
     }

@@ -101,6 +101,8 @@ const mabiGachaTv = async (content, qq, callback) => {
       queryParams = [`%${filter}%`, `%${filter}%`];
     }
   }
+  // select draw_pool, count(*) as total from mabi_draw_reward_records group by draw_pool;
+
   const base = `
     FROM ${table}
     ${whereClause}
@@ -127,7 +129,7 @@ const mabiGachaTv = async (content, qq, callback) => {
   const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiGC.png`)
   await render(row, {
     title: `抽蛋查询：${{'ylx': '猫服', 'yate': '亚特'}[sv]}`,
-    description: `(total: ${totalRow[0].total})`,
+    description: `(total: ${totalRow[0][0].total})`,
     output: outputDir,
     columns: [
       {
