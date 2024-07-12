@@ -101,19 +101,26 @@ const mabiGachaTv = async (content, qq, callback) => {
       queryParams = [`%${filter}%`, `%${filter}%`];
     }
   }
-  const query =
-    `
+  const base = `
     SELECT *
     FROM ${table}
     ${whereClause}
     ORDER BY data_time DESC 
+  `
+  const totalRow = await mysqlPool.query(base, queryParams)
+  const query =
+    `
+    ${base}
     LIMIT ?
     `
   queryParams.push(limit)
   const [row, fields] = await mysqlPool.query(query, queryParams)
+
+
   const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiGC.png`)
   await render(row, {
     title: `抽蛋查询：${{'ylx': '猫服', 'yate': '亚特'}[sv]}`,
+    description: `(total: ${totalRow.total})`,
     output: outputDir,
     columns: [
       {
