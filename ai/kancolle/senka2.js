@@ -1642,7 +1642,7 @@ function loopFront(list,ret,callback,lst,pcd,odp){
       m.ex=9999;
       m.dly=9999;
       m.lex=9999;
-      m.rss=9999;
+      m.rss=m.dd;
       var nret = ret.concat([m]);
       loopFront(slist,nret,callback,lst,pcd,odp);
     }else{
