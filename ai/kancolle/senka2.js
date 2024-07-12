@@ -1637,17 +1637,28 @@ function loopFront(list,ret,callback,lst,pcd,odp){
     var m = list[0];
     var slist = list.slice(1);
     var nm = m.n;
-    handleSenkaReply('s8-'+nm,'','',function(r){
-      m.o=r.o;
-      m.ex=r.ex;
-      m.dly=m.dly.toFixed(1);
-      m.lask=r.lask;
-      handleSenkaReply('s8l-'+nm,'','',function(rl){
-        m.lex=rl.ex;
-        var nret = ret.concat([m]);
-        loopFront(slist,nret,callback,lst,pcd,odp);
-      });
-    })
+    if(nm==16){
+      m.o=0;
+      m.ex=9999;
+      m.dly=9999;
+      m.lex=9999;
+      m.rss=9999;
+      var nret = ret.concat([m]);
+      loopFront(slist,nret,callback,lst,pcd,odp);
+    }else{
+      handleSenkaReply('s8-'+nm,'','',function(r){
+        m.o=r.o;
+        m.ex=r.ex;
+        m.dly=m.dly.toFixed(1);
+        m.lask=r.lask;
+        handleSenkaReply('s8l-'+nm,'','',function(rl){
+          m.lex=rl.ex;
+          var nret = ret.concat([m]);
+          loopFront(slist,nret,callback,lst,pcd,odp);
+        });
+      })
+    }
+
   }
 }
 
@@ -2031,7 +2042,7 @@ function searchShip(name,callback){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8','','',function(r){console.log(r)})
+  handleSenkaReply('z8-1','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getRank(1,[]);
   //searchShip('Apate',function(r){console.log(r)})
