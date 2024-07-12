@@ -120,7 +120,7 @@ const mabiGachaTv = async (content, qq, callback) => {
   const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiGC.png`)
   await render(row, {
     title: `抽蛋查询：${{'ylx': '猫服', 'yate': '亚特'}[sv]}`,
-    description: `(total: ${totalRow.total})`,
+    description: `(total: ${totalRow[0].total})`,
     output: outputDir,
     columns: [
       {
