@@ -91,9 +91,9 @@ const mabiGachaTv = async (content, qq, callback) => {
   if(filter.length) {
     if(filter.indexOf('-') > -1) {
       let sp = filter.split('-')
-      let [itemFilter, nameFilter] = sp
-      if (itemFilter || nameFilter) {
-        whereClause = `WHERE${sp.map((x, i) => x && [' item_name LIKE ?', ' character_name LIKE ?'][i]).filter(x => x).join(' OR')}`
+      let [itemFilter, nameFilter, poolFilter] = sp
+      if (itemFilter || nameFilter || poolFilter) {
+        whereClause = `WHERE${sp.map((x, i) => x && [' item_name LIKE ?', ' character_name LIKE ?', ' draw_pool LIKE ?'][i]).filter(x => x).join(' AND')}`
         queryParams = sp.map(x => x && `%${x}%`).filter(x => x)
       }
     } else {
