@@ -100,21 +100,46 @@ const mabiTelevision = async (content, qq, callback) => {
       queryParams = [`%${filter}%`, `%${filter}%`, `%${filter}%`];
     }
   }
-  const query =
-    `
-    SELECT *
+
+
+  const base = `
     FROM ${table}
     ${whereClause}
     ORDER BY data_time DESC 
+  `
+  const totalQuery = `
+    SELECT COUNT(*) as total
+    ${base}
+  `
+  const totalRow = await mysqlPool.query(totalQuery, queryParams)
+  console.log(`========TOTAL ROW=========\n\n\n
+  ${JSON.stringify(totalRow)}
+  \n\n\n\n==================`)
+  const query =
+    `
+    SELECT *
+    ${base}
     LIMIT ?
     `
   queryParams.push(limit)
   const [row, fields] = await mysqlPool.query(query, queryParams)
+
+  // const query =
+  //   `
+  //   SELECT *
+  //   FROM ${table}
+  //   ${whereClause}
+  //   ORDER BY data_time DESC
+  //   LIMIT ?
+  //   `
+  // queryParams.push(limit)
+  // const [row, fields] = await mysqlPool.query(query, queryParams)
   // console.log(row)
   // const outputDir = path.join(__dirname, 'text.jpg')
   const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiTV.png`)
   await render(row, {
     title: `出货记录查询：${{'ylx': '猫服', 'yate': '亚特'}[sv]}`,
+    description: `(total: ${totalRow[0][0].total})`,
     output: outputDir,
     columns: [
       {
