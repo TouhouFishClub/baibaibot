@@ -3,7 +3,6 @@ const path = require("path-extra");
 const mysql = require('mysql2')
 const {IMAGE_DATA} = require("../../../baibaiConfigs");
 const nodeHtmlToImage = require("node-html-to-image");
-const {join} = require("path");
 
 let mysqlPool
 
@@ -19,8 +18,8 @@ const createMysqlPool = async () => {
 }
 const broadcast = async (callback, server = `ylx`) => {
 
-  const [row, fields] = await mysqlPool.query(`select * from mabi_chat_records order by date desc limit 500;`)
-  row.map(x => x.chat)
+  const [row, fields] = await mysqlPool.query(`select * from ${server == 'ylx' ? 'mabi_chat_records': 'mabi_chat_records_yate'} order by date desc limit 500;`)
+  let chats = row.map(x => x.chat)
 
 
 }

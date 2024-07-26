@@ -1,8 +1,9 @@
 const { sendImageMsgBuffer } = require('../../cq/sendImage')
 const {createCanvas, registerFont} = require('canvas')
+const { createColorForCode } = require('./color/switchColor')
 const _ = require('lodash')
 
-const renderColorBoard = (context, callback) => {
+const renderColorBoard = async (context, callback) => {
   let c = '', rgb = '', hex = ''
   // RGB
   if(context.match(/\d{1,3}[,， ]\d{1,3}[,， ]\d{1,3}/)) {
@@ -22,6 +23,11 @@ const renderColorBoard = (context, callback) => {
     hex = `#${c.toUpperCase()}`
     rgb = _.chunk(c.split(''), 2).map(x => `${parseInt(x.join(''), 16)}`).join(',')
     c = `#${c}`
+  }
+  if(context.length == 8 && context.match(/^[0-9ABCDEFabcdef]*$/)) {
+    // MABINOGI SWITCH COLOR
+    const res = await createColorForCode(context)
+    callback(res)
   }
   if(c) {
     let canvas = createCanvas(100, 20)
