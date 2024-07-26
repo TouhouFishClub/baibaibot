@@ -28,6 +28,7 @@ const renderColorBoard = async (context, callback) => {
     // MABINOGI SWITCH COLOR
     const res = await createColorForCode(context)
     callback(res)
+    return
   }
   if(c) {
     let canvas = createCanvas(100, 20)
