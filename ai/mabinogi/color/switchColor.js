@@ -423,7 +423,7 @@ const createColorForCode = async code => {
       start
     })
   const cqCode = await renderGif(colorArr, speed)
-  return `=== 洛奇闪染 ===\n颜色1：${color1}\n颜色2：${color2}\n闪烁种类：${['','','','','规则','','往返','切换','不规则','',''][mode]}\n${cqCode}\n速度：${speed}\n变化幅度：${scope}\n起始颜色：${start}`
+  return `=== 洛奇闪染 ===\n颜色1：${color1}\n颜色2：${color2}\n闪烁种类：${['错误','错误','错误','错误','规则','错误','往返','切换','不规则','错误','错误'][mode]}\n${cqCode}\n速度：${speed}\n变化幅度：${scope}\n起始颜色：${start}`
 }
 
 // console.log(createColorArr('#000000', '#ffffff', {scope: 1}))
