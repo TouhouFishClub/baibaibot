@@ -1931,6 +1931,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(content.startsWith('处决')) {
     chujue(content.substring(2),callback)
+    return
   }
 
 

@@ -14,6 +14,7 @@ const chujue = (content, callback) => {
 
   if(!(/^\d+$/.test(qq) && qq.length > 4)) {
     console.log('输入错误')
+    return
   }
 
   let html = `<!DOCTYPE html>
