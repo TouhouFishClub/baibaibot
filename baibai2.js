@@ -169,6 +169,7 @@ const { soVitsReply } = require('./ai/vits/index.js')
 const {mabiWeather} = require('./ai/mabinogi/weather')
 const {tcArticle} = require('./ai/mabinogi/newArticle')
 const {LiveInspect} = require('./ai/mabinogi/live-inspect')
+const {chujue} = require('./ai/image/generator/chujue/index.js')
 
 
 
@@ -1928,6 +1929,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
+  if(content.startsWith('处决')) {
+    chujue(content.substring(2),callback)
+  }
 
 
   let co = content.indexOf('疫情')
