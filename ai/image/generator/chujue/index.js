@@ -3,7 +3,7 @@ const path = require('path')
 const nodeHtmlToImage = require('node-html-to-image')
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', '..', '..', 'baibaiConfigs.js'))
 const chujue = (content, callback) => {
-  const image = fs.readFileSync('./处决.png');
+  const image = fs.readFileSync(path.join(__dirname, './处决.png'));
   const base64Image = new Buffer.from(image).toString('base64');
   const dataURI = 'data:image/jpeg;base64,' + base64Image
   let qq = content
