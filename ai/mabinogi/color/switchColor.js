@@ -127,7 +127,9 @@ const renderGif = (colorArr, speed) => new Promise((resolve) => {
 
   encoder.start();
   encoder.setRepeat(0);   // 0 for repeat, -1 for no-repeat
-  encoder.setDelay(33 * speed);  // frame delay in ms
+  // 百百似乎生成的会很慢，这里加强3倍速度
+  // encoder.setDelay(1 + 33 * speed);  // frame delay in ms
+  encoder.setDelay(1 + 11 * speed);  // frame delay in ms
   encoder.setQuality(10); // image quality. 10 is default.
 
 // use node-canvas
