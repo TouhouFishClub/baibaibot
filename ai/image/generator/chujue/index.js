@@ -60,7 +60,7 @@ const chujue = (content, callback) => {
   })
     .then(() => {
       console.log(`保存chujue.png成功！`)
-      let imgMsg = `[CQ:image,file=${path.join('send', 'menu', `chujue.png`)}]`
+      let imgMsg = `[CQ:image,file=${path.join('send', 'other', `chujue.png`)}]`
       callback(imgMsg)
     })
 }
