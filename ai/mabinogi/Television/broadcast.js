@@ -4,11 +4,14 @@ const mysql = require('mysql2')
 const {IMAGE_DATA} = require("../../../baibaiConfigs");
 const { extract } = require("nodejieba")
 const nodeHtmlToImage = require("node-html-to-image");
+const {join} = require("path");
 
 let echart = fs.readFileSync(path.join(__dirname, '..', '..', 'chat', 'libs', 'echart.min.js'), 'utf-8')
 let echartWordcloud = fs.readFileSync(path.join(__dirname, '..', '..', 'chat', 'libs', 'echart-wordcloud.js'), 'utf-8')
 
 let mysqlPool
+
+let personasLimit = {}
 
 const createMysqlPool = async () => {
   const pool = mysql.createPool(Object.assign(
@@ -23,6 +26,12 @@ const createMysqlPool = async () => {
 const mabiBroadcast = async (callback, server = `ylx`) => {
   if(!mysqlPool) {
     await createMysqlPool()
+  }
+
+  if(personasLimit[server] && Date.now() < personasLimit[server]) {
+    let imgMsg = `[CQ:image,file=${join('send', 'other', `${server}_count_img.png`)}]`
+    callback(imgMsg)
+    return
   }
   const [row, fields] = await mysqlPool.query(`select * from ${server == 'ylx' ? 'mabi_chat_records': 'mabi_chat_records_yate'} order by date desc limit 500;`)
   let enChats = []
@@ -137,7 +146,7 @@ const renderMabiBroadcast = async (chatObj, server, callback) => {
   })
     .then(() => {
       console.log(`保存${server}_count_img.png成功！`)
-      let imgMsg = `[CQ:image,file=${join('send', 'other', `${server}_count_img.png`)}]`
+      let imgMsg = `[CQ:image,file=${path.join('send', 'other', `${server}_count_img.png`)}]`
       personasLimit[server] = Date.now() + 30 * 60 * 1000
       callback(imgMsg)
     })
