@@ -30,7 +30,7 @@ const mabiBroadcast = async (callback, server = `ylx`) => {
     let { chat = '' } = x
     let splitEn = Array.from(chat.toString().matchAll(/[a-zA-Z0-9]+/g)).map(x => x[0])
     splitEn.forEach(en => {
-      chats = chats.split(en).join('')
+      chat = chat.split(en).join('')
       if(/^\d+$/.test(en)){
         return
       }
