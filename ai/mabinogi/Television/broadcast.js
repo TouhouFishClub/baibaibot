@@ -2,7 +2,11 @@ const fs = require("fs-extra");
 const path = require("path-extra");
 const mysql = require('mysql2')
 const {IMAGE_DATA} = require("../../../baibaiConfigs");
+const { extract } = require("nodejieba")
 const nodeHtmlToImage = require("node-html-to-image");
+
+let echart = fs.readFileSync(path.join(__dirname, '..', 'libs', 'echart.min.js'), 'utf-8')
+let echartWordcloud = fs.readFileSync(path.join(__dirname, '..', '..', 'chat', 'libs', 'echart-wordcloud.js'), 'utf-8')
 
 let mysqlPool
 
@@ -16,16 +20,35 @@ const createMysqlPool = async () => {
   ))
   mysqlPool = pool.promise();
 }
-const broadcast = async (callback, server = `ylx`) => {
-
+const mabiBroadcast = async (callback, server = `ylx`) => {
+  if(!mysqlPool) {
+    await createMysqlPool()
+  }
   const [row, fields] = await mysqlPool.query(`select * from ${server == 'ylx' ? 'mabi_chat_records': 'mabi_chat_records_yate'} order by date desc limit 500;`)
-  let chats = row.map(x => x.chat)
+  let enChats = []
+  let chats = row.map(x => {
+    let { chat = '' } = x
+    let splitEn = Array.from(chat.toString().matchAll(/[a-zA-Z0-9]+/g)).map(x => x[0])
+    splitEn.forEach(en => {
+      chats = chats.split(en).join('')
+      if(/^\d+$/.test(en)){
+        return
+      }
+      enChats.push(`${en}`.toLowerCase())
+    })
+    return chat
+  })
+  let ext = extract(chats.concat(enChats).join('\n'), 256)
 
-
+  let keyWords = {}
+  ext.forEach(item => {
+    keyWords[item.word] = ~~item.weight
+  })
+  renderMabiBroadcast(keyWords, server, callback)
 }
 
 
-const renderGroupCountChart = async (chatObj, server, callback) => {
+const renderMabiBroadcast = async (chatObj, server, callback) => {
   // console.log(chatObj)
 
   let output = path.join(IMAGE_DATA, 'other', `${server}_count_img.png`)
@@ -118,4 +141,8 @@ const renderGroupCountChart = async (chatObj, server, callback) => {
       personasLimit[server] = Date.now() + 30 * 60 * 1000
       callback(imgMsg)
     })
+}
+
+module.exports = {
+  mabiBroadcast
 }

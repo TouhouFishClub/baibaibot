@@ -165,6 +165,7 @@ const {mabiTelevision} = require('./ai/mabinogi/Television/new')
 const {mabiGachaTv} = require('./ai/mabinogi/Television/gacha')
 
 const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
+const { mabiBroadcast } = require('./ai/mabinogi/Television/broadcast')
 const { soVitsReply } = require('./ai/vits/index.js')
 const {mabiWeather} = require('./ai/mabinogi/weather')
 const {tcArticle} = require('./ai/mabinogi/newArticle')
@@ -1336,6 +1337,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(content == '洛奇火山天气') {
     mabiWeather(content, callback)
+    return
+  }
+  if(content == '猫服号角') {
+    mabiBroadcast(callback)
+    return
+  }
+  if(content == '亚特号角') {
+    mabiBroadcast(callback, 'yate')
     return
   }
   if(content.toUpperCase().startsWith('TC公告')) {
