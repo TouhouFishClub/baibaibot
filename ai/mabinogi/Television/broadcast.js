@@ -5,7 +5,7 @@ const {IMAGE_DATA} = require("../../../baibaiConfigs");
 const { extract } = require("nodejieba")
 const nodeHtmlToImage = require("node-html-to-image");
 
-let echart = fs.readFileSync(path.join(__dirname, '..', 'libs', 'echart.min.js'), 'utf-8')
+let echart = fs.readFileSync(path.join(__dirname, '..', '..', 'libs', 'echart.min.js'), 'utf-8')
 let echartWordcloud = fs.readFileSync(path.join(__dirname, '..', '..', 'chat', 'libs', 'echart-wordcloud.js'), 'utf-8')
 
 let mysqlPool
