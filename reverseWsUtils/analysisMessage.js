@@ -35,22 +35,22 @@ const replaceImageToBase64 = message =>
   }).join('[CQ:image,file=base64://')
 
 const sendMessage = (context, ws, port, oneBotVersion) => {
-  console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
+  // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
   let { raw_message, message_type, user_id, group_id, sender, mixins, time } = context
-  console.log(`\n\n\n\n****CONTEXT*****\n\n${JSON.stringify(context)}\n\n********\n\n\n\n`)
-  let { card } = sender
+  // console.log(`\n\n\n\n****CONTEXT*****\n\n${JSON.stringify(context)}\n\n********\n\n\n\n`)
+  let { card, nickname } = sender
   let { group_info, user_info, bot_name } = mixins
-  console.log(`\n\n\n\n****MIXINS*****\n\n${JSON.stringify(mixins)}\n\n********\n\n\n\n`)
+  // console.log(`\n\n\n\n****MIXINS*****\n\n${JSON.stringify(mixins)}\n\n********\n\n\n\n`)
   let { group_name } = group_info
 
-  console.log(`\n\n\n\n****user info*****\n\n${JSON.stringify(user_info)}\n\n********\n\n\n\n`)
+  // console.log(`\n\n\n\n****user info*****\n\n${JSON.stringify(user_info)}\n\n********\n\n\n\n`)
   let { user_name } = user_info || {user_name: '未知'}
 
-  console.log(`[ws msg][${group_name}(${group_id})][${card || user_name}(${user_id})]${raw_message}`)
+  console.log(`[ws msg][${group_name}(${group_id})][${card || nickname || user_name}(${user_id})]${raw_message}`)
 
-  saveChat(group_id, user_id, card || user_name, raw_message, bot_name, context);
+  saveChat(group_id, user_id, card || nickname || user_name, raw_message, bot_name, context);
 
-  handle_msg_D2(raw_message, user_id, card || user_name, group_id, msg => {
+  handle_msg_D2(raw_message, user_id, card || nickname || user_name, group_id, msg => {
     msg = msg
       .replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
       .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
