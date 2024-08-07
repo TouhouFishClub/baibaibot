@@ -48,6 +48,7 @@ const groupWhiteList = new Set([
   910505194,
   315902131,
   949651646,
+  891964430,
 	// 1011153915
 ])
 
@@ -71,40 +72,49 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) =
 	if(!gachaInfo.length) {
 		await loadGachaGroup()
 	}
-	let gacha = gachaInfo[userSelectGacha[user] || 0], isHunDan = false, isShengDi = false, otherCount = 0
+	let gacha = gachaInfo[userSelectGacha[user] || 0], isHunDan = false, isShengDi = false, isChongwu = false, otherCount = 0
 	if(gacha.rare['C'][2].length == 0 && gacha.rare['D'][2].length == 0) {
 		isHunDan = true
 	}
 	if(gacha.name.indexOf('圣地钥匙') > -1) {
 		isShengDi = true
 	}
+	if(gacha.name.indexOf('宠物') > -1) {
+		isChongwu = true
+	}
 
 	let point = 0
 
 	switch(gachaCount) {
 		case 1:
-			point = isHunDan ? 500 : isShengDi ? 100 : 50
+			point = isHunDan ? 500 : isShengDi ? 100 : isChongwu ? 398 :50
 			break
 		case 11:
 			if(isHunDan)
 				gachaCount = 11
+			if(isChongwu)
+				gachaCount = 10
 			if(isShengDi)
 				otherCount = 1
-			point = isHunDan ? 5400 : isShengDi ? 1000 : 500
+			point = isHunDan ? 5400 : isShengDi ? 1000 : isChongwu ? 3980 :500
 			break
 		case 60:
 			if(isHunDan)
 				gachaCount = 11
+      if(isChongwu)
+        gachaCount = 6
 			if(isShengDi)
 				otherCount = 15
-			point = isHunDan ? 5400 : isShengDi ? 6000 : 2640
+			point = isHunDan ? 5400 : isShengDi ? 6000 : isChongwu ? 1658 : 2640
 			break
 		case 600:
 			if(isHunDan)
 				gachaCount = 110
+      if(isChongwu)
+        gachaCount = 60
 			if(isShengDi)
 				otherCount = 150
-			point = isHunDan ? 54000 : isShengDi ? 60000 : 26400
+			point = isHunDan ? 54000 : isShengDi ? 60000 : isChongwu ? 16580 :26400
 			break
 		default:
 			point = 0
