@@ -73,14 +73,12 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) =
 		await loadGachaGroup()
 	}
 	let gacha = gachaInfo[userSelectGacha[user] || 0], isHunDan = false, isShengDi = false, isChongwu = false, otherCount = 0
-	if(gacha.rare['C'][2].length == 0 && gacha.rare['D'][2].length == 0) {
+  if(gacha.name.indexOf('宠物') > -1) {
+    isChongwu = true
+  } else if(gacha.name.indexOf('圣地钥匙') > -1) {
+    isShengDi = true
+  } else if(gacha.rare['C'][2].length == 0 && gacha.rare['D'][2].length == 0) {
 		isHunDan = true
-	}
-	if(gacha.name.indexOf('圣地钥匙') > -1) {
-		isShengDi = true
-	}
-	if(gacha.name.indexOf('宠物') > -1) {
-		isChongwu = true
 	}
 
 	let point = 0
