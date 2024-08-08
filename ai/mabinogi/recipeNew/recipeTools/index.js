@@ -211,6 +211,7 @@ const analyzer = async () => {
       if(cate.startsWith('Tailoring')) {
         // 已经有的过滤，不再重新添加
         if(!TailoringSet.has(xmlItem.ProductItemID)) {
+          //卷轴
           try {
             // 如果有，则不做添加
             console.log(eval(`Item${xmlItem.ManualItemID}${xmlItem.FormID}`))
@@ -218,6 +219,15 @@ const analyzer = async () => {
             // console.log(err)
             // 如果没有，则添加额外item
             itemPlus[`Item${xmlItem.ManualItemID}${xmlItem.FormID}`] = transform[xmlItem.ManualNameLocal].trim()
+          }
+          //成品
+          try {
+            // 如果有，则不做添加
+            console.log(eval(`Item${xmlItem.ProductItemID}`))
+          } catch (err) {
+            // console.log(err)
+            // 如果没有，则添加额外item
+            itemPlus[`Item${xmlItem.ProductItemID}`] = transform[xmlItem.ManualNameLocal].split('-')[1].trim()
           }
           let essentials = await analyzerItem(xmlItem.Essentials)
           let completeEssentials = await analyzerCompleteItem(xmlItem.CompleteEssentials)
@@ -241,6 +251,7 @@ const analyzer = async () => {
       }
       if(cate.startsWith('BlackSmith')) {
         if(!BlackSmithSet.has(xmlItem.ProductItemID)) {
+          //卷轴
           try {
             // 如果有，则不做添加
             console.log(eval(`Item${xmlItem.ManualItemID}${xmlItem.FormID}`))
@@ -248,6 +259,15 @@ const analyzer = async () => {
             // console.log(err)
             // 如果没有，则添加额外item
             itemPlus[`Item${xmlItem.ManualItemID}${xmlItem.FormID}`] = transform[xmlItem.ManualNameLocal].trim()
+          }
+          //成品
+          try {
+            // 如果有，则不做添加
+            console.log(eval(`Item${xmlItem.ProductItemID}`))
+          } catch (err) {
+            // console.log(err)
+            // 如果没有，则添加额外item
+            itemPlus[`Item${xmlItem.ProductItemID}`] = transform[xmlItem.ManualNameLocal].split('-')[1].trim()
           }
           let essentials = await analyzerItem(xmlItem.Essentials)
           let completeEssentials = await analyzerCompleteItem(xmlItem.CompleteEssentials)
@@ -290,6 +310,12 @@ const analyzer = async () => {
   let TailoringOutputStr = `TailoringList.concat([${Object.values(Tailoring).filter(x => !x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nTalentTailoringList.concat([${Object.values(Tailoring).filter(x => x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nvar ${Object.values(Tailoring).map(x => `TailoringItem${x.ProductItemID}=${x.output}`).join(',')};`
   console.log(TailoringOutputStr)
   console.log('\n')
+
+  console.log('=== append to Item.js file ===\n')
+  let ItemOutputStr = `var ${Object.keys(itemPlus).map(key => `${key}=["${itemPlus[key]}"]`).join(',')};`
+  console.log(ItemOutputStr)
+  console.log('\n')
+
 }
 
 analyzer()
