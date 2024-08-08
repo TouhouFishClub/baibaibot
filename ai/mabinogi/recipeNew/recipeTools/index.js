@@ -318,6 +318,11 @@ const analyzer = async () => {
   console.log('==', itemPlus)
   console.log(`Tailoring count: ${Object.keys(Tailoring).length}, BlackSmith count: ${Object.keys(BlackSmith).length}, `)
 
+  console.log('=== append to BlacksmithItem.js file ===\n')
+  let BlacksmithOutputStr = `BlacksmithList = BlacksmithList.concat([${Object.values(BlackSmith).filter(x => !x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nTalentBlacksmithList = TalentBlacksmithList.concat([${Object.values(BlackSmith).filter(x => x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nvar ${Object.values(BlackSmith).map(x => `BlacksmithItem${x.ProductItemID}=${x.output}`).join(',')};`
+  console.log(BlacksmithOutputStr)
+  console.log('\n')
+
   console.log('=== append to TailoringItem.js file ===\n')
   let TailoringOutputStr = `TailoringList = TailoringList.concat([${Object.values(Tailoring).filter(x => !x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nTalentTailoringList = TalentTailoringList.concat([${Object.values(Tailoring).filter(x => x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nvar ${Object.values(Tailoring).map(x => `TailoringItem${x.ProductItemID}=${x.output}`).join(',')};`
   console.log(TailoringOutputStr)
