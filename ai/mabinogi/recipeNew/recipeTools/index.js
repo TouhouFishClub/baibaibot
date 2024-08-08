@@ -214,7 +214,10 @@ const analyzer = async () => {
           //卷轴
           try {
             // 如果有，则不做添加
-            console.log(eval(`Item${xmlItem.ManualItemID}${xmlItem.FormID}`))
+            process.stdout.clearLine()
+            process.stdout.cursorTo(0)
+            let out = eval(`Item${xmlItem.ManualItemID}${xmlItem.FormID}`)
+            process.stdout.write(out)
           } catch (err) {
             // console.log(err)
             // 如果没有，则添加额外item
@@ -223,7 +226,10 @@ const analyzer = async () => {
           //成品
           try {
             // 如果有，则不做添加
-            console.log(eval(`Item${xmlItem.ProductItemID}`))
+            process.stdout.clearLine()
+            process.stdout.cursorTo(0)
+            let out2 = eval(`Item${xmlItem.ProductItemID}`)
+            process.stdout.write(out2)
           } catch (err) {
             // console.log(err)
             // 如果没有，则添加额外item
@@ -254,7 +260,10 @@ const analyzer = async () => {
           //卷轴
           try {
             // 如果有，则不做添加
-            console.log(eval(`Item${xmlItem.ManualItemID}${xmlItem.FormID}`))
+            process.stdout.clearLine()
+            process.stdout.cursorTo(0)
+            let out = eval(`Item${xmlItem.ManualItemID}${xmlItem.FormID}`)
+            process.stdout.write(out)
           } catch (err) {
             // console.log(err)
             // 如果没有，则添加额外item
@@ -263,7 +272,10 @@ const analyzer = async () => {
           //成品
           try {
             // 如果有，则不做添加
-            console.log(eval(`Item${xmlItem.ProductItemID}`))
+            process.stdout.clearLine()
+            process.stdout.cursorTo(0)
+            let out2 = eval(`Item${xmlItem.ProductItemID}`)
+            process.stdout.write(out2)
           } catch (err) {
             // console.log(err)
             // 如果没有，则添加额外item
@@ -293,7 +305,7 @@ const analyzer = async () => {
   }
 
   process.stdout.write('\n')
-  console.log(Tailoring, BlackSmith)
+  // console.log(Tailoring, BlackSmith)
   Object.keys(Tailoring).forEach(x => {
     console.log(transform[Tailoring[x].ManualNameLocal])
     console.log(`${x} = ${Tailoring[x].output}\n`)
@@ -307,7 +319,7 @@ const analyzer = async () => {
   console.log(`Tailoring count: ${Object.keys(Tailoring).length}, BlackSmith count: ${Object.keys(BlackSmith).length}, `)
 
   console.log('=== append to TailoringItem.js file ===\n')
-  let TailoringOutputStr = `TailoringList.concat([${Object.values(Tailoring).filter(x => !x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nTalentTailoringList.concat([${Object.values(Tailoring).filter(x => x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nvar ${Object.values(Tailoring).map(x => `TailoringItem${x.ProductItemID}=${x.output}`).join(',')};`
+  let TailoringOutputStr = `TailoringList = TailoringList.concat([${Object.values(Tailoring).filter(x => !x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nTalentTailoringList = TalentTailoringList.concat([${Object.values(Tailoring).filter(x => x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nvar ${Object.values(Tailoring).map(x => `TailoringItem${x.ProductItemID}=${x.output}`).join(',')};`
   console.log(TailoringOutputStr)
   console.log('\n')
 
