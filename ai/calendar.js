@@ -36,7 +36,7 @@ const calendar = async (content, author, groupId, callback, type = 'add') => {
 			console.log(e)
 		}
 	}
-	let sp = content.split('\n').map(x => x.trim()).filter(x => x)
+	let sp = content.replace(/#/g, '\n').split('\n').map(x => x.trim()).filter(x => x)
 	let alias = await checkAlias(sp[0], groupId)
 	switch(type) {
 		case "search":
