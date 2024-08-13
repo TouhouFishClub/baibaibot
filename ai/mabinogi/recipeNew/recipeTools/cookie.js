@@ -227,24 +227,25 @@ const createCookieRecipe = async () => {
 
 const render = data => {
   let str = `
-  {{CookingRecipe
-  |图片=${data.China_Local_Name}.png
-  |名称=${data.China_Local_Name}
-  |可否制作=true
-  |英文名称=${data.Text_Name0}
-  |饱食度=${data.Food_Amount}
-  |售卖NPC=
-  |经验值=${data.cookexp}
-  |制作方式=${data.China_Action}
-  |持续时间=${data?.FoodEffectXMLTrans?.food_effect?.duration_sec || ''}
-  |占用格子=${data.Inv_XSize}x${data.Inv_YSize}
-  |料理描述=${data.Text_China_Desc}
-  |${data.essential.map((x, i) => `材料${i+1}=${x.Text_China || ''}|含量${i+1}=${x.quality_max||0}`).join('|')}
-  |体重=${data.Food_Fatness >= 0 ? `+${data.Food_Fatness}` : data.Food_Fatness}
-  |上半身=${data.Food_Upper >= 0 ? `+${data.Food_Upper}` : data.Food_Upper}
-  |下半身=${data.Food_Lower >= 0 ? `+${data.Food_Lower}` : data.Food_Lower}
-  |${data?.FoodEffectXMLTrans?.effect.map(x => `${x.param_china}=${x.amount}`).join('|')}
-  }}
+{{CookingRecipe
+|ID=${data.ID}
+|图片=${data.China_Local_Name}.png
+|名称=${data.China_Local_Name}
+|可否制作=true
+|英文名称=${data.Text_Name0}
+|饱食度=${data.Food_Amount}
+|售卖NPC=
+|经验值=${data.cookexp}
+|制作方式=${data.China_Action}
+|持续时间=${data?.FoodEffectXMLTrans?.food_effect?.duration_sec || ''}
+|占用格子=${data.Inv_XSize}x${data.Inv_YSize}
+|料理描述=${data.Text_China_Desc.replace(/\\n/g, '<br/>')}
+|${data.essential.map((x, i) => `材料${i+1}=${x.Text_China || ''}\n|含量${i+1}=${x.quality_max||0}`).join('\n|')}
+|体重=${data.Food_Fatness >= 0 ? `+${data.Food_Fatness}` : data.Food_Fatness}
+|上半身=${data.Food_Upper >= 0 ? `+${data.Food_Upper}` : data.Food_Upper}
+|下半身=${data.Food_Lower >= 0 ? `+${data.Food_Lower}` : data.Food_Lower}
+|${data?.FoodEffectXMLTrans?.effect.map(x => `${x.param_china}=${x.amount}`).join('\n|')}
+}}
 `
   return str
 }
