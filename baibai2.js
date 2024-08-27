@@ -1886,7 +1886,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   if(rcontent.startsWith("色图")||rcontent.startsWith("炼铜")){
-    if(new Set(['29334', 26334, 28334, 30004, 30014, 30024, '30016']).has(port) && from !== 799018865){
+    if(from !== 799018865){
       return
     }
     runsetu(rcontent,groupid,from,callback,port);
