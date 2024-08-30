@@ -235,7 +235,7 @@ function generageImageXL(kw,detail,callback){
   })
 }
 
-generageImageXL();
+//generageImageXL();
 
 module.exports={
   AIdraw,
