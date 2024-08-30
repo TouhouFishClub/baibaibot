@@ -1868,7 +1868,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
   if(rcontent.startsWith("抽卡")){
-    generageImageXL(content,'',callback);
+    generageImageXL(content,groupid,from,callback);
     //AIdraw(content,groupid,from,callback)
     return;
   }
