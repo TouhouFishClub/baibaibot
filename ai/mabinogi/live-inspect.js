@@ -22,7 +22,7 @@ const fetchTCData = (page = 1) => new Promise(resolve => {
       // data =
       //   {
       //     auto_id: '750',
-      //     anchor_nickname: '牛排mabinogi',
+      //     nick_name: '牛排mabinogi',
       //     show_img: '//img6.tiancitycdn.com/luoqi_51349/20220303/img_1646301814_xt.png',
       //     anchor_level: '3',
       //     live_url: 'https://live.bilibili.com/2649023?spm_id_from=333.999.0.0',
@@ -97,11 +97,11 @@ const LiveInspect = async (qq, group, content, callback) => {
   }
   let infos = []
   for(let i = 0; i < allList.length; i ++) {
-    const {anchor_nickname, live_url} = allList[i]
+    const {nick_name, live_url} = allList[i]
     const roomId = new URL(live_url).pathname.split('/')[1]
     const {title, keyframe, parent_area_name, area_name} = await fetchBiliData(roomId)
     infos.push({
-      anchor_nickname,
+      nick_name,
       roomId,
       title,
       keyframe,
@@ -201,7 +201,7 @@ const render = async list => {
         <img src="${item.keyframe}">
       </div>
       <div class="info-line">
-        <div class="nickname">${item.anchor_nickname}</div>
+        <div class="nickname">${item.nick_name}</div>
         <div class="area">${item.parent_area_name} - ${item.area_name}</div>
       </div>
       <div class="info-line">
