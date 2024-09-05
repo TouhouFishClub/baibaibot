@@ -220,8 +220,8 @@ const render = async list => {
   })
 }
 
-// module.exports = {
-//   LiveInspect
-// }
+module.exports = {
+  LiveInspect
+}
 // fetchBiliData(22543755)
-LiveInspect(799018865)
+// LiveInspect(799018865)
