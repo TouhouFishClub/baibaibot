@@ -76,7 +76,7 @@ const fetchBiliData = roomId => new Promise(resolve => {
       //   official_room_info: null,
       //   voice_background: ''
       // }
-      resolve(response.data.data.room_info)
+      resolve(response.data.data)
       // console.log(response.data.data.room_info)
     })
     .catch(error => {
@@ -100,8 +100,10 @@ const LiveInspect = async (qq, group, content, callback) => {
     const {nick_name, live_address} = allList[i]
     // console.log(allList[i])
     const roomId = new URL(live_address).pathname.split('/')[1]
-    const {title, keyframe, parent_area_name, area_name} = await fetchBiliData(roomId)
+    const {room_info, anchor_info} = await fetchBiliData(roomId)
+    const {title, keyframe, parent_area_name, area_name} = room_info
     infos.push({
+      attention: anchor_info?.relation_info?.attention || 0,
       nick_name,
       roomId,
       title,
@@ -207,6 +209,7 @@ const render = async list => {
       </div>
       <div class="info-line">
         <div class="title">${item.title}</div>
+        <div class="title">粉丝数: ${item.attention}</div>
       </div>
     </div>
   `).join('')}
