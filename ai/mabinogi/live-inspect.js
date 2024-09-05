@@ -265,6 +265,7 @@ const startTimeout = () => {
   let timeLeft = 3610000 - new Date().getTime() % 3600000
   setTimeout(async () => {
     await LiveInspect(799018865, 0, '', () => {}, true)
+    console.log('自动统计成功！')
     startTimeout()
   }, timeLeft)
 }
