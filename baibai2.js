@@ -156,7 +156,7 @@ const { searchGroupChat } = require('./ai/chat/GroupChatSearch/index')
 
 const {handleCustomChatgptReplay,getChatgptReplay,getBaibaiReplay} = require('./ai/chat/openai');
 const {ysVoiceReply} = require('./ai/voice/ysvoice')
-const {AIdraw,yishijie} = require('./ai/games/card2/AIDraw')
+const {AIdraw,yishijie,generageImageXL} = require('./ai/games/card2/AIDraw')
 
 const {BA_Schedule} = require('./ai/BlueArchive/schedule')
 const {BaRaidRanking} = require('./ai/BlueArchive/RaidRanking')
@@ -1864,8 +1864,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
+
+
+
   if(rcontent.startsWith("抽卡")){
-    AIdraw(content,groupid,from,callback)
+    generageImageXL(content,groupid,from,callback);
+    //AIdraw(content,groupid,from,callback)
     return;
   }
 
