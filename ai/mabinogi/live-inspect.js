@@ -7,10 +7,10 @@ const {IMAGE_DATA} = require("../../baibaiConfigs");
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'hk4e_zh-cn.ttf'))
 
 const fetchTCData = (page = 1) => new Promise(resolve => {
-  const url = 'https://evt05.tiancity.com/luoqi/51349/home/index.php/lists';
+  const url = 'https://evt08.tiancity.com/luoqi/2451841/home/index.php/lists';
   const data = new URLSearchParams({
     page,
-    sign: 1
+    sign_type: '全部'
   });
 
   axios.post(url, data.toString(), {
