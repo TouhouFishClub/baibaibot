@@ -28,6 +28,7 @@ const saveFansInfo = async infos => {
       'roomId': infos[i].roomId,
       'nick_name': infos[i].nick_name,
       'attention': infos[i].attention,
+      'update': Date.now()
     })
   }
 }
@@ -110,7 +111,7 @@ const fetchBiliData = roomId => new Promise(resolve => {
     });
 })
 
-const LiveInspect = async (qq, group, content, callback) => {
+const LiveInspect = async (qq, group, content, callback, auto = false) => {
   if(qq != 799018865) {
     return
   }
@@ -141,11 +142,13 @@ const LiveInspect = async (qq, group, content, callback) => {
 
   // console.log(infos)
   await saveFansInfo(infos)
-  await render(infos)
+  if(!auto) {
+    await render(infos)
 
-  console.log(`保存live-inspect.png成功！`)
-  let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `live-inspect.png`)}]`
-  callback(imgMsg)
+    console.log(`保存live-inspect.png成功！`)
+    let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `live-inspect.png`)}]`
+    callback(imgMsg)
+  }
 }
 
 const render = async list => {
@@ -258,8 +261,16 @@ const render = async list => {
   })
 }
 
+const startTimeout = () => {
+  let timeLeft = 3610000 - new Date().getTime() % 3600000
+  setTimeout(async () => {
+    await LiveInspect(799018865, 0, '', () => {}, true)
+    startTimeout()
+  }, timeLeft)
+}
+
+startTimeout()
+
 module.exports = {
   LiveInspect
 }
-// fetchBiliData(22543755)
-// LiveInspect(799018865)
