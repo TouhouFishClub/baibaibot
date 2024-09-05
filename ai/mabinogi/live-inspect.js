@@ -25,7 +25,7 @@ const fetchTCData = (page = 1) => new Promise(resolve => {
       //     nick_name: '牛排mabinogi',
       //     show_img: '//img6.tiancitycdn.com/luoqi_51349/20220303/img_1646301814_xt.png',
       //     anchor_level: '3',
-      //     live_url: 'https://live.bilibili.com/2649023?spm_id_from=333.999.0.0',
+      //     live_address: 'https://live.bilibili.com/2649023?spm_id_from=333.999.0.0',
       //     is_open: '0',
       //     is_sign: '1'
       //   },
@@ -97,8 +97,9 @@ const LiveInspect = async (qq, group, content, callback) => {
   }
   let infos = []
   for(let i = 0; i < allList.length; i ++) {
-    const {nick_name, live_url} = allList[i]
-    const roomId = new URL(live_url).pathname.split('/')[1]
+    const {nick_name, live_address} = allList[i]
+    // console.log(allList[i])
+    const roomId = new URL(live_address).pathname.split('/')[1]
     const {title, keyframe, parent_area_name, area_name} = await fetchBiliData(roomId)
     infos.push({
       nick_name,
@@ -219,8 +220,8 @@ const render = async list => {
   })
 }
 
-module.exports = {
-  LiveInspect
-}
+// module.exports = {
+//   LiveInspect
+// }
 // fetchBiliData(22543755)
-// LiveInspect()
+LiveInspect(799018865)
