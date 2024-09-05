@@ -125,19 +125,23 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
   let infos = []
   for(let i = 0; i < allList.length; i ++) {
     const {nick_name, live_address} = allList[i]
-    // console.log(allList[i])
+    console.log(allList[i])
     const roomId = new URL(live_address).pathname.split('/')[1]
-    const {room_info, anchor_info} = await fetchBiliData(roomId)
-    const {title, keyframe, parent_area_name, area_name} = room_info
-    infos.push({
-      attention: anchor_info?.relation_info?.attention || 0,
-      nick_name,
-      roomId,
-      title,
-      keyframe,
-      parent_area_name,
-      area_name
-    })
+    try{
+      const {room_info, anchor_info} = await fetchBiliData(roomId)
+      const {title, keyframe, parent_area_name, area_name} = room_info
+      infos.push({
+        attention: anchor_info?.relation_info?.attention || 0,
+        nick_name,
+        roomId,
+        title,
+        keyframe,
+        parent_area_name,
+        area_name
+      })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   // console.log(infos)
@@ -271,7 +275,7 @@ const startTimeout = () => {
 }
 
 startTimeout()
-
 module.exports = {
   LiveInspect
 }
+// LiveInspect(799018865)
