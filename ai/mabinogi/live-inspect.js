@@ -4,7 +4,33 @@ const nodeHtmlToImage = require('node-html-to-image')
 const font2base64 = require('node-font2base64')
 const {IMAGE_DATA} = require("../../baibaiConfigs");
 
+const MongoClient = require('mongodb').MongoClient
+const MONGO_URL = require('../../baibaiConfigs').mongourl;
+
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'hk4e_zh-cn.ttf'))
+
+let client
+(async () => {
+  try {
+    client = await MongoClient.connect(MONGO_URL)
+  } catch (e) {
+    console.log('MONGO ERROR FOR MABI LIVE MODULE!!')
+    console.log(e)
+  }
+})()
+
+const saveFansInfo = async infos => {
+  let collection = client.collection('cl_mabinogi_live_fans')
+  let day = ~~(Date.now()/86400000)
+  for(let i = 0; i < infos.length; i ++) {
+    await collection.save({
+      '_id': `${infos[i].roomId}_${day}`,
+      'roomId': infos[i].roomId,
+      'nick_name': infos[i].nick_name,
+      'attention': infos[i].attention,
+    })
+  }
+}
 
 const fetchTCData = (page = 1) => new Promise(resolve => {
   const url = 'https://evt08.tiancity.com/luoqi/2451841/home/index.php/lists';
@@ -112,7 +138,9 @@ const LiveInspect = async (qq, group, content, callback) => {
       area_name
     })
   }
+
   // console.log(infos)
+  await saveFansInfo(infos)
   await render(infos)
 
   console.log(`保存live-inspect.png成功！`)
@@ -194,6 +222,11 @@ const render = async list => {
       font-size: 16px;
       color: #999;
     }
+    .fans {
+			font-family: HANYIWENHEI;
+      font-size: 16px;
+      color: #333;
+    }
   </style>
 </head>
 <body>
@@ -209,7 +242,9 @@ const render = async list => {
       </div>
       <div class="info-line">
         <div class="title">${item.title}</div>
-        <div class="title">粉丝数: ${item.attention}</div>
+      </div>
+      <div class="info-line">
+        <div class="fans">粉丝数: ${item.attention}</div>
       </div>
     </div>
   `).join('')}
