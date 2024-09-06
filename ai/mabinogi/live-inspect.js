@@ -123,6 +123,7 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
     page ++
   }
   let infos = []
+  let yesterday = ~~(Date.now()/86400000) - 1
   for(let i = 0; i < allList.length; i ++) {
     const {nick_name, live_address} = allList[i]
     console.log(allList[i])
@@ -130,15 +131,21 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
     try{
       const {room_info, anchor_info} = await fetchBiliData(roomId)
       const {title, keyframe, parent_area_name, area_name} = room_info
-      infos.push({
+      let data = {
         attention: anchor_info?.relation_info?.attention || 0,
+        biliName: anchor_info?.base_info?.uname || '',
         nick_name,
         roomId,
         title,
         keyframe,
         parent_area_name,
         area_name
-      })
+      }
+      if(!auto) {
+        const prevData = await client.collection('cl_mabinogi_live_fans').findOne({_id: `${roomId}_${yesterday}`})
+        data.prevAttention = prevData?.attention || -1
+      }
+      infos.push(data)
     } catch (e) {
       console.log(e)
     }
@@ -234,6 +241,12 @@ const render = async list => {
       font-size: 16px;
       color: #333;
     }
+    .fans.hottest {color: #F00;}
+    .fans.hotest {color: #ff6739;}
+    .fans.hot {color: #ffac5e;}
+    .fans.ho {color: #a4ff51;}
+    .fans strong.up {color: #d80000}
+    .fans strong.down {color: #008a07}
   </style>
 </head>
 <body>
@@ -248,10 +261,13 @@ const render = async list => {
         <div class="area">${item.parent_area_name} - ${item.area_name}</div>
       </div>
       <div class="info-line">
+        <div class="nickname">${item.biliName}</div>
+      </div>
+      <div class="info-line">
         <div class="title">${item.title}</div>
       </div>
       <div class="info-line">
-        <div class="fans">粉丝数: ${item.attention}</div>
+        <div class="fans ${item.attention > 100000 ? 'hottest' : item.attention > 10000 ? 'hotest' : item.attention > 1000 ? 'hot' : item.attention > 100 ? 'ho' : 'normal'}">粉丝数: ${item.attention}${item.prevAttention >= 0 ? `(${item.attention - item.prevAttention > 0 ? `<strong class="up">+${item.attention - item.prevAttention}</strong>` : `<strong class="down">${item.attention - item.prevAttention}</strong>`})` : ''}</div>
       </div>
     </div>
   `).join('')}
