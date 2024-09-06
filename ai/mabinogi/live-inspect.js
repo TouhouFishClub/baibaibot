@@ -241,10 +241,10 @@ const render = async list => {
       font-size: 16px;
       color: #333;
     }
-    .fans.hottest {color: #F00;}
-    .fans.hotest {color: #ff6739;}
-    .fans.hot {color: #ffac5e;}
-    .fans.ho {color: #a4ff51;}
+    .fans.hottest {color: #540000;}
+    .fans.hotest {color: #602514;}
+    .fans.hot {color: #724d2b;}
+    .fans.ho {color: #38571b;}
     .fans strong.up {color: #d80000}
     .fans strong.down {color: #008a07}
   </style>
@@ -267,7 +267,7 @@ const render = async list => {
         <div class="title">${item.title}</div>
       </div>
       <div class="info-line">
-        <div class="fans ${item.attention > 100000 ? 'hottest' : item.attention > 10000 ? 'hotest' : item.attention > 1000 ? 'hot' : item.attention > 100 ? 'ho' : 'normal'}">粉丝数: ${item.attention}${item.prevAttention >= 0 ? `(${item.attention - item.prevAttention > 0 ? `<strong class="up">+${item.attention - item.prevAttention}</strong>` : `<strong class="down">${item.attention - item.prevAttention}</strong>`})` : ''}</div>
+        <div class="fans ${item.attention > 100000 ? 'hottest' : item.attention > 10000 ? 'hotest' : item.attention > 1000 ? 'hot' : item.attention > 100 ? 'ho' : 'normal'}">粉丝数: ${item.attention}${item.prevAttention >= 0 ? ` (${item.attention - item.prevAttention > 0 ? `<strong class="up">+${item.attention - item.prevAttention}</strong>` : `<strong class="down">${item.attention - item.prevAttention}</strong>`})` : ''}</div>
       </div>
     </div>
   `).join('')}
