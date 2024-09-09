@@ -1157,9 +1157,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     handleDSReply(content.substring(3),groupid,from,name,callback,port);
     return;
   }
-  // if(content.startsWith('z8')){
-  //   handleSenkaReply(content.trim(),groupid,from,callback);
-  // }
+  if(content.startsWith('z8')){
+    handleSenkaReply(content.trim(),groupid,from,callback);
+  }
 
 
 
