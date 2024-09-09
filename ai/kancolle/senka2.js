@@ -1254,6 +1254,9 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
               var rkea = emap[rkn];
               var rkcmt = rk.cmt;
               var rke;
+              if(rkea==undefined){
+                continue;
+              }
               if(rkea.length==1){
                 rke = rkea[0]
               }else{
@@ -2044,7 +2047,7 @@ function searchShip(name,callback){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  //handleSenkaReply('z8-1s','','',function(r){console.log(r)})
+  //handleSenkaReply('z8','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getRank(1,[]);
   //searchShip('Apate',function(r){console.log(r)})
