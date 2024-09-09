@@ -2044,12 +2044,12 @@ function searchShip(name,callback){
 
 setTimeout(function(){
   //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
-  handleSenkaReply('z8-1s','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-1s','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getRank(1,[]);
   //searchShip('Apate',function(r){console.log(r)})
 
-},1500)
+},2500)
 
 
 
