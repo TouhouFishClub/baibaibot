@@ -4,6 +4,7 @@ const nodeHtmlToImage = require('node-html-to-image')
 const font2base64 = require('node-font2base64')
 const {IMAGE_DATA} = require("../../baibaiConfigs");
 const https = require("https");
+const {render} = require('./Television/render')
 
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../baibaiConfigs').mongourl;
@@ -130,6 +131,81 @@ const fetchBiliData = roomId => new Promise(resolve => {
     });
 })
 
+const formatTime = ts => {
+  let d = new Date(ts)
+  return `${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} ${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}`
+}
+
+const LiveAnalyzer = async(qq, group, content, callback) => {
+  if(qq != 799018865) {
+    return
+  }
+  let allData = await client.collection('cl_mabinogi_live_fans').find().toArray()
+  let allLiverRoomId = Array.from(new Set(allData.map(x => x.roomId)))
+  let reData = []
+  for(let i = 0; i < allLiverRoomId.length; i ++) {
+    let roomId = allLiverRoomId[i]
+    let roomRecord = allData.filter(x => x.roomId == roomId).sort((a, b) => a.update - b.update)
+    // {
+    //   "_id" : "6411516_19976",
+    //   "roomId" : "6411516",
+    //   "nick_name" : "奶白蛋卷",
+    //   "attention" : 13,
+    //   "update" : 1725926411481
+    // }
+
+    const {room_info, anchor_info} = await fetchBiliData(roomId)
+    const {title, keyframe, parent_area_name, area_name} = room_info
+    const nowAttention = anchor_info?.relation_info?.attention || 0
+    const add = nowAttention - roomRecord[0].attention
+
+
+    let out = Object.assign({}, roomRecord[0], {
+      nowAttention,
+      add,
+      addStr: add > 0 ? `+${add}` : add
+    })
+    reData.push(out)
+  }
+  if(content === '洛奇涨粉榜') {
+    reData.sort((a, b) => b.add - a.add)
+  } else {
+    reData.sort((a, b) => a.add - b.add)
+  }
+  const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiFans.png`)
+  await render(reData.slice(0, 20), {
+    title: content,
+    output: outputDir,
+    columns: [
+      {
+        label: '直播间id',
+        key: 'roomId',
+      },
+      {
+        label: '昵称',
+        key: 'nick_name',
+      },
+      {
+        label: '首次统计时间',
+        key: 'update',
+        format: time => formatTime(new Date(time).getTime())
+      },
+      {
+        label: '现在粉丝',
+        key: 'attention',
+      },
+      {
+        label: '粉丝变化',
+        key: 'addStr',
+      },
+    ]
+  })
+
+  console.log(`保存MabiFans.png成功！`)
+  let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiFans.png`)}]`
+  callback(imgMsg)
+}
+
 const LiveInspect = async (qq, group, content, callback, auto = false) => {
   if(qq != 799018865) {
     return
@@ -179,7 +255,7 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
   // console.log(infos)
   await saveFansInfo(infos)
   if(!auto) {
-    await render(infos)
+    await renderTv(infos)
 
     console.log(`保存live-inspect.png成功！`)
     let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `live-inspect.png`)}]`
@@ -187,7 +263,7 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
   }
 }
 
-const render = async list => {
+const renderTv = async list => {
   let html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -317,6 +393,7 @@ const startTimeout = () => {
 
 startTimeout()
 module.exports = {
-  LiveInspect
+  LiveInspect,
+  LiveAnalyzer
 }
 // LiveInspect(799018865)
