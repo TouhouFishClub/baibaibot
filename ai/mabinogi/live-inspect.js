@@ -3,6 +3,7 @@ const axios = require('axios');
 const nodeHtmlToImage = require('node-html-to-image')
 const font2base64 = require('node-font2base64')
 const {IMAGE_DATA} = require("../../baibaiConfigs");
+const https = require("https");
 
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../baibaiConfigs').mongourl;
@@ -18,6 +19,24 @@ let client
     console.log(e)
   }
 })()
+
+
+function getRedirectUrl(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      const { statusCode } = res;
+
+      // 如果状态码是重定向状态码 (3xx)，获取 Location 头部
+      if (statusCode >= 300 && statusCode < 400 && res.headers.location) {
+        resolve(res.headers.location);
+      } else {
+        reject(new Error('No redirect or invalid status code'));
+      }
+    }).on('error', (err) => {
+      reject(err);
+    });
+  });
+}
 
 const saveFansInfo = async infos => {
   let collection = client.collection('cl_mabinogi_live_fans')
@@ -126,8 +145,14 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
   let yesterday = ~~(Date.now()/86400000) - 1
   for(let i = 0; i < allList.length; i ++) {
     const {nick_name, live_address} = allList[i]
-    console.log(allList[i])
-    const roomId = new URL(live_address).pathname.split('/')[1]
+    // console.log(allList[i])
+    let roomId = new URL(live_address).pathname.split('/')[1]
+    if(!/^\d+$/.test(roomId)) {
+      const redirectUrl = await getRedirectUrl(live_address).catch((err) => {
+        console.error(err);
+      });
+      roomId = new URL(redirectUrl).pathname.split('/')[1]
+    }
     try{
       const {room_info, anchor_info} = await fetchBiliData(roomId)
       const {title, keyframe, parent_area_name, area_name} = room_info
