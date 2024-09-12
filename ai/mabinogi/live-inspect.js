@@ -196,7 +196,7 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
       },
       {
         label: '现在粉丝',
-        key: 'attention',
+        key: 'nowAttention',
       },
       {
         label: '粉丝变化',
