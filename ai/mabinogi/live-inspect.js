@@ -144,6 +144,7 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
   let allLiverRoomId = Array.from(new Set(allData.map(x => x.roomId)))
   let reData = []
   for(let i = 0; i < allLiverRoomId.length; i ++) {
+    console.log(`==== ${i}/${allLiverRoomId.length} ====`)
     let roomId = allLiverRoomId[i]
     let roomRecord = allData.filter(x => x.roomId == roomId).sort((a, b) => a.update - b.update)
     // {
