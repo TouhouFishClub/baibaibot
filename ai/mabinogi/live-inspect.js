@@ -136,6 +136,8 @@ const formatTime = ts => {
   return `${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} ${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}`
 }
 
+const addZero = n => n < 10 ? ('0' + n) : n
+
 const LiveAnalyzer = async(qq, group, content, callback) => {
   if(qq != 799018865) {
     return
