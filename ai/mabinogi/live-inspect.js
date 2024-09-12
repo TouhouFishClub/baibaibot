@@ -178,6 +178,7 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
   const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiFans.png`)
   await render(reData.slice(0, 20), {
     title: content,
+    description: '',
     output: outputDir,
     columns: [
       {
@@ -191,7 +192,7 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
       {
         label: '首次统计时间',
         key: 'update',
-        format: time => formatTime(new Date(time).getTime())
+        format: time => formatTime(new Date(time || 0).getTime())
       },
       {
         label: '现在粉丝',
