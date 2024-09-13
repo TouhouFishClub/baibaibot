@@ -8,6 +8,10 @@ const {render} = require('./Television/render')
 
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../baibaiConfigs').mongourl;
+const whiteList = new Set([
+  '799018865',
+  '1980146855',
+])
 
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'hk4e_zh-cn.ttf'))
 
@@ -138,41 +142,58 @@ const formatTime = ts => {
 
 const addZero = n => n < 10 ? ('0' + n) : n
 
+let cache = {
+  data: [],
+  update: 0,
+  expire: 0
+}
+
 const LiveAnalyzer = async(qq, group, content, callback) => {
-  if(qq != 799018865) {
+  if(!whiteList.has(`${qq}`)) {
     return
   }
   let allData = await client.collection('cl_mabinogi_live_fans').find().toArray()
   let allLiverRoomId = Array.from(new Set(allData.map(x => x.roomId)))
-  let reData = []
+  let reData = [], updateCount = 0
   for(let i = 0; i < allLiverRoomId.length; i ++) {
-    console.log(`==== ${i}/${allLiverRoomId.length} ====`)
-    let roomId = allLiverRoomId[i]
-    let roomRecord = allData.filter(x => x.roomId == roomId).sort((a, b) => a.update - b.update)
-    // {
-    //   "_id" : "6411516_19976",
-    //   "roomId" : "6411516",
-    //   "nick_name" : "奶白蛋卷",
-    //   "attention" : 13,
-    //   "update" : 1725926411481
-    // }
+    let target = cache.data.filter(x => x && x.roomId == allLiverRoomId[i])[0]
+    if(cache.expire < Date.now() || !target) {
+      updateCount ++
+      console.log(`==== ${i}/${allLiverRoomId.length} ====`)
+      let roomId = allLiverRoomId[i]
+      let roomRecord = allData.filter(x => x.roomId == roomId).sort((a, b) => a.update - b.update)
+      // {
+      //   "_id" : "6411516_19976",
+      //   "roomId" : "6411516",
+      //   "nick_name" : "奶白蛋卷",
+      //   "attention" : 13,
+      //   "update" : 1725926411481
+      // }
 
-    const {room_info, anchor_info} = await fetchBiliData(roomId)
-    const {title, keyframe, parent_area_name, area_name} = room_info
-    const nowAttention = anchor_info?.relation_info?.attention || 0
-    const add = nowAttention - roomRecord[0].attention
+      const {room_info, anchor_info} = await fetchBiliData(roomId)
+      const {title, keyframe, parent_area_name, area_name} = room_info
+      const nowAttention = anchor_info?.relation_info?.attention || 0
+      const add = nowAttention - roomRecord[0].attention
 
-    const biliName = anchor_info?.base_info?.uname || '';
+      const biliName = anchor_info?.base_info?.uname || '';
 
 
-    let out = Object.assign({}, roomRecord[0], {
-      nowAttention,
-      add,
-      biliName,
-      addStr: add > 0 ? `+${add}` : add
-    })
-    reData.push(out)
+      let out = Object.assign({}, roomRecord[0], {
+        nowAttention,
+        add,
+        biliName,
+        addStr: add > 0 ? `+${add}` : add
+      })
+      reData.push(out)
+      cache.update = Date.now()
+    } else {
+      reData.push(target)
+    }
+    if(updateCount > 100) {
+      cache.expire = Date.now() + 1000 * 60 * 30
+    }
   }
+
   if(content === '洛奇涨粉榜') {
     reData.sort((a, b) => b.add - a.add)
   } else {
@@ -218,7 +239,7 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
 }
 
 const LiveInspect = async (qq, group, content, callback, auto = false) => {
-  if(qq != 799018865) {
+  if(!whiteList.has(`${qq}`)) {
     return
   }
   let page = 1, pageCount = 9999, allList = []
