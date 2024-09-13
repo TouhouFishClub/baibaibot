@@ -193,6 +193,7 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
       cache.expire = Date.now() + 1000 * 60 * 30
     }
   }
+  cache.data = reData
 
   if(content === '洛奇涨粉榜') {
     reData.sort((a, b) => b.add - a.add)
