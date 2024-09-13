@@ -255,7 +255,11 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
   for(let i = 0; i < allList.length; i ++) {
     const {nick_name, live_address} = allList[i]
     console.log(allList[i])
-    let roomId = new URL(live_address).pathname.split('/')[1]
+    let sp = new URL(live_address).pathname.split('/')
+    let roomId = sp[1]
+    if(roomId.toLowerCase() == 'h5') {
+      roomId = sp[2]
+    }
     if(!/^\d+$/.test(roomId)) {
       const redirectUrl = await getRedirectUrl(live_address).catch((err) => {
         console.error(err);
