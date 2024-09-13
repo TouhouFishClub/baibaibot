@@ -254,7 +254,7 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
   let yesterday = ~~(Date.now()/86400000) - 1
   for(let i = 0; i < allList.length; i ++) {
     const {nick_name, live_address} = allList[i]
-    // console.log(allList[i])
+    console.log(allList[i])
     let roomId = new URL(live_address).pathname.split('/')[1]
     if(!/^\d+$/.test(roomId)) {
       const redirectUrl = await getRedirectUrl(live_address).catch((err) => {
