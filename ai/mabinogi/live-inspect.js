@@ -162,10 +162,13 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
     const nowAttention = anchor_info?.relation_info?.attention || 0
     const add = nowAttention - roomRecord[0].attention
 
+    const biliName = anchor_info?.base_info?.uname || '';
+
 
     let out = Object.assign({}, roomRecord[0], {
       nowAttention,
       add,
+      biliName,
       addStr: add > 0 ? `+${add}` : add
     })
     reData.push(out)
@@ -184,6 +187,10 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
       {
         label: '直播间id',
         key: 'roomId',
+      },
+      {
+        label: 'B站昵称',
+        key: 'biliName',
       },
       {
         label: '昵称',
