@@ -170,7 +170,7 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
       //   "update" : 1725926411481
       // }
 
-      const {room_info, anchor_info} = await fetchBiliData(roomId)
+      const {room_info, anchor_info, activity_init_info} = await fetchBiliData(roomId)
       const {title, keyframe, parent_area_name, area_name} = room_info
       const nowAttention = anchor_info?.relation_info?.attention || 0
       const add = nowAttention - roomRecord[0].attention
@@ -182,16 +182,17 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
         nowAttention,
         add,
         biliName,
-        addStr: add > 0 ? `+${add}` : add
+        addStr: add > 0 ? `+${add}` : add,
+        update: (activity_init_info?.lego?.timestamp || (Date.now() / 1000))*1000,
       })
       reData.push(out)
       cache.update = Date.now()
     } else {
       reData.push(target)
     }
-    if(updateCount > 100) {
-      cache.expire = Date.now() + 1000 * 60 * 30
-    }
+  }
+  if(updateCount > 100) {
+    cache.expire = Date.now() + 1000 * 60 * 30
   }
   cache.data = reData
 
@@ -203,7 +204,7 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
   const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiFans.png`)
   await render(reData.slice(0, 20), {
     title: content,
-    description: '',
+    description: `update: ${formatTime(reData[0].update)}`,
     output: outputDir,
     columns: [
       {
