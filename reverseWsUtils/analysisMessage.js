@@ -18,7 +18,8 @@ const {
 } = require('./manager/actionManager')
 
 const {
-  localImageToBase64
+  localImageToBase64,
+  localAssetsToBase64
 } = require('../util/imageToBase64')
 
 const { handle_msg_D2 } = require('../baibai2');
@@ -33,6 +34,16 @@ const replaceImageToBase64 = message =>
     }
     return sp
   }).join('[CQ:image,file=base64://')
+
+const replaceRecordToBase64 = message =>
+  message.split('[CQ:record,file=file:').map((sp, index) => {
+    if(index) {
+      let tsp = sp.split(']'), url = tsp[0]
+      tsp[0] = localAssetsToBase64(url)
+      return tsp.join(']')
+    }
+    return sp
+  }).join('[CQ:record,file=base64://')
 
 const sendMessage = (context, ws, port, oneBotVersion) => {
   // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
@@ -62,6 +73,9 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
     if(msg.indexOf('[CQ:image,file') > -1){
       message = replaceImageToBase64(msg)
       // console.log(`检测到图片，转化为以下格式：\n${message}`)
+    }
+    if(msg.indexOf('[CQ:record,file') > -1){
+      message = replaceRecordToBase64(msg)
     }
     let sendBody
     if(oneBotVersion === 12) {

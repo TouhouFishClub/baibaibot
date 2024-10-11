@@ -6,6 +6,11 @@ function localImageToBase64(localImagePath) {
   const data = fs.readFileSync(localImagePath);
   return data.toString('base64');
 }
+// 转换本地图片为Base64
+function localAssetsToBase64(localAssetsPath) {
+  const data = fs.readFileSync(localAssetsPath);
+  return data.toString('base64');
+}
 
 // 转换网络图片为Base64
 function remoteImageToBase64(remoteImageUrl, callback) {
@@ -21,6 +26,7 @@ function remoteImageToBase64(remoteImageUrl, callback) {
 
 module.exports = {
   localImageToBase64,
+  localAssetsToBase64,
   remoteImageToBase64
 }
 
