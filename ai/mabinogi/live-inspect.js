@@ -15,6 +15,8 @@ const whiteList = new Set([
 
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'hk4e_zh-cn.ttf'))
 
+const season = 2
+
 let client
 (async () => {
   try {
@@ -44,15 +46,18 @@ function getRedirectUrl(url) {
 }
 
 const saveFansInfo = async infos => {
-  let collection = client.collection('cl_mabinogi_live_fans')
+  let collection = client.collection('cl_mabinogi_live_fans_v2')
+  let hour = ~~(Date.now()/3600000)
   let day = ~~(Date.now()/86400000)
   for(let i = 0; i < infos.length; i ++) {
     await collection.save({
-      '_id': `${infos[i].roomId}_${day}`,
+      '_id': `${infos[i].roomId}_${hour}`,
       'roomId': infos[i].roomId,
       'nick_name': infos[i].nick_name,
       'attention': infos[i].attention,
-      'update': Date.now()
+      'update': Date.now(),
+      season,
+      day
     })
   }
 }
@@ -152,7 +157,7 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
   if(!whiteList.has(`${qq}`)) {
     return
   }
-  let allData = await client.collection('cl_mabinogi_live_fans').find().toArray()
+  let allData = await client.collection('cl_mabinogi_live_fans_v2').find({ season }).toArray()
   let allLiverRoomId = Array.from(new Set(allData.map(x => x.roomId)))
   let reData = [], updateCount = 0
   for(let i = 0; i < allLiverRoomId.length; i ++) {
@@ -252,6 +257,8 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
     page ++
   }
   let infos = []
+  //TODO： 这里需要查询昨天的数据，但是先查上小时的数据
+  let prevHour = ~~(Date.now()/3600000) - 1
   let yesterday = ~~(Date.now()/86400000) - 1
   for(let i = 0; i < allList.length; i ++) {
     try{
@@ -281,7 +288,7 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
         area_name
       }
       if(!auto) {
-        const prevData = await client.collection('cl_mabinogi_live_fans').findOne({_id: `${roomId}_${yesterday}`})
+        const prevData = await client.collection('cl_mabinogi_live_fans_v2').findOne({_id: `${roomId}_${prevHour}`, season})
         data.prevAttention = prevData?.attention || -1
       }
       infos.push(data)
