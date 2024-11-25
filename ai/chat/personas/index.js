@@ -22,9 +22,9 @@ setTimeout(function(){
 
 
 const analysisChatData = data => {
-	let msgList = []
+	let msgList = [], ignoreIds = new Set([2186702980, 981069482])
 	data.forEach(msg => {
-		if(msg.d && !msg.d.startsWith('http') && msg.uid != 981069482){
+		if(msg.d && !msg.d.startsWith('http') && !ignoreIds.has(msg.uid)){
 			let filterCQ = msg.d.split('[CQ:').map((x, i) => i ? x.split(']')[1]: x).filter(x => x.trim()).join('')
 			let splitEn = Array.from(filterCQ.matchAll(/[a-zA-Z0-9]+/g)).map(x => x[0])
 
