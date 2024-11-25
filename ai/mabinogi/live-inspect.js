@@ -61,7 +61,7 @@ const saveFansInfo = async infos => {
     })
   }
 }
-
+// https://evt08.tiancity.com/luoqi/2451841/home/index.php/lists
 const fetchTCData = (page = 1) => new Promise(resolve => {
   const url = 'https://evt08.tiancity.com/luoqi/2451841/home/index.php/lists';
   const data = new URLSearchParams({
