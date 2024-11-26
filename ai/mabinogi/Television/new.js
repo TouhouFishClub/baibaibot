@@ -96,8 +96,12 @@ const mabiTelevision = async (content, qq, callback) => {
         queryParams = sp.map(x => x && `%${x}%`).filter(x => x)
       }
     } else {
-      whereClause = `WHERE reward LIKE ? OR character_name LIKE ? OR dungeon_name LIKE ?`;
-      queryParams = [`%${filter}%`, `%${filter}%`, `%${filter}%`];
+      if(filter == '新卷') {
+        whereClause = `WHERE reward REGEXP '渴望的$|盼望的$|期盼的$|沉没的$|消失的$|被覆盖的$|逃跑的$|观望的$|旋转的$|囚禁$|不动之$|冻结的$|兔猿人$|极地骷髅战士$|极地冰狼$|踪迹$|轨迹$|痕迹$|符文猫$|斯内塔$|冰雪索灵$|白桦树$|波纹$|镜子$'`;
+      } else {
+        whereClause = `WHERE reward LIKE ? OR character_name LIKE ? OR dungeon_name LIKE ?`;
+        queryParams = [`%${filter}%`, `%${filter}%`, `%${filter}%`];
+      }
     }
   }
 
