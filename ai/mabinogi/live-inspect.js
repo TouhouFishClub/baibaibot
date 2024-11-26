@@ -225,7 +225,7 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
         key: 'nick_name',
       },
       {
-        label: '首次统计时间',
+        label: '更新时间',
         key: 'update',
         format: time => formatTime(new Date(time || 0).getTime())
       },
