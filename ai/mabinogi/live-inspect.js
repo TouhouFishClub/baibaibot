@@ -132,7 +132,7 @@ const fetchBiliData = roomId => new Promise(resolve => {
       //   official_room_info: null,
       //   voice_background: ''
       // }
-      console.log(response.data)
+      // console.log(response.data)
       resolve(response.data.data)
     })
     .catch(error => {
@@ -428,7 +428,7 @@ const renderTv = async list => {
 }
 
 const startTimeout = () => {
-  let timeLeft = 3610000 - new Date().getTime() % 3600000
+  let timeLeft = 10810000 - new Date().getTime() % 10800000
   setTimeout(async () => {
     await LiveInspect(799018865, 0, '', () => {}, true)
     console.log('自动统计成功！')
