@@ -132,8 +132,8 @@ const fetchBiliData = roomId => new Promise(resolve => {
       //   official_room_info: null,
       //   voice_background: ''
       // }
+      console.log(response.data)
       resolve(response.data.data)
-      // console.log(response.data.data.room_info)
     })
     .catch(error => {
       console.error('Error:', error);
