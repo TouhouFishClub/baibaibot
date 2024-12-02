@@ -164,8 +164,8 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
     let target = cache.data.filter(x => x && x.roomId == allLiverRoomId[i])[0]
     if(cache.expire < Date.now() || !target) {
       updateCount ++
-      console.log(`==== ${i}/${allLiverRoomId.length} ====`)
       let roomId = allLiverRoomId[i]
+      console.log(`==== ${i}/${allLiverRoomId.length}: ${roomId} ====`)
       let roomRecord = allData.filter(x => x.roomId == roomId).sort((a, b) => a.update - b.update)
       // {
       //   "_id" : "6411516_19976",
