@@ -3,11 +3,19 @@ const axios = require('axios');
 const nodeHtmlToImage = require('node-html-to-image')
 const font2base64 = require('node-font2base64')
 const {IMAGE_DATA} = require("../../baibaiConfigs");
+const https = require("https");
+const {render} = require('./Television/render')
 
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../baibaiConfigs').mongourl;
+const whiteList = new Set([
+  '799018865',
+  '1980146855',
+])
 
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'hk4e_zh-cn.ttf'))
+
+const season = 2
 
 let client
 (async () => {
@@ -19,20 +27,41 @@ let client
   }
 })()
 
+
+function getRedirectUrl(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      const { statusCode } = res;
+
+      // 如果状态码是重定向状态码 (3xx)，获取 Location 头部
+      if (statusCode >= 300 && statusCode < 400 && res.headers.location) {
+        resolve(res.headers.location);
+      } else {
+        reject(new Error('No redirect or invalid status code'));
+      }
+    }).on('error', (err) => {
+      reject(err);
+    });
+  });
+}
+
 const saveFansInfo = async infos => {
-  let collection = client.collection('cl_mabinogi_live_fans')
+  let collection = client.collection('cl_mabinogi_live_fans_v2')
+  let hour = ~~(Date.now()/3600000)
   let day = ~~(Date.now()/86400000)
   for(let i = 0; i < infos.length; i ++) {
     await collection.save({
-      '_id': `${infos[i].roomId}_${day}`,
+      '_id': `${infos[i].roomId}_${hour}`,
       'roomId': infos[i].roomId,
       'nick_name': infos[i].nick_name,
       'attention': infos[i].attention,
-      'update': Date.now()
+      'update': Date.now(),
+      season,
+      day
     })
   }
 }
-
+// https://evt08.tiancity.com/luoqi/2451841/home/index.php/lists
 const fetchTCData = (page = 1) => new Promise(resolve => {
   const url = 'https://evt08.tiancity.com/luoqi/2451841/home/index.php/lists';
   const data = new URLSearchParams({
@@ -103,16 +132,121 @@ const fetchBiliData = roomId => new Promise(resolve => {
       //   official_room_info: null,
       //   voice_background: ''
       // }
+      // console.log(response.data)
       resolve(response.data.data)
-      // console.log(response.data.data.room_info)
     })
     .catch(error => {
       console.error('Error:', error);
     });
 })
 
+const formatTime = ts => {
+  let d = new Date(ts)
+  return `${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} ${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}`
+}
+
+const addZero = n => n < 10 ? ('0' + n) : n
+
+let cache = {
+  data: [],
+  update: 0,
+  expire: 0
+}
+
+const LiveAnalyzer = async(qq, group, content, callback) => {
+  if(!whiteList.has(`${qq}`)) {
+    return
+  }
+  let allData = await client.collection('cl_mabinogi_live_fans_v2').find({ season }).toArray()
+  let allLiverRoomId = Array.from(new Set(allData.map(x => x.roomId)))
+  let reData = [], updateCount = 0
+  for(let i = 0; i < allLiverRoomId.length; i ++) {
+    let target = cache.data.filter(x => x && x.roomId == allLiverRoomId[i])[0]
+    if(cache.expire < Date.now() || !target) {
+      updateCount ++
+      let roomId = allLiverRoomId[i]
+      console.log(`==== ${i}/${allLiverRoomId.length}: ${roomId} ====`)
+      let roomRecord = allData.filter(x => x.roomId == roomId).sort((a, b) => a.update - b.update)
+      // {
+      //   "_id" : "6411516_19976",
+      //   "roomId" : "6411516",
+      //   "nick_name" : "奶白蛋卷",
+      //   "attention" : 13,
+      //   "update" : 1725926411481
+      // }
+
+      const {room_info, anchor_info, activity_init_info} = await fetchBiliData(roomId)
+      const {title, keyframe, parent_area_name, area_name} = room_info
+      const nowAttention = anchor_info?.relation_info?.attention || 0
+      const add = nowAttention - roomRecord[0].attention
+
+      const biliName = anchor_info?.base_info?.uname || '';
+
+
+      let out = Object.assign({}, roomRecord[0], {
+        nowAttention,
+        add,
+        biliName,
+        addStr: add > 0 ? `+${add}` : add,
+        update: (activity_init_info?.lego?.timestamp || (Date.now() / 1000))*1000,
+      })
+      reData.push(out)
+      cache.update = Date.now()
+    } else {
+      reData.push(target)
+    }
+  }
+  if(updateCount > 100) {
+    cache.expire = Date.now() + 1000 * 60 * 30
+  }
+  cache.data = reData
+
+  if(content === '洛奇涨粉榜') {
+    reData.sort((a, b) => b.add - a.add)
+  } else {
+    reData.sort((a, b) => a.add - b.add)
+  }
+  const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiFans.png`)
+  await render(reData.slice(0, 20), {
+    title: content,
+    description: `update: ${formatTime(reData[0].update)}`,
+    output: outputDir,
+    columns: [
+      {
+        label: '直播间id',
+        key: 'roomId',
+      },
+      {
+        label: 'B站昵称',
+        key: 'biliName',
+      },
+      {
+        label: '昵称',
+        key: 'nick_name',
+      },
+      {
+        label: '更新时间',
+        key: 'update',
+        format: time => formatTime(new Date(time || 0).getTime())
+      },
+      {
+        label: '现在粉丝',
+        key: 'nowAttention',
+      },
+      {
+        label: '粉丝变化',
+        key: 'addStr',
+      },
+    ]
+  })
+
+  console.log(`保存MabiFans.png成功！`)
+  let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiFans.png`)}]`
+  callback(imgMsg)
+}
+
 const LiveInspect = async (qq, group, content, callback, auto = false) => {
-  if(qq != 799018865) {
+  if(!whiteList.has(`${qq}`)) {
     return
   }
   let page = 1, pageCount = 9999, allList = []
@@ -123,12 +257,24 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
     page ++
   }
   let infos = []
+  //TODO： 这里需要查询昨天的数据，但是先查上小时的数据
+  let prevHour = ~~(Date.now()/3600000) - 1
   let yesterday = ~~(Date.now()/86400000) - 1
   for(let i = 0; i < allList.length; i ++) {
-    const {nick_name, live_address} = allList[i]
-    console.log(allList[i])
-    const roomId = new URL(live_address).pathname.split('/')[1]
     try{
+      const {nick_name, live_address} = allList[i]
+      console.log(allList[i])
+      let sp = new URL(live_address).pathname.split('/')
+      let roomId = sp[1]
+      if(roomId.toLowerCase() == 'h5') {
+        roomId = sp[2]
+      }
+      if(!/^\d+$/.test(roomId)) {
+        const redirectUrl = await getRedirectUrl(live_address).catch((err) => {
+          console.error(err);
+        });
+        roomId = new URL(redirectUrl).pathname.split('/')[1]
+      }
       const {room_info, anchor_info} = await fetchBiliData(roomId)
       const {title, keyframe, parent_area_name, area_name} = room_info
       let data = {
@@ -142,7 +288,7 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
         area_name
       }
       if(!auto) {
-        const prevData = await client.collection('cl_mabinogi_live_fans').findOne({_id: `${roomId}_${yesterday}`})
+        const prevData = await client.collection('cl_mabinogi_live_fans_v2').findOne({_id: `${roomId}_${prevHour}`, season})
         data.prevAttention = prevData?.attention || -1
       }
       infos.push(data)
@@ -154,7 +300,7 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
   // console.log(infos)
   await saveFansInfo(infos)
   if(!auto) {
-    await render(infos)
+    await renderTv(infos)
 
     console.log(`保存live-inspect.png成功！`)
     let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `live-inspect.png`)}]`
@@ -162,7 +308,7 @@ const LiveInspect = async (qq, group, content, callback, auto = false) => {
   }
 }
 
-const render = async list => {
+const renderTv = async list => {
   let html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -282,7 +428,7 @@ const render = async list => {
 }
 
 const startTimeout = () => {
-  let timeLeft = 3610000 - new Date().getTime() % 3600000
+  let timeLeft = 10810000 - new Date().getTime() % 10800000
   setTimeout(async () => {
     await LiveInspect(799018865, 0, '', () => {}, true)
     console.log('自动统计成功！')
@@ -292,6 +438,7 @@ const startTimeout = () => {
 
 startTimeout()
 module.exports = {
-  LiveInspect
+  LiveInspect,
+  LiveAnalyzer
 }
 // LiveInspect(799018865)

@@ -169,7 +169,7 @@ const { mabiBroadcast } = require('./ai/mabinogi/Television/broadcast')
 const { soVitsReply } = require('./ai/vits/index.js')
 const {mabiWeather} = require('./ai/mabinogi/weather')
 const {tcArticle} = require('./ai/mabinogi/newArticle')
-const {LiveInspect} = require('./ai/mabinogi/live-inspect')
+const {LiveInspect, LiveAnalyzer} = require('./ai/mabinogi/live-inspect')
 const {chujue} = require('./ai/image/generator/chujue/index.js')
 
 
@@ -1795,6 +1795,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(fie4 == '洛奇查房') {
     LiveInspect(from, groupid, con.substring(4).trim(), callback).catch(err => {console.log(err)});
+    return
+  }
+  if(con == '洛奇涨粉榜' || con == '洛奇掉粉榜') {
+
+    LiveAnalyzer(from, groupid, con, callback).catch(err => {console.log(err)});
     return
   }
 

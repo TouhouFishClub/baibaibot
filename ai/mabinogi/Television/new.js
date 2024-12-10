@@ -92,12 +92,20 @@ const mabiTelevision = async (content, qq, callback) => {
       let sp = filter.split('-')
       let [rewordFilter, nameFilter, dungeonFilter] = sp
       if (rewordFilter || nameFilter || dungeonFilter) {
-        whereClause = `WHERE${sp.map((x, i) => x && [' reward LIKE ?', ' character_name LIKE ?', ' dungeon_name LIKE ?'][i]).filter(x => x).join(' AND')}`
-        queryParams = sp.map(x => x && `%${x}%`).filter(x => x)
+        let rewordSql = ' reward LIKE ?'
+        if(sp[0] === '新卷') {
+          rewordSql = ` reward REGEXP '渴望的$|盼望的$|期盼的$|沉没的$|消失的$|被覆盖的$|逃跑的$|观望的$|旋转的$|囚禁$|不动之$|冻结的$|兔猿人$|极地骷髅战士$|极地冰狼$|踪迹$|轨迹$|痕迹$|符文猫$|斯内塔$|冰雪索灵$|白桦树$|波纹$|镜子$'`
+        }
+        whereClause = `WHERE${sp.map((x, i) => x && [rewordSql, ' character_name LIKE ?', ' dungeon_name LIKE ?'][i]).filter(x => x).join(' AND')}`
+        queryParams = sp.map(x => x && `%${x}%`).filter(x => x && x !== '%新卷%')
       }
     } else {
-      whereClause = `WHERE reward LIKE ? OR character_name LIKE ? OR dungeon_name LIKE ?`;
-      queryParams = [`%${filter}%`, `%${filter}%`, `%${filter}%`];
+      if(filter == '新卷') {
+        whereClause = `WHERE reward REGEXP '渴望的$|盼望的$|期盼的$|沉没的$|消失的$|被覆盖的$|逃跑的$|观望的$|旋转的$|囚禁$|不动之$|冻结的$|兔猿人$|极地骷髅战士$|极地冰狼$|踪迹$|轨迹$|痕迹$|符文猫$|斯内塔$|冰雪索灵$|白桦树$|波纹$|镜子$'`;
+      } else {
+        whereClause = `WHERE reward LIKE ? OR character_name LIKE ? OR dungeon_name LIKE ?`;
+        queryParams = [`%${filter}%`, `%${filter}%`, `%${filter}%`];
+      }
     }
   }
 
