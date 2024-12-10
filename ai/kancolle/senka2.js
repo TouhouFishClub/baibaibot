@@ -45,13 +45,13 @@ function getUserInfo(uuid,callback,noproxy,shipsave){
   var hour = nn.getHours();
   var key = year+'_'+month+'_'+dateno+'_'+hour;
   var now = nn.getTime();
-  var url = 'http://203.104.209.199/kcsapi/api_req_member/get_practice_enemyinfo';
+  var url = 'http://w08r.kancolle-server.com/kcsapi/api_req_member/get_practice_enemyinfo';
   var req = {
       url: url,
       method: "POST",
       headers:{
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Referer':'http://203.104.209.199/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
+          'Referer':'http://w08r.kancolle-server.com/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
           'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
       },
       body:'api_token='+token+'&api_verno=1&api_member_id='+uuid
@@ -263,7 +263,7 @@ function generateRankKey(userid){
 var MAGIC_R_NUMS = [8931, 1201, 1156, 5061, 4569, 4732, 3779, 4568, 5695, 4619, 4912, 5669, 6586 ];
 function getRank(page,retarr,proxy){
   console.log('will get rank:'+page+':'+proxy);
-  var url = 'http://203.104.209.199/kcsapi/api_req_ranking/mxltvkpyuklh';
+  var url = 'http://w08r.kancolle-server.com/kcsapi/api_req_ranking/mxltvkpyuklh';
   var nn = new Date();
   var now = new Date().getTime();
   var userid = 8156938;
@@ -286,7 +286,7 @@ function getRank(page,retarr,proxy){
             method: "POST",
             headers:{
               'Content-Type': 'application/x-www-form-urlencoded',
-              'Referer':'http://203.104.209.199/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
+              'Referer':'http://w08r.kancolle-server.com/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
               'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
             },
             body:"api%5Fpageno="+page+"&api%5Fverno=1&api%5Franking="+ranking+"&api%5Ftoken="+token
@@ -310,6 +310,7 @@ function getRank(page,retarr,proxy){
       request(req, function(error, response, body) {
         if (error && error.code) {
           console.log('pipe error catched!')
+          console.log(error);
           var delay = proxy?(2000*proxy+3000):2000
           setTimeout(function(){
             getRank(page,retarr,proxy+1)
@@ -333,6 +334,8 @@ function getRank(page,retarr,proxy){
                 return;
             }
           var data = eval('('+body+')');
+          console.log('seed');
+
           try {
             var list = data.api_data.api_list;
           } catch(ex) {
@@ -346,7 +349,7 @@ function getRank(page,retarr,proxy){
           
             request(
               {
-                url: "http://203.104.209.199/kcs2/js/main.js",
+                url: "http://w08r.kancolle-server.com/kcs2/js/main.js",
                 method: "GET",
                 headers: {
                   "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36",
@@ -402,7 +405,7 @@ function getRank(page,retarr,proxy){
                 if (rdlist === null || nobj === null) {
                   throw "update SEED failed!!!";
                 }
-          
+
                 nobj = Number(nobj);
                 let offset = nobj - rdlist.findIndex((e) => e == "'B2jQzwn0'");
           
