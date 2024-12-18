@@ -44,7 +44,7 @@ const searchNameAndFilter = async (namesSet, filterStr) => {
   if(optionSetObj.length == 0) {
     await loadOptionset()
   }
-  return optionSetObj.filter(opt => (namesSet.has(opt.LocalName) || namesSet.has(opt.LocalName2)) && opt.BuffStr.match(filterStr)).map(x => x.LocalName)
+  return optionSetObj.filter(opt => (namesSet.has(opt.LocalName) || namesSet.has(opt.LocalName2)) && opt.Buff.join(',').match(filterStr)).map(x => x.LocalName)
 }
 
 const op = function(userId, nickname, context, type = 'normal', callback) {
