@@ -40,8 +40,8 @@ const help = callback => {
   callback('这是帮助')
 }
 
-const createSearchRegexp = filterStr => {
-  console.log(`===> ${filterStr}`)
+const createSearchRegexp = async filterStr => {
+  // console.log(`===> ${filterStr}`)
   const scrolls = [
     '渴望的',
     '盼望的',
@@ -69,9 +69,9 @@ const createSearchRegexp = filterStr => {
     '镜子'
   ]
   const filter = filterStr.trim().substring(1, filterStr.length - 1)
-  console.log(`===> ${filter}`)
+  // console.log(`===> ${filter}`)
   if(filter) {
-    let f = searchNameAndFilter(new Set(scrolls), filter)
+    let f = await searchNameAndFilter(new Set(scrolls), filter)
     console.log(`===> ${f}`)
     if(f.length) {
       return f.map(x => `${x}$`).join('|')
@@ -138,7 +138,8 @@ const mabiTelevision = async (content, qq, callback) => {
       if (rewordFilter || nameFilter || dungeonFilter) {
         let rewordSql = ' reward LIKE ?'
         if(/^新.*卷$/.test(sp[0])) {
-          rewordSql = ` reward REGEXP '${createSearchRegexp(sp[0])}'`
+          const regStr = await createSearchRegexp(sp[0])
+          rewordSql = ` reward REGEXP '${regStr}'`
           // rewordSql = ` reward REGEXP '渴望的$|盼望的$|期盼的$|沉没的$|消失的$|被覆盖的$|逃跑的$|观望的$|旋转的$|囚禁$|不动之$|冻结的$|兔猿人$|极地骷髅战士$|极地冰狼$|踪迹$|轨迹$|痕迹$|符文猫$|斯内塔$|冰雪索灵$|白桦树$|波纹$|镜子$'`
         }
         whereClause = `WHERE${sp.map((x, i) => x && [rewordSql, ' character_name LIKE ?', ' dungeon_name LIKE ?'][i]).filter(x => x).join(' AND')}`
@@ -146,7 +147,8 @@ const mabiTelevision = async (content, qq, callback) => {
       }
     } else {
       if(/^新.*卷$/.test(filter)) {
-        whereClause = `WHERE reward REGEXP '${createSearchRegexp(filter)}'`
+        const regStr = await createSearchRegexp(filter)
+        whereClause = `WHERE reward REGEXP '${regStr}'`
         // whereClause = `WHERE reward REGEXP '渴望的$|盼望的$|期盼的$|沉没的$|消失的$|被覆盖的$|逃跑的$|观望的$|旋转的$|囚禁$|不动之$|冻结的$|兔猿人$|极地骷髅战士$|极地冰狼$|踪迹$|轨迹$|痕迹$|符文猫$|斯内塔$|冰雪索灵$|白桦树$|波纹$|镜子$'`;
       } else {
         whereClause = `WHERE reward LIKE ? OR character_name LIKE ? OR dungeon_name LIKE ?`;

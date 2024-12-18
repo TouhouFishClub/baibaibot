@@ -34,7 +34,18 @@ const delOptionsetWhere = (userId, author, callback) => {
   optionsetWhereCnHandler('del', author, LocalName, Level, '', callback, saveTmpMap[userId])
 }
 
-const searchNameAndFilter = (namesSet, filterStr) => optionSetObj.filter(opt => (namesSet.has(opt.LocalName) || namesSet.has(opt.LocalName2)) && opt.BuffStr.match(filterStr)).map(x => x.LocalName)
+const loadOptionset = () => new Promise((resolve, reject) => {
+  op(1,'1','白桦树','normal',() => {
+    resolve()
+  })
+})
+
+const searchNameAndFilter = async (namesSet, filterStr) => {
+  if(optionSetObj.length == 0) {
+    await loadOptionset()
+  }
+  return optionSetObj.filter(opt => (namesSet.has(opt.LocalName) || namesSet.has(opt.LocalName2)) && opt.BuffStr.match(filterStr)).map(x => x.LocalName)
+}
 
 const op = function(userId, nickname, context, type = 'normal', callback) {
   // console.log('\n====================\n\n\n\n\n\n\n\n\n')
