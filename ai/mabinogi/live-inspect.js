@@ -132,8 +132,8 @@ const fetchBiliData = roomId => new Promise(resolve => {
       //   official_room_info: null,
       //   voice_background: ''
       // }
+      // console.log(response.data)
       resolve(response.data.data)
-      // console.log(response.data.data.room_info)
     })
     .catch(error => {
       console.error('Error:', error);
@@ -164,8 +164,8 @@ const LiveAnalyzer = async(qq, group, content, callback) => {
     let target = cache.data.filter(x => x && x.roomId == allLiverRoomId[i])[0]
     if(cache.expire < Date.now() || !target) {
       updateCount ++
-      console.log(`==== ${i}/${allLiverRoomId.length} ====`)
       let roomId = allLiverRoomId[i]
+      console.log(`==== ${i}/${allLiverRoomId.length}: ${roomId} ====`)
       let roomRecord = allData.filter(x => x.roomId == roomId).sort((a, b) => a.update - b.update)
       // {
       //   "_id" : "6411516_19976",
@@ -428,7 +428,7 @@ const renderTv = async list => {
 }
 
 const startTimeout = () => {
-  let timeLeft = 3610000 - new Date().getTime() % 3600000
+  let timeLeft = 10810000 - new Date().getTime() % 10800000
   setTimeout(async () => {
     await LiveInspect(799018865, 0, '', () => {}, true)
     console.log('自动统计成功！')
