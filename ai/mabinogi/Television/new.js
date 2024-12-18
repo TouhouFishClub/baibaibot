@@ -41,6 +41,7 @@ const help = callback => {
 }
 
 const createSearchRegexp = filterStr => {
+  console.log(`===> ${filterStr}`)
   const scrolls = [
     '渴望的',
     '盼望的',
@@ -68,9 +69,10 @@ const createSearchRegexp = filterStr => {
     '镜子'
   ]
   const filter = filterStr.trim().substring(1, filterStr.length - 1)
+  console.log(`===> ${filter}`)
   if(filter) {
     let f = searchNameAndFilter(new Set(scrolls), filter)
-    console.log(f)
+    console.log(`===> ${f}`)
     if(f.length) {
       return f.map(x => `${x}$`).join('|')
     } else {
