@@ -34,7 +34,9 @@ const delOptionsetWhere = (userId, author, callback) => {
   optionsetWhereCnHandler('del', author, LocalName, Level, '', callback, saveTmpMap[userId])
 }
 
-module.exports = function(userId, nickname, context, type = 'normal', callback) {
+const searchNameAndFilter = (namesSet, filterStr) => optionSetObj.filter(opt => (namesSet.has(opt.LocalName) || namesSet.has(opt.LocalName2)) && opt.BuffStr.match(filterStr)).map(x => x.LocalName)
+
+const op = function(userId, nickname, context, type = 'normal', callback) {
   // console.log('\n====================\n\n\n\n\n\n\n\n\n')
   // console.log(userId)
   // console.log(context)
@@ -438,4 +440,8 @@ module.exports = function(userId, nickname, context, type = 'normal', callback) 
   } else {
     _initSearch()
   }
+}
+module.exports = {
+  op,
+  searchNameAndFilter
 }

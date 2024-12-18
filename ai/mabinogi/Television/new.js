@@ -4,6 +4,8 @@ const mysql = require('mysql2')
 const {render} = require('./render')
 const { IMAGE_DATA } = require('../../../baibaiConfigs')
 
+const { searchNameAndFilter } = require('../optionset')
+
 const { MongoClient } = require('mongodb')
 const { mongourl } = require('../../../baibaiConfigs')
 
@@ -38,6 +40,46 @@ const help = callback => {
   callback('这是帮助')
 }
 
+const createSearchRegexp = filterStr => {
+  const scrolls = [
+    '渴望的',
+    '盼望的',
+    '期盼的',
+    '沉没的',
+    '消失的',
+    '被覆盖的',
+    '逃跑的',
+    '观望的$',
+    '转的',
+    '囚禁',
+    '不动之',
+    '冻结的',
+    '兔猿人',
+    '极地骷髅战士',
+    '极地冰狼',
+    '踪迹',
+    '轨迹',
+    '痕迹',
+    '符文猫',
+    '斯内塔',
+    '冰雪索灵',
+    '白桦树',
+    '波纹',
+    '镜子'
+  ]
+  const filter = filterStr.trim().substring(1, filterStr.length - 1)
+  if(filter) {
+    let f = searchNameAndFilter(new Set(scrolls), filter)
+    console.log(f)
+    if(f.length) {
+      return f.map(x => `${x}$`).join('|')
+    } else {
+      return scrolls.map(x => `${x}$`).join('|')
+    }
+  } else {
+    return scrolls.map(x => `${x}$`).join('|')
+  }
+}
 
 const formatTime = ts => {
   let d = new Date(ts)
@@ -93,15 +135,17 @@ const mabiTelevision = async (content, qq, callback) => {
       let [rewordFilter, nameFilter, dungeonFilter] = sp
       if (rewordFilter || nameFilter || dungeonFilter) {
         let rewordSql = ' reward LIKE ?'
-        if(sp[0] === '新卷') {
-          rewordSql = ` reward REGEXP '渴望的$|盼望的$|期盼的$|沉没的$|消失的$|被覆盖的$|逃跑的$|观望的$|旋转的$|囚禁$|不动之$|冻结的$|兔猿人$|极地骷髅战士$|极地冰狼$|踪迹$|轨迹$|痕迹$|符文猫$|斯内塔$|冰雪索灵$|白桦树$|波纹$|镜子$'`
+        if(/^新.*卷$/.test(sp[0])) {
+          rewordSql = ` reward REGEXP '${createSearchRegexp(sp[0])}'`
+          // rewordSql = ` reward REGEXP '渴望的$|盼望的$|期盼的$|沉没的$|消失的$|被覆盖的$|逃跑的$|观望的$|旋转的$|囚禁$|不动之$|冻结的$|兔猿人$|极地骷髅战士$|极地冰狼$|踪迹$|轨迹$|痕迹$|符文猫$|斯内塔$|冰雪索灵$|白桦树$|波纹$|镜子$'`
         }
         whereClause = `WHERE${sp.map((x, i) => x && [rewordSql, ' character_name LIKE ?', ' dungeon_name LIKE ?'][i]).filter(x => x).join(' AND')}`
         queryParams = sp.map(x => x && `%${x}%`).filter(x => x && x !== '%新卷%')
       }
     } else {
-      if(filter == '新卷') {
-        whereClause = `WHERE reward REGEXP '渴望的$|盼望的$|期盼的$|沉没的$|消失的$|被覆盖的$|逃跑的$|观望的$|旋转的$|囚禁$|不动之$|冻结的$|兔猿人$|极地骷髅战士$|极地冰狼$|踪迹$|轨迹$|痕迹$|符文猫$|斯内塔$|冰雪索灵$|白桦树$|波纹$|镜子$'`;
+      if(/^新.*卷$/.test(filter)) {
+        whereClause = `WHERE reward REGEXP '${createSearchRegexp(filter)}'`
+        // whereClause = `WHERE reward REGEXP '渴望的$|盼望的$|期盼的$|沉没的$|消失的$|被覆盖的$|逃跑的$|观望的$|旋转的$|囚禁$|不动之$|冻结的$|兔猿人$|极地骷髅战士$|极地冰狼$|踪迹$|轨迹$|痕迹$|符文猫$|斯内塔$|冰雪索灵$|白桦树$|波纹$|镜子$'`;
       } else {
         whereClause = `WHERE reward LIKE ? OR character_name LIKE ? OR dungeon_name LIKE ?`;
         queryParams = [`%${filter}%`, `%${filter}%`, `%${filter}%`];
