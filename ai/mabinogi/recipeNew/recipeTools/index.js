@@ -6,6 +6,7 @@ const xml2js = require('xml2js')
 const parser = new xml2js.Parser()
 let itemXML = []
 let itemETCXML = []
+let itemWeaponXML = []
 let itemTXT = {}
 
 let itemPlus = {}
@@ -54,6 +55,25 @@ const loadItemETCXml = async () => {
     let output = xmlData.Items.Mabi_Item.map(x => Object.assign({}, x.$, {Text_China: transform[x.$.Text_Name1]}))
     // console.log(output)
     itemETCXML = output
+    return output
+  }
+}
+const loadItemWeaponXml = async () => {
+  if(itemWeaponXML.length) {
+    return itemWeaponXML
+  } else {
+    let xmlData = await readXmlParse(path.join(__dirname, '..', '..', 'data', 'IT', `itemdb_weapon.xml`))
+    let txt = fs.readFileSync(path.join(__dirname, '..', '..', 'data', 'IT', `itemdb_weapon.china.txt`), 'utf-8')
+    let transform = {}
+    txt.split('\n').forEach(val => {
+      let sp = val.split('\t')
+      if(sp[0] && sp[1]) {
+        transform[`_LT[xml.itemdb_etc.${sp[0].trim()}]`] = sp[1].trim()
+      }
+    })
+    let output = xmlData.Items.Mabi_Item.map(x => Object.assign({}, x.$, {Text_China: transform[x.$.Text_Name1]}))
+    // console.log(output)
+    itemWeaponXML = output
     return output
   }
 }
@@ -131,7 +151,7 @@ const analyzerItem = async str => {
 
 const analyzerCompleteItem = async str => {
   // process.stdout.write('\n')
-  let items = (await loadItemXml()).concat(await loadItemETCXml())
+  let items = (await loadItemXml()).concat(await loadItemETCXml().concat(await loadItemWeaponXml()))
 
   let output = []
   let compTypes = str.split('\n').map(x => x.trim().substring(1, x.trim().length - 1))
