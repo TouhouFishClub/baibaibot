@@ -97,6 +97,7 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
         }
       }
     }
+    saveChat(group_id, 10000, `百百${port}`, message, port);
     ws.send(JSON.stringify(sendBody));
   }, group_name, user_name, message_type, port || 30015, context )
 }
