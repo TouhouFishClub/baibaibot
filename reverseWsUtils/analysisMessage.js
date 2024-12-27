@@ -180,7 +180,7 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
         }
         break
       case 'meta_event':
-        console.log(`[ws info][WS META EVENT][${context.meta_event_type}][${JSON.stringify(context.status)}]`)
+        console.log(`[ws info][WS META EVENT][${bot_name}][${context.meta_event_type}][${JSON.stringify(context.status)}]`)
         break
       default:
         console.log(`[ws info]\n[UNKNOWN POST TYPE]\n[${JSON.stringify(context)}]\n`)
