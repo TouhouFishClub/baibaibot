@@ -13,6 +13,9 @@ let itemPlus = {}
 
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/TailoringItem.js')).toString('utf-8'))
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/BlacksmithItem.js')).toString('utf-8'))
+eval(fs.readFileSync(path.join(__dirname, '..', '/js/HeulwenEngineeringItem.js')).toString('utf-16le'))
+eval(fs.readFileSync(path.join(__dirname, '..', '/js/MagicCraftItem.js')).toString('utf-8'))
+
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/Item.js')).toString('utf-8'))
 // console.log(TailoringList)
 // console.log(BlacksmithList)
@@ -145,13 +148,14 @@ const analyzerItem = async str => {
       return parseInt(x.id)
     }
   })
+  console.log('\n')
   // console.log(output)
   return output
 }
 
 const analyzerCompleteItem = async str => {
   // process.stdout.write('\n')
-  let items = (await loadItemXml()).concat(await loadItemETCXml().concat(await loadItemWeaponXml()))
+  let items = (await loadItemXml()).concat((await loadItemETCXml()).concat(await loadItemWeaponXml()))
 
   let output = []
   let compTypes = str.split('\n').map(x => x.trim().substring(1, x.trim().length - 1))
@@ -208,14 +212,45 @@ const analyzerCompleteItem = async str => {
       return parseInt(x.id)
     }
   }))
+
+  console.log('\n')
   // console.log(output)
   return output
 }
 
 // 参考 44008 恶魔孤寂拳套 BlacksmithItem44008
+// 参考 1260003 死神浪客拳套 工学
+// 参考 1040007 毁灭弓 工艺 三眼
+// 参考 1230010 元素法仗 工艺
+//
+
+
+const formatProduction = async () => {
+  let xmlData = await readXmlParse(path.join(__dirname, '..', '..', 'data', 'IT', `production.xml`))
+  let txt = fs.readFileSync(path.join(__dirname, '..', '..', 'data', 'IT', `production.china.txt`), 'utf-8')
+  let transform = {}
+  txt.split('\n').forEach(val => {
+    let sp = val.split('\t')
+    transform[`_LT[xml.production.${sp[0].trim()}]`] = sp[1]
+  })
+  let HeulwenEngineering = {}, MagicCraft = {}
+
+  for(let i = 0; i < xmlData.Production.HeulwenEngineering[0].Production.length; i ++) {
+    let xmlItem = xmlData.Production.HeulwenEngineering[0].Production[i].$
+    if(xmlItem.Essentials) {
+      if(xmlItem.Title) {
+        xmlItem.TitleCn = transform[xmlItem.Title].trim()
+      }
+      if(xmlItem.EssentialDesc) {
+        xmlItem.EssentialDescCn = transform[xmlItem.EssentialDesc].trim()
+      }
+      console.log(xmlItem)
+    }
+  }
+}
 const analyzer = async () => {
-  let xmlData = await readXmlParse(path.join(__dirname, 'data', `ManualForm.xml`))
-  let txt = fs.readFileSync(path.join(__dirname, 'data', `ManualForm.china.txt`), 'utf-8')
+  let xmlData = await readXmlParse(path.join(__dirname, '..', '..', 'data', 'IT', `ManualForm.xml`))
+  let txt = fs.readFileSync(path.join(__dirname, '..', '..', 'data', 'IT', `ManualForm.china.txt`), 'utf-8')
   let transform = {}
   txt.split('\n').forEach(val => {
     let sp = val.split('\t')
@@ -323,6 +358,7 @@ const analyzer = async () => {
       }
     }
   }
+  await formatProduction()
 
   process.stdout.write('\n')
   // console.log(Tailoring, BlackSmith)
