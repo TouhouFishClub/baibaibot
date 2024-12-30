@@ -341,7 +341,8 @@ async function addSendQueue(groupid,msg,port,from, configs){
 
 	let msgSource = msg
 
-	if(port === '29334' && Math.random() > 0.4) {
+  const portGroup = new Set(['29334', '30006'])
+	if(portGroup.has(port) && Math.random() > 0.4) {
 		// 限制某些端口强制使用图片发送文字(概率60%)
 		let sp = msg.split('[CQ:'), output = []
 		for(let index = 0 ; index < sp.length; index ++) {
@@ -1478,16 +1479,16 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
-  if(con.startsWith('查') && (con.endsWith('成分') | con.endsWith('浓度'))) {
-    composition(con, callback)
-    return
-  }
-
-  if(con.startsWith('查') && (con.endsWith('成分排名') | con.endsWith('浓度排名'))) {
-    let s = con.substring(1, con.length - 4).trim()
-    groupCompositionRank(groupid, port, s, callback)
-    return
-  }
+  // if(con.startsWith('查') && (con.endsWith('成分') | con.endsWith('浓度'))) {
+  //   composition(con, callback)
+  //   return
+  // }
+  //
+  // if(con.startsWith('查') && (con.endsWith('成分排名') | con.endsWith('浓度排名'))) {
+  //   let s = con.substring(1, con.length - 4).trim()
+  //   groupCompositionRank(groupid, port, s, callback)
+  //   return
+  // }
 
   // 日历系统
   if(content.startsWith('日历设置')) {
