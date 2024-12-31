@@ -20,9 +20,11 @@ eval(fs.readFileSync(path.join(__dirname, '..', '/js/Item.js')).toString('utf-8'
 // console.log(TailoringList)
 // console.log(BlacksmithList)
 
+
 const TailoringSet = new Set(TailoringList.map(x => `${x}`))
 const BlackSmithSet = new Set(BlacksmithList.map(x => `${x}`))
 
+const wait = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms))
 const loadItemXml = async () => {
   if(itemXML.length) {
     return itemXML
@@ -103,7 +105,7 @@ const readXmlParse = filePath => new Promise((resolve, reject) => {
 })
 
 const analyzerItem = async str => {
-  let items = await loadItemXml()
+  let items = (await loadItemXml()).concat((await loadItemETCXml()).concat(await loadItemWeaponXml()))
   let sp = str.split(';').map(x => x.split(',').map(x => x.trim()).filter(x => x)).filter(x => x.length)
   let infos = [], output = []
   for(let i = 0; i < sp.length; i ++) {
@@ -235,8 +237,11 @@ const formatProduction = async () => {
   })
   let HeulwenEngineering = {}, MagicCraft = {}
 
+  // 工学
+  let ignoreHeulwenEngineeringItemSet = new Set(['希尔文工学'])
   for(let i = 0; i < xmlData.Production.HeulwenEngineering[0].Production.length; i ++) {
     let xmlItem = xmlData.Production.HeulwenEngineering[0].Production[i].$
+    // await wait()
     if(xmlItem.Essentials) {
       if(xmlItem.Title) {
         xmlItem.TitleCn = transform[xmlItem.Title].trim()
@@ -244,9 +249,90 @@ const formatProduction = async () => {
       if(xmlItem.EssentialDesc) {
         xmlItem.EssentialDescCn = transform[xmlItem.EssentialDesc].trim()
       }
-      console.log(xmlItem)
+      if(xmlItem.Desc) {
+        xmlItem.DescCn = transform[xmlItem.Desc].trim()
+      }
+      // console.log(xmlItem)
+      // console.log(xmlItem.ProductItemId)
+      // console.log(`Item${xmlItem.ProductItemId}`)
+      //成品
+
+      if(ignoreHeulwenEngineeringItemSet.has(xmlItem.TitleCn)) {
+        continue
+      }
+      try {
+        // 如果有，则不做添加
+        process.stdout.clearLine()
+        process.stdout.cursorTo(0)
+        let out = eval(`Item${xmlItem.ProductItemId}`)[0]
+        process.stdout.write(out)
+      } catch (err) {
+        // console.log(err)
+        // console.log(xmlItem)
+        // 如果没有，则添加额外item
+        itemPlus[`Item${xmlItem.ProductItemId}`] = transform[xmlItem.Title].trim()
+        let essentials = await analyzerItem(xmlItem.Essentials)
+
+        HeulwenEngineering[xmlItem.ProductItemId] = Object.assign({
+          output: JSON.stringify([
+            parseInt(xmlItem.ProductionType),
+            [
+              ...essentials,
+            ]
+          ])
+        }, xmlItem)
+      }
     }
   }
+
+  // 工艺
+  let ignoreMagicCraftItemSet = new Set(['魔法工艺'])
+  for(let i = 0; i < xmlData.Production.MagicCraft[0].Production.length; i ++) {
+    let xmlItem = xmlData.Production.MagicCraft[0].Production[i].$
+    // await wait()
+    if(xmlItem.Essentials) {
+      if(xmlItem.Title) {
+        xmlItem.TitleCn = transform[xmlItem.Title].trim()
+      }
+      if(xmlItem.EssentialDesc) {
+        xmlItem.EssentialDescCn = transform[xmlItem.EssentialDesc].trim()
+      }
+      if(xmlItem.Desc) {
+        xmlItem.DescCn = transform[xmlItem.Desc].trim()
+      }
+      console.log(xmlItem)
+      // console.log(xmlItem.ProductItemId)
+      // console.log(`Item${xmlItem.ProductItemId}`)
+      //成品
+
+      if(ignoreMagicCraftItemSet.has(xmlItem.TitleCn)) {
+        continue
+      }
+      try {
+        // 如果有，则不做添加
+        process.stdout.clearLine()
+        process.stdout.cursorTo(0)
+        let out = eval(`Item${xmlItem.ProductItemId}`)[0]
+        process.stdout.write(out)
+      } catch (err) {
+        // console.log(err)
+        // console.log(xmlItem)
+        // 如果没有，则添加额外item
+        itemPlus[`Item${xmlItem.ProductItemId}`] = transform[xmlItem.Title].trim()
+        let essentials = await analyzerItem(xmlItem.Essentials)
+
+        MagicCraft[xmlItem.ProductItemId] = Object.assign({
+          output: JSON.stringify([
+            parseInt(xmlItem.ProductionType),
+            [
+              ...essentials,
+            ]
+          ])
+        }, xmlItem)
+      }
+    }
+  }
+  return {HeulwenEngineering, MagicCraft}
 }
 const analyzer = async () => {
   let xmlData = await readXmlParse(path.join(__dirname, '..', '..', 'data', 'IT', `ManualForm.xml`))
@@ -358,7 +444,8 @@ const analyzer = async () => {
       }
     }
   }
-  await formatProduction()
+
+  const {HeulwenEngineering, MagicCraft} = await formatProduction()
 
   process.stdout.write('\n')
   // console.log(Tailoring, BlackSmith)
@@ -383,6 +470,17 @@ const analyzer = async () => {
   let TailoringOutputStr = `TailoringList = TailoringList.concat([${Object.values(Tailoring).filter(x => !x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nTalentTailoringList = TalentTailoringList.concat([${Object.values(Tailoring).filter(x => x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nvar ${Object.values(Tailoring).map(x => `TailoringItem${x.ProductItemID}=${x.output}`).join(',')};`
   console.log(TailoringOutputStr)
   console.log('\n')
+
+  console.log('=== append to MagicCraftItem.js file ===\n')
+  let MagicCraftOutputStr = `MagicCraftList = MagicCraftList.concat([${Object.values(MagicCraft).map(x=>x.ProductItemId).join(',')}]);\nSightOfOtherSideMagicCraftList = SightOfOtherSideMagicCraftList.concat([${Object.values(HeulwenEngineering).map(x=>x.ProductItemId).join(',')}]);\nvar ${Object.values(MagicCraft).map(x => `MagicCraftItem${x.ProductItemId}=${x.output}`).join(',')};`
+  console.log(MagicCraftOutputStr)
+  console.log('\n')
+
+  console.log('=== append to HeulwenEngineeringItem.js file ===\n')
+  let HeulwenEngineeringOutputStr = `HeulwenEngineeringList = HeulwenEngineeringList.concat([${Object.values(HeulwenEngineering).map(x=>x.ProductItemId).join(',')}]);\nvar ${Object.values(HeulwenEngineering).map(x => `HeulwenEngineeringItem${x.ProductItemId}=${x.output}`).join(',')};`
+  console.log(HeulwenEngineeringOutputStr)
+  console.log('\n')
+
 
   console.log('=== append to Item.js file ===\n')
   let ItemOutputStr = `var ${Object.keys(itemPlus).map(key => `${key}=["${itemPlus[key]}"]`).join(',')};`
