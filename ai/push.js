@@ -109,8 +109,8 @@ function pushToGroup(type) {
               "message": mssg
             }
           }
-          console.log('will send wsssssssssssssss');
-          console.log(sendBody);
+          //console.log('will send wsssssssssssssss');
+          //console.log(sendBody);
           if(ws){
             ws.send(JSON.stringify(sendBody));
           }
