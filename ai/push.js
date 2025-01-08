@@ -74,6 +74,23 @@ function getCurrency(callback){
   req.end();
 }
 
+
+const {
+  localImageToBase64,
+  localAssetsToBase64
+} = require('../util/imageToBase64')
+
+const replaceImageToBase64 = message =>
+  message.split('[CQ:image,file=file:').map((sp, index) => {
+    if(index) {
+      let tsp = sp.split(']'), url = tsp[0]
+      tsp[0] = localImageToBase64(url)
+      return tsp.join(']')
+    }
+    return sp
+  }).join('[CQ:image,file=base64://')
+
+
 function pushToGroup(type) {
   if (type == 2) {
     var groupid = 221698514;
