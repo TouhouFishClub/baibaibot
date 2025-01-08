@@ -9,6 +9,11 @@ const {cm,combine} = require(path.join(__dirname, '/coin/market.js'))
 const {getStock} = require(path.join(__dirname, '/coin/stock.js'))
 
 pushTask();
+var ws;
+function setPushWs(revws){
+  console.log('set puuuuuuuuuuuuuuuush');
+  ws = revws
+}
 
 
 function pushTask(){
@@ -80,22 +85,33 @@ function pushToGroup(type) {
       if (res.trim().length > 0) {
           res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=/home/flan/baibai/coolq-data/cq/data/image/sen")
           var bdy = {"user_id": 357474405, message: res};
-          console.log("send:" + res);
-          request({
-              headers:{
-                  "Content-Type":"application/json"
-              },
-              method: "POST",
-              url: 'http://'+require('../baibaiConfigs').myip+':'+25334+'/send_private_msg',
-              body: JSON.stringify(bdy)
-          }, function(error, response, body) {
-              if (error && error.code) {
-                  console.log('pipe error catched!')
-                  console.log(error);
-              } else {
-                  console.log('ok1');
-              }
-          });
+          var sendBody = {
+            "action": "send_msg",
+            "params": {
+              "message_type": "group",
+              "group_id": groupid,
+              "message": res
+            }
+          }
+          if(ws){
+            ws.send(JSON.stringify(sendBody));
+          }
+          // console.log("send:" + res);
+          // request({
+          //     headers:{
+          //         "Content-Type":"application/json"
+          //     },
+          //     method: "POST",
+          //     url: 'http://'+require('../baibaiConfigs').myip+':'+25334+'/send_private_msg',
+          //     body: JSON.stringify(bdy)
+          // }, function(error, response, body) {
+          //     if (error && error.code) {
+          //         console.log('pipe error catched!')
+          //         console.log(error);
+          //     } else {
+          //         console.log('ok1');
+          //     }
+          // });
       }
     }
     var now = new Date();
@@ -399,5 +415,6 @@ module.exports={
   pushTask,
   getPrice,
   getBitFlyer,
-  getCoinMarket
+  getCoinMarket,
+  setPushWs
 }

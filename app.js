@@ -20,6 +20,8 @@ const {
   analysisMessage,
   socketManager
 } = require('./reverseWsUtils')
+const {setPushWs} = require('./ai/push');
+
 
 const ports = new Set([
 	// 23334,
@@ -109,9 +111,11 @@ app.ws('/lagrange/:bot_name', (ws, req) => {
   // console.log(`======================\n\npath: ${path}\n\n======================`);
   let bot_name = req.params.bot_name
   console.log(`======================\n\nbot_name: ${bot_name}\nheaders: ${JSON.stringify(req.headers, null, 2)}\n\n======================`)
+  if(bot_name==25334){
+    setPushWs(ws);
+  }
   socketManager.set(bot_name, ws)
   ws.on('message', (msg) => {
-    // console.log(`======================\n\n${msg}\n\n======================`)
     analysisMessage(msg, ws, bot_name, 11)
   })
   ws.on('close', () => {
