@@ -94,6 +94,8 @@ function pushToGroup(type) {
             }
           }
           console.log('will send wsssssssssssssss');
+          console.log(sendBody);
+          console.log(ws);
           if(ws){
             ws.send(JSON.stringify(sendBody));
           }
@@ -129,206 +131,14 @@ function pushToGroup(type) {
 
 
 
-function getBitFlyer(callback,withproxy){
-  console.log('will get bitflyer');
-  var options = {
-    hostname: "api.bitflyer.jp",
-    port: 443,
-    path: '/v1/ticker?product_code=BTC_JPY',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
-    },
-    method: 'GET'
-  };
-  options.agent=agent;
-  var req = https.request(options, function(res) {
-    res.setEncoding('utf8');
-    var code = res.statusCode;
-    if(code==200){
-      failed=0;
-      var resdata = '';
-      res.on('data', function (chunk) {
-        resdata = resdata + chunk;
-      });
-      res.on('end', function () {
-        parseBitFlyerRes(resdata,callback);
-      });
-      res.on('error',function(){
 
-      })
-    }else{
-      failed = failed + 1;
-      if(failed>2){
-        callback('bitflyer BOOM!');
-      }else{
-        getBitFlyer(callback);
-      }
-    }
-  });
-  req.setTimeout(5000,function(){
-    callback('bitflyer BOOM!');
-  });
-  req.on('error', function(err) {
-    console.log('req err:');
-    console.log(err);
-  });
-  req.end();
-}
 
-function parseBitFlyerRes(resdata,callback){
-  var ret = '';
-  try{
-    var data = eval('('+resdata+')');
-    var btc_jpy = data.best_bid;
-    var now = new Date();
-    ret = "比特币行情(Bitflyer)："+now.toLocaleString()+"\n";
-    ret = ret + "BTC:"+btc_jpy+"円";
-  }catch(e){
-    console.log(e);
-    ret = '';
-  }
-  callback(ret);
-}
-
-function getHT(callback,withproxy){
-  console.log('will get bitflyer');
-  var options = {
-    hostname: "api.huobi.pro",
-    port: 443,
-    path: '/market/detail/merged?symbol=htusdt',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
-    },
-    method: 'GET'
-  };
-  options.agent=agent;
-  var req = https.request(options, function(res) {
-    res.setEncoding('utf8');
-    var code = res.statusCode;
-    if(code==200){
-      failed=0;
-      var resdata = '';
-      res.on('data', function (chunk) {
-        resdata = resdata + chunk;
-      });
-      res.on('end', function () {
-        parseHTRes(resdata,callback);
-      });
-      res.on('error',function(){
-
-      })
-    }else{
-      failed = failed + 1;
-      if(failed>2){
-        callback('huobi BOOM!');
-      }else{
-        getHT(callback);
-      }
-    }
-  });
-  req.on('error', function(err) {
-    console.log('req err:');
-    console.log(err);
-  });
-  req.setTimeout(5000,function(){
-    callback('huobi BOOM!');
-  });
-  req.end();
-}
-
-function parseHTRes(resdata,callback){
-  var ret = '';
-  try{
-    var data = eval('('+resdata+')');
-    var ch=data.ch;
-    var symbol = ch.split(".")[1];
-    var price = data.tick.close;
-    var now = new Date();
-    ret = "火币行情："+now.toLocaleString()+"\n";
-    ret = ret + symbol+":"+price.toFixed(8);
-  }catch(e){
-    console.log(e);
-    ret = '';
-  }
-  callback(ret);
-
-}
 
 
 
 function getPrice(callback){
   failed=0;
   getCoinMarket(callback,false);
-}
-
-var HttpsProxyAgent = require('https-proxy-agent')
-var proxy = 'http://192.168.17.62:3128';
-var agent = new HttpsProxyAgent(proxy);
-
-function getBifFinex(usd_cny,callback,withproxy){
-  console.log('will get bitfinex:'+withproxy);
-  var options = {
-    hostname: "api.bitfinex.com",
-    port: 443,
-    path: '/v2/tickers?symbols=tBTCUSD,tLTCUSD,tETHUSD,tETCUSD,tBCHUSD,tEOSUSD,tXRPUSD,tQTMUSD,tDSHUSD',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36'
-    },
-    method: 'GET'
-  };
-  options.agent=agent;
-  var req = https.request(options, function(res) {
-    res.setEncoding('utf8');
-    var code = res.statusCode;
-    if(code==200){
-      failed=0;
-      var resdata = '';
-      res.on('data', function (chunk) {
-        resdata = resdata + chunk;
-      });
-      res.on('end', function () {
-        parseBitFinexRes(resdata,usd_cny,callback);
-      });
-      res.on('error',function(){
-
-      })
-    }else{
-      failed = failed + 1;
-      if(failed>1){
-        callback('bitfinex BOOM!');
-      }else{
-        getPrice(callback);
-      }
-    }
-  });
-  req.on('error', function(err) {
-    console.log('req err:');
-    console.log(err);
-  });
-  req.setTimeout(5000,function(){
-    req.end();
-    failed = failed + 1;
-    if(failed>2){
-      callback('bitfinex BOOM!');
-    }else{
-      getBifFinex(usd_cny,callback,true);
-    }
-  });
-  req.end();
-}
-
-function parseBitFinexRes(resdata,usd_cny,callback){
-  var list = eval('('+resdata+')');
-  var now = new Date();
-  var ret = "数字货币行情(Bitfinex)："+now.toLocaleString()+"\n";
-  for(var i=0;i<list.length;i++){
-    var p = list[i];
-    var name = p[0].substring(1,4);
-    var price = p[7];
-    ret = ret + name + ":$"+price.toFixed(2)+"   \t￥"+(usd_cny*price).toFixed(2)+"\n";
-  }
-  ret = ret + "1$="+usd_cny+"1￥";
-  callback(ret.trim());
 }
 
 function getCoinMarket(callback,withproxy, isInterface = false){
