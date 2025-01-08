@@ -7,7 +7,7 @@ var request = require('request');
 const {IMAGE_DATA} = require('../baibaiConfigs');
 const {cm,combine} = require(path.join(__dirname, '/coin/market.js'))
 const {getStock} = require(path.join(__dirname, '/coin/stock.js'))
-
+const {replaceImageToBase64} = require('../reverseWsUtils/analysisMessage');
 pushTask();
 var ws;
 function setPushWs(revws){
@@ -73,15 +73,6 @@ function getCurrency(callback){
   });
   req.end();
 }
-const replaceImageToBase64 = message =>
-  message.split('[CQ:image,file=file:').map((sp, index) => {
-    if(index) {
-      let tsp = sp.split(']'), url = tsp[0]
-      tsp[0] = localImageToBase64(url)
-      return tsp.join(']')
-    }
-    return sp
-  }).join('[CQ:image,file=base64://')
 
 function pushToGroup(type) {
   if (type == 2) {
