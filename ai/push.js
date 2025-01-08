@@ -73,7 +73,15 @@ function getCurrency(callback){
   });
   req.end();
 }
-
+const replaceImageToBase64 = message =>
+  message.split('[CQ:image,file=file:').map((sp, index) => {
+    if(index) {
+      let tsp = sp.split(']'), url = tsp[0]
+      tsp[0] = localImageToBase64(url)
+      return tsp.join(']')
+    }
+    return sp
+  }).join('[CQ:image,file=base64://')
 
 function pushToGroup(type) {
   if (type == 2) {
@@ -84,13 +92,13 @@ function pushToGroup(type) {
       var port = 25334;
       if (res.trim().length > 0) {
           res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
-          //res = res.replace(/CQ:image,file=file:/gi,'CQ:image,file=')
+          var mssg = replaceImageToBase64(res)
           var sendBody = {
             "action": "send_msg",
             "params": {
               "message_type": "group",
               "group_id": groupid,
-              "message": 'sss'
+              "message": mssg
             }
           }
           console.log('will send wsssssssssssssss');
