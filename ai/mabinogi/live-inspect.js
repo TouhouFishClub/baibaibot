@@ -427,16 +427,17 @@ const renderTv = async list => {
   })
 }
 
-const startTimeout = () => {
-  let timeLeft = 10810000 - new Date().getTime() % 10800000
-  setTimeout(async () => {
-    await LiveInspect(799018865, 0, '', () => {}, true)
-    console.log('自动统计成功！')
-    startTimeout()
-  }, timeLeft)
-}
+// const startTimeout = () => {
+//   let timeLeft = 10810000 - new Date().getTime() % 10800000
+//   setTimeout(async () => {
+//     await LiveInspect(799018865, 0, '', () => {}, true)
+//     console.log('自动统计成功！')
+//     startTimeout()
+//   }, timeLeft)
+// }
 
-startTimeout()
+// startTimeout()
+
 module.exports = {
   LiveInspect,
   LiveAnalyzer
