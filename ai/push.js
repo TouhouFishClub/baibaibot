@@ -83,7 +83,8 @@ function pushToGroup(type) {
       var msg = res.trim();
       var port = 25334;
       if (res.trim().length > 0) {
-          res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=/home/flan/baibai/coolq-data/cq/data/image/sen")
+          res = res.replace(/CQ:image,file=sen/i, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+          //res = res.replace(/CQ:image,file=file:/gi,'CQ:image,file=')
           var bdy = {"user_id": 357474405, message: res};
           var sendBody = {
             "action": "send_msg",
@@ -95,7 +96,6 @@ function pushToGroup(type) {
           }
           console.log('will send wsssssssssssssss');
           console.log(sendBody);
-          console.log(ws);
           if(ws){
             ws.send(JSON.stringify(sendBody));
           }
