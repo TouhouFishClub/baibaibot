@@ -225,7 +225,6 @@ module.exports={
   pushToGroup,
   pushTask,
   getPrice,
-  getBitFlyer,
   getCoinMarket,
   setPushWs
 }
