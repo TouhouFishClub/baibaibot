@@ -20,7 +20,7 @@ const {
   analysisMessage,
   socketManager
 } = require('./reverseWsUtils')
-const {setPushWs} = require('./ai/push');
+const {setPushWs,pushToGroup} = require('./ai/push');
 
 
 const ports = new Set([
@@ -433,26 +433,9 @@ app.get('/f1/*',function(req,res){
 })
 
 
-app.get('/xxx',function(req,res){
-  var r= [
-    {
-      "id": 1,
-      "name": "LV",
-      "createTime": 1543828108386
-    },
-    {
-      "id": 2,
-      "name": "CC",
-      "createTime": 1543828108387
-    },
-    {
-      "id": 3,
-      "name": "BB",
-      "createTime": 1543828108388
-    }
-  ]
-  res.set("Access-Control-Allow-Origin", "*");
-  res.send(JSON.stringify(r));
+app.get('/test',function(req,res){
+  pushToGroup(2);
+  res.send('ok');
 })
 
 app.get('/x1',function(req,res){

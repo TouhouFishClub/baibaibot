@@ -93,6 +93,7 @@ function pushToGroup(type) {
               "message": res
             }
           }
+          console.log('will send wsssssssssssssss');
           if(ws){
             ws.send(JSON.stringify(sendBody));
           }
