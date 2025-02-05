@@ -1487,11 +1487,9 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     img1.drawText(420, 250, '+'+(r500-dd), 'NorthWest')
                   }
                 }
-
                 getlm(1,function(ret){
+                  console.log(1111111);
                   img1.drawText(520, 50, ret[1], 'NorthWest')
-
-
                   img1.drawText(520, 100, ret[5], 'NorthWest')
                   img1.drawText(520, 150, ret[20], 'NorthWest')
                   img1.drawText(520, 200, ret[100], 'NorthWest')
@@ -1504,6 +1502,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   img1.drawText(530, 270, ret[1500], 'NorthWest')
                   img1.fontSize(25)             .fill('blue')
                   getlm(2,function(ret){
+                    console.log(222222);
                     img1.drawText(620, 50, ret[1], 'NorthWest')
                     img1.drawText(620, 100, ret[5], 'NorthWest')
                     img1.drawText(620, 150, ret[20], 'NorthWest')
@@ -1517,6 +1516,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     img1.drawText(630, 270, ret[1500], 'NorthWest')
                     img1.fontSize(25)             .fill('blue')
                     getlm(3,function(ret){
+                      console.log(111111331);
                       img1.drawText(720, 50, ret[1], 'NorthWest')
                       img1.drawText(720, 100, ret[5], 'NorthWest')
                       img1.drawText(720, 150, ret[20], 'NorthWest')
@@ -1530,6 +1530,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                       img1.drawText(730, 270, ret[1500], 'NorthWest')
                       img1.fontSize(25)             .fill('blue')
                       getlm(12,function(ret){
+                        console.log(1111114441);
                         img1.drawText(820, 50, ret[1], 'NorthWest')
                         img1.drawText(820, 100, ret[5], 'NorthWest')
                         img1.drawText(820, 150, ret[20], 'NorthWest')
@@ -1547,8 +1548,6 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     })
                   })
                 })
-
-
               });
             });
           })
@@ -1563,39 +1562,42 @@ function getlm(skip,callback){
   var date = nn.getDate();
   var year = nn.getFullYear();
   var month = nn.getMonth() + 1;
+  var rr;
   if(skip==12){
     year = year - 1
-
   }else{
     month = nn.getMonth()+1-skip;
     if(month<1){
-      callback({});
+      rr = new Array(2000).fill(-1);
     }
   }
+  if(rr){
+    callback(rr);
+  }else{
+    var hour = nn.getHours();
+    var keym = year+"_"+month;
 
-  var hour = nn.getHours();
-  var keym = year+"_"+month;
-
-  var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
-  var rankDateNo = (date * 2 - 2) + (hour>13?1:0);
-  var endDateNo = monthOfDay[month-1] *2 - 1;
-  var list = [rankDateNo+"_1",rankDateNo+"_5",rankDateNo+"_20",rankDateNo+"_100",rankDateNo+"_500",endDateNo+"_1",endDateNo+"_5",endDateNo+"_20",endDateNo+"_100",endDateNo+"_500"]
-  var query = {'_id':{'$in':list}};
-  cl_n_senka_8.find(query).toArray(function(err,arr){
-    var ret = {};
-    for(var i=0;i<arr.length;i++){
-      var id = arr[i]._id;
-      var dateno = id.split("_")[0];
-      var dd = arr[i].dd;
-      var no = arr[i].no;
-      if(dateno==rankDateNo){
-        ret[no] = dd;
-      }else{
-        ret[parseInt(no)+1000] = dd;
+    var cl_n_senka_8 = udb.collection("cl_n_8_senka_"+keym);
+    var rankDateNo = (date * 2 - 2) + (hour>13?1:0);
+    var endDateNo = monthOfDay[month-1] *2 - 1;
+    var list = [rankDateNo+"_1",rankDateNo+"_5",rankDateNo+"_20",rankDateNo+"_100",rankDateNo+"_500",endDateNo+"_1",endDateNo+"_5",endDateNo+"_20",endDateNo+"_100",endDateNo+"_500"]
+    var query = {'_id':{'$in':list}};
+    cl_n_senka_8.find(query).toArray(function(err,arr){
+      var ret = {};
+      for(var i=0;i<arr.length;i++){
+        var id = arr[i]._id;
+        var dateno = id.split("_")[0];
+        var dd = arr[i].dd;
+        var no = arr[i].no;
+        if(dateno==rankDateNo){
+          ret[no] = dd;
+        }else{
+          ret[parseInt(no)+1000] = dd;
+        }
       }
-    }
-    callback(ret);
-  });
+      callback(ret);
+    });
+  }
 }
 
 
@@ -2054,7 +2056,7 @@ setTimeout(function(){
   //getRank(1,[]);
   //searchShip('Apate',function(r){console.log(r)})
 
-},2500)
+},500)
 
 
 
