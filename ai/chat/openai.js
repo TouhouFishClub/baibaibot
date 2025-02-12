@@ -157,7 +157,7 @@ function getBaibaiReplay(content,gid,qq,callback){
           var txt = data.message.content;
           var n1 = txt.indexOf('<think>');
           var n2 = txt.indexOf('</think>');
-          if(n1>0&&n2>0){
+          if(n1>-1&&n2>0){
             txt = txt.substring(n2+8).trim();
           }
           var ret = txt;
