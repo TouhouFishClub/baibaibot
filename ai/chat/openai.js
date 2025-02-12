@@ -107,13 +107,10 @@ function getBaibaiReplay(content,gid,qq,callback){
   if(content.startsWith("百百 ")) {
     content=content.substring(3).trim();
   }
-    var url = 'https://api.openai.com/v1/chat/completions'
+    var url = 'http://192.168.17.237/api/chat'
 
     var sm = save[gid];
     var pm;
-    if(!content.startsWith("/cmd")){
-      content = "/CMD "+content;
-    }
     if(sm==undefined){
       sm=[]
       pm = tmp.concat([{"role": "user", "content": content}])
@@ -128,7 +125,7 @@ function getBaibaiReplay(content,gid,qq,callback){
           break;
         }else{
           wc=wc+sd.content.length;
-          if(wc>2000){
+          if(wc>20000){
             break;
           }else{
             up.push({"role":sd.role,"content":sd.content})
@@ -138,8 +135,9 @@ function getBaibaiReplay(content,gid,qq,callback){
       pm=tmp.concat(up.reverse()).concat([{"role": "user", "content": content}])
     }
     var bd = {
-      "model": "gpt-3.5-turbo",
-      "messages":pm
+      "model": "deepseek-r1:14b",
+      "messages":pm,
+      "stream":false
     };
     console.log(bd)
     request({
@@ -147,10 +145,8 @@ function getBaibaiReplay(content,gid,qq,callback){
       method: "POST",
       headers: {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
-        'content-type': 'application/json',
-        'Authorization': 'Bearer ' + OPENAI_API_KEY
+        'content-type': 'application/json'
       },
-      proxy: 'http://192.168.17.241:2346',
       body: JSON.stringify(bd)
     }, function (error, response, resbody) {
       if (error && error.code) {
@@ -168,7 +164,6 @@ function getBaibaiReplay(content,gid,qq,callback){
         }
       }
     });
-  
 }
 
 
@@ -315,7 +310,6 @@ function handleCustomChatgptReplay(content,gid,qq,callback){
         'content-type': 'application/json',
         'Authorization': 'Bearer ' + OPENAI_API_KEY
       },
-      proxy: 'http://192.168.17.236:2346',
       body: JSON.stringify(bd)
     }, function (error, response, resbody) {
       if (error && error.code) {
