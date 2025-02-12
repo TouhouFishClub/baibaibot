@@ -155,6 +155,11 @@ function getBaibaiReplay(content,gid,qq,callback){
         var data = eval('(' + resbody + ')');
         if(data.message){
           var txt = data.message.content;
+          var n1 = txt.indexOf('<think>');
+          var n2 = txt.indexOf('</think>');
+          if(n1>0&&n2>0){
+            txt = txt.substring(n2+8).trim();
+          }
           var ret = txt;
           sm.push({"role": "user", "content": content,ts:now})
           sm.push({"role": "assistant", "content": txt,ts:now})
