@@ -279,12 +279,12 @@ const init = () => {
 	let irusanChannelOffset = irusanChannelBase.map(x => {
 		let base = x - irusanChannelOffsetBase
 		if(Math.abs(base) < baseLoopTime) {
-			return base
+			return ~~(base / 1000)
 		} else {
 			if(base < 0) {
-				return base + baseLoopTime
+				return ~~((base + baseLoopTime) / 1000)
 			} else {
-				return base - baseLoopTime
+				return ~~((base - baseLoopTime) / 1000)
 			}
 		}
 	})
