@@ -34,6 +34,20 @@ const calcOffset = (time1, time2, intervalArray) => {
 	return (time2.getTime() - time1.getTime() - ~~((time2.getTime() - time1.getTime()) / basePeriod) * basePeriod) / 1000
 }
 
+const IrusanBaseInfo = [
+	[2, '2025-02-18 9:50:18', '4:54'], //10x 状态（1等船2等出发），当前时间，显示时间（巨人港-凯安时间）
+	[2, '2025-02-18 9:36:01', '1:39'], //1x 状态（1等船2等出发），当前时间，显示时间（卡普-贝岛时间）
+	[2, '2025-02-18 9:36:25', '1:51'], //2x
+	[2, '2025-02-18 9:38:26', '3:16'], //3x
+	[2, '2025-02-18 9:40:03', '3:21'], //4
+	[2, '2025-02-18 9:38:47', '0:34'], //5x
+	[2, '2025-02-18 9:40:19', '3:15'], //6x
+	[2, '2025-02-18 9:42:01', '4:58'], //7x
+	[2, '2025-02-18 9:39:15', '2:28'], //8x
+	[1, '2025-02-18 9:43:42', '2:23'], //9x
+	[2, '2025-02-18 9:39:34', '3:06'], //10x
+]
+
 // const ChannelOffset = {
 // 	// 'Eavan': [7, -62, -1, -13, 11, 8, -13, -5, 25, 0],
 // 	// 'Eavan': [-25, -70, -11, -16, 5, -2, -16, -19, 299, 0],
@@ -194,7 +208,7 @@ const I18N = {
 }
 
 
-const BaseTime = {
+let BaseTime = {
 	// 'Eavan': {
 	// 	base: {
 	// 		Iria: {
@@ -253,6 +267,33 @@ const BaseTime = {
 		channelOffset: [-300, -70, -25, -10, -55, 0, -21, -10, 0, 0]
 	}
 }
+
+const createTimeInfo = ([type, now, show]) => {
+	return new Date(now).getTime() + show.split(':').reduce((p, e, i) => p + e * (i ? 60 : 1), 0) * 1000 * Math.pow(-1, type)
+}
+
+const init = () => {
+	let baseLoopTime = BaseTime.Irusan.Belvast.interval[0] + BaseTime.Irusan.Belvast.interval[1]
+	let irusanChannelBase = IrusanBaseInfo.slice(1).map(x => createTimeInfo(x) % baseLoopTime)
+	let irusanChannelOffsetBase = irusanChannelBase[irusanChannelBase.length - 1]
+	let irusanChannelOffset = irusanChannelBase.map(x => {
+		let base = x - irusanChannelOffsetBase
+		if(Math.abs(base) < baseLoopTime) {
+			return base
+		} else {
+			if(base < 0) {
+				return base + baseLoopTime
+			} else {
+				return base - baseLoopTime
+			}
+		}
+	})
+	BaseTime.Irusan.channelOffset = irusanChannelOffset
+	BaseTime.Irusan.Belvast.timeStr = new Date(createTimeInfo(IrusanBaseInfo[11])).toLocaleString()
+	BaseTime.Irusan.Iria.timeStr = new Date(createTimeInfo(IrusanBaseInfo[0])).toLocaleString()
+}
+
+init()
 
 const Ferry = [
 	{
