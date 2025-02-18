@@ -273,7 +273,7 @@ const createTimeInfo = ([type, now, show]) => {
 }
 
 const init = () => {
-	let baseLoopTime = BaseTime.Irusan.Belvast.interval[0] + BaseTime.Irusan.Belvast.interval[1]
+	let baseLoopTime = BaseTime.Irusan.base.Belvast.interval[0] + BaseTime.Irusan.base.Belvast.interval[1]
 	let irusanChannelBase = IrusanBaseInfo.slice(1).map(x => createTimeInfo(x) % baseLoopTime)
 	let irusanChannelOffsetBase = irusanChannelBase[irusanChannelBase.length - 1]
 	let irusanChannelOffset = irusanChannelBase.map(x => {
@@ -288,8 +288,8 @@ const init = () => {
 			}
 		}
 	})
-	BaseTime.Irusan.channelOffset = irusanChannelOffset
-	BaseTime.Irusan.Belvast.timeStr = new Date(createTimeInfo(IrusanBaseInfo[11])).toLocaleString()
+	BaseTime.Irusan.base.channelOffset = irusanChannelOffset
+	BaseTime.Irusan.base.Belvast.timeStr = new Date(createTimeInfo(IrusanBaseInfo[11])).toLocaleString()
 	BaseTime.Irusan.Iria.timeStr = new Date(createTimeInfo(IrusanBaseInfo[0])).toLocaleString()
 }
 
