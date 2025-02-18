@@ -288,9 +288,9 @@ const init = () => {
 			}
 		}
 	})
-	BaseTime.Irusan.base.channelOffset = irusanChannelOffset
+	BaseTime.Irusan.channelOffset = irusanChannelOffset
 	BaseTime.Irusan.base.Belvast.timeStr = new Date(createTimeInfo(...IrusanBaseInfo[10])).toLocaleString()
-	BaseTime.Irusan.Iria.timeStr = new Date(createTimeInfo(...IrusanBaseInfo[0])).toLocaleString()
+	BaseTime.Irusan.base.Iria.timeStr = new Date(createTimeInfo(...IrusanBaseInfo[0])).toLocaleString()
 }
 
 init()
