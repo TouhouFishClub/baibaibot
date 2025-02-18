@@ -683,7 +683,7 @@ const FerryTimetable = (content, qq, groupId, callback) => {
 	if(/\d{2}/.test(ct) || ct == 10){
 		channel = 9
 	} else {
-		ct = content.substring(2, 3)
+		ct = content.substring(0, 1)
 		if(/\d/.test(ct) || ct > 0) {
 			channel = ct - 1
 		}
