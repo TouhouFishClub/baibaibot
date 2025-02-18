@@ -34,18 +34,19 @@ const calcOffset = (time1, time2, intervalArray) => {
 	return (time2.getTime() - time1.getTime() - ~~((time2.getTime() - time1.getTime()) / basePeriod) * basePeriod) / 1000
 }
 
+//TODO 基础应该用伊利亚时间，不应该用贝岛时间，所以0应该是卡普-贝岛，1-10应该是卡普-凯安时间，周三以后同步修改
 const IrusanBaseInfo = [
-	[2, '2025-02-18 9:50:18', '4:54'], //10x 状态（1等船2等出发），当前时间，显示时间（巨人港-凯安时间）
-	[2, '2025-02-18 9:36:01', '1:39'], //1x 状态（1等船2等出发），当前时间，显示时间（卡普-贝岛时间）
-	[2, '2025-02-18 9:36:25', '1:51'], //2x
-	[2, '2025-02-18 9:38:26', '3:16'], //3x
-	[2, '2025-02-18 9:40:03', '3:21'], //4
-	[2, '2025-02-18 9:38:47', '0:34'], //5x
-	[2, '2025-02-18 9:40:19', '3:15'], //6x
-	[2, '2025-02-18 9:42:01', '4:58'], //7x
-	[2, '2025-02-18 9:39:15', '2:28'], //8x
-	[1, '2025-02-18 9:43:42', '2:23'], //9x
-	[2, '2025-02-18 9:39:34', '3:06'], //10x
+	[1, '2025-02-18 15:38:27', '0:47'], //10x 状态（1等船2等出发），当前时间，显示时间（巨人港-凯安时间）
+	[2, '2025-02-18 15:35:03', '1:09'], //1x 状态（1等船2等出发），当前时间，显示时间（卡普-贝岛时间）
+	[2, '2025-02-18 15:34:42', '2:06'], //2x
+	[2, '2025-02-18 15:34:22', '0:53'], //3x
+	[2, '2025-02-18 15:34:01', '1:55'], //4x
+	[2, '2025-02-18 15:33:45', '4:08'], //5x
+	[2, '2025-02-18 15:33:25', '2:42'], //6x
+	[2, '2025-02-18 15:33:07', '5:14'], //7x
+	[2, '2025-02-18 15:32:45', '1:31'], //8x
+	[2, '2025-02-18 15:32:23', '3:44'], //9x
+	[2, '2025-02-18 15:31:21', '3:53'], //10x
 ]
 
 // const ChannelOffset = {
@@ -273,7 +274,7 @@ const createTimeInfo = (type, now, show) => {
 }
 
 const init = () => {
-	let baseLoopTime = BaseTime.Irusan.base.Belvast.interval[0] + BaseTime.Irusan.base.Belvast.interval[1]
+	let baseLoopTime = BaseTime.Irusan.base.Iria.interval[0] + BaseTime.Irusan.base.Iria.interval[1]
 	let irusanChannelBase = IrusanBaseInfo.slice(1).map(x => createTimeInfo(...x) % baseLoopTime)
 	let irusanChannelOffsetBase = irusanChannelBase[irusanChannelBase.length - 1]
 	let irusanChannelOffset = irusanChannelBase.map(x => {
@@ -289,8 +290,8 @@ const init = () => {
 		}
 	})
 	BaseTime.Irusan.channelOffset = irusanChannelOffset
-	BaseTime.Irusan.base.Belvast.timeStr = new Date(createTimeInfo(...IrusanBaseInfo[10])).toLocaleString()
-	BaseTime.Irusan.base.Iria.timeStr = new Date(createTimeInfo(...IrusanBaseInfo[0])).toLocaleString()
+	BaseTime.Irusan.base.Iria.timeStr = new Date(createTimeInfo(...IrusanBaseInfo[10])).toLocaleString()
+	BaseTime.Irusan.base.Belvast.timeStr = new Date(createTimeInfo(...IrusanBaseInfo[0])).toLocaleString()
 }
 
 init()
