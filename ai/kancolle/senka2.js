@@ -905,9 +905,9 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
 
             var user = arr2[0];
             var ud = user.d;
-            if(ud['2024_2_56_10']){
-              ud['2024_2_57_21']=ud['2024_2_56_10'];
-              ud['2024_3_0_1']=ud['2024_2_56_10'];
+            if(ud['2025_2_54_10']){
+              ud['2025_2_55_21']=ud['2025_2_54_10'];
+              ud['2025_3_0_1']=ud['2025_2_54_10'];
             }
             var culist = [];
             var sexp = 0;
@@ -1219,9 +1219,9 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
             var emap = {};
             for(var i=0;i<arr2.length;i++){
 
-              if(arr2[i].d['2024_2_56_10']){
-                arr2[i].d['2024_2_57_21']=arr2[i].d['2024_2_56_10'];
-                arr2[i].d['2024_3_0_1']=arr2[i].d['2023_2_56_10'];
+              if(arr2[i].d['2025_2_54_10']){
+                arr2[i].d['2025_2_55_21']=arr2[i].d['2025_2_54_10'];
+                arr2[i].d['2025_3_0_1']=arr2[i].d['2025_2_55_10'];
               }
 
               if(emap[arr2[i].n]){
