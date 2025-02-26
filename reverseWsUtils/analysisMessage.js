@@ -142,6 +142,12 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
         // 暂时只处理群信息
         if(context.message_type === 'group') {
           // mixinInfos(context, ws)
+          var groupid = context.group_id;
+          if((groupid+"").startsWith("20570")){
+            if(bot_name!=25334){
+              return
+            }
+          }
 
           let group_info = await createAction({
             "action": "get_group_info",
