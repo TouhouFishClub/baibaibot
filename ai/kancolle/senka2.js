@@ -741,6 +741,11 @@ function handleSenkaReply(content,gid,qq,callback,uidd){
 
 function handleSenkaReply_1(content,gid,qq,callback,uidd){
   //console.log('e:'+content+':'+uidd);
+  if(content=='z8-0'){
+    getRank(1,[]);
+    callback('rank');
+    return;
+  }
   var odp = 0;
   if(content.length<7&&content.endsWith("s")){
     odp=1;
