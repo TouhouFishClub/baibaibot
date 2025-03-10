@@ -339,94 +339,172 @@ function getRank(page,retarr,proxy){
             var list = data.api_data.api_list;
           } catch(ex) {
             console.log('seed error,will req');
-            let mvCur = (str, ind, regex) => {
-              for (let _i = 0; _i < ind; ++_i) {
-                str = str.slice(str.search(regex) + 1);
-              }
-              return str;
-            };
-          
-            request(
-              {
-                url: "http://ooi.moe/kcs2/js/main.js",
-                method: "GET",
-                headers: {
-                  "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36",
-                },
-              },
-              (error, response, body) => {
-                console.log('req ok');
-                let rdlist = null, nobj = null;
-                let bak_body = body
-          
-                for (let __i = 0; __i < 5; ++__i) {
-                  // 预计 5 个 function 以内结束
-          
-                  // 这个 b_patten 很脆弱！！！
-                  b_patten = /(?<!\')\{(?!\\x20)|(?<!\\x20)\}(?!\')/
-          
-                  body = body.slice(body.search(b_patten))
-                  let ref_body = body
-          
-                  let bracket_match = 0
-                  let pos, tpos = 0
-                  do {
-                    cur = body.match(b_patten);
-                    pos = body.search(b_patten);
+            // ------
+            (async () => {
+              let MAX_BYTES = 311000;
+              let MAX_BYTES_2 = 530000;
+              let MAIN_JS_URL = "http://w08r.kancolle-server.com/kcs2/js/main.js"; // 下载速率似乎比 http://ooi.moe/kcs2/js/main.js 更快
+              let UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36";
+              let PATTEN = /(?<!\')\{(?!\\x20)|(?<!\\x20)\}(?!\')/;
 
-                    if (cur == "{") ++bracket_match;
-                    else --bracket_match;
+              let same = (a, b) => {
+                return JSON.stringify(a) == JSON.stringify(b);
+              };
 
-                    body = body.slice(pos + 1);
-                    tpos += pos + 1;
-                  } while (bracket_match != 0);
-          
-                  let b_str = ref_body.slice(0, tpos)
-          
-                  // 提取特征，特征类型越多越好
-                  var_cnt = [...b_str.matchAll(/var /g)].length
-                  for_cnt = [...b_str.matchAll(/for\(/g)].length
-                  while_cnt = [...b_str.matchAll(/while\(/g)].length
-                  if_cnt = [...b_str.matchAll(/if\(/g)].length
-                  typeof_cnt = [...b_str.matchAll(/typeof /g)].length
-                  return_cnt = [...b_str.matchAll(/return /g)].length
-                  if (var_cnt == 1 && for_cnt == 0 && while_cnt == 0 && if_cnt == 0 && typeof_cnt == 0 && return_cnt == 2) {
-                    b_str = mvCur(b_str, 1, /\[/);
-                    rdlist = b_str.slice(0, b_str.search(/\]/)).split(",");
-                  } else if (var_cnt == 1 && for_cnt == 0 && while_cnt == 0 && if_cnt == 0 && typeof_cnt > 2 && return_cnt == 0) {
-                    b_str = mvCur(b_str, 1, /\(/);
-                    nobj = b_str.slice(0, b_str.search(/\)/));
+              let reverse = (str) => {
+                return str.split("").reverse().join("");
+              };
+
+              let get_partical_main_js = async (is_reverse = false) => {
+                // is_reverse: 是否反向读取
+                return fetch(MAIN_JS_URL, {
+                  headers: {
+                    "User-Agent": UA,
+                    Range: `bytes=${is_reverse ? -MAX_BYTES : `0-${MAX_BYTES_2}`}`,
+                    // Range: bytes=-311000 或者 Range: bytes=0-530000
+                    // 前者是为了获取最后 311000 字节，后者是为了获取前 530000 字节
+                    // 为什么不直接获取全部？因为获取全部的话会很慢
+                  },
+                });
+              };
+
+              let get_pos = (str, is_reverse = false) => {
+                let ret = [];
+                let pos = 0;
+                while (true) {
+                  let r = str.search(PATTEN);
+
+                  if (r == -1) break;
+
+                  str = str.slice(r);
+                  pos += r;
+
+                  let begin = pos;
+
+                  let bracket_match = 0;
+
+                  while (true) {
+                    // 经典的括号匹配问题
+                    // 从左往右读取时，遇到 "{" bracket_match++，遇到 "}" bracket_match--
+                    // 从右往左读取时，遇到 "{" bracket_match--，遇到 "}" bracket_match++
+                    // 当 bracket_match == 0 时，说明找到了一个完整的 function
+                    // 从 begin 到 pos 就是这个 function 的范围
+                    // 然后将这个范围加入 ret 中
+                    // 然后继续寻找下一个 function
+                    // 直到 str 中没有 "{" 或 "}"
+                    // 这个算法的时间复杂度是 O(n)
+                    // 其中 n 是 str 的长度
+                    r = str.search(PATTEN);
+                    if (r == -1) break;
+
+                    if (is_reverse) {
+                      if (str[r] == "{") --bracket_match;
+                      else ++bracket_match;
+                    } else {
+                      if (str[r] == "{") ++bracket_match;
+                      else --bracket_match;
+                    }
+
+                    str = str.slice(r + 1);
+                    pos += r + 1;
+
+                    if (bracket_match == 0) break;
                   }
-          
-                  if (rdlist != null && nobj != null) break;
-                }
-          
-                if (rdlist === null || nobj === null) {
-                  throw "update SEED failed!!!";
+
+                  if (bracket_match == 0) ret.push([begin, pos]);
                 }
 
-                nobj = Number(nobj);
-                let offset = nobj - rdlist.findIndex((e) => e == "'B2jQzwn0'");
-          
-                let nseed = (rdlist.findIndex((e) => e == "'ue9svf9bueLFu0vfra'") + offset + rdlist.length) % rdlist.length;
-          
-                let reg = new RegExp("\\(0x" + nseed.toString(16) + "\\)\\]=\\[");
-                bak_body = mvCur(bak_body, 1, reg);
-                bak_body = mvCur(bak_body, 1, /\[/);
-          
-                let res = bak_body.slice(0, bak_body.search(/\]/)).split(",");
-          
-                for (let _i = 0; _i < res.length; ++_i) {
-                  res[_i] = Number(res[_i]);
-                }
-          
-                console.log(res);
+                if (is_reverse)
+                  for (let i = 0; i < ret.length; ++i)
+                    ret[i] = [MAX_BYTES - ret[i][1], MAX_BYTES - ret[i][0]];
 
-                PORT_API_SEED = res;
-                getRank(page,retarr,proxy+1);
-                return;
+                return ret;
+              };
+
+              let rdlist = null;
+              let nobj = null;
+
+              let front_data = {};
+              front_data.body = await get_partical_main_js().then((v) => {
+                if (!v.ok) throw "fetch main.js failed!!!";
+                return v.text();
+              });
+              front_data.pos = get_pos(front_data.body);
+
+              let _f = (_d) => {
+                for (let [left, right] of _d.pos) {
+                  let func = _d.body.slice(left, right);
+
+                  let var_cnt = [...func.matchAll(/var /g)].length;
+                  let for_cnt = [...func.matchAll(/for\(/g)].length;
+                  let while_cnt = [...func.matchAll(/while\(/g)].length;
+                  let if_cnt = [...func.matchAll(/if\(/g)].length;
+                  let typeof_cnt = [...func.matchAll(/typeof /g)].length;
+                  let return_cnt = [...func.matchAll(/return /g)].length;
+
+                  let judge = [var_cnt, for_cnt, while_cnt, if_cnt, return_cnt];
+
+                  if (same(judge, [1, 0, 0, 0, 2]) && typeof_cnt == 0) {
+                    func = func.slice(func.search(/\[/) + 1);
+                    rdlist = func.slice(0, func.search(/\]/)).split(",");
+                  } else if (same(judge, [1, 0, 0, 0, 0]) && typeof_cnt > 2) {
+                    func = func.slice(func.search(/\(/) + 1);
+                    nobj = func.slice(0, func.search(/\)/));
+                  }
+                }
+              };
+
+              _f(front_data);
+              if (rdlist == null || nobj == null) {
+                let tail_data = {};
+                tail_data.body = await get_partical_main_js(true).then((v) => {
+                  if (!v.ok) throw "fetch main.js failed!!!";
+                  return v.text();
+                });
+                tail_data.pos = get_pos(reverse(tail_data.body), true);
+                _f(tail_data);
               }
-            );
+
+              if (rdlist == null || nobj == null) throw "update SEED failed!!!";
+
+              // 目标是求 ue9svf9bueLFu0vfra 偏移后的位置，知道这个位置表示知道 SEED 的位置
+
+              // 求偏移值的过程
+              // 已知 B2jQzwn0 偏移前的位置是 rdlist.findIndex((e) => e == "'B2jQzwn0'")
+              // B2jQzwn0 偏移后的位置是 nobj
+              // 可以求偏移量 offset = 偏移后 - 偏移前
+
+              // 知道 ue9svf9bueLFu0vfra 偏移前的位置是 rdlist.findIndex((e) => e == "'ue9svf9bueLFu0vfra'")
+              // 可以求 ue9svf9bueLFu0vfra 偏移后的位置是 rdlist.findIndex((e) => e == "'ue9svf9bueLFu0vfra'") + offset
+              // 但是偏移后可能会越界，可能是负数，也可能是超过 rdlist 的长度
+              // 所以要先加上 rdlist.length，然后再取模 rdlist.length
+              nobj = Number(nobj);
+              let offset = nobj - rdlist.findIndex((e) => e == "'B2jQzwn0'");
+              let nseed =
+                (rdlist.findIndex((e) => e == "'ue9svf9bueLFu0vfra'") +
+                  offset +
+                  rdlist.length) %
+                rdlist.length;
+
+              let reg = new RegExp("\\(0x" + nseed.toString(16) + "\\)\\]=\\[");
+
+              front_data.body = front_data.body.slice(front_data.body.search(reg) + 1);
+              front_data.body = front_data.body.slice(front_data.body.search(/\[/) + 1);
+
+              let res = front_data.body
+                .slice(0, front_data.body.search(/\]/))
+                .split(",");
+
+              for (let _i = 0; _i < res.length; ++_i) {
+                res[_i] = Number(res[_i]);
+              }
+              console.log(res);
+
+              PORT_API_SEED = res;
+              getRank(page, retarr, proxy + 1);
+              return;
+            })();
+            // ------
             return;
           }
           var rret = retarr.concat(list);
