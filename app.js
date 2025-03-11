@@ -92,6 +92,32 @@ app.ws('/c/*', function(ws, req) {
   });
 });
 
+const servicePassword = 'flanbaka'
+var crypto = require('crypto');
+app.ws('/service/:type/:bot_name/:sign', (ws, req) => {
+  let bot_name = req.params.bot_name;
+  let sign = req.params.sign;
+  let type = req.params.type;
+  var strToSign = bot_name+servicePassword;
+  var hash = crypto.createHash('md5');
+  hash.update(str);
+  var md5 = hash.digest('hex');
+  if(md5==sign){
+    socketManager.set(bot_name, ws)
+    ws.on('message', (msg) => {
+      analysisMessage(msg, ws, bot_name)
+    })
+    ws.on('close', () => {
+      console.log('ws close')
+    })
+  }else{
+    console.log('err sign:'+strToSign+":"+md5+":"+sign)
+    ws.close();
+  }
+})
+
+
+
 app.ws('/shamrock/:bot_name', (ws, req) => {
   // var path = req.path.substring(1);
   // console.log(`======================\n\npath: ${path}\n\n======================`);
