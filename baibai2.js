@@ -21,7 +21,7 @@ const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
 const {baiduSearch,baikeReply} = require('./ai/baidusearch');
 const {getWeatherByCity} = require('./ai/weather');
-const {tulingMsg,getLike,getQAIresponse} = require('./ai/tuling');
+//const {tulingMsg,getLike,getQAIresponse} = require('./ai/tuling');
 const {translateMsg}=require('./ai/translate');
 const {money} = require('./ai/money');
 const {route} = require('./ai/map');
@@ -1825,10 +1825,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(rcontent=='好感度'){
-    getLike(from,name,callback);
-    return;
-  }
+
 
   if(rcontent.toUpperCase().startsWith("HD")){
     ImgScale(rcontent,groupid,from,callback);
