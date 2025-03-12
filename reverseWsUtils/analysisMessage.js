@@ -52,6 +52,9 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
   let { card, nickname } = sender
   let { group_info, user_info, bot_name } = mixins
   // console.log(`\n\n\n\n****MIXINS*****\n\n${JSON.stringify(mixins)}\n\n********\n\n\n\n`)
+  if(!group_info){
+    return;
+  }
   let { group_name } = group_info
 
   // console.log(`\n\n\n\n****user info*****\n\n${JSON.stringify(user_info)}\n\n********\n\n\n\n`)
