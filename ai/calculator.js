@@ -7,7 +7,7 @@ cal = function(str){
       return undefined;
     }
   }
-  if(str.indexOf("!")>0||str.indexOf("！")>0){
+  if(str.endsWith("!")||str.endsWith("！")){
     var n=str.indexOf("!");
     if(n<0){
       n=str.indexOf("！");
