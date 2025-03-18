@@ -137,7 +137,7 @@ app.ws('/lagrange/:bot_name', (ws, req) => {
   // console.log(`======================\n\npath: ${path}\n\n======================`);
   let bot_name = req.params.bot_name
   console.log(`======================\n\nbot_name: ${bot_name}\nheaders: ${JSON.stringify(req.headers, null, 2)}\n\n======================`)
-  if(bot_name==25334){
+  if(req.headers&&req.headers['x-self-id']=="1840239061"){
     setPushWs(ws);
   }
   socketManager.set(bot_name, ws)
