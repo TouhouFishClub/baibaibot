@@ -25,7 +25,7 @@ const fetchData = async content => {
 }
 
 const renderCard = data => {
-  let out = `[ID: ${data.id}]\n[CQ:image,file=https://cdn.233.momobako.com/ygopro/pics/${data.id}.jpg]\n${data.cn_name}${data.cn_name != data.cnocg_n ? `(${data.cnocg_n})` : ''}\n${data.text.types}\n${data.text.desc}\n${data.text.pdesc}`
+  let out = `[ID: ${data.id}]\n[CQ:image,file=https://cdn02.moecube.com:444/ygopro-super-pre/data/pics/${data.id}.jpg]\n${data.cn_name}${data.cn_name != data.cnocg_n ? `(${data.cnocg_n})` : ''}\n${data.text.types}\n${data.text.desc}\n${data.text.pdesc}`
   return out
 }
 
