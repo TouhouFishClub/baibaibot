@@ -218,6 +218,9 @@ class SearchHandler {
       buffIgnore: []
     }
 
+    // 保存最后一个搜索名称用于完全匹配
+    this._lastSearchName = keywords[keywords.length - 1]?.trim()
+
     for (const keyword of keywords) {
       const trimmed = keyword.trim()
       
@@ -336,8 +339,20 @@ class SearchHandler {
       }
       str += `超过搜索限制，请添加更多关键字\nsearch count : ${results.length}\n`
     }
-    
-    callback(str)
+
+    // 检查是否有完全匹配的结果
+    const exactMatch = results.find(os => 
+      os.LocalName === this._lastSearchName || os.LocalName2 === this._lastSearchName
+    )
+
+    if (exactMatch) {
+      str += `\n已为您匹配到${exactMatch.LocalName}\n`
+      await this._renderSingleResult(exactMatch, type, callbackStr => {
+        callback(str + callbackStr)
+      })
+    } else {
+      callback(str)
+    }
   }
 
   _showHelp(callback) {
