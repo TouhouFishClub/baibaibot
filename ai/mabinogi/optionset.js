@@ -353,17 +353,12 @@ class SearchHandler {
 
       if (exactMatch) {
         str += `\n已为您匹配到${exactMatch.LocalName}\n`
-        // 保存admin匹配
-        if (CONFIG.ADMIN_USERS.has(this._currentUserId)) {
-          this.store.saveTmpMap[this._currentUserId] = exactMatch
-        }
         await this._renderSingleResult(exactMatch, type, callbackStr => {
           callback(str + callbackStr)
         })
         return
       }
     }
-    
     callback(str)
   }
 
