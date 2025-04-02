@@ -115,6 +115,9 @@ class SearchHandler {
   async handleSearch(userId, nickname, context, type = 'normal', callback) {
     const ctx = context.trim()
     
+    // 保存当前用户ID
+    this._currentUserId = userId
+    
     // 处理管理员命令
     if (CONFIG.ADMIN_USERS.has(userId) && this.store.saveTmpMap[userId]) {
       await this._handleAdminCommands(userId, nickname, ctx, callback)
@@ -218,9 +221,6 @@ class SearchHandler {
       buffIgnore: []
     }
 
-    // 保存最后一个搜索名称用于完全匹配
-    this._lastSearchName = keywords[keywords.length - 1]?.trim()
-
     for (const keyword of keywords) {
       const trimmed = keyword.trim()
       
@@ -266,11 +266,15 @@ class SearchHandler {
 
   async _searchByName(name, type, callback) {
     const results = this.store.searchByName(name)
+    // 保存搜索名称用于完全匹配
+    this._lastSearchName = name
     await this._renderResult(results, type, callback)
   }
 
   async _searchByKeywords(keywords, type, callback) {
     const results = this.store.searchByKeywords(keywords)
+    // 移除完全匹配的引用
+    this._lastSearchName = null
     await this._renderResult(results, type, callback)
   }
 
@@ -340,19 +344,27 @@ class SearchHandler {
       str += `超过搜索限制，请添加更多关键字\nsearch count : ${results.length}\n`
     }
 
-    // 检查是否有完全匹配的结果
-    const exactMatch = results.find(os => 
-      os.LocalName === this._lastSearchName || os.LocalName2 === this._lastSearchName
-    )
+    // 只有在有_lastSearchName且不为null时才执行完全匹配
+    if (this._lastSearchName) {
+      // 检查是否有完全匹配的结果
+      const exactMatch = results.find(os => 
+        os.LocalName === this._lastSearchName || os.LocalName2 === this._lastSearchName
+      )
 
-    if (exactMatch) {
-      str += `\n已为您匹配到${exactMatch.LocalName}\n`
-      await this._renderSingleResult(exactMatch, type, callbackStr => {
-        callback(str + callbackStr)
-      })
-    } else {
-      callback(str)
+      if (exactMatch) {
+        str += `\n已为您匹配到${exactMatch.LocalName}\n`
+        // 保存admin匹配
+        if (CONFIG.ADMIN_USERS.has(this._currentUserId)) {
+          this.store.saveTmpMap[this._currentUserId] = exactMatch
+        }
+        await this._renderSingleResult(exactMatch, type, callbackStr => {
+          callback(str + callbackStr)
+        })
+        return
+      }
     }
+    
+    callback(str)
   }
 
   _showHelp(callback) {
