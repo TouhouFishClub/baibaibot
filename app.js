@@ -21,6 +21,8 @@ const {
   socketManager
 } = require('./reverseWsUtils')
 const {setPushWs,pushToGroup} = require('./ai/push');
+// 导入openApi路由
+const openApiRouter = require('./openApi/index');
 
 
 const ports = new Set([
@@ -42,6 +44,9 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json({limit: '10mb'}))
 var request = require("request");
 app.use(express.static(path.join(__dirname, 'public')));
+
+// 配置openApi路由
+app.use('/openapi', openApiRouter);
 
 /* set public path */
 
