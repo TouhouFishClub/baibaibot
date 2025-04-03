@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
+const fs = require('fs');
 
 // 导入需要的功能函数
 const { searchMabiRecipe } = require('../ai/mabinogi/recipeNew/searchRecipe');
@@ -8,6 +9,30 @@ const { mabiTelevision } = require('../ai/mabinogi/Television/new');
 const { mabiGachaTv } = require('../ai/mabinogi/Television/gacha');
 const { op } = require('../ai/mabinogi/optionset');
 const { searchEquipUpgrade } = require('../ai/mabinogi/ItemUpgrade/index');
+
+/**
+ * 转换本地图片为Base64
+ * @param {string} imagePath - 图片路径
+ * @returns {string} - base64编码的图片数据
+ */
+function imageToBase64(imagePath) {
+  try {
+    // 根路径，对应CQ码中send/路径
+    const basePath = path.join(__dirname, '..', '..', 'coolq-data', 'cq', 'data', 'image');
+    const fullPath = path.join(basePath, imagePath);
+    
+    if (fs.existsSync(fullPath)) {
+      const data = fs.readFileSync(fullPath);
+      return data.toString('base64');
+    } else {
+      console.error(`图片文件不存在: ${fullPath}`);
+      return null;
+    }
+  } catch (error) {
+    console.error('转换图片为base64时出错:', error);
+    return null;
+  }
+}
 
 /**
  * 添加API根路由，提供基本使用说明
@@ -67,14 +92,30 @@ function createCallback(res) {
       const imgPath = imgPathMatch ? imgPathMatch[1] : null;
       
       if (imgPath) {
-        res.json({
-          status: 'ok',
-          data: {
-            type: 'image',
-            path: imgPath,
-            message: result.replace(/\[CQ:image,file=[^\]]+\]/, '').trim()
-          }
-        });
+        // 转换图片为base64
+        const base64Data = imageToBase64(imgPath);
+        if (base64Data) {
+          res.json({
+            status: 'ok',
+            data: {
+              type: 'image',
+              path: imgPath,
+              base64: base64Data,
+              message: result.replace(/\[CQ:image,file=[^\]]+\]/, '').trim()
+            }
+          });
+        } else {
+          // 图片转换失败，返回路径信息
+          res.json({
+            status: 'ok',
+            data: {
+              type: 'image',
+              path: imgPath,
+              message: result.replace(/\[CQ:image,file=[^\]]+\]/, '').trim(),
+              error: '图片转换失败'
+            }
+          });
+        }
       } else {
         res.json({
           status: 'ok',
