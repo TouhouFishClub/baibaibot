@@ -9,6 +9,9 @@ const { mabiTelevision } = require('../ai/mabinogi/Television/new');
 const { mabiGachaTv } = require('../ai/mabinogi/Television/gacha');
 const { op } = require('../ai/mabinogi/optionset');
 const { searchEquipUpgrade } = require('../ai/mabinogi/ItemUpgrade/index');
+const { saveTxt, answer } = require('../lib/mongo.js');
+const { BossWork } = require('../ai/mabinogi/BossWork/BossWork');
+const { calendar } = require('../ai/calendar.js');
 
 /**
  * 转换本地图片为Base64
@@ -72,6 +75,27 @@ router.get('/', (req, res) => {
         path: '/openapi/mbcd',
         description: '洛奇抽卡电视查询',
         params: ['content - 查询内容', 'from - 用户ID(可选)']
+      },
+      {
+        path: '/openapi/uni',
+        description: '通用内容存储和查询接口',
+        params: [
+          'content - 根据不同内容提供不同功能：',
+          '- bosswork/boss/boss工作表：查询洛奇BOSS刷新时间表',
+          '- xxx日历：查询xxx项目的日历',
+          '- 日历设置xxx：设置日历',
+          '- 日历修改xxx：修改日历',
+          '- 日历删除xxx：删除日历',
+          '- 选择日历xxx：选择特定日历进行修改',
+          '- 选择删除xxx：选择特定日历进行删除',
+          '- 关键词|内容：保存关键词和对应内容(问答模块)',
+          '- 关键词|：删除关键词对应内容(问答模块)',
+          '- 关键词：查询关键词对应内容(问答模块)',
+          'group - 群组ID(必需)',
+          'from - 用户ID(可选)',
+          'name - 用户名称(可选，默认为OPENAPI-用户ID)',
+          'groupName - 群组名称(可选，默认为OPENAPI-群组ID)'
+        ]
       }
     ],
     example: '/openapi/mbi?content=工程手套'
@@ -305,6 +329,98 @@ router.get('/mbcd', (req, res) => {
     mabiGachaTv(content, from, createCallback(res)).catch(err => {
       handleError(res, err);
     });
+  } catch (error) {
+    handleError(res, error);
+  }
+});
+
+/**
+ * uni - 通用内容存储和查询接口
+ * 支持多种操作，通过content参数判断
+ * 对于问答模块：
+ * - content=关键词：查询关键词对应内容
+ * - content=关键词|内容：保存关键词和对应内容
+ * - content=关键词|：删除关键词对应内容
+ */
+router.get('/uni', (req, res) => {
+  try {
+    // 获取并处理content参数
+    let content = '';
+    if (req.query && req.query.content) {
+      try {
+        content = decodeURIComponent(req.query.content);
+      } catch (e) {
+        content = req.query.content;
+      }
+    }
+    
+    // 获取其他参数
+    const from = req.query && req.query.from ? req.query.from : '0';
+    const group = req.query && req.query.group ? req.query.group : '0';
+    
+    // 为问答模块设置默认名称格式
+    let name = 'API用户';
+    if (req.query && req.query.name) {
+      name = req.query.name;
+    } else if (from !== '0') {
+      name = `OPENAPI-${from}`;
+    }
+    
+    let groupName = '';
+    if (req.query && req.query.groupName) {
+      groupName = req.query.groupName;
+    } else if (group !== '0') {
+      groupName = `OPENAPI-${group}`;
+    }
+    
+    if (!content.trim()) {
+      return res.json({
+        status: 'error',
+        message: '请提供content参数'
+      });
+    }
+    
+    // 根据content内容匹配不同功能
+    if (content.toLowerCase() === 'bosswork' || content.toLowerCase() === 'boss' || content.startsWith('boss工作表')) {
+      // BOSS工作表
+      BossWork(from, group, createCallback(res));
+    } else if (content.startsWith('日历设置')) {
+      // 日历设置功能
+      calendar(content.substring(4), from, group, createCallback(res));
+    } else if (content.startsWith('日历修改')) {
+      // 日历修改功能
+      calendar(content.substring(4), from, group, createCallback(res), 'insert');
+    } else if (content.startsWith('选择日历')) {
+      // 日历选择功能
+      calendar(content.substring(4), from, group, createCallback(res), 'insert-select');
+    } else if (content.startsWith('日历删除')) {
+      // 日历删除功能
+      calendar(content.substring(4), from, group, createCallback(res), 'delete');
+    } else if (content.startsWith('选择删除')) {
+      // 日历删除选择功能
+      calendar(content.substring(4), from, group, createCallback(res), 'delete-select');
+    } else if (content.endsWith('日历')) {
+      // 日历查询功能
+      calendar(content.substring(0, content.length - 2), from, group, createCallback(res), 'search');
+    } else if (content.includes('|')) {
+      // 包含"|"，执行保存或删除操作（问答模块）
+      const parts = content.split('|');
+      const key = parts[0].trim();
+      const value = parts.length > 1 ? parts.slice(1).join('|').trim() : '';
+      
+      if (!key) {
+        return res.json({
+          status: 'error',
+          message: '请提供关键词'
+        });
+      }
+      
+      // 如果value为空，执行删除操作
+      saveTxt(key, value, name, groupName, createCallback(res), from, group);
+    } else {
+      // 默认为查询操作（问答模块）
+      answer(content.trim(), name, groupName, createCallback(res), group, from);
+    }
   } catch (error) {
     handleError(res, error);
   }
