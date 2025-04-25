@@ -155,7 +155,7 @@ function handleError(res, error) {
  */
 router.get('/mbi', (req, res) => {
   try {
-    const content = req.query.content || '';
+    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
     
     if (!content.trim()) {
       return res.json({
@@ -175,7 +175,7 @@ router.get('/mbi', (req, res) => {
  */
 router.get('/mbd', (req, res) => {
   try {
-    const content = req.query.content || '';
+    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
     
     if (!content.trim()) {
       return res.json({
@@ -195,7 +195,7 @@ router.get('/mbd', (req, res) => {
  */
 router.get('/opt', (req, res) => {
   try {
-    const content = req.query.content || '';
+    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
     const from = req.query.from || '0';
     const name = req.query.name || 'API用户';
     
@@ -219,7 +219,7 @@ router.get('/opt', (req, res) => {
  */
 router.get('/meu', (req, res) => {
   try {
-    const content = req.query.content || '';
+    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
     const from = req.query.from || '0';
     const groupid = req.query.groupid || '0';
     
@@ -241,7 +241,7 @@ router.get('/meu', (req, res) => {
  */
 router.get('/mbtv', (req, res) => {
   try {
-    const content = req.query.content || '';
+    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
     const from = req.query.from || '0';
     
     mabiTelevision(content, from, createCallback(res)).catch(err => {
@@ -257,7 +257,7 @@ router.get('/mbtv', (req, res) => {
  */
 router.get('/mbcd', (req, res) => {
   try {
-    const content = req.query.content || '';
+    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
     const from = req.query.from || '0';
     
     mabiGachaTv(content, from, createCallback(res)).catch(err => {
