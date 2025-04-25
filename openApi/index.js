@@ -155,7 +155,14 @@ function handleError(res, error) {
  */
 router.get('/mbi', (req, res) => {
   try {
-    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
+    let content = '';
+    if (req.query && req.query.content) {
+      try {
+        content = decodeURIComponent(req.query.content);
+      } catch (e) {
+        content = req.query.content;
+      }
+    }
     
     if (!content.trim()) {
       return res.json({
@@ -175,7 +182,14 @@ router.get('/mbi', (req, res) => {
  */
 router.get('/mbd', (req, res) => {
   try {
-    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
+    let content = '';
+    if (req.query && req.query.content) {
+      try {
+        content = decodeURIComponent(req.query.content);
+      } catch (e) {
+        content = req.query.content;
+      }
+    }
     
     if (!content.trim()) {
       return res.json({
@@ -195,9 +209,16 @@ router.get('/mbd', (req, res) => {
  */
 router.get('/opt', (req, res) => {
   try {
-    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
-    const from = req.query.from || '0';
-    const name = req.query.name || 'API用户';
+    let content = '';
+    if (req.query && req.query.content) {
+      try {
+        content = decodeURIComponent(req.query.content);
+      } catch (e) {
+        content = req.query.content;
+      }
+    }
+    const from = req.query && req.query.from ? req.query.from : '0';
+    const name = req.query && req.query.name ? req.query.name : 'API用户';
     
     if (!content.trim()) {
       return res.json({
@@ -219,9 +240,16 @@ router.get('/opt', (req, res) => {
  */
 router.get('/meu', (req, res) => {
   try {
-    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
-    const from = req.query.from || '0';
-    const groupid = req.query.groupid || '0';
+    let content = '';
+    if (req.query && req.query.content) {
+      try {
+        content = decodeURIComponent(req.query.content);
+      } catch (e) {
+        content = req.query.content;
+      }
+    }
+    const from = req.query && req.query.from ? req.query.from : '0';
+    const groupid = req.query && req.query.groupid ? req.query.groupid : '0';
     
     if (!content.trim()) {
       return res.json({
@@ -241,8 +269,15 @@ router.get('/meu', (req, res) => {
  */
 router.get('/mbtv', (req, res) => {
   try {
-    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
-    const from = req.query.from || '0';
+    let content = '';
+    if (req.query && req.query.content) {
+      try {
+        content = decodeURIComponent(req.query.content);
+      } catch (e) {
+        content = req.query.content;
+      }
+    }
+    const from = req.query && req.query.from ? req.query.from : '0';
     
     mabiTelevision(content, from, createCallback(res)).catch(err => {
       handleError(res, err);
@@ -257,8 +292,15 @@ router.get('/mbtv', (req, res) => {
  */
 router.get('/mbcd', (req, res) => {
   try {
-    const content = req.query.content ? decodeURIComponent(req.query.content) : '';
-    const from = req.query.from || '0';
+    let content = '';
+    if (req.query && req.query.content) {
+      try {
+        content = decodeURIComponent(req.query.content);
+      } catch (e) {
+        content = req.query.content;
+      }
+    }
+    const from = req.query && req.query.from ? req.query.from : '0';
     
     mabiGachaTv(content, from, createCallback(res)).catch(err => {
       handleError(res, err);
