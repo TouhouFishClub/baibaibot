@@ -12,7 +12,7 @@ async function update_shipid2name() {
     return v.json();
   });
 
-  let ret = new Array(data.length + 1000);
+  let ret = new Array(data.length + 1000).fill("");
   data.forEach((e) => {
     ret[e.id] = e.name;
   });
