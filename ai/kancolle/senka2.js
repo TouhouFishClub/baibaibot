@@ -9,7 +9,7 @@ var imageMagick = gm.subClass({ imageMagick : true });
 var {sendGmImage} = require('../../cq/sendImage');
 var path = require('path');
 //var {sendGmImage} = require('../../../cq/sendImage');
-
+const { update_shipid2name } = require("./update_utils");
 
 var monthOfDay=[31,28,31,30,31,30,31,31,30,31,30,31];
 var u = {};
@@ -2141,7 +2141,9 @@ setTimeout(function(){
 
 },500)
 
-
+setInterval(async () => {
+  shipid2name = await update_shipid2name();
+}, 1 * 60 * 60 * 1000);
 
 
 
