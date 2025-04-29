@@ -12,6 +12,10 @@ const { searchEquipUpgrade } = require('../ai/mabinogi/ItemUpgrade/index');
 const { saveTxt, answer } = require('../lib/mongo.js');
 const { BossWork } = require('../ai/mabinogi/BossWork/BossWork');
 const { calendar } = require('../ai/calendar.js');
+const { cal } = require('../ai/calculator');
+const { menu } = require('../ai/menu');
+const { mabiGacha, selectGachaGroup } = require('../ai/mabinogi/gacha/index');
+const { tcArticle } = require('../ai/mabinogi/newArticle');
 
 /**
  * 转换本地图片为Base64
@@ -157,6 +161,36 @@ function createCallback(res) {
           message: result
         }
       });
+    }
+  };
+}
+
+/**
+ * 增强版回调处理函数，在没有结果时尝试使用cal函数
+ * @param {Object} res - Express响应对象
+ * @param {string} content - 用户输入内容
+ * @returns {Function} 回调函数
+ */
+function createCallbackWithCalFallback(res, content) {
+  let hasResponse = false;
+  
+  return function(result) {
+    if (result) {
+      hasResponse = true;
+      // 使用原始callback处理结果
+      createCallback(res)(result);
+    } else {
+      // 如果answer没有返回结果(result为空)，尝试使用cal函数
+      const calResult = cal(content.trim());
+      if (calResult) {
+        res.json({
+          status: 'ok',
+          data: {
+            type: 'text',
+            message: `${content.trim()}=${calResult}`
+          }
+        });
+      }
     }
   };
 }
@@ -402,6 +436,27 @@ router.get('/uni', (req, res) => {
     } else if (content.endsWith('日历')) {
       // 日历查询功能
       calendar(content.substring(0, content.length - 2), from, group, createCallback(res), 'search');
+    } else if (content.startsWith('菜单') || content.startsWith('menu')) {
+      // 菜单功能
+      menu(content, group, createCallback(res));
+    } else if (content === '洛奇来一发') {
+      // 洛奇抽卡一次
+      mabiGacha(from, group, createCallback(res), 1);
+    } else if (content === '洛奇来十连') {
+      // 洛奇抽卡十连
+      mabiGacha(from, group, createCallback(res), 11);
+    } else if (content === '洛奇来一单') {
+      // 洛奇抽卡一单
+      mabiGacha(from, group, createCallback(res), 60);
+    } else if (content === '洛奇来十单') {
+      // 洛奇抽卡十单
+      mabiGacha(from, group, createCallback(res), 600);
+    } else if (content.startsWith('洛奇蛋池')) {
+      // 选择洛奇抽卡池
+      selectGachaGroup(from, group, createCallback(res), content.substring(4).trim());
+    } else if (content.toUpperCase().startsWith('TC公告')) {
+      // 获取洛奇TC公告
+      tcArticle(content.substring(4), createCallback(res));
     } else if (content.includes('|')) {
       // 包含"|"，执行保存或删除操作（问答模块）
       const parts = content.split('|');
@@ -419,7 +474,8 @@ router.get('/uni', (req, res) => {
       saveTxt(key, value, name, groupName, createCallback(res), from, group);
     } else {
       // 默认为查询操作（问答模块）
-      answer(content.trim(), name, groupName, createCallback(res), group, from);
+      // 使用增强版回调，在answer没有结果时尝试cal函数
+      answer(content.trim(), name, groupName, createCallbackWithCalFallback(res, content), group, from);
     }
   } catch (error) {
     handleError(res, error);
