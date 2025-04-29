@@ -175,7 +175,7 @@ function createCallbackWithCalFallback(res, content) {
   let hasResponse = false;
   
   return function(result) {
-    console.log(`\n\n\n===\nresult: ${result}\n\n`)
+    // console.log(`\n\n\n===\nresult: ${result}\n\n`)
     if (result) {
       hasResponse = true;
       // 使用原始callback处理结果
@@ -191,8 +191,13 @@ function createCallbackWithCalFallback(res, content) {
             message: `${content.trim()}=${calResult}`
           }
         });
+      } else {
+        // 如果cal也没有结果，返回错误状态
+        res.json({
+          status: 'error',
+          message: '未找到相关内容'
+        });
       }
-      // 如果cal也没有结果，不返回任何信息
     }
   };
 }
