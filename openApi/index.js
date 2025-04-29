@@ -175,6 +175,7 @@ function createCallbackWithCalFallback(res, content) {
   let hasResponse = false;
   
   return function(result) {
+    console.log(`\n\n\n===\nresult: ${result}\n\n`)
     if (result) {
       hasResponse = true;
       // 使用原始callback处理结果
