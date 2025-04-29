@@ -341,8 +341,8 @@ function getRank(page,retarr,proxy){
             console.log('seed error,will req');
             // ------
             (async () => {
-              let MAX_BYTES = 311000;
-              let MAX_BYTES_2 = 530000;
+              let MAX_BYTES = 1000000;
+              let MAX_BYTES_2 = 1000000;
               let MAIN_JS_URL = "http://w08r.kancolle-server.com/kcs2/js/main.js"; // 下载速率似乎比 http://ooi.moe/kcs2/js/main.js 更快
               let UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36";
               let PATTEN = /(?<!\')\{(?!\\x20)|(?<!\\x20)\}(?!\')/;
@@ -2145,6 +2145,10 @@ setInterval(async () => {
   shipid2name = await update_shipid2name();
 }, 1 * 60 * 60 * 1000);
 
+
+setTimeout(async () => {
+  shipid2name = await update_shipid2name();
+}, 1 * 5000);
 
 
 
