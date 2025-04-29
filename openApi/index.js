@@ -180,7 +180,7 @@ function createCallbackWithCalFallback(res, content) {
       // 使用原始callback处理结果
       createCallback(res)(result);
     } else {
-      // 如果answer没有返回结果(result为空)，尝试使用cal函数
+      // 如果answer没有返回结果(result为空、null或undefined)，尝试使用cal函数
       const calResult = cal(content.trim());
       if (calResult) {
         res.json({
@@ -191,6 +191,7 @@ function createCallbackWithCalFallback(res, content) {
           }
         });
       }
+      // 如果cal也没有结果，不返回任何信息
     }
   };
 }
