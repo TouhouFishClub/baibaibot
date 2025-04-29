@@ -822,6 +822,9 @@ function handleMsg_D(msgObj,port, configs) {
 		'是吧',
 	]
 	callback = function (res, blank) {
+    if(!res) {
+      return
+    }
 		if (res.trim().length > 0) {
 			// 添加自定义后缀
 			if(new Set([99999]).has(port)) {
