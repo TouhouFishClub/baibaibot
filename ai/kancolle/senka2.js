@@ -1512,7 +1512,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 var date = nn.getDate();
                 var img1 = new imageMagick("static/blank.png");
                 img1.autoOrient()
-                  .resize(950,350,'!')
+                  .resize(1050,350,'!')
                   .fontSize(20)
                   .fill('blue')
                   .font('./font/STXIHEI.TTF')
@@ -1525,6 +1525,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 img1.drawText(620, 0, ''+(month-2)+'月'+'', 'NorthWest')
                 img1.drawText(720, 0, ''+(month-3)+'月'+'', 'NorthWest')
                 img1.drawText(820, 0, ''+(year-1)+'年'+month+'月'+'', 'NorthWest')
+                img1.drawText(920, 0, ''+(year-2)+'年'+month+'月'+'', 'NorthWest')
                 img1.drawText(20, 50, '【1位】', 'NorthWest')
                 img1.drawText(20, 100, '【5位】', 'NorthWest')
                 img1.drawText(20, 150, '【20位】', 'NorthWest')
@@ -1630,7 +1631,22 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                         img1.drawText(830, 220, ret[1100], 'NorthWest')
                         img1.drawText(830, 270, ret[1500], 'NorthWest')
                         img1.fontSize(25)             .fill('blue')
-                        sendGmImage(img1,'',callback);
+                        getlm(24,function(ret){
+                          console.log(11111144415555);
+                          img1.drawText(920, 50, ret[1], 'NorthWest')
+                          img1.drawText(920, 100, ret[5], 'NorthWest')
+                          img1.drawText(920, 150, ret[20], 'NorthWest')
+                          img1.drawText(920, 200, ret[100], 'NorthWest')
+                          img1.drawText(920, 250, ret[500], 'NorthWest')
+                          img1.fontSize(20)             .fill('red')
+                          img1.drawText(930, 70, ret[1001], 'NorthWest')
+                          img1.drawText(930, 120, ret[1005], 'NorthWest')
+                          img1.drawText(930, 170, ret[1020], 'NorthWest')
+                          img1.drawText(930, 220, ret[1100], 'NorthWest')
+                          img1.drawText(930, 270, ret[1500], 'NorthWest')
+                          img1.fontSize(25)             .fill('blue')
+                          sendGmImage(img1,'',callback);
+                        })
                       })
                     })
                   })
@@ -1652,6 +1668,8 @@ function getlm(skip,callback){
   var rr;
   if(skip==12){
     year = year - 1
+  }else if(skip==24){
+    year = year - 2
   }else{
     month = nn.getMonth()+1-skip;
     if(month<1){
