@@ -150,6 +150,7 @@ function getUserInfo(uuid,callback,noproxy,shipsave){
           rrr.exp=exp;
           rrr.ship=shipstr;
           rrr.cmt=cmt;
+          rrr.countOf = { ship: data.api_ship, slotitem: data.api_slotitem };
           ret = ret + name + "  \n";
 
           ret = ret + '经验值：【'+exp+'】\t 经验战果值：【'+exps+'】\n'
@@ -1144,6 +1145,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
 
                   ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'  \t  继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
                   ret = ret + '经验值【'+rrr.exp+'】 \t EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                  ret = ret + `船位：${rrr.countOf.ship[0]}/${rrr.countOf.ship[1]}\t\t装备位：${rrr.countOf.slotitem[0]}/${rrr.countOf.slotitem[1]}`
                   ret = ret + '\n'
                   ret = ret + rrr.ship + '\n';
                   culist[culist.length] = {rd: tno + 1, exp: rrr.exp, sk: -1, eo: 0, es: addsenka};
@@ -1192,6 +1194,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                       var ret = namelist[0] + '\n';
                       ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
                       ret = ret + '经验值【'+rrr.exp+'】 \t EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                      ret = ret + `船位：${rrr.countOf.ship[0]}/${rrr.countOf.ship[1]}\t\t装备位：${rrr.countOf.slotitem[0]}/${rrr.countOf.slotitem[1]}`
                       if (rrr.exp > 200000000) {
                         //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
                       }
@@ -1225,6 +1228,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     var ret = namelist[0] + '\n';
                     ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
                     ret = ret + '经验值【'+rrr.exp+'】 \t EX:' + exstr + '  日均:【' + dailystr + '】\n';
+                    ret = ret + `船位：${rrr.countOf.ship[0]}/${rrr.countOf.ship[1]}\t\t装备位：${rrr.countOf.slotitem[0]}/${rrr.countOf.slotitem[1]}`
                     if (rrr.exp > 200000000) {
                       //ret = ret + '【exp：'+(rrr.exp/100000000).toFixed(1)+'亿】'
                     }
