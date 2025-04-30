@@ -68,6 +68,9 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
   saveChat(group_id, user_id, card || nickname || user_name, raw_message, bot_name, context);
 
   handle_msg_D2(raw_message, user_id, card || nickname || user_name, group_id, msg => {
+    if(!msg) {
+      return
+    }
     msg = msg
       .replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
       .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
