@@ -109,32 +109,21 @@ const formatUpgradeInfo = async () => {
 		transform[`_LT[xml.itemupgradedb.${sp[0].trim()}]`] = sp[1]
 	})
 
-	// test output
-	// let output = {}
-	// xmlData.upgrade_db.upgrade.forEach(item => {
-	// 	if(item.$.effect) {
-	// 		item.$.effect.split(';').forEach(ef => {
-	// 			let efs = ef.split('(')
-	// 			if(efs.length < 2) {
-	// 				return
-	// 			}
-	// 			console.log(efs)
-	// 			if(output[efs[0]]) {
-	// 				output[efs[0]].itemSet.add(efs[1].split(',')[0].trim())
-	// 			} else {
-	// 				output[efs[0]] = {
-	// 					itemSet: new Set([efs[1].split(',')[0].trim()])
-	// 				}
-	// 			}
-	// 		})
-	// 	}
-	// })
-	// console.log(output)
-	// console.log(xmlData.upgrade_db.effect)
+	// 处理重复id的情况，仅保留后面的id，前面的id废弃
+	let upgradeItems = xmlData.upgrade_db.upgrade
+	let upgradeMap = new Map()
+	
+	// 按照id分组，遍历每个升级项，相同id后面的会覆盖前面的
+	upgradeItems.forEach(item => {
+		upgradeMap.set(item.$.id, item)
+	})
+	
+	// 提取唯一的升级项
+	let uniqueUpgradeItems = Array.from(upgradeMap.values())
 	let effectTmp = xmlData.upgrade_db.effect.map(x => x.$)
 
 	return [
-		xmlData.upgrade_db.upgrade.map(item => Object.assign(item.$, {
+		uniqueUpgradeItems.map(item => Object.assign(item.$, {
 			localnameCn: transform[item.$.localname].trim(),
 			descCn: transform[item.$.desc].trim(),
 			filterArr: item.$.item_filter.split('|').filter(x => x),
