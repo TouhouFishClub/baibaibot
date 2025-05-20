@@ -902,6 +902,11 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
   }
 
   var pcd = parseInt(cd);
+
+  if(cd=='12sKy'){
+    pcd = NaN
+  }
+
   var cf = ca[0];
 
   var startk;
