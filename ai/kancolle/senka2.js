@@ -1208,6 +1208,15 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     generateImage(culist, ret, callback,month);
                   } else {
                     getUserInfo(userid, function (rrr) {
+
+                      if(!rrr.exp){
+                        rrr.exp=0;
+                        rrr.ship='';
+                        rrr.cmt='';
+                        rrr.countOf = { ship: [0,0], slotitem: [0,0] };
+                      }
+
+
                       var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
                       var ret = namelist[0] + '\n';
                       ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
@@ -1242,6 +1251,15 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   generateImage(culist, ret, callback,month);
                 } else {
                   getUserInfo(userid, function (rrr) {
+
+
+                    if(!rrr.exp){
+                      rrr.exp=0;
+                      rrr.ship='';
+                      rrr.cmt='';
+                      rrr.countOf = { ship: [0,0], slotitem: [0,0] };
+                    }
+
                     var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
                     var ret = namelist[0] + '\n';
                     ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
