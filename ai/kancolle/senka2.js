@@ -1152,7 +1152,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     rrr.exp=0;
                     rrr.ship='';
                     rrr.cmt='';
-                    rrr.countOf = { ship: 0, slotitem: 0 };
+                    rrr.countOf = { ship: [0,0], slotitem: [0,0] };
                   }
 
 
