@@ -5,7 +5,7 @@ const { sendImageMsgBuffer } = require('../../cq/sendImage')
 const {createCanvas, registerFont} = require('canvas')
 const MAX_SIZE = 30
 const GLOBAL_MARGIN = 40
-const FONT_INIT = ['notobk', 'notoserifbk']
+const FONT_INIT = ['Noto Sans CJK Black', 'Noto Sans SC Heavy']
 const LINE_INDENT = 200
 
 const renderRedText = (ctx, text, x, y) => {
@@ -180,8 +180,8 @@ const fiveThousandTrillionYen = (content, callback) => {
 	if(sp[0].lastIndexOf('[CQ:') > -1 || sp[1].lastIndexOf('[CQ:') > -1)
 		return
 
-	registerFont(path.join(__dirname, './font/NotoSansCJK-Black.otf'), { family: FONT_INIT[0] })
-	registerFont(path.join(__dirname, './font/NotoSansSC-heavy.otf'), { family: FONT_INIT[1] })
+	registerFont(path.join(__dirname, './font/NotoSansCJK-Black.otf'), { family: 'Noto Sans CJK Black' })
+	registerFont(path.join(__dirname, './font/NotoSansSC-heavy.otf'), { family: 'Noto Sans SC Heavy' })
 
 	let canvasTmp = createCanvas(2000, 400), ctxTmp = canvasTmp.getContext('2d')
 	ctxTmp.setTransform(1, 0, -0.45, 1, 0, 0)
