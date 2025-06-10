@@ -133,7 +133,7 @@ const mabiTelevision = async (content, qq, callback) => {
 
   if(filter.startsWith('芙兰队')) {
     // 芙兰队特殊查询
-    const namePatterns = ['Fl%', '莉丽%', '娜兹%', 'Sa%', '永夜%', '温雯%', '奇幻%', '幽鬼%'];
+    const namePatterns = ['Fl%', '莉丽%', '娜兹%', 'Sa%', '永夜%', '温雯%', '圣祐%', '幽鬼%'];
     const nameConditions = namePatterns.map(() => 'character_name LIKE ?').join(' OR ');
     let teamWhereClause = `WHERE (${nameConditions}) AND channel = ? AND dungeon_name = ? AND (TIME(data_time) >= '20:00:00' OR TIME(data_time) <= '01:00:00')`;
     queryParams = [...namePatterns, 10, '格伦贝尔纳'];
