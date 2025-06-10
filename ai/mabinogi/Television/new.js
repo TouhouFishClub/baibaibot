@@ -144,7 +144,7 @@ const mabiTelevision = async (content, qq, callback) => {
       teamWhereClause += ` AND reward REGEXP '${regStr}'`;
     }
     if(filter.includes('+1卷')) {
-      teamWhereClause += ` AND reward REGEXP '+1咒语书'`;
+      teamWhereClause += ` AND reward REGEXP '\\\\+1咒语书'`;
     }
     
     whereClause = teamWhereClause;
