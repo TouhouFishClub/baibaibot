@@ -127,11 +127,18 @@ const mabiTelevision = async (content, qq, callback) => {
     'yate': 'mabi_dungeon_reward_records_yate'
   }[sv]
   const filter = content.trim()
-  const limit = 20
+  let limit = 20
   let queryParams = [];
   let whereClause = '';
 
-  if(filter.length) {
+  if(filter === '芙兰队') {
+    // 芙兰队特殊查询
+    const namePatterns = ['Fl%', '莉丽%', '娜兹%', 'Sa%', '永夜%', '温雯%', '奇幻%', '幽鬼%'];
+    const nameConditions = namePatterns.map(() => 'character_name LIKE ?').join(' OR ');
+    whereClause = `WHERE (${nameConditions}) AND channel = ? AND dungeon_name = ?`;
+    queryParams = [...namePatterns, 10, '格伦贝尔纳'];
+    limit = 50;
+  } else if(filter.length) {
     if(filter.indexOf('-') > -1) {
       let sp = filter.split('-')
       let [rewordFilter, nameFilter, dungeonFilter] = sp
