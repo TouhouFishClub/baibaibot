@@ -5,11 +5,11 @@ const { sendImageMsgBuffer } = require('../../cq/sendImage')
 const {createCanvas, registerFont} = require('canvas')
 const MAX_SIZE = 30
 const GLOBAL_MARGIN = 40
-const FONT_INIT = ['Noto Sans CJK Black', 'Noto Sans SC Heavy']
+const FONT_INIT = ['NotoBlack', 'NotoHeavy']
 const LINE_INDENT = 200
 
 const renderRedText = (ctx, text, x, y) => {
-
+	ctx.save()
 	ctx.setTransform(1, 0, -0.45, 1, 0, 0)
 	ctx.font = `100px ${FONT_INIT[0]}`
 
@@ -95,10 +95,12 @@ const renderRedText = (ctx, text, x, y) => {
 		ctx.fillStyle = grad;
 		ctx.fillText(text, x, y - 3);
 	}
-
+	
+	ctx.restore()
 }
 
 const renderWhiteText = (ctx, text, x, y) => {
+	ctx.save()
 	ctx.setTransform(1, 0, -0.45, 1, 0, 0)
 	ctx.font = `100px ${FONT_INIT[1]}`
 
@@ -168,7 +170,8 @@ const renderWhiteText = (ctx, text, x, y) => {
 		ctx.fillStyle = grad;
 		ctx.fillText(text, x, y - 3);
 	}
-
+	
+	ctx.restore()
 }
 
 const fiveThousandTrillionYen = (content, callback) => {
@@ -180,8 +183,8 @@ const fiveThousandTrillionYen = (content, callback) => {
 	if(sp[0].lastIndexOf('[CQ:') > -1 || sp[1].lastIndexOf('[CQ:') > -1)
 		return
 
-	registerFont(path.join(__dirname, './font/NotoSansCJK-Black.otf'), { family: 'Noto Sans CJK Black' })
-	registerFont(path.join(__dirname, './font/NotoSansSC-heavy.otf'), { family: 'Noto Sans SC Heavy' })
+	registerFont(path.join(__dirname, './font/NotoSansCJK-Black.otf'), { family: 'NotoBlack' })
+	registerFont(path.join(__dirname, './font/NotoSansSC-heavy.otf'), { family: 'NotoHeavy' })
 
 	let canvasTmp = createCanvas(2000, 400), ctxTmp = canvasTmp.getContext('2d')
 	ctxTmp.setTransform(1, 0, -0.45, 1, 0, 0)
