@@ -131,12 +131,20 @@ const mabiTelevision = async (content, qq, callback) => {
   let queryParams = [];
   let whereClause = '';
 
-  if(filter === '芙兰队') {
+  if(filter.startsWith('芙兰队')) {
     // 芙兰队特殊查询
     const namePatterns = ['Fl%', '莉丽%', '娜兹%', 'Sa%', '永夜%', '温雯%', '奇幻%', '幽鬼%'];
     const nameConditions = namePatterns.map(() => 'character_name LIKE ?').join(' OR ');
-    whereClause = `WHERE (${nameConditions}) AND channel = ? AND dungeon_name = ? AND (TIME(data_time) >= '20:00:00' OR TIME(data_time) <= '01:00:00')`;
+    let teamWhereClause = `WHERE (${nameConditions}) AND channel = ? AND dungeon_name = ? AND (TIME(data_time) >= '20:00:00' OR TIME(data_time) <= '01:00:00')`;
     queryParams = [...namePatterns, 10, '格伦贝尔纳'];
+    
+    // 检查是否包含新卷条件
+    if(filter.includes('新卷')) {
+      const regStr = await createSearchRegexp('新卷');
+      teamWhereClause += ` AND reward REGEXP '${regStr}'`;
+    }
+    
+    whereClause = teamWhereClause;
     limit = 50;
   } else if(filter.length) {
     if(filter.indexOf('-') > -1) {
