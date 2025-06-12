@@ -59,7 +59,7 @@ var failed = 0;
 function getWeatherByCity(city,userId,callback){
   var options = {
     hostname: 'toy1.weather.com.cn',
-    port: 80,
+    port: 443,
     path: '/search?cityname='+encodeURIComponent(city)+'&callback=s',
     headers:{
       'Referer':'https://www.weather.com.cn/'
@@ -67,7 +67,7 @@ function getWeatherByCity(city,userId,callback){
     method: 'GET'
   };
   console.log(options);
-  var req = http.request(options, function (res) {
+  var req = https.request(options, function (res) {
     var resdata = "";
     res.on('data', function (chunk) {
       resdata+=chunk;
