@@ -100,11 +100,11 @@ function getWeatherByCity(city,userId,callback){
 function getWeatherByCityCode(city,cityCode,userId,callback){
   var options = {
     hostname: 'www.weather.com.cn',
-    port: 80,
+    port: 443,
     path: '/weather/'+cityCode+'.shtml',
     method: 'GET'
   };
-  var req = http.request(options, function (res) {
+  var req = https.request(options, function (res) {
     var resdata = "";
     res.on('data', function (chunk) {
       resdata += chunk;
@@ -268,7 +268,7 @@ function getinner(s){
 }
 
 
-
+getWeatherByCity('北京','aaa',function(r){console.log(r)})
 
 
 
