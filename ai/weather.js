@@ -67,6 +67,7 @@ function getWeatherByCity(city,userId,callback){
           console.log('pipe error catched!')
           console.log(error);
         }else{
+          var resdata = body;
           failed = 0;
           var reply = false;
           var n = resdata.indexOf("(");
