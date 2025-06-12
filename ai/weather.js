@@ -61,6 +61,9 @@ function getWeatherByCity(city,userId,callback){
     hostname: 'toy1.weather.com.cn',
     port: 80,
     path: '/search?cityname='+encodeURIComponent(city)+'&callback=s',
+    headers:{
+      'Referer':'https://www.weather.com.cn/'
+    }
     method: 'GET'
   };
   console.log(options);
