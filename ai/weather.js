@@ -63,7 +63,7 @@ function getWeatherByCity(city,userId,callback){
     path: '/search?cityname='+encodeURIComponent(city)+'&callback=s',
     headers:{
       'Referer':'https://www.weather.com.cn/'
-    }
+    },
     method: 'GET'
   };
   console.log(options);
