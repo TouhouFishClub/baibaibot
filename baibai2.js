@@ -1099,12 +1099,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   // DeepSeek对话模块
-  if(content.startsWith('ds ') || content.startsWith('deepseek ') || 
-     content.startsWith('DS ') || content.startsWith('DeepSeek ') || 
-     content.startsWith('Ds ') || content.startsWith('dS ')){
-    handleDeepSeekChat(content, groupid, from, callback);
-    return;
-  }
+  // if(content.startsWith('ds ') || content.startsWith('deepseek ') || 
+  //    content.startsWith('DS ') || content.startsWith('DeepSeek ') || 
+  //    content.startsWith('Ds ') || content.startsWith('dS ')){
+  //   handleDeepSeekChat(content, groupid, from, callback);
+  //   return;
+  // }
 
   // if(content.startsWith('s ')||content.startsWith('s1')||content.startsWith('s2')||content.startsWith('s3')){
   //   content=content.trim();
