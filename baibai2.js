@@ -173,7 +173,7 @@ const {LiveInspect, LiveAnalyzer} = require('./ai/mabinogi/live-inspect')
 const {chujue} = require('./ai/image/generator/chujue/index.js')
 
 // 导入deepseek模块
-const {handleDeepSeekChat} = require('./ai/llm/deepseek')
+// const {handleDeepSeekChat} = require('./ai/llm/deepseek')
 
 
 
