@@ -1,4 +1,8 @@
 cal = function(str){
+  str = str.replace(/,/g,'');
+  if(str.endsWith('=')){
+    str = str.substring(0,str.length-1);
+  }
   var sa=str.split('^');
   if(sa.length==2){
     if(parseFloat(sa[0])==sa[0]&&parseFloat(sa[1])==sa[1]){
