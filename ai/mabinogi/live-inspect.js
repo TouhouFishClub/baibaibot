@@ -6,6 +6,15 @@ const {IMAGE_DATA} = require("../../baibaiConfigs");
 const https = require("https");
 const {render} = require('./Television/render')
 
+// 读取配置文件中的 cookie
+let bilibiliCookie = '';
+try {
+  const secretConfig = require('./.secret.json');
+  bilibiliCookie = secretConfig.Cookie || '';
+} catch (e) {
+  console.log('无法读取 .secret.json 文件或 Cookie 配置不存在');
+}
+
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../baibaiConfigs').mongourl;
 const whiteList = new Set([
@@ -95,7 +104,17 @@ const fetchTCData = (page = 1) => new Promise(resolve => {
 const fetchBiliData = roomId => new Promise(resolve => {
   const url = `https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=${roomId}`;
 
-  axios.get(url)
+  const config = {
+    headers: {}
+  };
+  
+  // 如果配置了 cookie，则添加到请求头中
+  if (bilibiliCookie) {
+    config.headers['Cookie'] = bilibiliCookie;
+    config.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36';
+  }
+
+  axios.get(url, config)
     .then(response => {
       // room_info = {
       //   uid: 9099105,
