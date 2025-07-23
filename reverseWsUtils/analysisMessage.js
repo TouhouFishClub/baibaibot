@@ -22,7 +22,8 @@ const {
   localAssetsToBase64
 } = require('../util/imageToBase64')
 
-const { handle_msg_D2 } = require('../baibai2');
+// 延迟加载以避免循环依赖
+// const { handle_msg_D2 } = require('../baibai2');
 const { saveChat} = require("../ai/chat/collect");
 
 const replaceImageToBase64 = message =>
@@ -67,6 +68,8 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
 
   saveChat(group_id, user_id, card || nickname || user_name, raw_message, bot_name, context);
 
+  // 延迟加载 handle_msg_D2 以避免循环依赖
+  const { handle_msg_D2 } = require('../baibai2');
   handle_msg_D2(raw_message, user_id, card || nickname || user_name, group_id, msg => {
     if(!msg) {
       return
