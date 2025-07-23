@@ -2,7 +2,7 @@
  * 快速测试工具 - 专门用于诊断群成员列表问题
  */
 
-const { createHttpApiWrapper } = require('./index')
+const { createHttpApiWrapper } = require('./httpApiWrapper')
 
 async function quickTestGroupMembers(botName = '25334', groupId = '584155191') {
   console.log(`=== 快速测试群成员列表 ===`)

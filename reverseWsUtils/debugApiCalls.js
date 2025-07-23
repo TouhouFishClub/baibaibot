@@ -3,7 +3,7 @@
  * 用于诊断 API 调用问题
  */
 
-const { createHttpApiWrapper } = require('./index')
+const { createHttpApiWrapper } = require('./httpApiWrapper')
 
 /**
  * 调试群成员列表获取

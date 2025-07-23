@@ -48,11 +48,21 @@ const responseAction = res => {
     console.log(`[ActionManager] 动作成功: ${echo.action}`)
     action.resolve(data)
   } else {
-    console.error(`[ActionManager] 动作失败: ${echo.action}, status: ${status}, retcode: ${retcode}`)
+    console.warn(`[ActionManager] 动作失败: ${echo.action}, status: ${status}, retcode: ${retcode}`)
     const error = new Error(`API 调用失败: ${echo.action}, status: ${status}, retcode: ${retcode}`)
     error.status = status
     error.retcode = retcode
     error.data = data
+    
+    // 对于某些可预期的错误，提供更友好的处理
+    if (retcode === 404) {
+      console.warn(`[ActionManager] 资源未找到 (404): ${echo.action}`)
+    } else if (retcode === 1403) {
+      console.warn(`[ActionManager] 权限不足 (1403): ${echo.action}`)
+    } else if (retcode === 1404) {
+      console.warn(`[ActionManager] 群/用户不存在 (1404): ${echo.action}`)
+    }
+    
     action.reject(error)
   }
 }

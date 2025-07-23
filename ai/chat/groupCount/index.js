@@ -5,7 +5,8 @@ const { mongourl, IMAGE_DATA, myip} = require('../../../baibaiConfigs')
 const nodeHtmlToImage = require('node-html-to-image')
 const path = require("path");
 const http = require("http");
-const { createHttpApiWrapper } = require('../../../reverseWsUtils')
+// 延迟加载以避免循环依赖
+// const { createHttpApiWrapper } = require('../../../reverseWsUtils')
 
 let echart = readFileSync(join(__dirname, '..', 'libs', 'echart.min.js'), 'utf-8')
 let echartWordcloud = readFileSync(join(__dirname, '..', 'libs', 'echart-wordcloud.js'), 'utf-8')
@@ -39,6 +40,8 @@ const fetchGroupUsers = async (groupid, port) => {
 	console.log(`[群成员获取] 开始获取群 ${groupid} 成员列表，使用端口/机器人: ${port}`)
 	
 	try {
+		// 延迟加载以避免循环依赖
+		const { createHttpApiWrapper } = require('../../../reverseWsUtils')
 		// 优先尝试使用反向 WebSocket 接口
 		const apiWrapper = createHttpApiWrapper(port)
 		console.log(`[反向 WebSocket] 创建 API 包装器成功，机器人名: ${port}`)
