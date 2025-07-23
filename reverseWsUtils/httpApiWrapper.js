@@ -10,22 +10,101 @@ class HttpApiWrapper {
   }
 
   /**
+   * 获取群成员信息（单个成员）
+   * @param {string|number} groupId - 群ID  
+   * @param {string|number} userId - 用户ID
+   * @param {boolean} noCache - 是否不使用缓存，默认 false
+   * @returns {Promise<Object>} 群成员信息
+   */
+  async getGroupMemberInfo(groupId, userId, noCache = false) {
+    try {
+      // 确保 ID 是数字类型
+      const numericGroupId = parseInt(groupId)
+      const numericUserId = parseInt(userId)
+      
+      if (isNaN(numericGroupId)) {
+        throw new Error(`无效的群ID: ${groupId}`)
+      }
+      if (isNaN(numericUserId)) {
+        throw new Error(`无效的用户ID: ${userId}`)
+      }
+
+      console.log(`[反向 WebSocket] 正在获取群 ${numericGroupId} 用户 ${numericUserId} 信息，no_cache: ${noCache}`)
+      
+      const actionParams = {
+        "action": "get_group_member_info",
+        "params": {
+          "group_id": numericGroupId,
+          "user_id": numericUserId,
+          "no_cache": noCache
+        }
+      }
+
+      console.log(`[反向 WebSocket] 发送请求:`, JSON.stringify(actionParams))
+      
+      const response = await createAction(actionParams, this.botName)
+      
+      console.log(`[反向 WebSocket] 收到响应:`, JSON.stringify(response))
+      
+      return response || {}
+    } catch (error) {
+      console.error(`[反向 WebSocket] 获取群成员信息失败 [群ID: ${groupId}, 用户ID: ${userId}]:`, error)
+      console.error(`[反向 WebSocket] 错误堆栈:`, error.stack)
+      return {}
+    }
+  }
+
+  /**
    * 获取群成员列表
-   * @param {string} groupId - 群ID
+   * @param {string|number} groupId - 群ID
+   * @param {boolean} noCache - 是否不使用缓存，默认 false
    * @returns {Promise<Array>} 群成员列表
    */
-  async getGroupMemberList(groupId) {
+  async getGroupMemberList(groupId, noCache = false) {
     try {
-      const data = await createAction({
+      // 确保 groupId 是数字类型（根据 Lagrange.OneBot 文档）
+      const numericGroupId = parseInt(groupId)
+      if (isNaN(numericGroupId)) {
+        throw new Error(`无效的群ID: ${groupId}`)
+      }
+
+      console.log(`[反向 WebSocket] 正在获取群 ${numericGroupId} 成员列表，no_cache: ${noCache}`)
+      
+      const actionParams = {
         "action": "get_group_member_list",
         "params": {
-          "group_id": groupId
+          "group_id": numericGroupId,
+          "no_cache": noCache
         }
-      }, this.botName)
+      }
+
+      console.log(`[反向 WebSocket] 发送请求:`, JSON.stringify(actionParams))
       
-      return data || []
+      const response = await createAction(actionParams, this.botName)
+      
+      console.log(`[反向 WebSocket] 收到响应:`, JSON.stringify(response))
+      
+      // 检查响应数据类型和内容
+      if (!response) {
+        console.warn(`[反向 WebSocket] 群 ${numericGroupId} 响应为空`)
+        return []
+      }
+      
+      if (!Array.isArray(response)) {
+        console.warn(`[反向 WebSocket] 群 ${numericGroupId} 响应不是数组类型:`, typeof response)
+        console.warn(`[反向 WebSocket] 响应内容:`, response)
+        return []
+      }
+      
+      console.log(`[反向 WebSocket] 群 ${numericGroupId} 成员列表长度: ${response.length}`)
+      if (response.length > 0) {
+        console.log(`[反向 WebSocket] 第一个成员示例:`, JSON.stringify(response[0]))
+      }
+      
+      return response
     } catch (error) {
-      console.error(`获取群成员列表失败 [群ID: ${groupId}]:`, error)
+      console.error(`[反向 WebSocket] 获取群成员列表失败 [群ID: ${groupId}]:`, error)
+      console.error(`[反向 WebSocket] 错误堆栈:`, error.stack)
       return []
     }
   }

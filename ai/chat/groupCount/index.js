@@ -36,12 +36,25 @@ const analysisChatData = (data, userMap) => {
  * @returns {Promise<Array>} 群成员列表
  */
 const fetchGroupUsers = async (groupid, port) => {
+	console.log(`[群成员获取] 开始获取群 ${groupid} 成员列表，使用端口/机器人: ${port}`)
+	
 	try {
 		// 优先尝试使用反向 WebSocket 接口
 		const apiWrapper = createHttpApiWrapper(port)
-		const groupMemberData = await apiWrapper.getGroupMemberList(groupid)
+		console.log(`[反向 WebSocket] 创建 API 包装器成功，机器人名: ${port}`)
 		
-		if (groupMemberData && Array.isArray(groupMemberData)) {
+		// 尝试不使用缓存获取群成员列表
+		let groupMemberData = await apiWrapper.getGroupMemberList(groupid, true)
+		console.log(`[反向 WebSocket] 首次获取结果 (no_cache=true):`, groupMemberData ? `数组长度 ${groupMemberData.length}` : '空响应')
+		
+		// 如果不使用缓存失败，尝试使用缓存
+		if (!groupMemberData || !Array.isArray(groupMemberData) || groupMemberData.length === 0) {
+			console.log(`[反向 WebSocket] 首次获取失败，尝试使用缓存 (no_cache=false)`)
+			groupMemberData = await apiWrapper.getGroupMemberList(groupid, false)
+			console.log(`[反向 WebSocket] 缓存获取结果:`, groupMemberData ? `数组长度 ${groupMemberData.length}` : '空响应')
+		}
+		
+		if (groupMemberData && Array.isArray(groupMemberData) && groupMemberData.length > 0) {
 			const groupUsers = groupMemberData.map(x => {
 				let nid = x.card || x.nickname, alias = nid
 				if(nid.length > 7) {
@@ -54,16 +67,22 @@ const fetchGroupUsers = async (groupid, port) => {
 				}
 			})
 			console.log(`[反向 WebSocket] 成功获取群 ${groupid} 成员列表，共 ${groupUsers.length} 人`)
+			console.log(`[反向 WebSocket] 前3个成员示例:`, groupUsers.slice(0, 3))
 			return groupUsers
+		} else {
+			console.warn(`[反向 WebSocket] 群 ${groupid} 成员列表为空或格式错误`)
+			console.warn(`[反向 WebSocket] 原始响应:`, groupMemberData)
 		}
 	} catch (error) {
-		console.warn(`[反向 WebSocket] 获取群成员列表失败，回退到 HTTP 方式:`, error.message)
+		console.error(`[反向 WebSocket] 获取群成员列表异常:`, error.message)
+		console.error(`[反向 WebSocket] 错误堆栈:`, error.stack)
 	}
 
 	// 回退到原有的 HTTP 调用方式
+	console.log(`[HTTP 回退] 反向 WebSocket 方式失败，尝试 HTTP 方式`)
 	return new Promise(resolve => {
 		let url = `http://${myip}:${port}/get_group_member_list?group_id=${groupid}`
-		console.log(`[HTTP 回退] 尝试调用: ${url}`)
+		console.log(`[HTTP 回退] 请求 URL: ${url}`)
 		
 		http.get(url, (res) => {
 			res.setEncoding('utf8');
@@ -71,7 +90,16 @@ const fetchGroupUsers = async (groupid, port) => {
 			res.on('data', (chunk) => { rawData += chunk; });
 			res.on('end', () => {
 				try {
+					console.log(`[HTTP 回退] 收到原始响应 (长度: ${rawData.length}):`, rawData.substring(0, 500))
 					const parsedData = JSON.parse(rawData);
+					console.log(`[HTTP 回退] 解析后的响应:`, JSON.stringify(parsedData, null, 2))
+					
+					if (!parsedData.data || !Array.isArray(parsedData.data)) {
+						console.error(`[HTTP 回退] 响应格式错误，data 不是数组:`, parsedData)
+						resolve([])
+						return
+					}
+					
 					const groupUsers = parsedData.data.map(x => {
 						let nid = x.card || x.nickname, alias = nid
 						if(nid.length > 7) {
@@ -87,6 +115,7 @@ const fetchGroupUsers = async (groupid, port) => {
 					resolve(groupUsers);
 				} catch (e) {
 					console.error(`[HTTP 回退] 解析响应失败:`, e.message);
+					console.error(`[HTTP 回退] 原始响应:`, rawData);
 					resolve([])
 				}
 			});
