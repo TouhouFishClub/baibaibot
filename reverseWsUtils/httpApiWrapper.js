@@ -29,8 +29,6 @@ class HttpApiWrapper {
         throw new Error(`无效的用户ID: ${userId}`)
       }
 
-      console.log(`[反向 WebSocket] 正在获取群 ${numericGroupId} 用户 ${numericUserId} 信息，no_cache: ${noCache}`)
-      
       const actionParams = {
         "action": "get_group_member_info",
         "params": {
@@ -40,16 +38,11 @@ class HttpApiWrapper {
         }
       }
 
-      console.log(`[反向 WebSocket] 发送请求:`, JSON.stringify(actionParams))
-      
       const response = await createAction(actionParams, this.botName)
-      
-      console.log(`[反向 WebSocket] 收到响应:`, JSON.stringify(response))
       
       return response || {}
     } catch (error) {
-      console.error(`[反向 WebSocket] 获取群成员信息失败 [群ID: ${groupId}, 用户ID: ${userId}]:`, error)
-      console.error(`[反向 WebSocket] 错误堆栈:`, error.stack)
+      console.error(`获取群成员信息失败 [群ID: ${groupId}, 用户ID: ${userId}]:`, error.message)
       return {}
     }
   }
@@ -68,8 +61,6 @@ class HttpApiWrapper {
         throw new Error(`无效的群ID: ${groupId}`)
       }
 
-      console.log(`[反向 WebSocket] 正在获取群 ${numericGroupId} 成员列表，no_cache: ${noCache}`)
-      
       const actionParams = {
         "action": "get_group_member_list",
         "params": {
@@ -78,33 +69,11 @@ class HttpApiWrapper {
         }
       }
 
-      console.log(`[反向 WebSocket] 发送请求:`, JSON.stringify(actionParams))
-      
       const response = await createAction(actionParams, this.botName)
       
-      console.log(`[反向 WebSocket] 收到响应:`, JSON.stringify(response))
-      
-      // 检查响应数据类型和内容
-      if (!response) {
-        console.warn(`[反向 WebSocket] 群 ${numericGroupId} 响应为空`)
-        return []
-      }
-      
-      if (!Array.isArray(response)) {
-        console.warn(`[反向 WebSocket] 群 ${numericGroupId} 响应不是数组类型:`, typeof response)
-        console.warn(`[反向 WebSocket] 响应内容:`, response)
-        return []
-      }
-      
-      console.log(`[反向 WebSocket] 群 ${numericGroupId} 成员列表长度: ${response.length}`)
-      if (response.length > 0) {
-        console.log(`[反向 WebSocket] 第一个成员示例:`, JSON.stringify(response[0]))
-      }
-      
-      return response
+      return response || []
     } catch (error) {
-      console.error(`[反向 WebSocket] 获取群成员列表失败 [群ID: ${groupId}]:`, error)
-      console.error(`[反向 WebSocket] 错误堆栈:`, error.stack)
+      console.error(`获取群成员列表失败 [群ID: ${groupId}]:`, error.message)
       return []
     }
   }
@@ -125,7 +94,7 @@ class HttpApiWrapper {
       
       return data || {}
     } catch (error) {
-      console.error(`获取群信息失败 [群ID: ${groupId}]:`, error)
+      console.error(`获取群信息失败 [群ID: ${groupId}]:`, error.message)
       return {}
     }
   }
@@ -148,7 +117,7 @@ class HttpApiWrapper {
       
       return data || {}
     } catch (error) {
-      console.error(`获取用户信息失败 [用户ID: ${userId}]:`, error)
+      console.error(`获取用户信息失败 [用户ID: ${userId}]:`, error.message)
       return {}
     }
   }
@@ -180,7 +149,7 @@ class HttpApiWrapper {
       
       return data || {}
     } catch (error) {
-      console.error(`发送消息失败 [类型: ${messageType}, 目标: ${targetId}]:`, error)
+      console.error(`发送消息失败 [类型: ${messageType}, 目标: ${targetId}]:`, error.message)
       return {}
     }
   }
@@ -200,7 +169,7 @@ class HttpApiWrapper {
       
       return data
     } catch (error) {
-      console.error(`API 调用失败 [动作: ${action}]:`, error)
+      console.error(`API 调用失败 [动作: ${action}]:`, error.message)
       throw error
     }
   }
