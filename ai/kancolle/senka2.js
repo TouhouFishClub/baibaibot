@@ -2173,7 +2173,7 @@ function searchShip(name,callback){
         if(arr[i+1]){
           addexp = arr[i].e-arr[i+1].e;
         }
-        var addsk = (addexp / 10000 * 7).toFixed(1)
+        var addsk = (-addexp / 10000 * 7).toFixed(2)
         var ship = arr[i].s.replace(/\t/g,' ');
         img1.drawText(20, 20+i*16, tsstr, 'NorthWest')
         img1.fill('red')
