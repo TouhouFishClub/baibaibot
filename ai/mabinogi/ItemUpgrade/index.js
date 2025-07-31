@@ -566,23 +566,24 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
     }
     .main-container .equip-random .product-fixed .value-group{
     	display: flex;
-    	flex-direction: column;
-    	align-items: flex-start;
+    	flex-direction: row;
+    	align-items: center;
+    	flex-wrap: wrap;
     }
     .main-container .equip-random .product-fixed .base-value{
     	font-size: 20px;
     	color: #fff;
-    	margin-bottom: 3px;
+    	margin-right: 15px;
     }
     .main-container .equip-random .product-fixed .master-value{
     	font-size: 16px;
     	color: #ffd94c;
-    	margin-bottom: 2px;
+    	margin-right: 12px;
     }
     .main-container .equip-random .product-fixed .quality-value{
     	font-size: 16px;
     	color: #57aeff;
-    	margin-bottom: 2px;
+    	margin-right: 12px;
     }
     .main-container .equip-random .product-fixed .master-value sup,
     .main-container .equip-random .product-fixed .quality-value sup{
