@@ -2124,7 +2124,7 @@ function collectShipInfo(glist){
 
 
 function timer4(){
-  var left4 = 360000 - new Date().getTime()%360000+10000
+  var left4 = 300000 - new Date().getTime()%300000+10000
   var leftmin4 = left4/60000;
   console.log('leftmin4:'+leftmin4);
   setTimeout(function(){
