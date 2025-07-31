@@ -2083,7 +2083,7 @@ function getShipInfo(){
     var result = resultr.value;
     if(result){
         var lastts = result.ts;
-        if(nn.getTime() - lastts < 300000){
+        if(nn.getTime() - lastts < 270000){
           cl_p_senka_8.updateOne({'_id':'p'},{'$set':{ts:lastts,tse:result.tse}});
           return;
         }else{
