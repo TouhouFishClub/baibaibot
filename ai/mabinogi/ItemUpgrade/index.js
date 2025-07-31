@@ -368,6 +368,52 @@ const renderRandomInfo = targetItem => {
 	}).join('')
 }
 
+// 渲染固定属性信息（用于打铁类道具）
+const renderFixedInfo = targetItem => {
+	// 定义需要显示的固定属性列表
+	const fixedAttributes = [
+		'attack_min',
+		'attack_max', 
+		'critical',
+		'balance',
+		'durability_filled_max',
+		'magic_damage',
+		'defense',
+		'protect',
+		'magic_defense',
+		'magic_protect'
+	]
+	
+	let outputHtml = ''
+	
+	fixedAttributes.forEach(attrKey => {
+		let hasProduct = RandomProductHash[attrKey]
+		if(hasProduct) {
+			// 从targetItem或xmlParser中获取属性值
+			let productValue = hasProduct.xmlInfo ? 
+				parseFloat(targetItem.xmlParser?.[hasProduct.rootKey] || '0') : 
+				parseFloat(targetItem[hasProduct.rootKey] || '0')
+			
+			// 特殊处理耐久度（需要除以1000）
+			if(attrKey == 'durability_filled_max') {
+				productValue /= 1000
+			}
+			
+			// 只显示有值的属性（大于0）
+			if(productValue > 0) {
+				outputHtml += `
+					<div class="product-random">
+						<div class="label">${hasProduct.label} : </div>
+						<div class="text">${productValue}</div>
+					</div>
+				`
+			}
+		}
+	})
+	
+	return outputHtml
+}
+
 const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 	console.log(itemUpgradeEffectData)
 	console.log(upgradeInfos.map(x => `[${x.id}]（${x.upgraded_min} ~ ${x.upgraded_max}）${x.localnameCn}: ${x.descCn}`).join('\n'))
@@ -544,7 +590,11 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 	<div class="equip-random">
 		${renderRandomInfo(targetItem)}
 	</div>
-	` : ''}
+	` : `
+	<div class="equip-random">
+		${renderFixedInfo(targetItem)}
+	</div>
+	`}
 	<div class="upgrade-group">
 		${normalUpgrade.map(x => `
 			<div class="upgrade-item">
