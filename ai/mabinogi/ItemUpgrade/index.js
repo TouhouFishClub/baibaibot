@@ -703,7 +703,7 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 					${x.need_gold}
 				</div>
 				<div class="item-col col-5">
-					${x.available_npc.split(';').map(x => `${npcInfoHash[x.toLowerCase()] || x}`).join(', ')}
+					${x.available_npc.split(';').filter(npc => !npc.toLowerCase().startsWith('testserver')).map(x => `${npcInfoHash[x.toLowerCase()] || x}`).join(', ')}
 				</div>
 				<div class="item-step-info">
 					${[0,1,2,3,4].map(i => (x.upgraded_min <= i && i <= x.upgraded_max) ? `<div class="step-item active">${i}</div>` : `<div class="step-item">${i}</div>`).join('')}
@@ -727,7 +727,7 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 					${x.need_gold}
 				</div>
 				<div class="item-col col-5">
-					${x.available_npc.split(';').map(x => `${npcInfoHash[x.toLowerCase()] || x}`).join(', ')}
+					${x.available_npc.split(';').filter(npc => !npc.toLowerCase().startsWith('testserver')).map(x => `${npcInfoHash[x.toLowerCase()] || x}`).join(', ')}
 				</div>
 				<div class="need-gem">
 					${x.need_gem.split(';').map(gemItem => {
