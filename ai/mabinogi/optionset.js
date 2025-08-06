@@ -306,6 +306,20 @@ class SearchHandler {
       }
     }
 
+    // 为管理员用户保存释放卷轴信息，以便可以使用add/set/remove等命令
+    if (CONFIG.ADMIN_USERS.has(this._currentUserId)) {
+      this.store.saveTmpMap[this._currentUserId] = {
+        LocalName: result.LocalName,
+        LocalName2: result.LocalName2,
+        Level: result.Level,
+        Usage: result.Usage,
+        UsageQuery: result.UsageQuery,
+        Buff: result.Buff,
+        Debuff: result.Debuff,
+        ID: result.ID
+      }
+    }
+
     switch (type) {
       case 'image':
         optionsetImage(optionsetInfo, wheres, 'mabi', callback)
