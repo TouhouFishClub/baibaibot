@@ -197,6 +197,14 @@ const mabiTelevision = async (content, qq, callback) => {
   console.log(`========TOTAL ROW=========`)
   console.log(`Query: ${totalQuery}`)
   console.log(`Params: ${JSON.stringify(queryParams)}`)
+  
+  // 生成完整的可执行SQL语句
+  let executableTotalSql = totalQuery
+  queryParams.forEach((param, index) => {
+    executableTotalSql = executableTotalSql.replace('?', `'${param}'`)
+  })
+  console.log(`Executable SQL: ${executableTotalSql}`)
+  
   console.log(`Result: ${JSON.stringify(totalRow)}`)
   console.log(`Total count: ${totalRow[0][0].total}`)
   console.log(`==================`)
@@ -210,6 +218,14 @@ const mabiTelevision = async (content, qq, callback) => {
   console.log(`========DATA QUERY=========`)
   console.log(`Query: ${query}`)
   console.log(`Params after adding limit: ${JSON.stringify(queryParams)}`)
+  
+  // 生成完整的可执行SQL语句
+  let executableDataSql = query
+  queryParams.forEach((param, index) => {
+    executableDataSql = executableDataSql.replace('?', `'${param}'`)
+  })
+  console.log(`Executable SQL: ${executableDataSql}`)
+  
   const [row, fields] = await mysqlPool.query(query, queryParams)
   console.log(`Data rows returned: ${row.length}`)
   console.log(`==================`)
