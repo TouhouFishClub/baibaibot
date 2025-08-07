@@ -176,74 +176,89 @@ const mabiTelevision = async (content, qq, callback) => {
   }
 
 
+  console.log(`========QUERY CONSTRUCTION=========`)
+  console.log(`Filter: "${filter}"`)
+  console.log(`Table: ${table}`)
+  console.log(`Where clause: ${whereClause}`)
+  console.log(`Query params before total query: ${JSON.stringify(queryParams)}`)
+  console.log(`Limit: ${limit}`)
+  console.log(`===============================`)
+  
   const base = `
     FROM ${table}
     ${whereClause}
     ORDER BY data_time DESC 
   `
-  
-  // 使用单个连接确保查询一致性
-  const connection = await mysqlPool.getConnection()
-  try {
-    const totalQuery = `
-      SELECT COUNT(*) as total
-      ${base}
+  const totalQuery = `
+    SELECT COUNT(*) as total
+    ${base}
+  `
+  const totalRow = await mysqlPool.query(totalQuery, queryParams)
+  console.log(`========TOTAL ROW=========`)
+  console.log(`Query: ${totalQuery}`)
+  console.log(`Params: ${JSON.stringify(queryParams)}`)
+  console.log(`Result: ${JSON.stringify(totalRow)}`)
+  console.log(`Total count: ${totalRow[0][0].total}`)
+  console.log(`==================`)
+  const query =
     `
-    const totalRow = await connection.query(totalQuery, queryParams)
-    console.log(`========TOTAL ROW=========\n\n\n
-    ${JSON.stringify(totalRow)}
-    \n\n\n\n==================`)
-    
-    const query = `
-      SELECT *
-      ${base}
-      LIMIT ?
+    SELECT *
+    ${base}
+    LIMIT ?
     `
-    // 为数据查询创建单独的参数数组，避免影响总数查询
-    const dataQueryParams = [...queryParams, limit]
-    const [row, fields] = await connection.query(query, dataQueryParams)
-    
-    // 处理渲染
-    const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiTV.png`)
-    await render(row, {
-      title: `出货记录查询：${{'ylx': '猫服', 'yate': '亚特'}[sv]}`,
-      description: `(total: ${totalRow[0][0].total})`,
-      output: outputDir,
-      columns: [
-        {
-          label: '角色名称',
-          key: 'character_name',
-        },
-        {
-          label: '物品名称',
-          key: 'reward',
-        },
-        {
-          label: '地下城名称',
-          key: 'dungeon_name',
-        },
-        {
-          label: '时间',
-          key: 'data_time',
-          format: time => formatTime(new Date(time).getTime())
-        },
-        {
-          label: '频道',
-          key: 'channel',
-        },
-      ]
-    })
+  queryParams.push(limit)
+  console.log(`========DATA QUERY=========`)
+  console.log(`Query: ${query}`)
+  console.log(`Params after adding limit: ${JSON.stringify(queryParams)}`)
+  const [row, fields] = await mysqlPool.query(query, queryParams)
+  console.log(`Data rows returned: ${row.length}`)
+  console.log(`==================`)
 
-    console.log(`保存MabiTV.png成功！`)
-    let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiTV.png`)}]`
-    callback(imgMsg)
-    
-  } catch (error) {
-    console.error('Query error:', error)
-    throw error
-  } finally {
-    connection.release()
-  }
+  // const query =
+  //   `
+  //   SELECT *
+  //   FROM ${table}
+  //   ${whereClause}
+  //   ORDER BY data_time DESC
+  //   LIMIT ?
+  //   `
+  // queryParams.push(limit)
+  // const [row, fields] = await mysqlPool.query(query, queryParams)
+  // console.log(row)
+  // const outputDir = path.join(__dirname, 'text.jpg')
+  const outputDir = path.join(IMAGE_DATA, 'mabi_other', `MabiTV.png`)
+  await render(row, {
+    title: `出货记录查询：${{'ylx': '猫服', 'yate': '亚特'}[sv]}`,
+    description: `(total: ${totalRow[0][0].total})`,
+    output: outputDir,
+    columns: [
+      {
+        label: '角色名称',
+        key: 'character_name',
+      },
+      {
+        label: '物品名称',
+        key: 'reward',
+      },
+      {
+        label: '地下城名称',
+        key: 'dungeon_name',
+      },
+      {
+        label: '时间',
+        key: 'data_time',
+        format: time => formatTime(new Date(time).getTime())
+      },
+      {
+        label: '频道',
+        key: 'channel',
+      },
+    ]
+  })
+
+  console.log(`保存MabiTV.png成功！`)
+  let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiTV.png`)}]`
+  callback(imgMsg)
 }
 
 module.exports = {
