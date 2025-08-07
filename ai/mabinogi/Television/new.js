@@ -214,19 +214,21 @@ const mabiTelevision = async (content, qq, callback) => {
     ${base}
     LIMIT ?
     `
-  queryParams.push(limit)
+  // 为数据查询创建单独的参数数组，避免修改原数组
+  const dataQueryParams = [...queryParams, limit]
   console.log(`========DATA QUERY=========`)
   console.log(`Query: ${query}`)
-  console.log(`Params after adding limit: ${JSON.stringify(queryParams)}`)
+  console.log(`Original queryParams: ${JSON.stringify(queryParams)}`)
+  console.log(`Data query params: ${JSON.stringify(dataQueryParams)}`)
   
   // 生成完整的可执行SQL语句
   let executableDataSql = query
-  queryParams.forEach((param, index) => {
+  dataQueryParams.forEach((param, index) => {
     executableDataSql = executableDataSql.replace('?', `'${param}'`)
   })
   console.log(`Executable SQL: ${executableDataSql}`)
   
-  const [row, fields] = await mysqlPool.query(query, queryParams)
+  const [row, fields] = await mysqlPool.query(query, dataQueryParams)
   console.log(`Data rows returned: ${row.length}`)
   console.log(`==================`)
 
