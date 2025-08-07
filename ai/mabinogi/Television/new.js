@@ -195,8 +195,9 @@ const mabiTelevision = async (content, qq, callback) => {
     ${base}
     LIMIT ?
     `
-  queryParams.push(limit)
-  const [row, fields] = await mysqlPool.query(query, queryParams)
+  // 为数据查询创建单独的参数数组，避免影响总数查询
+  const dataQueryParams = [...queryParams, limit]
+  const [row, fields] = await mysqlPool.query(query, dataQueryParams)
 
   // const query =
   //   `
