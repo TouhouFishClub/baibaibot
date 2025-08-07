@@ -182,7 +182,29 @@ const mabiTelevision = async (content, qq, callback) => {
   console.log(`Where clause: ${whereClause}`)
   console.log(`Query params before total query: ${JSON.stringify(queryParams)}`)
   console.log(`Limit: ${limit}`)
+  console.log(`Timestamp: ${new Date().toISOString()}`)
   console.log(`===============================`)
+  
+  // 检查数据库连接状态和事务隔离级别
+  try {
+    const [isolationResult] = await mysqlPool.query('SELECT @@transaction_isolation as isolation_level')
+    console.log(`DB Isolation Level: ${isolationResult[0].isolation_level}`)
+    
+    const [connectionResult] = await mysqlPool.query('SELECT CONNECTION_ID() as connection_id')
+    console.log(`DB Connection ID: ${connectionResult[0].connection_id}`)
+    
+    // 检查是否有活跃的事务
+    const [processResult] = await mysqlPool.query('SHOW PROCESSLIST')
+    const activeTransactions = processResult.filter(p => p.State && p.State.includes('transaction'))
+    console.log(`Active transactions: ${activeTransactions.length}`)
+    
+    // 检查autocommit状态
+    const [autocommitResult] = await mysqlPool.query('SELECT @@autocommit as autocommit')
+    console.log(`Autocommit: ${autocommitResult[0].autocommit}`)
+    
+  } catch (err) {
+    console.log(`DB Status Check Error: ${err.message}`)
+  }
   
   const base = `
     FROM ${table}
@@ -208,6 +230,14 @@ const mabiTelevision = async (content, qq, callback) => {
   console.log(`Result: ${JSON.stringify(totalRow)}`)
   console.log(`Total count: ${totalRow[0][0].total}`)
   console.log(`==================`)
+  
+  // 检查总数查询后的连接状态
+  try {
+    const [connectionAfterTotal] = await mysqlPool.query('SELECT CONNECTION_ID() as connection_id')
+    console.log(`Connection ID after total query: ${connectionAfterTotal[0].connection_id}`)
+  } catch (err) {
+    console.log(`Connection check error: ${err.message}`)
+  }
   const query =
     `
     SELECT *
@@ -230,6 +260,14 @@ const mabiTelevision = async (content, qq, callback) => {
   
   const [row, fields] = await mysqlPool.query(query, dataQueryParams)
   console.log(`Data rows returned: ${row.length}`)
+  
+  // 检查数据查询后的连接状态
+  try {
+    const [connectionAfterData] = await mysqlPool.query('SELECT CONNECTION_ID() as connection_id')
+    console.log(`Connection ID after data query: ${connectionAfterData[0].connection_id}`)
+  } catch (err) {
+    console.log(`Connection check error: ${err.message}`)
+  }
   console.log(`==================`)
 
   // const query =
