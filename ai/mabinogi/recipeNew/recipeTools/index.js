@@ -18,6 +18,7 @@ eval(fs.readFileSync(path.join(__dirname, '..', '/js/BlacksmithItem.js')).toStri
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/HeulwenEngineeringItem.js')).toString('utf-16le'))
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/MagicCraftItem.js')).toString('utf-8'))
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/HandicraftItem.js')).toString('utf-8'))
+eval(fs.readFileSync(path.join(__dirname, '..', '/js/CarpentryItem.js')).toString('utf-8'))
 
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/Item.js')).toString('utf-8'))
 // console.log(TailoringList)
@@ -27,6 +28,7 @@ eval(fs.readFileSync(path.join(__dirname, '..', '/js/Item.js')).toString('utf-8'
 const TailoringSet = new Set(TailoringList.map(x => `${x}`))
 const BlackSmithSet = new Set(BlacksmithList.map(x => `${x}`))
 const HandicraftSet = new Set(HandicraftList.map(x => `${x}`))
+const CarpentrySet = new Set(CarpentryList.map(x => `${x}`))
 
 const wait = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -312,7 +314,7 @@ const formatProduction = async () => {
     let sp = val.split('\t')
     transform[`_LT[xml.production.${sp[0].trim()}]`] = sp[1]
   })
-  let HeulwenEngineering = {}, MagicCraft = {}, Handicraft = {}
+  let HeulwenEngineering = {}, MagicCraft = {}, Handicraft = {}, Carpentry = {}
 
   // 手工艺
   let ignoreHandicraftItemSet = new Set(['手工艺'])
@@ -352,6 +354,55 @@ const formatProduction = async () => {
             let essentials = await analyzerItem(xmlItem.Essentials)
 
             Handicraft[xmlItem.ProductItemId] = Object.assign({
+              output: JSON.stringify([
+                [parseInt(xmlItem.Difficulty), parseInt(xmlItem.Difficulty)], // 难度等级要求
+                essentials
+              ])
+            }, xmlItem)
+          }
+        }
+      }
+    }
+  }
+
+  // 木工
+  let ignoreCarpentryItemSet = new Set(['木工'])
+  if(xmlData.Production.Carpentry && xmlData.Production.Carpentry[0] && xmlData.Production.Carpentry[0].Production) {
+    for(let i = 0; i < xmlData.Production.Carpentry[0].Production.length; i ++) {
+      let xmlItem = xmlData.Production.Carpentry[0].Production[i].$
+      // await wait()
+      if(xmlItem.Essentials) {
+        if(xmlItem.Title) {
+          xmlItem.TitleCn = transform[xmlItem.Title].trim()
+        }
+        if(xmlItem.EssentialDesc) {
+          xmlItem.EssentialDescCn = transform[xmlItem.EssentialDesc].trim()
+        }
+        if(xmlItem.Desc) {
+          xmlItem.DescCn = transform[xmlItem.Desc].trim()
+        }
+        console.log(`Processing Carpentry item: ${xmlItem.TitleCn} (ID: ${xmlItem.ProductItemId})`)
+        
+        if(ignoreCarpentryItemSet.has(xmlItem.TitleCn)) {
+          continue
+        }
+        
+        // 检查是否已存在
+        if(!CarpentrySet.has(xmlItem.ProductItemId)) {
+          try {
+            // 如果有，则不做添加
+            process.stdout.clearLine()
+            process.stdout.cursorTo(0)
+            let out = eval(`Item${xmlItem.ProductItemId}`)[0]
+            process.stdout.write(out)
+          } catch (err) {
+            // console.log(err)
+            // console.log(xmlItem)
+            // 如果没有，则添加额外item
+            itemPlus[`Item${xmlItem.ProductItemId}`] = transform[xmlItem.Title].trim()
+            let essentials = await analyzerItem(xmlItem.Essentials)
+
+            Carpentry[xmlItem.ProductItemId] = Object.assign({
               output: JSON.stringify([
                 [parseInt(xmlItem.Difficulty), parseInt(xmlItem.Difficulty)], // 难度等级要求
                 essentials
@@ -458,7 +509,7 @@ const formatProduction = async () => {
       }
     }
   }
-  return {HeulwenEngineering, MagicCraft, Handicraft}
+  return {HeulwenEngineering, MagicCraft, Handicraft, Carpentry}
 }
 const analyzer = async () => {
   let xmlData = await readXmlParse(path.join(__dirname, '..', '..', 'data', 'IT', `ManualForm.xml`))
@@ -571,7 +622,7 @@ const analyzer = async () => {
     }
   }
 
-  const {HeulwenEngineering, MagicCraft, Handicraft} = await formatProduction()
+  const {HeulwenEngineering, MagicCraft, Handicraft, Carpentry} = await formatProduction()
 
   process.stdout.write('\n')
   // console.log(Tailoring, BlackSmith)
@@ -585,7 +636,7 @@ const analyzer = async () => {
   })
   // console.log(fs.readFileSync(path.join(__dirname, '..', '/js/Item.js')).toString('utf-8'))
   console.log('==', itemPlus)
-  console.log(`Tailoring count: ${Object.keys(Tailoring).length}, BlackSmith count: ${Object.keys(BlackSmith).length}, Handicraft count: ${Object.keys(Handicraft).length}`)
+  console.log(`Tailoring count: ${Object.keys(Tailoring).length}, BlackSmith count: ${Object.keys(BlackSmith).length}, Handicraft count: ${Object.keys(Handicraft).length}, Carpentry count: ${Object.keys(Carpentry).length}`)
 
   console.log('=== append to BlacksmithItem.js file ===\n')
   let BlacksmithOutputStr = `BlacksmithList = BlacksmithList.concat([${Object.values(BlackSmith).filter(x => !x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nTalentBlacksmithList = TalentBlacksmithList.concat([${Object.values(BlackSmith).filter(x => x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nvar ${Object.values(BlackSmith).map(x => `BlacksmithItem${x.ProductItemID}=${x.output}`).join(',')};`
@@ -610,6 +661,11 @@ const analyzer = async () => {
   console.log('=== append to HandicraftItem.js file ===\n')
   let HandicraftOutputStr = `HandicraftList = HandicraftList.concat([${Object.values(Handicraft).map(x=>x.ProductItemId).join(',')}]);\nvar ${Object.values(Handicraft).map(x => `HandicraftItem${x.ProductItemId}=${x.output}`).join(',')};`
   console.log(HandicraftOutputStr)
+  console.log('\n')
+
+  console.log('=== append to CarpentryItem.js file ===\n')
+  let CarpentryOutputStr = `CarpentryList = CarpentryList.concat([${Object.values(Carpentry).map(x=>x.ProductItemId).join(',')}]);\nvar ${Object.values(Carpentry).map(x => `CarpentryItem${x.ProductItemId}=${x.output}`).join(',')};`
+  console.log(CarpentryOutputStr)
   console.log('\n')
 
 
