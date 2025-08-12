@@ -639,17 +639,16 @@ function Item(Id, a) {
   }
   if (tt != "") t += "</tr><tr>" + TdSkill("使用", "", "", "", "", RowsQuantity) + tt;
   if (CheckT == t) {
-    // 尝试从材料出处文件中获取出处信息
+    // 尝试从材料出处数据中获取出处信息
     let materialSource = "？";
     try {
-      // 动态加载材料出处模块
-      if (typeof require !== 'undefined') {
-        const { getMaterialSource } = require('../materialSources/MaterialSources.js');
-        const itemName = eval("Item" + Id)[0];
-        materialSource = getMaterialSource(itemName);
+      const itemName = eval("Item" + Id)[0];
+      // 在浏览器环境中使用全局函数
+      if (typeof getMaterialSourceInBrowser !== 'undefined') {
+        materialSource = getMaterialSourceInBrowser(itemName);
       }
     } catch (e) {
-      // 如果加载失败，保持默认的"？"
+      // 如果查找失败，保持默认的"？"
     }
     t += "</tr><tr>" + TdText(materialSource, 667)
   }
