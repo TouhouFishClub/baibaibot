@@ -67,6 +67,7 @@ const filterItem = async () => {
 					localeNameCn.indexOf('禁止') === -1 &&
 					localeNameCn.indexOf('交易') === -1 &&
 					localeNameCn.indexOf('专用') === -1 &&
+					localeNameCn.indexOf('活动') === -1 &&
 					!localeNameCn.startsWith('@') &&
 					!localeNameCn.startsWith('精灵') &&
 					!localeNameCn.startsWith('新手') &&

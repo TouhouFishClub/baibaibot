@@ -14,5 +14,13 @@
     "OptionDesc": "可以对舌头进行魔法释放\\n嘴硬程度+100\\n国服玩家kidmao开发的魔法释放",
     "Level": 14,
     "Usage": "1"
+  },
+  {
+    "ID": "000004",
+    "Name": "SheepHead",
+    "LocalName": "羊头",
+    "OptionDesc": "可以对屁股进行魔法释放\\n穿刺等级+10\\n国服玩家kidmao开发的魔法释放",
+    "Level": 14,
+    "Usage": "1"
   }
 ]
