@@ -63,12 +63,14 @@ let html = `
       /*color: #49445A;*/
       color: #eee;
       font-size: 36px;
+      padding-top: 20px;
     }
     .header .desc {
       font-family: HANYIWENHEI;
-      font-size: 24px;
-      color: #ccc;
+      font-size: 20px;
+      color: #666;
       margin-top: 10px;
+      padding-bottom: 20px;
     }
     table {
       font-size: 20px;
