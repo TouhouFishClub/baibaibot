@@ -480,7 +480,7 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
   }
 }
 
-const mergeSearchResults = (mysqlResults, mongoResults) => {
+const mergeSearchResults = (mysqlResults, mongoResults, limit = 20) => {
   try {
     console.log(`开始合并搜索结果: MySQL ${mysqlResults.length} 条, MongoDB ${mongoResults.length} 条`)
     
@@ -509,11 +509,12 @@ const mergeSearchResults = (mysqlResults, mongoResults) => {
       }
     })
     
-    // 转换为数组并按时间排序
+    // 转换为数组，按ID倒序排序，然后取前limit条
     const mergedResults = Array.from(resultMap.values())
-      .sort((a, b) => new Date(b.data_time) - new Date(a.data_time))
+      .sort((a, b) => b.id - a.id)  // 按ID倒序排序
+      .slice(0, limit)              // 取前limit条
     
-    console.log(`合并完成: 总计 ${mergedResults.length} 条记录`)
+    console.log(`合并完成: 去重后 ${resultMap.size} 条记录, 最终返回 ${mergedResults.length} 条记录`)
     console.log(`数据源分布: MySQL独有: ${mergedResults.filter(r => r.source === 'mysql').length}, MongoDB独有: ${mergedResults.filter(r => r.source === 'mongodb').length}, 双源: ${mergedResults.filter(r => r.source === 'both').length}`)
     
     return mergedResults
@@ -830,7 +831,7 @@ const mabiTelevision = async (content, qq, callback) => {
   
   // 合并MySQL和MongoDB的搜索结果
   console.log(`========MERGING RESULTS=========`)
-  const mergedResults = mergeSearchResults(row, mongoResults)
+  const mergedResults = mergeSearchResults(row, mongoResults, limit)
   console.log(`Merged results: ${mergedResults.length} records`)
   console.log(`==================`)
   
