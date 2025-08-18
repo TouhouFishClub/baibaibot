@@ -378,8 +378,17 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
     console.log(`开始从 MongoDB 搜索: ${tableName}`)
     console.log(`MongoDB搜索参数: whereClause="${whereClause}", queryParams=${JSON.stringify(queryParams)}, limit=${limit}`)
     
+    // 检查MongoDB连接
+    if (!mgoClient) {
+      throw new Error('MongoDB客户端未连接')
+    }
+    console.log(`MongoDB客户端状态正常`)
+    
     const mongoDb = mgoClient.db('db_bot')
+    console.log(`获取数据库 db_bot 成功`)
+    
     const collection = mongoDb.collection(tableName)
+    console.log(`获取集合 ${tableName} 成功`)
     
     // 检查集合中是否有数据
     const totalDocuments = await collection.countDocuments()
@@ -473,11 +482,10 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
     console.log(`MongoDB总文档数查询完成: ${totalCount}`)
     
     // 执行查询
-    console.log(`开始执行 find().sort({id:-1}).hint({id:-1}).limit(${limit || 20})`)
+    console.log(`开始执行 find().sort({id:-1}).limit(${limit || 20})`)
     const results = await collection
       .find(mongoQuery)
       .sort({ id: -1 })
-      .hint({ id: -1 })
       .limit(limit || 20)
       .toArray()
     
@@ -493,6 +501,8 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
     
   } catch (error) {
     console.error(`MongoDB搜索失败: ${error.message}`)
+    console.error(`MongoDB搜索异常详情:`, error)
+    console.error(`MongoDB搜索异常堆栈:`, error.stack)
     return { results: [], total: 0 }
   }
 }
