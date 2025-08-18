@@ -484,6 +484,14 @@ const mergeSearchResults = (mysqlResults, mongoResults, limit = 20) => {
   try {
     console.log(`开始合并搜索结果: MySQL ${mysqlResults.length} 条, MongoDB ${mongoResults.length} 条`)
     
+    // 输出MySQL数据的ID列表
+    const mysqlIds = mysqlResults.map(r => r.id).sort((a, b) => b - a)
+    console.log(`MySQL数据ID列表 (按ID倒序): [${mysqlIds.join(', ')}]`)
+    
+    // 输出MongoDB数据的ID列表
+    const mongoIds = mongoResults.map(r => r.id).sort((a, b) => b - a)
+    console.log(`MongoDB数据ID列表 (按ID倒序): [${mongoIds.join(', ')}]`)
+    
     // 使用Map去重，以ID为键
     const resultMap = new Map()
     
@@ -494,25 +502,39 @@ const mergeSearchResults = (mysqlResults, mongoResults, limit = 20) => {
         source: 'mysql'
       })
     })
+    console.log(`添加MySQL数据后，Map中有 ${resultMap.size} 条记录`)
     
     // 再添加MongoDB结果，如果ID已存在则跳过，避免重复
+    let mongoAdded = 0
+    let mongoDuplicate = 0
     mongoResults.forEach(record => {
       if (!resultMap.has(record.id)) {
         resultMap.set(record.id, {
           ...record,
           source: 'mongodb'
         })
+        mongoAdded++
       } else {
         // 如果MySQL中已有该记录，标记为双源
         const existingRecord = resultMap.get(record.id)
         existingRecord.source = 'both'
+        mongoDuplicate++
       }
     })
+    console.log(`添加MongoDB数据: 新增 ${mongoAdded} 条, 重复 ${mongoDuplicate} 条, Map总计 ${resultMap.size} 条记录`)
+    
+    // 输出合并去重后的所有ID
+    const allMergedIds = Array.from(resultMap.keys()).sort((a, b) => b - a)
+    console.log(`合并去重后所有ID (按ID倒序): [${allMergedIds.join(', ')}]`)
     
     // 转换为数组，按ID倒序排序，然后取前limit条
     const mergedResults = Array.from(resultMap.values())
       .sort((a, b) => b.id - a.id)  // 按ID倒序排序
       .slice(0, limit)              // 取前limit条
+    
+    // 输出最终结果的ID列表
+    const finalIds = mergedResults.map(r => r.id)
+    console.log(`最终返回的ID列表 (前${limit}条): [${finalIds.join(', ')}]`)
     
     console.log(`合并完成: 去重后 ${resultMap.size} 条记录, 最终返回 ${mergedResults.length} 条记录`)
     console.log(`数据源分布: MySQL独有: ${mergedResults.filter(r => r.source === 'mysql').length}, MongoDB独有: ${mergedResults.filter(r => r.source === 'mongodb').length}, 双源: ${mergedResults.filter(r => r.source === 'both').length}`)
