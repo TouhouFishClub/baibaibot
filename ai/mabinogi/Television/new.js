@@ -40,37 +40,45 @@ const help = callback => {
   callback('这是帮助')
 }
 
-const scheduledFullSync = async () => {
+const scheduledMissingSync = async () => {
   try {
-    console.log(`[${new Date().toISOString()}] 开始执行定时全量同步任务`)
+    console.log(`[${new Date().toISOString()}] 开始执行定时缺失数据同步任务`)
     
     // 确保连接正常
     await checkLink()
     
-    // 同步猫服数据
-    console.log('定时任务: 开始同步猫服出货数据')
-    const ylxResult = await fullSyncToMongoDB('mabi_dungeon_reward_records')
-    console.log(`定时任务: 猫服同步完成 - ${ylxResult.success ? '成功' : '失败'}`)
+    // 同步猫服缺失数据
+    console.log('定时任务: 开始检查猫服出货缺失数据')
+    const ylxResult = await syncMissingIdsToMongoDB('mabi_dungeon_reward_records')
+    console.log(`定时任务: 猫服缺失数据同步完成 - ${ylxResult.success ? '成功' : '失败'}`)
     if (ylxResult.success) {
-      console.log(`定时任务: 猫服同步统计 - 总计:${ylxResult.count}, 插入:${ylxResult.inserted}, 更新:${ylxResult.modified}`)
+      if (ylxResult.count > 0) {
+        console.log(`定时任务: 猫服缺失数据同步统计 - 总缺失:${ylxResult.totalMissing}, 本次同步:${ylxResult.count}`)
+      } else {
+        console.log(`定时任务: 猫服无缺失数据`)
+      }
     } else {
-      console.error(`定时任务: 猫服同步失败 - ${ylxResult.message}`)
+      console.error(`定时任务: 猫服缺失数据同步失败 - ${ylxResult.message}`)
     }
     
-    // 同步亚特数据
-    console.log('定时任务: 开始同步亚特出货数据')
-    const yateResult = await fullSyncToMongoDB('mabi_dungeon_reward_records_yate')
-    console.log(`定时任务: 亚特同步完成 - ${yateResult.success ? '成功' : '失败'}`)
+    // 同步亚特缺失数据
+    console.log('定时任务: 开始检查亚特出货缺失数据')
+    const yateResult = await syncMissingIdsToMongoDB('mabi_dungeon_reward_records_yate')
+    console.log(`定时任务: 亚特缺失数据同步完成 - ${yateResult.success ? '成功' : '失败'}`)
     if (yateResult.success) {
-      console.log(`定时任务: 亚特同步统计 - 总计:${yateResult.count}, 插入:${yateResult.inserted}, 更新:${yateResult.modified}`)
+      if (yateResult.count > 0) {
+        console.log(`定时任务: 亚特缺失数据同步统计 - 总缺失:${yateResult.totalMissing}, 本次同步:${yateResult.count}`)
+      } else {
+        console.log(`定时任务: 亚特无缺失数据`)
+      }
     } else {
-      console.error(`定时任务: 亚特同步失败 - ${yateResult.message}`)
+      console.error(`定时任务: 亚特缺失数据同步失败 - ${yateResult.message}`)
     }
     
-    console.log(`[${new Date().toISOString()}] 定时全量同步任务完成`)
+    console.log(`[${new Date().toISOString()}] 定时缺失数据同步任务完成`)
     
   } catch (error) {
-    console.error(`[${new Date().toISOString()}] 定时同步任务执行失败:`, error.message)
+    console.error(`[${new Date().toISOString()}] 定时缺失数据同步任务执行失败:`, error.message)
   }
 }
 
@@ -83,11 +91,11 @@ const startScheduledSync = () => {
   
   // 延迟到下一个整点，然后每小时执行一次
   setTimeout(() => {
-    scheduledFullSync() // 立即执行一次
-    setInterval(scheduledFullSync, 60 * 60 * 1000) // 然后每小时执行
+    scheduledMissingSync() // 立即执行一次
+    setInterval(scheduledMissingSync, 60 * 60 * 1000) // 然后每小时执行
   }, timeToNextHour)
   
-  console.log(`出货数据定时同步任务已启动 - 下次执行时间: ${nextHour.toLocaleString('zh-CN')}`)
+  console.log(`出货数据定时缺失同步任务已启动 - 下次执行时间: ${nextHour.toLocaleString('zh-CN')}`)
 }
 
 const createSearchRegexp = async filterStr => {
