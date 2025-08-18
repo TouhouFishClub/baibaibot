@@ -8,7 +8,6 @@ const { searchNameAndFilter } = require('../optionset')
 
 const { MongoClient } = require('mongodb')
 const { mongourl } = require('../../../baibaiConfigs')
-const cron = require('node-cron')
 
 let mysqlPool, mgoClient
 
@@ -77,12 +76,18 @@ const scheduledFullSync = async () => {
 
 // 启动定时任务 - 每整点执行
 const startScheduledSync = () => {
-  // 使用cron表达式: 0 0 * * * * (每整点的0分0秒执行)
-  cron.schedule('0 0 * * * *', scheduledFullSync, {
-    scheduled: true,
-    timezone: "Asia/Shanghai"
-  })
-  console.log('出货数据定时同步任务已启动 - 每整点执行')
+  // 计算到下一个整点的时间
+  const now = new Date()
+  const nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0, 0)
+  const timeToNextHour = nextHour.getTime() - now.getTime()
+  
+  // 延迟到下一个整点，然后每小时执行一次
+  setTimeout(() => {
+    scheduledFullSync() // 立即执行一次
+    setInterval(scheduledFullSync, 60 * 60 * 1000) // 然后每小时执行
+  }, timeToNextHour)
+  
+  console.log(`出货数据定时同步任务已启动 - 下次执行时间: ${nextHour.toLocaleString('zh-CN')}`)
 }
 
 const createSearchRegexp = async filterStr => {
