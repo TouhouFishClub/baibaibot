@@ -527,7 +527,7 @@ const mabiTelevision = async (content, qq, callback) => {
   // }
   await checkLink()
   
-  // 管理员全量同步功能
+  // 管理员同步功能 - 需要在服务器选择逻辑之前检查
   if (qq === '799018865') {
     const trimmedContent = content.trim()
     
