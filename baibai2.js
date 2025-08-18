@@ -1803,7 +1803,6 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
   if(fie4 == 'mbcd') {
-    return
     mabiGachaTv(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
     return
   }
