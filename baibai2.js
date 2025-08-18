@@ -1799,10 +1799,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
   if(fie4 == 'mbtv') {
+    if(from != 799018865)
+      return
     mabiTelevision(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
     return
   }
   if(fie4 == 'mbcd') {
+    if(from != 799018865)
+      return
     mabiGachaTv(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
     return
   }
