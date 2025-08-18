@@ -445,7 +445,7 @@ const mabiGachaTv = async (content, qq, callback) => {
     const trimmedContent = content.trim()
     
     // 全量同步猫服抽蛋
-    if (trimmedContent === '同步抽蛋猫服') {
+    if (trimmedContent === '同步猫服') {
       console.log(`管理员 ${qq} 执行猫服抽蛋全量同步操作`)
       
       const ylxResult = await fullSyncToMongoDB('mabi_draw_reward_records')
@@ -462,7 +462,7 @@ const mabiGachaTv = async (content, qq, callback) => {
     }
     
     // 全量同步亚特抽蛋
-    if (trimmedContent === '同步抽蛋亚特') {
+    if (trimmedContent === '同步亚特') {
       console.log(`管理员 ${qq} 执行亚特抽蛋全量同步操作`)
       
       const yateResult = await fullSyncToMongoDB('mabi_draw_reward_records_yate')
@@ -479,7 +479,7 @@ const mabiGachaTv = async (content, qq, callback) => {
     }
     
     // 按ID同步猫服抽蛋特定记录
-    const catIdMatch = trimmedContent.match(/^同步抽蛋猫服(\d+)$/)
+    const catIdMatch = trimmedContent.match(/^同步猫服(\d+)$/)
     if (catIdMatch) {
       const recordId = catIdMatch[1]
       console.log(`管理员 ${qq} 执行猫服抽蛋ID ${recordId} 同步操作`)
@@ -498,7 +498,7 @@ const mabiGachaTv = async (content, qq, callback) => {
     }
     
     // 按ID同步亚特抽蛋特定记录
-    const yateIdMatch = trimmedContent.match(/^同步抽蛋亚特(\d+)$/)
+    const yateIdMatch = trimmedContent.match(/^同步亚特(\d+)$/)
     if (yateIdMatch) {
       const recordId = yateIdMatch[1]
       console.log(`管理员 ${qq} 执行亚特抽蛋ID ${recordId} 同步操作`)
@@ -517,7 +517,7 @@ const mabiGachaTv = async (content, qq, callback) => {
     }
     
     // 同步猫服抽蛋缺失记录
-    if (trimmedContent === '同步抽蛋猫服缺失') {
+    if (trimmedContent === '同步猫服缺失') {
       console.log(`管理员 ${qq} 执行猫服抽蛋缺失ID同步操作`)
       
       const result = await syncMissingIdsToMongoDB('mabi_draw_reward_records')
@@ -534,7 +534,7 @@ const mabiGachaTv = async (content, qq, callback) => {
     }
     
     // 同步亚特抽蛋缺失记录
-    if (trimmedContent === '同步抽蛋亚特缺失') {
+    if (trimmedContent === '同步亚特缺失') {
       console.log(`管理员 ${qq} 执行亚特抽蛋缺失ID同步操作`)
       
       const result = await syncMissingIdsToMongoDB('mabi_draw_reward_records_yate')
