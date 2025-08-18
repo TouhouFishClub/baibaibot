@@ -8,6 +8,7 @@ const { searchNameAndFilter } = require('../optionset')
 
 const { MongoClient } = require('mongodb')
 const { mongourl } = require('../../../baibaiConfigs')
+const cron = require('node-cron')
 
 let mysqlPool, mgoClient
 
@@ -38,6 +39,50 @@ const checkLink = async () => {
 
 const help = callback => {
   callback('这是帮助')
+}
+
+const scheduledFullSync = async () => {
+  try {
+    console.log(`[${new Date().toISOString()}] 开始执行定时全量同步任务`)
+    
+    // 确保连接正常
+    await checkLink()
+    
+    // 同步猫服数据
+    console.log('定时任务: 开始同步猫服出货数据')
+    const ylxResult = await fullSyncToMongoDB('mabi_dungeon_reward_records')
+    console.log(`定时任务: 猫服同步完成 - ${ylxResult.success ? '成功' : '失败'}`)
+    if (ylxResult.success) {
+      console.log(`定时任务: 猫服同步统计 - 总计:${ylxResult.count}, 插入:${ylxResult.inserted}, 更新:${ylxResult.modified}`)
+    } else {
+      console.error(`定时任务: 猫服同步失败 - ${ylxResult.message}`)
+    }
+    
+    // 同步亚特数据
+    console.log('定时任务: 开始同步亚特出货数据')
+    const yateResult = await fullSyncToMongoDB('mabi_dungeon_reward_records_yate')
+    console.log(`定时任务: 亚特同步完成 - ${yateResult.success ? '成功' : '失败'}`)
+    if (yateResult.success) {
+      console.log(`定时任务: 亚特同步统计 - 总计:${yateResult.count}, 插入:${yateResult.inserted}, 更新:${yateResult.modified}`)
+    } else {
+      console.error(`定时任务: 亚特同步失败 - ${yateResult.message}`)
+    }
+    
+    console.log(`[${new Date().toISOString()}] 定时全量同步任务完成`)
+    
+  } catch (error) {
+    console.error(`[${new Date().toISOString()}] 定时同步任务执行失败:`, error.message)
+  }
+}
+
+// 启动定时任务 - 每整点执行
+const startScheduledSync = () => {
+  // 使用cron表达式: 0 0 * * * * (每整点的0分0秒执行)
+  cron.schedule('0 0 * * * *', scheduledFullSync, {
+    scheduled: true,
+    timezone: "Asia/Shanghai"
+  })
+  console.log('出货数据定时同步任务已启动 - 每整点执行')
 }
 
 const createSearchRegexp = async filterStr => {
@@ -909,6 +954,9 @@ const mabiTelevision = async (content, qq, callback) => {
   let imgMsg = `[CQ:image,file=${path.join('send', 'mabi_other', `MabiTV.png`)}]`
   callback(imgMsg)
 }
+
+// 启动定时任务
+startScheduledSync()
 
 module.exports = {
   mabiTelevision
