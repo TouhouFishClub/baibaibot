@@ -391,8 +391,22 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
     console.log(`获取集合 ${tableName} 成功`)
     
     // 检查集合中是否有数据
-    const totalDocuments = await collection.countDocuments()
-    console.log(`MongoDB集合 ${tableName} 总文档数: ${totalDocuments}`)
+    console.log(`准备执行 countDocuments()`)
+    try {
+      const totalDocuments = await collection.countDocuments()
+      console.log(`MongoDB集合 ${tableName} 总文档数: ${totalDocuments}`)
+    } catch (countError) {
+      console.error(`countDocuments() 执行失败:`, countError.message)
+      // 尝试用 estimatedDocumentCount() 替代
+      try {
+        const estimatedCount = await collection.estimatedDocumentCount()
+        console.log(`MongoDB集合 ${tableName} 估计文档数: ${estimatedCount}`)
+      } catch (estimateError) {
+        console.error(`estimatedDocumentCount() 也失败:`, estimateError.message)
+        // 如果连 estimatedDocumentCount 都失败，说明集合可能不存在
+        console.log(`集合可能不存在，尝试直接查询`)
+      }
+    }
     
     // 构建MongoDB查询条件
     let mongoQuery = {}
@@ -477,17 +491,40 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
     console.log(`MongoDB查询条件: ${JSON.stringify(mongoQuery)}`)
     
     // 获取总数
+    let totalCount = 0
     console.log(`开始执行 countDocuments(${JSON.stringify(mongoQuery)})`)
-    const totalCount = await collection.countDocuments(mongoQuery)
-    console.log(`MongoDB总文档数查询完成: ${totalCount}`)
+    try {
+      totalCount = await collection.countDocuments(mongoQuery)
+      console.log(`MongoDB总文档数查询完成: ${totalCount}`)
+    } catch (countError) {
+      console.error(`countDocuments 查询失败:`, countError.message)
+      console.log(`跳过总数统计，继续执行查询`)
+    }
     
     // 执行查询
     console.log(`开始执行 find().sort({id:-1}).limit(${limit || 20})`)
-    const results = await collection
-      .find(mongoQuery)
-      .sort({ id: -1 })
-      .limit(limit || 20)
-      .toArray()
+    let results = []
+    try {
+      results = await collection
+        .find(mongoQuery)
+        .sort({ id: -1 })
+        .limit(limit || 20)
+        .toArray()
+      console.log(`find 查询执行成功`)
+    } catch (findError) {
+      console.error(`find 查询失败:`, findError.message)
+      console.log(`尝试不使用排序的简单查询`)
+      try {
+        results = await collection
+          .find(mongoQuery)
+          .limit(limit || 20)
+          .toArray()
+        console.log(`简单查询执行成功`)
+      } catch (simpleError) {
+        console.error(`简单查询也失败:`, simpleError.message)
+        throw simpleError
+      }
+    }
     
     console.log(`MongoDB搜索结果: ${results.length} 条记录, 总计: ${totalCount} 条`)
     
