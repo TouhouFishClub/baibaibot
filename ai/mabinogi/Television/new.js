@@ -385,12 +385,6 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
     const totalDocuments = await collection.countDocuments()
     console.log(`MongoDB集合 ${tableName} 总文档数: ${totalDocuments}`)
     
-    // 如果集合为空，直接返回
-    if (totalDocuments === 0) {
-      console.log(`MongoDB集合 ${tableName} 为空，跳过搜索`)
-      return { results: [], total: 0 }
-    }
-    
     // 构建MongoDB查询条件
     let mongoQuery = {}
     
@@ -474,9 +468,12 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
     console.log(`MongoDB查询条件: ${JSON.stringify(mongoQuery)}`)
     
     // 获取总数
+    console.log(`开始执行 countDocuments(${JSON.stringify(mongoQuery)})`)
     const totalCount = await collection.countDocuments(mongoQuery)
+    console.log(`MongoDB总文档数查询完成: ${totalCount}`)
     
     // 执行查询
+    console.log(`开始执行 find().sort({id:-1}).hint({id:-1}).limit(${limit || 20})`)
     const results = await collection
       .find(mongoQuery)
       .sort({ id: -1 })
@@ -485,6 +482,12 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
       .toArray()
     
     console.log(`MongoDB搜索结果: ${results.length} 条记录, 总计: ${totalCount} 条`)
+    
+    // 输出前几条记录的ID用于调试
+    if (results.length > 0) {
+      const resultIds = results.slice(0, 5).map(r => r.id)
+      console.log(`MongoDB前5条记录ID: [${resultIds.join(', ')}]`)
+    }
     
     return { results, total: totalCount }
     
