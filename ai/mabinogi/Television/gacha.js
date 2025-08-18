@@ -316,8 +316,6 @@ const syncMissingIdsToMongoDB = async (tableName) => {
 
 const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => {
   try {
-    console.log(`开始从 MongoDB 搜索抽蛋: ${tableName}`)
-    
     const mongoDb = mgoClient.db('db_bot')
     const collection = mongoDb.collection(tableName)
     
@@ -364,26 +362,25 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
       }
     }
     
-    console.log(`抽蛋MongoDB查询条件: ${JSON.stringify(mongoQuery)}`)
+    // 获取总数
+    const totalCount = await collection.count(mongoQuery)
     
     // 执行查询
     const results = await collection
       .find(mongoQuery)
-      .sort({ data_time: -1 })
+      .sort({ id: -1 })
       .limit(limit || 20)
       .toArray()
     
-    console.log(`抽蛋MongoDB搜索结果: ${results.length} 条记录`)
-    
-    return results
+    return { results, total: totalCount }
     
   } catch (error) {
     console.error(`抽蛋MongoDB搜索失败: ${error.message}`)
-    return []
+    return { results: [], total: 0 }
   }
 }
 
-const mergeSearchResults = (mysqlResults, mongoResults) => {
+const mergeSearchResults = (mysqlResults, mongoResults, limit = 20) => {
   try {
     console.log(`开始合并抽蛋搜索结果: MySQL ${mysqlResults.length} 条, MongoDB ${mongoResults.length} 条`)
     
@@ -412,11 +409,12 @@ const mergeSearchResults = (mysqlResults, mongoResults) => {
       }
     })
     
-    // 转换为数组并按时间排序
+    // 转换为数组，按ID倒序排序，然后取前limit条
     const mergedResults = Array.from(resultMap.values())
-      .sort((a, b) => new Date(b.data_time) - new Date(a.data_time))
+      .sort((a, b) => b.id - a.id)  // 按ID倒序排序
+      .slice(0, limit)              // 取前limit条
     
-    console.log(`抽蛋合并完成: 总计 ${mergedResults.length} 条记录`)
+    console.log(`抽蛋合并完成: 去重后 ${resultMap.size} 条记录, 最终返回 ${mergedResults.length} 条记录`)
     console.log(`抽蛋数据源分布: MySQL独有: ${mergedResults.filter(r => r.source === 'mysql').length}, MongoDB独有: ${mergedResults.filter(r => r.source === 'mongodb').length}, 双源: ${mergedResults.filter(r => r.source === 'both').length}`)
     
     return mergedResults
@@ -630,13 +628,15 @@ const mabiGachaTv = async (content, qq, callback) => {
   
   // 从MongoDB搜索相同条件的抽蛋数据
   console.log(`========MONGODB抽蛋搜索=========`)
-  const mongoResults = await searchFromMongoDB(table, whereClause, queryParams.slice(0, -1), limit) // 移除最后的limit参数
-  console.log(`MongoDB抽蛋搜索完成: ${mongoResults.length} records`)
+  const mongoSearchResult = await searchFromMongoDB(table, whereClause, queryParams.slice(0, -1), limit) // 移除最后的limit参数
+  const mongoResults = mongoSearchResult.results || []
+  const mongoTotal = mongoSearchResult.total || 0
+  console.log(`MongoDB抽蛋搜索完成: ${mongoResults.length} records, total: ${mongoTotal}`)
   console.log(`==================`)
   
   // 合并MySQL和MongoDB的抽蛋搜索结果
   console.log(`========合并抽蛋结果=========`)
-  const mergedResults = mergeSearchResults(row, mongoResults)
+  const mergedResults = mergeSearchResults(row, mongoResults, limit)
   console.log(`合并抽蛋结果: ${mergedResults.length} records`)
   console.log(`==================`)
   
@@ -652,7 +652,7 @@ const mabiGachaTv = async (content, qq, callback) => {
   const bothSourceCount = mergedResults.filter(r => r.source === 'both').length
   
   // 构建抽蛋描述信息
-  let description = `(MySQL: ${totalRow[0][0].total}, 合并后: ${totalMergedCount})`
+  let description = `(MySQL: ${totalRow[0][0].total}, MongoDB: ${mongoTotal}, 合并后: ${totalMergedCount})`
   if (mongoOnlyCount > 0) {
     description += ` [MongoDB补充: +${mongoOnlyCount}]`
   }

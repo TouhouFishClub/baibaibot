@@ -375,38 +375,8 @@ const syncMissingIdsToMongoDB = async (tableName) => {
 
 const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => {
   try {
-    console.log(`开始从 MongoDB 搜索: ${tableName}`)
-    console.log(`MongoDB搜索参数: whereClause="${whereClause}", queryParams=${JSON.stringify(queryParams)}, limit=${limit}`)
-    
-    // 检查MongoDB连接
-    if (!mgoClient) {
-      throw new Error('MongoDB客户端未连接')
-    }
-    console.log(`MongoDB客户端状态正常`)
-    
     const mongoDb = mgoClient.db('db_bot')
-    console.log(`获取数据库 db_bot 成功`)
-    
     const collection = mongoDb.collection(tableName)
-    console.log(`获取集合 ${tableName} 成功`)
-    
-    // 检查集合中是否有数据
-    console.log(`准备执行 countDocuments()`)
-    try {
-      const totalDocuments = await collection.countDocuments()
-      console.log(`MongoDB集合 ${tableName} 总文档数: ${totalDocuments}`)
-    } catch (countError) {
-      console.error(`countDocuments() 执行失败:`, countError.message)
-      // 尝试用 estimatedDocumentCount() 替代
-      try {
-        const estimatedCount = await collection.estimatedDocumentCount()
-        console.log(`MongoDB集合 ${tableName} 估计文档数: ${estimatedCount}`)
-      } catch (estimateError) {
-        console.error(`estimatedDocumentCount() 也失败:`, estimateError.message)
-        // 如果连 estimatedDocumentCount 都失败，说明集合可能不存在
-        console.log(`集合可能不存在，尝试直接查询`)
-      }
-    }
     
     // 构建MongoDB查询条件
     let mongoQuery = {}
@@ -414,7 +384,6 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
     // 解析SQL WHERE子句并转换为MongoDB查询
     if (whereClause) {
       const whereStr = whereClause.replace(/^WHERE\s*/i, '')
-      console.log(`MongoDB WHERE子句解析: "${whereStr}"`)
       
       // 处理不同的查询模式
       if (whereStr.includes('character_name LIKE') && whereStr.includes('channel =') && whereStr.includes('dungeon_name =')) {
@@ -426,9 +395,6 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
           channel: 10,
           dungeon_name: '格伦贝尔纳'
         }
-        
-        // 处理时间条件 (20:00-01:00)
-        // 这里简化处理，实际可能需要更复杂的时间逻辑
         
         // 处理新卷条件
         if (whereStr.includes('REGEXP')) {
@@ -484,62 +450,22 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
           })
         }
       }
-    } else {
-      console.log(`MongoDB无WHERE条件，查询所有文档`)
     }
-    
-    console.log(`MongoDB查询条件: ${JSON.stringify(mongoQuery)}`)
     
     // 获取总数
-    let totalCount = 0
-    console.log(`开始执行 countDocuments(${JSON.stringify(mongoQuery)})`)
-    try {
-      totalCount = await collection.countDocuments(mongoQuery)
-      console.log(`MongoDB总文档数查询完成: ${totalCount}`)
-    } catch (countError) {
-      console.error(`countDocuments 查询失败:`, countError.message)
-      console.log(`跳过总数统计，继续执行查询`)
-    }
+    const totalCount = await collection.count(mongoQuery)
     
     // 执行查询
-    console.log(`开始执行 find().sort({id:-1}).limit(${limit || 20})`)
-    let results = []
-    try {
-      results = await collection
-        .find(mongoQuery)
-        .sort({ id: -1 })
-        .limit(limit || 20)
-        .toArray()
-      console.log(`find 查询执行成功`)
-    } catch (findError) {
-      console.error(`find 查询失败:`, findError.message)
-      console.log(`尝试不使用排序的简单查询`)
-      try {
-        results = await collection
-          .find(mongoQuery)
-          .limit(limit || 20)
-          .toArray()
-        console.log(`简单查询执行成功`)
-      } catch (simpleError) {
-        console.error(`简单查询也失败:`, simpleError.message)
-        throw simpleError
-      }
-    }
-    
-    console.log(`MongoDB搜索结果: ${results.length} 条记录, 总计: ${totalCount} 条`)
-    
-    // 输出前几条记录的ID用于调试
-    if (results.length > 0) {
-      const resultIds = results.slice(0, 5).map(r => r.id)
-      console.log(`MongoDB前5条记录ID: [${resultIds.join(', ')}]`)
-    }
+    const results = await collection
+      .find(mongoQuery)
+      .sort({ id: -1 })
+      .limit(limit || 20)
+      .toArray()
     
     return { results, total: totalCount }
     
   } catch (error) {
     console.error(`MongoDB搜索失败: ${error.message}`)
-    console.error(`MongoDB搜索异常详情:`, error)
-    console.error(`MongoDB搜索异常堆栈:`, error.stack)
     return { results: [], total: 0 }
   }
 }
