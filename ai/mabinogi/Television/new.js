@@ -376,9 +376,20 @@ const syncMissingIdsToMongoDB = async (tableName) => {
 const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => {
   try {
     console.log(`开始从 MongoDB 搜索: ${tableName}`)
+    console.log(`MongoDB搜索参数: whereClause="${whereClause}", queryParams=${JSON.stringify(queryParams)}, limit=${limit}`)
     
     const mongoDb = mgoClient.db('db_bot')
     const collection = mongoDb.collection(tableName)
+    
+    // 检查集合中是否有数据
+    const totalDocuments = await collection.countDocuments()
+    console.log(`MongoDB集合 ${tableName} 总文档数: ${totalDocuments}`)
+    
+    // 如果集合为空，直接返回
+    if (totalDocuments === 0) {
+      console.log(`MongoDB集合 ${tableName} 为空，跳过搜索`)
+      return { results: [], total: 0 }
+    }
     
     // 构建MongoDB查询条件
     let mongoQuery = {}
@@ -386,6 +397,7 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
     // 解析SQL WHERE子句并转换为MongoDB查询
     if (whereClause) {
       const whereStr = whereClause.replace(/^WHERE\s*/i, '')
+      console.log(`MongoDB WHERE子句解析: "${whereStr}"`)
       
       // 处理不同的查询模式
       if (whereStr.includes('character_name LIKE') && whereStr.includes('channel =') && whereStr.includes('dungeon_name =')) {
@@ -455,6 +467,8 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
           })
         }
       }
+    } else {
+      console.log(`MongoDB无WHERE条件，查询所有文档`)
     }
     
     console.log(`MongoDB查询条件: ${JSON.stringify(mongoQuery)}`)
