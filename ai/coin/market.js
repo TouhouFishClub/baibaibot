@@ -80,27 +80,35 @@ module.exports={
 
 
 var USD2CNY = 6.5;
+var lts = 0;
 function getFixer(){
-  var url = 'http://data.fixer.io/api/latest?access_key=01a69c4322e94ee4533267a407dea588';
-  request({
+  var now = new Date().getTime();
+  if(now-lts>86400000){
+    var url = 'http://data.fixer.io/api/latest?access_key=563125d88dcc14455f4cbfa3d56ab0e4';
+    request({
       headers:{
-          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36',
       },
       url: url,
-  }, function(error, response, body) {
+    }, function(error, response, body) {
       if (error && error.code) {
-          console.log('pipe error catched!')
-          console.log(error);
+        console.log('pipe error catched!')
+        console.log(error);
       } else {
-          var data = eval('('+body+')');
-          var rates = data.rates;
-          if(rates){
-            var usd = rates.USD;
-            var cny = rates.CNY;
-            USD2CNY = cny/usd;
-          }
+        var data = eval('('+body+')');
+        var rates = data.rates;
+        if(rates){
+          var usd = rates.USD;
+          var cny = rates.CNY;
+          USD2CNY = cny/usd;
+          lts = now;
+        }
       }
-  });
+    });
+  }else{
+
+  }
+
 }
 
 getFixer();
