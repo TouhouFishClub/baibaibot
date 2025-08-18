@@ -459,20 +459,24 @@ const searchFromMongoDB = async (tableName, whereClause, queryParams, limit) => 
     
     console.log(`MongoDB查询条件: ${JSON.stringify(mongoQuery)}`)
     
+    // 获取总数
+    const totalCount = await collection.countDocuments(mongoQuery)
+    
     // 执行查询
     const results = await collection
       .find(mongoQuery)
-      .sort({ data_time: -1 })
+      .sort({ id: -1 })
+      .hint({ id: -1 })
       .limit(limit || 20)
       .toArray()
     
-    console.log(`MongoDB搜索结果: ${results.length} 条记录`)
+    console.log(`MongoDB搜索结果: ${results.length} 条记录, 总计: ${totalCount} 条`)
     
-    return results
+    return { results, total: totalCount }
     
   } catch (error) {
     console.error(`MongoDB搜索失败: ${error.message}`)
-    return []
+    return { results: [], total: 0 }
   }
 }
 
@@ -818,8 +822,10 @@ const mabiTelevision = async (content, qq, callback) => {
   
   // 从MongoDB搜索相同条件的数据
   console.log(`========MONGODB SEARCH=========`)
-  const mongoResults = await searchFromMongoDB(table, whereClause, queryParams, limit)
-  console.log(`MongoDB search completed: ${mongoResults.length} records`)
+  const mongoSearchResult = await searchFromMongoDB(table, whereClause, queryParams, limit)
+  const mongoResults = mongoSearchResult.results || []
+  const mongoTotal = mongoSearchResult.total || 0
+  console.log(`MongoDB search completed: ${mongoResults.length} records, total: ${mongoTotal}`)
   console.log(`==================`)
   
   // 合并MySQL和MongoDB的搜索结果
@@ -852,7 +858,7 @@ const mabiTelevision = async (content, qq, callback) => {
   const bothSourceCount = mergedResults.filter(r => r.source === 'both').length
   
   // 构建描述信息
-  let description = `(MySQL: ${totalRow[0][0].total}, 合并后: ${totalMergedCount})`
+  let description = `(MySQL: ${totalRow[0][0].total}, MongoDB: ${mongoTotal}, 合并后: ${totalMergedCount})`
   if (mongoOnlyCount > 0) {
     description += ` [MongoDB补充: +${mongoOnlyCount}]`
   }
