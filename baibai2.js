@@ -1800,12 +1800,16 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(fie4 == 'mbtv') {
     if(from != 799018865)
+      if(Date.now() < new Date('2025-09-15').getTime())
+        callback('因数据源不再可信，mbtv及mbcd现已下线')
       return
     mabiTelevision(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
     return
   }
   if(fie4 == 'mbcd') {
     if(from != 799018865)
+      if(Date.now() < new Date('2025-09-15').getTime())
+        callback('因数据源不再可信，mbtv及mbcd现已下线')
       return
     mabiGachaTv(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
     return
