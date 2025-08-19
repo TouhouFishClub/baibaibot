@@ -746,7 +746,7 @@ const mabiGachaTv = async (content, qq, callback) => {
 }
 
 // 启动抽蛋定时任务
-startScheduledSyncGacha()
+// startScheduledSyncGacha()
 
 module.exports = {
   mabiGachaTv

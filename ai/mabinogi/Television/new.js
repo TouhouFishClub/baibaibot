@@ -969,7 +969,7 @@ const mabiTelevision = async (content, qq, callback) => {
 }
 
 // 启动定时任务
-startScheduledSync()
+// startScheduledSync()
 
 module.exports = {
   mabiTelevision
