@@ -28,6 +28,30 @@ const mabiWeather = async (content, callback) => {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
     await page.setViewport({ width: 1920, height: 1080 });
     
+    // 阻止加载可能导致超时的资源
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+      const resourceType = req.resourceType();
+      const url = req.url();
+      
+      // 阻止加载可能导致超时的第三方资源
+      if (resourceType === 'image' || 
+          resourceType === 'media' || 
+          resourceType === 'font' ||
+          url.includes('google-analytics') ||
+          url.includes('googletagmanager') ||
+          url.includes('facebook') ||
+          url.includes('twitter') ||
+          url.includes('doubleclick') ||
+          url.includes('adsystem') ||
+          url.includes('googlesyndication')) {
+        console.log(`阻止加载资源: ${url}`);
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+    
     // 设置更长的超时时间并添加重试机制
     const maxRetries = 3;
     let retryCount = 0;
@@ -37,9 +61,9 @@ const mabiWeather = async (content, callback) => {
       try {
         console.log(`尝试第 ${retryCount + 1} 次访问网页...`);
         
-        // 导航到网页，设置更长的超时时间
+        // 导航到网页，使用更宽松的等待策略
         await page.goto('https://mabinogi.fws.tw/weather.php?wa=20', {
-          waitUntil: 'networkidle2', // 等待网络空闲
+          waitUntil: 'domcontentloaded', // 只等待 DOM 加载完成，不等待所有资源
           timeout: 60000 // 60秒超时
         });
         
