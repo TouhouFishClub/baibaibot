@@ -5,6 +5,8 @@ const { mongourl, IMAGE_DATA, myip} = require('../../../baibaiConfigs')
 const nodeHtmlToImage = require('node-html-to-image')
 const path = require("path");
 const http = require("http");
+// 延迟加载以避免循环依赖
+// const { createHttpApiWrapper } = require('../../../reverseWsUtils')
 
 let echart = readFileSync(join(__dirname, '..', 'libs', 'echart.min.js'), 'utf-8')
 let echartWordcloud = readFileSync(join(__dirname, '..', 'libs', 'echart-wordcloud.js'), 'utf-8')
@@ -28,8 +30,47 @@ const analysisChatData = (data, userMap) => {
 	return accountCount
 }
 
-const fetchGroupUsers = (groupid, port) =>
-	new Promise(resolve => {
+/**
+ * 获取群成员列表（优先使用反向 WebSocket，失败时回退到 HTTP）
+ * @param {string} groupid - 群ID
+ * @param {string} port - 端口/机器人名称
+ * @returns {Promise<Array>} 群成员列表
+ */
+const fetchGroupUsers = async (groupid, port) => {
+	try {
+		// 延迟加载以避免循环依赖
+		const { createHttpApiWrapper } = require('../../../reverseWsUtils')
+		// 优先尝试使用反向 WebSocket 接口
+		const apiWrapper = createHttpApiWrapper(port)
+		
+		// 尝试不使用缓存获取群成员列表
+		let groupMemberData = await apiWrapper.getGroupMemberList(groupid, true)
+		
+		// 如果不使用缓存失败，尝试使用缓存
+		if (!groupMemberData || !Array.isArray(groupMemberData) || groupMemberData.length === 0) {
+			groupMemberData = await apiWrapper.getGroupMemberList(groupid, false)
+		}
+		
+		if (groupMemberData && Array.isArray(groupMemberData) && groupMemberData.length > 0) {
+			const groupUsers = groupMemberData.map(x => {
+				let nid = x.card || x.nickname, alias = nid
+				if(nid.length > 7) {
+					alias = `${nid.substring(0, 7)}...`
+				}
+				return {
+					uid: x.user_id,
+					nid,
+					alias
+				}
+			})
+			return groupUsers
+		}
+	} catch (error) {
+		console.warn(`[反向 WebSocket] 获取群成员列表失败，回退到 HTTP 方式:`, error.message)
+	}
+
+	// 回退到原有的 HTTP 调用方式
+	return new Promise(resolve => {
 		let url = `http://${myip}:${port}/get_group_member_list?group_id=${groupid}`
 		http.get(url, (res) => {
 			res.setEncoding('utf8');
@@ -49,9 +90,6 @@ const fetchGroupUsers = (groupid, port) =>
 							alias
 						}
 					})
-					// console.log('===============')
-					// console.log(groupUsers)
-					// console.log('===============')
 					resolve(groupUsers);
 				} catch (e) {
 					console.error(e.message);
@@ -63,6 +101,7 @@ const fetchGroupUsers = (groupid, port) =>
 			resolve([])
 		})
 	})
+}
 
 const fetchGroupData = async (port, groupId) => {
 	let users = await fetchGroupUsers(groupId, port)

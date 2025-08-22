@@ -2,6 +2,8 @@ const fs = require('fs-extra')
 const process = require('process')
 const path = require('path')
 const xml2js = require('xml2js')
+const https = require('https')
+const http = require('http')
 
 const parser = new xml2js.Parser()
 let itemXML = []
@@ -15,6 +17,8 @@ eval(fs.readFileSync(path.join(__dirname, '..', '/js/TailoringItem.js')).toStrin
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/BlacksmithItem.js')).toString('utf-8'))
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/HeulwenEngineeringItem.js')).toString('utf-16le'))
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/MagicCraftItem.js')).toString('utf-8'))
+eval(fs.readFileSync(path.join(__dirname, '..', '/js/HandicraftItem.js')).toString('utf-8'))
+eval(fs.readFileSync(path.join(__dirname, '..', '/js/CarpentryItem.js')).toString('utf-8'))
 
 eval(fs.readFileSync(path.join(__dirname, '..', '/js/Item.js')).toString('utf-8'))
 // console.log(TailoringList)
@@ -23,8 +27,83 @@ eval(fs.readFileSync(path.join(__dirname, '..', '/js/Item.js')).toString('utf-8'
 
 const TailoringSet = new Set(TailoringList.map(x => `${x}`))
 const BlackSmithSet = new Set(BlacksmithList.map(x => `${x}`))
+const HandicraftSet = new Set(HandicraftList.map(x => `${x}`))
+const CarpentrySet = new Set(CarpentryList.map(x => `${x}`))
 
 const wait = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms))
+
+// 下载图片的函数
+const downloadImage = (url, filepath) => {
+  return new Promise((resolve, reject) => {
+    const protocol = url.startsWith('https') ? https : http
+    const file = fs.createWriteStream(filepath)
+    
+    protocol.get(url, (response) => {
+      if (response.statusCode === 200) {
+        response.pipe(file)
+        file.on('finish', () => {
+          file.close()
+          resolve(filepath)
+        })
+      } else {
+        file.close()
+        fs.unlink(filepath, () => {}) // 删除空文件
+        reject(new Error(`HTTP ${response.statusCode}: ${response.statusMessage}`))
+      }
+    }).on('error', (err) => {
+      file.close()
+      fs.unlink(filepath, () => {}) // 删除空文件
+      reject(err)
+    })
+  })
+}
+
+// 批量下载图片的函数
+const downloadItemImages = async (itemPlus) => {
+  const imageDir = path.join(__dirname, '..', 'temp_images')
+  
+  // 确保图片目录存在
+  await fs.ensureDir(imageDir)
+  
+  console.log('\n=== 开始下载新物品图片 ===')
+  console.log(`图片将保存到: ${imageDir}`)
+  
+  const itemIds = Object.keys(itemPlus)
+    .filter(key => key.startsWith('Item'))
+    .map(key => key.replace('Item', ''))
+    .filter(id => /^\d+$/.test(id)) // 只处理纯数字ID
+  
+  if (itemIds.length === 0) {
+    console.log('没有新的物品图片需要下载')
+    return
+  }
+  
+  console.log(`找到 ${itemIds.length} 个新物品需要下载图片`)
+  
+  let successCount = 0
+  let failCount = 0
+  
+  for (const itemId of itemIds) {
+    const imageUrl = `https://mabires2.pril.cc/invimage/kr/${itemId}/${itemId}.png`
+    const imagePath = path.join(imageDir, `${itemId}.png`)
+    
+    try {
+      console.log(`正在下载: ${itemPlus[`Item${itemId}`]} (${itemId})`)
+      await downloadImage(imageUrl, imagePath)
+      console.log(`✓ 下载成功: ${itemId}.png`)
+      successCount++
+      
+      // 避免请求过于频繁
+      await wait(500)
+    } catch (error) {
+      console.log(`✗ 下载失败: ${itemId}.png - ${error.message}`)
+      failCount++
+    }
+  }
+  
+  console.log(`\n图片下载完成: 成功 ${successCount}，失败 ${failCount}`)
+  console.log(`图片保存位置: ${imageDir}`)
+}
 const loadItemXml = async () => {
   if(itemXML.length) {
     return itemXML
@@ -235,7 +314,105 @@ const formatProduction = async () => {
     let sp = val.split('\t')
     transform[`_LT[xml.production.${sp[0].trim()}]`] = sp[1]
   })
-  let HeulwenEngineering = {}, MagicCraft = {}
+  let HeulwenEngineering = {}, MagicCraft = {}, Handicraft = {}, Carpentry = {}
+
+  // 手工艺
+  let ignoreHandicraftItemSet = new Set(['手工艺'])
+  if(xmlData.Production.Handicraft && xmlData.Production.Handicraft[0] && xmlData.Production.Handicraft[0].Production) {
+    for(let i = 0; i < xmlData.Production.Handicraft[0].Production.length; i ++) {
+      let xmlItem = xmlData.Production.Handicraft[0].Production[i].$
+      // await wait()
+      if(xmlItem.Essentials) {
+        if(xmlItem.Title) {
+          xmlItem.TitleCn = transform[xmlItem.Title].trim()
+        }
+        if(xmlItem.EssentialDesc) {
+          xmlItem.EssentialDescCn = transform[xmlItem.EssentialDesc].trim()
+        }
+        if(xmlItem.Desc) {
+          xmlItem.DescCn = transform[xmlItem.Desc].trim()
+        }
+        console.log(`Processing Handicraft item: ${xmlItem.TitleCn} (ID: ${xmlItem.ProductItemId})`)
+        
+        if(ignoreHandicraftItemSet.has(xmlItem.TitleCn)) {
+          continue
+        }
+        
+        // 检查是否已存在
+        if(!HandicraftSet.has(xmlItem.ProductItemId)) {
+          try {
+            // 如果有，则不做添加
+            process.stdout.clearLine()
+            process.stdout.cursorTo(0)
+            let out = eval(`Item${xmlItem.ProductItemId}`)[0]
+            process.stdout.write(out)
+          } catch (err) {
+            // console.log(err)
+            // console.log(xmlItem)
+            // 如果没有，则添加额外item
+            itemPlus[`Item${xmlItem.ProductItemId}`] = transform[xmlItem.Title].trim()
+            let essentials = await analyzerItem(xmlItem.Essentials)
+
+            Handicraft[xmlItem.ProductItemId] = Object.assign({
+              output: JSON.stringify([
+                [parseInt(xmlItem.Difficulty), parseInt(xmlItem.Difficulty)], // 难度等级要求
+                essentials
+              ])
+            }, xmlItem)
+          }
+        }
+      }
+    }
+  }
+
+  // 木工
+  let ignoreCarpentryItemSet = new Set(['木工'])
+  if(xmlData.Production.Carpentry && xmlData.Production.Carpentry[0] && xmlData.Production.Carpentry[0].Production) {
+    for(let i = 0; i < xmlData.Production.Carpentry[0].Production.length; i ++) {
+      let xmlItem = xmlData.Production.Carpentry[0].Production[i].$
+      // await wait()
+      if(xmlItem.Essentials) {
+        if(xmlItem.Title) {
+          xmlItem.TitleCn = transform[xmlItem.Title].trim()
+        }
+        if(xmlItem.EssentialDesc) {
+          xmlItem.EssentialDescCn = transform[xmlItem.EssentialDesc].trim()
+        }
+        if(xmlItem.Desc) {
+          xmlItem.DescCn = transform[xmlItem.Desc].trim()
+        }
+        console.log(`Processing Carpentry item: ${xmlItem.TitleCn} (ID: ${xmlItem.ProductItemId})`)
+        
+        if(ignoreCarpentryItemSet.has(xmlItem.TitleCn)) {
+          continue
+        }
+        
+        // 检查是否已存在
+        if(!CarpentrySet.has(xmlItem.ProductItemId)) {
+          try {
+            // 如果有，则不做添加
+            process.stdout.clearLine()
+            process.stdout.cursorTo(0)
+            let out = eval(`Item${xmlItem.ProductItemId}`)[0]
+            process.stdout.write(out)
+          } catch (err) {
+            // console.log(err)
+            // console.log(xmlItem)
+            // 如果没有，则添加额外item
+            itemPlus[`Item${xmlItem.ProductItemId}`] = transform[xmlItem.Title].trim()
+            let essentials = await analyzerItem(xmlItem.Essentials)
+
+            Carpentry[xmlItem.ProductItemId] = Object.assign({
+              output: JSON.stringify([
+                [parseInt(xmlItem.Difficulty), parseInt(xmlItem.Difficulty)], // 难度等级要求
+                essentials
+              ])
+            }, xmlItem)
+          }
+        }
+      }
+    }
+  }
 
   // 工学
   let ignoreHeulwenEngineeringItemSet = new Set(['希尔文工学'])
@@ -332,7 +509,7 @@ const formatProduction = async () => {
       }
     }
   }
-  return {HeulwenEngineering, MagicCraft}
+  return {HeulwenEngineering, MagicCraft, Handicraft, Carpentry}
 }
 const analyzer = async () => {
   let xmlData = await readXmlParse(path.join(__dirname, '..', '..', 'data', 'IT', `ManualForm.xml`))
@@ -445,7 +622,7 @@ const analyzer = async () => {
     }
   }
 
-  const {HeulwenEngineering, MagicCraft} = await formatProduction()
+  const {HeulwenEngineering, MagicCraft, Handicraft, Carpentry} = await formatProduction()
 
   process.stdout.write('\n')
   // console.log(Tailoring, BlackSmith)
@@ -459,7 +636,7 @@ const analyzer = async () => {
   })
   // console.log(fs.readFileSync(path.join(__dirname, '..', '/js/Item.js')).toString('utf-8'))
   console.log('==', itemPlus)
-  console.log(`Tailoring count: ${Object.keys(Tailoring).length}, BlackSmith count: ${Object.keys(BlackSmith).length}, `)
+  console.log(`Tailoring count: ${Object.keys(Tailoring).length}, BlackSmith count: ${Object.keys(BlackSmith).length}, Handicraft count: ${Object.keys(Handicraft).length}, Carpentry count: ${Object.keys(Carpentry).length}`)
 
   console.log('=== append to BlacksmithItem.js file ===\n')
   let BlacksmithOutputStr = `BlacksmithList = BlacksmithList.concat([${Object.values(BlackSmith).filter(x => !x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nTalentBlacksmithList = TalentBlacksmithList.concat([${Object.values(BlackSmith).filter(x => x.SpecialTalent).map(x=>x.ProductItemID).join(',')}]);\nvar ${Object.values(BlackSmith).map(x => `BlacksmithItem${x.ProductItemID}=${x.output}`).join(',')};`
@@ -481,11 +658,24 @@ const analyzer = async () => {
   console.log(HeulwenEngineeringOutputStr)
   console.log('\n')
 
+  console.log('=== append to HandicraftItem.js file ===\n')
+  let HandicraftOutputStr = `HandicraftList = HandicraftList.concat([${Object.values(Handicraft).map(x=>x.ProductItemId).join(',')}]);\nvar ${Object.values(Handicraft).map(x => `HandicraftItem${x.ProductItemId}=${x.output}`).join(',')};`
+  console.log(HandicraftOutputStr)
+  console.log('\n')
+
+  console.log('=== append to CarpentryItem.js file ===\n')
+  let CarpentryOutputStr = `CarpentryList = CarpentryList.concat([${Object.values(Carpentry).map(x=>x.ProductItemId).join(',')}]);\nvar ${Object.values(Carpentry).map(x => `CarpentryItem${x.ProductItemId}=${x.output}`).join(',')};`
+  console.log(CarpentryOutputStr)
+  console.log('\n')
+
 
   console.log('=== append to Item.js file ===\n')
   let ItemOutputStr = `var ${Object.keys(itemPlus).map(key => `${key}=["${itemPlus[key]}"]`).join(',')};`
   console.log(ItemOutputStr)
   console.log('\n')
+
+  // 下载新物品的图片
+  await downloadItemImages(itemPlus)
 
 }
 

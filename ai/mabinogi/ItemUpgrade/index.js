@@ -67,6 +67,7 @@ const filterItem = async () => {
 					localeNameCn.indexOf('禁止') === -1 &&
 					localeNameCn.indexOf('交易') === -1 &&
 					localeNameCn.indexOf('专用') === -1 &&
+					localeNameCn.indexOf('活动') === -1 &&
 					!localeNameCn.startsWith('@') &&
 					!localeNameCn.startsWith('精灵') &&
 					!localeNameCn.startsWith('新手') &&
@@ -368,6 +369,104 @@ const renderRandomInfo = targetItem => {
 	}).join('')
 }
 
+// 渲染固定属性信息（用于打铁类道具）
+const renderFixedInfo = targetItem => {
+	// 定义需要显示的固定属性列表
+	const fixedAttributes = [
+		'attack_min',
+		'attack_max', 
+		'critical',
+		'balance',
+		'durability_filled_max',
+		'magic_damage',
+		'defense',
+		'protect',
+		'magic_defense',
+		'magic_protect'
+	]
+	
+	// 判断装备类型
+	const category = targetItem.Category.toLowerCase()
+	let equipType = 'unknown'
+	if(category.includes('/weapon/') || category.includes('/tool/')) {
+		equipType = category.includes('/weapon/') ? 'weapon' : 'tool'
+	} else if(category.includes('/shield/')) {
+		equipType = 'shield'
+	} else if(category.includes('/armor/') || category.includes('/cloth/')) {
+		equipType = 'armor'
+	}
+	
+	// 定义宗师加成
+	const masterBonus = {
+		weapon: { balance: 3, durability_filled_max: 2, attack_min: 3, attack_max: 4, critical: 1 },
+		tool: { balance: 3, durability_filled_max: 2, attack_min: 3, attack_max: 4, critical: 1 },
+		shield: { durability_filled_max: 1, protect: 1, defense: 2 },
+		armor: { durability_filled_max: 1, defense: 1, protect: 3 }
+	}
+	
+	// 定义品质加成
+	const qualityBonus = {
+		weapon: {
+			80: { attack_max: 2, attack_min: 1, critical: 3, balance: 5, durability_filled_max: 5 },
+			100: { attack_max: 2, attack_min: 2, critical: 5, balance: 10, durability_filled_max: 5 }
+		},
+		armor: {
+			80: { defense: 0, protect: 2, durability_filled_max: 5 },
+			100: { defense: 1, protect: 3, durability_filled_max: 5 }
+		},
+		shield: {
+			80: { defense: 0, durability_filled_max: 2 },
+			100: { defense: 1, durability_filled_max: 5 }
+		}
+	}
+	
+	let outputHtml = ''
+	
+	fixedAttributes.forEach(attrKey => {
+		let hasProduct = RandomProductHash[attrKey]
+		if(hasProduct) {
+			// 从targetItem或xmlParser中获取属性值
+			let baseValue = hasProduct.xmlInfo ? 
+				parseFloat(targetItem.xmlParser?.[hasProduct.rootKey] || '0') : 
+				parseFloat(targetItem[hasProduct.rootKey] || '0')
+			
+			// 特殊处理耐久度（需要除以1000）
+			if(attrKey == 'durability_filled_max') {
+				baseValue /= 1000
+			}
+			
+			// 只显示有值的属性（大于0）
+			if(baseValue > 0) {
+				// 计算宗师加成
+				const masterAdd = (masterBonus[equipType] && masterBonus[equipType][attrKey]) || 0
+				const masterValue = baseValue + masterAdd
+				
+				// 计算品质加成（工具类装备使用武器的品质加成）
+				const qualityType = (equipType === 'tool') ? 'weapon' : equipType
+				const quality80Add = (qualityBonus[qualityType] && qualityBonus[qualityType][80] && qualityBonus[qualityType][80][attrKey]) || 0
+				const quality100Add = (qualityBonus[qualityType] && qualityBonus[qualityType][100] && qualityBonus[qualityType][100][attrKey]) || 0
+				
+				const quality80Value = masterValue + quality80Add
+				const quality100Value = masterValue + quality100Add
+				
+				outputHtml += `
+					<div class="product-fixed">
+						<div class="label">${hasProduct.label} : </div>
+						<div class="value-group">
+							<div class="base-value">${baseValue}</div>
+							${masterAdd > 0 ? `<div class="master-value">宗师:${masterValue}<sup>+${masterAdd}</sup></div>` : ''}
+							${quality80Add > 0 ? `<div class="quality-value">80品:${quality80Value}<sup>+${quality80Add}</sup></div>` : ''}
+							${quality100Add > 0 ? `<div class="quality-value">100品:${quality100Value}<sup>+${quality100Add}</sup></div>` : ''}
+						</div>
+					</div>
+				`
+			}
+		}
+	})
+	
+	return outputHtml
+}
+
 const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 	console.log(itemUpgradeEffectData)
 	console.log(upgradeInfos.map(x => `[${x.id}]（${x.upgraded_min} ~ ${x.upgraded_max}）${x.localnameCn}: ${x.descCn}`).join('\n'))
@@ -452,6 +551,45 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
     }
     .main-container .equip-random .product-random .text sup{
     	color: #57aeff
+    }
+    .main-container .equip-random .product-fixed{
+    	display: flex;
+    	justify-content: flex-start;
+    	align-items: flex-start;
+    	margin-bottom: 10px;
+    }
+    .main-container .equip-random .product-fixed .label{
+    	width: 150px;
+    	font-size: 20px;
+    	color: #fff;
+    	margin-right: 10px;
+    	margin-top: 5px;
+    }
+    .main-container .equip-random .product-fixed .value-group{
+    	display: flex;
+    	flex-direction: row;
+    	align-items: center;
+    	flex-wrap: wrap;
+    }
+    .main-container .equip-random .product-fixed .base-value{
+    	font-size: 20px;
+    	color: #fff;
+    	margin-right: 15px;
+    }
+    .main-container .equip-random .product-fixed .master-value{
+    	font-size: 16px;
+    	color: #ffd94c;
+    	margin-right: 12px;
+    }
+    .main-container .equip-random .product-fixed .quality-value{
+    	font-size: 16px;
+    	color: #57aeff;
+    	margin-right: 12px;
+    }
+    .main-container .equip-random .product-fixed .master-value sup,
+    .main-container .equip-random .product-fixed .quality-value sup{
+    	color: #ff9999;
+    	font-size: 12px;
     }
     .main-container .upgrade-group{
     	margin-top: 20px;
@@ -544,7 +682,11 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 	<div class="equip-random">
 		${renderRandomInfo(targetItem)}
 	</div>
-	` : ''}
+	` : `
+	<div class="equip-random">
+		${renderFixedInfo(targetItem)}
+	</div>
+	`}
 	<div class="upgrade-group">
 		${normalUpgrade.map(x => `
 			<div class="upgrade-item">
@@ -562,7 +704,7 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 					${x.need_gold}
 				</div>
 				<div class="item-col col-5">
-					${x.available_npc.split(';').map(x => `${npcInfoHash[x.toLowerCase()] || x}`).join(', ')}
+					${x.available_npc.split(';').filter(npc => !npc.toLowerCase().startsWith('testserver')).map(x => `${npcInfoHash[x.toLowerCase()] || x}`).join(', ')}
 				</div>
 				<div class="item-step-info">
 					${[0,1,2,3,4].map(i => (x.upgraded_min <= i && i <= x.upgraded_max) ? `<div class="step-item active">${i}</div>` : `<div class="step-item">${i}</div>`).join('')}
@@ -586,7 +728,7 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 					${x.need_gold}
 				</div>
 				<div class="item-col col-5">
-					${x.available_npc.split(';').map(x => `${npcInfoHash[x.toLowerCase()] || x}`).join(', ')}
+					${x.available_npc.split(';').filter(npc => !npc.toLowerCase().startsWith('testserver')).map(x => `${npcInfoHash[x.toLowerCase()] || x}`).join(', ')}
 				</div>
 				<div class="need-gem">
 					${x.need_gem.split(';').map(gemItem => {

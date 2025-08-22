@@ -1,5 +1,6 @@
 var https=require('https');
 var http = require('http');
+var request = require('request');
 function weatherReply(city,userId,callback){
   var options = {
     hostname: 'wthrcdn.etouch.cn',
@@ -57,66 +58,53 @@ function weatherReply(city,userId,callback){
 
 var failed = 0;
 function getWeatherByCity(city,userId,callback){
-  var options = {
-    hostname: 'toy1.weather.com.cn',
-    port: 80,
-    path: '/search?cityname='+encodeURIComponent(city)+'&callback=s',
-    method: 'GET'
-  };
-  console.log(options);
-  var req = http.request(options, function (res) {
-    var resdata = "";
-    res.on('data', function (chunk) {
-      resdata+=chunk;
-    });
-    res.on('end', function () {
-      failed = 0;
-      var reply = false;
-      var n = resdata.indexOf("(");
-      if(n>0){
-        var arr = eval(resdata.substring(n));
-        var ret = "";
-        if(arr.length>0){
-          var cityref = arr[0].ref;
-          if(cityref){
-            var ca = cityref.split("~");
-            var citycode = ca[0];
-            ret = citycode;
-            reply = true;
-            getWeatherByCityCode(city,ret,userId,callback);
+      var url = 'https://toy1.weather.com.cn'+'/search?cityname='+encodeURIComponent(city)+'&callback=s';
+      request({
+        url: url,
+        headers:{
+          'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+          'Referer':'https://www.weather.com.cn/'
+        },
+        method: "GET"
+      }, function(error, response, body){
+        if(error&&error.code){
+          console.log('pipe error catched!')
+          console.log(error);
+        }else{
+          var resdata = body;
+          failed = 0;
+          var reply = false;
+          var n = resdata.indexOf("(");
+          if(n>0){
+            var arr = eval(resdata.substring(n));
+            var ret = "";
+            if(arr.length>0){
+              var cityref = arr[0].ref;
+              if(cityref){
+                var ca = cityref.split("~");
+                var citycode = ca[0];
+                ret = citycode;
+                reply = true;
+                getWeatherByCityCode(city,ret,userId,callback);
+              }
+            }
+          }
+          if(reply == false){
+            ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇';
+            callback(ret);
           }
         }
-      }
-      if(reply == false){
-        ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇';
-        callback(ret);
-      }
-    });
-    res.on('error',function(error){
-      console.log(error);
-    })
-  });
-  req.setTimeout(8000,function(){
-    req.end();
-    failed = failed+1;
-    ret = '"'+city+'"' + ' 是哪里？'+userId+' 带我去玩哇!';
-    if(failed>2){
-      callback(ret);
-    }else{
-      getWeatherByCity(city,userId,callback)
-    }
-  });
-  req.end();
+      })
 }
 
 function getWeatherByCityCode(city,cityCode,userId,callback){
   var options = {
     hostname: 'www.weather.com.cn',
-    port: 80,
+    port: 443,
     path: '/weather/'+cityCode+'.shtml',
     method: 'GET'
   };
-  var req = http.request(options, function (res) {
+  var req = https.request(options, function (res) {
     var resdata = "";
     res.on('data', function (chunk) {
       resdata += chunk;
@@ -280,7 +268,7 @@ function getinner(s){
 }
 
 
-
+getWeatherByCity('北京','aaa',function(r){console.log(r)})
 
 
 

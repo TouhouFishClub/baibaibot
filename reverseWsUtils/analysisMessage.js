@@ -22,7 +22,8 @@ const {
   localAssetsToBase64
 } = require('../util/imageToBase64')
 
-const { handle_msg_D2 } = require('../baibai2');
+// 延迟加载以避免循环依赖
+// const { handle_msg_D2 } = require('../baibai2');
 const { saveChat} = require("../ai/chat/collect");
 
 const replaceImageToBase64 = message =>
@@ -67,6 +68,8 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
 
   saveChat(group_id, user_id, card || nickname || user_name, raw_message, bot_name, context);
 
+  // 延迟加载 handle_msg_D2 以避免循环依赖
+  const { handle_msg_D2 } = require('../baibai2');
   handle_msg_D2(raw_message, user_id, card || nickname || user_name, group_id, msg => {
     if(!msg) {
       return
@@ -158,19 +161,33 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
             }
           }
 
-          let group_info = await createAction({
-            "action": "get_group_info",
-            "params": {
-              "group_id": context.group_id
-            }
-          }, bot_name)
+          // 获取群信息，添加错误处理
+          let group_info = null
+          try {
+            group_info = await createAction({
+              "action": "get_group_info",
+              "params": {
+                "group_id": context.group_id
+              }
+            }, bot_name)
+          } catch (error) {
+            console.warn(`[WS] 获取群信息失败 [群ID: ${context.group_id}]:`, error.message)
+            group_info = { group_name: `群${context.group_id}` } // 提供默认值
+          }
 
-          let user_info = await createAction({
-            "action": oneBotVersion === 12 ? "get_user_info" : "get_stranger_info ",
-            "params": {
-              "user_id": context.user_id
-            },
-          }, bot_name)
+          // 获取用户信息，添加错误处理
+          let user_info = null
+          try {
+            user_info = await createAction({
+              "action": oneBotVersion === 12 ? "get_user_info" : "get_stranger_info",  // 修复：去掉多余空格
+              "params": {
+                "user_id": context.user_id
+              },
+            }, bot_name)
+          } catch (error) {
+            console.warn(`[WS] 获取用户信息失败 [用户ID: ${context.user_id}]:`, error.message)
+            user_info = { nickname: `用户${context.user_id}` } // 提供默认值
+          }
 
           context.mixins = {
             group_info,

@@ -120,8 +120,11 @@ class SearchHandler {
     
     // 处理管理员命令
     if (CONFIG.ADMIN_USERS.has(userId) && this.store.saveTmpMap[userId]) {
-      await this._handleAdminCommands(userId, nickname, ctx, callback)
-      return
+      const handled = await this._handleAdminCommands(userId, nickname, ctx, callback)
+      if (handled) {
+        return
+      }
+      // 如果不是管理员命令，继续处理普通搜索
     }
 
     // 处理where查询
@@ -149,7 +152,11 @@ class SearchHandler {
       optionsetWhereCnHandler('remove', nickname, LocalName, Level, ctx.substr(6).trim(), callback, this.store.saveTmpMap[userId])
     } else if (ctx.startsWith('del')) {
       optionsetWhereCnHandler('del', nickname, LocalName, Level, '', callback, this.store.saveTmpMap[userId])
+    } else {
+      // 如果不是管理员命令，则返回false，让调用者继续处理普通搜索
+      return false
     }
+    return true
   }
 
   async _handleWhereSearch(ctx, callback) {
@@ -303,6 +310,20 @@ class SearchHandler {
       } else {
         wheres = await optionsetWhere(result.Name, result.ID)
         optionsetInfo = { ...result, where: 'TW' }
+      }
+    }
+
+    // 为管理员用户保存释放卷轴信息，以便可以使用add/set/remove等命令
+    if (CONFIG.ADMIN_USERS.has(this._currentUserId)) {
+      this.store.saveTmpMap[this._currentUserId] = {
+        LocalName: result.LocalName,
+        LocalName2: result.LocalName2,
+        Level: result.Level,
+        Usage: result.Usage,
+        UsageQuery: result.UsageQuery,
+        Buff: result.Buff,
+        Debuff: result.Debuff,
+        ID: result.ID
       }
     }
 

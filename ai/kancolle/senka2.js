@@ -903,6 +903,14 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
   }
 
   var pcd = parseInt(cd);
+
+  if(cd=='12sKy'){
+
+
+
+    pcd = NaN
+  }
+
   var cf = ca[0];
 
   var startk;
@@ -1139,12 +1147,22 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                 generateImage(culist, ret, callback,month);
               } else {
                 getUserInfo(userid, function (rrr) {
-                  var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
-                  var ret = namelist[0] + '\n';
-                  var lesenka = '';
 
+                  if(!rrr.exp){
+                    rrr.exp=0;
+                    rrr.ship='';
+                    rrr.cmt='';
+                    rrr.countOf = { ship: [0,0], slotitem: [0,0] };
+                  }
+
+
+
+                  var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
+                  var ret = namelist[0] + '【'+rrr.cmt+'】\n';
+                  var lesenka = '';
                   ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'  \t  继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
                   ret = ret + '经验值【'+rrr.exp+'】 \t EX:' + exstr + '  日均:【' + dailystr + '】\n';
+
                   ret = ret + `船位：${rrr.countOf.ship[0]}/${rrr.countOf.ship[1]}\t\t装备位：${rrr.countOf.slotitem[0]}/${rrr.countOf.slotitem[1]}`
                   ret = ret + '\n'
                   ret = ret + rrr.ship + '\n';
@@ -1190,8 +1208,17 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                     generateImage(culist, ret, callback,month);
                   } else {
                     getUserInfo(userid, function (rrr) {
+
+                      if(!rrr.exp){
+                        rrr.exp=0;
+                        rrr.ship='';
+                        rrr.cmt='';
+                        rrr.countOf = { ship: [0,0], slotitem: [0,0] };
+                      }
+
+
                       var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
-                      var ret = namelist[0] + '\n';
+                      var ret = namelist[0] + '【'+rrr.cmt+'】\n';
                       ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
                       ret = ret + '经验值【'+rrr.exp+'】 \t EX:' + exstr + '  日均:【' + dailystr + '】\n';
                       ret = ret + `船位：${rrr.countOf.ship[0]}/${rrr.countOf.ship[1]}\t\t装备位：${rrr.countOf.slotitem[0]}/${rrr.countOf.slotitem[1]}`
@@ -1224,8 +1251,17 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   generateImage(culist, ret, callback,month);
                 } else {
                   getUserInfo(userid, function (rrr) {
+
+
+                    if(!rrr.exp){
+                      rrr.exp=0;
+                      rrr.ship='';
+                      rrr.cmt='';
+                      rrr.countOf = { ship: [0,0], slotitem: [0,0] };
+                    }
+
                     var addsenka = ((rrr.exp - thenexp) / 10000 * 7).toFixed(1);
-                    var ret = namelist[0] + '\n';
+                    var ret = namelist[0] + '【'+rrr.cmt+'】\n';
                     ret = ret + '当前战果：【' + ton + '位】【' + td + '(+' + addsenka + ')' + ddstr + '】'+'继承：'+'【'+lasenka.toFixed(1)+'】'+'\n'
                     ret = ret + '经验值【'+rrr.exp+'】 \t EX:' + exstr + '  日均:【' + dailystr + '】\n';
                     ret = ret + `船位：${rrr.countOf.ship[0]}/${rrr.countOf.ship[1]}\t\t装备位：${rrr.countOf.slotitem[0]}/${rrr.countOf.slotitem[1]}`
@@ -2047,7 +2083,7 @@ function getShipInfo(){
     var result = resultr.value;
     if(result){
         var lastts = result.ts;
-        if(nn.getTime() - lastts < 300000){
+        if(nn.getTime() - lastts < 270000){
           cl_p_senka_8.updateOne({'_id':'p'},{'$set':{ts:lastts,tse:result.tse}});
           return;
         }else{
@@ -2088,7 +2124,7 @@ function collectShipInfo(glist){
 
 
 function timer4(){
-  var left4 = 360000 - new Date().getTime()%360000+10000
+  var left4 = 300000 - new Date().getTime()%300000+10000
   var leftmin4 = left4/60000;
   console.log('leftmin4:'+leftmin4);
   setTimeout(function(){
@@ -2137,7 +2173,7 @@ function searchShip(name,callback){
         if(arr[i+1]){
           addexp = arr[i].e-arr[i+1].e;
         }
-        var addsk = (addexp / 10000 * 7).toFixed(1)
+        var addsk = (-addexp / 10000 * 7).toFixed(2)
         var ship = arr[i].s.replace(/\t/g,' ');
         img1.drawText(20, 20+i*16, tsstr, 'NorthWest')
         img1.fill('red')
@@ -2155,7 +2191,7 @@ function searchShip(name,callback){
 
 
 setTimeout(function(){
-  //handleSenkaReply('z8l-カオス','','',function(r){console.log(r)})
+  handleSenkaReply('z8-桂','','',function(r){console.log(r)})
   //handleSenkaReply('z8','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getRank(1,[]);

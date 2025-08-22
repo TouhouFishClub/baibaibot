@@ -172,6 +172,9 @@ const {tcArticle} = require('./ai/mabinogi/newArticle')
 const {LiveInspect, LiveAnalyzer} = require('./ai/mabinogi/live-inspect')
 const {chujue} = require('./ai/image/generator/chujue/index.js')
 
+// 导入deepseek模块
+// const {handleDeepSeekChat} = require('./ai/llm/deepseek')
+
 
 
 let globalConfig = {
@@ -1064,7 +1067,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if((content=='百百')||(content.indexOf('百百')>=0&&content.indexOf('菜单')>=0)){
     var ret = "";
     ret = ret + "欢迎使用百百型机器人\n";
-    ret = ret + "通用功能导航：【`】【·】【ˋ】【'】【‘】【，】【’】任选其一\n";
+    ret = ret + "通用功能导航：【`】【·】【ˋ】【'】【'】【，】【'】任选其一\n";
     ret = ret + "游戏导航：【玩游戏】\n";
     ret = ret + "最终幻想XIV导航【ffxiv】\n";
     ret = ret + "明日方舟导航【ark】\n";
@@ -1094,6 +1097,15 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     getChatgptReplay(content,groupid,from,callback);
     return;
   }
+
+  // DeepSeek对话模块
+  // if(content.startsWith('ds ') || content.startsWith('deepseek ') || 
+  //    content.startsWith('DS ') || content.startsWith('DeepSeek ') || 
+  //    content.startsWith('Ds ') || content.startsWith('dS ')){
+  //   handleDeepSeekChat(content, groupid, from, callback);
+  //   return;
+  // }
+
   // if(content.startsWith('s ')||content.startsWith('s1')||content.startsWith('s2')||content.startsWith('s3')){
   //   content=content.trim();
   //   handleCustomChatgptReplay(content,groupid,from,callback);
@@ -1787,10 +1799,18 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
   if(fie4 == 'mbtv') {
+    if(from != 799018865)
+      if(Date.now() < new Date('2025-09-15').getTime())
+        callback('因数据源不再可信，mbtv及mbcd现已下线')
+      return
     mabiTelevision(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
     return
   }
   if(fie4 == 'mbcd') {
+    if(from != 799018865)
+      if(Date.now() < new Date('2025-09-15').getTime())
+        callback('因数据源不再可信，mbtv及mbcd现已下线')
+      return
     mabiGachaTv(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
     return
   }
@@ -1928,7 +1948,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
 
-  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"||first=="’"){
+  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="'"||first=="，"||first=="'"){
 
     var c1 = content.substring(1);
     if(c1==""){
@@ -1937,7 +1957,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       ret = ret + '`d50x10：ROLL10次小于50整数\n';
       ret = ret + "天气预报：城市名+天气\n教百百说话：问题|答案\n计算器：直接输入算式\n闲聊：``+对话\n";
       ret = ret + "今日运势占卜【今日运势】【jrrp】\n";
-			drawTxtImage('', ret.trim(), callback, {color: 'black', font: 'STXIHEI.TTF'})
+      drawTxtImage('', ret.trim(), callback, {color: 'black', font: 'STXIHEI.TTF'})
       // callback(ret);
     }else{
       reply(c1,name,callback,groupid,from,groupName,nickname,port);
@@ -2003,7 +2023,7 @@ function reply(content,userName,callback,groupid,from,groupName,nickname,port){
   var first = content.substring(0,1);
   if(content.substring(0, 2) == 'gf'){
     gf(content.substring(2), callback)
-  } else if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="‘"||first=="，"||first=="’"){
+  } else if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="'"||first=="，"||first=="'"){
     //tulingMsg(userName,content.substring(1),callback,groupid);
   }else if(first==2){
     translateMsg(content.substring(1),'ja',callback);
