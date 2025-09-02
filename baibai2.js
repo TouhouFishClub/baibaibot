@@ -134,6 +134,7 @@ const { renderColorBoard } = require('./ai/mabinogi/renderColor')
 const { trade, tradeOcr } = require('./ai/mabinogi/trade')
 
 const { searchMabiRecipe } = require('./ai/mabinogi/recipeNew/searchRecipe')
+const { searchBasicMaterials } = require('./ai/mabinogi/recipeNew/searchBasicMaterials')
 
 
 const { ergo } = require('./ai/mabinogi/ergo')
@@ -1844,6 +1845,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(fie == 'mbd'){
     searchMabiRecipe(con.substring(3).trim(), callback, true);
+    // autoVoteSend(groupid, callback)
+    return;
+  }
+
+  if(fie == 'mbc'){
+    searchBasicMaterials(con.substring(3).trim(), callback);
     // autoVoteSend(groupid, callback)
     return;
   }
