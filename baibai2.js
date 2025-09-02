@@ -1446,9 +1446,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     if(port == '29334'){
       return
     }
-    if(port == '30016') {
-      return
-    }
+    // if(port == '30016') {
+    //   return
+    // }
 		// if(!new Set([24334, 25334]).has(port)) {
 		// 	return
 		// }
