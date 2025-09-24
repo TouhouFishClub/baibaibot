@@ -9,7 +9,7 @@ let client
 
 const renderMenu = async (group, callback) => {
   try {
-    let keywords = await client.db('db_bot').collection('cl_menu').find({g: group}).toArray()
+    let keywords = await client.db('db_bot').collection('cl_menu').find({g: parseInt(`${group}`)}).toArray()
     if(!keywords.length) {
       callback('该群组暂无菜单项，请使用 [菜单 增加 项目名] 添加菜单项')
       return
