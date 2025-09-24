@@ -28,7 +28,7 @@ cal = function(str){
     return undefined;
   }
   var first = str.substring(0,1)
-  if(first=="√"||first==0||first=="("||first=="（"||first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||first=="e"||first=="π"||parseInt(str)){
+  if(first=="√"||first=='0'||first=="("||first=="（"||first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||first=="e"||first=="π"||parseInt(str)){
     can = true;
     willcal = false;
     var z="";
@@ -36,7 +36,7 @@ cal = function(str){
     var needtail = false;
     for(var i=0;i<str.length;i++){
       var cha = str[i];
-      if(cha>=0&cha<=9){
+      if(cha>='0'&&cha<='9'){
         z=z+cha;
       }else if(cha=='+'||cha=='-'||cha=="*"||cha=="/"){
         if(i>0){

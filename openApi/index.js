@@ -70,16 +70,16 @@ router.get('/', (req, res) => {
         description: '洛奇装备升级查询',
         params: ['content - 查询内容', 'from - 用户ID(可选)', 'groupid - 群组ID(可选)']
       },
-      {
-        path: '/openapi/mbtv',
-        description: '洛奇电视查询',
-        params: ['content - 查询内容', 'from - 用户ID(可选)']
-      },
-      {
-        path: '/openapi/mbcd',
-        description: '洛奇抽卡电视查询',
-        params: ['content - 查询内容', 'from - 用户ID(可选)']
-      },
+      // {
+      //   path: '/openapi/mbtv',
+      //   description: '洛奇电视查询',
+      //   params: ['content - 查询内容', 'from - 用户ID(可选)']
+      // },
+      // {
+      //   path: '/openapi/mbcd',
+      //   description: '洛奇抽卡电视查询',
+      //   params: ['content - 查询内容', 'from - 用户ID(可选)']
+      // },
       {
         path: '/openapi/uni',
         description: '通用内容存储和查询接口',
@@ -92,9 +92,16 @@ router.get('/', (req, res) => {
           '- 日历删除xxx：删除日历',
           '- 选择日历xxx：选择特定日历进行修改',
           '- 选择删除xxx：选择特定日历进行删除',
+          '- 菜单/menu：查询菜单功能',
+          '- 洛奇来一发：洛奇抽卡一次',
+          '- 洛奇来十连：洛奇抽卡十连',
+          '- 洛奇来一单：洛奇抽卡一单(60次)',
+          '- 洛奇来十单：洛奇抽卡十单(600次)',
+          '- 洛奇蛋池xxx：选择洛奇抽卡池',
+          '- TC公告xxx：获取洛奇TC公告',
           '- 关键词|内容：保存关键词和对应内容(问答模块)',
           '- 关键词|：删除关键词对应内容(问答模块)',
-          '- 关键词：查询关键词对应内容(问答模块)',
+          '- 关键词：查询关键词对应内容(问答模块，无结果时会尝试计算器功能)',
           'group - 群组ID(必需)',
           'from - 用户ID(可选)',
           'name - 用户名称(可选，默认为OPENAPI-用户ID)',
@@ -176,15 +183,16 @@ function createCallbackWithCalFallback(res, content) {
   
   return function(result) {
     // console.log(`\n\n\n===\nresult: ${result}\n\n`)
-    if (result) {
+    // 检查result是否有实际内容（不是null、undefined、空字符串或只包含空白字符）
+    if (result && result.toString().trim()) {
       hasResponse = true;
       // 使用原始callback处理结果
       createCallback(res)(result);
     } else {
-      // 如果answer没有返回结果(result为空、null或undefined)，尝试使用cal函数
+      // 如果answer没有返回结果，尝试使用cal函数
       const calResult = cal(content.trim());
       console.log(`\n\n\n===\ncontent: ${content}\ncal res: ${calResult}\n\n`)
-      if (calResult) {
+      if (calResult !== undefined && calResult !== null) {
         res.json({
           status: 'ok',
           data: {

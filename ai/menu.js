@@ -8,10 +8,12 @@ const { IMAGE_DATA } = require(path.join(__dirname, '..', 'baibaiConfigs.js'))
 let client
 
 const renderMenu = async (group, callback) => {
-  let keywords = await client.db('db_bot').collection('cl_menu').find({g: group}).toArray()
-  if(!keywords.length) {
-    return
-  }
+  try {
+    let keywords = await client.db('db_bot').collection('cl_menu').find({g: group}).toArray()
+    if(!keywords.length) {
+      callback('该群组暂无菜单项，请使用 [菜单 增加 项目名] 添加菜单项')
+      return
+    }
   let html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,6 +60,14 @@ const renderMenu = async (group, callback) => {
       let imgMsg = `[CQ:image,file=${path.join('send', 'menu', `${group}.png`)}]`
       callback(imgMsg)
     })
+    .catch(err => {
+      console.error('生成菜单图片失败:', err)
+      callback('生成菜单失败，请稍后重试')
+    })
+  } catch (error) {
+    console.error('菜单渲染错误:', error)
+    callback('菜单功能暂时不可用，请稍后重试')
+  }
 }
 
 const menu = async (content, group, callback) => {
@@ -67,33 +77,39 @@ const menu = async (content, group, callback) => {
     } catch (e) {
       console.log('MONGO ERROR FOR MENU MODULE!!')
       console.log(e)
+      callback('数据库连接失败，菜单功能暂时不可用')
+      return
     }
   }
-  let sp = content.split(' ').filter(x => x && x.indexOf('[CQ') == -1)
-  switch (sp[1]) {
-    case 'add':
-    case '增加':
-      sp = sp.splice(2)
-      for(let i = 0; i < sp.length; i ++) {
-        await client.db('db_bot').collection('cl_menu').save({
-          g: group,
-          d: sp[i]
-        })
-      }
-      callback('保存成功')
-      break
-    case 'remove':
-    case '删除':
-      await client.db('db_bot').collection('cl_menu').remove({g: group, d: sp[2]})
-      callback('已删除')
-      break
-    case 'help':
-      callback(`[menu add xxx xxx] 或 [菜单 增加 xxx xxx]:\n 增加记录，可增加多条记录，使用空格分隔\n[menu remove xxx] 或 [菜单 删除 xxx]:\n 删除记录，每次仅可删除一条`)
-      break
-    default:
-      renderMenu(group, callback)
+  try {
+    let sp = content.split(' ').filter(x => x && x.indexOf('[CQ') == -1)
+    switch (sp[1]) {
+      case 'add':
+      case '增加':
+        sp = sp.splice(2)
+        for(let i = 0; i < sp.length; i ++) {
+          await client.db('db_bot').collection('cl_menu').save({
+            g: group,
+            d: sp[i]
+          })
+        }
+        callback('保存成功')
+        break
+      case 'remove':
+      case '删除':
+        await client.db('db_bot').collection('cl_menu').remove({g: group, d: sp[2]})
+        callback('已删除')
+        break
+      case 'help':
+        callback(`[menu add xxx xxx] 或 [菜单 增加 xxx xxx]:\n 增加记录，可增加多条记录，使用空格分隔\n[menu remove xxx] 或 [菜单 删除 xxx]:\n 删除记录，每次仅可删除一条`)
+        break
+      default:
+        await renderMenu(group, callback)
+    }
+  } catch (error) {
+    console.error('菜单操作错误:', error)
+    callback('菜单操作失败，请稍后重试')
   }
-
 }
 
 module.exports = {
