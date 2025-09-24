@@ -291,7 +291,7 @@ router.get('/opt', (req, res) => {
         content = req.query.content;
       }
     }
-    const from = req.query && req.query.from ? req.query.from : '0';
+    const from = req.query && req.query.from ? parseInt(req.query.from) || 0 : 0;
     const name = req.query && req.query.name ? req.query.name : 'API用户';
     
     if (!content.trim()) {
@@ -322,8 +322,8 @@ router.get('/meu', (req, res) => {
         content = req.query.content;
       }
     }
-    const from = req.query && req.query.from ? req.query.from : '0';
-    const groupid = req.query && req.query.groupid ? req.query.groupid : '0';
+    const from = req.query && req.query.from ? parseInt(req.query.from) || 0 : 0;
+    const groupid = req.query && req.query.groupid ? parseInt(req.query.groupid) || 0 : 0;
     
     if (!content.trim()) {
       return res.json({
@@ -405,21 +405,21 @@ router.get('/uni', (req, res) => {
     }
     
     // 获取其他参数
-    const from = req.query && req.query.from ? req.query.from : '0';
-    const group = req.query && req.query.group ? req.query.group : '0';
+    const from = req.query && req.query.from ? parseInt(req.query.from) || 0 : 0;
+    const group = req.query && req.query.group ? parseInt(req.query.group) || 0 : 0;
     
     // 为问答模块设置默认名称格式
     let name = 'API用户';
     if (req.query && req.query.name) {
       name = req.query.name;
-    } else if (from !== '0') {
+    } else if (from !== 0) {
       name = `OPENAPI-${from}`;
     }
     
     let groupName = '';
     if (req.query && req.query.groupName) {
       groupName = req.query.groupName;
-    } else if (group !== '0') {
+    } else if (group !== 0) {
       groupName = `OPENAPI-${group}`;
     }
     
