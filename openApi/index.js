@@ -180,54 +180,16 @@ function createCallback(res) {
  */
 function createCallbackWithCalFallback(res, content) {
   let hasResponse = false;
-  let callbackCalled = false;
-  
-  // 设置超时，防止回调永远不被调用
-  const timeoutId = setTimeout(() => {
-    if (!callbackCalled) {
-      console.log(`[TIMEOUT] Callback not called for content: "${content}", trying calculator directly`);
-      callbackCalled = true;
-      const calResult = cal(content.trim());
-      console.log(`[TIMEOUT] Cal result: ${calResult} (type: ${typeof calResult})`);
-      if (calResult !== undefined && calResult !== null) {
-        res.json({
-          status: 'ok',
-          data: {
-            type: 'text',
-            message: `${content.trim()}=${calResult}`
-          }
-        });
-      } else {
-        res.json({
-          status: 'error',
-          message: '查询超时，未找到相关内容'
-        });
-      }
-    }
-  }, 5000); // 5秒超时
   
   return function(result) {
-    if (callbackCalled) {
-      console.log(`[WARNING] Callback called multiple times for content: "${content}"`);
-      return;
-    }
-    
-    callbackCalled = true;
-    clearTimeout(timeoutId);
-    
-    console.log(`[CALLBACK] Content: "${content}", Result: ${result} (type: ${typeof result})`);
-    
     // 检查result是否有实际内容（不是null、undefined、空字符串或只包含空白字符）
     if (result && result.toString().trim()) {
       hasResponse = true;
-      console.log(`[CALLBACK] Found answer in database`);
       // 使用原始callback处理结果
       createCallback(res)(result);
     } else {
-      console.log(`[CALLBACK] No answer found, trying calculator...`);
       // 如果answer没有返回结果，尝试使用cal函数
       const calResult = cal(content.trim());
-      console.log(`[CALLBACK] Cal result: ${calResult} (type: ${typeof calResult})`);
       if (calResult !== undefined && calResult !== null) {
         res.json({
           status: 'ok',
@@ -527,7 +489,6 @@ router.get('/uni', (req, res) => {
     } else {
       // 默认为查询操作（问答模块）
       // 使用增强版回调，在answer没有结果时尝试cal函数
-      console.log(`[UNI] Processing query - content: "${content}", group: ${group}, from: ${from}`);
       answer(content.trim(), name, groupName, createCallbackWithCalFallback(res, content), group, from);
     }
   } catch (error) {
