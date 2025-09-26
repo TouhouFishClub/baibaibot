@@ -191,7 +191,6 @@ function createCallbackWithCalFallback(res, content) {
     } else {
       // 如果answer没有返回结果，尝试使用cal函数
       const calResult = cal(content.trim());
-      console.log(`\n\n\n===\ncontent: ${content}\ncal res: ${calResult}\n\n`)
       if (calResult !== undefined && calResult !== null) {
         res.json({
           status: 'ok',

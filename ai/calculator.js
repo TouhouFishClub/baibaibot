@@ -24,8 +24,14 @@ cal = function(str){
     }
   }
   str = str.toLowerCase().trim();
+  // 检查是否是无效的减法表达式（如字母-字母），但允许数字减法
   if(str.length==3&&str[1]=="-"){
-    return undefined;
+    var firstChar = str[0];
+    var thirdChar = str[2];
+    // 如果第一个和第三个字符都不是数字，则返回undefined
+    if(!(/\d/.test(firstChar)) || !(/\d/.test(thirdChar))){
+      return undefined;
+    }
   }
   var first = str.substring(0,1)
   if(first=="√"||first=='0'||first=="("||first=="（"||first=="s"||first=="c"||first=="t"||first=="l"||first=="p"||first=="e"||first=="π"||parseInt(str)){
