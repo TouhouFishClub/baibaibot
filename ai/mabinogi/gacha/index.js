@@ -63,12 +63,17 @@ const matchItemWeight = [
 	{regexp: new RegExp('PLUS辅助'), rare: 0.97},
 ]
 
-const checkWriteList = (user, groupId) => {
+const checkWriteList = (user, groupId, isApiCall = false) => {
+	// API调用时绕过群组白名单限制
+	if (isApiCall) {
+		return true
+	}
 	return user == 799018865 || groupWhiteList.has(groupId)
 }
 
-const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) => {
-	if(!checkWriteList(user, groupId)) {
+const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup, isApiCall = false) => {
+	if(!checkWriteList(user, groupId, isApiCall)) {
+		callback('抱歉，此功能仅限特定群组使用')
 		return
 	}
 	if(!gachaInfo.length) {
@@ -184,8 +189,9 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup) =
 	drawTxtImage(`[CQ:at,qq=${user}]`, str, callback, {color: 'black', font: 'STXIHEI.TTF'})
 }
 
-const selectGachaGroup = async (user, groupId, callback, select) => {
-	if(!checkWriteList(user, groupId)) {
+const selectGachaGroup = async (user, groupId, callback, select, isApiCall = false) => {
+	if(!checkWriteList(user, groupId, isApiCall)) {
+		callback('抱歉，此功能仅限特定群组使用')
 		return
 	}
 	if(!gachaInfo.length) {

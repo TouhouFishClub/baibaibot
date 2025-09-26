@@ -455,19 +455,19 @@ router.get('/uni', (req, res) => {
       menu(content, group, createCallback(res));
     } else if (content === '洛奇来一发') {
       // 洛奇抽卡一次
-      mabiGacha(from, group, createCallback(res), 1);
+      mabiGacha(from, group, createCallback(res), 1, undefined, true);
     } else if (content === '洛奇来十连') {
       // 洛奇抽卡十连
-      mabiGacha(from, group, createCallback(res), 11);
+      mabiGacha(from, group, createCallback(res), 11, undefined, true);
     } else if (content === '洛奇来一单') {
       // 洛奇抽卡一单
-      mabiGacha(from, group, createCallback(res), 60);
+      mabiGacha(from, group, createCallback(res), 60, undefined, true);
     } else if (content === '洛奇来十单') {
       // 洛奇抽卡十单
-      mabiGacha(from, group, createCallback(res), 600);
+      mabiGacha(from, group, createCallback(res), 600, undefined, true);
     } else if (content.startsWith('洛奇蛋池')) {
       // 选择洛奇抽卡池
-      selectGachaGroup(from, group, createCallback(res), content.substring(4).trim());
+      selectGachaGroup(from, group, createCallback(res), content.substring(4).trim(), true);
     } else if (content.toUpperCase().startsWith('TC公告')) {
       // 获取洛奇TC公告
       tcArticle(content.substring(4), createCallback(res));
