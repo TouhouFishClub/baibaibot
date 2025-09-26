@@ -58,24 +58,6 @@ function getMaterialSource(materialName) {
     loadMaterialSources();
   }
   
-  // 首先检查材料名称是否在Item.js中存在
-  if (typeof global !== 'undefined' && global.eval) {
-    // Node.js环境下验证材料是否存在
-    try {
-      const fs = require('fs');
-      const path = require('path');
-      const itemJsPath = path.join(__dirname, '..', 'js', 'Item.js');
-      const itemContent = fs.readFileSync(itemJsPath, 'utf-8');
-      
-      if (!itemContent.includes(`"${materialName}"`)) {
-        console.warn(`警告: 材料 "${materialName}" 在Item.js中不存在，这可能是非法添加`);
-        return '？';
-      }
-    } catch (e) {
-      // 如果验证失败，继续执行
-    }
-  }
-  
   return materialSourcesMap.get(materialName) || '？';
 }
 
