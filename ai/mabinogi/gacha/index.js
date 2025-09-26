@@ -68,7 +68,7 @@ const checkWriteList = (user, groupId, isApiCall = false) => {
 	if (isApiCall) {
 		return true
 	}
-	return user == 799018865 || groupWhiteList.has(groupId)
+	return user == '799018865' || groupWhiteList.has(groupId)
 }
 
 const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup, isApiCall = false) => {
