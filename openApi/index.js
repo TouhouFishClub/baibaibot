@@ -18,6 +18,7 @@ const { mabiGacha, selectGachaGroup } = require('../ai/mabinogi/gacha/index');
 const { tcArticle } = require('../ai/mabinogi/newArticle');
 const rua = require('../ai/mabinogi/ruawork')
 const { jrrp } = require('../ai/rp_new')
+const { mabiWeather } = require('../ai/mabinogi/weather')
 
 
 /**
@@ -104,6 +105,8 @@ router.get('/', (req, res) => {
           '- TC公告xxx：获取洛奇TC公告',
           '- jrrp/今日运势：查询今日人品值',
           '- ruawork/茹娅上班：查询茹娅工作状态',
+          '- 今日专家/今日专家地下城：查询今日专家地下城',
+          '- 洛奇火山天气：查询洛奇火山天气信息',
           '- 关键词|内容：保存关键词和对应内容(问答模块)',
           '- 关键词|：删除关键词对应内容(问答模块)',
           '- 关键词：查询关键词对应内容(问答模块，无结果时会尝试计算器功能)',
@@ -441,6 +444,14 @@ router.get('/uni', (req, res) => {
       rua(createCallback(res))
     } else if(content.toLowerCase() === 'jrrp' || content === '今日运势'){
 			jrrp(from, group, 'channel', createCallback(res), '', {nid: name})
+    } else if (content === '今日专家' || content === '今日专家地下城') {
+      // 今日专家地下城功能
+      let index = ~~((new Date().getTime()+28800000 - 25200000)/60/60/24/1000)%9
+      const result = `今天的专家地下城是${['皮卡','伊比','赛尔','拉比','玛斯','菲奥娜','巴里','克里尔','伦达'][index]}地下城`
+      createCallback(res)(result)
+    } else if (content === '洛奇火山天气') {
+      // 洛奇火山天气功能
+      mabiWeather(content, createCallback(res))
     } else if (content.startsWith('日历设置')) {
       // 日历设置功能
       calendar(content.substring(4), from, group, createCallback(res));
