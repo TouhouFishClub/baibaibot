@@ -16,6 +16,9 @@ const { cal } = require('../ai/calculator');
 const { menu } = require('../ai/menu');
 const { mabiGacha, selectGachaGroup } = require('../ai/mabinogi/gacha/index');
 const { tcArticle } = require('../ai/mabinogi/newArticle');
+const rua = require('../ai/mabinogi/ruawork')
+const { jrrp } = require('../ai/rp_new')
+
 
 /**
  * 转换本地图片为Base64
@@ -99,6 +102,8 @@ router.get('/', (req, res) => {
           '- 洛奇来十单：洛奇抽卡十单(600次)',
           '- 洛奇蛋池xxx：选择洛奇抽卡池',
           '- TC公告xxx：获取洛奇TC公告',
+          '- jrrp/今日运势：查询今日人品值',
+          '- ruawork/茹娅上班：查询茹娅工作状态',
           '- 关键词|内容：保存关键词和对应内容(问答模块)',
           '- 关键词|：删除关键词对应内容(问答模块)',
           '- 关键词：查询关键词对应内容(问答模块，无结果时会尝试计算器功能)',
@@ -432,6 +437,10 @@ router.get('/uni', (req, res) => {
     if (content.toLowerCase() === 'bosswork' || content.toLowerCase() === 'boss' || content.startsWith('boss工作表')) {
       // BOSS工作表
       BossWork(from, group, createCallback(res));
+    } else if(content.toLowerCase() === 'ruawork' || (content.indexOf('茹娅') + 1 && content.indexOf('上班') + 1)){
+      rua(createCallback(res))
+    } else if(content.toLowerCase() === 'jrrp' || content === '今日运势'){
+			jrrp(from, group, 'channel', createCallback(res), '', {nid: name})
     } else if (content.startsWith('日历设置')) {
       // 日历设置功能
       calendar(content.substring(4), from, group, createCallback(res));
