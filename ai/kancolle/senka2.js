@@ -2192,7 +2192,7 @@ function searchShip(name,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-桂','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-桂','','',function(r){console.log(r)})
   //handleSenkaReply('z8','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getRank(1,[]);
