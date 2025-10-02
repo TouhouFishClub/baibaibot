@@ -945,7 +945,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
         var m = {};
         arr.sort(function(a,b){return b.dd-a.dd});
         var mx = {};
-        for(var i=0;i<.length;i++){
+        for(var i=0;i<arr.length;i++){
           var name = arr[i].n;
           var ttn = parseInt(arr[i]._id.split('_')[0]);
           if(mx[ttn]){
