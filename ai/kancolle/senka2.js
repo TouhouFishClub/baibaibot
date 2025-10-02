@@ -945,7 +945,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
         var m = {};
         arr.sort(function(a,b){return b.dd-a.dd});
         var mx = {};
-        for(var i=0;i<arr.length;i++){
+        for(var i=0;i<.length;i++){
           var name = arr[i].n;
           var ttn = parseInt(arr[i]._id.split('_')[0]);
           if(mx[ttn]){
@@ -978,6 +978,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
           var lstrk = ranklist[ranklist.length-1];
           var rkcmt = lstrk.cmt;
           var skq;
+          if(namelist[0]=='アキラ'){uidd=754677}
           if(uidd){
             skq = {'_id':uidd};
           }else{
