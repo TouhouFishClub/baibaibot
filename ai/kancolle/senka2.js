@@ -1392,7 +1392,12 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   }else if(rkcmt!=''&&b.cmt==rkcmt){
                     return 1;
                   }else{
-                    return b.ts-a.ts;
+                      if(Math.abs(b.ts-a.ts)<3600000){
+                            return b.e-a.e
+                      }else{
+                            return b.ts-a.ts
+                      }
+                    //return b.ts-a.ts;
                   }
                 })
                 rke = rkea[0];
