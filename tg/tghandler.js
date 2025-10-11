@@ -97,7 +97,11 @@ bot.on('message', (msg) => {
       .catch(err => console.error('发送消息失败:', err.message));
   } else if (chatType === 'group' || chatType === 'supergroup') {
     const { handle_msg_D2 } = require('../baibai2');
-    handle_msg_D2(messageText, userName, userName, userName,rmsg => {
+    var groupid=userName
+    if(chatTitle=='拉包尔钻石VIP会员群'){
+      groupid=835339290;
+    }
+    handle_msg_D2(messageText, userName, userName, groupid,rmsg => {
       console.log('tg send:'+rmsg);
       var rra = parseCQMessage(rmsg);
       for(var i=0;i<rra.length;i++){
@@ -110,7 +114,7 @@ bot.on('message', (msg) => {
             .catch(err => console.error('群聊回复失败:', err.message));
         }
       }
-    }, userName, userName, 'group', 19334, {} )
+    }, chatTitle, userName, 'group', 19334, {} )
 
     // 群聊：也正常回复（不需要@）
 
