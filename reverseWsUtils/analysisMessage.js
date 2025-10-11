@@ -157,7 +157,7 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
           var user_id = context.user_id;
           var user_name = context.sender.nickname;
           var botid = context.self_id;
-          var msg = context.raw_message;
+          var raw_message = context.raw_message;
 
 
           const { handle_msg_D2 } = require('../baibai2');
