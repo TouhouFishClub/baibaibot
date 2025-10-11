@@ -23,7 +23,7 @@ const {
 const {setPushWs,pushToGroup} = require('./ai/push');
 // 导入openApi路由
 const openApiRouter = require('./openApi/index');
-
+require('./tg/tghandler');
 
 const ports = new Set([
 	// 23334,
