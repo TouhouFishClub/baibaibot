@@ -87,7 +87,7 @@ bot.on('message', (msg) => {
     const { handle_msg_D2 } = require('../baibai2');
     handle_msg_D2(messageText, userName, userName, userName,rmsg => {
       console.log('tg send:'+rmsg);
-      bot.sendMessage(chatId, rmsg);
+      bot.sendMessage(chatId, rmsg)
         .catch(err => console.error('群聊回复失败:', err.message));
     }, userName, userName, 'group', 19334, {} )
 
