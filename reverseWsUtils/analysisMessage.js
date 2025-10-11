@@ -152,6 +152,10 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
       case 'message':
         // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
         // 暂时只处理群信息
+        if(context.message_type === 'private') {
+          console.log(context);
+
+        }else
         if(context.message_type === 'group') {
           // mixinInfos(context, ws)
           var groupid = context.group_id;
