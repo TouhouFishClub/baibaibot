@@ -212,6 +212,13 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
               return
             }
           }
+          if(bot_name==25334){
+            if((groupid+"").startsWith("20570")||(groupid+"").startsWith("22169")){
+
+            }else{
+              return
+            }
+          }
 
           // 获取群信息，添加错误处理
           let group_info = null
