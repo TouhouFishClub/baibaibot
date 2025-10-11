@@ -202,7 +202,7 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
             }
             //saveChat(group_id, 10000, `百百${port}`, msg, port);
             ws.send(JSON.stringify(sendBody));
-          }, user_name, user_name, context.message_type, port || 30015, context )
+          }, user_name, user_name, context.message_type, bot_name, context )
         }else
         if(context.message_type === 'group') {
           // mixinInfos(context, ws)
