@@ -161,7 +161,7 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
 
 
           const { handle_msg_D2 } = require('../baibai2');
-          handle_msg_D2(raw_message, user_name, user_id, msg => {
+          handle_msg_D2(raw_message, user_id, user_name, user_id, msg => {
             if(!msg) {
               return
             }
