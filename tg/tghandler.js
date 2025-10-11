@@ -2,7 +2,7 @@
 
 const TelegramBot = require('node-telegram-bot-api');
 const { HttpsProxyAgent } = require('https-proxy-agent');
-
+const fs = require('fs');
 // ========== 配置区域 ==========
 const TOKEN = '7728677679:AAG4laTaQ4VbskLICECnB_i_bXAKyFu1Mow';
 
@@ -58,6 +58,18 @@ bot.getMe()
     process.exit(1);
   });
 
+
+function parseCQMessage(msg) {
+  const result = [];
+  const regex = /\[CQ:image,file=([^\]]+)\]|([^\[]+)/g;
+  let match;
+
+  while ((match = regex.exec(msg))) {
+    result.push(match[1] || match[2]);
+  }
+  return result;
+}
+
 // ========== 1. 基本消息接收和发送（支持私聊和群聊）==========
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
@@ -87,8 +99,17 @@ bot.on('message', (msg) => {
     const { handle_msg_D2 } = require('../baibai2');
     handle_msg_D2(messageText, userName, userName, userName,rmsg => {
       console.log('tg send:'+rmsg);
-      bot.sendMessage(chatId, rmsg)
-        .catch(err => console.error('群聊回复失败:', err.message));
+      var rra = parseCQMessage(rmsg);
+      for(var i=0;i<rra.length;i++){
+        var rd = rra[i];
+        if(rd.startsWith('send/')){
+          //如果要发送本地图片:
+          bot.sendPhoto(chatId, fs.createReadStream('/home/flan/baibai/coolq-data/cq/data/image/'+rd));
+        }else{
+          bot.sendMessage(chatId, rmsg)
+            .catch(err => console.error('群聊回复失败:', err.message));
+        }
+      }
     }, userName, userName, 'group', 19334, {} )
 
     // 群聊：也正常回复（不需要@）
