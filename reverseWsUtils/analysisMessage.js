@@ -155,6 +155,9 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
         if(context.message_type === 'private') {
           console.log(context);
           var user_id = context.user_id;
+          if(!(user_id+"").startsWith("35747")){
+            return
+          }
           var user_name = context.sender.nickname;
           var botid = context.self_id;
           var raw_message = context.raw_message;
@@ -216,7 +219,7 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
             if((groupid+"").startsWith("20570")||(groupid+"").startsWith("22169")){
 
             }else{
-              return
+              //return
             }
           }
 
