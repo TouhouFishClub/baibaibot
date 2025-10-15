@@ -978,6 +978,7 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
           var lstrk = ranklist[ranklist.length-1];
           var rkcmt = lstrk.cmt;
           var skq;
+          if(namelist[0]=='アキラ'){uidd=754677}
           if(uidd){
             skq = {'_id':uidd};
           }else{
@@ -1391,7 +1392,12 @@ function handleSenkaReply_1(content,gid,qq,callback,uidd){
                   }else if(rkcmt!=''&&b.cmt==rkcmt){
                     return 1;
                   }else{
-                    return b.ts-a.ts;
+                      if(Math.abs(b.ts-a.ts)<3600000){
+                            return b.e-a.e
+                      }else{
+                            return b.ts-a.ts
+                      }
+                    //return b.ts-a.ts;
                   }
                 })
                 rke = rkea[0];
@@ -2191,7 +2197,7 @@ function searchShip(name,callback){
 
 
 setTimeout(function(){
-  handleSenkaReply('z8-桂','','',function(r){console.log(r)})
+  //handleSenkaReply('z8-桂','','',function(r){console.log(r)})
   //handleSenkaReply('z8','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getRank(1,[]);

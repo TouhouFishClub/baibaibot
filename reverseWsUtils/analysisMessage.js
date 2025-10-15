@@ -152,12 +152,74 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
       case 'message':
         // console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
         // 暂时只处理群信息
+        if(context.message_type === 'private') {
+          console.log(context);
+          var user_id = context.user_id;
+          if(!(user_id+"").startsWith("35747")){
+            return
+          }
+          var user_name = context.sender.nickname;
+          var botid = context.self_id;
+          var raw_message = context.raw_message;
+
+
+          const { handle_msg_D2 } = require('../baibai2');
+          handle_msg_D2(raw_message, user_id, user_name, user_id, msg => {
+            if(!msg) {
+              return
+            }
+            msg = msg
+              .replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+              .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+              .replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+
+            // console.log(`===\nwill send\n${msg}\n===`)
+            console.log(`[ws private send][${user_name}(${user_id})]${msg}`)
+            let message = msg
+            if(msg.indexOf('[CQ:image,file') > -1){
+              message = replaceImageToBase64(msg)
+              // console.log(`检测到图片，转化为以下格式：\n${message}`)
+            }
+            if(msg.indexOf('[CQ:record,file') > -1){
+              message = replaceRecordToBase64(msg)
+            }
+            let sendBody
+            if(oneBotVersion === 12) {
+              sendBody = {
+                "action": "send_message",
+                "params": {
+                  "detail_type": "private",
+                  "user_id": user_id,
+                  "message": message
+                }
+              }
+            } else {
+              sendBody = {
+                "action": "send_msg",
+                "params": {
+                  "message_type": "private",
+                  "user_id": user_id,
+                  "message": message
+                }
+              }
+            }
+            //saveChat(group_id, 10000, `百百${port}`, msg, port);
+            ws.send(JSON.stringify(sendBody));
+          }, user_name, user_name, context.message_type, bot_name, context )
+        }else
         if(context.message_type === 'group') {
           // mixinInfos(context, ws)
           var groupid = context.group_id;
           if((groupid+"").startsWith("20570")){
             if(bot_name!=25334){
               return
+            }
+          }
+          if(bot_name==25334){
+            if((groupid+"").startsWith("20570")||(groupid+"").startsWith("22169")){
+
+            }else{
+              //return
             }
           }
 

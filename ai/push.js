@@ -103,9 +103,14 @@ function pushToGroup(type) {
           var mssg = replaceImageToBase64(res)
           var sendBody = {
             "action": "send_msg",
+            // "params": {
+            //   "message_type": "group",
+            //   "group_id": groupid,
+            //   "message": mssg
+            // }
             "params": {
-              "message_type": "group",
-              "group_id": groupid,
+              "message_type": "private",
+              "user_id": 357474405,
               "message": mssg
             }
           }
