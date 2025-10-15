@@ -55,6 +55,10 @@ banana create a beautiful landscape painting
 
 ### 基于参考图片生成
 
+支持两种方式提供参考图片：
+
+#### 1. 通过图片URL
+
 ```
 banana [提示词] [图片URL]
 ```
@@ -63,6 +67,18 @@ banana [提示词] [图片URL]
 ```
 banana 把这张图片变成动漫风格 https://example.com/image.jpg
 banana 改变颜色为蓝色调 https://example.com/photo.png
+```
+
+#### 2. 直接发送图片
+
+```
+banana [提示词] [发送图片]
+```
+
+在聊天中直接发送图片，系统会自动识别CQ码格式的图片：
+```
+banana 动漫风格 [发送一张图片]
+banana 转换成油画效果 [发送一张图片]
 ```
 
 ### 获取帮助

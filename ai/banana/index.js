@@ -158,9 +158,8 @@ function parseUserInput(content) {
   // 移除"banana"前缀
   let input = content.replace(/^banana\s*/i, '').trim();
 
-  console.log('==== content ====')
-  console.log(content)
-  console.log('==== content end ====')
+  // 调试日志（可选）
+  // console.log('解析输入:', content)
   
   if (!input) {
     return {
@@ -168,17 +167,42 @@ function parseUserInput(content) {
     };
   }
 
-  // 检查是否包含图片URL
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  const urls = input.match(urlRegex);
-  
   let prompt = input;
   let imgUrl = null;
 
-  if (urls && urls.length > 0) {
-    // 移除URL，剩余部分作为提示词
-    prompt = input.replace(urlRegex, '').trim();
-    imgUrl = urls; // 可以支持多个URL
+  // 检查是否包含CQ图片码
+  const cqImageRegex = /\[CQ:image[^\]]*url=([^,\]]+)[^\]]*\]/g;
+  const cqMatches = input.match(cqImageRegex);
+  
+  if (cqMatches && cqMatches.length > 0) {
+    // 提取CQ码中的URL
+    const urls = [];
+    cqMatches.forEach(cqCode => {
+      const urlMatch = cqCode.match(/url=([^,\]]+)/);
+      if (urlMatch && urlMatch[1]) {
+        // 对URL进行反转义处理
+        let url = urlMatch[1];
+        url = url.replace(/&amp;/g, '&');
+        url = url.replace(/&#44;/g, ',');
+        urls.push(url);
+      }
+    });
+    
+    if (urls.length > 0) {
+      imgUrl = urls;
+      // 移除CQ码，剩余部分作为提示词
+      prompt = input.replace(cqImageRegex, '').trim();
+    }
+  } else {
+    // 检查是否包含普通的图片URL
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urls = input.match(urlRegex);
+    
+    if (urls && urls.length > 0) {
+      // 移除URL，剩余部分作为提示词
+      prompt = input.replace(urlRegex, '').trim();
+      imgUrl = urls;
+    }
   }
 
   if (!prompt) {
@@ -186,6 +210,9 @@ function parseUserInput(content) {
       error: '请提供有效的图片生成提示词'
     };
   }
+
+  // 调试日志（可选）
+  // console.log('解析结果 - 提示词:', prompt, '图片URL:', imgUrl)
 
   return {
     prompt: prompt,
@@ -230,13 +257,16 @@ function getNanoBananaHelp(callback) {
 用法：
 banana [提示词] - 根据提示词生成图片
 banana [提示词] [图片URL] - 基于参考图片和提示词生成图片
+banana [提示词] [发送图片] - 基于发送的图片和提示词生成图片
 
 示例：
 banana 一只可爱的小猫咪
 banana 美丽的风景画 https://example.com/image.jpg
+banana 动漫风格 [发送一张图片]
 
 注意：
 - 提示词建议使用中文或英文
+- 支持直接发送图片或提供图片URL链接
 - 图片URL需要是公网可访问的链接
 - 生成过程需要一些时间，请耐心等待
 
