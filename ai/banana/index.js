@@ -67,33 +67,30 @@ function callNanoBananaAPI(prompt, imgUrl, callback) {
         const response = JSON.parse(data);
         
         if (response.code === 200 && response.data && response.data.id) {
-          console.log('API响应成功:', response);
+          console.log('图片生成API响应成功:', response);
           
-          // 尝试多个可能的图片URL格式
-          const possibleUrls = [
-            `https://api.wuyinkeji.com/api/img/get/${response.data.id}`,
-            `https://api.wuyinkeji.com/img/${response.data.id}`,
-            `https://api.wuyinkeji.com/api/img/${response.data.id}`,
-          ];
-          
-          // 如果响应中直接包含图片URL，优先使用
-          if (response.data.url) {
-            possibleUrls.unshift(response.data.url);
-          }
-          
-          console.log(`尝试下载图片，可能的URL:`, possibleUrls);
-          
-          // 尝试下载图片
-          tryDownloadImage(possibleUrls, response.data.id, 0, (localPath, error) => {
-            if (localPath) {
-              callback(`[CQ:image,file=${localPath}]`);
+          // 使用图片详情查询接口获取真正的图片URL
+          getImageDetail(response.data.id, (imageUrl, error) => {
+            if (imageUrl) {
+              console.log(`获取到图片URL: ${imageUrl}`);
+              // 下载图片到本地
+              downloadImage(imageUrl, response.data.id, (localPath, downloadError) => {
+                if (localPath) {
+                  callback(`[CQ:image,file=${localPath}]`);
+                } else {
+                  let errorMsg = `图片生成成功，但下载失败。图片ID: ${response.data.id}`;
+                  if (downloadError) {
+                    errorMsg += `\n下载错误: ${downloadError}`;
+                  }
+                  errorMsg += `\n图片URL: ${imageUrl}`;
+                  callback(errorMsg);
+                }
+              });
             } else {
-              // 提供更详细的错误信息和备用方案
-              let errorMsg = `图片生成成功，但下载失败。图片ID: ${response.data.id}`;
+              let errorMsg = `图片生成成功，但获取图片URL失败。图片ID: ${response.data.id}`;
               if (error) {
                 errorMsg += `\n错误详情: ${error}`;
               }
-              errorMsg += `\n尝试的链接: ${possibleUrls.join(', ')}`;
               callback(errorMsg);
             }
           });
@@ -117,31 +114,82 @@ function callNanoBananaAPI(prompt, imgUrl, callback) {
 }
 
 /**
- * 尝试从多个URL下载图片
- * @param {Array} urls - 图片URL数组
+ * 获取图片详情，包含真正的图片下载URL
  * @param {string} imageId - 图片ID
- * @param {number} index - 当前尝试的URL索引
- * @param {Function} callback - 回调函数
+ * @param {Function} callback - 回调函数 (imageUrl, error)
  */
-function tryDownloadImage(urls, imageId, index, callback) {
-  if (index >= urls.length) {
-    callback(null, '所有URL都尝试失败');
+function getImageDetail(imageId, callback) {
+  if (!API_KEY) {
+    callback(null, '未配置API密钥');
     return;
   }
-  
-  const currentUrl = urls[index];
-  console.log(`尝试URL ${index + 1}/${urls.length}: ${currentUrl}`);
-  
-  downloadImage(currentUrl, imageId, (localPath, error) => {
-    if (localPath) {
-      callback(localPath);
-    } else {
-      console.log(`URL ${index + 1} 失败: ${error}`);
-      // 尝试下一个URL
-      tryDownloadImage(urls, imageId, index + 1, callback);
+
+  const detailUrl = `https://api.wuyinkeji.com/api/img/drawDetail?id=${imageId}`;
+  console.log(`查询图片详情: ${detailUrl}`);
+
+  const options = {
+    hostname: 'api.wuyinkeji.com',
+    port: 443,
+    path: `/api/img/drawDetail?id=${imageId}`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': API_KEY
     }
+  };
+
+  const req = https.request(options, (res) => {
+    let data = '';
+
+    res.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    res.on('end', () => {
+      try {
+        const response = JSON.parse(data);
+        console.log('图片详情API响应:', response);
+        
+        if (response.code === 200 && response.data) {
+          // 检查图片状态
+          if (response.data.status === 2 && response.data.image_url) {
+            // 状态2表示成功，返回图片URL
+            callback(response.data.image_url);
+          } else if (response.data.status === 0 || response.data.status === 1) {
+            // 状态0:排队中，状态1:生成中，需要等待
+            console.log(`图片还在处理中，状态: ${response.data.status}`);
+            setTimeout(() => {
+              getImageDetail(imageId, callback);
+            }, 2000); // 2秒后重试
+          } else if (response.data.status === 3) {
+            // 状态3表示失败
+            callback(null, '图片生成失败');
+          } else {
+            callback(null, `未知状态: ${response.data.status}`);
+          }
+        } else {
+          callback(null, `获取图片详情失败: ${response.msg || '未知错误'}`);
+        }
+      } catch (error) {
+        console.error('解析图片详情响应失败:', error);
+        callback(null, `解析响应失败: ${error.message}`);
+      }
+    });
   });
+
+  req.on('error', (error) => {
+    console.error('图片详情请求失败:', error);
+    callback(null, `网络请求失败: ${error.message}`);
+  });
+
+  req.setTimeout(10000, () => {
+    req.destroy();
+    callback(null, '请求超时');
+  });
+
+  req.end();
 }
+
 
 /**
  * 下载图片到本地
@@ -171,11 +219,10 @@ function downloadImage(imageUrl, imageId, callback) {
 
   const protocol = imageUrl.startsWith('https:') ? https : http;
   
-  // 构建请求选项，包含可能需要的认证头
+  // 构建请求选项
   const options = {
     headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      'Authorization': API_KEY // 尝试使用API密钥
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     }
   };
   
