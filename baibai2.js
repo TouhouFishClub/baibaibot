@@ -172,6 +172,7 @@ const {mabiWeather} = require('./ai/mabinogi/weather')
 const {tcArticle} = require('./ai/mabinogi/newArticle')
 const {LiveInspect, LiveAnalyzer} = require('./ai/mabinogi/live-inspect')
 const {chujue} = require('./ai/image/generator/chujue/index.js')
+const {nanoBananaReply, getNanoBananaHelp} = require('./ai/banana')
 
 // 导入deepseek模块
 // const {handleDeepSeekChat} = require('./ai/llm/deepseek')
@@ -1968,6 +1969,15 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       // callback(ret);
     }else{
       reply(c1,name,callback,groupid,from,groupName,nickname,port);
+    }
+    return;
+  }
+
+  if(content.toLowerCase().startsWith('banana')) {
+    if(content.toLowerCase().trim() === 'banana' || content.toLowerCase().trim() === 'banana help') {
+      getNanoBananaHelp(callback);
+    } else {
+      nanoBananaReply(content, from, name, groupid, callback);
     }
     return;
   }
