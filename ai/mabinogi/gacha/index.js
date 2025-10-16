@@ -73,7 +73,7 @@ const checkWriteList = (user, groupId, isApiCall = false) => {
 
 const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup, isApiCall = false) => {
 	if(!checkWriteList(user, groupId, isApiCall)) {
-		callback('抱歉，此功能仅限特定群组使用')
+		// callback('抱歉，此功能仅限特定群组使用')
 		return
 	}
 	if(!gachaInfo.length) {
@@ -191,7 +191,7 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup, i
 
 const selectGachaGroup = async (user, groupId, callback, select, isApiCall = false) => {
 	if(!checkWriteList(user, groupId, isApiCall)) {
-		callback('抱歉，此功能仅限特定群组使用')
+		// callback('抱歉，此功能仅限特定群组使用')
 		return
 	}
 	if(!gachaInfo.length) {
