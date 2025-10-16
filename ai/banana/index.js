@@ -370,6 +370,36 @@ function parseUserInput(content) {
 }
 
 /**
+ * 检查用户是否有权限使用NanoBanana功能
+ * @param {string} from - 用户ID
+ * @param {string} groupid - 群组ID
+ * @returns {boolean} 是否有权限
+ */
+function checkPermission(from, groupid) {
+  // 白名单群组
+  const allowedGroups = [577587780];
+  
+  // 白名单用户
+  const allowedUsers = [799018865, 2408709050];
+  
+  // 转换为数字进行比较
+  const fromId = parseInt(from);
+  const groupId = parseInt(groupid);
+  
+  // 检查是否在白名单群组中
+  if (allowedGroups.includes(groupId)) {
+    return true;
+  }
+  
+  // 检查是否是白名单用户
+  if (allowedUsers.includes(fromId)) {
+    return true;
+  }
+  
+  return false;
+}
+
+/**
  * NanoBanana主处理函数
  * @param {string} content - 用户输入内容
  * @param {string} from - 用户ID
@@ -379,6 +409,12 @@ function parseUserInput(content) {
  */
 function nanoBananaReply(content, from, name, groupid, callback) {
   console.log(`NanoBanana请求 - 用户: ${name}(${from}), 群组: ${groupid}, 内容: ${content}`);
+  
+  // 检查权限
+  if (!checkPermission(from, groupid)) {
+    callback('抱歉，您暂无权限使用NanoBanana图片生成功能。');
+    return;
+  }
   
   const parseResult = parseUserInput(content);
   
@@ -399,9 +435,11 @@ function nanoBananaReply(content, from, name, groupid, callback) {
 /**
  * 获取帮助信息
  * @param {Function} callback - 回调函数
+ * @param {string} from - 用户ID（可选，用于权限检查）
+ * @param {string} groupid - 群组ID（可选，用于权限检查）
  */
-function getNanoBananaHelp(callback) {
-  const helpText = `🍌 NanoBanana AI图片生成帮助
+function getNanoBananaHelp(callback, from = null, groupid = null) {
+  let helpText = `🍌 NanoBanana AI图片生成帮助
 
 用法：
 banana [提示词] - 根据提示词生成图片
@@ -417,7 +455,28 @@ banana 动漫风格 [发送一张图片]
 - 提示词建议使用中文或英文
 - 支持直接发送图片或提供图片URL链接
 - 图片URL需要是公网可访问的链接
-- 生成过程需要一些时间，请耐心等待
+- 生成过程需要一些时间，请耐心等待`;
+
+  // 如果提供了用户信息，检查权限并添加相应说明
+  if (from !== null && groupid !== null) {
+    if (checkPermission(from, groupid)) {
+      helpText += `
+
+✅ 权限状态：您有权限使用此功能`;
+    } else {
+      helpText += `
+
+❌ 权限状态：您暂无权限使用此功能
+此功能仅限特定群组和用户使用`;
+    }
+  } else {
+    helpText += `
+
+权限说明：
+此功能仅限特定群组和用户使用`;
+  }
+
+  helpText += `
 
 配置：
 请在 ai/banana/.secret.json 中配置API密钥`;

@@ -1975,7 +1975,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(content.toLowerCase().startsWith('banana')) {
     if(content.toLowerCase().trim() === 'banana' || content.toLowerCase().trim() === 'banana help') {
-      getNanoBananaHelp(callback);
+      getNanoBananaHelp(callback, from, groupid);
     } else {
       nanoBananaReply(content, from, name, groupid, callback);
     }
