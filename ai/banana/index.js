@@ -326,13 +326,20 @@ function parseUserInput(content) {
   
   if (replyMatch && replyMatch[1]) {
     replyMessageId = replyMatch[1];
-    // 移除 reply 和 at CQ码，只保留 banana 命令和提示词
-    input = content
-      .replace(replyRegex, '')  // 移除 reply CQ码
-      .replace(/\[CQ:at[^\]]*\]/g, '')  // 移除 at CQ码
-      .trim();
-    
     console.log(`检测到回复消息，消息ID: ${replyMessageId}`);
+    
+    // 在回复模式下，找到 banana 关键词的位置
+    const bananaIndex = content.toLowerCase().indexOf('banana');
+    if (bananaIndex !== -1) {
+      // 只保留 banana 及其后面的内容，忽略前面所有内容（包括 CQ码、@等）
+      input = content.substring(bananaIndex);
+    } else {
+      // 如果没有找到 banana（理论上不应该发生），保留原有逻辑
+      input = content
+        .replace(replyRegex, '')
+        .replace(/\[CQ:at[^\]]*\]/g, '')
+        .trim();
+    }
   }
 
   // 移除"banana"前缀
