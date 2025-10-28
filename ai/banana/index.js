@@ -417,7 +417,8 @@ function parseUserInput(content) {
 async function getMessageDetail(messageId, botName) {
   try {
     // 动态导入 createAction 以避免循环依赖
-    const { createAction } = require('../reverseWsUtils/manager/actionManager');
+    // 路径: ai/banana/index.js -> reverseWsUtils/manager/actionManager.js
+    const { createAction } = require('../../reverseWsUtils/manager/actionManager');
     
     console.log(`正在获取消息详情，消息ID: ${messageId}, bot: ${botName}`);
     
