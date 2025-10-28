@@ -26,15 +26,14 @@ try {
 const API_URL = 'https://api.wuyinkeji.com/api/img/nanoBanana';
 
 /**
- * 调用NanoBanana API生成图片
+ * 调用NanoBanana API生成图片（Promise版本）
  * @param {string} prompt - 生成图片的提示词
  * @param {string|Array} imgUrl - 参考图片URL（可选）
- * @param {Function} callback - 回调函数
+ * @returns {Promise<string>} 返回Promise，resolve时传递图片路径
  */
-function callNanoBananaAPI(prompt, imgUrl, callback) {
+async function callNanoBananaAPI(prompt, imgUrl) {
   if (!API_KEY) {
-    callback('错误：未配置NanoBanana API密钥，请在ai/banana/.secret.json中添加配置');
-    return;
+    throw new Error('错误：未配置NanoBanana API密钥，请在ai/banana/.secret.json中添加配置');
   }
 
   const postData = JSON.stringify({
@@ -55,73 +54,70 @@ function callNanoBananaAPI(prompt, imgUrl, callback) {
     }
   };
 
-  const req = https.request(options, (res) => {
-    let data = '';
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+      let data = '';
 
-    res.on('data', (chunk) => {
-      data += chunk;
-    });
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
 
-    res.on('end', () => {
-      try {
-        const response = JSON.parse(data);
-        
-        if (response.code === 200 && response.data && response.data.id) {
-          console.log('图片生成API响应成功:', response);
+      res.on('end', async () => {
+        try {
+          const response = JSON.parse(data);
           
-          // 使用图片详情查询接口获取真正的图片URL
-          getImageDetail(response.data.id, (imageUrl, error) => {
-            if (imageUrl) {
+          if (response.code === 200 && response.data && response.data.id) {
+            console.log('图片生成API响应成功:', response);
+            
+            // 使用图片详情查询接口获取真正的图片URL
+            try {
+              const imageUrl = await getImageDetail(response.data.id);
               console.log(`获取到图片URL: ${imageUrl}`);
+              
               // 下载图片到本地
-              downloadImage(imageUrl, response.data.id, (localPath, downloadError) => {
-                if (localPath) {
-                  callback(`[CQ:image,file=${localPath}]`);
-                } else {
-                  let errorMsg = `图片生成成功，但下载失败。图片ID: ${response.data.id}`;
-                  if (downloadError) {
-                    errorMsg += `\n下载错误: ${downloadError}`;
-                  }
-                  errorMsg += `\n图片URL: ${imageUrl}`;
-                  callback(errorMsg);
-                }
-              });
-            } else {
-              let errorMsg = `图片生成成功，但获取图片URL失败。图片ID: ${response.data.id}`;
-              if (error) {
-                errorMsg += `\n错误详情: ${error}`;
+              try {
+                const localPath = await downloadImage(imageUrl, response.data.id);
+                resolve(`[CQ:image,file=${localPath}]`);
+              } catch (downloadError) {
+                let errorMsg = `图片生成成功，但下载失败。图片ID: ${response.data.id}`;
+                errorMsg += `\n下载错误: ${downloadError}`;
+                errorMsg += `\n图片URL: ${imageUrl}`;
+                reject(new Error(errorMsg));
               }
-              callback(errorMsg);
+            } catch (error) {
+              let errorMsg = `图片生成成功，但获取图片URL失败。图片ID: ${response.data.id}`;
+              errorMsg += `\n错误详情: ${error.message}`;
+              reject(new Error(errorMsg));
             }
-          });
-        } else {
-          callback(`API调用失败: ${response.msg || '未知错误'}`);
+          } else {
+            reject(new Error(`API调用失败: ${response.msg || '未知错误'}`));
+          }
+        } catch (error) {
+          console.error('解析API响应失败:', error);
+          reject(new Error('API响应解析失败，请稍后重试'));
         }
-      } catch (error) {
-        console.error('解析API响应失败:', error);
-        callback('API响应解析失败，请稍后重试');
-      }
+      });
     });
-  });
 
-  req.on('error', (error) => {
-    console.error('API请求失败:', error);
-    callback('网络请求失败，请稍后重试');
-  });
+    req.on('error', (error) => {
+      console.error('API请求失败:', error);
+      reject(new Error('网络请求失败，请稍后重试'));
+    });
 
-  req.write(postData);
-  req.end();
+    req.write(postData);
+    req.end();
+  });
 }
 
 /**
- * 获取图片详情，包含真正的图片下载URL
+ * 获取图片详情，包含真正的图片下载URL（Promise版本）
  * @param {string} imageId - 图片ID
- * @param {Function} callback - 回调函数 (imageUrl, error)
+ * @param {number} maxRetries - 最大重试次数，默认30次（60秒）
+ * @returns {Promise<string>} 返回Promise，resolve时传递图片URL
  */
-function getImageDetail(imageId, callback) {
+async function getImageDetail(imageId, maxRetries = 30) {
   if (!API_KEY) {
-    callback(null, '未配置API密钥');
-    return;
+    throw new Error('未配置API密钥');
   }
 
   const detailUrl = `https://api.wuyinkeji.com/api/img/drawDetail?id=${imageId}`;
@@ -138,66 +134,81 @@ function getImageDetail(imageId, callback) {
     }
   };
 
-  const req = https.request(options, (res) => {
-    let data = '';
+  // 使用循环和 Promise 替代递归回调
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const req = https.request(options, (res) => {
+          let data = '';
 
-    res.on('data', (chunk) => {
-      data += chunk;
-    });
+          res.on('data', (chunk) => {
+            data += chunk;
+          });
 
-    res.on('end', () => {
-      try {
-        const response = JSON.parse(data);
-        console.log('图片详情API响应:', response);
-        
-        if (response.code === 200 && response.data) {
-          // 检查图片状态
-          if (response.data.status === 2 && response.data.image_url) {
-            // 状态2表示成功，返回图片URL
-            callback(response.data.image_url);
-          } else if (response.data.status === 0 || response.data.status === 1) {
-            // 状态0:排队中，状态1:生成中，需要等待
-            console.log(`图片还在处理中，状态: ${response.data.status}`);
-            setTimeout(() => {
-              getImageDetail(imageId, callback);
-            }, 2000); // 2秒后重试
-          } else if (response.data.status === 3) {
-            // 状态3表示失败
-            callback(null, '图片生成失败');
-          } else {
-            callback(null, `未知状态: ${response.data.status}`);
-          }
+          res.on('end', () => {
+            try {
+              const response = JSON.parse(data);
+              resolve(response);
+            } catch (error) {
+              reject(new Error(`解析响应失败: ${error.message}`));
+            }
+          });
+        });
+
+        req.on('error', (error) => {
+          reject(new Error(`网络请求失败: ${error.message}`));
+        });
+
+        req.setTimeout(10000, () => {
+          req.destroy();
+          reject(new Error('请求超时'));
+        });
+
+        req.end();
+      });
+
+      console.log('图片详情API响应:', response);
+      
+      if (response.code === 200 && response.data) {
+        // 检查图片状态
+        if (response.data.status === 2 && response.data.image_url) {
+          // 状态2表示成功，返回图片URL
+          return response.data.image_url;
+        } else if (response.data.status === 0 || response.data.status === 1) {
+          // 状态0:排队中，状态1:生成中，需要等待
+          console.log(`图片还在处理中，状态: ${response.data.status}，等待2秒后重试 (${attempt + 1}/${maxRetries})`);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // 等待2秒
+          continue; // 继续下一次循环
+        } else if (response.data.status === 3) {
+          // 状态3表示失败
+          throw new Error('图片生成失败');
         } else {
-          callback(null, `获取图片详情失败: ${response.msg || '未知错误'}`);
+          throw new Error(`未知状态: ${response.data.status}`);
         }
-      } catch (error) {
-        console.error('解析图片详情响应失败:', error);
-        callback(null, `解析响应失败: ${error.message}`);
+      } else {
+        throw new Error(`获取图片详情失败: ${response.msg || '未知错误'}`);
       }
-    });
-  });
+    } catch (error) {
+      // 如果是最后一次尝试，抛出错误
+      if (attempt === maxRetries - 1) {
+        throw error;
+      }
+      // 否则继续重试
+      console.error('图片详情请求失败，重试中:', error.message);
+    }
+  }
 
-  req.on('error', (error) => {
-    console.error('图片详情请求失败:', error);
-    callback(null, `网络请求失败: ${error.message}`);
-  });
-
-  req.setTimeout(10000, () => {
-    req.destroy();
-    callback(null, '请求超时');
-  });
-
-  req.end();
+  throw new Error('获取图片详情超时，已达到最大重试次数');
 }
 
 
 /**
- * 下载图片到本地
+ * 下载图片到本地（Promise版本）
  * @param {string} imageUrl - 图片URL
  * @param {string} imageId - 图片ID
- * @param {Function} callback - 回调函数
+ * @returns {Promise<string>} 返回Promise，resolve时传递图片相对路径
  */
-function downloadImage(imageUrl, imageId, callback) {
+async function downloadImage(imageUrl, imageId) {
   const fileName = `nanoBanana_${imageId}_${Date.now()}.jpg`;
   const localPath = path.join(IMAGE_DATA, 'nanoBanana', fileName);
   const relativePath = path.join('send', 'nanoBanana', fileName);
@@ -212,8 +223,7 @@ function downloadImage(imageUrl, imageId, callback) {
       console.log(`创建目录成功: ${dir}`);
     } catch (error) {
       console.error('创建目录失败:', error);
-      callback(null, `创建目录失败: ${error.message}`);
-      return;
+      throw new Error(`创建目录失败: ${error.message}`);
     }
   }
 
@@ -226,75 +236,78 @@ function downloadImage(imageUrl, imageId, callback) {
     }
   };
   
-  const req = protocol.get(imageUrl, options, (res) => {
-    console.log(`HTTP响应状态码: ${res.statusCode}`);
-    console.log(`响应头:`, res.headers);
-    
-    if (res.statusCode === 200) {
-      const fileStream = fs.createWriteStream(localPath);
-      let downloadedBytes = 0;
+  return new Promise((resolve, reject) => {
+    const req = protocol.get(imageUrl, options, (res) => {
+      console.log(`HTTP响应状态码: ${res.statusCode}`);
+      console.log(`响应头:`, res.headers);
       
-      res.on('data', (chunk) => {
-        downloadedBytes += chunk.length;
-      });
-      
-      res.pipe(fileStream);
-      
-      fileStream.on('finish', () => {
-        fileStream.close();
-        console.log(`图片下载完成: ${downloadedBytes} 字节`);
+      if (res.statusCode === 200) {
+        const fileStream = fs.createWriteStream(localPath);
+        let downloadedBytes = 0;
         
-        // 验证文件是否存在且有内容
-        if (fs.existsSync(localPath)) {
-          const stats = fs.statSync(localPath);
-          if (stats.size > 0) {
-            console.log(`文件保存成功: ${localPath} (${stats.size} 字节)`);
-            callback(relativePath);
+        res.on('data', (chunk) => {
+          downloadedBytes += chunk.length;
+        });
+        
+        res.pipe(fileStream);
+        
+        fileStream.on('finish', () => {
+          fileStream.close();
+          console.log(`图片下载完成: ${downloadedBytes} 字节`);
+          
+          // 验证文件是否存在且有内容
+          if (fs.existsSync(localPath)) {
+            const stats = fs.statSync(localPath);
+            if (stats.size > 0) {
+              console.log(`文件保存成功: ${localPath} (${stats.size} 字节)`);
+              resolve(relativePath);
+            } else {
+              console.error('下载的文件大小为0');
+              reject(new Error('下载的文件大小为0'));
+            }
           } else {
-            console.error('下载的文件大小为0');
-            callback(null, '下载的文件大小为0');
+            console.error('文件保存失败，文件不存在');
+            reject(new Error('文件保存失败'));
           }
+        });
+        
+        fileStream.on('error', (error) => {
+          console.error('文件写入失败:', error);
+          reject(new Error(`文件写入失败: ${error.message}`));
+        });
+      } else if (res.statusCode === 302 || res.statusCode === 301) {
+        // 处理重定向
+        const redirectUrl = res.headers.location;
+        console.log(`重定向到: ${redirectUrl}`);
+        if (redirectUrl) {
+          // 递归下载重定向后的URL
+          downloadImage(redirectUrl, imageId).then(resolve).catch(reject);
         } else {
-          console.error('文件保存失败，文件不存在');
-          callback(null, '文件保存失败');
+          reject(new Error('重定向失败，无重定向地址'));
         }
-      });
-      
-      fileStream.on('error', (error) => {
-        console.error('文件写入失败:', error);
-        callback(null, `文件写入失败: ${error.message}`);
-      });
-    } else if (res.statusCode === 302 || res.statusCode === 301) {
-      // 处理重定向
-      const redirectUrl = res.headers.location;
-      console.log(`重定向到: ${redirectUrl}`);
-      if (redirectUrl) {
-        downloadImage(redirectUrl, imageId, callback);
       } else {
-        callback(null, `重定向失败，无重定向地址`);
+        console.error('图片下载失败，状态码:', res.statusCode);
+        let errorBody = '';
+        res.on('data', (chunk) => {
+          errorBody += chunk;
+        });
+        res.on('end', () => {
+          console.error('错误响应内容:', errorBody);
+          reject(new Error(`HTTP错误 ${res.statusCode}: ${errorBody.substring(0, 200)}`));
+        });
       }
-    } else {
-      console.error('图片下载失败，状态码:', res.statusCode);
-      let errorBody = '';
-      res.on('data', (chunk) => {
-        errorBody += chunk;
-      });
-      res.on('end', () => {
-        console.error('错误响应内容:', errorBody);
-        callback(null, `HTTP错误 ${res.statusCode}: ${errorBody.substring(0, 200)}`);
-      });
-    }
-  });
+    });
 
-  req.on('error', (error) => {
-    console.error('图片下载请求失败:', error);
-    callback(null, `网络请求失败: ${error.message}`);
-  });
+    req.on('error', (error) => {
+      console.error('图片下载请求失败:', error);
+      reject(new Error(`网络请求失败: ${error.message}`));
+    });
 
-  req.setTimeout(30000, () => {
-    req.destroy();
-    console.error('图片下载超时');
-    callback(null, '下载超时（30秒）');
+    req.setTimeout(30000, () => {
+      req.destroy();
+      console.error('图片下载超时');
+      reject(new Error('下载超时（30秒）'));
+    });
   });
 }
 
@@ -400,14 +413,14 @@ function checkPermission(from, groupid) {
 }
 
 /**
- * NanoBanana主处理函数
+ * NanoBanana主处理函数（异步版本）
  * @param {string} content - 用户输入内容
  * @param {string} from - 用户ID
  * @param {string} name - 用户名称
  * @param {string} groupid - 群组ID
  * @param {Function} callback - 回调函数
  */
-function nanoBananaReply(content, from, name, groupid, callback) {
+async function nanoBananaReply(content, from, name, groupid, callback) {
   console.log(`NanoBanana请求 - 用户: ${name}(${from}), 群组: ${groupid}, 内容: ${content}`);
   
   // 检查权限
@@ -426,10 +439,14 @@ function nanoBananaReply(content, from, name, groupid, callback) {
   // 显示处理中的消息
   callback('🎨 正在使用NanoBanana生成图片，请稍候...');
 
-  // 调用API生成图片
-  callNanoBananaAPI(parseResult.prompt, parseResult.imgUrl, (result) => {
+  // 调用API生成图片（使用 Promise 版本）
+  try {
+    const result = await callNanoBananaAPI(parseResult.prompt, parseResult.imgUrl);
     callback(result);
-  });
+  } catch (error) {
+    console.error('NanoBanana生成失败:', error);
+    callback(`图片生成失败: ${error.message}`);
+  }
 }
 
 /**

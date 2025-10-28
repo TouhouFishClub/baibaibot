@@ -29,3 +29,4 @@ getNanoBananaHelp((result) => {
 
 console.log('\n测试完成！');
 
+
