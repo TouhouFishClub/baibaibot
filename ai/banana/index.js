@@ -23,6 +23,21 @@ try {
   console.log('读取.secret.json文件失败:', e.message);
 }
 
+// 加载预置prompt配置
+let PRESETS_CONFIG = null;
+try {
+  const presetsPath = path.join(__dirname, 'presets.json');
+  if (fs.existsSync(presetsPath)) {
+    PRESETS_CONFIG = JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+    const presetsCount = Object.keys(PRESETS_CONFIG).length;
+    console.log(`加载预置prompt配置成功，共 ${presetsCount} 个预设`);
+  } else {
+    console.log('未找到presets.json文件，预置prompt功能将不可用');
+  }
+} catch (e) {
+  console.log('读取presets.json文件失败:', e.message);
+}
+
 const API_URL = 'https://api.wuyinkeji.com/api/img/nanoBanana';
 
 /**
@@ -312,6 +327,39 @@ async function downloadImage(imageUrl, imageId) {
 }
 
 /**
+ * 检查并应用预置prompt
+ * @param {string} userPrompt - 用户输入的提示词
+ * @returns {Object} {prompt: 最终使用的prompt, isPreset: 是否使用了预设, presetName: 预设名称}
+ */
+function applyPresetPrompt(userPrompt) {
+  // 如果没有加载配置，直接返回原始prompt
+  if (!PRESETS_CONFIG) {
+    return { prompt: userPrompt, isPreset: false };
+  }
+
+  // 不区分大小写进行匹配
+  const userPromptLower = userPrompt.toLowerCase().trim();
+  
+  // 遍历所有预设 key
+  for (const presetKey in PRESETS_CONFIG) {
+    const presetKeyLower = presetKey.toLowerCase();
+    
+    // 完全匹配
+    if (userPromptLower === presetKeyLower) {
+      console.log(`✅ 匹配到预置prompt: "${presetKey}"`);
+      return {
+        prompt: PRESETS_CONFIG[presetKey],
+        isPreset: true,
+        presetName: presetKey
+      };
+    }
+  }
+  
+  // 没有匹配到任何预设，返回原始prompt
+  return { prompt: userPrompt, isPreset: false };
+}
+
+/**
  * 解析用户输入，提取提示词和图片URL
  * @param {string} content - 用户输入内容
  * @returns {Object} 解析结果 {prompt, imgUrl, replyMessageId}
@@ -443,8 +491,8 @@ async function getMessageDetail(messageId, botName) {
  * @returns {Array|null} 图片URL数组
  */
 function extractImageUrlsFromMessage(messageDetail) {
-  console.log('========== 开始提取图片URL ==========');
-  console.log('消息详情完整内容:', JSON.stringify(messageDetail, null, 2));
+  // console.log('========== 开始提取图片URL ==========');
+  // console.log('消息详情完整内容:', JSON.stringify(messageDetail, null, 2));
   
   if (!messageDetail || !messageDetail.message) {
     console.log('❌ 消息详情为空或没有message字段');
@@ -454,15 +502,15 @@ function extractImageUrlsFromMessage(messageDetail) {
   const urls = [];
   const message = messageDetail.message;
   
-  console.log('消息类型:', Array.isArray(message) ? '数组' : typeof message);
-  console.log('消息内容:', JSON.stringify(message, null, 2));
+  // console.log('消息类型:', Array.isArray(message) ? '数组' : typeof message);
+  // console.log('消息内容:', JSON.stringify(message, null, 2));
 
   // 消息格式可能是数组或字符串
   if (Array.isArray(message)) {
     // 数组格式
-    console.log(`消息段数量: ${message.length}`);
+    // console.log(`消息段数量: ${message.length}`);
     message.forEach((segment, index) => {
-      console.log(`消息段 ${index}:`, JSON.stringify(segment));
+      // console.log(`消息段 ${index}:`, JSON.stringify(segment));
       if (segment.type === 'image' && segment.data && segment.data.url) {
         let url = segment.data.url;
         // 反转义处理
@@ -474,32 +522,32 @@ function extractImageUrlsFromMessage(messageDetail) {
     });
   } else if (typeof message === 'string') {
     // 字符串格式，提取CQ码
-    console.log('尝试从字符串中提取CQ图片码...');
+    // console.log('尝试从字符串中提取CQ图片码...');
     const cqImageRegex = /\[CQ:image[^\]]*url=([^,\]]+)[^\]]*\]/g;
     let match;
-    let matchCount = 0;
+    // let matchCount = 0;
     while ((match = cqImageRegex.exec(message)) !== null) {
-      matchCount++;
-      console.log(`CQ图片码匹配 ${matchCount}:`, match[0]);
+      // matchCount++;
+      // console.log(`CQ图片码匹配 ${matchCount}:`, match[0]);
       if (match[1]) {
         let url = match[1];
         url = url.replace(/&amp;/g, '&');
         url = url.replace(/&#44;/g, ',');
-        console.log(`✅ 提取到图片URL ${matchCount}:`, url);
+        console.log(`✅ 提取到图片URL:`, url);
         urls.push(url);
       }
     }
-    if (matchCount === 0) {
-      console.log('⚠️ 未找到任何CQ图片码匹配');
-    }
+    // if (matchCount === 0) {
+    //   console.log('⚠️ 未找到任何CQ图片码匹配');
+    // }
   }
 
-  console.log(`========== 提取完成，共找到 ${urls.length} 个图片URL ==========`);
-  if (urls.length > 0) {
-    console.log('提取到的所有图片URL:', urls);
-  } else {
-    console.log('❌ 未提取到任何图片URL');
-  }
+  console.log(`提取完成，共找到 ${urls.length} 个图片URL`);
+  // if (urls.length > 0) {
+  //   console.log('提取到的所有图片URL:', urls);
+  // } else {
+  //   console.log('❌ 未提取到任何图片URL');
+  // }
   
   return urls.length > 0 ? urls : null;
 }
@@ -563,57 +611,63 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
     return;
   }
 
+  // 应用预置prompt
+  const presetResult = applyPresetPrompt(parseResult.prompt);
+  const finalPrompt = presetResult.prompt;
+  
+  if (presetResult.isPreset) {
+    console.log(`使用预置prompt: ${presetResult.presetName}`);
+  }
+
   let finalImgUrl = parseResult.imgUrl;
 
   // 如果有回复消息ID，获取被回复的消息详情
   if (parseResult.replyMessageId && port) {
     try {
-      console.log(`========== 回复消息处理开始 ==========`);
-      console.log(`回复消息ID: ${parseResult.replyMessageId}`);
-      console.log(`Bot名称/端口: ${port}`);
-      console.log(`尝试获取消息详情...`);
+      console.log(`检测到回复消息 [ID: ${parseResult.replyMessageId}]，正在获取消息详情...`);
+      // console.log(`Bot名称/端口: ${port}`);
       
       const messageDetail = await getMessageDetail(parseResult.replyMessageId, port);
       
-      console.log(`✅ 成功获取消息详情`);
-      console.log(`被回复的消息完整内容:`, JSON.stringify(messageDetail, null, 2));
+      // console.log(`✅ 成功获取消息详情`);
+      // console.log(`被回复的消息完整内容:`, JSON.stringify(messageDetail, null, 2));
       
       // 从被回复的消息中提取图片URL
       const replyImageUrls = extractImageUrlsFromMessage(messageDetail);
       
       if (replyImageUrls && replyImageUrls.length > 0) {
         console.log(`✅ 从回复消息中成功提取到 ${replyImageUrls.length} 张图片`);
-        console.log(`提取到的图片URL列表:`, replyImageUrls);
+        // console.log(`提取到的图片URL列表:`, replyImageUrls);
         
         // 如果命令中没有图片，使用回复消息中的图片
         if (!finalImgUrl) {
-          console.log(`命令中没有图片，使用回复消息中的图片`);
+          // console.log(`命令中没有图片，使用回复消息中的图片`);
           finalImgUrl = replyImageUrls;
         } else {
-          console.log(`命令中已有图片，合并回复消息中的图片`);
+          console.log(`合并命令中的图片和回复消息中的图片`);
           // 如果命令中有图片，合并两者
           if (Array.isArray(finalImgUrl)) {
             finalImgUrl = [...finalImgUrl, ...replyImageUrls];
           } else {
             finalImgUrl = [finalImgUrl, ...replyImageUrls];
           }
-          console.log(`合并后的图片列表:`, finalImgUrl);
+          // console.log(`合并后的图片列表:`, finalImgUrl);
         }
       } else {
         console.log(`⚠️ 回复的消息中未找到图片`);
         // 回复的消息中没有图片
         if (!finalImgUrl) {
-          console.log(`❌ 命令中也没有图片，拒绝生成`);
           callback('❌ 回复的消息中没有图片，无法生成图片。\n提示：请回复包含图片的消息，或直接在命令中附带图片。');
           return;
-        } else {
-          console.log(`⚠️ 但命令中有图片，将使用命令中的图片继续`);
         }
+        // else {
+        //   console.log(`⚠️ 但命令中有图片，将使用命令中的图片继续`);
+        // }
       }
-      console.log(`========== 回复消息处理完成 ==========`);
+      // console.log(`========== 回复消息处理完成 ==========`);
     } catch (error) {
-      console.error('❌ 获取回复消息失败:', error);
-      console.error('错误堆栈:', error.stack);
+      console.error('❌ 获取回复消息失败:', error.message);
+      // console.error('错误堆栈:', error.stack);
       // 如果获取失败但有其他图片URL，继续执行
       if (!finalImgUrl) {
         callback(`❌ 获取回复消息失败: ${error.message}\n如果想使用参考图片，请直接发送图片或提供图片URL。`);
@@ -624,16 +678,21 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
   }
 
   // 显示处理中的消息
+  let statusMessage = '🎨 正在使用NanoBanana';
+  if (presetResult.isPreset) {
+    statusMessage += `[${presetResult.presetName}]`;
+  }
   if (finalImgUrl) {
     const imageCount = Array.isArray(finalImgUrl) ? finalImgUrl.length : 1;
-    callback(`🎨 正在使用NanoBanana基于 ${imageCount} 张参考图生成图片，请稍候...`);
+    statusMessage += `基于 ${imageCount} 张参考图生成图片，请稍候...`;
   } else {
-    callback('🎨 正在使用NanoBanana生成图片，请稍候...');
+    statusMessage += '生成图片，请稍候...';
   }
+  callback(statusMessage);
 
-  // 调用API生成图片（使用 Promise 版本）
+  // 调用API生成图片（使用 Promise 版本，使用最终的prompt）
   try {
-    const result = await callNanoBananaAPI(parseResult.prompt, finalImgUrl);
+    const result = await callNanoBananaAPI(finalPrompt, finalImgUrl);
     callback(result);
   } catch (error) {
     console.error('NanoBanana生成失败:', error);
@@ -662,13 +721,32 @@ banana 美丽的风景画 https://example.com/image.jpg
 banana 动漫风格 [发送一张图片]
 [回复一张图片] banana 转换成油画风格
 
+预置效果：`;
+
+  // 添加预置prompt列表
+  if (PRESETS_CONFIG) {
+    const presetKeys = Object.keys(PRESETS_CONFIG);
+    if (presetKeys.length > 0) {
+      presetKeys.forEach(key => {
+        helpText += `\n- ${key}`;
+      });
+    } else {
+      helpText += '\n（暂无可用预置效果）';
+    }
+  } else {
+    helpText += '\n（预置效果功能未启用）';
+  }
+
+  helpText += `
+
 注意：
 - 提示词建议使用中文或英文
 - 支持直接发送图片或提供图片URL链接
 - 支持回复消息功能，回复图片消息时会使用该图片作为参考图
 - 如果回复的消息中没有图片，将拒绝生成以节省API用量
 - 图片URL需要是公网可访问的链接
-- 生成过程需要一些时间，请耐心等待`;
+- 生成过程需要一些时间，请耐心等待
+- 预置效果可在 presets.json 中配置`;
 
   // 如果提供了用户信息，检查权限并添加相应说明
   if (from !== null && groupid !== null) {
