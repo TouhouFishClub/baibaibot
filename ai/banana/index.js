@@ -314,18 +314,36 @@ async function downloadImage(imageUrl, imageId) {
 /**
  * 解析用户输入，提取提示词和图片URL
  * @param {string} content - 用户输入内容
- * @returns {Object} 解析结果
+ * @returns {Object} 解析结果 {prompt, imgUrl, replyMessageId}
  */
 function parseUserInput(content) {
+  let input = content;
+  let replyMessageId = null;
+
+  // 检查是否包含回复CQ码 [CQ:reply,id=xxx]
+  const replyRegex = /\[CQ:reply,id=(-?\d+)\]/;
+  const replyMatch = content.match(replyRegex);
+  
+  if (replyMatch && replyMatch[1]) {
+    replyMessageId = replyMatch[1];
+    // 移除 reply 和 at CQ码，只保留 banana 命令和提示词
+    input = content
+      .replace(replyRegex, '')  // 移除 reply CQ码
+      .replace(/\[CQ:at[^\]]*\]/g, '')  // 移除 at CQ码
+      .trim();
+    
+    console.log(`检测到回复消息，消息ID: ${replyMessageId}`);
+  }
+
   // 移除"banana"前缀
-  let input = content.replace(/^banana\s*/i, '').trim();
+  input = input.replace(/^banana\s*/i, '').trim();
 
   // 调试日志（可选）
   // console.log('解析输入:', content)
   
   if (!input) {
     return {
-      error: '请提供图片生成提示词\n用法: banana [提示词] [图片URL(可选)]'
+      error: '请提供图片生成提示词\n用法: banana [提示词] [图片URL(可选)]\n或回复图片消息: banana [提示词]'
     };
   }
 
@@ -374,12 +392,83 @@ function parseUserInput(content) {
   }
 
   // 调试日志（可选）
-  // console.log('解析结果 - 提示词:', prompt, '图片URL:', imgUrl)
+  // console.log('解析结果 - 提示词:', prompt, '图片URL:', imgUrl, '回复消息ID:', replyMessageId)
 
   return {
     prompt: prompt,
-    imgUrl: imgUrl
+    imgUrl: imgUrl,
+    replyMessageId: replyMessageId
   };
+}
+
+/**
+ * 获取消息详情
+ * @param {string} messageId - 消息ID
+ * @param {string} botName - bot名称
+ * @returns {Promise<Object>} 消息详情
+ */
+async function getMessageDetail(messageId, botName) {
+  try {
+    // 动态导入 createAction 以避免循环依赖
+    const { createAction } = require('../reverseWsUtils/manager/actionManager');
+    
+    console.log(`正在获取消息详情，消息ID: ${messageId}, bot: ${botName}`);
+    
+    const messageDetail = await createAction({
+      "action": "get_msg",
+      "params": {
+        "message_id": messageId
+      }
+    }, botName);
+    
+    console.log('获取到消息详情:', JSON.stringify(messageDetail));
+    return messageDetail;
+  } catch (error) {
+    console.error('获取消息详情失败:', error);
+    throw new Error(`获取消息详情失败: ${error.message}`);
+  }
+}
+
+/**
+ * 从消息中提取图片URL
+ * @param {Object} messageDetail - 消息详情
+ * @returns {Array|null} 图片URL数组
+ */
+function extractImageUrlsFromMessage(messageDetail) {
+  if (!messageDetail || !messageDetail.message) {
+    return null;
+  }
+
+  const urls = [];
+  const message = messageDetail.message;
+
+  // 消息格式可能是数组或字符串
+  if (Array.isArray(message)) {
+    // 数组格式
+    message.forEach(segment => {
+      if (segment.type === 'image' && segment.data && segment.data.url) {
+        let url = segment.data.url;
+        // 反转义处理
+        url = url.replace(/&amp;/g, '&');
+        url = url.replace(/&#44;/g, ',');
+        urls.push(url);
+      }
+    });
+  } else if (typeof message === 'string') {
+    // 字符串格式，提取CQ码
+    const cqImageRegex = /\[CQ:image[^\]]*url=([^,\]]+)[^\]]*\]/g;
+    let match;
+    while ((match = cqImageRegex.exec(message)) !== null) {
+      if (match[1]) {
+        let url = match[1];
+        url = url.replace(/&amp;/g, '&');
+        url = url.replace(/&#44;/g, ',');
+        urls.push(url);
+      }
+    }
+  }
+
+  return urls.length > 0 ? urls : null;
 }
 
 /**
@@ -419,8 +508,13 @@ function checkPermission(from, groupid) {
  * @param {string} name - 用户名称
  * @param {string} groupid - 群组ID
  * @param {Function} callback - 回调函数
+ * @param {string} groupName - 群组名称（可选）
+ * @param {string} nickname - 用户昵称（可选）
+ * @param {string} message_type - 消息类型（可选）
+ * @param {string} port - 端口/bot名称（可选）
+ * @param {Object} context - 消息上下文（可选）
  */
-async function nanoBananaReply(content, from, name, groupid, callback) {
+async function nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, message_type, port, context) {
   console.log(`NanoBanana请求 - 用户: ${name}(${from}), 群组: ${groupid}, 内容: ${content}`);
   
   // 检查权限
@@ -436,12 +530,59 @@ async function nanoBananaReply(content, from, name, groupid, callback) {
     return;
   }
 
+  let finalImgUrl = parseResult.imgUrl;
+
+  // 如果有回复消息ID，获取被回复的消息详情
+  if (parseResult.replyMessageId && port) {
+    try {
+      console.log(`检测到回复消息，尝试获取消息详情...`);
+      const messageDetail = await getMessageDetail(parseResult.replyMessageId, port);
+      
+      // 从被回复的消息中提取图片URL
+      const replyImageUrls = extractImageUrlsFromMessage(messageDetail);
+      
+      if (replyImageUrls && replyImageUrls.length > 0) {
+        console.log(`从回复消息中提取到 ${replyImageUrls.length} 张图片`);
+        // 如果命令中没有图片，使用回复消息中的图片
+        if (!finalImgUrl) {
+          finalImgUrl = replyImageUrls;
+        } else {
+          // 如果命令中有图片，合并两者
+          if (Array.isArray(finalImgUrl)) {
+            finalImgUrl = [...finalImgUrl, ...replyImageUrls];
+          } else {
+            finalImgUrl = [finalImgUrl, ...replyImageUrls];
+          }
+        }
+      } else {
+        // 回复的消息中没有图片
+        if (!finalImgUrl) {
+          callback('❌ 回复的消息中没有图片，无法生成图片。\n提示：请回复包含图片的消息，或直接在命令中附带图片。');
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('获取回复消息失败:', error);
+      // 如果获取失败但有其他图片URL，继续执行
+      if (!finalImgUrl) {
+        callback(`❌ 获取回复消息失败: ${error.message}\n如果想使用参考图片，请直接发送图片或提供图片URL。`);
+        return;
+      }
+      callback(`⚠️ 获取回复消息失败，将使用命令中提供的图片继续生成...`);
+    }
+  }
+
   // 显示处理中的消息
-  callback('🎨 正在使用NanoBanana生成图片，请稍候...');
+  if (finalImgUrl) {
+    const imageCount = Array.isArray(finalImgUrl) ? finalImgUrl.length : 1;
+    callback(`🎨 正在使用NanoBanana基于 ${imageCount} 张参考图生成图片，请稍候...`);
+  } else {
+    callback('🎨 正在使用NanoBanana生成图片，请稍候...');
+  }
 
   // 调用API生成图片（使用 Promise 版本）
   try {
-    const result = await callNanoBananaAPI(parseResult.prompt, parseResult.imgUrl);
+    const result = await callNanoBananaAPI(parseResult.prompt, finalImgUrl);
     callback(result);
   } catch (error) {
     console.error('NanoBanana生成失败:', error);
@@ -462,15 +603,19 @@ function getNanoBananaHelp(callback, from = null, groupid = null) {
 banana [提示词] - 根据提示词生成图片
 banana [提示词] [图片URL] - 基于参考图片和提示词生成图片
 banana [提示词] [发送图片] - 基于发送的图片和提示词生成图片
+回复图片消息 + banana [提示词] - 基于回复的图片生成新图片
 
 示例：
 banana 一只可爱的小猫咪
 banana 美丽的风景画 https://example.com/image.jpg
 banana 动漫风格 [发送一张图片]
+[回复一张图片] banana 转换成油画风格
 
 注意：
 - 提示词建议使用中文或英文
 - 支持直接发送图片或提供图片URL链接
+- 支持回复消息功能，回复图片消息时会使用该图片作为参考图
+- 如果回复的消息中没有图片，将拒绝生成以节省API用量
 - 图片URL需要是公网可访问的链接
 - 生成过程需要一些时间，请耐心等待`;
 

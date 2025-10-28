@@ -1973,11 +1973,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(content.toLowerCase().startsWith('banana')) {
+  if(content.toLowerCase().startsWith('banana') || content.includes('banana')) {
     if(content.toLowerCase().trim() === 'banana' || content.toLowerCase().trim() === 'banana help') {
       getNanoBananaHelp(callback, from, groupid);
     } else {
-      nanoBananaReply(content, from, name, groupid, callback);
+      // 传递完整的参数，包括 port 和 context，以支持回复消息功能
+      nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, message_type, port, context);
     }
     return;
   }
