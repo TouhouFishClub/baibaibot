@@ -47,12 +47,18 @@ const replaceRecordToBase64 = message =>
   }).join('[CQ:record,file=base64://')
 
 const sendMessage = (context, ws, port, oneBotVersion) => {
-  console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
+  if(port === 'mine'){
+    console.log(`======\n[ws message]\n${JSON.stringify(context)}`)
+  }
   let { raw_message, message_type, user_id, group_id, sender, mixins, time } = context
-  console.log(`\n\n\n\n****CONTEXT*****\n\n${JSON.stringify(context)}\n\n********\n\n\n\n`)
+  if(port === 'mine'){
+    console.log(`\n\n\n\n****CONTEXT*****\n\n${JSON.stringify(context)}\n\n********\n\n\n\n`)
+  }
   let { card, nickname } = sender
   let { group_info, user_info, bot_name } = mixins
-  console.log(`\n\n\n\n****MIXINS*****\n\n${JSON.stringify(mixins)}\n\n********\n\n\n\n`)
+  if(port === 'mine'){
+    console.log(`\n\n\n\n****MIXINS*****\n\n${JSON.stringify(mixins)}\n\n********\n\n\n\n`)
+  }
 
   var group_name;
   if(group_info){
