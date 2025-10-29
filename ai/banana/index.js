@@ -369,15 +369,21 @@ async function downloadImage(imageUrl, imageId) {
 function applyPresetPrompt(userPrompt) {
   // 如果没有加载配置，直接返回原始prompt
   if (!PRESETS_CONFIG) {
+    console.log('⚠️ 预置配置未加载');
     return { prompt: userPrompt, isPreset: false };
   }
 
   // 不区分大小写进行匹配
   const userPromptLower = userPrompt.toLowerCase().trim();
   
+  console.log(`🔍 尝试匹配预置prompt: "${userPrompt}" (标准化后: "${userPromptLower}")`);
+  
   // 遍历所有预设 key
   for (const presetKey in PRESETS_CONFIG) {
     const presetKeyLower = presetKey.toLowerCase();
+    
+    // 调试：显示比较过程
+    // console.log(`   比较: "${userPromptLower}" === "${presetKeyLower}" ? ${userPromptLower === presetKeyLower}`);
     
     // 完全匹配
     if (userPromptLower === presetKeyLower) {
@@ -391,6 +397,7 @@ function applyPresetPrompt(userPrompt) {
   }
   
   // 没有匹配到任何预设，返回原始prompt
+  console.log(`❌ 未匹配到预置prompt，使用原始提示词`);
   return { prompt: userPrompt, isPreset: false };
 }
 
