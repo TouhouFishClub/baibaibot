@@ -182,7 +182,7 @@ async function getImageDetail(imageId, maxRetries = 30) {
         req.end();
       });
 
-      console.log('图片详情API响应:', response);
+      // console.log('图片详情API响应:', response);
       
       if (response.code === 200 && response.data) {
         // 检查图片状态

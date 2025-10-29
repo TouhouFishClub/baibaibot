@@ -1973,8 +1973,22 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  if(content.toLowerCase().startsWith('banana') || content.toLowerCase().includes('banana')) {
-    if(content.toLowerCase().trim() === 'banana' || content.toLowerCase().trim() === 'banana help') {
+  // banana 功能触发逻辑
+  // 规则：非回复时必须 banana 开头，回复时 banana 可以在中间
+  const isReply = content.includes('[CQ:reply,id=');
+  const lowerContent = content.toLowerCase();
+  let shouldTriggerBanana = false;
+  
+  if (isReply) {
+    // 回复模式：banana 可以在任意位置
+    shouldTriggerBanana = lowerContent.includes('banana');
+  } else {
+    // 非回复模式：必须 banana 开头
+    shouldTriggerBanana = lowerContent.startsWith('banana');
+  }
+  
+  if (shouldTriggerBanana) {
+    if(lowerContent.trim() === 'banana' || lowerContent.trim() === 'banana help') {
       getNanoBananaHelp(callback, from, groupid);
     } else {
       // 传递完整的参数，包括 port 和 msgObjSource，以支持回复消息功能
