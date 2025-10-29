@@ -51,11 +51,26 @@ async function callNanoBananaAPI(prompt, imgUrl) {
     throw new Error('错误：未配置NanoBanana API密钥，请在ai/banana/.secret.json中添加配置');
   }
 
+  // 调试日志：打印即将发送的参数
+  console.log('========== 准备调用NanoBanana API ==========');
+  console.log('Prompt:', prompt);
+  console.log('Image URL:', imgUrl);
+  console.log('Image URL 类型:', Array.isArray(imgUrl) ? '数组' : typeof imgUrl);
+  if (Array.isArray(imgUrl)) {
+    console.log('Image URL 数量:', imgUrl.length);
+    imgUrl.forEach((url, index) => {
+      console.log(`  [${index}]:`, url.substring(0, 100) + (url.length > 100 ? '...' : ''));
+    });
+  }
+
   const postData = JSON.stringify({
     model: 'nano-banana',
     prompt: prompt,
     img_url: imgUrl || undefined
   });
+  
+  console.log('POST数据长度:', postData.length, '字节');
+  console.log('========================================');
 
   const options = {
     hostname: 'api.wuyinkeji.com',
@@ -696,6 +711,15 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
     statusMessage += '生成图片，请稍候...';
   }
   callback(statusMessage);
+
+  // 调试日志：确认最终参数
+  console.log('========== 即将调用API ==========');
+  console.log('最终Prompt:', finalPrompt.substring(0, 200) + (finalPrompt.length > 200 ? '...' : ''));
+  console.log('最终Image URL:', finalImgUrl ? (Array.isArray(finalImgUrl) ? `数组(${finalImgUrl.length}个)` : '单个URL') : '无');
+  if (finalImgUrl) {
+    console.log('详细URL信息:', JSON.stringify(finalImgUrl).substring(0, 300));
+  }
+  console.log('===================================');
 
   // 调用API生成图片（使用 Promise 版本，使用最终的prompt）
   try {
