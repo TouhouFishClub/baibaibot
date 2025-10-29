@@ -189,14 +189,16 @@ async function getImageDetail(imageId, maxRetries = 30) {
         if (response.data.status === 2 && response.data.image_url) {
           // 状态2表示成功，返回图片URL
           return response.data.image_url;
+        } else if (response.data.status === 3) {
+          // 状态3表示失败，立即抛出错误，不再重试
+          const failReason = response.data.fail_reason || '未知原因';
+          console.error(`❌ 图片生成失败: ${failReason}`);
+          throw new Error(`图片生成失败: ${failReason}`);
         } else if (response.data.status === 0 || response.data.status === 1) {
           // 状态0:排队中，状态1:生成中，需要等待
           console.log(`图片还在处理中，状态: ${response.data.status}，等待2秒后重试 (${attempt + 1}/${maxRetries})`);
           await new Promise(resolve => setTimeout(resolve, 2000)); // 等待2秒
           continue; // 继续下一次循环
-        } else if (response.data.status === 3) {
-          // 状态3表示失败
-          throw new Error('图片生成失败');
         } else {
           throw new Error(`未知状态: ${response.data.status}`);
         }
@@ -204,11 +206,16 @@ async function getImageDetail(imageId, maxRetries = 30) {
         throw new Error(`获取图片详情失败: ${response.msg || '未知错误'}`);
       }
     } catch (error) {
+      // 如果错误消息包含"图片生成失败"，说明是status===3的失败，不应该重试
+      if (error.message && error.message.includes('图片生成失败')) {
+        throw error; // 立即抛出，不重试
+      }
+      
       // 如果是最后一次尝试，抛出错误
       if (attempt === maxRetries - 1) {
         throw error;
       }
-      // 否则继续重试
+      // 否则继续重试（仅针对网络错误等临时性错误）
       console.error('图片详情请求失败，重试中:', error.message);
     }
   }
