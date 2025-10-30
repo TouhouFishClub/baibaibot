@@ -986,6 +986,44 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
 }
 
 /**
+ * 获取预置词条列表
+ * @param {Function} callback - 回调函数
+ */
+function getNanoBananaPresets(callback) {
+  if (!PRESETS_CONFIG || Object.keys(PRESETS_CONFIG).length === 0) {
+    callback('❌ 暂无可用的预置效果');
+    return;
+  }
+
+  const presetKeys = Object.keys(PRESETS_CONFIG);
+  const total = presetKeys.length;
+  
+  let message = `🎨 NanoBanana 内置词条列表\n`;
+  message += `━━━━━━━━━━━━━━━━━━\n`;
+  message += `共 ${total} 个预置效果\n\n`;
+  
+  // 简单列出所有词条，每行5个
+  const columns = 5;
+  for (let i = 0; i < presetKeys.length; i++) {
+    if (i % columns === 0 && i > 0) {
+      message += `\n`;
+    }
+    message += `${presetKeys[i]}`;
+    if ((i + 1) % columns !== 0 && i !== presetKeys.length - 1) {
+      message += ` | `;
+    }
+  }
+  
+  message += `\n\n━━━━━━━━━━━━━━━━━━\n`;
+  message += `使用方法：\n`;
+  message += `回复图片 + banana [词条名]\n`;
+  message += `例如：banana 手办化\n\n`;
+  message += `查看帮助：banana help`;
+  
+  callback(message);
+}
+
+/**
  * 获取帮助信息
  * @param {Function} callback - 回调函数
  * @param {string} from - 用户ID（可选，用于权限检查）
@@ -1000,21 +1038,31 @@ banana [提示词] [图片URL] - 基于参考图片和提示词生成图片
 banana [提示词] [发送图片] - 基于发送的图片和提示词生成图片
 回复图片消息 + banana [提示词] - 基于回复的图片生成新图片
 
+查看功能：
+banana 词条 / banana 内置 / banana 内置词条 - 查看所有预置效果
+banana help / banana - 查看帮助信息
+
 示例：
 banana 一只可爱的小猫咪
 banana 美丽的风景画 https://example.com/image.jpg
 banana 动漫风格 [发送一张图片]
 [回复一张图片] banana 转换成油画风格
 
-预置效果：`;
+预置效果（部分）：`;
 
-  // 添加预置prompt列表
+  // 添加预置prompt列表（只显示部分）
   if (PRESETS_CONFIG) {
     const presetKeys = Object.keys(PRESETS_CONFIG);
     if (presetKeys.length > 0) {
-      presetKeys.forEach(key => {
+      // 只显示前10个作为示例
+      const displayKeys = presetKeys.slice(0, 10);
+      displayKeys.forEach(key => {
         helpText += `\n- ${key}`;
       });
+      if (presetKeys.length > 10) {
+        helpText += `\n... 等共 ${presetKeys.length} 个效果`;
+        helpText += `\n\n查看完整列表：banana 词条`;
+      }
     } else {
       helpText += '\n（暂无可用预置效果）';
     }
@@ -1062,5 +1110,6 @@ banana 动漫风格 [发送一张图片]
 
 module.exports = {
   nanoBananaReply,
-  getNanoBananaHelp
+  getNanoBananaHelp,
+  getNanoBananaPresets
 };
