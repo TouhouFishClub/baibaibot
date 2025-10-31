@@ -869,7 +869,8 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
         const hasPrivateUrl = replyImageUrls.some(item => item.isPrivate);
         if (hasPrivateUrl) {
           console.log(`🔧 检测到私有域名URL，正在下载并托管到本地服务器...`);
-          callback('🔧 检测到回复消息中的图片来自QQ私有存储，正在下载并转换为公网可访问链接，请稍候...');
+          // 不再提示下载过程
+          // callback('🔧 检测到回复消息中的图片来自QQ私有存储，正在下载并转换为公网可访问链接，请稍候...');
           
           try {
             // 下载所有私有域名的图片，并记录本地路径以便后续清理
