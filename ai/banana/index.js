@@ -790,7 +790,7 @@ function checkPermission(from, groupid) {
   const allowedGroups = [577587780];
   
   // 白名单用户
-  const allowedUsers = [799018865, 2408709050];
+  const allowedUsers = [799018865, 2408709050, 540540678];
   
   // 转换为数字进行比较
   const fromId = parseInt(from);
