@@ -1,0 +1,56 @@
+[
+  {
+    "name": "爆发",
+    "skin": "爆发.gif",
+    "active": "爆发_active.gif",
+    "icon": "",
+    "description": "",
+    "where": "游戏内获得",
+    "link": "https://wiki.mabinogiworld.com/view/Spirit_Transformation_Liqueur_(Flare)"
+  },
+  {
+    "name": "羽毛",
+    "skin": "羽毛.gif",
+    "active": "羽毛_active.gif",
+    "icon": "",
+    "description": "",
+    "where": "游戏内获得",
+    "link": "https://wiki.mabinogiworld.com/view/Spirit_Transformation_Liqueur_(Feather)"
+  },
+  {
+    "name": "珠子",
+    "skin": "珠子.gif",
+    "active": "",
+    "icon": "",
+    "description": "",
+    "where": "游戏内获得",
+    "link": "https://wiki.mabinogiworld.com/view/Spirit_Transformation_Liqueur_(Basic)"
+  },
+  {
+    "name": "光之粉",
+    "skin": "光之粉.gif",
+    "active": "",
+    "icon": "",
+    "description": "",
+    "where": "抽蛋",
+    "link": "https://luoqi.tiancity.com/homepage/event/2020/0422act/page1.html"
+  },
+  {
+    "name": "花瓣",
+    "skin": "花瓣.gif",
+    "active": "",
+    "icon": "",
+    "description": "",
+    "where": "抽蛋",
+    "link": "https://luoqi.tiancity.com/homepage/event/2020/0422act/page1.html"
+  },
+  {
+    "name": "黑雾",
+    "skin": "黑雾.gif",
+    "active": "",
+    "icon": "",
+    "description": "",
+    "where": "抽蛋",
+    "link": "https://luoqi.tiancity.com/homepage/event/2020/0506act/?v=1"
+  }
+]
