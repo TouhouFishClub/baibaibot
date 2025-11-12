@@ -173,6 +173,7 @@ const {tcArticle} = require('./ai/mabinogi/newArticle')
 const {LiveInspect, LiveAnalyzer} = require('./ai/mabinogi/live-inspect')
 const {chujue} = require('./ai/image/generator/chujue/index.js')
 const {nanoBananaReply, getNanoBananaHelp, getNanoBananaPresets} = require('./ai/banana')
+const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
 
 // 导入deepseek模块
 // const {handleDeepSeekChat} = require('./ai/llm/deepseek')
@@ -1994,17 +1995,30 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     } 
     // 检查是否是查看词条命令
     else if(lowerContent.trim() === 'banana 词条' || 
-            lowerContent.trim() === 'banana 内置' || 
-            lowerContent.trim() === 'banana 内置词条' ||
-            lowerContent.trim() === 'banana词条' ||
-            lowerContent.trim() === 'banana内置' ||
-            lowerContent.trim() === 'banana内置词条') {
+           lowerContent.trim() === 'banana 内置' || 
+           lowerContent.trim() === 'banana 内置词条' ||
+           lowerContent.trim() === 'banana词条' ||
+           lowerContent.trim() === 'banana内置' ||
+           lowerContent.trim() === 'banana内置词条') {
       getNanoBananaPresets(callback);
     } 
     else {
       // 传递完整的参数，包括 port 和 msgObjSource，以支持回复消息功能
       // msgType 固定为 'group'
       nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, 'group', port, msgObjSource);
+    }
+    return;
+  }
+
+  // 豆包图片生成处理
+  if (lowerContent.startsWith('doubao')) {
+    // 检查是否是帮助命令
+    if(lowerContent.trim() === 'doubao' || lowerContent.trim() === 'doubao help') {
+      getDoubaoHelp(callback, from, groupid);
+    } 
+    else {
+      // 传递完整的参数
+      doubaoReply(content, from, name, groupid, callback, groupName, nickname, 'group', port, msgObjSource);
     }
     return;
   }
