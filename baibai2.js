@@ -1974,12 +1974,13 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  // banana 功能触发逻辑
-  // 规则：非回复时必须 banana 开头，回复时 banana 可以在中间
+  // AI 图片生成功能触发逻辑
+  // 规则：非回复时必须关键词开头，回复时关键词可以在中间
   const isReply = content.includes('[CQ:reply,id=');
   const lowerContent = content.toLowerCase();
-  let shouldTriggerBanana = false;
   
+  // banana 功能检测
+  let shouldTriggerBanana = false;
   if (isReply) {
     // 回复模式：banana 可以在任意位置
     shouldTriggerBanana = lowerContent.includes('banana');
@@ -2010,8 +2011,17 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
-  // 豆包图片生成处理
-  if (lowerContent.startsWith('doubao')) {
+  // doubao 功能检测
+  let shouldTriggerDoubao = false;
+  if (isReply) {
+    // 回复模式：doubao 可以在任意位置
+    shouldTriggerDoubao = lowerContent.includes('doubao');
+  } else {
+    // 非回复模式：必须 doubao 开头
+    shouldTriggerDoubao = lowerContent.startsWith('doubao');
+  }
+  
+  if (shouldTriggerDoubao) {
     // 检查是否是帮助命令
     if(lowerContent.trim() === 'doubao' || lowerContent.trim() === 'doubao help') {
       getDoubaoHelp(callback, from, groupid);

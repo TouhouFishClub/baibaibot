@@ -4,13 +4,11 @@
 
 ### 1. 配置 API 密钥
 
-确保在项目根目录的 `.secret.json` 中已添加豆包配置：
+确保在 `ai/doubao/.secret.json` 中已添加豆包配置：
 
 ```json
 {
-  "doubao": {
-    "apiKey": "acc59b5c-c423-45a8-adae-b04268d2dcd5"
-  }
+  "apiKey": "acc59b5c-c423-45a8-adae-b04268d2dcd5"
 }
 ```
 
@@ -26,13 +24,20 @@ doubao 一只可爱的小猫咪
 doubao Generate 3 images of a girl and a cow plushie happily riding a roller coaster in an amusement park
 ```
 
-#### 基于参考图生成
+#### 基于参考图生成（回复消息）
+
+```
+[回复一张图片消息]
+doubao 把这张图转换成动漫风格
+```
+
+#### 基于参考图生成（URL）
 
 ```
 doubao 把这张图转换成动漫风格 https://example.com/image.jpg
 ```
 
-或者直接发送图片：
+#### 基于参考图生成（直接发送）
 
 ```
 doubao 动漫风格 [发送一张图片]
@@ -72,7 +77,7 @@ doubao
 |------|--------|--------|
 | 模型 | NanoBanana | 豆包 SeeDream 4.0 |
 | 预设 prompt | ✅ 支持 | ❌ 不支持 |
-| 回复消息 | ✅ 支持 | ❌ 暂不支持 |
+| 回复消息 | ✅ 支持 | ✅ 支持 |
 | 私有域名图片 | ✅ 自动处理 | ❌ 需要公网URL |
 | 多图生成 | ⚠️ 需参考图 | ✅ 可连续生成 |
 
@@ -89,9 +94,9 @@ doubao
 ### 问题：提示未配置 API 密钥
 
 **解决方法**：
-1. 检查 `.secret.json` 文件是否存在于项目根目录
+1. 检查 `.secret.json` 文件是否存在于 `ai/doubao/` 目录
 2. 确认文件格式正确（有效的 JSON）
-3. 确认 `doubao.apiKey` 字段已正确填写
+3. 确认 `apiKey` 字段已正确填写
 
 ### 问题：API 返回错误
 

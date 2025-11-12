@@ -14,37 +14,33 @@ ai/doubao/
 
 - 🎨 基于文本提示词生成图片
 - 🖼️ 支持参考图片进行图片生成
+- 🔄 支持回复消息生成图片
 - ⚡ 完全异步，支持多用户并发调用
 - 🍃 简单易用的 doubao 命令触发
 - 📁 自动下载并保存生成的图片到本地
-- 🔒 从项目根目录的 .secret.json 读取密钥配置
+- 🔒 从同文件夹下的 .secret.json 读取密钥配置
 
 ## 安装配置
 
 ### 1. API密钥配置
 
-在项目根目录的 `.secret.json` 文件中添加豆包的配置：
+在 `ai/doubao/.secret.json` 文件中添加豆包的配置：
 
 ```json
 {
-  "bilibili": {
-    "cookie": "YOUR_BILIBILI_COOKIE_HERE"
-  },
-  "doubao": {
-    "apiKey": "acc59b5c-c423-45a8-adae-b04268d2dcd5"
-  }
+  "apiKey": "acc59b5c-c423-45a8-adae-b04268d2dcd5"
 }
 ```
 
 **配置说明：**
-- `doubao.apiKey`（必填）：火山引擎豆包 API 的授权密钥（Bearer Token）
+- `apiKey`（必填）：火山引擎豆包 API 的授权密钥（Bearer Token）
 
 ### 2. 获取API密钥
 
 1. 访问火山引擎控制台
 2. 开通豆包图像生成服务
 3. 在 API 密钥管理页面获取 Bearer Token
-4. 将密钥填入 `.secret.json` 文件的 `doubao.apiKey` 字段
+4. 将密钥填入 `ai/doubao/.secret.json` 文件的 `apiKey` 字段
 
 ## 使用方法
 
@@ -63,7 +59,21 @@ doubao Generate 3 images of a girl and a cow plushie happily riding a roller coa
 
 ### 基于参考图片生成
 
-#### 1. 通过图片URL
+#### 1. 回复图片消息（推荐）
+
+直接回复包含图片的消息，然后发送 doubao 命令：
+
+```
+[回复一张图片消息]
+doubao 转换成油画风格
+```
+
+特点：
+- ✅ 最方便快捷
+- ✅ 自动提取回复消息中的图片
+- ✅ 如果回复的消息没有图片会自动拒绝以节省API用量
+
+#### 2. 通过图片URL
 
 ```
 doubao [提示词] [图片URL]
@@ -75,7 +85,7 @@ doubao 把这张图片变成动漫风格 https://example.com/image.jpg
 doubao 改变颜色为蓝色调 https://example.com/photo.png
 ```
 
-#### 2. 直接发送图片
+#### 3. 直接发送图片
 
 ```
 doubao [提示词] [发送图片]
@@ -121,7 +131,7 @@ doubao help
 
 ## 注意事项
 
-1. **API密钥**：使用前必须在项目根目录的 `.secret.json` 中配置有效的API密钥
+1. **API密钥**：使用前必须在 `ai/doubao/.secret.json` 中配置有效的API密钥
 2. **权限限制**：仅白名单群组和用户可以使用此功能
 3. **网络要求**：需要稳定的网络连接访问火山引擎API
 4. **图片URL**：参考图片URL必须是公网可访问的链接
@@ -130,7 +140,7 @@ doubao help
 
 ## 错误处理
 
-- 未配置API密钥：会提示"错误：未配置豆包 API 密钥，请在.secret.json中添加doubao.apiKey字段"
+- 未配置API密钥：会提示"错误：未配置豆包 API 密钥，请在ai/doubao/.secret.json中添加apiKey字段"
 - 网络错误：会提示"网络请求失败"
 - API错误：会显示具体的API错误信息
 - 图片下载失败：会提示下载失败原因
