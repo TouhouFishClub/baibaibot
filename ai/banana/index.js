@@ -46,20 +46,26 @@ try {
 }
 
 const API_URL = 'https://api.wuyinkeji.com/api/img/nanoBanana';
+const API_URL_PRO = 'https://api.wuyinkeji.com/api/img/nanoBanana-pro';
 
 /**
  * 调用NanoBanana API生成图片（Promise版本）
  * @param {string} prompt - 生成图片的提示词
  * @param {string|Array} imgUrl - 参考图片URL（可选）
+ * @param {boolean} isPro - 是否使用Pro版本（默认false）
  * @returns {Promise<string>} 返回Promise，resolve时传递图片路径
  */
-async function callNanoBananaAPI(prompt, imgUrl) {
+async function callNanoBananaAPI(prompt, imgUrl, isPro = false) {
   if (!API_KEY) {
     throw new Error('错误：未配置NanoBanana API密钥，请在ai/banana/.secret.json中添加配置');
   }
 
+  const apiPath = isPro ? '/api/img/nanoBanana-pro' : '/api/img/nanoBanana';
+  const modelName = isPro ? 'nano-banana-pro' : 'nano-banana';
+  const versionText = isPro ? 'Pro' : '标准';
+
   // 调试日志：打印即将发送的参数
-  console.log('========== 准备调用NanoBanana API ==========');
+  console.log(`========== 准备调用NanoBanana API (${versionText}版) ==========`);
   console.log('Prompt:', prompt);
   console.log('Image URL:', imgUrl);
   console.log('Image URL 类型:', Array.isArray(imgUrl) ? '数组' : typeof imgUrl);
@@ -74,7 +80,7 @@ async function callNanoBananaAPI(prompt, imgUrl) {
   }
 
   const requestBody = {
-    model: 'nano-banana',
+    model: modelName,
     prompt: prompt,
     img_url: imgUrl || undefined
   };
@@ -88,7 +94,7 @@ async function callNanoBananaAPI(prompt, imgUrl) {
   const options = {
     hostname: 'api.wuyinkeji.com',
     port: 443,
-    path: '/api/img/nanoBanana',
+    path: apiPath,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -404,9 +410,10 @@ function applyPresetPrompt(userPrompt) {
 /**
  * 解析用户输入，提取提示词和图片URL
  * @param {string} content - 用户输入内容
+ * @param {boolean} isPro - 是否是Pro版本（用于识别nbp）
  * @returns {Object} 解析结果 {prompt, imgUrl, replyMessageId}
  */
-function parseUserInput(content) {
+function parseUserInput(content, isPro = false) {
   let input = content;
   let replyMessageId = null;
 
@@ -418,13 +425,28 @@ function parseUserInput(content) {
     replyMessageId = replyMatch[1];
     console.log(`检测到回复消息，消息ID: ${replyMessageId}`);
     
-    // 在回复模式下，找到 banana 关键词的位置
-    const bananaIndex = content.toLowerCase().indexOf('banana');
-    if (bananaIndex !== -1) {
-      // 只保留 banana 及其后面的内容，忽略前面所有内容（包括 CQ码、@等）
-      input = content.substring(bananaIndex);
+    // 在回复模式下，找到 banana、nbp 或 nb 关键词的位置
+    const lowerContent = content.toLowerCase();
+    const bananaIndex = lowerContent.indexOf('banana');
+    const nbpIndex = lowerContent.indexOf('nbp');
+    const nbIndex = lowerContent.indexOf('nb');
+    
+    // 使用最早出现的关键词位置
+    let keywordIndex = -1;
+    const indices = [];
+    if (bananaIndex !== -1) indices.push(bananaIndex);
+    if (nbpIndex !== -1) indices.push(nbpIndex);
+    if (nbIndex !== -1) indices.push(nbIndex);
+    
+    if (indices.length > 0) {
+      keywordIndex = Math.min(...indices);
+    }
+    
+    if (keywordIndex !== -1) {
+      // 只保留关键词及其后面的内容，忽略前面所有内容（包括 CQ码、@等）
+      input = content.substring(keywordIndex);
     } else {
-      // 如果没有找到 banana（理论上不应该发生），保留原有逻辑
+      // 如果没有找到关键词（理论上不应该发生），保留原有逻辑
       input = content
         .replace(replyRegex, '')
         .replace(/\[CQ:at[^\]]*\]/g, '')
@@ -432,15 +454,19 @@ function parseUserInput(content) {
     }
   }
 
-  // 移除"banana"前缀
-  input = input.replace(/^banana\s*/i, '').trim();
+  // 移除"banana"、"nbp"或"nb"前缀（注意顺序：先匹配长的）
+  if (isPro) {
+    input = input.replace(/^(banana|nbp)\s*/i, '').trim();
+  } else {
+    input = input.replace(/^(banana|nb)\s*/i, '').trim();
+  }
 
   // 调试日志（可选）
   // console.log('解析输入:', content)
   
   if (!input) {
     return {
-      error: '请提供图片生成提示词\n用法: banana [提示词] [图片URL(可选)]\n或回复图片消息: banana [提示词]'
+      error: '请提供图片生成提示词\n用法: banana/nb/nbp [提示词] [图片URL(可选)]\n或回复图片消息: banana/nb/nbp [提示词]\n注：nbp为Pro增强版'
     };
   }
 
@@ -821,9 +847,11 @@ function checkPermission(from, groupid) {
  * @param {string} message_type - 消息类型（可选）
  * @param {string} port - 端口/bot名称（可选）
  * @param {Object} context - 消息上下文（可选）
+ * @param {boolean} isPro - 是否使用Pro版本（可选，默认false）
  */
-async function nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, message_type, port, context) {
-  console.log(`NanoBanana请求 - 用户: ${name}(${from}), 群组: ${groupid}, 内容: ${content}`);
+async function nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, message_type, port, context, isPro = false) {
+  const versionText = isPro ? 'Pro' : '标准';
+  console.log(`NanoBanana请求 (${versionText}版) - 用户: ${name}(${from}), 群组: ${groupid}, 内容: ${content}`);
   
   // 检查权限
   if (!checkPermission(from, groupid)) {
@@ -831,7 +859,7 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
     return;
   }
   
-  const parseResult = parseUserInput(content);
+  const parseResult = parseUserInput(content, isPro);
   
   if (parseResult.error) {
     callback(parseResult.error);
@@ -946,7 +974,7 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
   }
 
   // 显示处理中的消息
-  let statusMessage = '🎨 正在使用NanoBanana';
+  let statusMessage = isPro ? '🎨 正在使用NanoBanana Pro' : '🎨 正在使用NanoBanana';
   if (presetResult.isPreset) {
     statusMessage += `[${presetResult.presetName}]`;
   }
@@ -960,6 +988,7 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
 
   // 调试日志：确认最终参数
   console.log('========== 即将调用API ==========');
+  console.log('版本:', isPro ? 'Pro' : '标准');
   console.log('最终Prompt:', finalPrompt.substring(0, 200) + (finalPrompt.length > 200 ? '...' : ''));
   console.log('最终Image URL:', finalImgUrl ? (Array.isArray(finalImgUrl) ? `数组(${finalImgUrl.length}个)` : '单个URL') : '无');
   if (finalImgUrl) {
@@ -969,7 +998,7 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
 
   // 调用API生成图片（使用 Promise 版本，使用最终的prompt）
   try {
-    const result = await callNanoBananaAPI(finalPrompt, finalImgUrl);
+    const result = await callNanoBananaAPI(finalPrompt, finalImgUrl, isPro);
     callback(result);
   } catch (error) {
     console.error('NanoBanana生成失败:', error);
@@ -1017,9 +1046,10 @@ function getNanoBananaPresets(callback) {
   
   message += `\n\n━━━━━━━━━━━━━━━━━━\n`;
   message += `使用方法：\n`;
-  message += `回复图片 + banana [词条名]\n`;
-  message += `例如：banana 手办化\n\n`;
-  message += `查看帮助：banana help`;
+  message += `回复图片 + banana/nb/nbp [词条名]\n`;
+  message += `例如：banana 手办化 或 nb 手办化 或 nbp 手办化\n`;
+  message += `注：nbp为Pro增强版\n\n`;
+  message += `查看帮助：banana help 或 nb help 或 nbp help`;
   
   callback(message);
 }
@@ -1033,21 +1063,23 @@ function getNanoBananaPresets(callback) {
 function getNanoBananaHelp(callback, from = null, groupid = null) {
   let helpText = `🍌 NanoBanana AI图片生成帮助
 
-用法：
-banana [提示词] - 根据提示词生成图片
-banana [提示词] [图片URL] - 基于参考图片和提示词生成图片
-banana [提示词] [发送图片] - 基于发送的图片和提示词生成图片
-回复图片消息 + banana [提示词] - 基于回复的图片生成新图片
+用法（支持 banana / nb / nbp 指令）：
+banana/nb/nbp [提示词] - 根据提示词生成图片
+banana/nb/nbp [提示词] [图片URL] - 基于参考图片和提示词生成图片
+banana/nb/nbp [提示词] [发送图片] - 基于发送的图片和提示词生成图片
+回复图片消息 + banana/nb/nbp [提示词] - 基于回复的图片生成新图片
+
+注：nbp 为 Pro 增强版，效果更好
 
 查看功能：
-banana 词条 / banana 内置 / banana 内置词条 - 查看所有预置效果
-banana help / banana - 查看帮助信息
+banana/nb/nbp 词条 / banana/nb/nbp 内置 / banana/nb/nbp 内置词条 - 查看所有预置效果
+banana/nb/nbp help / banana/nb/nbp - 查看帮助信息
 
 示例：
 banana 一只可爱的小猫咪
-banana 美丽的风景画 https://example.com/image.jpg
-banana 动漫风格 [发送一张图片]
-[回复一张图片] banana 转换成油画风格
+nb 美丽的风景画 https://example.com/image.jpg
+nbp 动漫风格 [发送一张图片]
+[回复一张图片] nbp 转换成油画风格
 
 预置效果（部分）：`;
 

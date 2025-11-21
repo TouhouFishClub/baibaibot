@@ -1979,19 +1979,51 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   const isReply = content.includes('[CQ:reply,id=');
   const lowerContent = content.toLowerCase();
   
-  // banana 功能检测
+  // nbp (Pro版) 功能检测 - 必须先检测，避免被 nb 误判
+  let shouldTriggerBananaPro = false;
+  if (isReply) {
+    // 回复模式：nbp 可以在任意位置
+    shouldTriggerBananaPro = lowerContent.includes('nbp');
+  } else {
+    // 非回复模式：必须 nbp 开头
+    shouldTriggerBananaPro = lowerContent.startsWith('nbp');
+  }
+  
+  if (shouldTriggerBananaPro) {
+    // 检查是否是帮助命令
+    if(lowerContent.trim() === 'nbp' || lowerContent.trim() === 'nbp help') {
+      getNanoBananaHelp(callback, from, groupid);
+    } 
+    // 检查是否是查看词条命令
+    else if(lowerContent.trim() === 'nbp 词条' ||
+           lowerContent.trim() === 'nbp 内置' ||
+           lowerContent.trim() === 'nbp 内置词条' ||
+           lowerContent.trim() === 'nbp词条' ||
+           lowerContent.trim() === 'nbp内置' ||
+           lowerContent.trim() === 'nbp内置词条') {
+      getNanoBananaPresets(callback);
+    } 
+    else {
+      // 传递完整的参数，isPro 设置为 true
+      nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, 'group', port, msgObjSource, true);
+    }
+    return;
+  }
+
+  // banana 功能检测（支持 banana 和 nb 两个触发词）
   let shouldTriggerBanana = false;
   if (isReply) {
-    // 回复模式：banana 可以在任意位置
-    shouldTriggerBanana = lowerContent.includes('banana');
+    // 回复模式：banana 或 nb 可以在任意位置
+    shouldTriggerBanana = lowerContent.includes('banana') || lowerContent.includes('nb');
   } else {
-    // 非回复模式：必须 banana 开头
-    shouldTriggerBanana = lowerContent.startsWith('banana');
+    // 非回复模式：必须 banana 或 nb 开头
+    shouldTriggerBanana = lowerContent.startsWith('banana') || lowerContent.startsWith('nb');
   }
   
   if (shouldTriggerBanana) {
     // 检查是否是帮助命令
-    if(lowerContent.trim() === 'banana' || lowerContent.trim() === 'banana help') {
+    if(lowerContent.trim() === 'banana' || lowerContent.trim() === 'banana help' ||
+       lowerContent.trim() === 'nb' || lowerContent.trim() === 'nb help') {
       getNanoBananaHelp(callback, from, groupid);
     } 
     // 检查是否是查看词条命令
@@ -2000,13 +2032,19 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
            lowerContent.trim() === 'banana 内置词条' ||
            lowerContent.trim() === 'banana词条' ||
            lowerContent.trim() === 'banana内置' ||
-           lowerContent.trim() === 'banana内置词条') {
+           lowerContent.trim() === 'banana内置词条' ||
+           lowerContent.trim() === 'nb 词条' ||
+           lowerContent.trim() === 'nb 内置' ||
+           lowerContent.trim() === 'nb 内置词条' ||
+           lowerContent.trim() === 'nb词条' ||
+           lowerContent.trim() === 'nb内置' ||
+           lowerContent.trim() === 'nb内置词条') {
       getNanoBananaPresets(callback);
     } 
     else {
       // 传递完整的参数，包括 port 和 msgObjSource，以支持回复消息功能
-      // msgType 固定为 'group'
-      nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, 'group', port, msgObjSource);
+      // msgType 固定为 'group'，isPro 设置为 false
+      nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, 'group', port, msgObjSource, false);
     }
     return;
   }
