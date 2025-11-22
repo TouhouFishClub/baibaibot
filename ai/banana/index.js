@@ -123,7 +123,7 @@ async function callNanoBananaAPI(prompt, imgUrl, isPro = false) {
             
             // 使用图片详情查询接口获取真正的图片URL
             try {
-              const imageUrl = await getImageDetail(response.data.id);
+              const imageUrl = await getImageDetail(response.data.id, isPro);
               console.log(`获取到图片URL: ${imageUrl}`);
               
               // 下载图片到本地
@@ -164,16 +164,23 @@ async function callNanoBananaAPI(prompt, imgUrl, isPro = false) {
 /**
  * 获取图片详情，包含真正的图片下载URL（Promise版本）
  * @param {string} imageId - 图片ID
- * @param {number} maxRetries - 最大重试次数，默认30次（60秒）
+ * @param {boolean} isPro - 是否为Pro版本（Pro版本轮询间隔更长）
  * @returns {Promise<string>} 返回Promise，resolve时传递图片URL
  */
-async function getImageDetail(imageId, maxRetries = 30) {
+async function getImageDetail(imageId, isPro = false) {
   if (!API_KEY) {
     throw new Error('未配置API密钥');
   }
 
+  // Pro版本：5秒轮询一次，最大等待5分钟（60次）
+  // 标准版本：2秒轮询一次，最大等待1分钟（30次）
+  const pollInterval = isPro ? 5000 : 2000;
+  const maxRetries = isPro ? 60 : 30;
+  const versionText = isPro ? 'Pro' : '标准';
+
   const detailUrl = `https://api.wuyinkeji.com/api/img/drawDetail?id=${imageId}`;
-  console.log(`查询图片详情: ${detailUrl}`);
+  console.log(`查询图片详情 (${versionText}版): ${detailUrl}`);
+  console.log(`轮询策略: 每${pollInterval/1000}秒查询一次，最多等待${maxRetries * pollInterval / 1000}秒`);
 
   const options = {
     hostname: 'api.wuyinkeji.com',
@@ -233,8 +240,8 @@ async function getImageDetail(imageId, maxRetries = 30) {
           throw new Error(`图片生成失败: ${failReason}`);
         } else if (response.data.status === 0 || response.data.status === 1) {
           // 状态0:排队中，状态1:生成中，需要等待
-          console.log(`图片还在处理中，状态: ${response.data.status}，等待2秒后重试 (${attempt + 1}/${maxRetries})`);
-          await new Promise(resolve => setTimeout(resolve, 2000)); // 等待2秒
+          console.log(`图片还在处理中，状态: ${response.data.status}，等待${pollInterval/1000}秒后重试 (${attempt + 1}/${maxRetries})`);
+          await new Promise(resolve => setTimeout(resolve, pollInterval)); // 等待指定时间
           continue; // 继续下一次循环
         } else {
           throw new Error(`未知状态: ${response.data.status}`);
