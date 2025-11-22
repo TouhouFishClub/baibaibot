@@ -79,11 +79,14 @@ async function callNanoBananaAPI(prompt, imgUrl, isPro = false) {
     console.log('完整URL:', imgUrl);
   }
 
-  const requestBody = {
-    model: modelName,
-    prompt: prompt,
-    img_url: imgUrl || undefined
-  };
+  // 构建请求体
+  // 注意：Pro版本不需要model参数，标准版需要model参数
+  const requestBody = isPro ? { prompt: prompt } : { model: modelName, prompt: prompt };
+  
+  // 只在imgUrl有效时才添加img_url字段
+  if (imgUrl) {
+    requestBody.img_url = imgUrl;
+  }
   
   const postData = JSON.stringify(requestBody);
   
