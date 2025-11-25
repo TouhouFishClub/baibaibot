@@ -823,7 +823,7 @@ function extractImageUrlsFromMessage(messageDetail) {
  */
 function checkPermission(from, groupid) {
   // 白名单群组
-  const allowedGroups = [577587780];
+  const allowedGroups = [577587780, 648050368];
   
   // 白名单用户
   const allowedUsers = [799018865, 2408709050, 540540678];
