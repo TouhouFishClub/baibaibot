@@ -737,6 +737,52 @@ setInterval(cleanupOldTempImages, 30 * 60 * 1000);
 console.log('✅ NanoBanana临时图片定期清理任务已启动（每30分钟执行一次）');
 
 /**
+ * 处理URL数组，检查并转换私有域名图片为公网可访问URL
+ * @param {Array|string} urls - URL数组或单个URL
+ * @param {string} userId - 用户ID（用于文件名唯一性）
+ * @returns {Promise<Object>} {processedUrls: 处理后的URL数组, tempPaths: 临时文件路径数组}
+ */
+async function processImageUrls(urls, userId) {
+  // 统一转为数组处理
+  const urlArray = Array.isArray(urls) ? urls : [urls];
+  const processedUrls = [];
+  const tempPaths = [];
+  
+  console.log(`🔍 开始处理 ${urlArray.length} 个图片URL...`);
+  
+  // 按顺序处理每个URL（保持顺序很重要！）
+  for (let i = 0; i < urlArray.length; i++) {
+    const url = urlArray[i];
+    const urlInfo = fixImageUrl(url);
+    
+    console.log(`   [${i + 1}/${urlArray.length}] 处理URL: ${urlInfo.url.substring(0, 80)}...`);
+    
+    if (urlInfo.isPrivate) {
+      console.log(`      ⚠️ 检测到私有域名 (multimedia.nt.qq.com.cn)，需要下载并临时发布`);
+      try {
+        const result = await downloadAndHostPrivateImage(urlInfo.url, userId);
+        processedUrls.push(result.publicUrl);
+        tempPaths.push(result.localPath);
+        console.log(`      ✅ 转换完成: ${result.publicUrl}`);
+      } catch (error) {
+        console.error(`      ❌ 处理失败: ${error.message}`);
+        throw new Error(`处理第 ${i + 1} 张图片失败: ${error.message}`);
+      }
+    } else {
+      console.log(`      ✅ 公网URL，直接使用`);
+      processedUrls.push(urlInfo.url);
+    }
+  }
+  
+  console.log(`✅ 所有图片URL处理完成，共 ${processedUrls.length} 个`);
+  
+  return {
+    processedUrls: processedUrls,
+    tempPaths: tempPaths
+  };
+}
+
+/**
  * 从消息中提取图片URL
  * @param {Object} messageDetail - 消息详情
  * @returns {Array|null} 图片URL数组
@@ -767,14 +813,8 @@ function extractImageUrlsFromMessage(messageDetail) {
         // 反转义处理
         url = url.replace(/&amp;/g, '&');
         url = url.replace(/&#44;/g, ',');
-        // 检查URL
-        const urlInfo = fixImageUrl(url);
-        if (urlInfo.isPrivate) {
-          console.log(`⚠️ 找到私有域名图片URL (消息段 ${index}):`, urlInfo.url.substring(0, 100));
-        } else {
-          console.log(`✅ 找到图片URL (消息段 ${index}):`, urlInfo.url);
-        }
-        urls.push({ url: urlInfo.url, isPrivate: urlInfo.isPrivate });
+        console.log(`✅ 找到图片URL (消息段 ${index}):`, url.substring(0, 100) + (url.length > 100 ? '...' : ''));
+        urls.push(url);
       }
     });
   } else if (typeof message === 'string') {
@@ -790,14 +830,8 @@ function extractImageUrlsFromMessage(messageDetail) {
         let url = match[1];
         url = url.replace(/&amp;/g, '&');
         url = url.replace(/&#44;/g, ',');
-        // 检查URL
-        const urlInfo = fixImageUrl(url);
-        if (urlInfo.isPrivate) {
-          console.log(`⚠️ 提取到私有域名图片URL:`, urlInfo.url.substring(0, 100));
-        } else {
-          console.log(`✅ 提取到图片URL:`, urlInfo.url);
-        }
-        urls.push({ url: urlInfo.url, isPrivate: urlInfo.isPrivate });
+        console.log(`✅ 提取到图片URL:`, url.substring(0, 100) + (url.length > 100 ? '...' : ''));
+        urls.push(url);
       }
     }
     // if (matchCount === 0) {
@@ -885,17 +919,33 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
   }
 
   let finalImgUrl = parseResult.imgUrl;
+  let allTempPaths = []; // 收集所有需要清理的临时文件路径
 
-  // 如果有回复消息ID，获取被回复的消息详情
+  // 第一步：处理命令中的图片URL（如果有）
+  if (finalImgUrl) {
+    try {
+      console.log(`📷 检测到命令中包含图片，开始检查并处理...`);
+      const result = await processImageUrls(finalImgUrl, from);
+      finalImgUrl = result.processedUrls;
+      allTempPaths.push(...result.tempPaths);
+      console.log(`✅ 命令中的图片处理完成`);
+    } catch (error) {
+      console.error(`❌ 处理命令中的图片失败:`, error.message);
+      callback(`❌ 处理图片失败: ${error.message}`);
+      // 清理已下载的临时文件
+      for (const tempPath of allTempPaths) {
+        deleteTempImage(tempPath);
+      }
+      return;
+    }
+  }
+
+  // 第二步：如果有回复消息ID，获取被回复的消息详情
   if (parseResult.replyMessageId && port) {
     try {
       console.log(`检测到回复消息 [ID: ${parseResult.replyMessageId}]，正在获取消息详情...`);
-      // console.log(`Bot名称/端口: ${port}`);
       
       const messageDetail = await getMessageDetail(parseResult.replyMessageId, port);
-      
-      // console.log(`✅ 成功获取消息详情`);
-      // console.log(`被回复的消息完整内容:`, JSON.stringify(messageDetail, null, 2));
       
       // 从被回复的消息中提取图片URL
       const replyImageUrls = extractImageUrlsFromMessage(messageDetail);
@@ -903,64 +953,30 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
       if (replyImageUrls && replyImageUrls.length > 0) {
         console.log(`✅ 从回复消息中成功提取到 ${replyImageUrls.length} 张图片`);
         
-        // 检查是否有私有域名的URL
-        const hasPrivateUrl = replyImageUrls.some(item => item.isPrivate);
-        if (hasPrivateUrl) {
-          console.log(`🔧 检测到私有域名URL，正在下载并托管到本地服务器...`);
-          // 不再提示下载过程
-          // callback('🔧 检测到回复消息中的图片来自QQ私有存储，正在下载并转换为公网可访问链接，请稍候...');
+        try {
+          // 处理回复消息中的图片URL
+          const result = await processImageUrls(replyImageUrls, from);
+          const processedReplyUrls = result.processedUrls;
+          allTempPaths.push(...result.tempPaths);
           
-          try {
-            // 下载所有私有域名的图片，并记录本地路径以便后续清理
-            const tempImagePaths = [];
-            const processedUrls = [];
-            
-            for (const item of replyImageUrls) {
-              if (item.isPrivate) {
-                // 传递用户ID以确保文件名唯一性
-                const result = await downloadAndHostPrivateImage(item.url, from);
-                processedUrls.push(result.publicUrl);
-                tempImagePaths.push(result.localPath);
-              } else {
-                processedUrls.push(item.url);
-              }
-            }
-            
-            console.log(`✅ 所有图片处理完成，共 ${processedUrls.length} 张`);
-            
-            // 存储临时文件路径，用于后续清理
-            context._tempImagePaths = tempImagePaths;
-            
-            // 如果命令中没有图片，使用处理后的URL
-            if (!finalImgUrl) {
-              finalImgUrl = processedUrls;
-            } else {
-              console.log(`合并命令中的图片和回复消息中的图片`);
-              if (Array.isArray(finalImgUrl)) {
-                finalImgUrl = [...finalImgUrl, ...processedUrls];
-              } else {
-                finalImgUrl = [finalImgUrl, ...processedUrls];
-              }
-            }
-          } catch (error) {
-            console.error(`❌ 下载私有域名图片失败:`, error.message);
-            callback(`❌ 下载图片失败: ${error.message}\n\n💡 建议：请直接发送图片（不要使用回复功能），格式如下：\nbabana 手办化 [发送图片]`);
-            return;
-          }
-        } else {
-          // 没有私有域名，直接使用原始URL
-          const cleanUrls = replyImageUrls.map(item => item.url);
-          
+          // 合并命令中的图片和回复消息中的图片
           if (!finalImgUrl) {
-            finalImgUrl = cleanUrls;
+            finalImgUrl = processedReplyUrls;
           } else {
             console.log(`合并命令中的图片和回复消息中的图片`);
-            if (Array.isArray(finalImgUrl)) {
-              finalImgUrl = [...finalImgUrl, ...cleanUrls];
-            } else {
-              finalImgUrl = [finalImgUrl, ...cleanUrls];
-            }
+            // finalImgUrl 已经是数组（经过 processImageUrls 处理）
+            finalImgUrl = [...finalImgUrl, ...processedReplyUrls];
           }
+          
+          console.log(`✅ 回复消息中的图片处理完成`);
+        } catch (error) {
+          console.error(`❌ 处理回复消息中的图片失败:`, error.message);
+          callback(`❌ 处理图片失败: ${error.message}`);
+          // 清理已下载的临时文件
+          for (const tempPath of allTempPaths) {
+            deleteTempImage(tempPath);
+          }
+          return;
         }
       } else {
         console.log(`⚠️ 回复的消息中未找到图片`);
@@ -970,17 +986,24 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
           return;
         }
       }
-      // console.log(`========== 回复消息处理完成 ==========`);
     } catch (error) {
       console.error('❌ 获取回复消息失败:', error.message);
-      // console.error('错误堆栈:', error.stack);
       // 如果获取失败但有其他图片URL，继续执行
       if (!finalImgUrl) {
         callback(`❌ 获取回复消息失败: ${error.message}\n如果想使用参考图片，请直接发送图片或提供图片URL。`);
+        // 清理已下载的临时文件
+        for (const tempPath of allTempPaths) {
+          deleteTempImage(tempPath);
+        }
         return;
       }
       callback(`⚠️ 获取回复消息失败，将使用命令中提供的图片继续生成...`);
     }
+  }
+
+  // 存储临时文件路径到context，用于finally块清理
+  if (allTempPaths.length > 0) {
+    context._tempImagePaths = allTempPaths;
   }
 
   // 显示处理中的消息
