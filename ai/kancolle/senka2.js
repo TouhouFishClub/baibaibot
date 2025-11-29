@@ -344,8 +344,10 @@ function getRank(page,retarr,proxy){
             (async () => {
               let MAX_BYTES = 1000000;
               let MAX_BYTES_2 = 1000000;
-              let MAIN_JS_URL = "https://w08r.kancolle-server.com/kcs2/js/main.js"; // 下载速率似乎比 http://ooi.moe/kcs2/js/main.js 更快
-              let UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36";
+              let MAIN_JS_URL =
+                "https://w08r.kancolle-server.com/kcs2/js/main.js"; // 下载速率似乎比 http://ooi.moe/kcs2/js/main.js 更快
+              let UA =
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36";
               let PATTEN = /(?<!\')\{(?!\\x20)|(?<!\\x20)\}(?!\')/;
 
               let same = (a, b) => {
@@ -361,7 +363,9 @@ function getRank(page,retarr,proxy){
                 return fetch(MAIN_JS_URL, {
                   headers: {
                     "User-Agent": UA,
-                    Range: `bytes=${is_reverse ? -MAX_BYTES : `0-${MAX_BYTES_2}`}`,
+                    Range: `bytes=${
+                      is_reverse ? -MAX_BYTES : `0-${MAX_BYTES_2}`
+                    }`,
                     // Range: bytes=-311000 或者 Range: bytes=0-530000
                     // 前者是为了获取最后 311000 字节，后者是为了获取前 530000 字节
                     // 为什么不直接获取全部？因为获取全部的话会很慢
@@ -369,7 +373,11 @@ function getRank(page,retarr,proxy){
                 });
               };
 
-              let get_pos = (str, is_reverse = false) => {
+              let get_pos = (
+                str,
+                is_reverse = false,
+                ori_length = undefined
+              ) => {
                 let ret = [];
                 let pos = 0;
                 while (true) {
@@ -417,7 +425,7 @@ function getRank(page,retarr,proxy){
 
                 if (is_reverse)
                   for (let i = 0; i < ret.length; ++i)
-                    ret[i] = [MAX_BYTES - ret[i][1], MAX_BYTES - ret[i][0]];
+                    ret[i] = [ori_length - ret[i][1], ori_length - ret[i][0]];
 
                 return ret;
               };
@@ -462,7 +470,11 @@ function getRank(page,retarr,proxy){
                   if (!v.ok) throw "fetch main.js failed!!!";
                   return v.text();
                 });
-                tail_data.pos = get_pos(reverse(tail_data.body), true);
+                tail_data.pos = get_pos(
+                  reverse(tail_data.body),
+                  true,
+                  tail_data.body.length
+                );
                 _f(tail_data);
               }
 
@@ -489,8 +501,12 @@ function getRank(page,retarr,proxy){
 
               let reg = new RegExp("\\(0x" + nseed.toString(16) + "\\)\\]=\\[");
 
-              front_data.body = front_data.body.slice(front_data.body.search(reg) + 1);
-              front_data.body = front_data.body.slice(front_data.body.search(/\[/) + 1);
+              front_data.body = front_data.body.slice(
+                front_data.body.search(reg) + 1
+              );
+              front_data.body = front_data.body.slice(
+                front_data.body.search(/\[/) + 1
+              );
 
               let res = front_data.body
                 .slice(0, front_data.body.search(/\]/))
