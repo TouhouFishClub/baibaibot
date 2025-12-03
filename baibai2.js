@@ -2021,9 +2021,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   
   if (shouldTriggerBanana) {
-    // 检查是否是帮助命令
-    if(lowerContent.trim() === 'banana' || lowerContent.trim() === 'banana help' ||
-       lowerContent.trim() === 'nb' || lowerContent.trim() === 'nb help') {
+    // 检查是否是帮助命令（只有 banana 触发帮助，nb 不触发）
+    if(lowerContent.trim() === 'banana' || lowerContent.trim() === 'banana help') {
       getNanoBananaHelp(callback, from, groupid);
     } 
     // 检查是否是查看词条命令

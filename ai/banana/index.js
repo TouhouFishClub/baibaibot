@@ -897,9 +897,9 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
   const versionText = isPro ? 'Pro' : '标准';
   console.log(`NanoBanana请求 (${versionText}版) - 用户: ${name}(${from}), 群组: ${groupid}, 内容: ${content}`);
   
-  // 检查权限
+  // 检查权限（无权限时静默返回，不回复提示）
   if (!checkPermission(from, groupid)) {
-    callback('抱歉，您暂无权限使用NanoBanana图片生成功能。');
+    console.log(`用户 ${name}(${from}) 无权限使用NanoBanana功能`);
     return;
   }
   
