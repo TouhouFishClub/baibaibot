@@ -58,6 +58,7 @@ const {handleSenkaReply} = require('./ai/kancolle/senka2');
 const {descryptReply} = require('./ai/image/qqspeak');
 const rp = require('./ai/rp');
 const { jrrp } = require('./ai/rp_new')
+const { jrzz } = require('./ai/rp_pig/jrzz')
 const {G21Boss} = require('./ai/mabinogi/G21Boss');
 const checkIgnoreUser = require('./ai/ignoreUser');
 const {searchMHW} = require('./ai/mhw/index');
@@ -1483,6 +1484,19 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
       return
     }
     // rp(from, callback)
+    return
+  }
+
+  // 今日猪猪
+  if(con.startsWith('jrzz') || con.startsWith('今日猪猪')) {
+    let userInfo
+    if(msgObjSource?.sender) {
+      userInfo = {
+        nid: msgObjSource?.sender?.card || msgObjSource?.sender?.nickname || 'unknown'
+      }
+    }
+    console.log('=== jrzz ===')
+    jrzz(from, callback, userInfo)
     return
   }
 
