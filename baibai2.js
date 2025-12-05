@@ -174,6 +174,7 @@ const {tcArticle} = require('./ai/mabinogi/newArticle')
 const {LiveInspect, LiveAnalyzer} = require('./ai/mabinogi/live-inspect')
 const {chujue} = require('./ai/image/generator/chujue/index.js')
 const {nanoBananaReply, getNanoBananaHelp, getNanoBananaPresets} = require('./ai/banana')
+const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao')
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
 
 // 导入deepseek模块
@@ -1993,6 +1994,35 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   const isReply = content.includes('[CQ:reply,id=');
   const lowerContent = content.toLowerCase();
   
+  // nbp2 (小豆包版 Nano Banana Pro 2) 功能检测 - 必须先于 nbp 检测
+  let shouldTriggerNbp2 = false;
+  if (isReply) {
+    shouldTriggerNbp2 = lowerContent.includes('nbp2');
+  } else {
+    shouldTriggerNbp2 = lowerContent.startsWith('nbp2');
+  }
+  
+  if (shouldTriggerNbp2) {
+    // 检查是否是帮助命令
+    if(lowerContent.trim() === 'nbp2' || lowerContent.trim() === 'nbp2 help') {
+      getNbp2Help(callback, from, groupid);
+    } 
+    // 检查是否是查看词条命令
+    else if(lowerContent.trim() === 'nbp2 词条' ||
+           lowerContent.trim() === 'nbp2 内置' ||
+           lowerContent.trim() === 'nbp2 内置词条' ||
+           lowerContent.trim() === 'nbp2词条' ||
+           lowerContent.trim() === 'nbp2内置' ||
+           lowerContent.trim() === 'nbp2内置词条') {
+      getNbp2Presets(callback);
+    } 
+    else {
+      // 调用 nbp2Reply
+      nbp2Reply(content, from, name, groupid, callback, groupName, nickname, 'group', port, msgObjSource);
+    }
+    return;
+  }
+
   // nbp (Pro版) 功能检测 - 必须先检测，避免被 nb 误判
   let shouldTriggerBananaPro = false;
   if (isReply) {
