@@ -7,13 +7,28 @@ const { IMAGE_DATA } = require(path.join(__dirname, '..', 'baibaiConfigs.js'))
 
 let client
 
-const renderMenu = async (group, callback) => {
+const renderMenu = async (group, callback, searchChars = []) => {
   try {
     let keywords = await client.db('db_bot').collection('cl_menu').find({g: parseInt(`${group}`)}).toArray()
     if(!keywords.length) {
       callback('该群组暂无菜单项，请使用 [菜单 增加 项目名] 添加菜单项')
       return
     }
+    
+    // 高亮匹配的字符
+    const highlightText = (text) => {
+      if (!searchChars.length) return text
+      let result = ''
+      for (const char of text) {
+        if (searchChars.includes(char)) {
+          result += `<span style="color: red;">${char}</span>`
+        } else {
+          result += char
+        }
+      }
+      return result
+    }
+    
   let html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,7 +61,7 @@ const renderMenu = async (group, callback) => {
 </head>
 <body>
   <table class="main-table" id="body">
-  ${_.chunk(keywords.map(x => x.d), 5).map(tr => `<tr>${tr.map(td => `<td>${td}</td>`).join('')}</tr>`).join('')}
+  ${_.chunk(keywords.map(x => highlightText(x.d)), 5).map(tr => `<tr>${tr.map(td => `<td>${td}</td>`).join('')}</tr>`).join('')}
   </table>
 </body>
 </html>`
@@ -104,7 +119,9 @@ const menu = async (content, group, callback) => {
         callback(`[menu add xxx xxx] 或 [菜单 增加 xxx xxx]:\n 增加记录，可增加多条记录，使用空格分隔\n[menu remove xxx] 或 [菜单 删除 xxx]:\n 删除记录，每次仅可删除一条`)
         break
       default:
-        await renderMenu(group, callback)
+        // 将搜索词拆成单个字符用于高亮
+        const searchChars = sp[1] ? [...sp[1]] : []
+        await renderMenu(group, callback, searchChars)
     }
   } catch (error) {
     console.error('菜单操作错误:', error)
