@@ -195,13 +195,33 @@ async function callGeminiAPI(prompt, images) {
           }
           
           // 解析Gemini API响应格式
+          console.log('[NBP2] ========== 开始解析API响应 ==========');
+          console.log('[NBP2] 响应结构检查:');
+          console.log('[NBP2] - response对象存在:', !!response);
+          console.log('[NBP2] - candidates存在:', !!response.candidates);
+          console.log('[NBP2] - candidates长度:', response.candidates ? response.candidates.length : 0);
+          
+          if (response.candidates && response.candidates[0]) {
+            console.log('[NBP2] - candidates[0]存在:', !!response.candidates[0]);
+            console.log('[NBP2] - candidates[0].content存在:', !!response.candidates[0].content);
+            
+            if (response.candidates[0].content) {
+              console.log('[NBP2] - content.parts存在:', !!response.candidates[0].content.parts);
+              console.log('[NBP2] - content.parts长度:', response.candidates[0].content.parts ? response.candidates[0].content.parts.length : 0);
+            }
+          }
+          
           if (response.candidates && response.candidates[0] && response.candidates[0].content) {
             const content = response.candidates[0].content;
             let resultText = '';
             let imageBase64 = null;
             let imageMimeType = null;
             
-            for (const part of content.parts || []) {
+            console.log('[NBP2] 开始遍历content.parts...');
+            for (let i = 0; i < (content.parts || []).length; i++) {
+              const part = content.parts[i];
+              console.log(`[NBP2] - Part ${i}:`, JSON.stringify(Object.keys(part)));
+              
               if (part.text) {
                 resultText = part.text;
                 console.log('[NBP2] 响应文本:', resultText.substring(0, 100));
@@ -210,7 +230,8 @@ async function callGeminiAPI(prompt, images) {
                 const inlineData = part.inline_data || part.inlineData;
                 imageBase64 = inlineData.data;
                 imageMimeType = inlineData.mime_type || inlineData.mimeType || 'image/png';
-                console.log('[NBP2] 收到图片数据, 类型:', imageMimeType);
+                const dataLength = imageBase64 ? imageBase64.length : 0;
+                console.log('[NBP2] ✅ 收到图片数据, 类型:', imageMimeType, ', 数据长度:', dataLength);
               }
             }
             
@@ -225,12 +246,17 @@ async function callGeminiAPI(prompt, images) {
               }
             } else if (resultText) {
               // 只有文本响应，没有图片
+              console.error('[NBP2] ❌ API返回了文本但没有图片');
+              console.error('[NBP2] 完整响应文本:', resultText);
               reject(new Error(`API未返回图片。响应: ${resultText}`));
             } else {
+              console.error('[NBP2] ❌ API响应中没有图片数据也没有文本');
+              console.error('[NBP2] 完整content对象:', JSON.stringify(content, null, 2));
               reject(new Error('API响应中没有图片数据'));
             }
           } else {
-            console.error('[NBP2] 意外的响应格式:', JSON.stringify(response).substring(0, 500));
+            console.error('[NBP2] ❌ 意外的响应格式');
+            console.error('[NBP2] 完整响应对象:', JSON.stringify(response, null, 2));
             reject(new Error('API响应格式异常'));
           }
         } catch (error) {
