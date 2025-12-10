@@ -97,9 +97,9 @@ class UVIXShortStrategy(QCAlgorithm):
         self.market_open_time = None
         self.first_hour_end_time = None
 
-        # 期权策略资金分配
-        self.option_allocation_uvix = 0.03
-        self.option_allocation_sqqq = 0.05
+        # 期权策略资金分配 - 只卖Put，可以增加资金
+        self.option_allocation_uvix = 0.05  # UVIX期权使用5%资金（从3%提高）
+        self.option_allocation_sqqq = 0.08  # SQQQ期权使用8%资金（从5%提高）
 
         # 波动率指标
         self.vix_ema = ExponentialMovingAverage(5)
@@ -397,11 +397,23 @@ class UVIXShortStrategy(QCAlgorithm):
             self.first_hour_end_time = self.Time + timedelta(hours=1)
 
             if self.IsOptionsExpiryDay():
-                self.Debug(f"[{self.Time}] *** 期权到期日 *** 开始记录开盘一小时高低点")
+                self.Debug(f"[{self.Time}] *** 期权到期日检测 *** 今天是周五，开始记录开盘一小时高低点")
                 self.expiry_day_data[self.uvix] = {'high': None, 'low': None, 'monitoring': True}
                 self.expiry_day_data[self.sqqq] = {'high': None, 'low': None, 'monitoring': True}
                 self.expiry_breakout_triggered[self.uvix] = False
                 self.expiry_breakout_triggered[self.sqqq] = False
+
+                # 检查期权链是否可用
+                self.Debug(f"[{self.Time}] 检查期权链可用性...")
+                uvix_chain = self.CurrentSlice.OptionChains.get(self.uvix_option)
+                sqqq_chain = self.CurrentSlice.OptionChains.get(self.sqqq_option)
+                self.Debug(f"[{self.Time}] UVIX期权链: {'可用' if uvix_chain and len(uvix_chain) > 0 else '不可用或为空'}")
+                self.Debug(f"[{self.Time}] SQQQ期权链: {'可用' if sqqq_chain and len(sqqq_chain) > 0 else '不可用或为空'}")
+
+                if uvix_chain and len(uvix_chain) > 0:
+                    self.Debug(f"[{self.Time}] UVIX期权链包含 {len(uvix_chain)} 个合约")
+                if sqqq_chain and len(sqqq_chain) > 0:
+                    self.Debug(f"[{self.Time}] SQQQ期权链包含 {len(sqqq_chain)} 个合约")
 
         if self.market_open_time and self.Time <= self.first_hour_end_time:
             for symbol in [self.uvix, self.sqqq]:
@@ -423,6 +435,7 @@ class UVIXShortStrategy(QCAlgorithm):
                     name = "UVIX" if symbol == self.uvix else "SQQQ"
                     if data_point['high'] and data_point['low']:
                         self.Debug(f"[{self.Time}] {name} 开盘一小时范围: 最高 ${data_point['high']:.2f}, 最低 ${data_point['low']:.2f}")
+                        self.Debug(f"[{self.Time}] {name} 开始监控突破，等待交易信号...")
                         data_point['monitoring'] = False
 
     def CheckExpiryDayBreakout(self, data):
@@ -447,38 +460,55 @@ class UVIXShortStrategy(QCAlgorithm):
             name = "UVIX" if symbol == self.uvix else "SQQQ"
             option_symbol = self.uvix_option if symbol == self.uvix else self.sqqq_option
 
+            # 向下突破最低点 -> 卖出Put（看跌期权，行权价在最低点附近）
             if current_price < data_point['low']:
-                self.Debug(f"[{self.Time}] {name} 向下突破最低点 ${data_point['low']:.2f} (当前${current_price:.2f}), 卖出Call")
-                self.SellOptionNearStrike(option_symbol, data_point['high'], OptionRight.Call, name)
-                self.expiry_breakout_triggered[symbol] = True
-
-            elif current_price > data_point['high']:
-                self.Debug(f"[{self.Time}] {name} 向上突破最高点 ${data_point['high']:.2f} (当前${current_price:.2f}), 卖出Put")
+                self.Debug(f"[{self.Time}] !!! {name} 向下突破触发 !!! 最低点${data_point['low']:.2f}, 当前${current_price:.2f}")
                 self.SellOptionNearStrike(option_symbol, data_point['low'], OptionRight.Put, name)
                 self.expiry_breakout_triggered[symbol] = True
 
+            # 向上突破最高点 -> 也卖出Put（行权价在当前价格下方）
+            elif current_price > data_point['high']:
+                self.Debug(f"[{self.Time}] !!! {name} 向上突破触发 !!! 最高点${data_point['high']:.2f}, 当前${current_price:.2f}")
+                target_strike = current_price * 0.95
+                self.SellOptionNearStrike(option_symbol, target_strike, OptionRight.Put, name)
+                self.expiry_breakout_triggered[symbol] = True
+
     def IsOptionsExpiryDay(self):
+        """判断今天是否是期权到期日（每周五）"""
         today = self.Time.date()
 
-        if today.weekday() != 4:
-            return False
+        # 检查是否是周五
+        if today.weekday() == 4:
+            return True
 
-        first_day = today.replace(day=1)
-        first_friday = first_day + timedelta(days=(4 - first_day.weekday()) % 7)
-        third_friday = first_friday + timedelta(weeks=2)
-
-        return today == third_friday
+        return False
 
     def SellOptionNearStrike(self, option_symbol, target_strike, option_right, underlying_name):
+        self.Debug(f"[{self.Time}] [期权交易] 尝试卖出 {underlying_name} Put，目标行权价 ${target_strike:.2f}")
+
         option_chain = self.CurrentSlice.OptionChains.get(option_symbol)
-        if option_chain is None or len(option_chain) == 0:
-            self.Debug(f"[{self.Time}] {underlying_name} 期权链为空，无法卖出")
+
+        if option_chain is None:
+            self.Debug(f"[{self.Time}] [期权失败] {underlying_name} 期权链为 None")
             return
 
-        options = [x for x in option_chain if x.Right == option_right]
-        if len(options) == 0:
-            self.Debug(f"[{self.Time}] {underlying_name} 没有找到{option_right}期权")
+        if len(option_chain) == 0:
+            self.Debug(f"[{self.Time}] [期权失败] {underlying_name} 期权链为空，没有可用合约")
             return
+
+        self.Debug(f"[{self.Time}] [期权可用] {underlying_name} 期权链包含 {len(option_chain)} 个合约")
+
+        # 只筛选Put期权
+        options = [x for x in option_chain if x.Right == OptionRight.Put]
+        self.Debug(f"[{self.Time}] [期权筛选] 找到 {len(options)} 个Put期权")
+
+        if len(options) == 0:
+            self.Debug(f"[{self.Time}] [期权失败] {underlying_name} 没有找到Put期权")
+            return
+
+        # 显示前5个期权信息用于调试
+        for i, opt in enumerate(options[:5]):
+            self.Debug(f"[{self.Time}] 期权{i+1}: 行权价${opt.Strike:.2f}, 到期{opt.Expiry.date()}, 买价${opt.BidPrice:.2f}")
 
         options = sorted(options, key=lambda x: abs(x.Strike - target_strike))
         selected_option = options[0]
@@ -492,17 +522,21 @@ class UVIXShortStrategy(QCAlgorithm):
         option_price = selected_option.BidPrice if selected_option.BidPrice > 0 else selected_option.LastPrice
 
         if option_price <= 0:
-            self.Debug(f"[{self.Time}] {underlying_name} 期权价格无效")
+            self.Debug(f"[{self.Time}] [期权失败] {underlying_name} 期权价格无效: Bid=${selected_option.BidPrice:.2f}, Last=${selected_option.LastPrice:.2f}")
             return
 
+        # 计算合约数
         contracts = int(allocation_value / (option_price * 100))
-        contracts = max(1, min(contracts, 10))
+        contracts = max(1, min(contracts, 15))
+
+        self.Debug(f"[{self.Time}] [准备下单] {underlying_name} Put: {contracts}张, 行权价${selected_option.Strike:.2f}, 价格${option_price:.2f}")
 
         self.MarketOrder(selected_option.Symbol, -contracts)
 
-        option_type = "Call" if option_right == OptionRight.Call else "Put"
         premium = option_price * 100 * contracts
-        self.Debug(f"[{self.Time}] 卖出 {contracts} 张 {underlying_name} {option_type}, 行权价 ${selected_option.Strike:.2f}, 权利金约 ${premium:.2f}")
+        self.Debug(f"[{self.Time}] [期权成交] 卖出 {contracts} 张 {underlying_name} Put, 行权价 ${selected_option.Strike:.2f}, "
+                  f"目标行权价 ${target_strike:.2f}, 权利金约 ${premium:.2f}, 到期 {selected_option.Expiry.date()}")
+        self.Debug(f"[{self.Time}] [只卖Put策略] 如被行权将以${selected_option.Strike:.2f}接盘{contracts*100}股，可直接做空")
 
     def OnEndOfDay(self):
         has_position = any(self.Portfolio[symbol].Invested for symbol in self.short_symbols.keys())
