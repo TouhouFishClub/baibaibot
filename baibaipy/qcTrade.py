@@ -13,7 +13,6 @@ class UVIXShortStrategy(QCAlgorithm):
 
         # 添加期权
         uvix_option = self.AddOption("UVIX", Resolution.Minute)
-        # 扩大过滤范围：行权价±5档，60天内到期
         uvix_option.SetFilter(-5, 5, 0, 60)
         self.uvix_option = uvix_option.Symbol
 
@@ -91,31 +90,39 @@ class UVIXShortStrategy(QCAlgorithm):
         self.spy_cumulative_rebound = 0.03
         self.vix_peak_drop_threshold = 0.30
 
-        # ========== 修改后的期权策略 ==========
-        # 每月卖出当月到期的Put期权（月度期权）
-        self.options_sold_this_month = False  # 记录本月是否已卖出期权
-        self.last_option_month = None  # 记录上次卖出期权的月份
-
-        # 期权策略：不再使用资金分配比例
-        # 改为根据做空数量决定：张数 = 做空数量 / 200
+        # 期权策略
+        self.options_sold_this_month = False
+        self.last_option_month = None
 
         # 波动率指标
         self.vix_ema = ExponentialMovingAverage(5)
         self.vix_spike_threshold = 1.5
 
+        # ========== 新增:限价单优化参数 ==========
+        self.limit_order_tickets = {}  # 记录限价单ticket
+        self.limit_order_premium = 0.002  # 限价单溢价:比市价高0.2%(做空所以要更高价格卖出)
+        self.limit_order_duration_minutes = 27  # 有效期27分钟(从开盘3分钟到30分钟)
+
         # ========== 修改后的定时任务 ==========
-        # 每月第一个交易日10:00：卖出当月到期的Put期权
+        # 开盘后3分钟:检查偏差并挂限价单
+        self.Schedule.On(
+            self.DateRules.EveryDay(self.uvix),
+            self.TimeRules.AfterMarketOpen(self.uvix, 3),
+            self.CheckDeviationAndPlaceLimitOrders
+        )
+
+        # 开盘后30分钟:检查限价单,未成交则用市价单
+        self.Schedule.On(
+            self.DateRules.EveryDay(self.uvix),
+            self.TimeRules.AfterMarketOpen(self.uvix, 30),
+            self.ExecuteFallbackMarketOrders
+        )
+
+        # 每月第一个交易日10:00:卖出当月到期的Put期权
         self.Schedule.On(
             self.DateRules.MonthStart(self.uvix),
             self.TimeRules.AfterMarketOpen(self.uvix, 30),
             self.SellMonthlyPuts
-        )
-
-        # 每日重新平衡
-        self.Schedule.On(
-            self.DateRules.EveryDay(self.uvix),
-            self.TimeRules.AfterMarketOpen(self.uvix, 30),
-            self.Rebalance
         )
 
         # 盘中监控
@@ -131,16 +138,13 @@ class UVIXShortStrategy(QCAlgorithm):
             current_vix = data[self.vix].Close
             self.vix_ema.Update(self.Time, current_vix)
 
-            # 记录VIX历史
             self.vix_history.append({'date': self.Time.date(), 'value': current_vix})
             if len(self.vix_history) > 10:
                 self.vix_history.pop(0)
 
-            # 更新VIX峰值
             if self.vix_peak_value is None or current_vix > self.vix_peak_value:
                 self.vix_peak_value = current_vix
 
-            # 检测VIX单日暴涨
             if self.vix_previous_close is not None and self.vix_previous_close > 0:
                 vix_daily_change = (current_vix - self.vix_previous_close) / self.vix_previous_close
 
@@ -151,7 +155,6 @@ class UVIXShortStrategy(QCAlgorithm):
 
             self.vix_previous_close = current_vix
 
-        # 更新SPY前收盘价和历史
         if data.ContainsKey(self.spy) and data[self.spy] is not None:
             current_spy = data[self.spy].Close
             if self.spy_previous_close is None:
@@ -161,35 +164,45 @@ class UVIXShortStrategy(QCAlgorithm):
             if len(self.spy_price_history) > 5:
                 self.spy_price_history.pop(0)
 
-    def Rebalance(self):
+    # ========== 新增:限价单逻辑 ==========
+
+    def CheckDeviationAndPlaceLimitOrders(self):
+        """开盘后3分钟:检查仓位偏差并挂限价单"""
+
+        # 先执行风控检查和仓位调整逻辑
         self.CheckPersistentVolatility()
         self.AdjustAllocations()
 
+        # 检查是否在观望期
+        if self.in_vix_spike_observation:
+            days_remaining = self.observation_days - (self.Time - self.vix_spike_date).days if self.vix_spike_date else 0
+            self.Debug(f"[{self.Time}] VIX闪崩观望期中,还剩 {days_remaining} 天,跳过交易")
+            return
+
+        # 检查观望期是否结束
         if self.in_vix_spike_observation and self.vix_spike_date is not None:
             days_since_spike = (self.Time - self.vix_spike_date).days
             if days_since_spike >= self.observation_days:
                 self.in_vix_spike_observation = False
                 self.Debug(f"[{self.Time}] VIX闪崩观望期结束，恢复正常交易")
 
-        if self.in_vix_spike_observation:
-            days_remaining = self.observation_days - (self.Time - self.vix_spike_date).days
-            self.Debug(f"[{self.Time}] VIX闪崩观望期中，还剩 {days_remaining} 天")
-            return
-
+        # 检查快速恢复
         if self.is_stopped_out and self.CheckFastRecovery():
             self.is_stopped_out = False
             self.stop_date = None
             self.Debug(f"[{self.Time}] *** 检测到快速恢复 *** 跳过冷却期，立即重新建仓")
 
+        # 检查冷却期
         if self.is_stopped_out and self.stop_date is not None:
             days_since_stop = (self.Time - self.stop_date).days
             if days_since_stop < self.cooldown_days:
-                self.Debug(f"[{self.Time}] 冷却期中，距离恢复还有 {self.cooldown_days - days_since_stop} 天")
+                self.Debug(f"[{self.Time}] 冷却期中,距离恢复还有 {self.cooldown_days - days_since_stop} 天")
                 return
             else:
                 self.is_stopped_out = False
                 self.Debug(f"[{self.Time}] 冷却期结束，恢复做空")
 
+        # 检查黑天鹅
         if self.DetectBlackSwan():
             has_position = any(self.Portfolio[symbol].Invested for symbol in self.short_symbols.keys())
             if has_position:
@@ -201,9 +214,163 @@ class UVIXShortStrategy(QCAlgorithm):
                 self.Debug(f"[{self.Time}] 检测到黑天鹅事件，全部平仓")
             return
 
+        # 为每个标的检查偏差并挂限价单
         if not self.is_stopped_out:
             for symbol, name in self.short_symbols.items():
-                self.RebalanceSymbol(symbol, name)
+                self.CheckDeviationAndPlaceLimitOrder(symbol, name)
+
+    def CheckDeviationAndPlaceLimitOrder(self, symbol, name):
+        """检查单个标的的仓位偏差,如果需要调仓则挂限价单"""
+
+        current_price = self.Securities[symbol].Price
+
+        if current_price <= 0:
+            self.Debug(f"[{self.Time}] {name} 价格无效: ${current_price:.2f},跳过")
+            return
+
+        # 计算目标仓位
+        allocation = self.allocations[symbol]
+        target_value = self.Portfolio.TotalPortfolioValue * allocation * self.leverage
+        target_shares = -int(target_value / current_price)
+
+        current_shares = self.Portfolio[symbol].Quantity
+
+        # 计算偏离度
+        if target_shares == 0:
+            if current_shares == 0:
+                deviation = 0
+            else:
+                deviation = 1.0
+        else:
+            deviation = abs(current_shares - target_shares) / abs(target_shares)
+
+        # 如果偏离小于阈值,不需要调仓
+        if deviation <= self.rebalance_threshold:
+            if current_shares != 0:
+                self.Debug(f"[{self.Time}] {name} 持仓偏离{deviation:.1%},无需调仓(当前:{current_shares},目标:{target_shares})")
+            return
+
+        shares_needed = target_shares - current_shares
+
+        if shares_needed == 0:
+            return
+
+        # 计算限价:做空需要更高的价格(卖出更贵)
+        # 市价$10,我们挂$10.01的限价单卖出(做空)
+        limit_price_raw = current_price * (1 + self.limit_order_premium)
+
+        # 修复精度问题:限价单价格四舍五入到2位小数
+        limit_price = round(limit_price_raw, 2)
+
+        # 下限价单
+        ticket = self.LimitOrder(symbol, shares_needed, limit_price)
+
+        self.limit_order_tickets[symbol] = {
+            'ticket': ticket,
+            'target_shares': shares_needed,
+            'limit_price': limit_price,
+            'market_price': current_price,
+            'current_shares': current_shares,
+            'target_total': target_shares
+        }
+
+        self.Debug(f"[{self.Time}] === {name} 挂限价单 ===")
+        self.Debug(f"  当前持仓: {current_shares} 股")
+        self.Debug(f"  目标持仓: {target_shares} 股")
+        self.Debug(f"  偏离度: {deviation:.1%}")
+        self.Debug(f"  需要调整: {shares_needed} 股")
+        self.Debug(f"  市价: ${current_price:.2f}")
+        self.Debug(f"  限价: ${limit_price:.2f} (溢价 {self.limit_order_premium:.2%})")
+
+    def ExecuteFallbackMarketOrders(self):
+        """开盘后30分钟:检查限价单,未成交则用市价单"""
+
+        if not self.limit_order_tickets:
+            self.Debug(f"[{self.Time}] 无待处理的限价单")
+            return
+
+        self.Debug(f"[{self.Time}] ========== 检查限价单执行情况 ==========")
+
+        for symbol, order_info in list(self.limit_order_tickets.items()):
+            ticket = order_info['ticket']
+            name = self.short_symbols[symbol]
+
+            # 检查订单状态
+            if ticket.Status == OrderStatus.Filled:
+                fill_price = ticket.AverageFillPrice
+                self.entry_prices[symbol] = fill_price
+                saved_slippage = (fill_price - order_info['market_price']) * abs(order_info['target_shares'])
+
+                self.Debug(f"[{self.Time}] ✓ {name} 限价单已完全成交!")
+                self.Debug(f"  成交股数: {ticket.QuantityFilled} 股")
+                self.Debug(f"  成交价格: ${fill_price:.2f}")
+                self.Debug(f"  限价价格: ${order_info['limit_price']:.2f}")
+                self.Debug(f"  开盘市价: ${order_info['market_price']:.2f}")
+                self.Debug(f"  节省滑点: ${saved_slippage:.2f} (${(fill_price - order_info['market_price']):.4f}/股)")
+
+            elif ticket.Status in [OrderStatus.Submitted, OrderStatus.PartiallyFilled]:
+                # 取消未成交的限价单
+                ticket.Cancel()
+
+                # 计算还需要的股数
+                filled_quantity = ticket.QuantityFilled
+                remaining_quantity = order_info['target_shares'] - filled_quantity
+
+                if abs(remaining_quantity) > 0:
+                    # 用市价单补齐
+                    current_price = self.Securities[symbol].Price
+
+                    if current_price > 0:
+                        market_ticket = self.MarketOrder(symbol, remaining_quantity)
+                        self.entry_prices[symbol] = current_price
+
+                        if filled_quantity != 0:
+                            self.Debug(f"[{self.Time}] ⚠ {name} 限价单部分成交,使用市价单补齐")
+                            self.Debug(f"  限价单成交: {filled_quantity} 股 @ ${ticket.AverageFillPrice:.2f}")
+                            self.Debug(f"  市价单补齐: {remaining_quantity} 股 @ ${current_price:.2f}")
+                        else:
+                            self.Debug(f"[{self.Time}] ✗ {name} 限价单未成交,改用市价单")
+                            self.Debug(f"  限价: ${order_info['limit_price']:.2f} (未成交)")
+                            self.Debug(f"  市价: ${current_price:.2f}")
+                            self.Debug(f"  市价单: {remaining_quantity} 股")
+                    else:
+                        self.Debug(f"[{self.Time}] ✗ {name} 当前价格无效,跳过")
+                else:
+                    self.Debug(f"[{self.Time}] ✓ {name} 限价单已完全成交")
+
+            elif ticket.Status == OrderStatus.Canceled:
+                # 订单已取消,用市价单
+                current_price = self.Securities[symbol].Price
+
+                if current_price > 0:
+                    market_ticket = self.MarketOrder(symbol, order_info['target_shares'])
+                    self.entry_prices[symbol] = current_price
+
+                    self.Debug(f"[{self.Time}] ⚠ {name} 限价单已被取消,使用市价单")
+                    self.Debug(f"  市价单: {order_info['target_shares']} 股 @ ${current_price:.2f}")
+
+            elif ticket.Status == OrderStatus.Invalid:
+                self.Debug(f"[{self.Time}] ✗ {name} 限价单无效,状态: {ticket.Status}")
+
+        # 清空限价单记录
+        self.limit_order_tickets.clear()
+        self.Debug(f"[{self.Time}] ========== 开仓流程完成 ==========")
+
+        # 输出最终持仓
+        for symbol, name in self.short_symbols.items():
+            if self.Portfolio[symbol].Invested:
+                position = self.Portfolio[symbol]
+                self.Debug(f"[{self.Time}] {name} 最终持仓: {position.Quantity} 股 @ ${position.AveragePrice:.2f}")
+
+    def Rebalance(self):
+        """已移除独立的Rebalance函数,所有再平衡逻辑已整合到CheckDeviationAndPlaceLimitOrders中"""
+        pass
+
+    def RebalanceSymbolFinal(self, symbol, name):
+        """已移除,功能已整合到CheckDeviationAndPlaceLimitOrder中"""
+        pass
+
+    # ========== 以下保持原有逻辑不变 ==========
 
     def CheckPersistentVolatility(self):
         if len(self.vix_history) < self.persistent_days_threshold:
@@ -245,39 +412,6 @@ class UVIXShortStrategy(QCAlgorithm):
             self.allocations[self.uvix] = uvix_alloc
             self.allocations[self.sqqq] = sqqq_alloc
             self.Debug(f"[{self.Time}] 动态调整仓位: VIX={vix_value:.2f}({vix_level}位), UVIX={uvix_alloc:.0%}, SQQQ={sqqq_alloc:.0%}")
-
-    def RebalanceSymbol(self, symbol, name):
-        current_price = self.Securities[symbol].Price
-
-        if current_price <= 0:
-            return
-
-        allocation = self.allocations[symbol]
-        target_value = self.Portfolio.TotalPortfolioValue * allocation * self.leverage
-        target_shares = -int(target_value / current_price)
-
-        current_shares = self.Portfolio[symbol].Quantity
-
-        if current_shares == 0:
-            if target_shares != 0:
-                self.MarketOrder(symbol, target_shares)
-                self.entry_prices[symbol] = current_price
-                self.Debug(f"[{self.Time}] 开仓做空 {abs(target_shares)} 股 {name} @ ${current_price:.2f}")
-            return
-
-        if target_shares == 0:
-            deviation = 1.0
-        else:
-            deviation = abs(current_shares - target_shares) / abs(target_shares)
-
-        if deviation > self.rebalance_threshold:
-            shares_diff = target_shares - current_shares
-            self.MarketOrder(symbol, shares_diff)
-            self.entry_prices[symbol] = current_price
-            self.Debug(f"[{self.Time}] {name} 调仓: 偏离{deviation:.1%}，从 {current_shares} 股调整到 {target_shares} 股")
-        else:
-            if self.Time.hour == 10 and self.Time.minute == 0:
-                self.Debug(f"[{self.Time}] {name} 持仓偏离{deviation:.1%}，维持现有仓位")
 
     def MonitorIntraday(self):
         has_position = any(self.Portfolio[symbol].Invested for symbol in self.short_symbols.keys())
@@ -351,7 +485,6 @@ class UVIXShortStrategy(QCAlgorithm):
             vix_drop_pct = (self.vix_peak_value - current_vix) / self.vix_peak_value
             if vix_drop_pct > self.vix_peak_drop_threshold:
                 vix_peak_recovery = True
-                self.Debug(f"[{self.Time}] 快速恢复条件1满足: VIX从峰值{self.vix_peak_value:.2f}回落{vix_drop_pct:.1%}到{current_vix:.2f}")
 
         vix_recovered = current_vix < self.vix_recovery_threshold
         spy_single_day_rebound = False
@@ -361,8 +494,6 @@ class UVIXShortStrategy(QCAlgorithm):
                 spy_single_day_rebound = True
 
         condition2 = vix_recovered and spy_single_day_rebound
-        if condition2:
-            self.Debug(f"[{self.Time}] 快速恢复条件2满足: VIX={current_vix:.2f}, SPY单日反弹={((current_spy - self.spy_previous_close) / self.spy_previous_close):.2%}")
 
         spy_cumulative_rebound = False
         if len(self.spy_price_history) >= 4:
@@ -370,7 +501,6 @@ class UVIXShortStrategy(QCAlgorithm):
             spy_cumulative_change = (current_spy - spy_3days_ago) / spy_3days_ago
             if vix_recovered and spy_cumulative_change > self.spy_cumulative_rebound:
                 spy_cumulative_rebound = True
-                self.Debug(f"[{self.Time}] 快速恢复条件3满足: VIX={current_vix:.2f}, SPY累计3日反弹={spy_cumulative_change:.2%}")
 
         if vix_peak_recovery or condition2 or spy_cumulative_rebound:
             self.vix_peak_value = current_vix
@@ -378,33 +508,20 @@ class UVIXShortStrategy(QCAlgorithm):
 
         return False
 
-    # ========== 新的期权策略方法 ==========
-
     def SellMonthlyPuts(self):
         """每月初卖出当月到期的Put期权"""
         current_month = self.Time.date().replace(day=1)
 
-        # 检查本月是否已经卖过
         if self.last_option_month == current_month:
-            self.Debug(f"[{self.Time}] 本月已卖出期权，跳过")
             return
 
         self.Debug(f"[{self.Time}] ========== 每月期权策略 ==========")
-        self.Debug(f"[{self.Time}] 当前日期: {self.Time.date()}")
 
-        # 先检查期权链数据
-        self.DebugAllOptionExpiries()
-
-        # 找到最近的到期日（通常是本月第三个周五）
         nearest_expiry = self.FindNearestExpiry()
 
         if nearest_expiry is None:
-            self.Debug(f"[{self.Time}] 没有找到可用的期权到期日")
             return
 
-        self.Debug(f"[{self.Time}] 选择到期日: {nearest_expiry}")
-
-        # 对UVIX和SQQQ分别卖出期权
         for symbol in [self.uvix, self.sqqq]:
             name = "UVIX" if symbol == self.uvix else "SQQQ"
             self.SellPutForSymbol(symbol, name, nearest_expiry)
@@ -412,10 +529,7 @@ class UVIXShortStrategy(QCAlgorithm):
         self.last_option_month = current_month
 
     def FindNearestExpiry(self):
-        """找到最近的期权到期日"""
         today = self.Time.date()
-
-        # 收集所有可用的到期日
         all_expiries = set()
 
         uvix_chain = self.CurrentSlice.OptionChains.get(self.uvix_option)
@@ -429,7 +543,6 @@ class UVIXShortStrategy(QCAlgorithm):
         if not all_expiries:
             return None
 
-        # 找到最近的未来到期日
         future_expiries = [d for d in all_expiries if d >= today]
 
         if not future_expiries:
@@ -437,123 +550,56 @@ class UVIXShortStrategy(QCAlgorithm):
 
         return min(future_expiries)
 
-    def DebugAllOptionExpiries(self):
-        """输出当前可用的所有期权到期日"""
-        self.Debug(f"[{self.Time}] === 检查期权链所有到期日 ===")
-
-        uvix_chain = self.CurrentSlice.OptionChains.get(self.uvix_option)
-        sqqq_chain = self.CurrentSlice.OptionChains.get(self.sqqq_option)
-
-        if uvix_chain and len(uvix_chain) > 0:
-            uvix_expiries = sorted(set(x.Expiry.date() for x in uvix_chain))
-            self.Debug(f"[{self.Time}] UVIX期权链: {len(uvix_chain)} 个合约")
-            self.Debug(f"[{self.Time}] UVIX可用到期日: {uvix_expiries}")
-
-            # 统计每个到期日的Put数量
-            for expiry in uvix_expiries:
-                puts_count = len([x for x in uvix_chain if x.Expiry.date() == expiry and x.Right == OptionRight.Put])
-                self.Debug(f"[{self.Time}]   {expiry}: {puts_count} 个Put期权")
-        else:
-            self.Debug(f"[{self.Time}] UVIX期权链: 无数据")
-
-        if sqqq_chain and len(sqqq_chain) > 0:
-            sqqq_expiries = sorted(set(x.Expiry.date() for x in sqqq_chain))
-            self.Debug(f"[{self.Time}] SQQQ期权链: {len(sqqq_chain)} 个合约")
-            self.Debug(f"[{self.Time}] SQQQ可用到期日: {sqqq_expiries}")
-
-            for expiry in sqqq_expiries:
-                puts_count = len([x for x in sqqq_chain if x.Expiry.date() == expiry and x.Right == OptionRight.Put])
-                self.Debug(f"[{self.Time}]   {expiry}: {puts_count} 个Put期权")
-        else:
-            self.Debug(f"[{self.Time}] SQQQ期权链: 无数据")
-
     def SellPutForSymbol(self, underlying_symbol, name, target_expiry):
         """为指定标的卖出Put期权"""
-        # 检查是否有做空仓位
         if not self.Portfolio[underlying_symbol].Invested:
-            self.Debug(f"[{self.Time}] {name} 没有做空仓位，跳过期权交易")
             return
 
         short_quantity = abs(self.Portfolio[underlying_symbol].Quantity)
         current_price = self.Securities[underlying_symbol].Price
 
         if current_price <= 0:
-            self.Debug(f"[{self.Time}] {name} 价格无效，跳过")
             return
 
-        # 计算合约数量：做空数量 / 200
         contracts = int(short_quantity / 200)
 
         if contracts < 1:
-            self.Debug(f"[{self.Time}] {name} 做空数量 {short_quantity} 不足200股，跳过期权交易")
             return
 
-        # 目标行权价：当前价格的85%
         target_strike = current_price * 0.85
 
-        self.Debug(f"[{self.Time}] {name} 做空仓位: {short_quantity} 股")
-        self.Debug(f"[{self.Time}] {name} 当前价格: ${current_price:.2f}")
-        self.Debug(f"[{self.Time}] {name} 目标行权价: ${target_strike:.2f} (85%)")
-        self.Debug(f"[{self.Time}] {name} 计划卖出: {contracts} 张Put")
-
-        # 获取期权链
         option_symbol = self.uvix_option if underlying_symbol == self.uvix else self.sqqq_option
         option_chain = self.CurrentSlice.OptionChains.get(option_symbol)
 
-        if option_chain is None:
-            self.Debug(f"[{self.Time}] {name} 期权链为None")
+        if option_chain is None or len(option_chain) == 0:
             return
 
-        if len(option_chain) == 0:
-            self.Debug(f"[{self.Time}] {name} 期权链为空")
-            return
-
-        self.Debug(f"[{self.Time}] {name} 期权链有 {len(option_chain)} 个合约")
-
-        # 筛选Put期权
         puts = [x for x in option_chain if x.Right == OptionRight.Put]
 
         if len(puts) == 0:
-            self.Debug(f"[{self.Time}] {name} 没有Put期权")
             return
 
-        # 筛选目标到期日的期权
         target_puts = [x for x in puts if x.Expiry.date() == target_expiry]
 
         if len(target_puts) == 0:
-            self.Debug(f"[{self.Time}] {name} 没有找到 {target_expiry} 到期的Put期权，跳过交易")
             return
 
-        self.Debug(f"[{self.Time}] {name} 找到 {len(target_puts)} 个目标到期日的Put期权")
-
-        # 选择行权价最接近目标的期权
         selected_option = min(target_puts, key=lambda x: abs(x.Strike - target_strike))
 
-        self.Debug(f"[{self.Time}] {name} 选中期权: 行权价=${selected_option.Strike:.2f}, 到期={selected_option.Expiry.date()}")
-
-        # 获取期权价格
         option_price = selected_option.BidPrice if selected_option.BidPrice > 0 else selected_option.LastPrice
 
         if option_price <= 0:
-            self.Debug(f"[{self.Time}] {name} 期权价格无效: Bid=${selected_option.BidPrice:.2f}, Last=${selected_option.LastPrice:.2f}")
             return
 
-        # 卖出期权
         self.MarketOrder(selected_option.Symbol, -contracts)
 
         premium = option_price * 100 * contracts
 
         self.Debug(f"[{self.Time}] *** [{name} 期权成交] ***")
-        self.Debug(f"[{self.Time}] 卖出 {contracts} 张 Put")
-        self.Debug(f"[{self.Time}] 行权价: ${selected_option.Strike:.2f} (目标: ${target_strike:.2f})")
-        self.Debug(f"[{self.Time}] 到期日: {selected_option.Expiry.date()}")
-        self.Debug(f"[{self.Time}] 期权价格: ${option_price:.2f}")
-        self.Debug(f"[{self.Time}] 收取权利金: ${premium:.2f}")
-        self.Debug(f"[{self.Time}] 如被行权: 将以 ${selected_option.Strike:.2f} 接盘 {contracts*100} 股")
+        self.Debug(f"[{self.Time}] 卖出 {contracts} 张 Put, 行权价: ${selected_option.Strike:.2f}, 收取权利金: ${premium:.2f}")
 
     def OnEndOfDay(self, symbol):
         """每日结束时输出持仓信息"""
-        # 只在主要标的结束时执行一次
         if symbol != self.uvix:
             return
 
@@ -563,7 +609,6 @@ class UVIXShortStrategy(QCAlgorithm):
         option_pnl = 0
         for kvp in self.Portfolio:
             security = kvp.Value
-            # 直接使用security而不是security.Holdings
             if security.Invested and security.Type == SecurityType.Option:
                 option_pnl += security.UnrealizedProfit
                 option_positions.append({
@@ -574,73 +619,23 @@ class UVIXShortStrategy(QCAlgorithm):
                     'current_price': security.Price
                 })
 
-        if has_position:
+        if has_position or len(option_positions) > 0:
             total_pnl = 0
-            for sym, name in self.short_symbols.items():
-                if self.Portfolio[sym].Invested:
-                    pnl = self.Portfolio[sym].UnrealizedProfit
-                    total_pnl += pnl
-                    self.Debug(f"[{self.Time.date()}] {name}持仓: {self.Portfolio[sym].Quantity} 股, 盈亏: ${pnl:.2f}")
+
+            if has_position:
+                for sym, name in self.short_symbols.items():
+                    if self.Portfolio[sym].Invested:
+                        pnl = self.Portfolio[sym].UnrealizedProfit
+                        total_pnl += pnl
+                        # 只在仓位有变化或每周一输出
+                        if self.Time.weekday() == 0:  # 周一
+                            self.Debug(f"[{self.Time.date()}] {name}持仓: {self.Portfolio[sym].Quantity} 股, 盈亏: ${pnl:.2f}")
 
             if len(option_positions) > 0:
-                self.Debug(f"[{self.Time.date()}] ========== 期权持仓详情 ==========")
-                for i, opt in enumerate(option_positions, 1):
-                    opt_symbol = opt['symbol']
-                    # 解析期权信息
-                    underlying = "UVIX" if "UVIX" in str(opt_symbol) else "SQQQ"
-
-                    # 尝试获取期权属性
-                    try:
-                        opt_contract = self.Securities[opt_symbol]
-                        strike = opt_contract.StrikePrice if hasattr(opt_contract, 'StrikePrice') else "N/A"
-                        expiry = opt_contract.Expiry.date() if hasattr(opt_contract, 'Expiry') else "N/A"
-                        right = "Put" if hasattr(opt_contract, 'Right') and opt_contract.Right == OptionRight.Put else "Call"
-                    except:
-                        strike = "N/A"
-                        expiry = "N/A"
-                        right = "Unknown"
-
-                    qty = opt['quantity']
-                    pnl = opt['pnl']
-                    avg_price = opt['avg_price']
-                    current_price = opt['current_price']
-
-                    self.Debug(f"[{self.Time.date()}] 期权{i}: {underlying} {right}")
-                    self.Debug(f"[{self.Time.date()}]   行权价: ${strike}, 到期: {expiry}")
-                    self.Debug(f"[{self.Time.date()}]   持仓: {qty} 张 (做空)" if qty < 0 else f"[{self.Time.date()}]   持仓: {qty} 张 (做多)")
-                    self.Debug(f"[{self.Time.date()}]   开仓价: ${avg_price:.2f}, 当前价: ${current_price:.2f}")
-                    self.Debug(f"[{self.Time.date()}]   盈亏: ${pnl:.2f}")
-
-                self.Debug(f"[{self.Time.date()}] 期权总盈亏: ${option_pnl:.2f}")
                 total_pnl += option_pnl
+                # 只在每周一输出期权详情
+                if self.Time.weekday() == 0:
+                    self.Debug(f"[{self.Time.date()}] 期权总盈亏: ${option_pnl:.2f}")
 
-            self.Debug(f"[{self.Time.date()}] 总盈亏: ${total_pnl:.2f}, 账户: ${self.Portfolio.TotalPortfolioValue:.2f}")
-        elif len(option_positions) > 0:
-            self.Debug(f"[{self.Time.date()}] ========== 期权持仓详情 ==========")
-            for i, opt in enumerate(option_positions, 1):
-                opt_symbol = opt['symbol']
-                underlying = "UVIX" if "UVIX" in str(opt_symbol) else "SQQQ"
-
-                try:
-                    opt_contract = self.Securities[opt_symbol]
-                    strike = opt_contract.StrikePrice if hasattr(opt_contract, 'StrikePrice') else "N/A"
-                    expiry = opt_contract.Expiry.date() if hasattr(opt_contract, 'Expiry') else "N/A"
-                    right = "Put" if hasattr(opt_contract, 'Right') and opt_contract.Right == OptionRight.Put else "Call"
-                except:
-                    strike = "N/A"
-                    expiry = "N/A"
-                    right = "Unknown"
-
-                qty = opt['quantity']
-                pnl = opt['pnl']
-                avg_price = opt['avg_price']
-                current_price = opt['current_price']
-
-                self.Debug(f"[{self.Time.date()}] 期权{i}: {underlying} {right}")
-                self.Debug(f"[{self.Time.date()}]   行权价: ${strike}, 到期: {expiry}")
-                self.Debug(f"[{self.Time.date()}]   持仓: {qty} 张 (做空)" if qty < 0 else f"[{self.Time.date()}]   持仓: {qty} 张 (做多)")
-                self.Debug(f"[{self.Time.date()}]   开仓价: ${avg_price:.2f}, 当前价: ${current_price:.2f}")
-                self.Debug(f"[{self.Time.date()}]   盈亏: ${pnl:.2f}")
-
-            self.Debug(f"[{self.Time.date()}] 期权总盈亏: ${option_pnl:.2f}")
-            self.Debug(f"[{self.Time.date()}] 账户: ${self.Portfolio.TotalPortfolioValue:.2f}")
+            # 每天输出总账户情况
+            self.Debug(f"[{self.Time.date()}] 账户总值: ${self.Portfolio.TotalPortfolioValue:.2f}, 总盈亏: ${total_pnl:.2f}")
