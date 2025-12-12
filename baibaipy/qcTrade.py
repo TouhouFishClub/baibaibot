@@ -13,11 +13,12 @@ class UVIXShortStrategy(QCAlgorithm):
 
         # 添加期权
         uvix_option = self.AddOption("UVIX", Resolution.Minute)
-        uvix_option.SetFilter(-2, 2, 0, 45)
+        # 扩大过滤范围：行权价±5档，60天内到期
+        uvix_option.SetFilter(-5, 5, 0, 60)
         self.uvix_option = uvix_option.Symbol
 
         sqqq_option = self.AddOption("SQQQ", Resolution.Minute)
-        sqqq_option.SetFilter(-2, 2, 0, 45)
+        sqqq_option.SetFilter(-5, 5, 0, 60)
         self.sqqq_option = sqqq_option.Symbol
 
         # 添加VIX期货作为市场恐慌指标
@@ -90,40 +91,24 @@ class UVIXShortStrategy(QCAlgorithm):
         self.spy_cumulative_rebound = 0.03
         self.vix_peak_drop_threshold = 0.30
 
-        # 期权到期日卖出策略
-        self.option_expiry_dates = {}
-        self.expiry_day_data = {}
-        self.expiry_breakout_triggered = {}
-        self.market_open_time = None
-        self.first_hour_end_time = None
+        # ========== 修改后的期权策略 ==========
+        # 每月卖出当月到期的Put期权（月度期权）
+        self.options_sold_this_month = False  # 记录本月是否已卖出期权
+        self.last_option_month = None  # 记录上次卖出期权的月份
 
-        # 期权策略资金分配 - 只卖Put，可以增加资金
-        self.option_allocation_uvix = 0.05  # UVIX期权使用5%资金（从3%提高）
-        self.option_allocation_sqqq = 0.08  # SQQQ期权使用8%资金（从5%提高）
+        # 期权策略：不再使用资金分配比例
+        # 改为根据做空数量决定：张数 = 做空数量 / 200
 
         # 波动率指标
         self.vix_ema = ExponentialMovingAverage(5)
         self.vix_spike_threshold = 1.5
 
-        # 获取即将到期的期权日期
+        # ========== 修改后的定时任务 ==========
+        # 每月第一个交易日10:00：卖出当月到期的Put期权
         self.Schedule.On(
-            self.DateRules.EveryDay(),
-            self.TimeRules.At(9, 0),
-            self.CheckUpcomingExpiries
-        )
-
-        # 期权到期日：标记开盘时间并检查期权链
-        self.Schedule.On(
-            self.DateRules.EveryDay(),
-            self.TimeRules.At(9, 30),
-            self.StartExpiryDayMonitoring
-        )
-
-        # 期权到期日：第一小时结束，输出高低点
-        self.Schedule.On(
-            self.DateRules.EveryDay(),
-            self.TimeRules.At(10, 30),
-            self.EndFirstHourMonitoring
+            self.DateRules.MonthStart(self.uvix),
+            self.TimeRules.AfterMarketOpen(self.uvix, 30),
+            self.SellMonthlyPuts
         )
 
         # 每日重新平衡
@@ -175,9 +160,6 @@ class UVIXShortStrategy(QCAlgorithm):
             self.spy_price_history.append({'date': self.Time.date(), 'price': current_spy})
             if len(self.spy_price_history) > 5:
                 self.spy_price_history.pop(0)
-
-        self.MonitorExpiryDayRanges(data)
-        self.CheckExpiryDayBreakout(data)
 
     def Rebalance(self):
         self.CheckPersistentVolatility()
@@ -396,187 +378,181 @@ class UVIXShortStrategy(QCAlgorithm):
 
         return False
 
-    def CheckUpcomingExpiries(self):
-        """每天9点检查"""
-        today = self.Time.date()
-        self.Debug(f"[{self.Time}] 每日检查 - 今天是 {today.strftime('%Y-%m-%d %A')}")
+    # ========== 新的期权策略方法 ==========
 
-    def StartExpiryDayMonitoring(self):
-        """9:30开始监控期权到期日"""
-        if not self.IsOptionsExpiryDay():
+    def SellMonthlyPuts(self):
+        """每月初卖出当月到期的Put期权"""
+        current_month = self.Time.date().replace(day=1)
+
+        # 检查本月是否已经卖过
+        if self.last_option_month == current_month:
+            self.Debug(f"[{self.Time}] 本月已卖出期权，跳过")
             return
 
-        self.market_open_time = self.Time
-        self.first_hour_end_time = self.Time + timedelta(hours=1)
+        self.Debug(f"[{self.Time}] ========== 每月期权策略 ==========")
+        self.Debug(f"[{self.Time}] 当前日期: {self.Time.date()}")
 
-        self.Debug(f"[{self.Time}] *** 今天是周五期权到期日 *** 开始记录开盘一小时高低点")
-        self.expiry_day_data[self.uvix] = {'high': None, 'low': None, 'monitoring': True}
-        self.expiry_day_data[self.sqqq] = {'high': None, 'low': None, 'monitoring': True}
-        self.expiry_breakout_triggered[self.uvix] = False
-        self.expiry_breakout_triggered[self.sqqq] = False
+        # 先检查期权链数据
+        self.DebugAllOptionExpiries()
 
-        # 检查期权链
-        self.Debug(f"[{self.Time}] 检查期权链可用性...")
+        # 找到最近的到期日（通常是本月第三个周五）
+        nearest_expiry = self.FindNearestExpiry()
+
+        if nearest_expiry is None:
+            self.Debug(f"[{self.Time}] 没有找到可用的期权到期日")
+            return
+
+        self.Debug(f"[{self.Time}] 选择到期日: {nearest_expiry}")
+
+        # 对UVIX和SQQQ分别卖出期权
+        for symbol in [self.uvix, self.sqqq]:
+            name = "UVIX" if symbol == self.uvix else "SQQQ"
+            self.SellPutForSymbol(symbol, name, nearest_expiry)
+
+        self.last_option_month = current_month
+
+    def FindNearestExpiry(self):
+        """找到最近的期权到期日"""
+        today = self.Time.date()
+
+        # 收集所有可用的到期日
+        all_expiries = set()
+
+        uvix_chain = self.CurrentSlice.OptionChains.get(self.uvix_option)
+        if uvix_chain:
+            all_expiries.update(x.Expiry.date() for x in uvix_chain)
+
+        sqqq_chain = self.CurrentSlice.OptionChains.get(self.sqqq_option)
+        if sqqq_chain:
+            all_expiries.update(x.Expiry.date() for x in sqqq_chain)
+
+        if not all_expiries:
+            return None
+
+        # 找到最近的未来到期日
+        future_expiries = [d for d in all_expiries if d >= today]
+
+        if not future_expiries:
+            return None
+
+        return min(future_expiries)
+
+    def DebugAllOptionExpiries(self):
+        """输出当前可用的所有期权到期日"""
+        self.Debug(f"[{self.Time}] === 检查期权链所有到期日 ===")
+
         uvix_chain = self.CurrentSlice.OptionChains.get(self.uvix_option)
         sqqq_chain = self.CurrentSlice.OptionChains.get(self.sqqq_option)
 
-        if uvix_chain is None:
-            self.Debug(f"[{self.Time}] UVIX期权链为None")
+        if uvix_chain and len(uvix_chain) > 0:
+            uvix_expiries = sorted(set(x.Expiry.date() for x in uvix_chain))
+            self.Debug(f"[{self.Time}] UVIX期权链: {len(uvix_chain)} 个合约")
+            self.Debug(f"[{self.Time}] UVIX可用到期日: {uvix_expiries}")
+
+            # 统计每个到期日的Put数量
+            for expiry in uvix_expiries:
+                puts_count = len([x for x in uvix_chain if x.Expiry.date() == expiry and x.Right == OptionRight.Put])
+                self.Debug(f"[{self.Time}]   {expiry}: {puts_count} 个Put期权")
         else:
-            self.Debug(f"[{self.Time}] UVIX期权链包含 {len(uvix_chain)} 个合约")
+            self.Debug(f"[{self.Time}] UVIX期权链: 无数据")
 
-        if sqqq_chain is None:
-            self.Debug(f"[{self.Time}] SQQQ期权链为None")
+        if sqqq_chain and len(sqqq_chain) > 0:
+            sqqq_expiries = sorted(set(x.Expiry.date() for x in sqqq_chain))
+            self.Debug(f"[{self.Time}] SQQQ期权链: {len(sqqq_chain)} 个合约")
+            self.Debug(f"[{self.Time}] SQQQ可用到期日: {sqqq_expiries}")
+
+            for expiry in sqqq_expiries:
+                puts_count = len([x for x in sqqq_chain if x.Expiry.date() == expiry and x.Right == OptionRight.Put])
+                self.Debug(f"[{self.Time}]   {expiry}: {puts_count} 个Put期权")
         else:
-            self.Debug(f"[{self.Time}] SQQQ期权链包含 {len(sqqq_chain)} 个合约")
+            self.Debug(f"[{self.Time}] SQQQ期权链: 无数据")
 
-    def EndFirstHourMonitoring(self):
-        """10:30第一小时结束"""
-        if not self.market_open_time:
+    def SellPutForSymbol(self, underlying_symbol, name, target_expiry):
+        """为指定标的卖出Put期权"""
+        # 检查是否有做空仓位
+        if not self.Portfolio[underlying_symbol].Invested:
+            self.Debug(f"[{self.Time}] {name} 没有做空仓位，跳过期权交易")
             return
 
-        for symbol in [self.uvix, self.sqqq]:
-            if symbol in self.expiry_day_data and self.expiry_day_data[symbol]:
-                data_point = self.expiry_day_data[symbol]
-                name = "UVIX" if symbol == self.uvix else "SQQQ"
+        short_quantity = abs(self.Portfolio[underlying_symbol].Quantity)
+        current_price = self.Securities[underlying_symbol].Price
 
-                if data_point.get('monitoring'):
-                    if data_point.get('high') and data_point.get('low'):
-                        self.Debug(f"[{self.Time}] {name} 开盘一小时范围: 最高 ${data_point['high']:.2f}, 最低 ${data_point['low']:.2f}")
-                        self.Debug(f"[{self.Time}] {name} 开始监控突破...")
-                        data_point['monitoring'] = False
-                    else:
-                        self.Debug(f"[{self.Time}] {name} 第一小时没有收集到价格数据")
-
-    def MonitorExpiryDayRanges(self, data):
-        """在OnData中持续更新价格"""
-        if not self.market_open_time or not self.first_hour_end_time:
+        if current_price <= 0:
+            self.Debug(f"[{self.Time}] {name} 价格无效，跳过")
             return
 
-        if self.Time > self.first_hour_end_time:
+        # 计算合约数量：做空数量 / 200
+        contracts = int(short_quantity / 200)
+
+        if contracts < 1:
+            self.Debug(f"[{self.Time}] {name} 做空数量 {short_quantity} 不足200股，跳过期权交易")
             return
 
-        for symbol in [self.uvix, self.sqqq]:
-            if symbol not in self.expiry_day_data or not self.expiry_day_data[symbol]:
-                continue
+        # 目标行权价：当前价格的85%
+        target_strike = current_price * 0.85
 
-            if not self.expiry_day_data[symbol].get('monitoring'):
-                continue
+        self.Debug(f"[{self.Time}] {name} 做空仓位: {short_quantity} 股")
+        self.Debug(f"[{self.Time}] {name} 当前价格: ${current_price:.2f}")
+        self.Debug(f"[{self.Time}] {name} 目标行权价: ${target_strike:.2f} (85%)")
+        self.Debug(f"[{self.Time}] {name} 计划卖出: {contracts} 张Put")
 
-            if not data.ContainsKey(symbol) or data[symbol] is None:
-                continue
-
-            price = data[symbol].Close
-
-            if self.expiry_day_data[symbol]['high'] is None:
-                self.expiry_day_data[symbol]['high'] = price
-                self.expiry_day_data[symbol]['low'] = price
-            else:
-                self.expiry_day_data[symbol]['high'] = max(self.expiry_day_data[symbol]['high'], price)
-                self.expiry_day_data[symbol]['low'] = min(self.expiry_day_data[symbol]['low'], price)
-
-    def CheckExpiryDayBreakout(self, data):
-        if not self.first_hour_end_time or self.Time <= self.first_hour_end_time:
-            return
-
-        for symbol in [self.uvix, self.sqqq]:
-            if self.expiry_breakout_triggered.get(symbol, False):
-                continue
-
-            if symbol not in self.expiry_day_data or not self.expiry_day_data[symbol]:
-                continue
-
-            data_point = self.expiry_day_data[symbol]
-            if data_point['high'] is None or data_point['low'] is None:
-                continue
-
-            if not data.ContainsKey(symbol) or data[symbol] is None:
-                continue
-
-            current_price = data[symbol].Close
-            name = "UVIX" if symbol == self.uvix else "SQQQ"
-            option_symbol = self.uvix_option if symbol == self.uvix else self.sqqq_option
-
-            # 向下突破最低点 -> 卖出Put（看跌期权，行权价在最低点附近）
-            if current_price < data_point['low']:
-                self.Debug(f"[{self.Time}] !!! {name} 向下突破触发 !!! 最低点${data_point['low']:.2f}, 当前${current_price:.2f}")
-                self.SellOptionNearStrike(option_symbol, data_point['low'], OptionRight.Put, name)
-                self.expiry_breakout_triggered[symbol] = True
-
-            # 向上突破最高点 -> 也卖出Put（行权价在当前价格下方）
-            elif current_price > data_point['high']:
-                self.Debug(f"[{self.Time}] !!! {name} 向上突破触发 !!! 最高点${data_point['high']:.2f}, 当前${current_price:.2f}")
-                target_strike = current_price * 0.95
-                self.SellOptionNearStrike(option_symbol, target_strike, OptionRight.Put, name)
-                self.expiry_breakout_triggered[symbol] = True
-
-    def IsOptionsExpiryDay(self):
-        """判断今天是否是期权到期日（每周五）"""
-        today = self.Time.date()
-
-        # 检查是否是周五
-        if today.weekday() == 4:
-            return True
-
-        return False
-
-    def SellOptionNearStrike(self, option_symbol, target_strike, option_right, underlying_name):
-        self.Debug(f"[{self.Time}] [期权交易] 尝试卖出 {underlying_name} Put，目标行权价 ${target_strike:.2f}")
-
+        # 获取期权链
+        option_symbol = self.uvix_option if underlying_symbol == self.uvix else self.sqqq_option
         option_chain = self.CurrentSlice.OptionChains.get(option_symbol)
 
         if option_chain is None:
-            self.Debug(f"[{self.Time}] [期权失败] {underlying_name} 期权链为 None")
+            self.Debug(f"[{self.Time}] {name} 期权链为None")
             return
 
         if len(option_chain) == 0:
-            self.Debug(f"[{self.Time}] [期权失败] {underlying_name} 期权链为空，没有可用合约")
+            self.Debug(f"[{self.Time}] {name} 期权链为空")
             return
 
-        self.Debug(f"[{self.Time}] [期权可用] {underlying_name} 期权链包含 {len(option_chain)} 个合约")
+        self.Debug(f"[{self.Time}] {name} 期权链有 {len(option_chain)} 个合约")
 
-        # 只筛选Put期权
-        options = [x for x in option_chain if x.Right == OptionRight.Put]
-        self.Debug(f"[{self.Time}] [期权筛选] 找到 {len(options)} 个Put期权")
+        # 筛选Put期权
+        puts = [x for x in option_chain if x.Right == OptionRight.Put]
 
-        if len(options) == 0:
-            self.Debug(f"[{self.Time}] [期权失败] {underlying_name} 没有找到Put期权")
+        if len(puts) == 0:
+            self.Debug(f"[{self.Time}] {name} 没有Put期权")
             return
 
-        # 显示前5个期权信息用于调试
-        for i, opt in enumerate(options[:5]):
-            self.Debug(f"[{self.Time}] 期权{i+1}: 行权价${opt.Strike:.2f}, 到期{opt.Expiry.date()}, 买价${opt.BidPrice:.2f}")
+        # 筛选目标到期日的期权
+        target_puts = [x for x in puts if x.Expiry.date() == target_expiry]
 
-        options = sorted(options, key=lambda x: abs(x.Strike - target_strike))
-        selected_option = options[0]
+        if len(target_puts) == 0:
+            self.Debug(f"[{self.Time}] {name} 没有找到 {target_expiry} 到期的Put期权，跳过交易")
+            return
 
-        underlying_symbol = self.uvix if underlying_name == "UVIX" else self.sqqq
-        option_allocation = self.option_allocation_uvix if underlying_symbol == self.uvix else self.option_allocation_sqqq
+        self.Debug(f"[{self.Time}] {name} 找到 {len(target_puts)} 个目标到期日的Put期权")
 
-        account_value = self.Portfolio.TotalPortfolioValue
-        allocation_value = account_value * option_allocation
+        # 选择行权价最接近目标的期权
+        selected_option = min(target_puts, key=lambda x: abs(x.Strike - target_strike))
 
+        self.Debug(f"[{self.Time}] {name} 选中期权: 行权价=${selected_option.Strike:.2f}, 到期={selected_option.Expiry.date()}")
+
+        # 获取期权价格
         option_price = selected_option.BidPrice if selected_option.BidPrice > 0 else selected_option.LastPrice
 
         if option_price <= 0:
-            self.Debug(f"[{self.Time}] [期权失败] {underlying_name} 期权价格无效: Bid=${selected_option.BidPrice:.2f}, Last=${selected_option.LastPrice:.2f}")
+            self.Debug(f"[{self.Time}] {name} 期权价格无效: Bid=${selected_option.BidPrice:.2f}, Last=${selected_option.LastPrice:.2f}")
             return
 
-        # 计算合约数
-        contracts = int(allocation_value / (option_price * 100))
-        contracts = max(1, min(contracts, 15))
-
-        self.Debug(f"[{self.Time}] [准备下单] {underlying_name} Put: {contracts}张, 行权价${selected_option.Strike:.2f}, 价格${option_price:.2f}")
-
+        # 卖出期权
         self.MarketOrder(selected_option.Symbol, -contracts)
 
         premium = option_price * 100 * contracts
-        self.Debug(f"[{self.Time}] [期权成交] 卖出 {contracts} 张 {underlying_name} Put, 行权价 ${selected_option.Strike:.2f}, "
-                  f"目标行权价 ${target_strike:.2f}, 权利金约 ${premium:.2f}, 到期 {selected_option.Expiry.date()}")
-        self.Debug(f"[{self.Time}] [只卖Put策略] 如被行权将以${selected_option.Strike:.2f}接盘{contracts*100}股，可直接做空")
+
+        self.Debug(f"[{self.Time}] *** [{name} 期权成交] ***")
+        self.Debug(f"[{self.Time}] 卖出 {contracts} 张 Put")
+        self.Debug(f"[{self.Time}] 行权价: ${selected_option.Strike:.2f} (目标: ${target_strike:.2f})")
+        self.Debug(f"[{self.Time}] 到期日: {selected_option.Expiry.date()}")
+        self.Debug(f"[{self.Time}] 期权价格: ${option_price:.2f}")
+        self.Debug(f"[{self.Time}] 收取权利金: ${premium:.2f}")
+        self.Debug(f"[{self.Time}] 如被行权: 将以 ${selected_option.Strike:.2f} 接盘 {contracts*100} 股")
 
     def OnEndOfDay(self, symbol):
-        """修复弃用警告 - 添加symbol参数"""
+        """每日结束时输出持仓信息"""
         # 只在主要标的结束时执行一次
         if symbol != self.uvix:
             return
@@ -587,13 +563,15 @@ class UVIXShortStrategy(QCAlgorithm):
         option_pnl = 0
         for kvp in self.Portfolio:
             security = kvp.Value
-            # 修复：直接使用security而不是security.Holdings
+            # 直接使用security而不是security.Holdings
             if security.Invested and security.Type == SecurityType.Option:
                 option_pnl += security.UnrealizedProfit
                 option_positions.append({
                     'symbol': security.Symbol,
                     'quantity': security.Quantity,
-                    'pnl': security.UnrealizedProfit
+                    'pnl': security.UnrealizedProfit,
+                    'avg_price': security.AveragePrice,
+                    'current_price': security.Price
                 })
 
         if has_position:
@@ -605,10 +583,64 @@ class UVIXShortStrategy(QCAlgorithm):
                     self.Debug(f"[{self.Time.date()}] {name}持仓: {self.Portfolio[sym].Quantity} 股, 盈亏: ${pnl:.2f}")
 
             if len(option_positions) > 0:
-                self.Debug(f"[{self.Time.date()}] 期权持仓数: {len(option_positions)}, 期权盈亏: ${option_pnl:.2f}")
+                self.Debug(f"[{self.Time.date()}] ========== 期权持仓详情 ==========")
+                for i, opt in enumerate(option_positions, 1):
+                    opt_symbol = opt['symbol']
+                    # 解析期权信息
+                    underlying = "UVIX" if "UVIX" in str(opt_symbol) else "SQQQ"
+
+                    # 尝试获取期权属性
+                    try:
+                        opt_contract = self.Securities[opt_symbol]
+                        strike = opt_contract.StrikePrice if hasattr(opt_contract, 'StrikePrice') else "N/A"
+                        expiry = opt_contract.Expiry.date() if hasattr(opt_contract, 'Expiry') else "N/A"
+                        right = "Put" if hasattr(opt_contract, 'Right') and opt_contract.Right == OptionRight.Put else "Call"
+                    except:
+                        strike = "N/A"
+                        expiry = "N/A"
+                        right = "Unknown"
+
+                    qty = opt['quantity']
+                    pnl = opt['pnl']
+                    avg_price = opt['avg_price']
+                    current_price = opt['current_price']
+
+                    self.Debug(f"[{self.Time.date()}] 期权{i}: {underlying} {right}")
+                    self.Debug(f"[{self.Time.date()}]   行权价: ${strike}, 到期: {expiry}")
+                    self.Debug(f"[{self.Time.date()}]   持仓: {qty} 张 (做空)" if qty < 0 else f"[{self.Time.date()}]   持仓: {qty} 张 (做多)")
+                    self.Debug(f"[{self.Time.date()}]   开仓价: ${avg_price:.2f}, 当前价: ${current_price:.2f}")
+                    self.Debug(f"[{self.Time.date()}]   盈亏: ${pnl:.2f}")
+
+                self.Debug(f"[{self.Time.date()}] 期权总盈亏: ${option_pnl:.2f}")
                 total_pnl += option_pnl
 
             self.Debug(f"[{self.Time.date()}] 总盈亏: ${total_pnl:.2f}, 账户: ${self.Portfolio.TotalPortfolioValue:.2f}")
         elif len(option_positions) > 0:
-            self.Debug(f"[{self.Time.date()}] 仅持有期权: {len(option_positions)} 个, 盈亏: ${option_pnl:.2f}")
+            self.Debug(f"[{self.Time.date()}] ========== 期权持仓详情 ==========")
+            for i, opt in enumerate(option_positions, 1):
+                opt_symbol = opt['symbol']
+                underlying = "UVIX" if "UVIX" in str(opt_symbol) else "SQQQ"
+
+                try:
+                    opt_contract = self.Securities[opt_symbol]
+                    strike = opt_contract.StrikePrice if hasattr(opt_contract, 'StrikePrice') else "N/A"
+                    expiry = opt_contract.Expiry.date() if hasattr(opt_contract, 'Expiry') else "N/A"
+                    right = "Put" if hasattr(opt_contract, 'Right') and opt_contract.Right == OptionRight.Put else "Call"
+                except:
+                    strike = "N/A"
+                    expiry = "N/A"
+                    right = "Unknown"
+
+                qty = opt['quantity']
+                pnl = opt['pnl']
+                avg_price = opt['avg_price']
+                current_price = opt['current_price']
+
+                self.Debug(f"[{self.Time.date()}] 期权{i}: {underlying} {right}")
+                self.Debug(f"[{self.Time.date()}]   行权价: ${strike}, 到期: {expiry}")
+                self.Debug(f"[{self.Time.date()}]   持仓: {qty} 张 (做空)" if qty < 0 else f"[{self.Time.date()}]   持仓: {qty} 张 (做多)")
+                self.Debug(f"[{self.Time.date()}]   开仓价: ${avg_price:.2f}, 当前价: ${current_price:.2f}")
+                self.Debug(f"[{self.Time.date()}]   盈亏: ${pnl:.2f}")
+
+            self.Debug(f"[{self.Time.date()}] 期权总盈亏: ${option_pnl:.2f}")
             self.Debug(f"[{self.Time.date()}] 账户: ${self.Portfolio.TotalPortfolioValue:.2f}")
