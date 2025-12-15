@@ -202,23 +202,52 @@ async function callGeminiAPI(prompt, images) {
           console.log('[NBP2] - candidates长度:', response.candidates ? response.candidates.length : 0);
           
           if (response.candidates && response.candidates[0]) {
-            console.log('[NBP2] - candidates[0]存在:', !!response.candidates[0]);
-            console.log('[NBP2] - candidates[0].content存在:', !!response.candidates[0].content);
+            const candidate = response.candidates[0];
+            console.log('[NBP2] - candidates[0]存在:', !!candidate);
+            console.log('[NBP2] - candidates[0].content存在:', !!candidate.content);
+            console.log('[NBP2] - finishReason:', candidate.finishReason || '未提供');
             
-            if (response.candidates[0].content) {
-              console.log('[NBP2] - content.parts存在:', !!response.candidates[0].content.parts);
-              console.log('[NBP2] - content.parts长度:', response.candidates[0].content.parts ? response.candidates[0].content.parts.length : 0);
+            if (candidate.content) {
+              console.log('[NBP2] - content.parts存在:', !!candidate.content.parts);
+              console.log('[NBP2] - content.parts长度:', candidate.content.parts ? candidate.content.parts.length : 0);
+            }
+            
+            // 检查是否有安全过滤或其他阻止原因
+            if (candidate.finishReason && candidate.finishReason !== 'STOP') {
+              console.error('[NBP2] ⚠️ API返回非正常结束原因:', candidate.finishReason);
             }
           }
           
+          // 检查promptFeedback（可能包含被阻止的原因）
+          if (response.promptFeedback) {
+            console.log('[NBP2] - promptFeedback:', JSON.stringify(response.promptFeedback, null, 2));
+          }
+          
           if (response.candidates && response.candidates[0] && response.candidates[0].content) {
-            const content = response.candidates[0].content;
+            const candidate = response.candidates[0];
+            const content = candidate.content;
             let resultText = '';
             let imageBase64 = null;
             let imageMimeType = null;
             
+            // 检查content.parts是否存在且有内容
+            if (!content.parts || content.parts.length === 0) {
+              console.error('[NBP2] ❌ content.parts为空或不存在');
+              console.error('[NBP2] finishReason:', candidate.finishReason || '未提供');
+              console.error('[NBP2] 完整candidate对象:', JSON.stringify(candidate, null, 2));
+              console.error('[NBP2] 完整响应对象:', JSON.stringify(response, null, 2));
+              
+              // 构建更有意义的错误信息
+              let errorMsg = 'API响应中没有图片数据';
+              if (candidate.finishReason && candidate.finishReason !== 'STOP') {
+                errorMsg = `图片生成被阻止，原因: ${candidate.finishReason}`;
+              }
+              reject(new Error(errorMsg));
+              return;
+            }
+            
             console.log('[NBP2] 开始遍历content.parts...');
-            for (let i = 0; i < (content.parts || []).length; i++) {
+            for (let i = 0; i < content.parts.length; i++) {
               const part = content.parts[i];
               console.log(`[NBP2] - Part ${i}:`, JSON.stringify(Object.keys(part)));
               
@@ -248,16 +277,30 @@ async function callGeminiAPI(prompt, images) {
               // 只有文本响应，没有图片
               console.error('[NBP2] ❌ API返回了文本但没有图片');
               console.error('[NBP2] 完整响应文本:', resultText);
+              console.error('[NBP2] 完整响应对象:', JSON.stringify(response, null, 2));
               reject(new Error(`API未返回图片。响应: ${resultText}`));
             } else {
               console.error('[NBP2] ❌ API响应中没有图片数据也没有文本');
               console.error('[NBP2] 完整content对象:', JSON.stringify(content, null, 2));
+              console.error('[NBP2] 完整响应对象:', JSON.stringify(response, null, 2));
               reject(new Error('API响应中没有图片数据'));
             }
           } else {
             console.error('[NBP2] ❌ 意外的响应格式');
             console.error('[NBP2] 完整响应对象:', JSON.stringify(response, null, 2));
-            reject(new Error('API响应格式异常'));
+            
+            // 尝试提取有用的错误信息
+            let errorMsg = 'API响应格式异常';
+            if (response.candidates && response.candidates[0]) {
+              const candidate = response.candidates[0];
+              if (candidate.finishReason) {
+                errorMsg = `API响应异常，原因: ${candidate.finishReason}`;
+              }
+            }
+            if (response.promptFeedback && response.promptFeedback.blockReason) {
+              errorMsg = `请求被阻止，原因: ${response.promptFeedback.blockReason}`;
+            }
+            reject(new Error(errorMsg));
           }
         } catch (error) {
           console.error('[NBP2] 解析API响应失败:', error);
