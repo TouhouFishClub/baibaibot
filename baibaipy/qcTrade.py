@@ -37,8 +37,8 @@ class UVIXShortStrategy(QCAlgorithm):
         self.rebalance_threshold = 0.05
 
         # 分级止损参数
-        self.stop_loss_uvix = 0.12
-        self.stop_loss_sqqq = 0.18
+        self.stop_loss_uvix = 0.08
+        self.stop_loss_sqqq = 0.12
 
         self.vix_threshold = 30
         self.spy_drawdown_threshold = 0.05
@@ -53,9 +53,9 @@ class UVIXShortStrategy(QCAlgorithm):
         # 动态仓位调整参数
         self.vix_low_threshold = 15
         self.vix_mid_threshold = 25
-        self.uvix_alloc_low_vix = 0.40
-        self.uvix_alloc_mid_vix = 0.30
-        self.uvix_alloc_high_vix = 0.20
+        self.uvix_alloc_low_vix = 0.35
+        self.uvix_alloc_mid_vix = 0.25
+        self.uvix_alloc_high_vix = 0.15
 
         # 状态变量
         self.entry_prices = {
@@ -65,8 +65,16 @@ class UVIXShortStrategy(QCAlgorithm):
         self.is_stopped_out = False
         self.spy_previous_close = None
         self.spy_price_history = []
-        self.cooldown_days = 5
+
+        # ========== 递进式冷却期参数 ==========
+        self.cooldown_days = 2  # 当前冷却期天数
         self.stop_date = None
+        self.stop_history = []  # 记录止损历史 [{date, cooldown_days}]
+        self.base_cooldown = 2  # 基础冷却期（第1次）
+        self.cooldown_level_2 = 3  # 第2次冷却期
+        self.cooldown_level_3 = 4  # 第3次冷却期
+        self.max_cooldown = 5  # 最大冷却期（第4次及以后）
+        self.cooldown_tracking_days = 10  # 在多少天内追踪止损次数
 
         # VIX闪崩检测
         self.vix_previous_close = None
@@ -98,12 +106,12 @@ class UVIXShortStrategy(QCAlgorithm):
         self.vix_ema = ExponentialMovingAverage(5)
         self.vix_spike_threshold = 1.5
 
-        # ========== 新增:限价单优化参数 ==========
+        # ========== 限价单优化参数 ==========
         self.limit_order_tickets = {}  # 记录限价单ticket
         self.limit_order_premium = 0.002  # 限价单溢价:比市价高0.2%(做空所以要更高价格卖出)
         self.limit_order_duration_minutes = 27  # 有效期27分钟(从开盘3分钟到30分钟)
 
-        # ========== 修改后的定时任务 ==========
+        # ========== 定时任务 ==========
         # 开盘后3分钟:检查偏差并挂限价单
         self.Schedule.On(
             self.DateRules.EveryDay(self.uvix),
@@ -164,7 +172,7 @@ class UVIXShortStrategy(QCAlgorithm):
             if len(self.spy_price_history) > 5:
                 self.spy_price_history.pop(0)
 
-    # ========== 新增:限价单逻辑 ==========
+    # ========== 限价单逻辑 ==========
 
     def CheckDeviationAndPlaceLimitOrders(self):
         """开盘后3分钟:检查仓位偏差并挂限价单"""
@@ -196,11 +204,13 @@ class UVIXShortStrategy(QCAlgorithm):
         if self.is_stopped_out and self.stop_date is not None:
             days_since_stop = (self.Time - self.stop_date).days
             if days_since_stop < self.cooldown_days:
-                self.Debug(f"[{self.Time}] 冷却期中,距离恢复还有 {self.cooldown_days - days_since_stop} 天")
+                self.Debug(f"[{self.Time}] 冷却期中(Level {self.GetCurrentCooldownLevel()}),距离恢复还有 {self.cooldown_days - days_since_stop} 天")
                 return
             else:
                 self.is_stopped_out = False
                 self.Debug(f"[{self.Time}] 冷却期结束，恢复做空")
+                # 冷却期结束后，检查是否可以重置为基础冷却期
+                self.CheckCooldownReset()
 
         # 检查黑天鹅
         if self.DetectBlackSwan():
@@ -211,7 +221,18 @@ class UVIXShortStrategy(QCAlgorithm):
                     self.entry_prices[symbol] = None
                 self.is_stopped_out = True
                 self.stop_date = self.Time
-                self.Debug(f"[{self.Time}] 检测到黑天鹅事件，全部平仓")
+
+                # 黑天鹅事件也计入止损历史
+                new_cooldown = self.CalculateCooldownPeriod()
+                self.cooldown_days = new_cooldown
+                self.stop_history.append({
+                    'date': self.Time,
+                    'cooldown_days': new_cooldown
+                })
+
+                level_info = f" [冷却期Level {self.GetCurrentCooldownLevel()}: {new_cooldown}天]"
+                self.Debug(f"[{self.Time}] 检测到黑天鹅事件，全部平仓{level_info}")
+                self.LogStopLossHistory()
             return
 
         # 为每个标的检查偏差并挂限价单
@@ -256,7 +277,7 @@ class UVIXShortStrategy(QCAlgorithm):
             return
 
         # 计算限价:做空需要更高的价格(卖出更贵)
-        # 市价$10,我们挂$10.01的限价单卖出(做空)
+        # 市价$10,我们挂$10.02的限价单卖出(做空)
         limit_price_raw = current_price * (1 + self.limit_order_premium)
 
         # 修复精度问题:限价单价格四舍五入到2位小数
@@ -362,15 +383,7 @@ class UVIXShortStrategy(QCAlgorithm):
                 position = self.Portfolio[symbol]
                 self.Debug(f"[{self.Time}] {name} 最终持仓: {position.Quantity} 股 @ ${position.AveragePrice:.2f}")
 
-    def Rebalance(self):
-        """已移除独立的Rebalance函数,所有再平衡逻辑已整合到CheckDeviationAndPlaceLimitOrders中"""
-        pass
-
-    def RebalanceSymbolFinal(self, symbol, name):
-        """已移除,功能已整合到CheckDeviationAndPlaceLimitOrder中"""
-        pass
-
-    # ========== 以下保持原有逻辑不变 ==========
+    # ========== 风控和仓位管理 ==========
 
     def CheckPersistentVolatility(self):
         if len(self.vix_history) < self.persistent_days_threshold:
@@ -442,8 +455,23 @@ class UVIXShortStrategy(QCAlgorithm):
                 self.is_stopped_out = True
                 self.stop_date = self.Time
                 self.entry_prices[symbol] = None
+
+                # 计算新的冷却期
+                new_cooldown = self.CalculateCooldownPeriod()
+                self.cooldown_days = new_cooldown
+
+                # 记录本次止损
+                self.stop_history.append({
+                    'date': self.Time,
+                    'cooldown_days': new_cooldown
+                })
+
                 mode_info = " [持续波动模式]" if self.in_persistent_volatility_mode else ""
-                self.Debug(f"[{self.Time}] {name} 触发止损（止损线{stop_loss_threshold:.0%}{mode_info}），亏损 {unrealized_loss:.2%}，平仓")
+                level_info = f" [冷却期Level {self.GetCurrentCooldownLevel()}: {new_cooldown}天]"
+                self.Debug(f"[{self.Time}] {name} 触发止损（止损线{stop_loss_threshold:.0%}{mode_info}），亏损 {unrealized_loss:.2%}，平仓{level_info}")
+
+                # 输出止损历史统计
+                self.LogStopLossHistory()
 
     def DetectBlackSwan(self):
         signals = []
@@ -504,9 +532,92 @@ class UVIXShortStrategy(QCAlgorithm):
 
         if vix_peak_recovery or condition2 or spy_cumulative_rebound:
             self.vix_peak_value = current_vix
+            # 快速恢复时也检查是否可以重置冷却期
+            self.CheckCooldownReset()
             return True
 
         return False
+
+    # ========== 递进式冷却期管理函数 ==========
+
+    def CalculateCooldownPeriod(self):
+        """根据止损历史计算新的冷却期天数
+        规则：
+        - 第1次止损：2天
+        - 10天内第2次：3天
+        - 10天内第3次：4天
+        - 10天内第4次及以上：5天
+        - 超过10天无止损：重置为2天
+        """
+        # 清理过期的止损记录（超过10天）
+        self.CleanupStopHistory()
+
+        # 计算最近10天内的止损次数（不包括本次）
+        recent_stops = len(self.stop_history)
+
+        if recent_stops == 0:
+            # 第1次止损
+            return self.base_cooldown
+        elif recent_stops == 1:
+            # 10天内第2次
+            return self.cooldown_level_2
+        elif recent_stops == 2:
+            # 10天内第3次
+            return self.cooldown_level_3
+        else:
+            # 10天内第4次及以上
+            return self.max_cooldown
+
+    def CleanupStopHistory(self):
+        """清理超过10天的止损记录"""
+        self.stop_history = [
+            stop for stop in self.stop_history
+            if (self.Time - stop['date']).days <= self.cooldown_tracking_days
+        ]
+
+    def GetCurrentCooldownLevel(self):
+        """获取当前冷却期级别（用于日志显示）"""
+        if self.cooldown_days == self.base_cooldown:
+            return 1
+        elif self.cooldown_days == self.cooldown_level_2:
+            return 2
+        elif self.cooldown_days == self.cooldown_level_3:
+            return 3
+        elif self.cooldown_days == self.max_cooldown:
+            return 4
+        else:
+            return "?"
+
+    def CheckCooldownReset(self):
+        """检查是否可以重置冷却期为基础级别"""
+        self.CleanupStopHistory()
+
+        if len(self.stop_history) == 0:
+            # 10天内没有止损记录，重置为基础冷却期
+            if self.cooldown_days != self.base_cooldown:
+                old_cooldown = self.cooldown_days
+                self.cooldown_days = self.base_cooldown
+                self.Debug(f"[{self.Time}] 冷却期重置: {old_cooldown}天 → {self.base_cooldown}天 (10天内无止损)")
+
+    def LogStopLossHistory(self):
+        """输出止损历史统计"""
+        if len(self.stop_history) == 0:
+            return
+
+        stops_in_10_days = len(self.stop_history)
+
+        # 计算平均止损间隔
+        if stops_in_10_days > 1:
+            intervals = []
+            for i in range(1, len(self.stop_history)):
+                days_diff = (self.stop_history[i]['date'] - self.stop_history[i-1]['date']).days
+                intervals.append(days_diff)
+            avg_interval = sum(intervals) / len(intervals)
+            self.Debug(f"[{self.Time}] 止损统计: 最近10天{stops_in_10_days}次, 平均间隔{avg_interval:.1f}天")
+        else:
+            self.Debug(f"[{self.Time}] 止损统计: 最近10天{stops_in_10_days}次")
+
+    # ========== 期权策略 ==========
 
     def SellMonthlyPuts(self):
         """每月初卖出当月到期的Put期权"""
@@ -597,6 +708,8 @@ class UVIXShortStrategy(QCAlgorithm):
 
         self.Debug(f"[{self.Time}] *** [{name} 期权成交] ***")
         self.Debug(f"[{self.Time}] 卖出 {contracts} 张 Put, 行权价: ${selected_option.Strike:.2f}, 收取权利金: ${premium:.2f}")
+
+    # ========== 日终报告 ==========
 
     def OnEndOfDay(self, symbol):
         """每日结束时输出持仓信息"""
