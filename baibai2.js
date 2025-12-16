@@ -176,6 +176,7 @@ const {chujue} = require('./ai/image/generator/chujue/index.js')
 const {nanoBananaReply, getNanoBananaHelp, getNanoBananaPresets} = require('./ai/banana')
 const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao')
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
+const { handleAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
 
 // 导入deepseek模块
 // const {handleDeepSeekChat} = require('./ai/llm/deepseek')
@@ -1094,6 +1095,12 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     ret = ret + "捉内鬼【捉内鬼】\n";
     ret = ret + ""
     callback(ret.trim());
+    return;
+  }
+
+  // 2025年度报告功能
+  if(content === '2025年度报告' || content === '2025年度报告'){
+    handleAnnualReportCommand(groupid, from, port, callback, groupName);
     return;
   }
 
