@@ -6,6 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const config = require('./config')
 const { formatNumber, truncateText, getAvatarUrl, getRandomComment } = require('./utils')
+const { generateBatchComments, isAIEnabled } = require('./aiComment')
 
 /**
  * 生成HTML报告模板
@@ -1112,7 +1113,14 @@ function generateHtmlTemplate(data) {
  * @param {number[]} selectedIndices 选中的热词索引（可选，默认前10）
  * @returns {Object}
  */
-function prepareTemplateData(jsonData, selectedIndices = null) {
+/**
+ * 准备模板数据
+ * @param {Object} jsonData 分析导出的JSON数据
+ * @param {number[]} selectedIndices 选中的热词索引（可选，默认前10）
+ * @param {Object} aiComments AI锐评映射（可选，词语 -> 锐评）
+ * @returns {Object}
+ */
+function prepareTemplateData(jsonData, selectedIndices = null, aiComments = null) {
   const topWords = jsonData.topWords || []
   
   // 选择热词（默认前10个）
@@ -1181,8 +1189,10 @@ function prepareTemplateData(jsonData, selectedIndices = null) {
     // 主要贡献者文本
     const contribText = contributors.slice(0, 3).map(c => c.name).join('、') || '未知'
 
-    // 随机锐评
-    const aiComment = getRandomComment(config.FALLBACK_COMMENTS)
+    // 获取AI锐评（优先使用传入的，否则使用随机备用）
+    const aiComment = (aiComments && aiComments[wordInfo.word]) 
+      ? aiComments[wordInfo.word] 
+      : getRandomComment(config.FALLBACK_COMMENTS)
 
     return {
       word: wordInfo.word,
@@ -1262,9 +1272,37 @@ function prepareTemplateData(jsonData, selectedIndices = null) {
  * @param {number[]} selectedIndices 选中的热词索引（可选）
  * @returns {Promise<string>} 生成的图片路径
  */
-async function generateImage(jsonData, outputPath, selectedIndices = null) {
+/**
+ * 生成图片报告
+ * @param {Object} jsonData 分析导出的JSON数据
+ * @param {string} outputPath 输出文件路径
+ * @param {number[]} selectedIndices 选中的热词索引（可选）
+ * @param {boolean} enableAI 是否启用AI锐评（默认true）
+ * @returns {Promise<string>} 生成的图片路径
+ */
+async function generateImage(jsonData, outputPath, selectedIndices = null, enableAI = true) {
+  const topWords = jsonData.topWords || []
+  
+  // 选择热词
+  let selected
+  if (selectedIndices && selectedIndices.length > 0) {
+    selected = selectedIndices.map(i => topWords[i]).filter(Boolean)
+  } else {
+    selected = topWords.slice(0, 10)
+  }
+  
+  // 生成AI锐评
+  let aiComments = null
+  if (enableAI && isAIEnabled()) {
+    try {
+      aiComments = await generateBatchComments(selected)
+    } catch (e) {
+      console.warn('AI锐评生成失败，使用备用锐评:', e.message)
+    }
+  }
+  
   // 准备数据
-  const templateData = prepareTemplateData(jsonData, selectedIndices)
+  const templateData = prepareTemplateData(jsonData, selectedIndices, aiComments)
   
   // 生成HTML
   const html = generateHtmlTemplate(templateData)

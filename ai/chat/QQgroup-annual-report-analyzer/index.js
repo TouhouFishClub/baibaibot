@@ -3,6 +3,7 @@
  * 主入口文件
  */
 
+const fs = require('fs')
 const path = require('path')
 const MongoClient = require('mongodb').MongoClient
 const { mongourl, IMAGE_DATA } = require('../../../baibaiConfigs')
@@ -11,6 +12,14 @@ const { generateImage } = require('./imageGenerator')
 
 // 机器人ID，排除统计
 const BOT_IDS = new Set([981069482, 3291864216, 1840239061, 2771362647, 384901015, 10000, 2730629054, 1561267174])
+
+// 缓存目录
+const CACHE_DIR = path.join(IMAGE_DATA, 'other', 'annual_report_cache')
+
+// 确保缓存目录存在
+if (!fs.existsSync(CACHE_DIR)) {
+  fs.mkdirSync(CACHE_DIR, { recursive: true })
+}
 
 // 获取群成员列表的引用
 let fetchGroupUsersRef = null
@@ -106,6 +115,51 @@ function buildUserMap(groupUsers) {
 }
 
 /**
+ * 获取缓存文件路径
+ * @param {number} groupId 群ID
+ * @param {string} year 年份
+ * @returns {string}
+ */
+function getCacheFilePath(groupId, year = '2025') {
+  return path.join(CACHE_DIR, `annual_report_${groupId}_${year}.png`)
+}
+
+/**
+ * 检查是否存在缓存
+ * @param {number} groupId 群ID
+ * @param {string} year 年份
+ * @returns {boolean}
+ */
+function hasCachedReport(groupId, year = '2025') {
+  const cachePath = getCacheFilePath(groupId, year)
+  return fs.existsSync(cachePath)
+}
+
+/**
+ * 获取缓存的报告图片CQ码
+ * @param {number} groupId 群ID
+ * @param {string} year 年份
+ * @returns {string}
+ */
+function getCachedReportCQ(groupId, year = '2025') {
+  const relativePath = path.join('send', 'other', 'annual_report_cache', `annual_report_${groupId}_${year}.png`)
+  return `[CQ:image,file=${relativePath}]`
+}
+
+/**
+ * 删除缓存的报告
+ * @param {number} groupId 群ID
+ * @param {string} year 年份
+ */
+function deleteCachedReport(groupId, year = '2025') {
+  const cachePath = getCacheFilePath(groupId, year)
+  if (fs.existsSync(cachePath)) {
+    fs.unlinkSync(cachePath)
+    console.log(`🗑️ 已删除缓存: ${cachePath}`)
+  }
+}
+
+/**
  * 生成年度报告
  * @param {Object} options 配置选项
  * @param {number} options.groupId 群ID
@@ -113,10 +167,23 @@ function buildUserMap(groupUsers) {
  * @param {string} options.groupName 群名称（可选）
  * @param {Date} options.startDate 开始日期
  * @param {Date} options.endDate 结束日期
+ * @param {boolean} options.forceRegenerate 是否强制重新生成
  * @returns {Promise<string>} 生成的图片CQ码
  */
 async function generateAnnualReport(options) {
-  const { groupId, port, groupName, startDate, endDate } = options
+  const { groupId, port, groupName, startDate, endDate, forceRegenerate = false } = options
+  const year = startDate.getFullYear().toString()
+  
+  // 检查缓存（非强制重新生成时）
+  if (!forceRegenerate && hasCachedReport(groupId, year)) {
+    console.log(`📦 使用缓存的年度报告: 群${groupId}`)
+    return getCachedReportCQ(groupId, year)
+  }
+  
+  // 如果强制重新生成，先删除旧缓存
+  if (forceRegenerate) {
+    deleteCachedReport(groupId, year)
+  }
   
   console.log(`🚀 开始生成年度报告`)
   console.log(`   群ID: ${groupId}`)
@@ -154,17 +221,16 @@ async function generateAnnualReport(options) {
   // 4. 导出JSON数据
   const jsonData = analyzer.exportJson()
   
-  // 5. 生成图片
+  // 5. 生成图片（保存到缓存目录）
   console.log('🖼️ 生成图片报告...')
-  const outputFileName = `annual_report_${groupId}_${Date.now()}.png`
-  const outputPath = path.join(IMAGE_DATA, 'other', outputFileName)
+  const outputPath = getCacheFilePath(groupId, year)
   
   await generateImage(jsonData, outputPath)
   
   // 返回CQ码格式的图片消息
-  const imgMsg = `[CQ:image,file=${path.join('send', 'other', outputFileName)}]`
+  const imgMsg = getCachedReportCQ(groupId, year)
   
-  console.log('✅ 年度报告生成完成!')
+  console.log('✅ 年度报告生成完成并已缓存!')
   return imgMsg
 }
 
@@ -175,8 +241,9 @@ async function generateAnnualReport(options) {
  * @param {string} port 端口号
  * @param {Function} callback 回调函数
  * @param {string} groupName 群名称（可选）
+ * @param {boolean} forceRegenerate 是否强制重新生成
  */
-async function handleAnnualReportCommand(groupId, userId, port, callback, groupName = null) {
+async function handleAnnualReportCommand(groupId, userId, port, callback, groupName = null, forceRegenerate = false) {
   // 权限检查：只有管理员799018865可以使用
   const ADMIN_ID = 799018865
   if (userId !== ADMIN_ID) {
@@ -185,23 +252,32 @@ async function handleAnnualReportCommand(groupId, userId, port, callback, groupN
   }
   
   try {
-    callback('📊 正在生成年度报告，请稍候...')
-    
     // 设置时间范围（2025年12月，用于测试）
     // 正式使用时改为2025年全年
     const startDate = new Date('2025-12-01T00:00:00+08:00')
     const endDate = new Date('2025-12-31T23:59:59+08:00')
+    const year = startDate.getFullYear().toString()
     
     // 如果要生成全年报告，使用以下日期：
     // const startDate = new Date('2025-01-01T00:00:00+08:00')
     // const endDate = new Date('2025-12-31T23:59:59+08:00')
+    
+    // 检查是否有缓存（非强制重新生成时）
+    if (!forceRegenerate && hasCachedReport(groupId, year)) {
+      callback('📦 发送缓存的年度报告...')
+    } else if (forceRegenerate) {
+      callback('🔄 正在重新生成年度报告，请稍候...')
+    } else {
+      callback('📊 正在生成年度报告，请稍候（首次生成需要较长时间）...')
+    }
     
     const imgMsg = await generateAnnualReport({
       groupId,
       port,
       groupName,
       startDate,
-      endDate
+      endDate,
+      forceRegenerate
     })
     
     callback(imgMsg)
@@ -214,6 +290,8 @@ async function handleAnnualReportCommand(groupId, userId, port, callback, groupN
 module.exports = {
   generateAnnualReport,
   handleAnnualReportCommand,
+  hasCachedReport,
+  deleteCachedReport,
   fetchChatData,
   fetchGroupUsers
 }

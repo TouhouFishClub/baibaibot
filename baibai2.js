@@ -1099,8 +1099,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   // 2025年度报告功能
-  if(content === '2025年度报告' || content === '2025年度报告'){
-    handleAnnualReportCommand(groupid, from, port, callback, groupName);
+  if(content === '2025年度报告'){
+    handleAnnualReportCommand(groupid, from, port, callback, groupName, false);
+    return;
+  }
+  
+  // 重新生成2025年度报告功能（强制刷新缓存）
+  if(content === '重新生成2025年度报告'){
+    handleAnnualReportCommand(groupid, from, port, callback, groupName, true);
     return;
   }
 
