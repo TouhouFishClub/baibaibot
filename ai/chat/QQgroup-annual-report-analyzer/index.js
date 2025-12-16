@@ -207,8 +207,17 @@ async function generateAnnualReport(options) {
   console.log('📥 获取聊天数据...')
   let messages = await fetchChatData(groupId, startDate, endDate)
   
-  // 过滤机器人消息
-  messages = messages.filter(msg => !BOT_IDS.has(msg.uid))
+  // 调试：检查第一条消息的格式
+  if (messages.length > 0) {
+    const sample = messages[0]
+    console.log(`   📋 样本消息: uid=${sample.uid}(${typeof sample.uid}), d=${sample.d ? sample.d.substring(0, 50) : 'undefined'}`)
+  }
+  
+  // 过滤机器人消息（注意uid可能是字符串或数字）
+  messages = messages.filter(msg => {
+    const uid = typeof msg.uid === 'string' ? parseInt(msg.uid, 10) : msg.uid
+    return !BOT_IDS.has(uid)
+  })
   console.log(`   过滤后剩余 ${messages.length} 条消息`)
   
   if (messages.length === 0) {

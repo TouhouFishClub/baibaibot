@@ -153,14 +153,29 @@ class ChatAnalyzer {
    * 预处理所有文本
    */
   _preprocessTexts() {
+    let emptyCount = 0
+    let cleanedEmptyCount = 0
+    
     for (const msg of this.messages) {
       const text = msg.d || ''
+      if (!text) {
+        emptyCount++
+        continue
+      }
       const cleaned = cleanText(text)
       if (cleaned && cleaned.length >= 1) {
         this.cleanedTexts.push(cleaned)
+      } else {
+        cleanedEmptyCount++
       }
     }
     console.log(`   有效文本: ${this.cleanedTexts.length} 条`)
+    if (emptyCount > 0) {
+      console.log(`   ⚠️ 空文本(msg.d为空): ${emptyCount} 条`)
+    }
+    if (cleanedEmptyCount > 0) {
+      console.log(`   ⚠️ 清理后为空: ${cleanedEmptyCount} 条`)
+    }
   }
 
   /**
