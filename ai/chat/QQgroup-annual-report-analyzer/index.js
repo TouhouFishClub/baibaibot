@@ -244,23 +244,18 @@ async function generateAnnualReport(options) {
  * @param {boolean} forceRegenerate 是否强制重新生成
  */
 async function handleAnnualReportCommand(groupId, userId, port, callback, groupName = null, forceRegenerate = false) {
-  // 权限检查：只有管理员799018865可以使用
-  const ADMIN_ID = 799018865
-  if (userId !== ADMIN_ID) {
+  // 权限检查：只有管理员可以使用
+  const ADMIN_IDS = new Set([799018865, 357474405])
+  if (!ADMIN_IDS.has(userId)) {
     // 非管理员不回复任何信息
     return
   }
   
   try {
-    // 设置时间范围（2025年12月，用于测试）
-    // 正式使用时改为2025年全年
-    const startDate = new Date('2025-12-01T00:00:00+08:00')
+    // 设置时间范围（2025年全年）
+    const startDate = new Date('2025-01-01T00:00:00+08:00')
     const endDate = new Date('2025-12-31T23:59:59+08:00')
     const year = startDate.getFullYear().toString()
-    
-    // 如果要生成全年报告，使用以下日期：
-    // const startDate = new Date('2025-01-01T00:00:00+08:00')
-    // const endDate = new Date('2025-12-31T23:59:59+08:00')
     
     // 检查是否有缓存（非强制重新生成时）
     if (!forceRegenerate && hasCachedReport(groupId, year)) {
