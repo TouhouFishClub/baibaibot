@@ -10,7 +10,7 @@ const ChatAnalyzer = require('./analyzer')
 const { generateImage } = require('./imageGenerator')
 
 // 机器人ID，排除统计
-const BOT_IDS = new Set([981069482, 3291864216, 1840239061, 2771362647, 384901015])
+const BOT_IDS = new Set([981069482, 3291864216, 1840239061, 2771362647, 384901015, 10000, 2730629054, 1561267174])
 
 // 获取群成员列表的引用
 let fetchGroupUsersRef = null
@@ -23,8 +23,7 @@ let fetchGroupUsersRef = null
  */
 async function fetchGroupUsers(groupId, port) {
   if (!fetchGroupUsersRef) {
-    const groupCountModule = require('../groupCount')
-    // 直接使用 groupCount 模块的方法，但我们需要从 reverseWsUtils 获取
+    // 使用 reverseWsUtils 获取群成员列表
     const { createHttpApiWrapper } = require('../../../reverseWsUtils')
     
     fetchGroupUsersRef = async (gid, p) => {
