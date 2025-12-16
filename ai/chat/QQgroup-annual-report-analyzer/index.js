@@ -90,15 +90,11 @@ async function fetchChatData(groupId, startDate, endDate) {
       }
     }
     
-    // 只获取必要的字段，减少内存占用
-    const projection = {
-      _id: 1,
-      uid: 1,
-      d: 1,
-      ts: 1
-    }
-    
-    const messages = await collection.find(query, { projection }).sort({ _id: 1 }).toArray()
+    // 使用 project() 方法替代 find 的第二参数，兼容性更好
+    const messages = await collection.find(query)
+      .project({ _id: 1, uid: 1, d: 1, ts: 1 })
+      .sort({ _id: 1 })
+      .toArray()
     console.log(`📊 获取到 ${messages.length} 条消息`)
     
     return messages
