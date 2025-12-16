@@ -78,7 +78,7 @@ async function fetchGroupUsers(groupId, port) {
 async function fetchChatData(groupId, startDate, endDate) {
   let client
   try {
-    client = await MongoClient.connect(mongourl, { useUnifiedTopology: true })
+    client = await MongoClient.connect(mongourl)
     const db = client.db('db_bot')
     const collection = db.collection('cl_chat')
     
@@ -90,7 +90,15 @@ async function fetchChatData(groupId, startDate, endDate) {
       }
     }
     
-    const messages = await collection.find(query).sort({ _id: 1 }).toArray()
+    // 只获取必要的字段，减少内存占用
+    const projection = {
+      _id: 1,
+      uid: 1,
+      d: 1,
+      ts: 1
+    }
+    
+    const messages = await collection.find(query, { projection }).sort({ _id: 1 }).toArray()
     console.log(`📊 获取到 ${messages.length} 条消息`)
     
     return messages

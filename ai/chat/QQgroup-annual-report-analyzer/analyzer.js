@@ -51,6 +51,9 @@ function cut(text) {
   return simpleCut(text)
 }
 
+// 大数据量阈值，超过此值使用轻量模式
+const LARGE_DATA_THRESHOLD = 50000
+
 class ChatAnalyzer {
   /**
    * @param {Object} options 配置选项
@@ -58,6 +61,7 @@ class ChatAnalyzer {
    * @param {Array} options.messages 消息列表
    * @param {Object} options.userMap uid到昵称的映射
    * @param {boolean} options.useStopwords 是否使用停用词
+   * @param {boolean} options.lightMode 是否使用轻量模式（大数据量时自动启用）
    */
   constructor(options) {
     this.chatName = options.chatName || '未知群聊'
@@ -65,6 +69,12 @@ class ChatAnalyzer {
     this.userMap = options.userMap || {}
     this.useStopwords = options.useStopwords !== false
     this.stopwords = this.useStopwords ? STOPWORDS : new Set()
+    
+    // 大数据量自动启用轻量模式
+    this.lightMode = options.lightMode || this.messages.length > LARGE_DATA_THRESHOLD
+    if (this.lightMode) {
+      console.log(`⚡ 数据量较大(${this.messages.length}条)，启用轻量分析模式`)
+    }
 
     // 统计数据
     this.wordFreq = new Map()
@@ -110,14 +120,22 @@ class ChatAnalyzer {
     console.log('🧹 预处理文本...')
     this._preprocessTexts()
 
-    console.log('🔤 分析单字独立性...')
-    this.singleCharStats = analyzeSingleChars(this.cleanedTexts)
+    // 轻量模式下跳过内存密集型操作
+    if (!this.lightMode) {
+      console.log('🔤 分析单字独立性...')
+      this.singleCharStats = analyzeSingleChars(this.cleanedTexts)
 
-    console.log('🔍 新词发现...')
-    this._discoverNewWords()
+      console.log('🔍 新词发现...')
+      this._discoverNewWords()
 
-    console.log('🔗 词组合并...')
-    this._mergeWordPairs()
+      console.log('🔗 词组合并...')
+      this._mergeWordPairs()
+    } else {
+      console.log('⏩ 轻量模式：跳过新词发现和词组合并')
+    }
+    
+    // 清理cleanedTexts释放内存（后续步骤不需要）
+    this.cleanedTexts = []
 
     console.log('📈 分词统计...')
     this._tokenizeAndCount()
@@ -294,12 +312,14 @@ class ChatAnalyzer {
           contrib.set(senderUid, (contrib.get(senderUid) || 0) + 1)
         }
 
-        // 样本收集
+        // 样本收集（限制数量以节省内存）
         if (!this.wordSamples.has(trimmed)) {
           this.wordSamples.set(trimmed, [])
         }
         const samples = this.wordSamples.get(trimmed)
-        if (samples.length < config.SAMPLE_COUNT * 3) {
+        // 轻量模式下只保存3个样本，正常模式保存更多
+        const maxSamples = this.lightMode ? 3 : config.SAMPLE_COUNT
+        if (samples.length < maxSamples) {
           samples.push(cleaned)
         }
       }
