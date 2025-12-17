@@ -54,6 +54,9 @@ function cleanText(text) {
     text = text.replace(/\[[^\[\]]*\]/g, '')
   }
   
+  // 去除残留的各种括号和标点
+  text = text.replace(/[\[\]【】《》<>〈〉「」『』（）(){}｛｝]/g, '')
+  
   // 去除链接
   text = text.replace(/https?:\/\/\S+/g, '')
   text = text.replace(/www\.\S+/g, '')
