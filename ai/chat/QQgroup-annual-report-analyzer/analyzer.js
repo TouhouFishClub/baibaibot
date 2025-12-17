@@ -5,6 +5,7 @@
 const config = require('./config')
 const STOPWORDS = require('./stopwords')
 const {
+  countTextLength,
   extractEmojis,
   isEmoji,
   cleanText,
@@ -365,8 +366,11 @@ class ChatAnalyzer {
       // 消息计数
       this.userMsgCount.set(senderUid, (this.userMsgCount.get(senderUid) || 0) + 1)
 
+      // 使用专用函数统计字数（CQ码算1个字符）
+      const charLen = countTextLength(text)
+      this.userCharCount.set(senderUid, (this.userCharCount.get(senderUid) || 0) + charLen)
+      
       const clean = cleanText(text)
-      this.userCharCount.set(senderUid, (this.userCharCount.get(senderUid) || 0) + clean.length)
 
       // 图片检测
       if (text.includes('[CQ:image') && !text.toLowerCase().includes('.gif')) {

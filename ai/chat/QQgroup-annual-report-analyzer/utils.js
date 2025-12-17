@@ -3,6 +3,36 @@
  */
 
 /**
+ * 统计文本长度（用于字数统计）
+ * CQ码和HTML实体编码的CQ码各算作1个字符
+ * @param {string} text 
+ * @returns {number}
+ */
+function countTextLength(text) {
+  if (!text) return 0
+  
+  // 先把每个CQ码替换成单个占位符（算1个字符）
+  let processed = text.replace(/\[CQ:[^\]]*\]/gi, '○')
+  processed = processed.replace(/&#91;CQ:[^&#]*&#93;/gi, '○')
+  
+  // 解码HTML实体
+  processed = processed.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
+  processed = processed.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"')
+  
+  // 去除其他方括号标记（如 [QQ红包]），每个也算1个字符
+  processed = processed.replace(/\[[^\[\]]{1,20}\]/g, '○')
+  
+  // 去除链接（不计入字数）
+  processed = processed.replace(/https?:\/\/\S+/g, '')
+  processed = processed.replace(/www\.\S+/g, '')
+  
+  // 去除多余空白
+  processed = processed.replace(/\s+/g, ' ').trim()
+  
+  return processed.length
+}
+
+/**
  * 提取文本中的emoji
  * @param {string} text 
  * @returns {string[]}
@@ -231,6 +261,7 @@ function getRandomComment(comments) {
 }
 
 module.exports = {
+  countTextLength,
   extractEmojis,
   isEmoji,
   cleanText,
