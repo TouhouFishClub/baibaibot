@@ -124,7 +124,7 @@ class UVIXShortStrategy(QCAlgorithm):
         # 收盘前30分钟:再次检查偏差,超过5%挂限价单(不用市价单)
         self.Schedule.On(
             self.DateRules.EveryDay(self.sqqq),
-            self.TimeRules.BeforeMarketClose(self.sqqq, 30),
+            self.TimeRules.BeforeMarketClose(self.sqqq, 75),
             self.PreCloseRebalanceCheck
         )
 
