@@ -37,25 +37,27 @@ function isEmoji(char) {
 function cleanText(text) {
   if (!text) return ''
   
-  // 去除CQ码
-  text = text.replace(/\[CQ:[^\]]+\]/g, '')
+  // 去除CQ码（更宽松的匹配）
+  text = text.replace(/\[CQ:[^\]]*\]/gi, '')
+  
+  // 去除常见的QQ消息标记（如 [QQ红包]、[图片]、[表情]、[疑问]、[码字] 等）
+  text = text.replace(/\[[^\[\]]{1,20}\]/g, '')
   
   // 去除回复标记
-  text = text.replace(/\[回复\s+[^\]]*\]/g, '')
+  text = text.replace(/\[回复[^\]]*\]/g, '')
   
   // 去除@某人
-  text = text.replace(/@[^\n]*?(?=\s+[\u4e00-\u9fffa-zA-Z])/g, '')
-  text = text.replace(/@[^\n]*$/g, '')
+  text = text.replace(/@[^\s\n]*\s*/g, '')
   
-  // 循环去除所有方括号内容
+  // 循环去除所有剩余的方括号内容（处理嵌套）
   let prev = null
   while (prev !== text) {
     prev = text
     text = text.replace(/\[[^\[\]]*\]/g, '')
   }
   
-  // 去除残留的各种括号和标点
-  text = text.replace(/[\[\]【】《》<>〈〉「」『』（）(){}｛｝]/g, '')
+  // 去除残留的各种括号（半角+全角）
+  text = text.replace(/[\[\]【】《》<>〈〉「」『』（）()\{\}｛｝［］＜＞]/g, '')
   
   // 去除链接
   text = text.replace(/https?:\/\/\S+/g, '')
