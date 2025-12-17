@@ -449,6 +449,7 @@ class ChatAnalyzer {
    */
   _filterResults() {
     const filteredFreq = new Map()
+    let blacklistFiltered = 0
 
     for (const [word, freq] of this.wordFreq) {
       if (word.length < config.MIN_WORD_LEN || word.length > config.MAX_WORD_LEN) continue
@@ -459,7 +460,10 @@ class ChatAnalyzer {
         continue
       }
 
-      if (config.BLACKLIST.has(word)) continue
+      if (config.BLACKLIST.has(word)) {
+        blacklistFiltered++
+        continue
+      }
 
       // 单字特殊处理
       if (word.length === 1) {
@@ -496,7 +500,13 @@ class ChatAnalyzer {
       }
     }
 
+    console.log(`   黑名单过滤了 ${blacklistFiltered} 个词`)
     console.log(`   过滤后 ${this.wordFreq.size} 个词`)
+    
+    // 调试：检查"直接"是否在结果中
+    if (this.wordFreq.has('直接')) {
+      console.log(`   ⚠️ 警告: "直接" 仍在词频表中，频次: ${this.wordFreq.get('直接')}`)
+    }
   }
 
   /**
