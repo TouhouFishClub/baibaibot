@@ -17,6 +17,13 @@ const {
 let nodejieba = null
 try {
   nodejieba = require('nodejieba')
+  // 加载自定义词典
+  if (config.USER_DICT && config.USER_DICT.length > 0) {
+    for (const word of config.USER_DICT) {
+      nodejieba.insertWord(word)
+    }
+    console.log(`📚 已加载 ${config.USER_DICT.length} 个自定义词`)
+  }
 } catch (e) {
   console.warn('nodejieba未安装，将使用简单分词')
 }
