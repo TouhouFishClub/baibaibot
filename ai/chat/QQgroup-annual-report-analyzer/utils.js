@@ -37,12 +37,13 @@ function isEmoji(char) {
 function cleanText(text) {
   if (!text) return ''
   
-  // 先解码HTML实体（&#91; = [, &#93; = ] 等）
+  // 先去除CQ码（支持HTML实体编码的版本）
+  text = text.replace(/\[CQ:[^\]]*\]/gi, '')
+  text = text.replace(/&#91;CQ:[^&#]*&#93;/gi, '')  // HTML实体编码版本的CQ码
+  
+  // 再解码HTML实体（&#91; = [, &#93; = ] 等）
   text = text.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
   text = text.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"')
-  
-  // 去除CQ码（更宽松的匹配）
-  text = text.replace(/\[CQ:[^\]]*\]/gi, '')
   
   // 去除常见的QQ消息标记（如 [QQ红包]、[图片]、[表情]、[疑问]、[码字] 等）
   text = text.replace(/\[[^\[\]]{1,20}\]/g, '')
