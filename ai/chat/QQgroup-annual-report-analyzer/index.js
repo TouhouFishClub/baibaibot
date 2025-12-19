@@ -502,6 +502,7 @@ async function generateUserAnnualReport(options) {
 async function handleUserAnnualReportCommand(groupId, userId, targetUserId, port, callback, groupName = null, targetUserName = null, forceRegenerate = false) {
   // 权限检查：只有管理员可以使用
   const ADMIN_IDS = new Set([799018865, 357474405])
+  console.log(11111111111111)
   if (!ADMIN_IDS.has(userId)) {
     // 非管理员不回复
     return
