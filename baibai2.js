@@ -1122,6 +1122,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
         handleUserAnnualReportCommand(groupid, from, targetUserId, port, callback, groupName, targetUserName, isRegen)
       })
       return;
+    } else {
+      console.log('err match at qq')
     }
   }
 
