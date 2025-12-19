@@ -13,8 +13,8 @@ const { generateImage } = require('./imageGenerator')
 // 机器人ID，排除统计
 const BOT_IDS = new Set([2854196310, 981069482, 3291864216, 1840239061, 2771362647, 384901015, 10000, 2730629054, 1561267174, 2136421688, 2363759162, 2854207387, 1315153795, 3889652245, 2186702980, 2704057269, 3652811667, 3815102062, 3611589471])
 
-// 缓存目录
-const CACHE_DIR = path.join(IMAGE_DATA, 'other', 'annual_report_cache')
+// 缓存目录（群年度报告）
+const CACHE_DIR = path.join(IMAGE_DATA, 'group-report')
 
 // 确保缓存目录存在
 if (!fs.existsSync(CACHE_DIR)) {
@@ -106,6 +106,48 @@ async function fetchChatData(groupId, startDate, endDate) {
 }
 
 /**
+ * 从数据库获取指定用户在群里的消息数据
+ * @param {number} groupId 群ID
+ * @param {number} userId 用户ID
+ * @param {Date} startDate 开始日期
+ * @param {Date} endDate 结束日期
+ * @returns {Promise<Array>}
+ */
+async function fetchUserChatData(groupId, userId, startDate, endDate) {
+  let client
+  try {
+    client = await MongoClient.connect(mongourl)
+    const db = client.db('db_bot')
+    const collection = db.collection('cl_chat')
+    
+    // 同时支持字符串和数字类型的uid
+    const query = {
+      gid: groupId,
+      $or: [
+        { uid: userId },
+        { uid: String(userId) }
+      ],
+      _id: {
+        $gte: startDate,
+        $lte: endDate
+      }
+    }
+    
+    const messages = await collection.find(query)
+      .project({ _id: 1, uid: 1, d: 1, ts: 1 })
+      .sort({ _id: 1 })
+      .toArray()
+    console.log(`📊 获取到用户 ${userId} 的 ${messages.length} 条消息`)
+    
+    return messages
+  } finally {
+    if (client) {
+      await client.close()
+    }
+  }
+}
+
+/**
  * 构建用户ID到昵称的映射
  * @param {Array} groupUsers 群成员列表
  * @returns {Object}
@@ -146,7 +188,7 @@ function hasCachedReport(groupId, year = '2025') {
  * @returns {string}
  */
 function getCachedReportCQ(groupId, year = '2025') {
-  const relativePath = path.join('send', 'other', 'annual_report_cache', `annual_report_${groupId}_${year}.png`)
+  const relativePath = path.join('send', 'group-report', `annual_report_${groupId}_${year}.png`)
   return `[CQ:image,file=${relativePath}]`
 }
 
@@ -295,12 +337,223 @@ async function handleAnnualReportCommand(groupId, userId, port, callback, groupN
   }
 }
 
+// ============== 群友年度报告相关函数 ==============
+
+/**
+ * 获取群友报告缓存文件路径
+ * @param {number} groupId 群ID
+ * @param {number} userId 用户ID
+ * @param {string} year 年份
+ * @returns {string}
+ */
+function getUserReportCachePath(groupId, userId, year = '2025') {
+  return path.join(CACHE_DIR, `user_report_${groupId}_${userId}_${year}.png`)
+}
+
+/**
+ * 检查群友报告是否有缓存
+ * @param {number} groupId 群ID
+ * @param {number} userId 用户ID
+ * @param {string} year 年份
+ * @returns {boolean}
+ */
+function hasUserCachedReport(groupId, userId, year = '2025') {
+  const cachePath = getUserReportCachePath(groupId, userId, year)
+  return fs.existsSync(cachePath)
+}
+
+/**
+ * 获取群友报告图片CQ码
+ * @param {number} groupId 群ID
+ * @param {number} userId 用户ID
+ * @param {string} year 年份
+ * @returns {string}
+ */
+function getUserReportCQ(groupId, userId, year = '2025') {
+  const relativePath = path.join('send', 'group-report', `user_report_${groupId}_${userId}_${year}.png`)
+  return `[CQ:image,file=${relativePath}]`
+}
+
+/**
+ * 删除群友报告缓存
+ * @param {number} groupId 群ID
+ * @param {number} userId 用户ID
+ * @param {string} year 年份
+ */
+function deleteUserCachedReport(groupId, userId, year = '2025') {
+  const cachePath = getUserReportCachePath(groupId, userId, year)
+  if (fs.existsSync(cachePath)) {
+    fs.unlinkSync(cachePath)
+    console.log(`🗑️ 已删除群友报告缓存: ${cachePath}`)
+  }
+}
+
+/**
+ * 生成群友年度报告
+ * @param {Object} options 配置选项
+ * @param {number} options.groupId 群ID
+ * @param {number} options.targetUserId 目标用户ID
+ * @param {string} options.port 端口号
+ * @param {string} options.groupName 群名称（可选）
+ * @param {string} options.targetUserName 目标用户昵称（可选）
+ * @param {Date} options.startDate 开始日期
+ * @param {Date} options.endDate 结束日期
+ * @param {boolean} options.forceRegenerate 是否强制重新生成
+ * @returns {Promise<string>} 生成的图片CQ码
+ */
+async function generateUserAnnualReport(options) {
+  const { groupId, targetUserId, port, groupName, targetUserName, startDate, endDate, forceRegenerate = false } = options
+  const year = startDate.getFullYear().toString()
+  
+  // 检查缓存
+  if (!forceRegenerate && hasUserCachedReport(groupId, targetUserId, year)) {
+    console.log(`📦 使用缓存的群友报告: 群${groupId} 用户${targetUserId}`)
+    return getUserReportCQ(groupId, targetUserId, year)
+  }
+  
+  // 强制重新生成时删除旧缓存
+  if (forceRegenerate) {
+    deleteUserCachedReport(groupId, targetUserId, year)
+  }
+  
+  console.log(`🚀 开始生成群友年度报告`)
+  console.log(`   群ID: ${groupId}`)
+  console.log(`   用户ID: ${targetUserId}`)
+  console.log(`   时间范围: ${startDate.toISOString()} ~ ${endDate.toISOString()}`)
+  
+  // 1. 获取群成员列表（用于构建用户名映射）
+  console.log('👥 获取群成员列表...')
+  const groupUsers = await fetchGroupUsers(groupId, port)
+  const userMap = buildUserMap(groupUsers)
+  
+  // 获取目标用户昵称
+  const userName = targetUserName || userMap[targetUserId] || `用户${targetUserId}`
+  console.log(`   目标用户: ${userName}`)
+  
+  // 2. 获取该用户的聊天数据
+  console.log('📥 获取用户聊天数据...')
+  let messages = await fetchUserChatData(groupId, targetUserId, startDate, endDate)
+  
+  if (messages.length === 0) {
+    throw new Error(`用户 ${userName} 在该群没有聊天记录`)
+  }
+  
+  // 过滤机器人消息（虽然理论上不应该有）
+  messages = messages.filter(msg => {
+    const uid = typeof msg.uid === 'string' ? parseInt(msg.uid, 10) : msg.uid
+    return !BOT_IDS.has(uid)
+  })
+  console.log(`   获取到 ${messages.length} 条消息`)
+  
+  if (messages.length < 10) {
+    throw new Error(`用户 ${userName} 的消息太少（${messages.length}条），无法生成有意义的报告`)
+  }
+  
+  // 3. 分析数据
+  console.log('🔍 开始分析数据...')
+  const reportTitle = `${userName} の ${groupName || '群聊'}年度报告`
+  const analyzer = new ChatAnalyzer({
+    chatName: reportTitle,
+    messages,
+    userMap,
+    useStopwords: true
+  })
+  
+  analyzer.analyze()
+  
+  // 4. 导出JSON数据
+  const jsonData = analyzer.exportJson()
+  
+  // 5. 为群友报告定制数据（移除榜单，因为只有一个人）
+  // 但保留热词和时段分布
+  jsonData.isUserReport = true
+  jsonData.targetUser = {
+    uid: targetUserId,
+    name: userName
+  }
+  
+  // 6. 生成图片
+  console.log('🖼️ 生成图片报告...')
+  const outputPath = getUserReportCachePath(groupId, targetUserId, year)
+  
+  await generateImage(jsonData, outputPath, {
+    enableAISelect: true,
+    enableAI: true
+  })
+  
+  // 返回CQ码
+  const imgMsg = getUserReportCQ(groupId, targetUserId, year)
+  
+  console.log('✅ 群友年度报告生成完成!')
+  return imgMsg
+}
+
+/**
+ * 处理群友年度报告命令
+ * @param {number} groupId 群ID
+ * @param {number} userId 命令发起者ID
+ * @param {number} targetUserId 目标用户ID（被@的用户）
+ * @param {string} port 端口号
+ * @param {Function} callback 回调函数
+ * @param {string} groupName 群名称（可选）
+ * @param {string} targetUserName 目标用户昵称（可选）
+ * @param {boolean} forceRegenerate 是否强制重新生成
+ */
+async function handleUserAnnualReportCommand(groupId, userId, targetUserId, port, callback, groupName = null, targetUserName = null, forceRegenerate = false) {
+  // 权限检查：只有管理员可以使用
+  const ADMIN_IDS = new Set([799018865, 357474405])
+  if (!ADMIN_IDS.has(userId)) {
+    // 非管理员不回复
+    return
+  }
+  
+  try {
+    // 设置时间范围（2025年全年）
+    const startDate = new Date('2025-01-01T00:00:00+08:00')
+    const endDate = new Date('2025-12-31T23:59:59+08:00')
+    const year = startDate.getFullYear().toString()
+    
+    // 检查缓存
+    if (!forceRegenerate && hasUserCachedReport(groupId, targetUserId, year)) {
+      callback('📦 发送缓存的群友年度报告...')
+    } else if (forceRegenerate) {
+      callback('🔄 正在重新生成群友年度报告，请稍候...')
+    } else {
+      callback(`📊 正在生成 ${targetUserName || targetUserId} 的年度报告，请稍候...`)
+    }
+    
+    const imgMsg = await generateUserAnnualReport({
+      groupId,
+      targetUserId,
+      port,
+      groupName,
+      targetUserName,
+      startDate,
+      endDate,
+      forceRegenerate
+    })
+    
+    callback(imgMsg)
+  } catch (error) {
+    console.error('群友年度报告生成失败:', error)
+    callback(`❌ 群友年度报告生成失败: ${error.message}`)
+  }
+}
+
 module.exports = {
+  // 群年度报告
   generateAnnualReport,
   handleAnnualReportCommand,
   hasCachedReport,
   deleteCachedReport,
+  // 群友年度报告
+  generateUserAnnualReport,
+  handleUserAnnualReportCommand,
+  hasUserCachedReport,
+  deleteUserCachedReport,
+  // 通用工具
   fetchChatData,
+  fetchUserChatData,
   fetchGroupUsers
 }
 
