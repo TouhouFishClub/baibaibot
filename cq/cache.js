@@ -2,7 +2,8 @@ var https=require('https');
 var http = require('http');
 var cache = {};
 var namecache = {};
-const { LOCALE_IP } = require('../baibaiConfigs')
+const { LOCALE_IP } = require('../baibaiConfigs');
+const { group } = require('console');
 
 function getGroupMemInfo(gid){
   return cache[gid];
@@ -86,6 +87,7 @@ function getGroupMemberNum(gid){
 }
 
 function getUserNickInGroupByCache(qq,groupid){
+  console.log('get catch', qq, groupid)
   if(cache[groupid]){
     if(cache[groupid][qq]){
       var card = cache[groupid][qq].card;
