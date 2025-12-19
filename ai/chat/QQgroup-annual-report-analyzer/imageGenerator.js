@@ -6,7 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const config = require('./config')
 const { formatNumber, truncateText, getAvatarUrl, getRandomComment } = require('./utils')
-const { generateBatchComments, isAIEnabled } = require('./aiComment')
+const { generateBatchComments, isAIEnabled, selectWords } = require('./aiComment')
 
 /**
  * 生成HTML报告模板
@@ -1111,12 +1111,6 @@ function generateHtmlTemplate(data) {
  * 准备模板数据
  * @param {Object} jsonData 分析导出的JSON数据
  * @param {number[]} selectedIndices 选中的热词索引（可选，默认前10）
- * @returns {Object}
- */
-/**
- * 准备模板数据
- * @param {Object} jsonData 分析导出的JSON数据
- * @param {number[]} selectedIndices 选中的热词索引（可选，默认前10）
  * @param {Object} aiComments AI锐评映射（可选，词语 -> 锐评）
  * @returns {Object}
  */
@@ -1130,6 +1124,18 @@ function prepareTemplateData(jsonData, selectedIndices = null, aiComments = null
   } else {
     selected = topWords.slice(0, 10)
   }
+  
+  return prepareTemplateDataWithSelected(jsonData, selected, aiComments)
+}
+
+/**
+ * 使用已选中的词数组准备模板数据
+ * @param {Object} jsonData 分析导出的JSON数据
+ * @param {Array} selected 已选中的热词数组
+ * @param {Object} aiComments AI锐评映射（可选，词语 -> 锐评）
+ * @returns {Object}
+ */
+function prepareTemplateDataWithSelected(jsonData, selected, aiComments = null) {
 
   const maxFreq = Math.max(...selected.map(w => w.freq))
   const minFreq = Math.min(...selected.map(w => w.freq))
@@ -1269,26 +1275,56 @@ function prepareTemplateData(jsonData, selectedIndices = null, aiComments = null
  * 生成图片报告
  * @param {Object} jsonData 分析导出的JSON数据
  * @param {string} outputPath 输出文件路径
- * @param {number[]} selectedIndices 选中的热词索引（可选）
+ * @param {Object} options 配置选项
+ * @param {number[]} options.selectedIndices 选中的热词索引（可选，指定后跳过AI选词）
+ * @param {boolean} options.enableAI 是否启用AI锐评（默认true）
+ * @param {boolean} options.enableAISelect 是否启用AI选词（默认true，从前200个中智能选10个）
+ * @param {number} options.aiSelectTopN AI选词候选范围（默认200）
+ * @param {number} options.aiSelectCount AI选词数量（默认10）
  * @returns {Promise<string>} 生成的图片路径
  */
-/**
- * 生成图片报告
- * @param {Object} jsonData 分析导出的JSON数据
- * @param {string} outputPath 输出文件路径
- * @param {number[]} selectedIndices 选中的热词索引（可选）
- * @param {boolean} enableAI 是否启用AI锐评（默认true）
- * @returns {Promise<string>} 生成的图片路径
- */
-async function generateImage(jsonData, outputPath, selectedIndices = null, enableAI = true) {
+async function generateImage(jsonData, outputPath, options = {}) {
+  // 兼容旧的调用方式
+  let selectedIndices, enableAI, enableAISelect, aiSelectTopN, aiSelectCount
+  if (Array.isArray(options) || options === null) {
+    // 旧调用方式: generateImage(jsonData, outputPath, selectedIndices, enableAI)
+    selectedIndices = options
+    enableAI = arguments[3] !== undefined ? arguments[3] : true
+    enableAISelect = true
+    aiSelectTopN = 200
+    aiSelectCount = 10
+  } else {
+    // 新调用方式: generateImage(jsonData, outputPath, { ... })
+    selectedIndices = options.selectedIndices || null
+    enableAI = options.enableAI !== undefined ? options.enableAI : true
+    enableAISelect = options.enableAISelect !== undefined ? options.enableAISelect : true
+    aiSelectTopN = options.aiSelectTopN || 200
+    aiSelectCount = options.aiSelectCount || 10
+  }
+  
   const topWords = jsonData.topWords || []
   
   // 选择热词
   let selected
   if (selectedIndices && selectedIndices.length > 0) {
+    // 手动指定了索引，直接使用
     selected = selectedIndices.map(i => topWords[i]).filter(Boolean)
+  } else if (enableAISelect && isAIEnabled() && topWords.length > aiSelectCount) {
+    // 启用AI选词：从前 topN 个高频词中智能选出最有趣的
+    console.log(`🤖 启用AI智能选词（从前${Math.min(aiSelectTopN, topWords.length)}个中选${aiSelectCount}个）...`)
+    try {
+      selected = await selectWords(topWords, aiSelectTopN, aiSelectCount)
+      if (!selected || selected.length === 0) {
+        console.warn('⚠️ AI选词失败，回退到前10个')
+        selected = topWords.slice(0, aiSelectCount)
+      }
+    } catch (e) {
+      console.warn('⚠️ AI选词出错，回退到前10个:', e.message)
+      selected = topWords.slice(0, aiSelectCount)
+    }
   } else {
-    selected = topWords.slice(0, 10)
+    // 不使用AI选词，直接取前10个
+    selected = topWords.slice(0, aiSelectCount)
   }
   
   // 生成AI锐评
@@ -1301,8 +1337,8 @@ async function generateImage(jsonData, outputPath, selectedIndices = null, enabl
     }
   }
   
-  // 准备数据
-  const templateData = prepareTemplateData(jsonData, selectedIndices, aiComments)
+  // 准备数据（直接传入选中的词数组）
+  const templateData = prepareTemplateDataWithSelected(jsonData, selected, aiComments)
   
   // 生成HTML
   const html = generateHtmlTemplate(templateData)
@@ -1336,6 +1372,7 @@ async function generateImage(jsonData, outputPath, selectedIndices = null, enabl
 module.exports = {
   generateHtmlTemplate,
   prepareTemplateData,
+  prepareTemplateDataWithSelected,
   generateImage
 }
 
