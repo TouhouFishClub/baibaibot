@@ -1112,18 +1112,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   
   // 群友年度报告功能：@xxx 2025年度报告 或 2025年度报告 @xxx
   if(content.includes('[CQ:at') && content.includes('2025年度报告')) {
-    console.log(`\n\n\n\n => `, content)
     const isRegen = content.includes('重新生成')
     // 提取被@的QQ号
     const atMatch = content.match(/\[CQ:at,qq=(\d+)/)
     if(atMatch) {
       const targetUserId = parseInt(atMatch[1], 10)
-      getUserNickInGroupByCache(groupid, targetUserId, port, (targetUserName) => {
-        handleUserAnnualReportCommand(groupid, from, targetUserId, port, callback, groupName, targetUserName, isRegen)
-      })
+      // 昵称在生成报告时会自动获取，这里传null即可
+      handleUserAnnualReportCommand(groupid, from, targetUserId, port, callback, groupName, null, isRegen)
       return;
-    } else {
-      console.log('err match at qq')
     }
   }
 
