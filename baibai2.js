@@ -176,7 +176,7 @@ const {chujue} = require('./ai/image/generator/chujue/index.js')
 const {nanoBananaReply, getNanoBananaHelp, getNanoBananaPresets} = require('./ai/banana')
 const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao')
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
-const { handleAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
+const { handleAnnualReportCommand, handleUserAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
 
 // 导入deepseek模块
 // const {handleDeepSeekChat} = require('./ai/llm/deepseek')
@@ -1107,6 +1107,27 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   // 重新生成2025年度报告功能（强制刷新缓存）
   if(content === '重新生成2025年度报告'){
     handleAnnualReportCommand(groupid, from, port, callback, groupName, true);
+    return;
+  }
+  
+  // 群友年度报告功能：@xxx 2025年度报告 或 2025年度报告 @xxx
+  const userReportMatch = content.match(/(?:\[CQ:at,qq=(\d+)[^\]]*\]\s*2025年度报告|2025年度报告\s*\[CQ:at,qq=(\d+)[^\]]*\])/)
+  if(userReportMatch) {
+    const targetUserId = parseInt(userReportMatch[1] || userReportMatch[2], 10)
+    // 尝试获取被@用户的昵称
+    getUserNickInGroupByCache(groupid, targetUserId, port, (targetUserName) => {
+      handleUserAnnualReportCommand(groupid, from, targetUserId, port, callback, groupName, targetUserName, false)
+    })
+    return;
+  }
+  
+  // 重新生成群友年度报告
+  const regenUserReportMatch = content.match(/(?:重新生成\s*\[CQ:at,qq=(\d+)[^\]]*\]\s*2025年度报告|重新生成2025年度报告\s*\[CQ:at,qq=(\d+)[^\]]*\]|\[CQ:at,qq=(\d+)[^\]]*\]\s*重新生成2025年度报告)/)
+  if(regenUserReportMatch) {
+    const targetUserId = parseInt(regenUserReportMatch[1] || regenUserReportMatch[2] || regenUserReportMatch[3], 10)
+    getUserNickInGroupByCache(groupid, targetUserId, port, (targetUserName) => {
+      handleUserAnnualReportCommand(groupid, from, targetUserId, port, callback, groupName, targetUserName, true)
+    })
     return;
   }
 
