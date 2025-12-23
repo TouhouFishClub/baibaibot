@@ -178,6 +178,14 @@ const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
 const { handleAnnualReportCommand, handleUserAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
 
+// AI 对话模块
+const { 
+  isAIEnabled, 
+  createAIEnhancedCallback, 
+  handleProactiveReply,
+  incrementMessageCount 
+} = require('./ai/chat/core/aiChat')
+
 // 导入deepseek模块
 // const {handleDeepSeekChat} = require('./ai/llm/deepseek')
 
@@ -830,7 +838,7 @@ function handleMsg_D(msgObj,port, configs) {
 		'没了',
 		'是吧',
 	]
-	callback = function (res, blank) {
+	let originalCallback = function (res, blank) {
     if(!res) {
       return
     }
@@ -895,6 +903,13 @@ function handleMsg_D(msgObj,port, configs) {
 		}
 	}
 
+  // AI 对话增强：如果群启用了 AI 对话，包装 callback
+  callback = originalCallback
+  if (type === 'group' && isAIEnabled(groupid)) {
+    callback = createAIEnhancedCallback(originalCallback, groupid, port)
+    console.log(`[AI Chat] 群 ${groupid} 启用 AI 对话增强`)
+  }
+
   if(!configAdminSet.has(msgObj.user_id) && (groupExpire.get(msgObj.group_id) || 0) > Date.now()) {
     console.log(`该群在${(groupExpire.get(msgObj.group_id) - Date.now()) / 1000}秒后可发消息`)
     return
@@ -925,6 +940,18 @@ function handleMsg_D(msgObj,port, configs) {
 		// }
 	}
   handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group',port,msgObj)
+
+  // AI 主动回复检查：如果群启用了 AI 对话，检查是否需要主动回复
+  if (type === 'group' && isAIEnabled(groupid)) {
+    // 使用 setTimeout 延迟执行，避免与其他回复冲突
+    setTimeout(async () => {
+      try {
+        await handleProactiveReply(groupid, from, port, originalCallback)
+      } catch (error) {
+        console.error('[AI Chat] 主动回复检查失败:', error.message)
+      }
+    }, 1000)
+  }
 }
 
 function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType,port, msgObjSource){
