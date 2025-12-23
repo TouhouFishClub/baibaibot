@@ -120,7 +120,7 @@ async function fetchGroupUsers(groupId, port) {
  * @param {number} limit 消息数量限制
  * @returns {Promise<Array>}
  */
-async function fetchRecentMessages(groupId, limit = 50) {
+async function fetchRecentMessages(groupId, limit = 20) {
   let client
   try {
     client = await MongoClient.connect(mongourl)
@@ -246,7 +246,7 @@ function formatMessagesForAI(messages, userMap, botId = 981069482) {
 async function enhanceReply(originalReply, groupId, port, userMap = null) {
   try {
     // 获取最近消息
-    const recentMessages = await fetchRecentMessages(groupId, 20)
+    const recentMessages = await fetchRecentMessages(groupId, 50)
     
     // 获取用户映射
     if (!userMap) {
@@ -455,7 +455,7 @@ function checkMentionTrigger(message) {
 async function generateMentionReply(userMessage, groupId, port, userName = '用户') {
   try {
     // 获取最近消息作为上下文
-    const recentMessages = await fetchRecentMessages(groupId, 20)
+    const recentMessages = await fetchRecentMessages(groupId, 50)
     
     // 获取用户映射
     const userMap = await fetchGroupUsers(groupId, port)
