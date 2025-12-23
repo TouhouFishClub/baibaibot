@@ -26,6 +26,14 @@ const {
 // const { handle_msg_D2 } = require('../baibai2');
 const { saveChat} = require("../ai/chat/collect");
 
+// AI 对话模块
+const { 
+  isAIEnabled, 
+  enhanceReply,
+  resetMessageCount,
+  handleProactiveReply
+} = require('../ai/chat/core/aiChat');
+
 const replaceImageToBase64 = message =>
   message.split('[CQ:image,file=file:').map((sp, index) => {
     if(index) {
@@ -76,10 +84,25 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
 
   // 延迟加载 handle_msg_D2 以避免循环依赖
   const { handle_msg_D2 } = require('../baibai2');
-  handle_msg_D2(raw_message, user_id, card || nickname || user_name, group_id, msg => {
+  
+  // 定义发送消息的回调函数
+  const sendCallback = async (msg) => {
     if(!msg) {
       return
     }
+    
+    // AI 对话增强：如果群启用了 AI 对话，优化回复内容
+    if (isAIEnabled(group_id)) {
+      try {
+        console.log(`[AI Chat] 群 ${group_id} 正在优化回复...`)
+        msg = await enhanceReply(msg, group_id, port)
+        resetMessageCount(group_id)
+        console.log(`[AI Chat] 优化完成`)
+      } catch (error) {
+        console.error('[AI Chat] 优化回复失败，使用原始回复:', error.message)
+      }
+    }
+    
     msg = msg
       .replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
       .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
@@ -117,7 +140,20 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
     }
     saveChat(group_id, 10000, `百百${port}`, msg, port);
     ws.send(JSON.stringify(sendBody));
-  }, group_name, user_name, message_type, port || 30015, context )
+  }
+  
+  handle_msg_D2(raw_message, user_id, card || nickname || user_name, group_id, sendCallback, group_name, user_name, message_type, port || 30015, context)
+  
+  // AI 主动回复检查：如果群启用了 AI 对话，检查是否需要主动回复
+  if (isAIEnabled(group_id)) {
+    setTimeout(async () => {
+      try {
+        await handleProactiveReply(group_id, user_id, port, sendCallback)
+      } catch (error) {
+        console.error('[AI Chat] 主动回复检查失败:', error.message)
+      }
+    }, 1000)
+  }
 }
 
 const mixinInfos = (context, ws) => {

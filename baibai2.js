@@ -178,11 +178,6 @@ const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
 const { handleAnnualReportCommand, handleUserAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
 
-// AI 对话模块
-const { 
-  isAIEnabled, 
-  handleProactiveReply
-} = require('./ai/chat/core/aiChat')
 
 // 导入deepseek模块
 // const {handleDeepSeekChat} = require('./ai/llm/deepseek')
@@ -355,19 +350,6 @@ async function addSendQueue(groupid,msg,port,from, configs){
   var gidstr = groupid+"";
 
 	let msgSource = msg
-
-  // AI 对话增强：如果群启用了 AI 对话，优化回复内容
-  if (isAIEnabled(groupid)) {
-    try {
-      const { enhanceReply, resetMessageCount } = require('./ai/chat/core/aiChat')
-      console.log(`[AI Chat] 群 ${groupid} 正在优化回复...`)
-      msg = await enhanceReply(msg, groupid, port)
-      resetMessageCount(groupid)
-      console.log(`[AI Chat] 优化后的回复: ${msg.substring(0, 50)}...`)
-    } catch (error) {
-      console.error('[AI Chat] 优化回复失败，使用原始回复:', error.message)
-    }
-  }
 
   const portGroup = new Set(['29334', '30006'])
 	if(portGroup.has(port) && Math.random() > 0.4) {
@@ -944,18 +926,6 @@ function handleMsg_D(msgObj,port, configs) {
 		// }
 	}
   handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,'group',port,msgObj)
-
-  // AI 主动回复检查：如果群启用了 AI 对话，检查是否需要主动回复
-  if (type === 'group' && isAIEnabled(groupid)) {
-    // 使用 setTimeout 延迟执行，避免与其他回复冲突
-    setTimeout(async () => {
-      try {
-        await handleProactiveReply(groupid, from, port, callback)
-      } catch (error) {
-        console.error('[AI Chat] 主动回复检查失败:', error.message)
-      }
-    }, 1000)
-  }
 }
 
 function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType,port, msgObjSource){
