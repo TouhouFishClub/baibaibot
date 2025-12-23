@@ -405,6 +405,88 @@ async function handleProactiveReply(groupId, userId, port, callback) {
   return false
 }
 
+/**
+ * 检查消息是否触发了 AI 对话（以"百百"开头或 @ 了机器人）
+ * @param {string} message 消息内容
+ * @returns {boolean}
+ */
+function checkMentionTrigger(message) {
+  if (!message) return false
+  
+  const trimmedMsg = message.trim()
+  
+  // 检查是否以"百百"开头
+  if (trimmedMsg.startsWith('百百')) {
+    return true
+  }
+  
+  // 检查是否 @ 了机器人（格式：[CQ:at,qq=xxx,name=xxx] 或 [CQ:at,qq=xxx]）
+  for (const botId of BOT_IDS) {
+    // 使用正则匹配，忽略可能存在的 name 参数
+    const atPattern = new RegExp(`\\[CQ:at,qq=${botId}(,name=[^\\]]*)?\\]`)
+    if (atPattern.test(message)) {
+      return true
+    }
+  }
+  
+  return false
+}
+
+/**
+ * 生成针对用户提问/对话的回复
+ * @param {string} userMessage 用户的消息
+ * @param {number} groupId 群ID
+ * @param {string} port 端口号
+ * @param {string} userName 用户昵称
+ * @returns {Promise<string|null>}
+ */
+async function generateMentionReply(userMessage, groupId, port, userName = '用户') {
+  try {
+    // 获取最近消息作为上下文
+    const recentMessages = await fetchRecentMessages(groupId, 20)
+    
+    // 获取用户映射
+    const userMap = await fetchGroupUsers(groupId, port)
+    
+    // 格式化消息
+    const formattedMessages = formatMessagesForAI(recentMessages, userMap)
+    
+    // 清理用户消息（去除 @ 和"百百"前缀）
+    let cleanMessage = userMessage
+      .replace(/\[CQ:at,qq=\d+(,name=[^\]]+)?\]/g, '')  // 去除所有 @（包括带 name 参数的）
+      .replace(/^百百[,，:：\s]*/i, '')   // 去除"百百"前缀及后面的标点
+      .trim()
+    
+    // 如果清理后消息为空，设置一个默认问候
+    if (!cleanMessage) {
+      cleanMessage = '在叫我吗？'
+    }
+    
+    // 添加用户的问题
+    formattedMessages.push({
+      role: 'user',
+      content: `[系统指令] ${userName} 正在呼叫你，对你说："${cleanMessage}"
+请以"百百"的身份直接回复这条消息。
+回复要自然、简洁、有趣，像真人聊天一样。
+不要重复用户说的话，直接给出你的回应。`
+    })
+    
+    const reply = await callDeepSeekAPI(AI_PERSONA, formattedMessages)
+    
+    if (!reply || reply.trim() === '') {
+      return null
+    }
+    
+    // 重置消息计数
+    resetMessageCount(groupId)
+    
+    return reply.trim()
+  } catch (error) {
+    console.error('生成对话回复失败:', error.message)
+    return null
+  }
+}
+
 module.exports = {
   isAIEnabled,
   enhanceReply,
@@ -417,6 +499,9 @@ module.exports = {
   shouldProactiveReply,
   fetchRecentMessages,
   fetchGroupUsers,
-  AI_ENABLED_GROUPS
+  checkMentionTrigger,
+  generateMentionReply,
+  AI_ENABLED_GROUPS,
+  BOT_IDS
 }
 

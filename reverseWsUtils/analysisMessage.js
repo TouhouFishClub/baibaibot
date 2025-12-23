@@ -31,7 +31,9 @@ const {
   isAIEnabled, 
   enhanceReply,
   resetMessageCount,
-  handleProactiveReply
+  handleProactiveReply,
+  checkMentionTrigger,
+  generateMentionReply
 } = require('../ai/chat/core/aiChat');
 
 const replaceImageToBase64 = message =>
@@ -151,6 +153,28 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
     }
     saveChat(group_id, 10000, `百百${port}`, msg, port);
     ws.send(JSON.stringify(sendBody));
+  }
+  
+  // 检查是否触发了 AI 对话（以"百百"开头或 @ 了机器人）
+  if (isAIEnabled(group_id) && checkMentionTrigger(raw_message)) {
+    console.log(`[AI Chat] 群 ${group_id} 检测到呼叫百百，生成 AI 回复...`)
+    // 异步生成 AI 回复
+    ;(async () => {
+      try {
+        const reply = await generateMentionReply(
+          raw_message, 
+          group_id, 
+          port, 
+          card || nickname || user_name
+        )
+        if (reply) {
+          await sendCallback(reply)
+        }
+      } catch (error) {
+        console.error('[AI Chat] 生成呼叫回复失败:', error.message)
+      }
+    })()
+    // 仍然调用 handle_msg_D2，以便其他模块也能处理（如果有匹配的命令）
   }
   
   handle_msg_D2(raw_message, user_id, card || nickname || user_name, group_id, sendCallback, group_name, user_name, message_type, port || 30015, context)
