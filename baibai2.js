@@ -181,9 +181,7 @@ const { handleAnnualReportCommand, handleUserAnnualReportCommand } = require('./
 // AI 对话模块
 const { 
   isAIEnabled, 
-  createAIEnhancedCallback, 
-  handleProactiveReply,
-  incrementMessageCount 
+  handleProactiveReply
 } = require('./ai/chat/core/aiChat')
 
 // 导入deepseek模块
@@ -357,6 +355,19 @@ async function addSendQueue(groupid,msg,port,from, configs){
   var gidstr = groupid+"";
 
 	let msgSource = msg
+
+  // AI 对话增强：如果群启用了 AI 对话，优化回复内容
+  if (isAIEnabled(groupid)) {
+    try {
+      const { enhanceReply, resetMessageCount } = require('./ai/chat/core/aiChat')
+      console.log(`[AI Chat] 群 ${groupid} 正在优化回复...`)
+      msg = await enhanceReply(msg, groupid, port)
+      resetMessageCount(groupid)
+      console.log(`[AI Chat] 优化后的回复: ${msg.substring(0, 50)}...`)
+    } catch (error) {
+      console.error('[AI Chat] 优化回复失败，使用原始回复:', error.message)
+    }
+  }
 
   const portGroup = new Set(['29334', '30006'])
 	if(portGroup.has(port) && Math.random() > 0.4) {
@@ -838,7 +849,7 @@ function handleMsg_D(msgObj,port, configs) {
 		'没了',
 		'是吧',
 	]
-	let originalCallback = function (res, blank) {
+	callback = function (res, blank) {
     if(!res) {
       return
     }
@@ -903,13 +914,6 @@ function handleMsg_D(msgObj,port, configs) {
 		}
 	}
 
-  // AI 对话增强：如果群启用了 AI 对话，包装 callback
-  callback = originalCallback
-  if (type === 'group' && isAIEnabled(groupid)) {
-    callback = createAIEnhancedCallback(originalCallback, groupid, port)
-    console.log(`[AI Chat] 群 ${groupid} 启用 AI 对话增强`)
-  }
-
   if(!configAdminSet.has(msgObj.user_id) && (groupExpire.get(msgObj.group_id) || 0) > Date.now()) {
     console.log(`该群在${(groupExpire.get(msgObj.group_id) - Date.now()) / 1000}秒后可发消息`)
     return
@@ -946,7 +950,7 @@ function handleMsg_D(msgObj,port, configs) {
     // 使用 setTimeout 延迟执行，避免与其他回复冲突
     setTimeout(async () => {
       try {
-        await handleProactiveReply(groupid, from, port, originalCallback)
+        await handleProactiveReply(groupid, from, port, callback)
       } catch (error) {
         console.error('[AI Chat] 主动回复检查失败:', error.message)
       }
