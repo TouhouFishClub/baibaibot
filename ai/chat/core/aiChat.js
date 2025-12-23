@@ -120,7 +120,7 @@ async function fetchGroupUsers(groupId, port) {
  * @param {number} limit 消息数量限制
  * @returns {Promise<Array>}
  */
-async function fetchRecentMessages(groupId, limit = 20) {
+async function fetchRecentMessages(groupId, limit = 50) {
   let client
   try {
     client = await MongoClient.connect(mongourl)
