@@ -127,11 +127,22 @@ async function fetchRecentMessages(groupId, limit = 20) {
     const db = client.db('db_bot')
     const collection = db.collection('cl_chat')
     
-    const messages = await collection.find({ gid: groupId })
-      .project({ _id: 1, uid: 1, d: 1, ts: 1, name: 1 })
+    // 同时支持数字和字符串类型的 gid
+    const numericGid = typeof groupId === 'string' ? parseInt(groupId, 10) : groupId
+    const query = {
+      $or: [
+        { gid: numericGid },
+        { gid: String(numericGid) }
+      ]
+    }
+    
+    const messages = await collection.find(query)
+      .project({ _id: 1, uid: 1, d: 1, ts: 1, name: 1, n: 1 })
       .sort({ _id: -1 })
       .limit(limit)
       .toArray()
+    
+    console.log(`[AI Chat] 获取到群 ${groupId} 的 ${messages.length} 条最近消息`)
     
     // 反转顺序，让消息按时间顺序排列
     return messages.reverse()
@@ -200,7 +211,8 @@ function formatMessagesForAI(messages, userMap, botId = 981069482) {
   
   for (const msg of messages) {
     const uid = typeof msg.uid === 'string' ? parseInt(msg.uid, 10) : msg.uid
-    const userName = userMap[uid] || msg.name || `用户${uid}`
+    // 数据库中用户名字段是 n，兼容 name 字段
+    const userName = userMap[uid] || msg.n || msg.name || `用户${uid}`
     const content = msg.d || ''
     
     // 跳过空消息
