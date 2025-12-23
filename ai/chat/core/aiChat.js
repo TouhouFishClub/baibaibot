@@ -34,12 +34,25 @@ const BOT_IDS = new Set([
 ])
 
 // AI 人设设定
-const AI_PERSONA = `你是一个名叫"百百"的QQ群聊机器人，你的性格活泼可爱，喜欢用表情符号，说话简短有趣。
-你在群里就像一个普通的群友一样聊天，不要表现得像个机器人。
-你的回复要自然、简洁，像真人在聊天一样，不要太正式或太长。
-如果话题是你不了解的，可以诚实地说不太懂。
-不要重复别人说的话，要有自己的想法和观点。
-偶尔可以用一些可爱的语气词，比如"捏"、"呢"、"啦"等。`
+const AI_PERSONA = `你是一个名叫"百百"的QQ群聊机器人。
+
+【性格特点】
+- 性格活泼可爱，喜欢用表情符号和颜文字
+- 说话简短有趣，像真人群友一样自然聊天
+- 偶尔用可爱的语气词，比如"捏"、"呢"、"啦"、"的说"等
+- 有自己的想法和观点，不会简单重复别人的话
+
+【知识背景】
+- 网络冲浪高手，熟悉各种网络热词、梗和互联网黑话
+- 对《洛奇mabinogi》这款游戏特别了解，包括游戏机制、玩法、角色、任务等
+- 了解二次元文化、游戏圈常见话题
+
+【回复规则】
+- 回复要简洁自然，不要太长或太正式
+- 关注最近的消息和话题，不要回复过时的话题
+- 不要引用或描述消息中的图片（[CQ:image...]）、语音等媒体内容
+- 如果话题不了解，可以诚实地说不太懂
+- 如果话题不适合插话或已经过时，选择不回复`
 
 // 群消息缓存，用于追踪未回复消息数量
 const groupMessageCache = new Map()
@@ -200,6 +213,61 @@ async function callDeepSeekAPI(prompt, messages) {
 }
 
 /**
+ * 格式化时间为可读格式
+ * @param {Date|number} time 时间对象或时间戳
+ * @returns {string}
+ */
+function formatTime(time) {
+  const date = time instanceof Date ? time : new Date(time)
+  const now = new Date()
+  const diff = now - date
+  
+  // 1分钟内
+  if (diff < 60000) {
+    return '刚刚'
+  }
+  // 1小时内
+  if (diff < 3600000) {
+    return `${Math.floor(diff / 60000)}分钟前`
+  }
+  // 今天内
+  if (date.toDateString() === now.toDateString()) {
+    return `今天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+  }
+  // 昨天
+  const yesterday = new Date(now)
+  yesterday.setDate(yesterday.getDate() - 1)
+  if (date.toDateString() === yesterday.toDateString()) {
+    return `昨天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+  }
+  // 更早
+  return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+}
+
+/**
+ * 清理消息内容，移除图片等媒体标记
+ * @param {string} content 原始消息内容
+ * @returns {string}
+ */
+function cleanMessageContent(content) {
+  if (!content) return ''
+  
+  // 移除图片标记，替换为 [图片]
+  let cleaned = content.replace(/\[CQ:image[^\]]*\]/g, '[图片]')
+  // 移除语音标记，替换为 [语音]
+  cleaned = cleaned.replace(/\[CQ:record[^\]]*\]/g, '[语音]')
+  // 移除视频标记，替换为 [视频]
+  cleaned = cleaned.replace(/\[CQ:video[^\]]*\]/g, '[视频]')
+  // 处理回复标记
+  cleaned = cleaned.replace(/\[CQ:reply[^\]]*\]/g, '[回复]')
+  // 处理 @ 标记，保留名字
+  cleaned = cleaned.replace(/\[CQ:at,qq=\d+,name=([^\]]+)\]/g, '@$1')
+  cleaned = cleaned.replace(/\[CQ:at,qq=(\d+)\]/g, '@$1')
+  
+  return cleaned.trim()
+}
+
+/**
  * 格式化消息为 AI 对话格式
  * @param {Array} messages 消息列表
  * @param {Object} userMap 用户ID到昵称的映射
@@ -213,10 +281,20 @@ function formatMessagesForAI(messages, userMap, botId = 981069482) {
     const uid = typeof msg.uid === 'string' ? parseInt(msg.uid, 10) : msg.uid
     // 数据库中用户名字段是 n，兼容 name 字段
     const userName = userMap[uid] || msg.n || msg.name || `用户${uid}`
-    const content = msg.d || ''
+    const rawContent = msg.d || ''
     
     // 跳过空消息
-    if (!content.trim()) continue
+    if (!rawContent.trim()) continue
+    
+    // 清理消息内容
+    const content = cleanMessageContent(rawContent)
+    
+    // 如果清理后只剩媒体标记，跳过
+    if (!content || content === '[图片]' || content === '[语音]' || content === '[视频]') continue
+    
+    // 获取消息时间
+    const msgTime = msg.ts ? formatTime(msg.ts) : (msg._id ? formatTime(msg._id) : '')
+    const timeStr = msgTime ? `[${msgTime}]` : ''
     
     // 判断是机器人还是用户
     if (BOT_IDS.has(uid)) {
@@ -227,7 +305,7 @@ function formatMessagesForAI(messages, userMap, botId = 981069482) {
     } else {
       formattedMessages.push({
         role: 'user',
-        content: `${userName}: ${content}`
+        content: `${timeStr} ${userName}: ${content}`
       })
     }
   }
@@ -310,9 +388,16 @@ async function generateProactiveReply(groupId, port) {
     formattedMessages.push({
       role: 'user',
       content: `[系统指令] 请根据以上群聊内容，以"百百"的身份参与讨论，生成一条自然的回复。
-回复要符合当前话题，表现得像一个真正的群友在参与聊天。
-如果话题不适合插话，可以返回"[不回复]"。
-回复要简短有趣，不要太正式。`
+
+注意事项：
+1. 只关注最近几分钟内的消息和话题，忽略时间较早的消息
+2. 回复要符合当前正在讨论的话题，不要回复已经过时的话题
+3. 不要提及或描述消息中的[图片]、[语音]等媒体内容
+4. 回复要简短有趣，像真正的群友在聊天
+5. 如果话题不适合插话、已经过时、或者只是闲聊没什么可说的，返回"[不回复]"
+
+现在的时间是：${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}
+请直接给出回复内容，不要有任何解释。`
     })
     
     const reply = await callDeepSeekAPI(AI_PERSONA, formattedMessages)
@@ -478,9 +563,16 @@ async function generateMentionReply(userMessage, groupId, port, userName = '用�
     formattedMessages.push({
       role: 'user',
       content: `[系统指令] ${userName} 正在呼叫你，对你说："${cleanMessage}"
-请以"百百"的身份直接回复这条消息。
-回复要自然、简洁、有趣，像真人聊天一样。
-不要重复用户说的话，直接给出你的回应。`
+
+注意事项：
+1. 以"百百"的身份直接回复这条消息
+2. 回复要自然、简洁、有趣，像真人聊天一样
+3. 不要重复用户说的话，直接给出你的回应
+4. 不要提及或描述消息中的[图片]、[语音]等媒体内容
+5. 可以结合上面的聊天记录来理解上下文
+
+现在的时间是：${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}
+请直接给出回复内容，不要有任何解释或前缀。`
     })
     
     const reply = await callDeepSeekAPI(AI_PERSONA, formattedMessages)
