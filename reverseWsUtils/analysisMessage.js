@@ -92,14 +92,25 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
     }
     
     // AI 对话增强：如果群启用了 AI 对话，优化回复内容
+    // 但如果消息只包含 CQ 码（图片、语音等），则跳过优化
     if (isAIEnabled(group_id)) {
-      try {
-        console.log(`[AI Chat] 群 ${group_id} 正在优化回复...`)
-        msg = await enhanceReply(msg, group_id, port)
+      // 检查消息是否只包含 CQ 码，去除所有 [CQ:...] 后看是否还有文本内容
+      const textContent = msg.replace(/\[CQ:[^\]]+\]/g, '').trim()
+      
+      if (textContent.length > 0) {
+        // 有文本内容，进行 AI 优化
+        try {
+          console.log(`[AI Chat] 群 ${group_id} 正在优化回复...`)
+          msg = await enhanceReply(msg, group_id, port)
+          resetMessageCount(group_id)
+          console.log(`[AI Chat] 优化完成`)
+        } catch (error) {
+          console.error('[AI Chat] 优化回复失败，使用原始回复:', error.message)
+        }
+      } else {
+        // 只有 CQ 码（图片、语音等），跳过优化，但仍重置计数
+        console.log(`[AI Chat] 群 ${group_id} 消息仅包含媒体内容，跳过优化`)
         resetMessageCount(group_id)
-        console.log(`[AI Chat] 优化完成`)
-      } catch (error) {
-        console.error('[AI Chat] 优化回复失败，使用原始回复:', error.message)
       }
     }
     
