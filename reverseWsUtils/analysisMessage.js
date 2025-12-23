@@ -143,17 +143,6 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
   }
   
   handle_msg_D2(raw_message, user_id, card || nickname || user_name, group_id, sendCallback, group_name, user_name, message_type, port || 30015, context)
-  
-  // AI 主动回复检查：如果群启用了 AI 对话，检查是否需要主动回复
-  if (isAIEnabled(group_id)) {
-    setTimeout(async () => {
-      try {
-        await handleProactiveReply(group_id, user_id, port, sendCallback)
-      } catch (error) {
-        console.error('[AI Chat] 主动回复检查失败:', error.message)
-      }
-    }, 1000)
-  }
 }
 
 const mixinInfos = (context, ws) => {
@@ -300,6 +289,60 @@ const analysisMessage = async (message, ws, bot_name, oneBotVersion = 12) => {
           }
 
           sendMessage(context, ws, bot_name, oneBotVersion)
+
+          // AI 主动回复检查：如果群启用了 AI 对话，检查是否需要主动回复
+          if (isAIEnabled(context.group_id)) {
+            setTimeout(async () => {
+              try {
+                // 创建发送回调函数
+                const proactiveSendCallback = async (msg) => {
+                  if (!msg) return
+                  
+                  msg = msg
+                    .replace(/CQ:image,file=sen/gi, "CQ:image,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+                    .replace(/CQ:cardimage,file=sen/gi, "CQ:cardimage,file=file:/home/flan/baibai/coolq-data/cq/data/image/sen")
+                    .replace(/CQ:record,file=sen/gi, "CQ:record,file=file:/home/flan/baibai/coolq-data/cq/data/record/sen")
+                  
+                  console.log(`[AI Chat][主动回复][${group_info?.group_name || context.group_id}]${msg}`)
+                  
+                  let message = msg
+                  if (msg.indexOf('[CQ:image,file') > -1) {
+                    message = replaceImageToBase64(msg)
+                  }
+                  if (msg.indexOf('[CQ:record,file') > -1) {
+                    message = replaceRecordToBase64(msg)
+                  }
+                  
+                  let sendBody
+                  if (oneBotVersion === 12) {
+                    sendBody = {
+                      "action": "send_message",
+                      "params": {
+                        "detail_type": "group",
+                        "group_id": context.group_id,
+                        "message": message
+                      }
+                    }
+                  } else {
+                    sendBody = {
+                      "action": "send_msg",
+                      "params": {
+                        "message_type": "group",
+                        "group_id": context.group_id,
+                        "message": message
+                      }
+                    }
+                  }
+                  saveChat(context.group_id, 10000, `百百${bot_name}`, msg, bot_name)
+                  ws.send(JSON.stringify(sendBody))
+                }
+                
+                await handleProactiveReply(context.group_id, context.user_id, bot_name, proactiveSendCallback)
+              } catch (error) {
+                console.error('[AI Chat] 主动回复检查失败:', error.message)
+              }
+            }, 1000)
+          }
 
           // if(context.message === 'HELLO') {
           //   console.log(`\n\n\n TARGET \n\n\n`)
