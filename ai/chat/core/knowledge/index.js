@@ -366,22 +366,28 @@ async function getKnowledgeList(contentPreviewLength = 200) {
     client = c
     
     // 使用聚合管道来截取内容预览，避免传输完整内容
+    // 使用 $substrCP 来处理 UTF-8 字符串
     const pipeline = [
       {
         $project: {
+          _id: 1,
           title: 1,
           keywords: 1,
           category: 1,
           createdAt: 1,
           updatedAt: 1,
           createdBy: 1,
-          contentLength: { $strLenCP: { $ifNull: ['$content', ''] } },
           contentPreview: {
             $cond: {
-              if: { $gt: [{ $strLenCP: { $ifNull: ['$content', ''] } }, contentPreviewLength] },
+              if: { 
+                $gt: [
+                  { $strLenCP: { $ifNull: ['$content', ''] } }, 
+                  contentPreviewLength
+                ] 
+              },
               then: {
                 $concat: [
-                  { $substr: [{ $ifNull: ['$content', ''] }, 0, contentPreviewLength] },
+                  { $substrCP: [{ $ifNull: ['$content', ''] }, 0, contentPreviewLength] },
                   '...'
                 ]
               },
@@ -397,7 +403,7 @@ async function getKnowledgeList(contentPreviewLength = 200) {
     
     return entries.map(e => ({
       id: e._id.toString(),
-      title: e.title,
+      title: e.title || '',
       contentPreview: e.contentPreview || '',
       keywords: e.keywords || [],
       category: e.category || '通用',
@@ -407,31 +413,31 @@ async function getKnowledgeList(contentPreviewLength = 200) {
     }))
   } catch (error) {
     console.error('[知识库] 获取列表失败:', error.message)
-    // 如果聚合失败，降级到简单查询（但只获取必要字段）
+    console.error('[知识库] 错误堆栈:', error.stack)
+    // 如果聚合失败，降级到简单查询（在内存中截取）
     try {
-      const entries = await collection.find({}, {
-        projection: {
-          title: 1,
-          keywords: 1,
-          category: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          createdBy: 1
-        }
-      }).sort({ createdAt: -1 }).toArray()
+      const entries = await collection.find({}).sort({ createdAt: -1 }).toArray()
       
-      return entries.map(e => ({
-        id: e._id.toString(),
-        title: e.title,
-        contentPreview: '', // 降级时不提供预览
-        keywords: e.keywords || [],
-        category: e.category || '通用',
-        createdAt: e.createdAt,
-        updatedAt: e.updatedAt,
-        createdBy: e.createdBy || null
-      }))
+      return entries.map(e => {
+        const content = e.content || ''
+        const contentPreview = content.length > contentPreviewLength
+          ? content.substring(0, contentPreviewLength) + '...'
+          : content
+        
+        return {
+          id: e._id.toString(),
+          title: e.title || '',
+          contentPreview: contentPreview,
+          keywords: e.keywords || [],
+          category: e.category || '通用',
+          createdAt: e.createdAt,
+          updatedAt: e.updatedAt,
+          createdBy: e.createdBy || null
+        }
+      })
     } catch (fallbackError) {
       console.error('[知识库] 降级查询也失败:', fallbackError.message)
+      console.error('[知识库] 降级错误堆栈:', fallbackError.stack)
       return []
     }
   } finally {

@@ -491,12 +491,14 @@ app.get('/api/knowledge/list', async (req, res) => {
   try {
     // 使用列表接口，不返回完整内容
     const entries = await knowledge.getKnowledgeList()
+    console.log(`[知识库API] 获取到 ${entries.length} 条知识条目`)
     res.json({
       success: true,
       data: entries
     })
   } catch (error) {
     console.error('获取知识列表失败:', error)
+    console.error('错误堆栈:', error.stack)
     res.json({
       success: false,
       message: error.message || '获取失败'
