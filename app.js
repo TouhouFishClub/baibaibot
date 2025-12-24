@@ -195,7 +195,7 @@ const checkAuth = (req, res) => new Promise((resolve, reject) => {
 const checkKnowledgeAuth = (req, res) => new Promise((resolve, reject) => {
   const user = basicAuth(req)
   if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
-    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    res.set('WWW-Authenticate', 'Basic realm="Knowledge Admin"')
     res.status(401).send('Unauthorized')
     reject('ERROR AUTH')
   } else {
@@ -468,7 +468,7 @@ app.get('/get_group_member_info',function(req,res){
 app.get('/knowledge-admin', (req, res) => {
   const user = basicAuth(req)
   if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
-    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    res.set('WWW-Authenticate', 'Basic realm="Knowledge Admin"')
     return res.status(401).send('Unauthorized')
   }
   
@@ -484,7 +484,7 @@ app.get('/knowledge-admin', (req, res) => {
 app.get('/api/knowledge/list', async (req, res) => {
   const user = basicAuth(req)
   if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
-    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    res.set('WWW-Authenticate', 'Basic realm="Knowledge Admin"')
     return res.status(401).send('Unauthorized')
   }
   
@@ -507,7 +507,7 @@ app.get('/api/knowledge/list', async (req, res) => {
 app.post('/api/knowledge/add', async (req, res) => {
   const user = basicAuth(req)
   if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
-    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    res.set('WWW-Authenticate', 'Basic realm="Knowledge Admin"')
     return res.status(401).send('Unauthorized')
   }
   
@@ -551,7 +551,7 @@ app.post('/api/knowledge/add', async (req, res) => {
 app.post('/api/knowledge/update', async (req, res) => {
   const user = basicAuth(req)
   if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
-    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    res.set('WWW-Authenticate', 'Basic realm="Knowledge Admin"')
     return res.status(401).send('Unauthorized')
   }
   
@@ -595,7 +595,7 @@ app.post('/api/knowledge/update', async (req, res) => {
 app.delete('/api/knowledge/delete', async (req, res) => {
   const user = basicAuth(req)
   if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
-    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    res.set('WWW-Authenticate', 'Basic realm="Knowledge Admin"')
     return res.status(401).send('Unauthorized')
   }
   
