@@ -100,17 +100,26 @@ async function handleKnowledgeCommand(message, userId) {
       return '格式错误！正确格式：知识库添加 标题 | 内容 | 关键词1,关键词2 | 分类\n（关键词和分类可选）'
     }
     
+    // 解析关键词，支持中英文逗号、顿号、空格作为分隔符
+    const keywords = parts[2] 
+      ? parts[2].split(/[,，、\s]+/).map(k => k.trim()).filter(k => k) 
+      : []
+    
     const entry = {
       title: parts[0],
       content: parts[1],
-      keywords: parts[2] ? parts[2].split(/[,，]/).map(k => k.trim()).filter(k => k) : [],
+      keywords: keywords,
       category: parts[3] || '通用',
       createdBy: userId
     }
     
     const success = await knowledge.addKnowledge(entry)
     if (success) {
-      return `✅ 知识添加成功！\n标题: ${entry.title}\n分类: ${entry.category}`
+      let reply = `✅ 知识添加成功！\n标题: ${entry.title}\n分类: ${entry.category}`
+      if (keywords.length > 0) {
+        reply += `\n关键词: ${keywords.join(', ')}`
+      }
+      return reply
     } else {
       return '❌ 知识添加失败，请检查格式'
     }

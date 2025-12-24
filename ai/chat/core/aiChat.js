@@ -394,8 +394,12 @@ async function generateProactiveReply(groupId, port) {
     // 格式化消息
     const formattedMessages = formatMessagesForAI(recentMessages, userMap)
     
-    // 从最近消息中提取关键词，查询相关知识
-    const recentContent = recentMessages.slice(-5).map(m => m.d || '').join(' ')
+    // 从最近消息中提取关键词，查询相关知识（清理 CQ 码）
+    const recentContent = recentMessages.slice(-5)
+      .map(m => (m.d || '').replace(/\[CQ:[^\]]+\]/g, ''))
+      .join(' ')
+      .replace(/[?？!！。，,.;；:：]/g, ' ')
+      .trim()
     const relevantKnowledge = await knowledge.getRelevantKnowledgePrompt(recentContent, 2)
     
     // 构建增强的 AI Persona（包含知识库内容）
@@ -571,9 +575,9 @@ async function generateMentionReply(userMessage, groupId, port, userName = '用�
     // 格式化消息
     const formattedMessages = formatMessagesForAI(recentMessages, userMap)
     
-    // 清理用户消息（去除 @ 和"百百"前缀）
+    // 清理用户消息（去除所有 CQ 码和"百百"前缀）
     let cleanMessage = userMessage
-      .replace(/\[CQ:at,qq=\d+(,name=[^\]]+)?\]/g, '')  // 去除所有 @（包括带 name 参数的）
+      .replace(/\[CQ:[^\]]+\]/g, '')  // 去除所有 CQ 码
       .replace(/^百百[,，:：\s]*/i, '')   // 去除"百百"前缀及后面的标点
       .trim()
     
@@ -582,8 +586,13 @@ async function generateMentionReply(userMessage, groupId, port, userName = '用�
       cleanMessage = '在叫我吗？'
     }
     
+    // 用于知识库搜索的纯文本（进一步清理标点符号）
+    const searchText = cleanMessage
+      .replace(/[?？!！。，,.;；:：]/g, ' ')  // 标点转空格
+      .trim()
+    
     // 查询相关知识库内容
-    const relevantKnowledge = await knowledge.getRelevantKnowledgePrompt(cleanMessage, 3)
+    const relevantKnowledge = await knowledge.getRelevantKnowledgePrompt(searchText, 3)
     
     // 构建增强的 AI Persona（包含知识库内容）
     const enhancedPersona = AI_PERSONA + relevantKnowledge

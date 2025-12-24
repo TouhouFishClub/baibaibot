@@ -167,11 +167,22 @@ async function searchKnowledge(query, limit = 5) {
     const { client: c, collection } = await getCollection()
     client = c
     
-    const queryLower = query.toLowerCase()
+    // 清理查询内容：移除 CQ 码和多余空白
+    const cleanQuery = query
+      .replace(/\[CQ:[^\]]+\]/g, '')  // 移除所有 CQ 码
+      .replace(/\s+/g, ' ')  // 合并多余空白
+      .trim()
+    
+    if (!cleanQuery) {
+      console.log(`[知识库] 清理后查询为空，跳过搜索`)
+      return []
+    }
+    
+    const queryLower = cleanQuery.toLowerCase()
     // 使用简单中文分词
     const queryTokens = simpleChineseTokenize(queryLower)
     
-    console.log(`[知识库] 搜索查询: "${query}"`)
+    console.log(`[知识库] 搜索查询: "${cleanQuery}"`)
     console.log(`[知识库] 分词结果: ${queryTokens.slice(0, 10).join(', ')}${queryTokens.length > 10 ? '...' : ''}`)
     
     // 获取所有知识条目（如果数据量大，后期可优化为 MongoDB 全文搜索）
