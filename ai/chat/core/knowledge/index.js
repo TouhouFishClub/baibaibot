@@ -66,6 +66,61 @@ async function addKnowledge(entry) {
 }
 
 /**
+ * 更新知识条目
+ * @param {string} id 条目ID（MongoDB ObjectId 字符串）
+ * @param {Object} entry 知识条目
+ * @param {string} entry.title 标题/关键词
+ * @param {string} entry.content 知识内容
+ * @param {string[]} [entry.keywords] 额外关键词
+ * @param {string} [entry.category] 分类
+ * @returns {Promise<boolean>} 是否更新成功
+ */
+async function updateKnowledge(id, entry) {
+  if (!entry.title || !entry.content) {
+    console.error('[知识库] 更新失败: 缺少标题或内容')
+    return false
+  }
+  
+  let client
+  try {
+    const { client: c, collection } = await getCollection()
+    client = c
+    
+    const { ObjectId } = require('mongodb')
+    let objectId
+    try {
+      objectId = new ObjectId(id)
+    } catch {
+      return false
+    }
+    
+    const updateData = {
+      title: entry.title,
+      content: entry.content,
+      keywords: entry.keywords || [],
+      category: entry.category || '通用',
+      updatedAt: new Date()
+    }
+    
+    const result = await collection.updateOne(
+      { _id: objectId },
+      { $set: updateData }
+    )
+    
+    if (result.matchedCount > 0) {
+      console.log(`[知识库] 更新成功: ${id}`)
+      return true
+    }
+    return false
+  } catch (error) {
+    console.error('[知识库] 更新失败:', error.message)
+    return false
+  } finally {
+    if (client) await client.close()
+  }
+}
+
+/**
  * 删除知识条目
  * @param {string} id 条目ID（MongoDB ObjectId 字符串）
  * @returns {Promise<boolean>} 是否删除成功
@@ -392,6 +447,7 @@ async function listKnowledgeSummary() {
 
 module.exports = {
   addKnowledge,
+  updateKnowledge,
   removeKnowledge,
   removeKnowledgeByTitle,
   searchKnowledge,

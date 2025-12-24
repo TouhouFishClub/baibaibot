@@ -23,6 +23,8 @@ const {
 const {setPushWs,pushToGroup} = require('./ai/push');
 // 导入openApi路由
 const openApiRouter = require('./openApi/index');
+// 导入知识库模块
+const knowledge = require('./ai/chat/core/knowledge');
 require('./tg/tghandler');
 
 const ports = new Set([
@@ -164,11 +166,37 @@ app.listen('10086', () => {
   console.log('http://localhost:10086')
 })
 
+// 加载知识库管理账号密码
+const knowledgeSecretPath = path.join(__dirname, 'ai/chat/core/.secret.json')
+let knowledgeAuth = { username: 'admin', password: 'admin123' }
+try {
+  const secret = JSON.parse(fs.readFileSync(knowledgeSecretPath, 'utf8'))
+  if (secret.knowledgeAdminUsername && secret.knowledgeAdminPassword) {
+    knowledgeAuth = {
+      username: secret.knowledgeAdminUsername,
+      password: secret.knowledgeAdminPassword
+    }
+  }
+} catch (error) {
+  console.warn('加载知识库管理账号密码失败，使用默认值:', error.message)
+}
+
 const checkAuth = (req, res) => new Promise((resolve, reject) => {
   const user = basicAuth(req)
   if (!user || !user.name || !user.pass || user.name != 'aaa' || user.pass != '111') {
     res.set('WWW-Authenticate', 'Basic realm=Authorization Required')
     res.send(401)
+    reject('ERROR AUTH')
+  } else {
+    resolve('success')
+  }
+})
+
+const checkKnowledgeAuth = (req, res) => new Promise((resolve, reject) => {
+  const user = basicAuth(req)
+  if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
+    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    res.status(401).send('Unauthorized')
     reject('ERROR AUTH')
   } else {
     resolve('success')
@@ -471,6 +499,142 @@ app.get('/f1/*',function(req,res){
 app.get('/test',function(req,res){
   pushToGroup(2);
   res.send('ok');
+})
+
+// 知识库管理页面
+app.get('/knowledge-admin', async (req, res) => {
+  try {
+    await checkKnowledgeAuth(req, res)
+    res.sendFile(path.join(__dirname, 'public', 'knowledge-admin.html'))
+  } catch (error) {
+    // 鉴权失败已在 checkKnowledgeAuth 中处理
+  }
+})
+
+// 知识库 API - 列表
+app.get('/api/knowledge/list', async (req, res) => {
+  try {
+    await checkKnowledgeAuth(req, res)
+    const entries = await knowledge.getAllKnowledge()
+    res.json({
+      success: true,
+      data: entries
+    })
+  } catch (error) {
+    // 鉴权失败已在 checkKnowledgeAuth 中处理
+  }
+})
+
+// 知识库 API - 添加
+app.post('/api/knowledge/add', async (req, res) => {
+  try {
+    await checkKnowledgeAuth(req, res)
+    const { title, content, keywords, category } = req.body
+    
+    if (!title || !content) {
+      return res.json({
+        success: false,
+        message: '标题和内容不能为空'
+      })
+    }
+    
+    const success = await knowledge.addKnowledge({
+      title,
+      content,
+      keywords: keywords || [],
+      category: category || '通用'
+    })
+    
+    if (success) {
+      res.json({
+        success: true,
+        message: '添加成功'
+      })
+    } else {
+      res.json({
+        success: false,
+        message: '添加失败'
+      })
+    }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || '添加失败'
+    })
+  }
+})
+
+// 知识库 API - 更新
+app.post('/api/knowledge/update', async (req, res) => {
+  try {
+    await checkKnowledgeAuth(req, res)
+    const { id, title, content, keywords, category } = req.body
+    
+    if (!id || !title || !content) {
+      return res.json({
+        success: false,
+        message: 'ID、标题和内容不能为空'
+      })
+    }
+    
+    const success = await knowledge.updateKnowledge(id, {
+      title,
+      content,
+      keywords: keywords || [],
+      category: category || '通用'
+    })
+    
+    if (success) {
+      res.json({
+        success: true,
+        message: '更新成功'
+      })
+    } else {
+      res.json({
+        success: false,
+        message: '更新失败，请检查ID是否正确'
+      })
+    }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || '更新失败'
+    })
+  }
+})
+
+// 知识库 API - 删除
+app.delete('/api/knowledge/delete', async (req, res) => {
+  try {
+    await checkKnowledgeAuth(req, res)
+    const { id } = req.query
+    
+    if (!id) {
+      return res.json({
+        success: false,
+        message: 'ID不能为空'
+      })
+    }
+    
+    const success = await knowledge.removeKnowledge(id)
+    
+    if (success) {
+      res.json({
+        success: true,
+        message: '删除成功'
+      })
+    } else {
+      res.json({
+        success: false,
+        message: '删除失败，请检查ID是否正确'
+      })
+    }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message || '删除失败'
+    })
+  }
 })
 
 app.get('/x1',function(req,res){
