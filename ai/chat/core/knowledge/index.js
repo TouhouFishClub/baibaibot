@@ -317,12 +317,22 @@ function formatKnowledgeForPrompt(entries) {
     return ''
   }
   
-  let formatted = '\n\n【参考知识库】\n以下是一些可能相关的知识供你参考，请根据实际情况决定是否使用：\n'
+  let formatted = `
+
+===========================================
+【官方知识库 - 必须优先采用】
+以下是经过验证的准确信息。当用户问题涉及这些内容时，你必须基于知识库回答，不要被群聊记录中的其他说法干扰或误导。
+===========================================
+`
   
   for (const entry of entries) {
-    formatted += `\n## ${entry.title}\n`
-    formatted += `${entry.content}\n`
+    formatted += `\n◆ ${entry.title}\n`
+    formatted += `  ${entry.content}\n`
   }
+  
+  formatted += `
+===========================================
+`
   
   return formatted
 }

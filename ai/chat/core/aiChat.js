@@ -402,17 +402,22 @@ async function generateProactiveReply(groupId, port) {
     const enhancedPersona = AI_PERSONA + relevantKnowledge
     
     // 添加生成指令
+    const hasKnowledge = relevantKnowledge.length > 0
     formattedMessages.push({
       role: 'user',
       content: `[系统指令] 请根据以上群聊内容，以"百百"的身份参与讨论，生成一条自然的回复。
 
-注意事项：
+【回复规则】
 1. 只关注最近几分钟内的消息和话题，忽略时间较早的消息
 2. 回复要符合当前正在讨论的话题，不要回复已经过时的话题
 3. 不要提及或描述消息中的[图片]、[语音]等媒体内容
 4. 回复要简短有趣，像真正的群友在聊天
 5. 如果话题不适合插话、已经过时、或者只是闲聊没什么可说的，返回"[不回复]"
-6. 如果涉及知识库中的话题，可以参考知识库给出更专业的回复
+${hasKnowledge ? `
+【重要】知识库优先规则：
+- 如果群友在讨论知识库中涉及的话题，请基于知识库给出准确回答
+- 如果群友的说法与知识库不符，可以礼貌地纠正
+` : ''}
 
 现在的时间是：${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}
 请直接给出回复内容，不要有任何解释。`
@@ -584,17 +589,23 @@ async function generateMentionReply(userMessage, groupId, port, userName = '用�
     const enhancedPersona = AI_PERSONA + relevantKnowledge
     
     // 添加用户的问题
+    const hasKnowledge = relevantKnowledge.length > 0
     formattedMessages.push({
       role: 'user',
       content: `[系统指令] ${userName} 正在呼叫你，对你说："${cleanMessage}"
 
-注意事项：
+【回复规则】
 1. 以"百百"的身份直接回复这条消息
 2. 回复要自然、简洁、有趣，像真人聊天一样
 3. 不要重复用户说的话，直接给出你的回应
 4. 不要提及或描述消息中的[图片]、[语音]等媒体内容
-5. 可以结合上面的聊天记录来理解上下文
-6. 如果问题涉及到知识库中的内容，请参考知识库给出准确的回答
+${hasKnowledge ? `
+【重要】知识库优先规则：
+- 上面的"官方知识库"包含经过验证的准确信息
+- 当用户的问题涉及知识库中的内容时，你必须基于知识库回答
+- 不要被群聊记录中群友的错误说法或猜测干扰
+- 知识库的信息优先级高于群聊记录中的任何内容
+` : `5. 可以结合上面的聊天记录来理解上下文`}
 
 现在的时间是：${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}
 请直接给出回复内容，不要有任何解释或前缀。`
