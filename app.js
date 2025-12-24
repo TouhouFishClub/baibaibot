@@ -465,33 +465,53 @@ app.get('/get_group_member_info',function(req,res){
 });
 
 // 知识库管理页面（需要在 /api/* 之前）
-app.get('/knowledge-admin', async (req, res) => {
-  try {
-    await checkKnowledgeAuth(req, res)
-    res.sendFile(path.join(__dirname, 'public', 'knowledge-admin.html'))
-  } catch (error) {
-    // 鉴权失败已在 checkKnowledgeAuth 中处理
+app.get('/knowledge-admin', (req, res) => {
+  const user = basicAuth(req)
+  if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
+    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    return res.status(401).send('Unauthorized')
   }
+  
+  res.sendFile(path.join(__dirname, 'public', 'knowledge-admin.html'), (err) => {
+    if (err) {
+      console.error('发送文件失败:', err)
+      res.status(500).send('服务器错误')
+    }
+  })
 })
 
 // 知识库 API - 列表（需要在 /api/* 之前）
 app.get('/api/knowledge/list', async (req, res) => {
+  const user = basicAuth(req)
+  if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
+    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    return res.status(401).send('Unauthorized')
+  }
+  
   try {
-    await checkKnowledgeAuth(req, res)
     const entries = await knowledge.getAllKnowledge()
     res.json({
       success: true,
       data: entries
     })
   } catch (error) {
-    // 鉴权失败已在 checkKnowledgeAuth 中处理
+    console.error('获取知识列表失败:', error)
+    res.json({
+      success: false,
+      message: error.message || '获取失败'
+    })
   }
 })
 
 // 知识库 API - 添加（需要在 /api/* 之前）
 app.post('/api/knowledge/add', async (req, res) => {
+  const user = basicAuth(req)
+  if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
+    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    return res.status(401).send('Unauthorized')
+  }
+  
   try {
-    await checkKnowledgeAuth(req, res)
     const { title, content, keywords, category } = req.body
     
     if (!title || !content) {
@@ -529,8 +549,13 @@ app.post('/api/knowledge/add', async (req, res) => {
 
 // 知识库 API - 更新（需要在 /api/* 之前）
 app.post('/api/knowledge/update', async (req, res) => {
+  const user = basicAuth(req)
+  if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
+    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    return res.status(401).send('Unauthorized')
+  }
+  
   try {
-    await checkKnowledgeAuth(req, res)
     const { id, title, content, keywords, category } = req.body
     
     if (!id || !title || !content) {
@@ -568,8 +593,13 @@ app.post('/api/knowledge/update', async (req, res) => {
 
 // 知识库 API - 删除（需要在 /api/* 之前）
 app.delete('/api/knowledge/delete', async (req, res) => {
+  const user = basicAuth(req)
+  if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
+    res.set('WWW-Authenticate', 'Basic realm=知识库管理')
+    return res.status(401).send('Unauthorized')
+  }
+  
   try {
-    await checkKnowledgeAuth(req, res)
     const { id } = req.query
     
     if (!id) {
