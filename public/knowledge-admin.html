@@ -442,12 +442,12 @@
       } else {
         filteredKnowledge = allKnowledge.filter(item => {
           const title = (item.title || '').toLowerCase();
-          const content = (item.content || '').toLowerCase();
+          const contentPreview = (item.contentPreview || '').toLowerCase();
           const category = (item.category || '').toLowerCase();
           const keywords = (item.keywords || []).join(' ').toLowerCase();
           
           return title.includes(searchQuery) || 
-                 content.includes(searchQuery) || 
+                 contentPreview.includes(searchQuery) || 
                  category.includes(searchQuery) || 
                  keywords.includes(searchQuery);
         });
@@ -578,20 +578,49 @@
     }
     
     // 编辑知识
-    function editKnowledge(id) {
+    async function editKnowledge(id) {
       const item = allKnowledge.find(k => k.id === id);
       if (!item) return;
       
-      currentKnowledge = item;
-      document.getElementById('knowledgeId').value = item.id;
-      document.getElementById('title').value = item.title;
-      document.getElementById('content').value = item.content;
-      document.getElementById('keywords').value = (item.keywords || []).join(', ');
-      document.getElementById('category').value = item.category || '通用';
-      
+      // 显示加载状态
       document.getElementById('formContainer').style.display = 'block';
       switchTab('edit');
-      updatePreview();
+      document.getElementById('title').value = '加载中...';
+      document.getElementById('content').value = '加载中...';
+      document.getElementById('keywords').value = '';
+      document.getElementById('category').value = '通用';
+      
+      try {
+        // 从API加载完整内容
+        const response = await fetch(`/api/knowledge/get?id=${id}`, {
+          credentials: 'include'
+        });
+        
+        if (response.status === 401) {
+          window.location.reload();
+          return;
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          const fullItem = data.data;
+          currentKnowledge = fullItem;
+          document.getElementById('knowledgeId').value = fullItem.id;
+          document.getElementById('title').value = fullItem.title;
+          document.getElementById('content').value = fullItem.content || '';
+          document.getElementById('keywords').value = (fullItem.keywords || []).join(', ');
+          document.getElementById('category').value = fullItem.category || '通用';
+          updatePreview();
+        } else {
+          showMessage(data.message || '加载失败', 'error');
+          document.getElementById('formContainer').style.display = 'none';
+        }
+      } catch (error) {
+        console.error('加载失败:', error);
+        showMessage('加载失败: ' + error.message, 'error');
+        document.getElementById('formContainer').style.display = 'none';
+      }
       
       // 更新列表中的高亮状态
       renderKnowledgeList();

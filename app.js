@@ -489,13 +489,52 @@ app.get('/api/knowledge/list', async (req, res) => {
   }
   
   try {
-    const entries = await knowledge.getAllKnowledge()
+    // 使用列表接口，不返回完整内容
+    const entries = await knowledge.getKnowledgeList()
     res.json({
       success: true,
       data: entries
     })
   } catch (error) {
     console.error('获取知识列表失败:', error)
+    res.json({
+      success: false,
+      message: error.message || '获取失败'
+    })
+  }
+})
+
+// 知识库 API - 获取单个知识（完整内容）
+app.get('/api/knowledge/get', async (req, res) => {
+  const user = basicAuth(req)
+  if (!user || !user.name || !user.pass || user.name !== knowledgeAuth.username || user.pass !== knowledgeAuth.password) {
+    res.set('WWW-Authenticate', 'Basic realm="Knowledge Admin"')
+    return res.status(401).send('Unauthorized')
+  }
+  
+  try {
+    const { id } = req.query
+    if (!id) {
+      return res.json({
+        success: false,
+        message: '缺少ID参数'
+      })
+    }
+    
+    const entry = await knowledge.getKnowledgeById(id)
+    if (!entry) {
+      return res.json({
+        success: false,
+        message: '知识条目不存在'
+      })
+    }
+    
+    res.json({
+      success: true,
+      data: entry
+    })
+  } catch (error) {
+    console.error('获取知识失败:', error)
     res.json({
       success: false,
       message: error.message || '获取失败'

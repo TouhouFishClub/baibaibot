@@ -332,7 +332,7 @@ async function searchKnowledge(query, limit = 5) {
 }
 
 /**
- * 获取所有知识条目
+ * 获取所有知识条目（包含完整内容）
  * @returns {Promise<Array>} 所有知识条目
  */
 async function getAllKnowledge() {
@@ -349,6 +349,127 @@ async function getAllKnowledge() {
   } catch (error) {
     console.error('[知识库] 获取失败:', error.message)
     return []
+  } finally {
+    if (client) await client.close()
+  }
+}
+
+/**
+ * 获取知识列表（不包含完整内容，只返回摘要）
+ * @param {number} [contentPreviewLength=200] 内容预览长度
+ * @returns {Promise<Array>} 知识列表
+ */
+async function getKnowledgeList(contentPreviewLength = 200) {
+  let client
+  try {
+    const { client: c, collection } = await getCollection()
+    client = c
+    
+    // 使用聚合管道来截取内容预览，避免传输完整内容
+    const pipeline = [
+      {
+        $project: {
+          title: 1,
+          keywords: 1,
+          category: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          createdBy: 1,
+          contentLength: { $strLenCP: { $ifNull: ['$content', ''] } },
+          contentPreview: {
+            $cond: {
+              if: { $gt: [{ $strLenCP: { $ifNull: ['$content', ''] } }, contentPreviewLength] },
+              then: {
+                $concat: [
+                  { $substr: [{ $ifNull: ['$content', ''] }, 0, contentPreviewLength] },
+                  '...'
+                ]
+              },
+              else: { $ifNull: ['$content', ''] }
+            }
+          }
+        }
+      },
+      { $sort: { createdAt: -1 } }
+    ]
+    
+    const entries = await collection.aggregate(pipeline).toArray()
+    
+    return entries.map(e => ({
+      id: e._id.toString(),
+      title: e.title,
+      contentPreview: e.contentPreview || '',
+      keywords: e.keywords || [],
+      category: e.category || '通用',
+      createdAt: e.createdAt,
+      updatedAt: e.updatedAt,
+      createdBy: e.createdBy || null
+    }))
+  } catch (error) {
+    console.error('[知识库] 获取列表失败:', error.message)
+    // 如果聚合失败，降级到简单查询（但只获取必要字段）
+    try {
+      const entries = await collection.find({}, {
+        projection: {
+          title: 1,
+          keywords: 1,
+          category: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          createdBy: 1
+        }
+      }).sort({ createdAt: -1 }).toArray()
+      
+      return entries.map(e => ({
+        id: e._id.toString(),
+        title: e.title,
+        contentPreview: '', // 降级时不提供预览
+        keywords: e.keywords || [],
+        category: e.category || '通用',
+        createdAt: e.createdAt,
+        updatedAt: e.updatedAt,
+        createdBy: e.createdBy || null
+      }))
+    } catch (fallbackError) {
+      console.error('[知识库] 降级查询也失败:', fallbackError.message)
+      return []
+    }
+  } finally {
+    if (client) await client.close()
+  }
+}
+
+/**
+ * 根据ID获取单个知识条目（完整内容）
+ * @param {string} id 条目ID
+ * @returns {Promise<Object|null>} 知识条目
+ */
+async function getKnowledgeById(id) {
+  let client
+  try {
+    const { client: c, collection } = await getCollection()
+    client = c
+    
+    const { ObjectId } = require('mongodb')
+    let objectId
+    try {
+      objectId = new ObjectId(id)
+    } catch {
+      return null
+    }
+    
+    const entry = await collection.findOne({ _id: objectId })
+    if (!entry) {
+      return null
+    }
+    
+    return {
+      ...entry,
+      id: entry._id.toString()
+    }
+  } catch (error) {
+    console.error('[知识库] 获取失败:', error.message)
+    return null
   } finally {
     if (client) await client.close()
   }
@@ -452,6 +573,8 @@ module.exports = {
   removeKnowledgeByTitle,
   searchKnowledge,
   getAllKnowledge,
+  getKnowledgeList,
+  getKnowledgeById,
   getKnowledgeByCategory,
   formatKnowledgeForPrompt,
   getRelevantKnowledgePrompt,
