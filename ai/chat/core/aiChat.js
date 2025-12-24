@@ -72,7 +72,8 @@ function initGroupCache(groupId) {
   if (!groupMessageCache.has(groupId)) {
     groupMessageCache.set(groupId, {
       messageCount: 0,  // 未回复消息计数
-      lastReplyTime: Date.now()
+      lastReplyTime: Date.now(),
+      isPassiveReplying: false  // 是否正在进行被动回复
     })
   }
 }
@@ -90,6 +91,8 @@ function resetMessageCount(groupId) {
   const cache = groupMessageCache.get(groupId)
   cache.messageCount = 0
   cache.lastReplyTime = Date.now()
+  // 重置被动回复标志，允许下次检查
+  cache.isPassiveReplying = false
 }
 
 // 获取消息计数
@@ -510,8 +513,24 @@ async function handleProactiveReply(groupId, userId, port, callback) {
     return false
   }
   
+  initGroupCache(groupId)
+  const cache = groupMessageCache.get(groupId)
+  
+  // 如果正在进行被动回复，跳过主动回复
+  if (cache.isPassiveReplying) {
+    console.log(`[AI Chat] 群 ${groupId} 正在进行被动回复，跳过主动回复`)
+    return false
+  }
+  
+  // 如果距离上次回复时间太短（3秒内），说明刚刚进行了回复（被动或主动），跳过主动回复
+  const timeSinceLastReply = Date.now() - cache.lastReplyTime
+  if (timeSinceLastReply < 3000) {
+    console.log(`[AI Chat] 群 ${groupId} 距离上次回复仅 ${timeSinceLastReply}ms，跳过主动回复（避免重复回复）`)
+    return false
+  }
+  
   // 如果消息计数为0，说明刚刚进行了被动回复，跳过主动回复
-  const currentCount = getMessageCount(groupId)
+  const currentCount = cache.messageCount
   if (currentCount === 0) {
     console.log(`[AI Chat] 群 ${groupId} 消息计数为0，跳过主动回复（可能刚刚进行了被动回复）`)
     return false
@@ -571,7 +590,11 @@ function checkMentionTrigger(message) {
  */
 async function generateMentionReply(userMessage, groupId, port, userName = '用户') {
   // 被动回复触发时，立即重置消息计数，避免主动回复也被触发
-  resetMessageCount(groupId)
+  initGroupCache(groupId)
+  const cache = groupMessageCache.get(groupId)
+  cache.messageCount = 0
+  cache.isPassiveReplying = true  // 标记正在进行被动回复
+  cache.lastReplyTime = Date.now()
   
   try {
     // 获取最近消息作为上下文
@@ -639,6 +662,10 @@ ${hasKnowledge ? `
     return reply.trim()
   } catch (error) {
     console.error('生成对话回复失败:', error.message)
+    // 生成失败时，清除被动回复标志，允许后续的主动回复检查
+    initGroupCache(groupId)
+    const cache = groupMessageCache.get(groupId)
+    cache.isPassiveReplying = false
     return null
   }
 }
