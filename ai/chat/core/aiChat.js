@@ -510,10 +510,14 @@ async function handleProactiveReply(groupId, userId, port, callback) {
     return false
   }
   
-  // 增加消息计数
-  incrementMessageCount(groupId)
+  // 如果消息计数为0，说明刚刚进行了被动回复，跳过主动回复
+  const currentCount = getMessageCount(groupId)
+  if (currentCount === 0) {
+    console.log(`[AI Chat] 群 ${groupId} 消息计数为0，跳过主动回复（可能刚刚进行了被动回复）`)
+    return false
+  }
   
-  // 检查是否应该主动回复
+  // 检查是否应该主动回复（使用当前的计数，计数已经在消息到达时增加过了）
   if (shouldProactiveReply(groupId)) {
     const reply = await generateProactiveReply(groupId, port)
     
@@ -566,6 +570,9 @@ function checkMentionTrigger(message) {
  * @returns {Promise<string|null>}
  */
 async function generateMentionReply(userMessage, groupId, port, userName = '用户') {
+  // 被动回复触发时，立即重置消息计数，避免主动回复也被触发
+  resetMessageCount(groupId)
+  
   try {
     // 获取最近消息作为上下文
     const recentMessages = await fetchRecentMessages(groupId, 50)
@@ -627,8 +634,7 @@ ${hasKnowledge ? `
       return null
     }
     
-    // 重置消息计数
-    resetMessageCount(groupId)
+    // 消息计数已在函数开始时重置，这里不需要再次重置
     
     return reply.trim()
   } catch (error) {

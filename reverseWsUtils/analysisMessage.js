@@ -31,6 +31,7 @@ const {
   isAIEnabled, 
   enhanceReply,
   resetMessageCount,
+  incrementMessageCount,
   handleProactiveReply,
   checkMentionTrigger,
   generateMentionReply,
@@ -173,9 +174,17 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
     return // 知识库命令不需要继续处理其他逻辑
   }
   
+  // AI 对话模块：先增加消息计数（用于主动回复统计）
+  // 如果是被动回复触发，会在下面重置计数
+  if (isAIEnabled(group_id)) {
+    incrementMessageCount(group_id)
+  }
+  
   // 检查是否触发了 AI 对话（以"百百"开头或 @ 了机器人）
   if (isAIEnabled(group_id) && checkMentionTrigger(raw_message)) {
     console.log(`[AI Chat] 群 ${group_id} 检测到呼叫百百，生成 AI 回复...`)
+    // 被动回复触发时，立即重置消息计数并清空累计次数，避免主动回复也被触发
+    resetMessageCount(group_id)
     // 异步生成 AI 回复
     ;(async () => {
       try {
