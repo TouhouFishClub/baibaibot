@@ -18,7 +18,7 @@
       padding: 20px;
     }
     .container {
-      max-width: 1200px;
+      max-width: 1600px;
       margin: 0 auto;
       background: white;
       border-radius: 8px;
@@ -31,11 +31,50 @@
       border-bottom: 2px solid #4CAF50;
       padding-bottom: 10px;
     }
+    .main-layout {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .left-panel {
+      flex: 1;
+      min-width: 0;
+    }
+    .right-panel {
+      width: 500px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 20px;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
     .toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 10px 40px 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .search-box::after {
+      content: '🔍';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
     }
     .btn {
       padding: 10px 20px;
@@ -67,7 +106,55 @@
       background: #0b7dda;
     }
     .knowledge-list {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      min-height: 400px;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .pagination-info {
+      color: #666;
+      font-size: 14px;
+      margin: 0 10px;
+    }
+    .pagination button {
+      padding: 8px 15px;
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .pagination button:hover:not(:disabled) {
+      background: #f0f0f0;
+      border-color: #4CAF50;
+    }
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .pagination button.active {
+      background: #4CAF50;
+      color: white;
+      border-color: #4CAF50;
+    }
+    .page-size-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .page-size-selector select {
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
     }
     .knowledge-item {
       background: #f9f9f9;
@@ -112,6 +199,10 @@
       background: #f9f9f9;
       border-radius: 4px;
       padding: 20px;
+      border: 2px solid #4CAF50;
+    }
+    .form-container:empty {
+      display: none;
     }
     .form-group {
       margin-bottom: 20px;
@@ -182,6 +273,11 @@
       border-radius: 4px;
       overflow-x: auto;
     }
+    .preview-content mark {
+      background: #ffeb3b;
+      padding: 2px 4px;
+      border-radius: 2px;
+    }
     .message {
       padding: 10px;
       border-radius: 4px;
@@ -226,56 +322,78 @@
     
     <div id="message" class="message"></div>
     
-    <div class="toolbar">
-      <button class="btn btn-primary" onclick="showAddForm()">➕ 添加知识</button>
-      <button class="btn btn-secondary" onclick="loadKnowledgeList()">🔄 刷新列表</button>
-    </div>
-    
-    <div class="knowledge-list" id="knowledgeList">
-      <p>加载中...</p>
-    </div>
-    
-    <div class="form-container" id="formContainer" style="display: none;">
-      <div class="tabs">
-        <button class="tab active" onclick="switchTab('edit')">编辑</button>
-        <button class="tab" onclick="switchTab('preview')">预览</button>
+    <div class="main-layout">
+      <div class="left-panel">
+        <div class="toolbar">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="搜索标题、内容、关键词或分类..." oninput="handleSearch()" />
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-primary" onclick="showAddForm()">➕ 添加知识</button>
+            <button class="btn btn-secondary" onclick="loadKnowledgeList()">🔄 刷新</button>
+          </div>
+        </div>
+        
+        <div class="knowledge-list" id="knowledgeList">
+          <p>加载中...</p>
+        </div>
+        
+        <div class="pagination" id="pagination"></div>
+        <div class="page-size-selector">
+          <span>每页显示：</span>
+          <select id="pageSizeSelect" onchange="changePageSize()">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
       </div>
       
-      <div id="editTab">
-        <form id="knowledgeForm" onsubmit="saveKnowledge(event)">
-          <input type="hidden" id="knowledgeId" />
-          
-          <div class="form-group">
-            <label for="title">标题 *</label>
-            <input type="text" id="title" required />
+      <div class="right-panel">
+        <div class="form-container" id="formContainer" style="display: none;">
+          <div class="tabs">
+            <button class="tab active" onclick="switchTab('edit')">编辑</button>
+            <button class="tab" onclick="switchTab('preview')">预览</button>
           </div>
           
-          <div class="form-group">
-            <label for="content">内容 * (支持 Markdown)</label>
-            <textarea id="content" required rows="10"></textarea>
+          <div id="editTab">
+            <form id="knowledgeForm" onsubmit="saveKnowledge(event)">
+              <input type="hidden" id="knowledgeId" />
+              
+              <div class="form-group">
+                <label for="title">标题 *</label>
+                <input type="text" id="title" required />
+              </div>
+              
+              <div class="form-group">
+                <label for="content">内容 * (支持 Markdown)</label>
+                <textarea id="content" required rows="10"></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="keywords">关键词 (用逗号、顿号或空格分隔)</label>
+                <input type="text" id="keywords" placeholder="例如：洛奇,跑商,攻略" />
+              </div>
+              
+              <div class="form-group">
+                <label for="category">分类</label>
+                <input type="text" id="category" value="通用" />
+              </div>
+              
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">💾 保存</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelEdit()">❌ 取消</button>
+              </div>
+            </form>
           </div>
           
-          <div class="form-group">
-            <label for="keywords">关键词 (用逗号、顿号或空格分隔)</label>
-            <input type="text" id="keywords" placeholder="例如：洛奇,跑商,攻略" />
+          <div id="previewTab" style="display: none;">
+            <div class="preview-container">
+              <div class="preview-title">预览效果</div>
+              <div class="preview-content" id="previewContent"></div>
+            </div>
           </div>
-          
-          <div class="form-group">
-            <label for="category">分类</label>
-            <input type="text" id="category" value="通用" />
-          </div>
-          
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">💾 保存</button>
-            <button type="button" class="btn btn-secondary" onclick="cancelEdit()">❌ 取消</button>
-          </div>
-        </form>
-      </div>
-      
-      <div id="previewTab" style="display: none;">
-        <div class="preview-container">
-          <div class="preview-title">预览效果</div>
-          <div class="preview-content" id="previewContent"></div>
         </div>
       </div>
     </div>
@@ -284,6 +402,10 @@
   <script>
     let currentKnowledge = null;
     let allKnowledge = [];
+    let filteredKnowledge = [];
+    let currentPage = 1;
+    let pageSize = 20;
+    let searchQuery = '';
     
     // 加载知识列表
     async function loadKnowledgeList() {
@@ -301,7 +423,7 @@
         
         if (data.success) {
           allKnowledge = data.data;
-          renderKnowledgeList(allKnowledge);
+          handleSearch();
         } else {
           showMessage(data.message || '加载失败', 'error');
         }
@@ -311,25 +433,71 @@
       }
     }
     
+    // 处理搜索
+    function handleSearch() {
+      searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+      
+      if (!searchQuery) {
+        filteredKnowledge = allKnowledge;
+      } else {
+        filteredKnowledge = allKnowledge.filter(item => {
+          const title = (item.title || '').toLowerCase();
+          const content = (item.content || '').toLowerCase();
+          const category = (item.category || '').toLowerCase();
+          const keywords = (item.keywords || []).join(' ').toLowerCase();
+          
+          return title.includes(searchQuery) || 
+                 content.includes(searchQuery) || 
+                 category.includes(searchQuery) || 
+                 keywords.includes(searchQuery);
+        });
+      }
+      
+      currentPage = 1;
+      renderKnowledgeList();
+      renderPagination();
+    }
+    
+    // 改变每页显示数量
+    function changePageSize() {
+      pageSize = parseInt(document.getElementById('pageSizeSelect').value);
+      currentPage = 1;
+      renderKnowledgeList();
+      renderPagination();
+    }
+    
     // 渲染知识列表
-    function renderKnowledgeList(list) {
+    function renderKnowledgeList() {
       const container = document.getElementById('knowledgeList');
       
-      if (list.length === 0) {
-        container.innerHTML = '<p>暂无知识条目</p>';
+      if (filteredKnowledge.length === 0) {
+        container.innerHTML = searchQuery 
+          ? '<p>没有找到匹配的知识条目</p>'
+          : '<p>暂无知识条目</p>';
         return;
       }
       
-      container.innerHTML = list.map(item => {
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+      const pageData = filteredKnowledge.slice(start, end);
+      
+      container.innerHTML = pageData.map(item => {
         const keywords = (item.keywords || []).map(k => 
           `<span class="keyword-tag">${k}</span>`
         ).join('');
         
+        // 高亮搜索关键词
+        let title = escapeHtml(item.title);
+        if (searchQuery) {
+          const regex = new RegExp(`(${escapeRegex(searchQuery)})`, 'gi');
+          title = title.replace(regex, '<mark>$1</mark>');
+        }
+        
         return `
-          <div class="knowledge-item" onclick="event.stopPropagation(); editKnowledge('${item.id}')">
+          <div class="knowledge-item ${currentKnowledge && currentKnowledge.id === item.id ? 'active' : ''}" onclick="event.stopPropagation(); editKnowledge('${item.id}')">
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
               <div style="flex: 1;">
-                <div class="knowledge-item-title">${escapeHtml(item.title)}</div>
+                <div class="knowledge-item-title">${title}</div>
                 <div class="knowledge-item-meta">
                   分类: ${escapeHtml(item.category || '通用')} | 
                   创建时间: ${formatDate(item.createdAt)}
@@ -341,6 +509,72 @@
           </div>
         `;
       }).join('');
+    }
+    
+    // 渲染分页
+    function renderPagination() {
+      const container = document.getElementById('pagination');
+      const totalPages = Math.ceil(filteredKnowledge.length / pageSize);
+      
+      if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+      }
+      
+      let html = '';
+      
+      // 上一页按钮
+      html += `<button onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>`;
+      
+      // 页码按钮
+      const maxVisible = 7;
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+      
+      if (endPage - startPage < maxVisible - 1) {
+        startPage = Math.max(1, endPage - maxVisible + 1);
+      }
+      
+      if (startPage > 1) {
+        html += `<button onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) {
+          html += `<span>...</span>`;
+        }
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+      }
+      
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          html += `<span>...</span>`;
+        }
+        html += `<button onclick="goToPage(${totalPages})">${totalPages}</button>`;
+      }
+      
+      // 下一页按钮
+      html += `<button onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>下一页</button>`;
+      
+      // 分页信息
+      const start = (currentPage - 1) * pageSize + 1;
+      const end = Math.min(currentPage * pageSize, filteredKnowledge.length);
+      html += `<span class="pagination-info">第 ${start}-${end} 条，共 ${filteredKnowledge.length} 条</span>`;
+      
+      container.innerHTML = html;
+    }
+    
+    // 跳转到指定页
+    function goToPage(page) {
+      const totalPages = Math.ceil(filteredKnowledge.length / pageSize);
+      if (page < 1 || page > totalPages) return;
+      
+      currentPage = page;
+      renderKnowledgeList();
+      renderPagination();
+      
+      // 滚动到列表顶部
+      document.getElementById('knowledgeList').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
     // 编辑知识
@@ -356,8 +590,11 @@
       document.getElementById('category').value = item.category || '通用';
       
       document.getElementById('formContainer').style.display = 'block';
-      document.getElementById('formContainer').scrollIntoView({ behavior: 'smooth' });
+      switchTab('edit');
       updatePreview();
+      
+      // 更新列表中的高亮状态
+      renderKnowledgeList();
     }
     
     // 显示添加表单
@@ -367,9 +604,11 @@
       document.getElementById('knowledgeId').value = '';
       document.getElementById('category').value = '通用';
       document.getElementById('formContainer').style.display = 'block';
-      document.getElementById('formContainer').scrollIntoView({ behavior: 'smooth' });
       switchTab('edit');
       document.getElementById('previewContent').innerHTML = '';
+      
+      // 更新列表中的高亮状态
+      renderKnowledgeList();
     }
     
     // 保存知识
@@ -422,8 +661,16 @@
         
         if (result.success) {
           showMessage(id ? '更新成功' : '添加成功', 'success');
-          loadKnowledgeList();
-          cancelEdit();
+          await loadKnowledgeList();
+          if (id) {
+            // 如果是更新，保持编辑状态并高亮
+            const updatedItem = allKnowledge.find(k => k.id === id);
+            if (updatedItem) {
+              editKnowledge(id);
+            }
+          } else {
+            cancelEdit();
+          }
         } else {
           showMessage(result.message || '保存失败', 'error');
         }
@@ -454,7 +701,7 @@
         
         if (result.success) {
           showMessage('删除成功', 'success');
-          loadKnowledgeList();
+          await loadKnowledgeList();
           cancelEdit();
         } else {
           showMessage(result.message || '删除失败', 'error');
@@ -520,6 +767,10 @@
       if (!dateStr) return '未知';
       const date = new Date(dateStr);
       return date.toLocaleString('zh-CN');
+    }
+    
+    function escapeRegex(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
     
     // 页面加载时初始化
