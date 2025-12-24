@@ -464,44 +464,7 @@ app.get('/get_group_member_info',function(req,res){
   groupm(req,res,'get_group_member_info')
 });
 
-app.get(`/api/*`, (req, res) => {
-	// console.log('==============')
-	// console.log(req)
-	// console.log(res)
-	// console.log(req.path)
-	// console.log('================')
-	groupm(req, res, req.path.substring(5))
-})
-
-function groupm(req,res,path){
-  res.set("Access-Control-Allow-Origin", "*");
-  var url = `http://${myip}:${PORT}/`+path;
-  let query = qs.stringify(req.query)
-  if(query) {
-    url = `${url}?${query}`
-  }
-  request({
-    url: url,
-    method: "GET"
-  }, function(error, response, body){
-    if(error&&error.code){
-      console.log('pipe error catched!')
-      console.log(error);
-    }
-  }).pipe(res);
-}
-
-app.get('/f1/*',function(req,res){
-  handlef1(req,res);
-})
-
-
-app.get('/test',function(req,res){
-  pushToGroup(2);
-  res.send('ok');
-})
-
-// 知识库管理页面
+// 知识库管理页面（需要在 /api/* 之前）
 app.get('/knowledge-admin', async (req, res) => {
   try {
     await checkKnowledgeAuth(req, res)
@@ -511,7 +474,7 @@ app.get('/knowledge-admin', async (req, res) => {
   }
 })
 
-// 知识库 API - 列表
+// 知识库 API - 列表（需要在 /api/* 之前）
 app.get('/api/knowledge/list', async (req, res) => {
   try {
     await checkKnowledgeAuth(req, res)
@@ -525,7 +488,7 @@ app.get('/api/knowledge/list', async (req, res) => {
   }
 })
 
-// 知识库 API - 添加
+// 知识库 API - 添加（需要在 /api/* 之前）
 app.post('/api/knowledge/add', async (req, res) => {
   try {
     await checkKnowledgeAuth(req, res)
@@ -564,7 +527,7 @@ app.post('/api/knowledge/add', async (req, res) => {
   }
 })
 
-// 知识库 API - 更新
+// 知识库 API - 更新（需要在 /api/* 之前）
 app.post('/api/knowledge/update', async (req, res) => {
   try {
     await checkKnowledgeAuth(req, res)
@@ -603,7 +566,7 @@ app.post('/api/knowledge/update', async (req, res) => {
   }
 })
 
-// 知识库 API - 删除
+// 知识库 API - 删除（需要在 /api/* 之前）
 app.delete('/api/knowledge/delete', async (req, res) => {
   try {
     await checkKnowledgeAuth(req, res)
@@ -635,6 +598,43 @@ app.delete('/api/knowledge/delete', async (req, res) => {
       message: error.message || '删除失败'
     })
   }
+})
+
+app.get(`/api/*`, (req, res) => {
+	// console.log('==============')
+	// console.log(req)
+	// console.log(res)
+	// console.log(req.path)
+	// console.log('================')
+	groupm(req, res, req.path.substring(5))
+})
+
+function groupm(req,res,path){
+  res.set("Access-Control-Allow-Origin", "*");
+  var url = `http://${myip}:${PORT}/`+path;
+  let query = qs.stringify(req.query)
+  if(query) {
+    url = `${url}?${query}`
+  }
+  request({
+    url: url,
+    method: "GET"
+  }, function(error, response, body){
+    if(error&&error.code){
+      console.log('pipe error catched!')
+      console.log(error);
+    }
+  }).pipe(res);
+}
+
+app.get('/f1/*',function(req,res){
+  handlef1(req,res);
+})
+
+
+app.get('/test',function(req,res){
+  pushToGroup(2);
+  res.send('ok');
 })
 
 app.get('/x1',function(req,res){

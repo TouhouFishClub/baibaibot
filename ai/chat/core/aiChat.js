@@ -151,6 +151,7 @@ async function fetchRecentMessages(groupId, limit = 20) {
     const collection = db.collection('cl_chat')
     
     // 同时支持数字和字符串类型的 gid
+    // TODO: 这里最好限制一下搜索时间，否则会出现过长时间没发言的群查询导致数据库负载过大
     const numericGid = typeof groupId === 'string' ? parseInt(groupId, 10) : groupId
     const query = {
       $or: [
