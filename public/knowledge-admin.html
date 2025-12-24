@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知识库管理</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    h1 {
+      margin-bottom: 30px;
+      color: #333;
+      border-bottom: 2px solid #4CAF50;
+      padding-bottom: 10px;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .btn-primary {
+      background: #4CAF50;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #45a049;
+    }
+    .btn-danger {
+      background: #f44336;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #da190b;
+    }
+    .btn-secondary {
+      background: #2196F3;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: #0b7dda;
+    }
+    .knowledge-list {
+      margin-bottom: 30px;
+    }
+    .knowledge-item {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .knowledge-item:hover {
+      background: #f0f0f0;
+      border-color: #4CAF50;
+    }
+    .knowledge-item.active {
+      background: #e8f5e9;
+      border-color: #4CAF50;
+    }
+    .knowledge-item-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    .knowledge-item-meta {
+      font-size: 12px;
+      color: #666;
+    }
+    .knowledge-item-keywords {
+      margin-top: 5px;
+    }
+    .keyword-tag {
+      display: inline-block;
+      background: #e3f2fd;
+      color: #1976d2;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      margin-right: 5px;
+    }
+    .form-container {
+      background: #f9f9f9;
+      border-radius: 4px;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .form-group textarea {
+      min-height: 100px;
+      font-family: monospace;
+    }
+    .form-group input[type="text"] {
+      height: 36px;
+    }
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .preview-container {
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      min-height: 200px;
+    }
+    .preview-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #666;
+    }
+    .preview-content {
+      line-height: 1.6;
+    }
+    .preview-content h1, .preview-content h2, .preview-content h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .preview-content p {
+      margin-bottom: 10px;
+    }
+    .preview-content ul, .preview-content ol {
+      margin-left: 20px;
+      margin-bottom: 10px;
+    }
+    .preview-content code {
+      background: #f4f4f4;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+    .preview-content pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    .message {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #ddd;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 14px;
+      color: #666;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+    }
+    .tab.active {
+      color: #4CAF50;
+      border-bottom-color: #4CAF50;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📚 知识库管理</h1>
+    
+    <div id="message" class="message"></div>
+    
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="showAddForm()">➕ 添加知识</button>
+      <button class="btn btn-secondary" onclick="loadKnowledgeList()">🔄 刷新列表</button>
+    </div>
+    
+    <div class="knowledge-list" id="knowledgeList">
+      <p>加载中...</p>
+    </div>
+    
+    <div class="form-container" id="formContainer" style="display: none;">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('edit')">编辑</button>
+        <button class="tab" onclick="switchTab('preview')">预览</button>
+      </div>
+      
+      <div id="editTab">
+        <form id="knowledgeForm" onsubmit="saveKnowledge(event)">
+          <input type="hidden" id="knowledgeId" />
+          
+          <div class="form-group">
+            <label for="title">标题 *</label>
+            <input type="text" id="title" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="content">内容 * (支持 Markdown)</label>
+            <textarea id="content" required rows="10"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="keywords">关键词 (用逗号、顿号或空格分隔)</label>
+            <input type="text" id="keywords" placeholder="例如：洛奇,跑商,攻略" />
+          </div>
+          
+          <div class="form-group">
+            <label for="category">分类</label>
+            <input type="text" id="category" value="通用" />
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">💾 保存</button>
+            <button type="button" class="btn btn-secondary" onclick="cancelEdit()">❌ 取消</button>
+          </div>
+        </form>
+      </div>
+      
+      <div id="previewTab" style="display: none;">
+        <div class="preview-container">
+          <div class="preview-title">预览效果</div>
+          <div class="preview-content" id="previewContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    let currentKnowledge = null;
+    let allKnowledge = [];
+    
+    // 加载知识列表
+    async function loadKnowledgeList() {
+      try {
+        const response = await fetch('/api/knowledge/list', {
+          credentials: 'include'
+        });
+        
+        if (response.status === 401) {
+          window.location.reload();
+          return;
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          allKnowledge = data.data;
+          renderKnowledgeList(allKnowledge);
+        } else {
+          showMessage(data.message || '加载失败', 'error');
+        }
+      } catch (error) {
+        console.error('加载失败:', error);
+        showMessage('加载失败: ' + error.message, 'error');
+      }
+    }
+    
+    // 渲染知识列表
+    function renderKnowledgeList(list) {
+      const container = document.getElementById('knowledgeList');
+      
+      if (list.length === 0) {
+        container.innerHTML = '<p>暂无知识条目</p>';
+        return;
+      }
+      
+      container.innerHTML = list.map(item => {
+        const keywords = (item.keywords || []).map(k => 
+          `<span class="keyword-tag">${k}</span>`
+        ).join('');
+        
+        return `
+          <div class="knowledge-item" onclick="event.stopPropagation(); editKnowledge('${item.id}')">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div style="flex: 1;">
+                <div class="knowledge-item-title">${escapeHtml(item.title)}</div>
+                <div class="knowledge-item-meta">
+                  分类: ${escapeHtml(item.category || '通用')} | 
+                  创建时间: ${formatDate(item.createdAt)}
+                </div>
+                ${keywords ? `<div class="knowledge-item-keywords">${keywords}</div>` : ''}
+              </div>
+              <button class="btn btn-danger" style="margin-left: 10px; padding: 5px 10px; font-size: 12px;" onclick="event.stopPropagation(); deleteKnowledge('${item.id}')">删除</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // 编辑知识
+    function editKnowledge(id) {
+      const item = allKnowledge.find(k => k.id === id);
+      if (!item) return;
+      
+      currentKnowledge = item;
+      document.getElementById('knowledgeId').value = item.id;
+      document.getElementById('title').value = item.title;
+      document.getElementById('content').value = item.content;
+      document.getElementById('keywords').value = (item.keywords || []).join(', ');
+      document.getElementById('category').value = item.category || '通用';
+      
+      document.getElementById('formContainer').style.display = 'block';
+      document.getElementById('formContainer').scrollIntoView({ behavior: 'smooth' });
+      updatePreview();
+    }
+    
+    // 显示添加表单
+    function showAddForm() {
+      currentKnowledge = null;
+      document.getElementById('knowledgeForm').reset();
+      document.getElementById('knowledgeId').value = '';
+      document.getElementById('category').value = '通用';
+      document.getElementById('formContainer').style.display = 'block';
+      document.getElementById('formContainer').scrollIntoView({ behavior: 'smooth' });
+      switchTab('edit');
+      document.getElementById('previewContent').innerHTML = '';
+    }
+    
+    // 保存知识
+    async function saveKnowledge(event) {
+      event.preventDefault();
+      
+      const id = document.getElementById('knowledgeId').value;
+      const title = document.getElementById('title').value.trim();
+      const content = document.getElementById('content').value.trim();
+      const keywordsStr = document.getElementById('keywords').value.trim();
+      const category = document.getElementById('category').value.trim() || '通用';
+      
+      if (!title || !content) {
+        showMessage('标题和内容不能为空', 'error');
+        return;
+      }
+      
+      const keywords = keywordsStr 
+        ? keywordsStr.split(/[,，、\s]+/).map(k => k.trim()).filter(k => k)
+        : [];
+      
+      const data = {
+        title,
+        content,
+        keywords,
+        category
+      };
+      
+      if (id) {
+        data.id = id;
+      }
+      
+      try {
+        const url = id ? '/api/knowledge/update' : '/api/knowledge/add';
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(data)
+        });
+        
+        if (response.status === 401) {
+          window.location.reload();
+          return;
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showMessage(id ? '更新成功' : '添加成功', 'success');
+          loadKnowledgeList();
+          cancelEdit();
+        } else {
+          showMessage(result.message || '保存失败', 'error');
+        }
+      } catch (error) {
+        console.error('保存失败:', error);
+        showMessage('保存失败: ' + error.message, 'error');
+      }
+    }
+    
+    // 删除知识
+    async function deleteKnowledge(id) {
+      if (!confirm('确定要删除这条知识吗？')) {
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/api/knowledge/delete?id=${id}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        
+        if (response.status === 401) {
+          window.location.reload();
+          return;
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showMessage('删除成功', 'success');
+          loadKnowledgeList();
+          cancelEdit();
+        } else {
+          showMessage(result.message || '删除失败', 'error');
+        }
+      } catch (error) {
+        console.error('删除失败:', error);
+        showMessage('删除失败: ' + error.message, 'error');
+      }
+    }
+    
+    // 取消编辑
+    function cancelEdit() {
+      document.getElementById('formContainer').style.display = 'none';
+      currentKnowledge = null;
+    }
+    
+    // 切换标签
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('editTab').style.display = tab === 'edit' ? 'block' : 'none';
+      document.getElementById('previewTab').style.display = tab === 'preview' ? 'block' : 'none';
+      
+      if (tab === 'preview') {
+        updatePreview();
+      }
+    }
+    
+    // 更新预览
+    function updatePreview() {
+      const content = document.getElementById('content').value;
+      const previewContent = document.getElementById('previewContent');
+      
+      if (marked) {
+        previewContent.innerHTML = marked.parse(content);
+      } else {
+        previewContent.textContent = content;
+      }
+    }
+    
+    // 监听内容变化
+    document.getElementById('content').addEventListener('input', updatePreview);
+    
+    // 显示消息
+    function showMessage(message, type) {
+      const msgEl = document.getElementById('message');
+      msgEl.textContent = message;
+      msgEl.className = `message ${type}`;
+      msgEl.style.display = 'block';
+      
+      setTimeout(() => {
+        msgEl.style.display = 'none';
+      }, 3000);
+    }
+    
+    // 工具函数
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    function formatDate(dateStr) {
+      if (!dateStr) return '未知';
+      const date = new Date(dateStr);
+      return date.toLocaleString('zh-CN');
+    }
+    
+    // 页面加载时初始化
+    window.addEventListener('load', () => {
+      loadKnowledgeList();
+    });
+  </script>
+</body>
+</html>
+

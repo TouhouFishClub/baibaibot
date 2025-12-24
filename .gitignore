@@ -13,6 +13,7 @@ public/fh
 public/bangumi
 tmp/
 public
+!public/knowledge-admin.html
 *.log
 *.sh
 4df/
