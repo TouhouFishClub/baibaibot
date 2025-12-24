@@ -33,7 +33,9 @@ const {
   resetMessageCount,
   handleProactiveReply,
   checkMentionTrigger,
-  generateMentionReply
+  generateMentionReply,
+  isKnowledgeCommand,
+  handleKnowledgeCommand
 } = require('../ai/chat/core/aiChat');
 
 const replaceImageToBase64 = message =>
@@ -153,6 +155,22 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
     }
     saveChat(group_id, 10000, `百百${port}`, msg, port);
     ws.send(JSON.stringify(sendBody));
+  }
+  
+  // 知识库命令处理（所有群都可用，但只有管理员有权限）
+  if (isKnowledgeCommand(raw_message)) {
+    ;(async () => {
+      try {
+        const reply = await handleKnowledgeCommand(raw_message, user_id)
+        if (reply) {
+          await sendCallback(reply)
+        }
+        // 非管理员 reply 为 null，静默忽略
+      } catch (error) {
+        console.error('[知识库] 命令处理失败:', error.message)
+      }
+    })()
+    return // 知识库命令不需要继续处理其他逻辑
   }
   
   // 检查是否触发了 AI 对话（以"百百"开头或 @ 了机器人）

@@ -52,6 +52,7 @@ const {googleImageSearch} = require('./ai/image/google');
 const rua = require('./ai/mabinogi/ruawork')
 const {baiduVoice} = require('./ai/voice/baiduvoice')
 const {saveChat} = require('./ai/chat/collect');
+const { isKnowledgeCommand, handleKnowledgeCommand } = require('./ai/chat/core/aiChat');
 const {getFoodRate} = require('./ai/kancolle/food');
 const {handleSenkaReply} = require('./ai/kancolle/senka2');
 
@@ -931,6 +932,22 @@ function handleMsg_D(msgObj,port, configs) {
 function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType,port, msgObjSource){
 
   content=content.trim();
+
+  // 知识库命令处理（所有群都可用，但只有管理员有权限）
+  if (isKnowledgeCommand(content)) {
+    ;(async () => {
+      try {
+        const reply = await handleKnowledgeCommand(content, from)
+        if (reply) {
+          callback(reply)
+        }
+        // 非管理员 reply 为 null，静默忽略
+      } catch (error) {
+        console.error('[知识库] 命令处理失败:', error.message)
+      }
+    })()
+    return // 知识库命令不需要继续处理其他逻辑
+  }
 
   if(content.startsWith("w")){
 
