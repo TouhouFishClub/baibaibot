@@ -8,6 +8,10 @@ const path = require('path')
 const MongoClient = require('mongodb').MongoClient
 const { mongourl } = require('../../../baibaiConfigs')
 
+// 引入知识库模块
+const knowledge = require('./knowledge')
+const knowledgeCommands = require('./knowledge/commands')
+
 // 加载 API Key
 const secretPath = path.join(__dirname, '.secret.json')
 let DEEPSEEK_API_KEY = ''
@@ -390,6 +394,13 @@ async function generateProactiveReply(groupId, port) {
     // 格式化消息
     const formattedMessages = formatMessagesForAI(recentMessages, userMap)
     
+    // 从最近消息中提取关键词，查询相关知识
+    const recentContent = recentMessages.slice(-5).map(m => m.d || '').join(' ')
+    const relevantKnowledge = await knowledge.getRelevantKnowledgePrompt(recentContent, 2)
+    
+    // 构建增强的 AI Persona（包含知识库内容）
+    const enhancedPersona = AI_PERSONA + relevantKnowledge
+    
     // 添加生成指令
     formattedMessages.push({
       role: 'user',
@@ -401,12 +412,13 @@ async function generateProactiveReply(groupId, port) {
 3. 不要提及或描述消息中的[图片]、[语音]等媒体内容
 4. 回复要简短有趣，像真正的群友在聊天
 5. 如果话题不适合插话、已经过时、或者只是闲聊没什么可说的，返回"[不回复]"
+6. 如果涉及知识库中的话题，可以参考知识库给出更专业的回复
 
 现在的时间是：${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}
 请直接给出回复内容，不要有任何解释。`
     })
     
-    const reply = await callDeepSeekAPI(AI_PERSONA, formattedMessages)
+    const reply = await callDeepSeekAPI(enhancedPersona, formattedMessages)
     
     // 检查是否选择不回复
     if (reply.includes('[不回复]') || reply.trim() === '') {
@@ -565,6 +577,12 @@ async function generateMentionReply(userMessage, groupId, port, userName = '用�
       cleanMessage = '在叫我吗？'
     }
     
+    // 查询相关知识库内容
+    const relevantKnowledge = await knowledge.getRelevantKnowledgePrompt(cleanMessage, 3)
+    
+    // 构建增强的 AI Persona（包含知识库内容）
+    const enhancedPersona = AI_PERSONA + relevantKnowledge
+    
     // 添加用户的问题
     formattedMessages.push({
       role: 'user',
@@ -576,12 +594,13 @@ async function generateMentionReply(userMessage, groupId, port, userName = '用�
 3. 不要重复用户说的话，直接给出你的回应
 4. 不要提及或描述消息中的[图片]、[语音]等媒体内容
 5. 可以结合上面的聊天记录来理解上下文
+6. 如果问题涉及到知识库中的内容，请参考知识库给出准确的回答
 
 现在的时间是：${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}
 请直接给出回复内容，不要有任何解释或前缀。`
     })
     
-    const reply = await callDeepSeekAPI(AI_PERSONA, formattedMessages)
+    const reply = await callDeepSeekAPI(enhancedPersona, formattedMessages)
     
     if (!reply || reply.trim() === '') {
       return null
@@ -612,6 +631,11 @@ module.exports = {
   checkMentionTrigger,
   generateMentionReply,
   AI_ENABLED_GROUPS,
-  BOT_IDS
+  BOT_IDS,
+  // 知识库相关
+  knowledge,
+  knowledgeCommands,
+  handleKnowledgeCommand: knowledgeCommands.handleKnowledgeCommand,
+  isKnowledgeCommand: knowledgeCommands.isKnowledgeCommand
 }
 
