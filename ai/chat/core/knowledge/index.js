@@ -126,6 +126,34 @@ async function removeKnowledgeByTitle(title) {
 }
 
 /**
+ * 简单的中文分词（提取2-4字的连续片段作为关键词）
+ * @param {string} text 文本
+ * @returns {string[]} 分词结果
+ */
+function simpleChineseTokenize(text) {
+  const tokens = new Set()
+  
+  // 按空格和标点分割
+  const segments = text.split(/[\s,，.。!！?？:：;；\-—_]+/).filter(s => s.length > 0)
+  
+  for (const segment of segments) {
+    // 添加整个片段
+    if (segment.length >= 2) {
+      tokens.add(segment)
+    }
+    
+    // 提取2-4字的子串
+    for (let len = 2; len <= Math.min(4, segment.length); len++) {
+      for (let i = 0; i <= segment.length - len; i++) {
+        tokens.add(segment.substring(i, i + len))
+      }
+    }
+  }
+  
+  return Array.from(tokens)
+}
+
+/**
  * 搜索相关知识
  * @param {string} query 查询内容
  * @param {number} limit 返回数量限制
@@ -140,10 +168,16 @@ async function searchKnowledge(query, limit = 5) {
     client = c
     
     const queryLower = query.toLowerCase()
-    const queryWords = queryLower.split(/\s+/).filter(w => w.length > 1)
+    // 使用简单中文分词
+    const queryTokens = simpleChineseTokenize(queryLower)
+    
+    console.log(`[知识库] 搜索查询: "${query}"`)
+    console.log(`[知识库] 分词结果: ${queryTokens.slice(0, 10).join(', ')}${queryTokens.length > 10 ? '...' : ''}`)
     
     // 获取所有知识条目（如果数据量大，后期可优化为 MongoDB 全文搜索）
     const allEntries = await collection.find({}).toArray()
+    
+    console.log(`[知识库] 共有 ${allEntries.length} 条知识`)
     
     // 计算每个条目的匹配分数
     const scored = allEntries.map(entry => {
@@ -165,7 +199,7 @@ async function searchKnowledge(query, limit = 5) {
         score += 40
       }
       
-      // 关键词匹配
+      // 关键词匹配（使用原始关键词）
       for (const keyword of keywordsLower) {
         if (keyword === queryLower) {
           score += 60
@@ -174,16 +208,28 @@ async function searchKnowledge(query, limit = 5) {
         }
       }
       
-      // 单词匹配
-      for (const word of queryWords) {
-        if (titleLower.includes(word)) {
+      // 分词匹配 - 查询分词与标题/关键词/内容匹配
+      for (const token of queryTokens) {
+        if (token.length < 2) continue
+        
+        // 标题包含分词
+        if (titleLower.includes(token)) {
           score += 15
         }
-        if (keywordsLower.some(k => k.includes(word))) {
-          score += 10
+        // 关键词包含分词
+        if (keywordsLower.some(k => k.includes(token) || token.includes(k))) {
+          score += 12
         }
-        if (contentLower.includes(word)) {
+        // 内容包含分词
+        if (contentLower.includes(token)) {
           score += 5
+        }
+      }
+      
+      // 反向匹配：知识库关键词在查询中
+      for (const keyword of keywordsLower) {
+        if (keyword.length >= 2 && queryLower.includes(keyword)) {
+          score += 25
         }
       }
       
@@ -191,9 +237,21 @@ async function searchKnowledge(query, limit = 5) {
     })
     
     // 过滤并排序
-    return scored
+    const filtered = scored
       .filter(item => item.score > 0)
       .sort((a, b) => b.score - a.score)
+    
+    // 调试日志：显示匹配结果
+    if (filtered.length > 0) {
+      console.log(`[知识库] 找到 ${filtered.length} 条匹配:`)
+      filtered.slice(0, 3).forEach(item => {
+        console.log(`  - "${item.entry.title}" (分数: ${item.score})`)
+      })
+    } else {
+      console.log(`[知识库] 未找到匹配的知识`)
+    }
+    
+    return filtered
       .slice(0, limit)
       .map(item => ({
         ...item.entry,
@@ -276,8 +334,15 @@ function formatKnowledgeForPrompt(entries) {
  * @returns {Promise<string>} 格式化的知识文本
  */
 async function getRelevantKnowledgePrompt(userMessage, limit = 3) {
+  console.log(`[知识库] 正在为消息搜索相关知识: "${userMessage.substring(0, 50)}..."`)
   const relevantEntries = await searchKnowledge(userMessage, limit)
-  return formatKnowledgeForPrompt(relevantEntries)
+  const formatted = formatKnowledgeForPrompt(relevantEntries)
+  if (formatted) {
+    console.log(`[知识库] 已注入 ${relevantEntries.length} 条知识到 AI Prompt`)
+  } else {
+    console.log(`[知识库] 未找到相关知识，不注入`)
+  }
+  return formatted
 }
 
 /**
