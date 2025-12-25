@@ -225,6 +225,7 @@ async function callDeepSeekAPI(prompt, messages) {
     }
 
     const data = await response.json()
+    console.log(`[AI Chat] DeepSeek API 调用成功: ${JSON.stringify(data)}`)
     return data.choices[0].message.content
   } catch (error) {
     console.error('DeepSeek API 调用失败:', error.message)
