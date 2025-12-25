@@ -201,7 +201,7 @@ async function callDeepSeekAPI(prompt, messages) {
   }
 
   const requestBody = {
-    model: 'deepseek-reasoner',
+    model: 'deepseek-chat',
     messages: [
       { role: 'system', content: prompt },
       ...messages
