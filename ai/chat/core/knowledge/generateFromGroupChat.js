@@ -350,7 +350,10 @@ async function callDeepSeekForSummary(messagesText, startDate, endDate) {
 【群聊记录】
 ${messagesText}
 
-请返回 JSON 格式的结果。注意：正文内容中必须包含时间范围信息，因为有些内容具有时效性。`
+请返回 JSON 格式的结果。注意：正文内容中必须包含时间范围信息，因为有些内容具有时效性。
+【特别注意】
+讨论中的布本为“布里列赫”，而不是“布罗尼副本”
+`
 
   const requestBody = {
     model: 'deepseek-chat',
