@@ -154,6 +154,7 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
         }
       }
     }
+    console.log(`\n\n\nws will send: ${msg}`)
     saveChat(group_id, 10000, `百百${port}`, msg, port);
     ws.send(JSON.stringify(sendBody));
   }
