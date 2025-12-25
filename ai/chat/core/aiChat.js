@@ -201,13 +201,13 @@ async function callDeepSeekAPI(prompt, messages) {
   }
 
   const requestBody = {
-    model: 'deepseek-reasoner',
+    model: 'deepseek-chat',
     messages: [
       { role: 'system', content: prompt },
       ...messages
     ],
     temperature: 0.8,
-    max_tokens: 20000
+    max_tokens: 200
   }
 
   try {
