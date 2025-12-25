@@ -207,7 +207,7 @@ async function callDeepSeekAPI(prompt, messages) {
       ...messages
     ],
     temperature: 0.8,
-    max_tokens: 1000
+    max_tokens: 20000
   }
 
   try {
