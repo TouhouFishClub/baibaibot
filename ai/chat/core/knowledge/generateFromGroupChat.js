@@ -110,9 +110,10 @@ async function fetchGroupMessages(groupId, startDate, endDate) {
     const start = new Date(startDate)
     start.setHours(0, 0, 0, 0)
     
-    // 设置结束时间为当天的 23:59:59.999
+    // 设置结束时间为下一天的 00:00:00（不包含），这样输入 12-7 就能包含 12-7 整天
     const end = new Date(endDate)
-    end.setHours(23, 59, 59, 999)
+    end.setDate(end.getDate() + 1)  // 加一天
+    end.setHours(0, 0, 0, 0)
     
     // 同时支持数字和字符串类型的 gid
     const numericGid = typeof groupId === 'string' ? parseInt(groupId, 10) : groupId
@@ -123,7 +124,7 @@ async function fetchGroupMessages(groupId, startDate, endDate) {
       ],
       _id: {
         $gte: start,
-        $lte: end
+        $lt: end  // 使用 $lt 因为 end 是下一天的 00:00:00，不包含
       }
     }
     
@@ -267,7 +268,7 @@ ${messagesText}
       { role: 'user', content: userPrompt }
     ],
     temperature: 0.7,
-    max_tokens: 2000
+    max_tokens: 4000  // DeepSeek 最大支持 8K，设置为 4K 留有余地
   }
 
   try {
@@ -354,7 +355,7 @@ async function main() {
     }
     
     // 2. 获取开始日期
-    let startDateStr = await question(rl, '请输入开始日期 (格式: 2025-1-1): ')
+    let startDateStr = await question(rl, '请输入开始日期 (格式: 2025-1-1，包含该天): ')
     const startDate = parseDate(startDateStr)
     if (!startDate) {
       console.error('❌ 开始日期格式错误，请使用 2025-1-1 格式')
@@ -362,7 +363,7 @@ async function main() {
     }
     
     // 3. 获取结束日期
-    let endDateStr = await question(rl, '请输入结束日期 (格式: 2025-1-1): ')
+    let endDateStr = await question(rl, '请输入结束日期 (格式: 2025-1-1，包含该天): ')
     const endDate = parseDate(endDateStr)
     if (!endDate) {
       console.error('❌ 结束日期格式错误，请使用 2025-1-1 格式')
@@ -404,8 +405,9 @@ async function main() {
     console.log('📝 正在格式化消息...')
     const messagesText = formatMessagesForSummary(messages)
     
-    // 如果消息太长，截取（DeepSeek 有 token 限制）
-    const maxLength = 10000 // 大约限制在 10000 字符
+    // 如果消息太长，截取（DeepSeek 上下文窗口 128K tokens）
+    // 中文文本约 1.5 tokens/字符，考虑系统提示词和输出，保守设置为 80000 字符
+    const maxLength = 80000
     let finalMessagesText = messagesText
     if (messagesText.length > maxLength) {
       console.log(`⚠️  消息内容过长 (${messagesText.length} 字符)，截取前 ${maxLength} 字符`)
