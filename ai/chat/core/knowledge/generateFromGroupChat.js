@@ -292,12 +292,29 @@ function formatMessagesForSummary(messages) {
 /**
  * 调用 DeepSeek API 总结知识库
  * @param {string} messagesText 消息文本
+ * @param {Date} startDate 开始日期
+ * @param {Date} endDate 结束日期
  * @returns {Promise<Object>} 包含 title, content, keywords 的对象
  */
-async function callDeepSeekForSummary(messagesText) {
+async function callDeepSeekForSummary(messagesText, startDate, endDate) {
   if (!DEEPSEEK_API_KEY) {
     throw new Error('DeepSeek API Key 未配置')
   }
+
+  // 格式化时间范围
+  const startDateStr = startDate.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+  const endDateStr = endDate.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+  const timeRange = startDateStr === endDateStr 
+    ? startDateStr 
+    : `${startDateStr} 至 ${endDateStr}`
 
   const systemPrompt = `你是一个知识库总结助手。你的任务是根据群聊记录，总结出有价值的知识点。
 
@@ -308,14 +325,14 @@ async function callDeepSeekForSummary(messagesText) {
 
 要求：
 - 标题要准确概括核心内容
-- 正文要条理清晰，包含重要细节
+- 正文要条理清晰，包含重要细节，并且必须在开头或结尾明确标注时间范围（因为有些内容具有时效性）
 - 关键词要覆盖主要内容，便于搜索
 - 如果内容没有价值或只是闲聊，请返回空结果
 
 请以 JSON 格式返回，格式如下：
 {
   "title": "标题",
-  "content": "正文内容",
+  "content": "正文内容（必须包含时间范围信息）",
   "keywords": ["关键词1", "关键词2", "关键词3"]
 }
 
@@ -328,9 +345,12 @@ async function callDeepSeekForSummary(messagesText) {
 
   const userPrompt = `以下是群聊记录，请总结成知识库条目：
 
+【时间范围】${timeRange}
+
+【群聊记录】
 ${messagesText}
 
-请返回 JSON 格式的结果。`
+请返回 JSON 格式的结果。注意：正文内容中必须包含时间范围信息，因为有些内容具有时效性。`
 
   const requestBody = {
     model: 'deepseek-chat',
@@ -497,7 +517,7 @@ async function main() {
     
     // 8. 调用 DeepSeek API 总结
     console.log('🤖 正在调用 DeepSeek API 总结知识库...')
-    const summary = await callDeepSeekForSummary(finalMessagesText)
+    const summary = await callDeepSeekForSummary(finalMessagesText, startDate, endDate)
     
     // 9. 输出结果
     console.log('')
