@@ -502,27 +502,18 @@ async function main() {
       process.exit(0)
     }
     
-    // 6. 智能采样消息（如果消息太多）
-    // 估算：平均每条消息约 40 字符，80000 字符约可容纳 2000 条消息
-    // 但为了安全，设置为 1500 条
-    const maxMessages = 1500
-    let finalMessages = messages
-    if (messages.length > maxMessages) {
-      console.log(`⚠️  消息数量过多 (${messages.length} 条)，进行智能采样到 ${maxMessages} 条...`)
-      finalMessages = sampleMessagesByTime(messages, maxMessages)
-      console.log(`✅ 采样完成，保留 ${finalMessages.length} 条消息（按时间均匀分布）`)
-    }
-    
-    // 7. 格式化消息
+    // 6. 格式化消息（使用所有消息，不进行采样）
     console.log('📝 正在格式化消息...')
-    let messagesText = formatMessagesForSummary(finalMessages)
+    let messagesText = formatMessagesForSummary(messages)
     
-    // 如果格式化后还是太长，再次截取（作为最后的安全措施）
+    // 如果格式化后太长，按字符截取（作为最后的安全措施，避免超过 DeepSeek token 限制）
     const maxLength = 80000
     let finalMessagesText = messagesText
     if (messagesText.length > maxLength) {
-      console.log(`⚠️  格式化后内容仍然过长 (${messagesText.length} 字符)，截取前 ${maxLength} 字符`)
-      finalMessagesText = messagesText.substring(0, maxLength) + '\n... (内容已截断)'
+      console.log(`⚠️  消息内容过长 (${messagesText.length} 字符)，截取前 ${maxLength} 字符以避免超过 token 限制`)
+      finalMessagesText = messagesText.substring(0, maxLength) + '\n... (内容已截断，超出部分已省略)'
+    } else {
+      console.log(`✅ 消息格式化完成，共 ${messagesText.length} 字符`)
     }
     
     // 8. 调用 DeepSeek API 总结
