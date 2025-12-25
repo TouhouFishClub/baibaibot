@@ -454,11 +454,18 @@ async function main() {
     }
     
     // 3. 获取结束日期
-    let endDateStr = await question(rl, '请输入结束日期 (格式: 2025-1-1，包含该天): ')
-    const endDate = parseDate(endDateStr)
-    if (!endDate) {
-      console.error('❌ 结束日期格式错误，请使用 2025-1-1 格式')
-      process.exit(1)
+    let endDateStr = await question(rl, '请输入结束日期 (格式: 2025-1-1，包含该天，直接回车则与开始日期相同): ')
+    let endDate
+    if (!endDateStr || endDateStr.trim() === '') {
+      // 如果直接回车，使用开始日期
+      endDate = new Date(startDate)
+      console.log(`✅ 结束日期未输入，使用开始日期: ${endDate.toLocaleDateString('zh-CN')}`)
+    } else {
+      endDate = parseDate(endDateStr)
+      if (!endDate) {
+        console.error('❌ 结束日期格式错误，请使用 2025-1-1 格式')
+        process.exit(1)
+      }
     }
     
     // 4. 验证日期范围
