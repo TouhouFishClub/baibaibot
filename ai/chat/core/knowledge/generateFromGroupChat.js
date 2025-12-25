@@ -178,7 +178,56 @@ function cleanMessageContent(content) {
 }
 
 /**
- * 格式化消息为文本
+ * 智能采样消息，按时间均匀分布
+ * 由于消息已经按时间排序，直接按索引均匀采样即可保证时间分布
+ * @param {Array} messages 消息列表（已按时间排序）
+ * @param {number} maxMessages 最大消息数量
+ * @returns {Array} 采样后的消息列表
+ */
+function sampleMessagesByTime(messages, maxMessages) {
+  if (messages.length <= maxMessages) {
+    return messages
+  }
+  
+  // 确保消息按时间排序
+  const sortedMessages = [...messages].sort((a, b) => {
+    const timeA = a.ts ? new Date(a.ts) : (a._id ? new Date(a._id) : new Date())
+    const timeB = b.ts ? new Date(b.ts) : (b._id ? new Date(b._id) : new Date())
+    return timeA - timeB
+  })
+  
+  // 按索引均匀采样，保证时间分布均匀
+  const step = sortedMessages.length / maxMessages
+  const sampled = []
+  
+  for (let i = 0; i < maxMessages; i++) {
+    const index = Math.floor(i * step)
+    if (index < sortedMessages.length) {
+      sampled.push(sortedMessages[index])
+    }
+  }
+  
+  // 确保包含第一条和最后一条消息（保持时间完整性）
+  if (sampled.length > 0) {
+    const firstMsg = sortedMessages[0]
+    const lastMsg = sortedMessages[sortedMessages.length - 1]
+    
+    // 如果第一条消息不在采样中，替换第一条
+    if (sampled[0] !== firstMsg) {
+      sampled[0] = firstMsg
+    }
+    
+    // 如果最后一条消息不在采样中，替换最后一条
+    if (sampled[sampled.length - 1] !== lastMsg) {
+      sampled[sampled.length - 1] = lastMsg
+    }
+  }
+  
+  return sampled
+}
+
+/**
+ * 格式化消息为文本（优化版本，减少 token 消耗）
  * @param {Array} messages 消息列表
  * @returns {string} 格式化后的文本
  */
@@ -188,31 +237,53 @@ function formatMessagesForSummary(messages) {
   }
   
   let formatted = ''
+  let lastHour = -1  // 用于简化时间显示，只在小时变化时显示
+  
   for (const msg of messages) {
     const uid = typeof msg.uid === 'string' ? parseInt(msg.uid, 10) : msg.uid
-    const userName = msg.n || msg.name || `用户${uid}`
     const rawContent = msg.d || ''
     
     // 跳过空消息
     if (!rawContent.trim()) continue
     
+    // 检查是否只包含媒体标记（纯图片/语音/视频消息）
+    const mediaOnlyPattern = /^(\[图片\]|\[语音\]|\[视频\]|\[回复\])+$/
+    const cleanedForCheck = rawContent
+      .replace(/\[CQ:image[^\]]*\]/g, '[图片]')
+      .replace(/\[CQ:record[^\]]*\]/g, '[语音]')
+      .replace(/\[CQ:video[^\]]*\]/g, '[视频]')
+      .replace(/\[CQ:reply[^\]]*\]/g, '[回复]')
+      .replace(/\[CQ:at[^\]]*\]/g, '')
+      .trim()
+    
+    // 如果清理后只剩媒体标记或为空，跳过
+    if (!cleanedForCheck || mediaOnlyPattern.test(cleanedForCheck)) continue
+    
     // 清理消息内容
     const content = cleanMessageContent(rawContent)
     
-    // 如果清理后只剩媒体标记，跳过
+    // 再次检查清理后的内容
     if (!content || content === '[图片]' || content === '[语音]' || content === '[视频]') continue
     
-    // 获取消息时间
-    const msgTime = msg.ts ? new Date(msg.ts) : (msg._id ? new Date(msg._id) : new Date())
-    const timeStr = msgTime.toLocaleString('zh-CN', { 
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
+    // 简化用户标识：使用 uid 后5位
+    const uidStr = String(uid)
+    const shortUid = uidStr.length > 5 ? uidStr.slice(-5) : uidStr.padStart(5, '0')
     
-    formatted += `[${timeStr}] ${userName}: ${content}\n`
+    // 简化时间：只在小时变化时显示，格式为 HH:mm
+    const msgTime = msg.ts ? new Date(msg.ts) : (msg._id ? new Date(msg._id) : new Date())
+    const currentHour = msgTime.getHours()
+    
+    let timePrefix = ''
+    if (currentHour !== lastHour) {
+      // 只在小时变化时显示时间
+      const hour = String(currentHour).padStart(2, '0')
+      const minute = String(msgTime.getMinutes()).padStart(2, '0')
+      timePrefix = `${hour}:${minute} `
+      lastHour = currentHour
+    }
+    
+    // 简化格式：时间(可选) + 用户ID后5位 + 内容
+    formatted += `${timePrefix}${shortUid}: ${content}\n`
   }
   
   return formatted.trim()
@@ -401,24 +472,34 @@ async function main() {
       process.exit(0)
     }
     
-    // 6. 格式化消息
-    console.log('📝 正在格式化消息...')
-    const messagesText = formatMessagesForSummary(messages)
+    // 6. 智能采样消息（如果消息太多）
+    // 估算：平均每条消息约 40 字符，80000 字符约可容纳 2000 条消息
+    // 但为了安全，设置为 1500 条
+    const maxMessages = 1500
+    let finalMessages = messages
+    if (messages.length > maxMessages) {
+      console.log(`⚠️  消息数量过多 (${messages.length} 条)，进行智能采样到 ${maxMessages} 条...`)
+      finalMessages = sampleMessagesByTime(messages, maxMessages)
+      console.log(`✅ 采样完成，保留 ${finalMessages.length} 条消息（按时间均匀分布）`)
+    }
     
-    // 如果消息太长，截取（DeepSeek 上下文窗口 128K tokens）
-    // 中文文本约 1.5 tokens/字符，考虑系统提示词和输出，保守设置为 80000 字符
+    // 7. 格式化消息
+    console.log('📝 正在格式化消息...')
+    let messagesText = formatMessagesForSummary(finalMessages)
+    
+    // 如果格式化后还是太长，再次截取（作为最后的安全措施）
     const maxLength = 80000
     let finalMessagesText = messagesText
     if (messagesText.length > maxLength) {
-      console.log(`⚠️  消息内容过长 (${messagesText.length} 字符)，截取前 ${maxLength} 字符`)
+      console.log(`⚠️  格式化后内容仍然过长 (${messagesText.length} 字符)，截取前 ${maxLength} 字符`)
       finalMessagesText = messagesText.substring(0, maxLength) + '\n... (内容已截断)'
     }
     
-    // 7. 调用 DeepSeek API 总结
+    // 8. 调用 DeepSeek API 总结
     console.log('🤖 正在调用 DeepSeek API 总结知识库...')
     const summary = await callDeepSeekForSummary(finalMessagesText)
     
-    // 8. 输出结果
+    // 9. 输出结果
     console.log('')
     console.log('='.repeat(60))
     console.log('✅ 知识库生成完成')
@@ -435,7 +516,7 @@ async function main() {
     console.log('')
     console.log('='.repeat(60))
     
-    // 9. 询问是否保存到知识库
+    // 10. 询问是否保存到知识库
     const save = await question(rl, '是否保存到知识库? (y/n): ')
     if (save.toLowerCase() === 'y' || save.toLowerCase() === 'yes') {
       if (summary.title && summary.content) {
