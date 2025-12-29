@@ -51,7 +51,10 @@ async function addKnowledge(entry) {
       category: entry.category || '通用',
       createdBy: entry.createdBy || null,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      // time字段：用于知识的时间信息，可在管理页面修改，用于搜索排序时的时间加权
+      // 如果未提供，默认使用当前时间
+      time: entry.time ? new Date(entry.time) : new Date()
     }
     
     await collection.insertOne(newEntry)
@@ -100,6 +103,11 @@ async function updateKnowledge(id, entry) {
       keywords: entry.keywords || [],
       category: entry.category || '通用',
       updatedAt: new Date()
+    }
+    
+    // 如果提供了time字段，则更新它
+    if (entry.time !== undefined) {
+      updateData.time = entry.time ? new Date(entry.time) : new Date()
     }
     
     const result = await collection.updateOne(
@@ -312,6 +320,21 @@ async function searchKnowledge(query, limit = 5) {
         if (keyword.length >= 2 && queryLower.includes(keyword)) {
           score += 30
         }
+      }
+      
+      // 时间加权：时间越近，分数越高
+      // 使用time字段，如果没有则使用updatedAt，再没有则使用createdAt
+      // 公式：30 - floor(时间差值/20)，每20天降1分，最高30分
+      const knowledgeTime = entry.time || entry.updatedAt || entry.createdAt
+      if (knowledgeTime) {
+        const now = new Date()
+        const timeDiff = now - new Date(knowledgeTime)  // 毫秒差
+        const daysDiff = timeDiff / (1000 * 60 * 60 * 24)  // 天数差
+        
+        // 时间加权：30 - floor(时间差值/20)
+        // 这样每20天降1分，最高30分，最低0分（600天以上）
+        const timeBonus = Math.max(0, 30 - Math.floor(daysDiff / 20))
+        score += timeBonus
       }
       
       return { entry, score }

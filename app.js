@@ -553,7 +553,7 @@ app.post('/api/knowledge/add', async (req, res) => {
   }
   
   try {
-    const { title, content, keywords, category } = req.body
+    const { title, content, keywords, category, time } = req.body
     
     if (!title || !content) {
       return res.json({
@@ -566,7 +566,9 @@ app.post('/api/knowledge/add', async (req, res) => {
       title,
       content,
       keywords: keywords || [],
-      category: category || '通用'
+      category: category || '通用',
+      // 如果提供了 time，使用它；否则不传，让 addKnowledge 使用默认的当前时间
+      time: time || undefined
     })
     
     if (success) {
@@ -597,7 +599,7 @@ app.post('/api/knowledge/update', async (req, res) => {
   }
   
   try {
-    const { id, title, content, keywords, category } = req.body
+    const { id, title, content, keywords, category, time } = req.body
     
     if (!id || !title || !content) {
       return res.json({
@@ -610,7 +612,8 @@ app.post('/api/knowledge/update', async (req, res) => {
       title,
       content,
       keywords: keywords || [],
-      category: category || '通用'
+      category: category || '通用',
+      time: time || undefined
     })
     
     if (success) {

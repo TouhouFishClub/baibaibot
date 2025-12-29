@@ -381,6 +381,12 @@
                 <input type="text" id="category" value="通用" />
               </div>
               
+              <div class="form-group">
+                <label for="time">时间 (用于搜索排序，格式：YYYY-MM-DD)</label>
+                <input type="date" id="time" />
+                <small style="color: #666; font-size: 12px;">时间越近的知识在搜索时排序越靠前。留空则使用当前时间。</small>
+              </div>
+              
               <div class="form-actions">
                 <button type="submit" class="btn btn-primary">💾 保存</button>
                 <button type="button" class="btn btn-secondary" onclick="cancelEdit()">❌ 取消</button>
@@ -611,6 +617,19 @@
           document.getElementById('content').value = fullItem.content || '';
           document.getElementById('keywords').value = (fullItem.keywords || []).join(', ');
           document.getElementById('category').value = fullItem.category || '通用';
+          // 设置时间字段，如果有time字段则使用，否则使用updatedAt或createdAt
+          if (fullItem.time) {
+            const timeDate = new Date(fullItem.time);
+            document.getElementById('time').value = timeDate.toISOString().split('T')[0];
+          } else if (fullItem.updatedAt) {
+            const timeDate = new Date(fullItem.updatedAt);
+            document.getElementById('time').value = timeDate.toISOString().split('T')[0];
+          } else if (fullItem.createdAt) {
+            const timeDate = new Date(fullItem.createdAt);
+            document.getElementById('time').value = timeDate.toISOString().split('T')[0];
+          } else {
+            document.getElementById('time').value = '';
+          }
           updatePreview();
         } else {
           showMessage(data.message || '加载失败', 'error');
@@ -632,6 +651,7 @@
       document.getElementById('knowledgeForm').reset();
       document.getElementById('knowledgeId').value = '';
       document.getElementById('category').value = '通用';
+      document.getElementById('time').value = '';  // 添加时留空，使用当前时间
       document.getElementById('formContainer').style.display = 'block';
       switchTab('edit');
       document.getElementById('previewContent').innerHTML = '';
@@ -649,6 +669,7 @@
       const content = document.getElementById('content').value.trim();
       const keywordsStr = document.getElementById('keywords').value.trim();
       const category = document.getElementById('category').value.trim() || '通用';
+      const timeStr = document.getElementById('time').value.trim();
       
       if (!title || !content) {
         showMessage('标题和内容不能为空', 'error');
@@ -665,6 +686,11 @@
         keywords,
         category
       };
+      
+      // 如果提供了时间，则添加到数据中
+      if (timeStr) {
+        data.time = timeStr;
+      }
       
       if (id) {
         data.id = id;
