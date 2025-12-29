@@ -252,50 +252,65 @@ async function searchKnowledge(query, limit = 5) {
       const contentLower = entry.content.toLowerCase()
       const keywordsLower = (entry.keywords || []).map(k => k.toLowerCase())
       
-      // 标题完全匹配 - 最高分
-      if (titleLower === queryLower) {
-        score += 100
-      }
-      // 标题包含查询
-      else if (titleLower.includes(queryLower)) {
-        score += 50
-      }
-      // 查询包含标题
-      else if (queryLower.includes(titleLower)) {
-        score += 40
-      }
-      
-      // 关键词匹配（使用原始关键词）
+      // 关键词匹配（使用原始关键词）- 最高优先级，因为关键词是专门设置的
       for (const keyword of keywordsLower) {
         if (keyword === queryLower) {
-          score += 60
+          score += 80  // 关键词完全匹配 - 最高分
         } else if (queryLower.includes(keyword) || keyword.includes(queryLower)) {
-          score += 30
+          score += 35  // 关键词部分匹配
         }
       }
       
-      // 分词匹配 - 查询分词与标题/关键词/内容匹配
+      // 正文匹配 - 正文包含主要内容，给予高权重
+      if (contentLower.length > 0) {
+        // 性能优化：对于超长正文（>1000字符），优先搜索前1000字符
+        // 因为正文开头通常包含最重要的信息，这样可以平衡性能和准确性
+        const contentSearchLength = Math.min(1000, contentLower.length)
+        const contentToSearch = contentLower.substring(0, contentSearchLength)
+        
+        // 正文包含完整查询
+        if (contentToSearch.includes(queryLower)) {
+          score += 60
+        }
+        
+        // 正文分词匹配 - 提高权重，因为正文是主要内容
+        for (const token of queryTokens) {
+          if (token.length < 2) continue
+          if (contentToSearch.includes(token)) {
+            score += 25  // 大幅提高正文分词权重
+          }
+        }
+      }
+      
+      // 标题匹配 - 降低权重，标题只是辅助信息
+      if (titleLower === queryLower) {
+        score += 40  // 标题完全匹配
+      } else if (titleLower.includes(queryLower)) {
+        score += 25  // 标题包含查询
+      } else if (queryLower.includes(titleLower)) {
+        score += 20  // 查询包含标题
+      }
+      
+      // 标题分词匹配
       for (const token of queryTokens) {
         if (token.length < 2) continue
-        
-        // 标题包含分词
         if (titleLower.includes(token)) {
-          score += 15
+          score += 8  // 降低标题分词权重
         }
-        // 关键词包含分词
+      }
+      
+      // 关键词分词匹配 - 保持中等权重
+      for (const token of queryTokens) {
+        if (token.length < 2) continue
         if (keywordsLower.some(k => k.includes(token) || token.includes(k))) {
-          score += 12
-        }
-        // 内容包含分词
-        if (contentLower.includes(token)) {
-          score += 5
+          score += 15
         }
       }
       
       // 反向匹配：知识库关键词在查询中
       for (const keyword of keywordsLower) {
         if (keyword.length >= 2 && queryLower.includes(keyword)) {
-          score += 25
+          score += 30
         }
       }
       

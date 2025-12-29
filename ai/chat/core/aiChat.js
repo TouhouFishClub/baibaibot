@@ -411,7 +411,7 @@ async function generateProactiveReply(groupId, port) {
       .join(' ')
       .replace(/[?？!！。，,.;；:：]/g, ' ')
       .trim()
-    const relevantKnowledge = await knowledge.getRelevantKnowledgePrompt(recentContent, 2)
+    const relevantKnowledge = await knowledge.getRelevantKnowledgePrompt(recentContent, 3)
     
     // 构建增强的 AI Persona（包含知识库内容）
     const enhancedPersona = AI_PERSONA + relevantKnowledge
@@ -630,7 +630,7 @@ async function generateMentionReply(userMessage, groupId, port, userName = '用�
       .trim()
     
     // 查询相关知识库内容
-    const relevantKnowledge = await knowledge.getRelevantKnowledgePrompt(searchText, 3)
+    const relevantKnowledge = await knowledge.getRelevantKnowledgePrompt(searchText, 5)
     
     // 构建增强的 AI Persona（包含知识库内容）
     const enhancedPersona = AI_PERSONA + relevantKnowledge
