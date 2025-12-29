@@ -345,18 +345,24 @@ async function searchKnowledge(query, limit = 5) {
       .filter(item => item.score > 0)
       .sort((a, b) => b.score - a.score)
     
-    // 调试日志：显示匹配结果
+    // 获取实际返回的结果（前limit条）
+    const resultEntries = filtered.slice(0, limit)
+    
+    // 调试日志：显示匹配结果（最多显示10条，避免日志过长）
     if (filtered.length > 0) {
       console.log(`[知识库] 找到 ${filtered.length} 条匹配:`)
-      filtered.slice(0, 3).forEach(item => {
+      const displayLimit = Math.min(10, resultEntries.length)
+      resultEntries.slice(0, displayLimit).forEach(item => {
         console.log(`  - "${item.entry.title}" (分数: ${item.score})`)
       })
+      if (resultEntries.length > 10) {
+        console.log(`  ... 还有 ${resultEntries.length - 10} 条未显示`)
+      }
     } else {
       console.log(`[知识库] 未找到匹配的知识`)
     }
     
-    return filtered
-      .slice(0, limit)
+    return resultEntries
       .map(item => ({
         ...item.entry,
         id: item.entry._id.toString()
