@@ -30,6 +30,11 @@ const AI_ENABLED_GROUPS = new Set([
   950540339, // 测试群
 ])
 
+// Admin 用户列表（这些用户在所有群都可以使用 AI 增强功能）
+const ADMIN_USERS = new Set([
+  799018865, // admin 用户
+])
+
 // 机器人 QQ 号列表
 const BOT_IDS = new Set([
   2854196310, 981069482, 3291864216, 1840239061, 2771362647, 
@@ -110,9 +115,15 @@ function getMessageCount(groupId) {
 /**
  * 检查群是否启用 AI 对话
  * @param {number} groupId 群ID
+ * @param {number} userId 用户ID（可选），如果是 admin 用户，即使群不在白名单中也可以使用
  * @returns {boolean}
  */
-function isAIEnabled(groupId) {
+function isAIEnabled(groupId, userId = null) {
+  // 如果是 admin 用户，在所有群都可以使用
+  if (userId && ADMIN_USERS.has(userId)) {
+    return true
+  }
+  // 否则检查群是否在白名单中
   return AI_ENABLED_GROUPS.has(groupId)
 }
 

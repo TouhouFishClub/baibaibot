@@ -182,7 +182,8 @@ const sendMessage = (context, ws, port, oneBotVersion) => {
   }
   
   // 检查是否触发了 AI 对话（以"百百"开头或 @ 了机器人）
-  if (isAIEnabled(group_id) && checkMentionTrigger(raw_message)) {
+  // 对于被动回复，如果是 admin 用户，即使群不在白名单中也可以使用
+  if (isAIEnabled(group_id, user_id) && checkMentionTrigger(raw_message)) {
     console.log(`[AI Chat] 群 ${group_id} 检测到呼叫百百，生成 AI 回复...`)
     // 被动回复触发时，立即重置消息计数并清空累计次数，避免主动回复也被触发
     resetMessageCount(group_id)
