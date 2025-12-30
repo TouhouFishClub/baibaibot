@@ -1163,7 +1163,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(content.startsWith('百百 ')){
 
     content=content.trim();
-    if(groupid==205700800){
+    if(groupid==205700800 || from == 799018865){
       getBaibaiReplay(content,groupid,from,callback);
       return;
     }
