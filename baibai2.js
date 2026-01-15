@@ -1128,7 +1128,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   if(content.trim().toLocaleLowerCase().startsWith('d')){
-    rd(content, from, callback)
+    rd(content.trim().toLocaleLowerCase(),from, callback)
     return;
   }
   
@@ -2020,7 +2020,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
 
-  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="'"||first=="，"||first=="'"){
+  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="'"||first=="，"||first=="'"||first=="‘"){
 
     var c1 = content.substring(1);
     if(c1==""){
