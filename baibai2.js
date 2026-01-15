@@ -1127,6 +1127,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     handleAnnualReportCommand(groupid, from, port, callback, groupName, true);
     return;
   }
+  if(content.trim().toLocaleLowerCase().startsWith('d')){
+    rd(content, from, callback)
+    return;
+  }
   
   // 群友年度报告功能：@xxx 2025年度报告 或 2025年度报告 @xxx
   if(content.includes('[CQ:at') && content.includes('2025年度报告')) {
