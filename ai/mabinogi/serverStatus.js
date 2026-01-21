@@ -22,6 +22,7 @@ const SERVERS = [
     name: "伊鲁夏",
     ipPrefix: "211.147.76",
     loginServer: { name: "登录服务器", ip: "211.147.76.44", port: 11000 },
+    chatServer: { name: "聊天服务器", ip: "211.147.76.47", port: 11000 },
     channels: [
       { id: 1, name: "频道1", ip: "211.147.76.31", port: 11020 },
       { id: 2, name: "频道2", ip: "211.147.76.32", port: 11020 },
@@ -39,6 +40,8 @@ const SERVERS = [
     id: "yate",
     name: "亚特",
     ipPrefix: "61.164.61",
+    loginServer: { name: "登录服务器", ip: "61.164.61.6", port: 11000 },
+    chatServer: { name: "聊天服务器", ip: "61.164.61.2", port: 11000 },
     channels: [
       { id: 11, name: "频道1", ip: "61.164.61.10", port: 11020 },
       { id: 12, name: "频道2", ip: "61.164.61.11", port: 11020 },
@@ -96,6 +99,7 @@ const testAllServers = async () => {
       id: server.id,
       name: server.name,
       loginServer: null,
+      chatServer: null,
       channels: []
     };
     
@@ -105,6 +109,15 @@ const testAllServers = async () => {
       serverResult.loginServer = {
         ...server.loginServer,
         ...loginResult
+      };
+    }
+    
+    // 测试聊天服务器（如果存在）
+    if (server.chatServer) {
+      const chatResult = await testConnection(server.chatServer.ip, server.chatServer.port);
+      serverResult.chatServer = {
+        ...server.chatServer,
+        ...chatResult
       };
     }
     
@@ -366,6 +379,23 @@ const renderStatusImage = async (results, callback) => {
         `;
       }
       
+      // 聊天服务器状态
+      let chatServerHtml = '';
+      if (server.chatServer) {
+        const chatStyle = getStatusStyle(server.chatServer.status, server.chatServer.latency);
+        const chatLatency = server.chatServer.latency >= 0 ? `${server.chatServer.latency}ms` : '--';
+        chatServerHtml = `
+          <div class="login-server" style="background: ${chatStyle.bg}; border: 1px solid ${chatStyle.color}33;">
+            <span class="login-label">💬 ${server.chatServer.name}</span>
+            <span class="login-status">
+              <span style="color: ${chatStyle.color};">${chatStyle.icon}</span>
+              <span style="color: ${chatStyle.color};">${chatLatency}</span>
+              <span style="color: ${chatStyle.color}; opacity: 0.8;">${chatStyle.text}</span>
+            </span>
+          </div>
+        `;
+      }
+      
       return `
         <div class="server-section">
           <div class="server-header">
@@ -373,6 +403,7 @@ const renderStatusImage = async (results, callback) => {
             <span class="server-badge ${badgeClass}">${badgeText}</span>
           </div>
           ${loginServerHtml}
+          ${chatServerHtml}
           <div class="channels-grid">
             ${server.channels.map(channel => {
               const style = getStatusStyle(channel.status, channel.latency);
