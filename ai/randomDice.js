@@ -2,7 +2,7 @@ const MAX_DICE_SURFACE = 10000
 const MAX_DICE_NUMBER = 20
 module.exports = function(content, qqid, callback){
   const errorRand = () => {
-    callback('输入错误')
+    //callback('输入错误')
   }
   if(!/^\d+(x\d+){0,1}$/.test(content)){
     errorRand()

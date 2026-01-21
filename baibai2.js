@@ -1128,6 +1128,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     handleAnnualReportCommand(groupid, from, port, callback, groupName, true);
     return;
   }
+  if(content.trim().toLocaleLowerCase().startsWith('d')){
+    rd(content.trim().toLocaleLowerCase(),from, callback)
+    return;
+  }
   
   // 群友年度报告功能：@xxx 2025年度报告 或 2025年度报告 @xxx
   if(content.includes('[CQ:at') && content.includes('2025年度报告')) {
@@ -2021,7 +2025,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
 
 
-  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="'"||first=="，"||first=="'"){
+  if(first=='`'||first=='·'||first=='ˋ'||first=="'"||first=="'"||first=="，"||first=="'"||first=="‘"){
 
     var c1 = content.substring(1);
     if(c1==""){
