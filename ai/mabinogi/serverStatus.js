@@ -579,7 +579,7 @@ const renderStatusImage = async (results, callback) => {
   }
 };
 
-// 渲染多节点状态图片
+// 渲染多节点状态图片（合并显示模式）
 const renderMultiNodeStatusImage = async (nodeResults, callback) => {
   const output = path.join(IMAGE_DATA, 'mabi_other', 'server_status.png');
   const updateTime = new Date().toLocaleString('zh-CN', { 
@@ -601,73 +601,60 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
     return;
   }
 
-  // 生成节点选项卡和内容
-  const generateNodeContent = (node, index) => {
-    if (!node.success || !node.data) return '';
+  // 整合数据：按服务器和频道聚合所有节点的数据
+  const mergedData = {};
+  
+  // 使用第一个成功节点的数据作为基础结构
+  const baseData = successNodes[0].data;
+  baseData.forEach(server => {
+    mergedData[server.id] = {
+      id: server.id,
+      name: server.name,
+      loginServer: {},  // nodeId -> loginData
+      channels: {}      // channelId -> { nodeId -> channelData }
+    };
     
-    return node.data.map(server => {
-      const isLoginTimeout = server.loginServer && server.loginServer.status === 'timeout';
+    // 初始化频道结构
+    server.channels.forEach(channel => {
+      mergedData[server.id].channels[channel.id] = {
+        id: channel.id,
+        name: channel.name,
+        nodes: {}
+      };
+    });
+  });
+  
+  // 填充所有节点的数据
+  successNodes.forEach(node => {
+    if (!node.data) return;
+    node.data.forEach(server => {
+      if (!mergedData[server.id]) return;
       
-      const onlineCount = server.channels.filter(c => c.status === 'online').length;
-      const totalCount = server.channels.length;
-      let badgeClass = 'badge-online';
-      let badgeText = '全部在线';
-      
-      if (isLoginTimeout) {
-        badgeClass = 'badge-maintenance';
-        badgeText = '维护中';
-      } else if (onlineCount === 0) {
-        badgeClass = 'badge-offline';
-        badgeText = '全部离线';
-      } else if (onlineCount < totalCount) {
-        badgeClass = 'badge-partial';
-        badgeText = `${onlineCount}/${totalCount} 在线`;
-      }
-      
-      let loginServerHtml = '';
+      // 登录服务器数据
       if (server.loginServer) {
-        const loginStyle = getStatusStyle(server.loginServer.status, server.loginServer.latency);
-        const loginLatency = server.loginServer.latency >= 0 ? `${server.loginServer.latency}ms` : '--';
-        loginServerHtml = `
-          <div class="login-server" style="background: ${loginStyle.bg}; border: 1px solid ${loginStyle.color}33;">
-            <span class="login-label">🔐 ${server.loginServer.name}</span>
-            <span class="login-status">
-              <span style="color: ${loginStyle.color};">${loginStyle.icon}</span>
-              <span style="color: ${loginStyle.color};">${loginLatency}</span>
-              <span style="color: ${loginStyle.color}; opacity: 0.8;">${loginStyle.text}</span>
-            </span>
-          </div>
-        `;
+        mergedData[server.id].loginServer[node.id] = {
+          nodeName: node.name,
+          ...server.loginServer
+        };
       }
       
-      return `
-        <div class="server-section">
-          <div class="server-header">
-            <span class="server-name">${server.name}</span>
-            <span class="server-badge ${badgeClass}">${badgeText}</span>
-          </div>
-          ${loginServerHtml}
-          <div class="channels-grid">
-            ${server.channels.map(channel => {
-              const channelStatus = isLoginTimeout ? 'maintenance' : channel.status;
-              const channelLatency = isLoginTimeout ? -1 : channel.latency;
-              const style = getStatusStyle(channelStatus, channelLatency);
-              const latencyText = channelLatency >= 0 ? `${channelLatency}ms` : '--';
-              return `
-                <div class="channel-card" style="background: ${style.bg}; border: 1px solid ${style.color}33;">
-                  <div class="channel-name">${channel.name}</div>
-                  <div class="channel-status">
-                    <span class="status-icon" style="color: ${style.color};">${style.icon}</span>
-                    <span class="channel-latency" style="color: ${style.color};">${latencyText}</span>
-                  </div>
-                  <div class="channel-text" style="color: ${style.color};">${style.text}</div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      `;
-    }).join('');
+      // 频道数据
+      server.channels.forEach(channel => {
+        if (mergedData[server.id].channels[channel.id]) {
+          mergedData[server.id].channels[channel.id].nodes[node.id] = {
+            nodeName: node.name,
+            status: channel.status,
+            latency: channel.latency
+          };
+        }
+      });
+    });
+  });
+
+  // 判断服务器是否处于维护状态（任意节点的登录服务器超时即为维护）
+  const isServerMaintenance = (serverId) => {
+    const loginData = mergedData[serverId].loginServer;
+    return Object.values(loginData).some(login => login.status === 'timeout');
   };
 
   const html = `
@@ -690,7 +677,7 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
       box-sizing: border-box;
     }
     body {
-      width: ${successNodes.length > 1 ? 580 * successNodes.length + 40 : 520}px;
+      width: 580px;
       font-family: 'Microsoft YaHei', sans-serif;
     }
     .container {
@@ -718,45 +705,29 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
       color: rgba(255, 255, 255, 0.5);
       font-family: 'Corp_Bold';
     }
-    .nodes-container {
+    .nodes-legend {
       display: flex;
-      gap: 20px;
-    }
-    .node-column {
-      flex: 1;
-      min-width: 0;
-    }
-    .node-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      justify-content: center;
+      gap: 16px;
       margin-bottom: 16px;
-      padding: 10px 14px;
+      padding: 8px 12px;
       background: rgba(255, 255, 255, 0.05);
       border-radius: 8px;
-      border-left: 3px solid #00d4ff;
     }
-    .node-icon {
-      font-size: 16px;
+    .node-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
     }
-    .node-name {
-      font-size: 16px;
-      font-weight: bold;
-      color: #fff;
-    }
-    .node-status {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      background: rgba(0, 255, 136, 0.2);
-      color: #00ff88;
-    }
-    .node-status.error {
-      background: rgba(255, 68, 68, 0.2);
-      color: #FF4444;
+    .node-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
     }
     .server-section {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .server-section:last-child {
       margin-bottom: 0;
@@ -767,7 +738,7 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
       margin-bottom: 10px;
     }
     .server-name {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
       color: #fff;
       margin-right: 12px;
@@ -800,57 +771,81 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
     }
     .login-server {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 8px 14px;
+      padding: 10px 14px;
       border-radius: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .login-label {
       font-size: 13px;
       color: rgba(255, 255, 255, 0.9);
       font-weight: 500;
+      margin-right: 16px;
+      min-width: 80px;
     }
-    .login-status {
+    .login-nodes {
       display: flex;
+      gap: 16px;
+      flex: 1;
+    }
+    .login-node-item {
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 6px;
-      font-size: 12px;
+      gap: 2px;
+    }
+    .login-node-latency {
+      font-size: 13px;
       font-family: 'Corp_Bold';
+    }
+    .login-node-name {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .login-node-status {
+      font-size: 9px;
     }
     .channels-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
+      gap: 8px;
     }
     .channel-card {
-      padding: 8px 6px;
-      border-radius: 6px;
+      padding: 10px 6px 8px;
+      border-radius: 8px;
       text-align: center;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .channel-name {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 3px;
-      font-weight: 500;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.95);
+      margin-bottom: 8px;
+      font-weight: 600;
     }
-    .channel-status {
+    .channel-nodes {
       display: flex;
-      align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 12px;
     }
-    .status-icon {
-      font-size: 9px;
+    .channel-node-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
     }
-    .channel-latency {
-      font-size: 11px;
+    .channel-node-latency {
+      font-size: 12px;
       font-family: 'Corp_Bold';
     }
-    .channel-text {
+    .channel-node-name {
       font-size: 9px;
-      margin-top: 2px;
-      opacity: 0.8;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .channel-node-status {
+      font-size: 9px;
     }
     .footer {
       margin-top: 16px;
@@ -889,18 +884,104 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
       <div class="subtitle">MABINOGI SERVER STATUS</div>
     </div>
     
-    <div class="nodes-container">
-      ${successNodes.map((node, index) => `
-        <div class="node-column">
-          <div class="node-header">
-            <span class="node-icon">📡</span>
-            <span class="node-name">${node.name}</span>
-            <span class="node-status">在线</span>
+    <div class="nodes-legend">
+      ${successNodes.map((node, index) => {
+        const colors = ['#00d4ff', '#00ff88', '#ff6b9d', '#ffd700', '#ff8c00'];
+        return `
+          <div class="node-legend-item">
+            <div class="node-dot" style="background: ${colors[index % colors.length]};"></div>
+            <span>${node.name}</span>
           </div>
-          ${generateNodeContent(node, index)}
-        </div>
-      `).join('')}
+        `;
+      }).join('')}
     </div>
+    
+    ${Object.values(mergedData).map(server => {
+      const isMaintenance = isServerMaintenance(server.id);
+      const loginNodes = Object.values(server.loginServer);
+      
+      // 计算在线频道数（基于第一个节点）
+      const channels = Object.values(server.channels);
+      const firstNodeId = successNodes[0].id;
+      const onlineCount = channels.filter(ch => 
+        ch.nodes[firstNodeId] && ch.nodes[firstNodeId].status === 'online'
+      ).length;
+      const totalCount = channels.length;
+      
+      let badgeClass = 'badge-online';
+      let badgeText = '全部在线';
+      if (isMaintenance) {
+        badgeClass = 'badge-maintenance';
+        badgeText = '维护中';
+      } else if (onlineCount === 0) {
+        badgeClass = 'badge-offline';
+        badgeText = '全部离线';
+      } else if (onlineCount < totalCount) {
+        badgeClass = 'badge-partial';
+        badgeText = onlineCount + '/' + totalCount + ' 在线';
+      }
+      
+      return `
+        <div class="server-section">
+          <div class="server-header">
+            <span class="server-name">${server.name}</span>
+            <span class="server-badge ${badgeClass}">${badgeText}</span>
+          </div>
+          
+          ${loginNodes.length > 0 ? `
+            <div class="login-server">
+              <span class="login-label">🔐 登录服务器</span>
+              <div class="login-nodes">
+                ${successNodes.map((node, index) => {
+                  const colors = ['#00d4ff', '#00ff88', '#ff6b9d', '#ffd700', '#ff8c00'];
+                  const loginData = server.loginServer[node.id];
+                  if (!loginData) return '';
+                  const style = getStatusStyle(loginData.status, loginData.latency);
+                  const latencyText = loginData.latency >= 0 ? loginData.latency + 'ms' : '--';
+                  return `
+                    <div class="login-node-item">
+                      <span class="login-node-latency" style="color: ${style.color};">${latencyText}</span>
+                      <span class="login-node-name" style="color: ${colors[index % colors.length]};">${node.name}</span>
+                      <span class="login-node-status" style="color: ${style.color};">${style.text}</span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          ` : ''}
+          
+          <div class="channels-grid">
+            ${channels.map(channel => {
+              return `
+                <div class="channel-card">
+                  <div class="channel-name">${channel.name}</div>
+                  <div class="channel-nodes">
+                    ${successNodes.map((node, index) => {
+                      const colors = ['#00d4ff', '#00ff88', '#ff6b9d', '#ffd700', '#ff8c00'];
+                      const nodeData = channel.nodes[node.id];
+                      if (!nodeData) return '';
+                      
+                      const channelStatus = isMaintenance ? 'maintenance' : nodeData.status;
+                      const channelLatency = isMaintenance ? -1 : nodeData.latency;
+                      const style = getStatusStyle(channelStatus, channelLatency);
+                      const latencyText = channelLatency >= 0 ? channelLatency + 'ms' : '--';
+                      
+                      return `
+                        <div class="channel-node-item">
+                          <span class="channel-node-latency" style="color: ${style.color};">${latencyText}</span>
+                          <span class="channel-node-name" style="color: ${colors[index % colors.length]};">${node.name}</span>
+                          <span class="channel-node-status" style="color: ${style.color};">${style.text}</span>
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }).join('')}
     
     <div class="footer">
       <div class="update-time">更新时间: ${updateTime}</div>
