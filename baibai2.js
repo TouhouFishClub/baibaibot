@@ -91,6 +91,7 @@ const anchan = require('./ai/arknights/arkNightsChallenge')
 const anp = require('./ai/arknights/arkNightsCharacterCompare')
 const { arkCalendar } = require('./ai/arknights/arkNightsCalendar')
 const { mabiCalendar } = require('./ai/mabinogi/mabiCalendar')
+const { serverStatus } = require('./ai/mabinogi/serverStatus')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 const {runsetu} = require('./ai/games/card/setu');
@@ -1396,6 +1397,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(content == '洛奇火山天气') {
     mabiWeather(content, callback)
+    return
+  }
+  if(content == '服务器状态' || content == '洛奇服务器' || content == '频道状态') {
+    serverStatus(content, from, groupid, callback)
     return
   }
   if(content == '猫服号角') {
