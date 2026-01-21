@@ -796,13 +796,13 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
       align-items: center;
       gap: 2px;
     }
+    .login-node-name {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.9);
+    }
     .login-node-latency {
       font-size: 13px;
       font-family: 'Corp_Bold';
-    }
-    .login-node-name {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.5);
     }
     .login-node-status {
       font-size: 9px;
@@ -836,13 +836,13 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
       align-items: center;
       gap: 1px;
     }
+    .channel-node-name {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.9);
+    }
     .channel-node-latency {
       font-size: 12px;
       font-family: 'Corp_Bold';
-    }
-    .channel-node-name {
-      font-size: 9px;
-      color: rgba(255, 255, 255, 0.5);
     }
     .channel-node-status {
       font-size: 9px;
@@ -933,15 +933,14 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
               <span class="login-label">🔐 登录服务器</span>
               <div class="login-nodes">
                 ${successNodes.map((node, index) => {
-                  const colors = ['#00d4ff', '#00ff88', '#ff6b9d', '#ffd700', '#ff8c00'];
                   const loginData = server.loginServer[node.id];
                   if (!loginData) return '';
                   const style = getStatusStyle(loginData.status, loginData.latency);
                   const latencyText = loginData.latency >= 0 ? loginData.latency + 'ms' : '--';
                   return `
                     <div class="login-node-item">
+                      <span class="login-node-name">${node.name}</span>
                       <span class="login-node-latency" style="color: ${style.color};">${latencyText}</span>
-                      <span class="login-node-name" style="color: ${colors[index % colors.length]};">${node.name}</span>
                       <span class="login-node-status" style="color: ${style.color};">${style.text}</span>
                     </div>
                   `;
@@ -957,7 +956,6 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
                   <div class="channel-name">${channel.name}</div>
                   <div class="channel-nodes">
                     ${successNodes.map((node, index) => {
-                      const colors = ['#00d4ff', '#00ff88', '#ff6b9d', '#ffd700', '#ff8c00'];
                       const nodeData = channel.nodes[node.id];
                       if (!nodeData) return '';
                       
@@ -968,8 +966,8 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
                       
                       return `
                         <div class="channel-node-item">
+                          <span class="channel-node-name">${node.name}</span>
                           <span class="channel-node-latency" style="color: ${style.color};">${latencyText}</span>
-                          <span class="channel-node-name" style="color: ${colors[index % colors.length]};">${node.name}</span>
                           <span class="channel-node-status" style="color: ${style.color};">${style.text}</span>
                         </div>
                       `;
