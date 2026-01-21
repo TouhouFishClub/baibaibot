@@ -22,7 +22,7 @@ const PROBE_NODES = [
     name: '上海',
     type: 'remote',
     url: 'http://122.51.73.37:3721/api/probe',  // 修改为实际地址
-    enabled: false  // 启用时改为 true
+    enabled: true  // 启用时改为 true
   },
   // 示例：添加更多节点
   // {
