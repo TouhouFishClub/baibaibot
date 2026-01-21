@@ -25,13 +25,13 @@ const PROBE_NODES = [
     enabled: true  // 启用时改为 true
   },
   // 示例：添加更多节点
-  // {
-  //   id: 'guangzhou',
-  //   name: '广州',
-  //   type: 'remote',
-  //   url: 'http://广州服务器IP:3721/api/probe',
-  //   enabled: false
-  // },
+  {
+    id: 'guangxi',
+    name: '广西',
+    type: 'remote',
+    url: 'http://mokou.ddns.net:51141/api/probe',
+    enabled: true
+  },
 ];
 
 // 确保输出目录存在
