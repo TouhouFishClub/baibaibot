@@ -1,9 +1,38 @@
 const net = require('net');
+const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const nodeHtmlToImage = require('node-html-to-image');
 const font2base64 = require('node-font2base64');
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'));
+
+// ============================================================
+// 探测节点配置
+// 可以添加多个探测节点，每个节点会独立检测服务器状态
+// ============================================================
+const PROBE_NODES = [
+  {
+    id: 'beijing',
+    name: '北京',
+    type: 'local',  // local: 本地检测, remote: 远程API
+    enabled: true
+  },
+  {
+    id: 'shanghai',
+    name: '上海',
+    type: 'remote',
+    url: 'http://122.51.73.37:3721/api/probe',  // 修改为实际地址
+    enabled: false  // 启用时改为 true
+  },
+  // 示例：添加更多节点
+  // {
+  //   id: 'guangzhou',
+  //   name: '广州',
+  //   type: 'remote',
+  //   url: 'http://广州服务器IP:3721/api/probe',
+  //   enabled: false
+  // },
+];
 
 // 确保输出目录存在
 const outputDir = path.join(IMAGE_DATA, 'mabi_other');
@@ -135,6 +164,85 @@ const testAllServers = async () => {
   }
   
   return results;
+};
+
+// 从远程探测节点获取数据
+const fetchRemoteProbe = (url, timeout = 10000) => {
+  return new Promise((resolve) => {
+    const startTime = Date.now();
+    
+    const req = http.get(url, { timeout }, (res) => {
+      let data = '';
+      
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(data);
+          if (json.success && json.data) {
+            resolve({
+              success: true,
+              data: json.data,
+              latency: Date.now() - startTime
+            });
+          } else {
+            resolve({ success: false, error: json.error || 'Invalid response' });
+          }
+        } catch (e) {
+          resolve({ success: false, error: 'Parse error' });
+        }
+      });
+    });
+    
+    req.on('error', (err) => {
+      resolve({ success: false, error: err.message });
+    });
+    
+    req.on('timeout', () => {
+      req.destroy();
+      resolve({ success: false, error: 'Timeout' });
+    });
+  });
+};
+
+// 从所有启用的探测节点获取数据
+const testAllNodes = async () => {
+  const enabledNodes = PROBE_NODES.filter(node => node.enabled);
+  const nodeResults = [];
+  
+  for (const node of enabledNodes) {
+    const nodeResult = {
+      id: node.id,
+      name: node.name,
+      type: node.type,
+      success: false,
+      data: null,
+      error: null
+    };
+    
+    if (node.type === 'local') {
+      // 本地检测
+      try {
+        nodeResult.data = await testAllServers();
+        nodeResult.success = true;
+      } catch (error) {
+        nodeResult.error = error.message;
+      }
+    } else if (node.type === 'remote') {
+      // 远程探测节点
+      const result = await fetchRemoteProbe(node.url);
+      if (result.success) {
+        nodeResult.data = result.data;
+        nodeResult.success = true;
+        nodeResult.latency = result.latency;
+      } else {
+        nodeResult.error = result.error;
+      }
+    }
+    
+    nodeResults.push(nodeResult);
+  }
+  
+  return nodeResults;
 };
 
 // 获取状态对应的颜色和图标
@@ -471,12 +579,376 @@ const renderStatusImage = async (results, callback) => {
   }
 };
 
+// 渲染多节点状态图片
+const renderMultiNodeStatusImage = async (nodeResults, callback) => {
+  const output = path.join(IMAGE_DATA, 'mabi_other', 'server_status.png');
+  const updateTime = new Date().toLocaleString('zh-CN', { 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit',
+    hour: '2-digit', 
+    minute: '2-digit', 
+    second: '2-digit',
+    hour12: false 
+  });
+
+  // 获取所有成功的节点
+  const successNodes = nodeResults.filter(n => n.success);
+  
+  // 如果没有成功的节点，使用错误提示
+  if (successNodes.length === 0) {
+    callback('所有探测节点都无法获取数据，请稍后再试');
+    return;
+  }
+
+  // 生成节点选项卡和内容
+  const generateNodeContent = (node, index) => {
+    if (!node.success || !node.data) return '';
+    
+    return node.data.map(server => {
+      const isLoginTimeout = server.loginServer && server.loginServer.status === 'timeout';
+      
+      const onlineCount = server.channels.filter(c => c.status === 'online').length;
+      const totalCount = server.channels.length;
+      let badgeClass = 'badge-online';
+      let badgeText = '全部在线';
+      
+      if (isLoginTimeout) {
+        badgeClass = 'badge-maintenance';
+        badgeText = '维护中';
+      } else if (onlineCount === 0) {
+        badgeClass = 'badge-offline';
+        badgeText = '全部离线';
+      } else if (onlineCount < totalCount) {
+        badgeClass = 'badge-partial';
+        badgeText = `${onlineCount}/${totalCount} 在线`;
+      }
+      
+      let loginServerHtml = '';
+      if (server.loginServer) {
+        const loginStyle = getStatusStyle(server.loginServer.status, server.loginServer.latency);
+        const loginLatency = server.loginServer.latency >= 0 ? `${server.loginServer.latency}ms` : '--';
+        loginServerHtml = `
+          <div class="login-server" style="background: ${loginStyle.bg}; border: 1px solid ${loginStyle.color}33;">
+            <span class="login-label">🔐 ${server.loginServer.name}</span>
+            <span class="login-status">
+              <span style="color: ${loginStyle.color};">${loginStyle.icon}</span>
+              <span style="color: ${loginStyle.color};">${loginLatency}</span>
+              <span style="color: ${loginStyle.color}; opacity: 0.8;">${loginStyle.text}</span>
+            </span>
+          </div>
+        `;
+      }
+      
+      return `
+        <div class="server-section">
+          <div class="server-header">
+            <span class="server-name">${server.name}</span>
+            <span class="server-badge ${badgeClass}">${badgeText}</span>
+          </div>
+          ${loginServerHtml}
+          <div class="channels-grid">
+            ${server.channels.map(channel => {
+              const channelStatus = isLoginTimeout ? 'maintenance' : channel.status;
+              const channelLatency = isLoginTimeout ? -1 : channel.latency;
+              const style = getStatusStyle(channelStatus, channelLatency);
+              const latencyText = channelLatency >= 0 ? `${channelLatency}ms` : '--';
+              return `
+                <div class="channel-card" style="background: ${style.bg}; border: 1px solid ${style.color}33;">
+                  <div class="channel-name">${channel.name}</div>
+                  <div class="channel-status">
+                    <span class="status-icon" style="color: ${style.color};">${style.icon}</span>
+                    <span class="channel-latency" style="color: ${style.color};">${latencyText}</span>
+                  </div>
+                  <div class="channel-text" style="color: ${style.color};">${style.text}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  };
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @font-face {
+      font-family: 'Corp_Bold';
+      src: url(${Corp_Bold}) format('opentype');
+    }
+    @font-face {
+      font-family: 'MalbergTrial';
+      src: url(${MalbergTrial}) format('truetype');
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      width: ${successNodes.length > 1 ? 580 * successNodes.length + 40 : 520}px;
+      font-family: 'Microsoft YaHei', sans-serif;
+    }
+    .container {
+      padding: 24px;
+      background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border-radius: 16px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #00d4ff, #00ff88);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 4px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'Corp_Bold';
+    }
+    .nodes-container {
+      display: flex;
+      gap: 20px;
+    }
+    .node-column {
+      flex: 1;
+      min-width: 0;
+    }
+    .node-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border-left: 3px solid #00d4ff;
+    }
+    .node-icon {
+      font-size: 16px;
+    }
+    .node-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .node-status {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(0, 255, 136, 0.2);
+      color: #00ff88;
+    }
+    .node-status.error {
+      background: rgba(255, 68, 68, 0.2);
+      color: #FF4444;
+    }
+    .server-section {
+      margin-bottom: 16px;
+    }
+    .server-section:last-child {
+      margin-bottom: 0;
+    }
+    .server-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .server-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      margin-right: 12px;
+    }
+    .server-badge {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-family: 'Corp_Bold';
+    }
+    .badge-online {
+      background: rgba(0, 255, 136, 0.2);
+      color: #00ff88;
+      border: 1px solid rgba(0, 255, 136, 0.4);
+    }
+    .badge-partial {
+      background: rgba(255, 215, 0, 0.2);
+      color: #FFD700;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+    }
+    .badge-offline {
+      background: rgba(255, 68, 68, 0.2);
+      color: #FF4444;
+      border: 1px solid rgba(255, 68, 68, 0.4);
+    }
+    .badge-maintenance {
+      background: rgba(136, 136, 136, 0.2);
+      color: #888888;
+      border: 1px solid rgba(136, 136, 136, 0.4);
+    }
+    .login-server {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .login-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+    }
+    .login-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-family: 'Corp_Bold';
+    }
+    .channels-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+    .channel-card {
+      padding: 8px 6px;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .channel-name {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 3px;
+      font-weight: 500;
+    }
+    .channel-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+    .status-icon {
+      font-size: 9px;
+    }
+    .channel-latency {
+      font-size: 11px;
+      font-family: 'Corp_Bold';
+    }
+    .channel-text {
+      font-size: 9px;
+      margin-top: 2px;
+      opacity: 0.8;
+    }
+    .footer {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .update-time {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+    .legend {
+      display: flex;
+      gap: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="title">洛奇服务器状态</div>
+      <div class="subtitle">MABINOGI SERVER STATUS</div>
+    </div>
+    
+    <div class="nodes-container">
+      ${successNodes.map((node, index) => `
+        <div class="node-column">
+          <div class="node-header">
+            <span class="node-icon">📡</span>
+            <span class="node-name">${node.name}</span>
+            <span class="node-status">在线</span>
+          </div>
+          ${generateNodeContent(node, index)}
+        </div>
+      `).join('')}
+    </div>
+    
+    <div class="footer">
+      <div class="update-time">更新时间: ${updateTime}</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background: #00FF88;"></div>&lt;50ms</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #7CFF00;"></div>&lt;100ms</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #FFD700;"></div>&lt;200ms</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #FF8C00;"></div>&gt;200ms</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  try {
+    await nodeHtmlToImage({
+      output,
+      html,
+      puppeteerArgs: {
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+      }
+    });
+    console.log('服务器状态图片生成成功！');
+    callback(`[CQ:image,file=${path.join('send', 'mabi_other', 'server_status.png')}]`);
+  } catch (error) {
+    console.error('生成服务器状态图片失败:', error);
+    callback('生成服务器状态图片失败，请稍后再试');
+  }
+};
+
 // 主函数
 const serverStatus = async (content, qq, groupId, callback) => {
   try {
     callback('正在检测服务器状态，请稍候...');
-    const results = await testAllServers();
-    await renderStatusImage(results, callback);
+    
+    // 检查是否有多个启用的探测节点
+    const enabledNodes = PROBE_NODES.filter(n => n.enabled);
+    
+    if (enabledNodes.length > 1 || enabledNodes.some(n => n.type === 'remote')) {
+      // 多节点模式
+      const nodeResults = await testAllNodes();
+      await renderMultiNodeStatusImage(nodeResults, callback);
+    } else {
+      // 单节点模式（向后兼容）
+      const results = await testAllServers();
+      await renderStatusImage(results, callback);
+    }
   } catch (error) {
     console.error('检测服务器状态失败:', error);
     callback('检测服务器状态失败，请稍后再试');
@@ -486,5 +958,8 @@ const serverStatus = async (content, qq, groupId, callback) => {
 module.exports = {
   serverStatus,
   testAllServers,
-  SERVERS
+  testAllNodes,
+  fetchRemoteProbe,
+  SERVERS,
+  PROBE_NODES
 };
