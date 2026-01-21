@@ -21,6 +21,7 @@ const SERVERS = [
     id: "yiluxia",
     name: "伊鲁夏",
     ipPrefix: "211.147.76",
+    loginServer: { name: "登录服务器", ip: "211.147.76.44", port: 11000 },
     channels: [
       { id: 1, name: "频道1", ip: "211.147.76.31", port: 11020 },
       { id: 2, name: "频道2", ip: "211.147.76.32", port: 11020 },
@@ -94,8 +95,18 @@ const testAllServers = async () => {
     const serverResult = {
       id: server.id,
       name: server.name,
+      loginServer: null,
       channels: []
     };
+    
+    // 测试登录服务器（如果存在）
+    if (server.loginServer) {
+      const loginResult = await testConnection(server.loginServer.ip, server.loginServer.port);
+      serverResult.loginServer = {
+        ...server.loginServer,
+        ...loginResult
+      };
+    }
     
     // 并行测试所有频道
     const channelPromises = server.channels.map(async (channel) => {
@@ -233,6 +244,26 @@ const renderStatusImage = async (results, callback) => {
       color: #FF4444;
       border: 1px solid rgba(255, 68, 68, 0.4);
     }
+    .login-server {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .login-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+    }
+    .login-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-family: 'Corp_Bold';
+    }
     .channels-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -318,12 +349,30 @@ const renderStatusImage = async (results, callback) => {
         badgeText = `${onlineCount}/${totalCount} 在线`;
       }
       
+      // 登录服务器状态
+      let loginServerHtml = '';
+      if (server.loginServer) {
+        const loginStyle = getStatusStyle(server.loginServer.status, server.loginServer.latency);
+        const loginLatency = server.loginServer.latency >= 0 ? `${server.loginServer.latency}ms` : '--';
+        loginServerHtml = `
+          <div class="login-server" style="background: ${loginStyle.bg}; border: 1px solid ${loginStyle.color}33;">
+            <span class="login-label">🔐 ${server.loginServer.name}</span>
+            <span class="login-status">
+              <span style="color: ${loginStyle.color};">${loginStyle.icon}</span>
+              <span style="color: ${loginStyle.color};">${loginLatency}</span>
+              <span style="color: ${loginStyle.color}; opacity: 0.8;">${loginStyle.text}</span>
+            </span>
+          </div>
+        `;
+      }
+      
       return `
         <div class="server-section">
           <div class="server-header">
             <span class="server-name">${server.name}</span>
             <span class="server-badge ${badgeClass}">${badgeText}</span>
           </div>
+          ${loginServerHtml}
           <div class="channels-grid">
             ${server.channels.map(channel => {
               const style = getStatusStyle(channel.status, channel.latency);
