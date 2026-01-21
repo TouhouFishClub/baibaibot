@@ -22,7 +22,7 @@ const SERVERS = [
     name: "伊鲁夏",
     ipPrefix: "211.147.76",
     loginServer: { name: "登录服务器", ip: "211.147.76.44", port: 11000 },
-    chatServer: { name: "聊天服务器", ip: "211.147.76.47", port: 11000 },
+    // chatServer: { name: "聊天服务器", ip: "211.147.76.47", port: 11000 },
     channels: [
       { id: 1, name: "频道1", ip: "211.147.76.31", port: 11020 },
       { id: 2, name: "频道2", ip: "211.147.76.32", port: 11020 },
@@ -40,8 +40,8 @@ const SERVERS = [
     id: "yate",
     name: "亚特",
     ipPrefix: "61.164.61",
-    loginServer: { name: "登录服务器", ip: "61.164.61.6", port: 11000 },
-    chatServer: { name: "聊天服务器", ip: "61.164.61.2", port: 11000 },
+    loginServer: { name: "登录服务器", ip: "61.164.61.3", port: 11000 },
+    // chatServer: { name: "聊天服务器", ip: "61.164.61.2", port: 11000 },
     channels: [
       { id: 11, name: "频道1", ip: "61.164.61.10", port: 11020 },
       { id: 12, name: "频道2", ip: "61.164.61.11", port: 11020 },
@@ -153,6 +153,8 @@ const getStatusStyle = (status, latency) => {
     return { color: '#FF6B6B', bg: 'rgba(255, 107, 107, 0.15)', icon: '◐', text: '拒绝' };
   } else if (status === 'timeout') {
     return { color: '#888888', bg: 'rgba(136, 136, 136, 0.15)', icon: '○', text: '超时' };
+  } else if (status === 'maintenance') {
+    return { color: '#888888', bg: 'rgba(136, 136, 136, 0.15)', icon: '🔧', text: '维护中' };
   } else {
     return { color: '#FF4444', bg: 'rgba(255, 68, 68, 0.15)', icon: '✕', text: '离线' };
   }
@@ -257,6 +259,11 @@ const renderStatusImage = async (results, callback) => {
       color: #FF4444;
       border: 1px solid rgba(255, 68, 68, 0.4);
     }
+    .badge-maintenance {
+      background: rgba(136, 136, 136, 0.2);
+      color: #888888;
+      border: 1px solid rgba(136, 136, 136, 0.4);
+    }
     .login-server {
       display: flex;
       justify-content: space-between;
@@ -350,11 +357,18 @@ const renderStatusImage = async (results, callback) => {
     </div>
     
     ${results.map(server => {
+      // 检查登录服务器是否超时，如果超时则整个服务器处于维护状态
+      const isLoginTimeout = server.loginServer && server.loginServer.status === 'timeout';
+      
       const onlineCount = server.channels.filter(c => c.status === 'online').length;
       const totalCount = server.channels.length;
       let badgeClass = 'badge-online';
       let badgeText = '全部在线';
-      if (onlineCount === 0) {
+      
+      if (isLoginTimeout) {
+        badgeClass = 'badge-maintenance';
+        badgeText = '维护中';
+      } else if (onlineCount === 0) {
         badgeClass = 'badge-offline';
         badgeText = '全部离线';
       } else if (onlineCount < totalCount) {
@@ -406,8 +420,11 @@ const renderStatusImage = async (results, callback) => {
           ${chatServerHtml}
           <div class="channels-grid">
             ${server.channels.map(channel => {
-              const style = getStatusStyle(channel.status, channel.latency);
-              const latencyText = channel.latency >= 0 ? `${channel.latency}ms` : '--';
+              // 如果登录服务器超时，所有频道显示为维护中
+              const channelStatus = isLoginTimeout ? 'maintenance' : channel.status;
+              const channelLatency = isLoginTimeout ? -1 : channel.latency;
+              const style = getStatusStyle(channelStatus, channelLatency);
+              const latencyText = channelLatency >= 0 ? `${channelLatency}ms` : '--';
               return `
                 <div class="channel-card" style="background: ${style.bg}; border: 1px solid ${style.color}33;">
                   <div class="channel-name">${channel.name}</div>
