@@ -30,7 +30,7 @@ const PROBE_NODES = [
     name: '广西',
     type: 'remote',
     url: 'http://mokou.ddns.net:51141/api/probe',
-    enabled: true
+    enabled: false
   },
 ];
 
