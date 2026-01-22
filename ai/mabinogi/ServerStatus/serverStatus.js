@@ -30,8 +30,8 @@ if (!fs.existsSync(outputDir)) {
 }
 
 // 字体加载
-const Corp_Bold = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'Corp-Bold.otf'));
-const MalbergTrial = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', 'font', 'MalbergTrial-Heavy.ttf'));
+const Corp_Bold = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'Corp-Bold.otf'));
+const MalbergTrial = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'MalbergTrial-Heavy.ttf'));
 
 // 服务器配置
 const SERVERS = [
