@@ -91,7 +91,7 @@ const anchan = require('./ai/arknights/arkNightsChallenge')
 const anp = require('./ai/arknights/arkNightsCharacterCompare')
 const { arkCalendar } = require('./ai/arknights/arkNightsCalendar')
 const { mabiCalendar } = require('./ai/mabinogi/mabiCalendar')
-const { serverStatus } = require('./ai/mabinogi/serverStatus')
+const { serverStatus } = require('./ai/mabinogi/ServerStatus/serverStatus')
 
 const { PerfectCactpot } = require('./ai/ff14/cactpot')
 const {runsetu} = require('./ai/games/card/setu');

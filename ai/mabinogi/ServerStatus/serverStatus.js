@@ -7,32 +7,21 @@ const font2base64 = require('node-font2base64');
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'));
 
 // ============================================================
-// 探测节点配置
-// 可以添加多个探测节点，每个节点会独立检测服务器状态
+// 探测节点配置 - 从.secret.json读取
 // ============================================================
-const PROBE_NODES = [
-  {
-    id: 'beijing',
-    name: '北京',
-    type: 'local',  // local: 本地检测, remote: 远程API
-    enabled: true
-  },
-  {
-    id: 'shanghai',
-    name: '上海',
-    type: 'remote',
-    url: 'http://122.51.73.37:3721/api/probe',  // 修改为实际地址
-    enabled: true  // 启用时改为 true
-  },
-  // 示例：添加更多节点
-  {
-    id: 'guangxi',
-    name: '广西',
-    type: 'remote',
-    url: 'http://mokou.ddns.net:51141/api/probe',
-    enabled: true
-  },
-];
+const loadProbeNodes = () => {
+  try {
+    const secretPath = path.join(__dirname, '.secret.json');
+    const secretData = JSON.parse(fs.readFileSync(secretPath, 'utf-8'));
+    return secretData.PROBE_NODES || [];
+  } catch (error) {
+    console.error('加载探测节点配置失败:', error.message);
+    // 默认返回本地节点
+    return [{ id: 'beijing', name: '北京', type: 'local', enabled: true }];
+  }
+};
+
+const PROBE_NODES = loadProbeNodes();
 
 // 确保输出目录存在
 const outputDir = path.join(IMAGE_DATA, 'mabi_other');
@@ -484,18 +473,20 @@ const renderStatusImage = async (results, callback) => {
         badgeText = `${onlineCount}/${totalCount} 在线`;
       }
       
-      // 登录服务器状态
+      // 登录服务器状态 - 只显示在线/离线
       let loginServerHtml = '';
       if (server.loginServer) {
-        const loginStyle = getStatusStyle(server.loginServer.status, server.loginServer.latency);
-        const loginLatency = server.loginServer.latency >= 0 ? `${server.loginServer.latency}ms` : '--';
+        const isOnline = server.loginServer.status === 'online';
+        const statusText = isOnline ? '在线' : '离线';
+        const statusColor = isOnline ? '#00ff88' : '#FF4444';
+        const statusBg = isOnline ? 'rgba(0, 255, 136, 0.15)' : 'rgba(255, 68, 68, 0.15)';
+        const statusIcon = isOnline ? '●' : '○';
         loginServerHtml = `
-          <div class="login-server" style="background: ${loginStyle.bg}; border: 1px solid ${loginStyle.color}33;">
+          <div class="login-server" style="background: ${statusBg}; border: 1px solid ${statusColor}33;">
             <span class="login-label">🔐 ${server.loginServer.name}</span>
             <span class="login-status">
-              <span style="color: ${loginStyle.color};">${loginStyle.icon}</span>
-              <span style="color: ${loginStyle.color};">${loginLatency}</span>
-              <span style="color: ${loginStyle.color}; opacity: 0.8;">${loginStyle.text}</span>
+              <span style="color: ${statusColor};">${statusIcon}</span>
+              <span style="color: ${statusColor};">${statusText}</span>
             </span>
           </div>
         `;
@@ -601,6 +592,9 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
     return;
   }
 
+  // 找到本地（北京）节点用于登录服务器判断
+  const localNode = successNodes.find(n => n.type === 'local') || successNodes[0];
+
   // 整合数据：按服务器和频道聚合所有节点的数据
   const mergedData = {};
   
@@ -610,8 +604,8 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
     mergedData[server.id] = {
       id: server.id,
       name: server.name,
-      loginServer: {},  // nodeId -> loginData
-      channels: {}      // channelId -> { nodeId -> channelData }
+      loginServer: null,  // 只存储本地节点的登录服务器数据
+      channels: {}        // channelId -> { nodeId -> channelData }
     };
     
     // 初始化频道结构
@@ -630,15 +624,15 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
     node.data.forEach(server => {
       if (!mergedData[server.id]) return;
       
-      // 登录服务器数据
-      if (server.loginServer) {
-        mergedData[server.id].loginServer[node.id] = {
+      // 登录服务器数据 - 只记录本地（北京）节点的数据
+      if (server.loginServer && node.id === localNode.id) {
+        mergedData[server.id].loginServer = {
           nodeName: node.name,
           ...server.loginServer
         };
       }
       
-      // 频道数据
+      // 频道数据 - 所有节点都记录
       server.channels.forEach(channel => {
         if (mergedData[server.id].channels[channel.id]) {
           mergedData[server.id].channels[channel.id].nodes[node.id] = {
@@ -651,11 +645,18 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
     });
   });
 
-  // 判断服务器是否处于维护状态（任意节点的登录服务器超时即为维护）
+  // 判断服务器是否处于维护状态（本地节点的登录服务器离线/超时即为维护）
   const isServerMaintenance = (serverId) => {
     const loginData = mergedData[serverId].loginServer;
-    return Object.values(loginData).some(login => login.status === 'timeout');
+    if (!loginData) return false;
+    return loginData.status === 'timeout' || loginData.status === 'error' || loginData.status === 'refused';
   };
+
+  // 动态计算图片宽度 - 根据节点数量调整
+  const nodeCount = successNodes.length;
+  const baseWidth = 520;
+  const widthPerExtraNode = 60;  // 每增加一个节点增加的宽度
+  const imageWidth = Math.min(baseWidth + Math.max(0, nodeCount - 2) * widthPerExtraNode, 800);
 
   const html = `
 <!DOCTYPE html>
@@ -677,7 +678,7 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
       box-sizing: border-box;
     }
     body {
-      width: 580px;
+      width: ${imageWidth}px;
       font-family: 'Microsoft YaHei', sans-serif;
     }
     .container {
@@ -898,7 +899,6 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
     
     ${Object.values(mergedData).map(server => {
       const isMaintenance = isServerMaintenance(server.id);
-      const loginNodes = Object.values(server.loginServer);
       
       // 计算在线频道数（基于第一个节点）
       const channels = Object.values(server.channels);
@@ -928,23 +928,22 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
             <span class="server-badge ${badgeClass}">${badgeText}</span>
           </div>
           
-          ${loginNodes.length > 0 ? `
+          ${server.loginServer ? `
             <div class="login-server">
               <span class="login-label">🔐 登录服务器</span>
               <div class="login-nodes">
-                ${successNodes.map((node, index) => {
-                  const loginData = server.loginServer[node.id];
-                  if (!loginData) return '';
-                  const style = getStatusStyle(loginData.status, loginData.latency);
-                  const latencyText = loginData.latency >= 0 ? loginData.latency + 'ms' : '--';
+                ${(() => {
+                  const loginData = server.loginServer;
+                  const isOnline = loginData.status === 'online';
+                  const statusText = isOnline ? '在线' : '离线';
+                  const statusColor = isOnline ? '#00ff88' : '#FF4444';
+                  const statusIcon = isOnline ? '●' : '○';
                   return `
                     <div class="login-node-item">
-                      <span class="login-node-name">${node.name}</span>
-                      <span class="login-node-latency" style="color: ${style.color};">${latencyText}</span>
-                      <span class="login-node-status" style="color: ${style.color};">${style.text}</span>
+                      <span class="login-node-latency" style="color: ${statusColor};">${statusIcon} ${statusText}</span>
                     </div>
                   `;
-                }).join('')}
+                })()}
               </div>
             </div>
           ` : ''}
