@@ -654,9 +654,16 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
 
   // 动态计算图片宽度 - 根据节点数量调整
   const nodeCount = successNodes.length;
-  const baseWidth = 520;
-  const widthPerExtraNode = 60;  // 每增加一个节点增加的宽度
-  const imageWidth = Math.min(baseWidth + Math.max(0, nodeCount - 2) * widthPerExtraNode, 800);
+  // 每个节点需要约40px宽度来显示名称+延迟，加上间距
+  // 基础宽度针对2节点优化，每增加节点需要更多空间
+  const widthByNodeCount = {
+    1: 520,
+    2: 580,
+    3: 720,
+    4: 860,
+    5: 1000
+  };
+  const imageWidth = widthByNodeCount[nodeCount] || (520 + nodeCount * 100);
 
   const html = `
 <!DOCTYPE html>
@@ -814,11 +821,12 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
       gap: 8px;
     }
     .channel-card {
-      padding: 10px 6px 8px;
+      padding: 10px 4px 8px;
       border-radius: 8px;
       text-align: center;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
     }
     .channel-name {
       font-size: 13px;
@@ -829,24 +837,26 @@ const renderMultiNodeStatusImage = async (nodeResults, callback) => {
     .channel-nodes {
       display: flex;
       justify-content: center;
-      gap: 12px;
+      gap: ${nodeCount > 2 ? '6px' : '12px'};
+      flex-wrap: wrap;
     }
     .channel-node-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1px;
+      gap: 0px;
+      min-width: ${nodeCount > 3 ? '28px' : '32px'};
     }
     .channel-node-name {
-      font-size: 9px;
+      font-size: ${nodeCount > 3 ? '8px' : '9px'};
       color: rgba(255, 255, 255, 0.9);
     }
     .channel-node-latency {
-      font-size: 12px;
+      font-size: ${nodeCount > 3 ? '10px' : '12px'};
       font-family: 'Corp_Bold';
     }
     .channel-node-status {
-      font-size: 9px;
+      font-size: ${nodeCount > 3 ? '8px' : '9px'};
     }
     .footer {
       margin-top: 16px;
