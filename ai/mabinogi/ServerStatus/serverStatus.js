@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const nodeHtmlToImage = require('node-html-to-image');
 const font2base64 = require('node-font2base64');
-const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', 'baibaiConfigs.js'));
+const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', '..', 'baibaiConfigs.js'));
 
 // ============================================================
 // 探测节点配置 - 从.secret.json读取
