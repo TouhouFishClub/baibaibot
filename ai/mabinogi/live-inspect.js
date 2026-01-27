@@ -72,10 +72,11 @@ const saveFansInfo = async infos => {
 }
 // https://evt08.tiancity.com/luoqi/2451841/home/index.php/lists
 const fetchTCData = (page = 1) => new Promise(resolve => {
-  const url = 'https://evt08.tiancity.com/luoqi/2451841/home/index.php/lists';
+  const url = 'https://evt08.tiancity.com/luoqi/2651032/home/index.php/lists';
   const data = new URLSearchParams({
     page,
-    sign_type: '全部'
+    sign_type: '全部',
+    live_platform: 'B站'
   });
 
   axios.post(url, data.toString(), {
