@@ -10,6 +10,9 @@ async function update_shipid2name() {
   }).then((v) => {
     if (!v.ok) throw "update shipid2name FAILED !!!";
     return v.json();
+  }).catch(e => {
+    console.log('error: ', e)
+    return []
   });
 
   let ret = new Array(data.length + 1000).fill("");
