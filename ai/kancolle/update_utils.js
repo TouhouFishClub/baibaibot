@@ -7,15 +7,17 @@ async function update_shipid2name() {
   data = await fetch(URL, {
     method: "GET",
     headers: HEADERS,
-  }).then((v) => {
-    if (!v.ok) throw "update shipid2name FAILED !!!";
-    return v.json();
-  }).catch(e => {
-    console.log('error: ', e)
-    return []
-  });
+  })
+    .then((v) => {
+      if (!v.ok) throw "update shipid2name FAILED !!!";
+      return v.json();
+    })
+    .catch((e) => {
+      console.log("error: ", e);
+      throw e;
+    });
 
-  let ret = new Array(data.length + 1000).fill("");
+  let ret = [];
   data.forEach((e) => {
     ret[e.id] = e.name;
   });
