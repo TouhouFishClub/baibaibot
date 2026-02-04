@@ -2222,12 +2222,16 @@ setTimeout(function(){
 },500)
 
 setInterval(async () => {
-  shipid2name = await update_shipid2name();
+  try {
+    shipid2name = await update_shipid2name();
+  } catch (e) {}
 }, 1 * 60 * 60 * 1000);
 
 
 setTimeout(async () => {
-  shipid2name = await update_shipid2name();
+  try {
+    shipid2name = await update_shipid2name();
+  } catch (e) {}
 }, 1 * 5000);
 
 
