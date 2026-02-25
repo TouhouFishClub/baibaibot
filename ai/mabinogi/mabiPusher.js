@@ -9,6 +9,12 @@ const SIMPLE_GAIN_REGEX = /^(.+?)获得了道具(.+)$/
 // 汐殇** 从 格伦贝尔纳获得了 套装效果拉蒂卡移动速度增加+1咒语书。 (频道5)
 const COMPLEX_GAIN_REGEX = /^(.+?)\s*从\s*(.+?)获得了\s*(.+?)。\s*\(频道(\d+)\)\s*$/
 
+function normalizeItemNameForAlias(itemName) {
+	if (!itemName) return ''
+	// 去掉中英文括号字符本身，便于用 alias 精确匹配
+	return itemName.replace(/[()（）]/g, '')
+}
+
 async function handlePush(byte, str, server, ip) {
 	const client = await getClient()
 	const col = client.db('db_bot').collection('cl_mabinogi_pusher')
@@ -48,14 +54,31 @@ async function handlePush(byte, str, server, ip) {
 
 				const colName = `cl_mbcd_${server}`
 				const simpleCol = client.db('db_bot').collection(colName)
-				await simpleCol.insertOne({
+
+				const simpleDoc = {
 					character_name,
 					item_name,
 					server,
 					raw: str,
 					ts: now,
 					time: new Date(now)
-				})
+				}
+
+				// 根据 item_name 去 cl_mabinogi_gacha_info 查抽池；
+				// 使用 alias 字段匹配，且去掉括号字符避免中英文括号差异。
+				const aliasKey = normalizeItemNameForAlias(item_name)
+				if (aliasKey) {
+					const gachaCol = client.db('db_bot').collection('cl_mabinogi_gacha_info')
+					const gachaInfo = await gachaCol.findOne({ alias: aliasKey })
+					if (gachaInfo && Array.isArray(gachaInfo.info) && gachaInfo.info.length > 0) {
+						const lastInfo = gachaInfo.info[gachaInfo.info.length - 1]
+						if (lastInfo && lastInfo.pool) {
+							simpleDoc.draw_pool = lastInfo.pool
+						}
+					}
+				}
+
+				await simpleCol.insertOne(simpleDoc)
 				return true
 			}
 
