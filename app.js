@@ -15,6 +15,7 @@ const UPLOAD_TMP_URL = '../coolq-data/cq/data/image/send/upload_tmp/'
 const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
 const { myip } = require('./baibaiConfigs')
 const { analyzerMessage } = require('./ai/GenshinImpact/GenshinPush')
+const { handlePush: handleMabiPush } = require('./ai/mabinogi/mabiPusher')
 const { getClient } = require('./mongo/index')
 const {
   analysisMessage,
@@ -781,6 +782,21 @@ const formatDate = ts => {
 	let date = new Date(ts)
 	return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`
 }
+
+app.post('/mabi/push/:server', async (req, res) => {
+	const server = req.params.server
+	const { byte, str } = req.body
+	if (byte === undefined || !str || !server) {
+		return res.status(400).send({ code: 400, msg: '参数不完整' })
+	}
+	try {
+		await handleMabiPush(byte, str, server)
+		res.send({ code: 200, msg: 'ok' })
+	} catch (e) {
+		console.error('[mabi push error]', e)
+		res.status(500).send({ code: 500, msg: '服务器错误' })
+	}
+})
 
 app.post('/mabi/gachaPush', async (req, res) => {
 	const data = req.body  // 获取 data 数组
