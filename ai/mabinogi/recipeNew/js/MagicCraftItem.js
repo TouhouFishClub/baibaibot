@@ -19,3 +19,8 @@ var MagicCraftItem1040054=[14,[5100303,5,5100304,10,5100275,10,5100279,2,5100282
 MagicCraftList = MagicCraftList.concat([1650002]);
 SightOfOtherSideMagicCraftList = SightOfOtherSideMagicCraftList.concat([41266,41271,1020011]);
 var MagicCraftItem1650002=[14,[5100037,1,5100038,20,5100039,20,5100040,20,5100369,100,5100035,20,5100058,20,64102,20]];
+
+// IT 123
+MagicCraftList = MagicCraftList.concat([1440012]);
+SightOfOtherSideMagicCraftList = SightOfOtherSideMagicCraftList.concat([]);
+var MagicCraftItem1440012=[14,[5100037,1,5100038,15,5100039,15,5100040,15,5100397,100,5100035,20,5100058,20,64655,5]];

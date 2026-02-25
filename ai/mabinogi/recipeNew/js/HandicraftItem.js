@@ -11,3 +11,7 @@ var HandicraftItem64705=[[0,0],[64027,1,9090909,1]],HandicraftItem1420006=[[15,1
 // IT 112
 HandicraftList = HandicraftList.concat([41263,41270,5250319]);
 var HandicraftItem41263=[[0,0],[63384,10,63385,20,63383,1]],HandicraftItem41270=[[0,0],[63385,20,63386,1]],HandicraftItem5250319=[[0,0],[5250318,1]];
+
+// IT 123
+HandicraftList = HandicraftList.concat([5040615,5040616]);
+var HandicraftItem5040615=[[0,0],[52387,3,64639,5]],HandicraftItem5040616=[[0,0],[52388,5,64639,20]];
