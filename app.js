@@ -786,12 +786,13 @@ const formatDate = ts => {
 app.post('/mabi/push/:server', async (req, res) => {
 	const server = req.params.server
 	const { byte, str } = req.body
+	const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
 	if (byte === undefined || !str || !server) {
 		return res.status(400).send({ code: 400, msg: '参数不完整' })
 	}
 	try {
-		await handleMabiPush(byte, str, server)
-		res.send({ code: 200, msg: 'ok' })
+		const inserted = await handleMabiPush(byte, str, server, ip)
+		res.send({ code: 200, msg: inserted ? 'ok' : 'duplicate, ignored' })
 	} catch (e) {
 		console.error('[mabi push error]', e)
 		res.status(500).send({ code: 500, msg: '服务器错误' })
