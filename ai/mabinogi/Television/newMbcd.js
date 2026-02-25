@@ -84,6 +84,12 @@ const mabiGachaTv = async (content, qq, callback) => {
     }
   }
 
+  // 亚特服暂不提供数据
+  if (sv === 'yate') {
+    callback('亚特区暂无数据，如有意向提供数据请联系百百妈')
+    return
+  }
+
   if (content.length > 20 || content.toLowerCase() === 'help' || content === '帮助') {
     help(callback)
     return
