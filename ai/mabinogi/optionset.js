@@ -28,10 +28,40 @@ class OptionsetStore {
   async loadData() {
     return new Promise((resolve) => {
       formatOptionset(data => {
-        this.optionsetObj = data
+        this.optionsetObj = this._dedupeOptionsets(data)
         resolve()
       })
     })
+  }
+
+  _dedupeOptionsets(data) {
+    const map = {}
+
+    data.forEach(opt => {
+      // 自定义卷轴不参与去重，直接保留
+      if (opt.custom) {
+        map[`custom:${opt.ID}`] = opt
+        return
+      }
+
+      const key = `${opt.LocalName}|${opt.Level}|${opt.Usage}`
+      const existing = map[key]
+
+      if (!existing) {
+        map[key] = opt
+        return
+      }
+
+      // 同名同Rank同用法时，保留ID更大的那条
+      const existingId = parseInt(existing.ID, 10)
+      const currentId = parseInt(opt.ID, 10)
+
+      if (!Number.isNaN(existingId) && !Number.isNaN(currentId) && currentId > existingId) {
+        map[key] = opt
+      }
+    })
+
+    return Object.values(map)
   }
 
   getOptionsetById(id) {
