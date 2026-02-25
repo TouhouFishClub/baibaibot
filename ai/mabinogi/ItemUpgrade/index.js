@@ -50,6 +50,8 @@ const filterItem = async () => {
 		return transform
 	})
 	let filterData = {}
+	// 按名称去重：同名时只保留 ID 更大的那条
+	let nameMap = {}
 	for(let index = 0; index < xmlData.length; index ++) {
 		let data = xmlData[index]
 		for(let i = 0; i < data.Items.Mabi_Item.length; i ++) {
@@ -59,7 +61,8 @@ const filterItem = async () => {
 			// 	continue
 			// }
 			if(item.$.Par_UpgradeMax && item.$.Par_UpgradeMax > 0 && (!item.$.Locale || item.$.Locale === 'china')) {
-				let localeNameCn = item.$.Text_Name1 ? txtData[index][item.$.Text_Name1] : 'NULL'
+				let localeNameCnRaw = item.$.Text_Name1 ? txtData[index][item.$.Text_Name1] : 'NULL'
+				let localeNameCn = localeNameCnRaw ? localeNameCnRaw.replace(/[\r\n]/g, '').trim() : 'NULL'
 				if(
 					localeNameCn &&
 					localeNameCn.indexOf('临时') === -1 &&
@@ -88,7 +91,17 @@ const filterItem = async () => {
 							console.log(`FAILED TO ${item.$.ID}`)
 						}
 					}
-					filterData[item.$.ID] = Object.assign(item.$, injectData)
+					// 根据名称去重：保留同名中 ID 最大的那条
+					let idNum = parseInt(item.$.ID, 10)
+					let existed = nameMap[localeNameCn]
+					if(!existed || (!Number.isNaN(idNum) && idNum > existed.idNum)) {
+						// 如果已有同名且需要替换，先删掉旧的
+						if(existed) {
+							delete filterData[existed.id]
+						}
+						nameMap[localeNameCn] = { id: item.$.ID, idNum }
+						filterData[item.$.ID] = Object.assign(item.$, injectData)
+					}
 				}
 			}
 		}
