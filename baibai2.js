@@ -179,6 +179,7 @@ const {nanoBananaReply, getNanoBananaHelp, getNanoBananaPresets} = require('./ai
 const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao')
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
 const { handleAnnualReportCommand, handleUserAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
+const { mabiSmuggler } = require('./ai/mabinogi/Television/newSmuggler')
 
 
 // 导入deepseek模块
@@ -1311,7 +1312,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(content.trim() === '走私查询'){
-    smuggler(callback)
+    mabiSmuggler(callback)
     return
   }
 

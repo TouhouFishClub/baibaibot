@@ -9,6 +9,13 @@ const SIMPLE_GAIN_REGEX = /^(.+?)获得了道具(.+)$/
 // 汐殇** 从 格伦贝尔纳获得了 套装效果拉蒂卡移动速度增加+1咒语书。 (频道5)
 const COMPLEX_GAIN_REGEX = /^(.+?)\s*从\s*(.+?)获得了\s*(.+?)。\s*\(频道(\d+)\)\s*$/
 
+// 在4分钟后地区的布拉格平原西北方处，出现了走私贩子. 今天的贸易物品为大理石。
+// 在布拉格平原西北方地区出现了走私贩子。今天的贸易物品为大理石。
+// 布拉格平原西北方地区的走私贩子 4分钟后将会消失。
+const SMUGGLER_FORECAST_REGEX = /^在4分钟后地区的(.+?)处，出现了走私贩子.*?今天的贸易物品为(.+?)。?$/
+const SMUGGLER_APPEAR_REGEX = /^在(.+?)地区出现了走私贩子。今天的贸易物品为(.+?)。?$/
+const SMUGGLER_DISAPPEAR_REGEX = /^(.+?)地区的走私贩子\s*4分钟后将会消失。?$/
+
 function normalizeItemNameForAlias(itemName) {
 	if (!itemName) return ''
 	// 去掉中英文括号字符本身，便于用 alias 精确匹配
@@ -107,6 +114,48 @@ async function handlePush(byte, str, server, ip) {
 		} catch (err) {
 			// 分发失败不影响主记录
 			console.error('mabinogi pusher byte=2 dispatch error', err, { str, server })
+		}
+	}
+
+	// 额外分发：byte 为 8 时，记录走私贩子信息到 cl_mabinogi_smuggler
+	if (Number(byte) === 8) {
+		try {
+			const smugglerCol = client.db('db_bot').collection('cl_mabinogi_smuggler')
+			let type = 'raw'
+			let area = null
+			let item = null
+
+			const forecastMatch = str.match(SMUGGLER_FORECAST_REGEX)
+			const appearMatch = !forecastMatch && str.match(SMUGGLER_APPEAR_REGEX)
+			const disappearMatch = !forecastMatch && !appearMatch && str.match(SMUGGLER_DISAPPEAR_REGEX)
+
+			if (forecastMatch) {
+				type = 'forecast'
+				area = forecastMatch[1].trim()
+				item = forecastMatch[2].trim()
+			} else if (appearMatch) {
+				type = 'appear'
+				area = appearMatch[1].trim()
+				item = appearMatch[2].trim()
+			} else if (disappearMatch) {
+				type = 'disappear_forecast'
+				area = disappearMatch[1].trim()
+			}
+
+			await smugglerCol.insertOne({
+				byte: Number(byte),
+				str,
+				server,
+				ip,
+				ts: now,
+				time: new Date(now),
+				type,
+				area,
+				item
+			})
+		} catch (err) {
+			// 分发失败不影响主记录
+			console.error('mabinogi pusher byte=8 dispatch error', err, { str, server })
 		}
 	}
 
