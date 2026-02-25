@@ -1,7 +1,7 @@
 const { getClient } = require('../../mongo/index')
 
 const CROSS_IP_DEDUP_MS = 30 * 1000
-const SAME_IP_DEDUP_MS = 100
+const SAME_IP_DEDUP_MS = 0
 
 async function handlePush(byte, str, server, ip) {
 	const client = await getClient()
@@ -16,12 +16,14 @@ async function handlePush(byte, str, server, ip) {
 	})
 	if (crossIpDup) return false
 
-	// 同一 IP 极短时间内重复推送 → 防抖
-	const sameIpDup = await col.findOne({
-		byte, str, server, ip,
-		ts: { $gte: now - SAME_IP_DEDUP_MS }
-	})
-	if (sameIpDup) return false
+	// 同一 IP 极短时间内重复推送 → 防抖（SAME_IP_DEDUP_MS 为 0 时跳过）
+	if (SAME_IP_DEDUP_MS > 0) {
+		const sameIpDup = await col.findOne({
+			byte, str, server, ip,
+			ts: { $gte: now - SAME_IP_DEDUP_MS }
+		})
+		if (sameIpDup) return false
+	}
 
 	await col.insertOne({
 		byte, str, server, ip,
