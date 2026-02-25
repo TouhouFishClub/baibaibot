@@ -116,7 +116,8 @@ const mabiGachaTv = async (content, qq, callback) => {
 
   const mongoQuery = buildMongoQuery(whereClause, queryParams)
 
-  const total = await col.countDocuments(mongoQuery)
+  // 兼容旧版 mongodb 驱动，使用 count 而不是 countDocuments
+  const total = await col.count(mongoQuery)
   const docs = await col
     .find(mongoQuery)
     .sort({ ts: -1 })
