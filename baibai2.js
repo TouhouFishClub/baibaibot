@@ -1867,7 +1867,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   if(fie4 == 'opts') {
-    op(from, name, con.substring(4).trim(), 'html', callback);
+    op(from, name, con.substring(4).trim(), 'image', callback);
     return
   }
   if(fie4 == 'mbtv') {
@@ -1897,7 +1897,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie == 'opt' && fi != 'opts'){
-    op(from, name, con.substring(3).trim(), 'image', callback);
+    op(from, name, con.substring(3).trim(), 'html', callback);
     // autoVoteSend(groupid, callback)
     return;
   }
