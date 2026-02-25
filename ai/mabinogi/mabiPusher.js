@@ -9,6 +9,9 @@ const SIMPLE_GAIN_REGEX = /^(.+?)获得了道具(.+)$/
 // 汐殇** 从 格伦贝尔纳获得了 套装效果拉蒂卡移动速度增加+1咒语书。 (频道5)
 const COMPLEX_GAIN_REGEX = /^(.+?)\s*从\s*(.+?)获得了\s*(.+?)。\s*\(频道(\d+)\)\s*$/
 
+// 醉伴** 制作 布里安恩德斯激情手套 成功。(频道1)
+const CRAFT_SUCCESS_REGEX = /^(.+?)\s*制作\s+(.+?)\s*成功。?\s*\(频道(\d+)\)\s*$/
+
 // 在4分钟后地区的布拉格平原西北方处，出现了走私贩子. 今天的贸易物品为大理石。
 // 在布拉格平原西北方地区出现了走私贩子。今天的贸易物品为大理石。
 // 布拉格平原西北方地区的走私贩子 4分钟后将会消失。
@@ -103,6 +106,27 @@ async function handlePush(byte, str, server, ip) {
 					character_name,
 					dungeon_name,
 					reward,
+					channel,
+					server,
+					raw: str,
+					ts: now,
+					time: new Date(now)
+				})
+				return true
+			}
+
+			const craftMatch = str.match(CRAFT_SUCCESS_REGEX)
+			if (craftMatch) {
+				const [, characterNameRaw, itemNameRaw, channelStr] = craftMatch
+				const character_name = characterNameRaw.trim()
+				const item_name = itemNameRaw.trim()
+				const channel = Number(channelStr)
+
+				const colName = `cl_mbzz_${server}`
+				const craftCol = client.db('db_bot').collection(colName)
+				await craftCol.insertOne({
+					character_name,
+					item_name,
 					channel,
 					server,
 					raw: str,
