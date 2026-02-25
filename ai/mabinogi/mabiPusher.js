@@ -3,6 +3,12 @@ const { getClient } = require('../../mongo/index')
 const CROSS_IP_DEDUP_MS = 30 * 1000
 const SAME_IP_DEDUP_MS = 0
 
+// 春灬语默获得了道具奇妙的皇家骑士学院手套
+const SIMPLE_GAIN_REGEX = /^(.+?)获得了道具(.+)$/
+
+// 汐殇** 从 格伦贝尔纳获得了 套装效果拉蒂卡移动速度增加+1咒语书。 (频道5)
+const COMPLEX_GAIN_REGEX = /^(.+?)\s*从\s*(.+?)获得了\s*(.+?)。\s*\(频道(\d+)\)\s*$/
+
 async function handlePush(byte, str, server, ip) {
 	const client = await getClient()
 	const col = client.db('db_bot').collection('cl_mabinogi_pusher')
@@ -30,6 +36,57 @@ async function handlePush(byte, str, server, ip) {
 		ts: now,
 		time: new Date(now)
 	})
+
+	// 额外分发：byte 为 2 时，根据内容写入不同集合
+	if (Number(byte) === 2) {
+		try {
+			const simpleMatch = str.match(SIMPLE_GAIN_REGEX)
+			if (simpleMatch) {
+				const [, characterNameRaw, itemNameRaw] = simpleMatch
+				const character_name = characterNameRaw.trim()
+				const item_name = itemNameRaw.trim()
+
+				const colName = `cl_mbcd_${server}`
+				const simpleCol = client.db('db_bot').collection(colName)
+				await simpleCol.insertOne({
+					character_name,
+					item_name,
+					server,
+					raw: str,
+					ts: now,
+					time: new Date(now)
+				})
+				return true
+			}
+
+			const complexMatch = str.match(COMPLEX_GAIN_REGEX)
+			if (complexMatch) {
+				const [, characterNameRaw, dungeonNameRaw, rewardRaw, channelStr] = complexMatch
+				const character_name = characterNameRaw.trim()
+				const dungeon_name = dungeonNameRaw.trim()
+				const reward = rewardRaw.trim()
+				const channel = Number(channelStr)
+
+				const colName = `cl_mbtv_${server}`
+				const complexCol = client.db('db_bot').collection(colName)
+				await complexCol.insertOne({
+					character_name,
+					dungeon_name,
+					reward,
+					channel,
+					server,
+					raw: str,
+					ts: now,
+					time: new Date(now)
+				})
+				return true
+			}
+		} catch (err) {
+			// 分发失败不影响主记录
+			console.error('mabinogi pusher byte=2 dispatch error', err, { str, server })
+		}
+	}
+
 	return true
 }
 

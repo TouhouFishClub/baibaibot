@@ -100,6 +100,10 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
     	  top: -14px;
     	  left: 15px;
     	}
+    	.main-container .text-box .name{
+    	  word-break: normal;
+    	  white-space: nowrap;
+    	}
     	.main-container .text-box .buff-item,
     	.main-container .text-box .where-item{
     	  line-height: 25px;
