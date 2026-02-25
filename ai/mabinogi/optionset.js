@@ -340,7 +340,8 @@ class SearchHandler {
   }
 
   _renderTextResult(info, wheres, callback) {
-    let str = `${info.LocalName.trim()}(Rank ${info.Level})\n[${info.Usage}]\n`
+    const safeName = (info.LocalName || '').replace(/[\r\n]/g, '').trim()
+    let str = `${safeName}(Rank ${info.Level})\n[${info.Usage}]\n`
     str += info.Buff.length ? `${info.Buff.join('\n')}\n` : ''
     str += info.Debuff.join('\n')
     
@@ -356,11 +357,13 @@ class SearchHandler {
     
     if (results.length <= CONFIG.MAX_SEARCH_RESULTS) {
       results.forEach(os => {
-        str += `opt ${os.ID} | [${os.Usage}]${os.LocalName}(Rank ${os.Level})\n`
+        const safeName = (os.LocalName || '').replace(/[\r\n]/g, '')
+        str += `opt ${os.ID} | [${os.Usage}]${safeName}(Rank ${os.Level})\n`
       })
     } else {
       for (let i = 0; i < CONFIG.MAX_SEARCH_RESULTS; i++) {
-        str += `opt ${results[i].ID} | [${results[i].Usage}]${results[i].LocalName}(Rank ${results[i].Level})\n`
+        const safeName = (results[i].LocalName || '').replace(/[\r\n]/g, '')
+        str += `opt ${results[i].ID} | [${results[i].Usage}]${safeName}(Rank ${results[i].Level})\n`
       }
       str += `超过搜索限制，请添加更多关键字\nsearch count : ${results.length}\n`
     }

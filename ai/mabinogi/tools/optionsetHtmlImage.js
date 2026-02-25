@@ -125,7 +125,7 @@ const optionsetHtmlImage = (obj, wheres, callback) => {
   	  <div class="title-desc">${isPersonal ? 'Personal Enchant Scroll' : 'Enchant Scroll'}</div>
   	  <div class="text-box">
   	    <div class="label">道具属性</div>
-  	    <div class="name">${obj.LocalName}${obj.LocalName2 == obj.LocalName ? '' : ` / ${obj.LocalName2}`}(${obj.Usage}:等级${obj.Level})</div>
+  	    <div class="name">${(obj.LocalName || '').replace(/[\r\n]/g, '')}${obj.LocalName2 == obj.LocalName ? '' : ` / ${(obj.LocalName2 || '').replace(/[\r\n]/g, '')}`}(${obj.Usage}:等级${obj.Level})</div>
   	    ${objArr.map(item => `
   	      <div class="buff-item ${item.buff ? 'buff': 'debuff'}">${item.text}</div>
   	    `).join('')}
