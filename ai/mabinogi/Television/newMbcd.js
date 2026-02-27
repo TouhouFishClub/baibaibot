@@ -14,46 +14,46 @@ const formatTime = ts => {
 
 const addZero = n => (n < 10 ? '0' + n : n)
 
-const buildMongoQuery = (whereClause, queryParams) => {
-  let mongoQuery = {}
+/**
+ * 构建 MongoDB 查询
+ * @param {string} filter - 原始搜索字符串
+ * @returns {object} MongoDB 查询对象
+ *
+ * 格式说明：
+ *   无分隔符：同时模糊搜索 item_name 和 character_name（$or）
+ *   有分隔符(-)：按位置精确指定字段 -> 道具名-角色名-手帕名
+ *     例: "道具"       → item_name OR character_name 包含"道具"
+ *     例: "道具-角色"  → item_name 包含"道具" AND character_name 包含"角色"
+ *     例: "-角色-"     → 仅 character_name 包含"角色"
+ *     例: "--手帕"     → 仅 draw_pool 包含"手帕"
+ */
+const buildMongoQuery = (filter) => {
+  if (!filter || !filter.length) return {}
 
-  if (whereClause && queryParams && queryParams.length > 0) {
-    const whereStr = whereClause.replace(/^WHERE\s*/i, '')
-
-    if (queryParams.length === 1) {
-      const searchTerm = queryParams[0].replace(/%/g, '')
-      mongoQuery = {
-        $or: [
-          { item_name: new RegExp(searchTerm, 'i') },
-          { character_name: new RegExp(searchTerm, 'i') }
-        ]
-      }
-    } else if (queryParams.length === 2 && whereStr.includes('OR')) {
-      const searchTerm = queryParams[0].replace(/%/g, '')
-      mongoQuery = {
-        $or: [
-          { item_name: new RegExp(searchTerm, 'i') },
-          { character_name: new RegExp(searchTerm, 'i') }
-        ]
-      }
-    } else {
-      mongoQuery = {}
-      queryParams.forEach((param, index) => {
-        if (param) {
-          const searchTerm = param.replace(/%/g, '')
-          if (index === 0) {
-            mongoQuery.item_name = new RegExp(searchTerm, 'i')
-          } else if (index === 1) {
-            mongoQuery.character_name = new RegExp(searchTerm, 'i')
-          } else if (index === 2) {
-            mongoQuery.draw_pool = new RegExp(searchTerm, 'i')
-          }
-        }
-      })
+  // 没有分隔符：同时搜 item_name 和 character_name
+  if (filter.indexOf('-') === -1) {
+    return {
+      $or: [
+        { item_name: new RegExp(filter, 'i') },
+        { character_name: new RegExp(filter, 'i') }
+      ]
     }
   }
 
-  return mongoQuery
+  // 有分隔符：按位置对应字段
+  const sp = filter.split('-')
+  const fields = ['item_name', 'character_name', 'draw_pool']
+  const conditions = []
+
+  sp.forEach((part, i) => {
+    if (part && fields[i]) {
+      conditions.push({ [fields[i]]: new RegExp(part, 'i') })
+    }
+  })
+
+  if (conditions.length === 0) return {}
+  if (conditions.length === 1) return conditions[0]
+  return { $and: conditions }
 }
 
 const mabiGachaTv = async (content, qq, callback) => {
@@ -97,30 +97,11 @@ const mabiGachaTv = async (content, qq, callback) => {
 
   const filter = content.trim()
   const limit = 20
-  let queryParams = []
-  let whereClause = ''
-
-  if (filter.length) {
-    if (filter.indexOf('-') > -1) {
-      const sp = filter.split('-')
-      const [itemFilter, nameFilter, poolFilter] = sp
-      if (itemFilter || nameFilter || poolFilter) {
-        whereClause = `WHERE${sp
-          .map((x, i) => x && [' item_name LIKE ?', ' character_name LIKE ?', ' draw_pool LIKE ?'][i])
-          .filter(x => x)
-          .join(' AND')}`
-        queryParams = sp.map(x => x && `%${x}%`).filter(x => x)
-      }
-    } else {
-      whereClause = `WHERE item_name LIKE ? OR character_name LIKE ?`
-      queryParams = [`%${filter}%`, `%${filter}%`]
-    }
-  }
 
   const collectionName = `cl_mbcd_${sv}`
   const col = db.collection(collectionName)
 
-  const mongoQuery = buildMongoQuery(whereClause, queryParams)
+  const mongoQuery = buildMongoQuery(filter)
 
   // 兼容旧版 mongodb 驱动，使用 count 而不是 countDocuments
   const total = await col.count(mongoQuery)

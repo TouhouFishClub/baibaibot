@@ -90,18 +90,13 @@ const buildMongoQuery = (whereClause, queryParams) => {
       )
       mongoQuery.reward = rewardRegex
     } else if (queryParams && queryParams.length > 0) {
+      // 过滤掉空参数，但保留索引信息的视图
+      const nonEmptyParams = queryParams.filter(p => p)
+
       // LIKE 查询
-      if (queryParams.length === 1) {
-        const searchTerm = queryParams[0].replace(/%/g, '')
-        mongoQuery = {
-          $or: [
-            { reward: new RegExp(searchTerm, 'i') },
-            { character_name: new RegExp(searchTerm, 'i') },
-            { dungeon_name: new RegExp(searchTerm, 'i') }
-          ]
-        }
-      } else if (queryParams.length === 3 && whereStr.includes('OR')) {
-        const searchTerm = queryParams[0].replace(/%/g, '')
+      // 无短横线的普通搜索：SQL 构造里会带 OR
+      if (nonEmptyParams.length >= 1 && whereStr.includes('OR')) {
+        const searchTerm = nonEmptyParams[0].replace(/%/g, '')
         mongoQuery = {
           $or: [
             { reward: new RegExp(searchTerm, 'i') },
@@ -110,7 +105,7 @@ const buildMongoQuery = (whereClause, queryParams) => {
           ]
         }
       } else {
-        // 多条件 AND（reward-character-dungeon）
+        // 多条件 AND（reward-character-dungeon）；通过索引判断字段
         mongoQuery = {}
         queryParams.forEach((param, index) => {
           if (param) {
@@ -205,7 +200,13 @@ const mabiTelevision = async (content, qq, callback) => {
           .map((x, i) => x && [rewordSql, ' character_name LIKE ?', ' dungeon_name LIKE ?'][i])
           .filter(x => x)
           .join(' AND')}`
-        queryParams = sp.map(x => x && `%${x}%`).filter(x => x && !(x.startsWith('%新') && x.endsWith('卷%')))
+        // 保留索引位置，避免因过滤空字符串导致字段错位
+        queryParams = sp.map((x, i) => {
+          if (!x) return null
+          // 奖励字段为“新卷”一类时，已经用 REGEXP 处理，这里不再作为 LIKE 参数
+          if (i === 0 && /^新.*卷$/.test(x)) return null
+          return `%${x}%`
+        })
       }
     } else {
       if (/^新.*卷$/.test(filter)) {
