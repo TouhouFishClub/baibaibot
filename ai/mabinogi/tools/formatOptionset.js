@@ -11,7 +11,7 @@ module.exports = function(callback) {
   let transform = {}
   optionsetInfo.split('\n').forEach(val => {
     let sp = val.split('\t')
-    transform[`_LT[xml.optionset.${sp[0]}]`] = sp[1]
+    transform[`_LT[xml.optionset.${sp[0]}]`] = sp[1].trim()
   })
   let effectiveOptionsetHashMap = {}
   parser.parseString(optionsetXml, (err, result) => {
