@@ -199,6 +199,16 @@
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 5px;
+      position: relative;
+    }
+    .material-id {
+      position: absolute;
+      top: 1px;
+      left: 3px;
+      font-size: 7px;
+      color: rgba(255,255,255,0.15);
+      line-height: 1;
+      pointer-events: none;
     }
     .material-icon {
       width: 28px;
@@ -344,6 +354,9 @@
       letter-spacing: 0.5px;
     }
     .sub-recipe-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
       background: rgba(255,255,255,0.02);
       border: 1px solid rgba(255,255,255,0.05);
       border-radius: 6px;
@@ -351,6 +364,25 @@
       margin-bottom: 5px;
     }
     .sub-recipe-block:last-child { margin-bottom: 0; }
+    .sub-recipe-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      background: rgba(218,165,32,0.08);
+      border: 1px solid rgba(218,165,32,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .sub-recipe-icon img {
+      max-width: 28px;
+      max-height: 28px;
+      object-fit: contain;
+    }
+    .sub-recipe-content { flex: 1; min-width: 0; }
     .sub-recipe-header {
       display: flex;
       align-items: center;
@@ -507,8 +539,8 @@
 
       if (recipe.type === 'manual') {
         html += `<span class="level-badge manual-level">Lv.${recipe.level}</span>`
-      } else if (recipe.type === 'production' && recipe.difficulty > 0) {
-        html += `<span class="level-badge difficulty">难度 ${recipe.difficulty}</span>`
+      } else if (recipe.type === 'production' && recipe.difficulty >= 0) {
+        html += `<span class="level-badge difficulty">难度 ${RANK_MAP[recipe.difficulty] !== undefined ? RANK_MAP[recipe.difficulty] : recipe.difficulty}</span>`
       } else if (recipe.type === 'cooking') {
         html += `<span class="cooking-action">${recipe.actionCn || recipe.action}</span>`
       }
@@ -603,6 +635,7 @@
       const imgSrc = mat.id > 0 ? getImageUrl(mat.id) : ''
       return `
         <div class="material-item">
+          ${mat.id > 0 ? `<span class="material-id">${mat.id}</span>` : ''}
           <div class="material-icon">
             ${imgSrc
               ? `<img src="${imgSrc}" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=placeholder>◆</span>'" />`
@@ -618,7 +651,16 @@
     }
 
     function renderSubRecipe(mat, sub) {
+      const matImg = mat.id > 0 ? getImageUrl(mat.id) : ''
       let html = '<div class="sub-recipe-block">'
+      // 左侧材料图片
+      html += '<div class="sub-recipe-icon">'
+      html += matImg
+        ? `<img src="${matImg}" onerror="this.style.display='none'" />`
+        : '<span style="font-size:14px;color:rgba(218,165,32,0.3);">◆</span>'
+      html += '</div>'
+      // 右侧内容
+      html += '<div class="sub-recipe-content">'
       html += '<div class="sub-recipe-header">'
       html += `<span class="sub-product-name">${mat.name}</span>`
       html += `<span class="sub-skill">`
@@ -627,7 +669,7 @@
       }
       html += `${sub.skillName}`
       if (sub.level) html += ` Lv.${sub.level}`
-      if (sub.difficulty) html += ` 难度${sub.difficulty}`
+      if (sub.difficulty !== undefined && sub.difficulty >= 0 && sub.type === 'production') html += ` 难度${RANK_MAP[sub.difficulty] !== undefined ? RANK_MAP[sub.difficulty] : sub.difficulty}`
       html += '</span></div>'
 
       const allMats = [...(sub.materials || []), ...(sub.completeMaterials || [])]
@@ -639,7 +681,7 @@
         }
         html += '</div>'
       }
-      html += '</div>'
+      html += '</div></div>'
       return html
     }
 
