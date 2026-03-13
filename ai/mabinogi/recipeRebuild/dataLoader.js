@@ -198,25 +198,6 @@ const resolveCompleteEssentials = (str, allItems) => {
   return { materials, hasVariants: variants.length > 1, variantCount: variants.length }
 }
 
-// ====== 第三只眼（SightOfOtherSide）物品ID集合 ======
-// 来源：旧项目各 *Item.js 中的 SightOfOtherSide*List
-const SIGHT_OF_OTHER_SIDE_IDS = new Set([
-  // Handicraft
-  41480, 41475, 41476,
-  // Blacksmith
-  41473, 41474, 41477, 41478, 41479, 41481,
-  // PotionMaking
-  51180, 51181,
-  // MagicCraft
-  85262, 1040006, 1230007, 1420000, 1040007, 1230008, 1420001,
-  1010055, 1270022, 5000142,
-  1000059, 1010070, 1020004, 1070014, 1200043, 1210067, 1220018,
-  1250026, 1260020, 1270029, 1290021, 1400012,
-  5100276, 5100278, 5100281, 5100285, 5100286, 5100290, 5100291,
-  5100292, 5100294, 5100300, 5100302,
-  41266, 41271, 1020011,
-])
-
 // ====== SpecialTalent 翻译 ======
 const SPECIAL_TALENT_MAP = {
   'sewing': '裁缝',
@@ -284,6 +265,8 @@ const loadProductionRecipes = async (allItems) => {
       if (!productId) continue
       // 跳过练习条目
       if (parseInt($.ProductionId) >= 10000) continue
+      // 跳过已废弃的 feature（ __feature 以 ! 开头表示旧版本，已被新版本替代）
+      if ($.__feature && $.__feature.startsWith('!')) continue
 
       const title = $.Title ? (transform[$.Title] || $.Title) : ''
       const desc = $.Desc ? (transform[$.Desc] || '') : ''
@@ -301,8 +284,8 @@ const loadProductionRecipes = async (allItems) => {
       const materials = resolveEssentials($.Essentials, allItems)
       const productItem = allItems.get(productId)
 
-      // 第三只眼标记
-      const requiresSightOfOtherSide = SIGHT_OF_OTHER_SIDE_IDS.has(productId)
+      // 第三只眼标记：根据 ApplySpecialization="true"
+      const requiresSightOfOtherSide = $.ApplySpecialization === 'true'
 
       recipes.push({
         type: 'production',
@@ -367,8 +350,8 @@ const loadManualFormRecipes = async (allItems) => {
       const rawTalent = ($.SpecialTalent || '').replace(/;/g, '').trim()
       const specialTalent = SPECIAL_TALENT_MAP[rawTalent] || ''
 
-      // 第三只眼标记
-      const requiresSightOfOtherSide = SIGHT_OF_OTHER_SIDE_IDS.has(productId)
+      // 第三只眼标记：根据 ApplySpecialization="true"
+      const requiresSightOfOtherSide = $.ApplySpecialization === 'true'
 
       recipes.push({
         type: 'manual',

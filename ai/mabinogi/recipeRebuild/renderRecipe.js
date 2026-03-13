@@ -60,9 +60,64 @@ const scheduleBrowserClose = () => {
   }, BROWSER_IDLE_TIMEOUT)
 }
 
-// ====== 模板路径 ======
+// ====== 模板路径 & 图片路径 ======
 const TEMPLATE_PATH = 'file:///' + path.join(__dirname, 'template.html').replace(/\\/g, '/')
 const SKILL_ICON_BASE = 'file:///' + path.join(__dirname, 'img', 'Skill').replace(/\\/g, '/') + '/'
+const ITEM_ICON_DIR = path.join(__dirname, 'img', 'item')
+const ITEM_ICON_BASE = 'file:///' + ITEM_ICON_DIR.replace(/\\/g, '/') + '/'
+const ITEM_IMAGE_REMOTE = 'https://mabires2.pril.cc/invimage/kr'
+
+// 确保图片缓存目录存在
+if (!fs.existsSync(ITEM_ICON_DIR)) {
+  fs.mkdirSync(ITEM_ICON_DIR, { recursive: true })
+}
+
+// ====== 图片下载缓存 ======
+const https = require('https')
+const http = require('http')
+
+/** 下载单张图片到本地缓存，若已存在则跳过 */
+const downloadItemIcon = (itemId) => new Promise((resolve) => {
+  if (itemId <= 0) return resolve(false)
+  const localPath = path.join(ITEM_ICON_DIR, `${itemId}.png`)
+  if (fs.existsSync(localPath)) return resolve(true)
+
+  const url = `${ITEM_IMAGE_REMOTE}/${itemId}/${itemId}.png`
+  const client = url.startsWith('https') ? https : http
+
+  const req = client.get(url, { timeout: 5000 }, (res) => {
+    if (res.statusCode !== 200) {
+      res.resume()
+      return resolve(false)
+    }
+    const chunks = []
+    res.on('data', c => chunks.push(c))
+    res.on('end', () => {
+      try {
+        fs.writeFileSync(localPath, Buffer.concat(chunks))
+        resolve(true)
+      } catch (e) { resolve(false) }
+    })
+  })
+  req.on('error', () => resolve(false))
+  req.on('timeout', () => { req.destroy(); resolve(false) })
+})
+
+/** 批量下载物品图片（并发控制） */
+const downloadItemIcons = async (itemIds) => {
+  const unique = [...new Set(itemIds.filter(id => id > 0))]
+  // 过滤已缓存的
+  const toDownload = unique.filter(id => !fs.existsSync(path.join(ITEM_ICON_DIR, `${id}.png`)))
+  if (toDownload.length === 0) return
+
+  console.log(`[renderRecipe] 下载 ${toDownload.length} 张物品图片...`)
+  // 并发下载，限制并发数
+  const CONCURRENCY = 8
+  for (let i = 0; i < toDownload.length; i += CONCURRENCY) {
+    const batch = toDownload.slice(i, i + CONCURRENCY)
+    await Promise.all(batch.map(id => downloadItemIcon(id)))
+  }
+}
 
 /**
  * 构建子配方数据（mbd模式：展示材料的制作配方）
@@ -119,9 +174,28 @@ const buildSubRecipes = (recipes, allItems, recipesByProduct) => {
 const renderRecipeImage = async (product, recipes, allItems, recipesByProduct, showDesc, callback, msg = '', order = 'IF') => {
   let page = null
   try {
+    // 收集所有需要的物品图片ID
+    const allItemIds = [product.id]
+    for (const r of recipes) {
+      for (const m of (r.materials || [])) allItemIds.push(m.id)
+      for (const m of (r.completeMaterials || [])) allItemIds.push(m.id)
+    }
+    // 子配方材料图片
+    if (showDesc) {
+      const subR = buildSubRecipes(recipes, allItems, recipesByProduct)
+      for (const subs of Object.values(subR)) {
+        for (const s of subs) {
+          for (const m of (s.materials || [])) allItemIds.push(m.id)
+          for (const m of (s.completeMaterials || [])) allItemIds.push(m.id)
+        }
+      }
+    }
+    // 批量下载缺失图片
+    await downloadItemIcons(allItemIds)
+
     const browser = await getBrowser()
     page = await browser.newPage()
-    await page.setViewport({ width: 800, height: 600, deviceScaleFactor: 2 })
+    await page.setViewport({ width: 560, height: 600, deviceScaleFactor: 2 })
 
     // 加载模板
     await page.goto(TEMPLATE_PATH, { waitUntil: 'domcontentloaded' })
@@ -168,6 +242,7 @@ const renderRecipeImage = async (product, recipes, allItems, recipesByProduct, s
       showDesc,
       subRecipes,
       skillIconBase: SKILL_ICON_BASE,
+      itemIconBase: ITEM_ICON_BASE,
     }
 
     // 注入数据并渲染
