@@ -65,7 +65,11 @@ const TEMPLATE_PATH = 'file:///' + path.join(__dirname, 'template.html').replace
 const SKILL_ICON_BASE = 'file:///' + path.join(__dirname, 'img', 'Skill').replace(/\\/g, '/') + '/'
 const ITEM_ICON_DIR = path.join(__dirname, 'img', 'item')
 const ITEM_ICON_BASE = 'file:///' + ITEM_ICON_DIR.replace(/\\/g, '/') + '/'
-const ITEM_IMAGE_REMOTE = 'https://mabires2.pril.cc/invimage/kr'
+// 图片远程服务器（优先CN，回退KR）
+const ITEM_IMAGE_SERVERS = [
+  'https://mabires2.pril.cc/invimage/cn',
+  'https://mabires2.pril.cc/invimage/kr',
+]
 
 // 确保图片缓存目录存在
 if (!fs.existsSync(ITEM_ICON_DIR)) {
@@ -76,32 +80,40 @@ if (!fs.existsSync(ITEM_ICON_DIR)) {
 const https = require('https')
 const http = require('http')
 
-/** 下载单张图片到本地缓存，若已存在则跳过 */
-const downloadItemIcon = (itemId) => new Promise((resolve) => {
-  if (itemId <= 0) return resolve(false)
-  const localPath = path.join(ITEM_ICON_DIR, `${itemId}.png`)
-  if (fs.existsSync(localPath)) return resolve(true)
-
-  const url = `${ITEM_IMAGE_REMOTE}/${itemId}/${itemId}.png`
+/** 从指定URL下载图片，返回Buffer或null */
+const fetchImage = (url) => new Promise((resolve) => {
   const client = url.startsWith('https') ? https : http
-
   const req = client.get(url, { timeout: 5000 }, (res) => {
     if (res.statusCode !== 200) {
       res.resume()
-      return resolve(false)
+      return resolve(null)
     }
     const chunks = []
     res.on('data', c => chunks.push(c))
-    res.on('end', () => {
-      try {
-        fs.writeFileSync(localPath, Buffer.concat(chunks))
-        resolve(true)
-      } catch (e) { resolve(false) }
-    })
+    res.on('end', () => resolve(Buffer.concat(chunks)))
   })
-  req.on('error', () => resolve(false))
-  req.on('timeout', () => { req.destroy(); resolve(false) })
+  req.on('error', () => resolve(null))
+  req.on('timeout', () => { req.destroy(); resolve(null) })
 })
+
+/** 下载单张图片到本地缓存，优先CN服务器，CN没有再尝试KR */
+const downloadItemIcon = async (itemId) => {
+  if (itemId <= 0) return false
+  const localPath = path.join(ITEM_ICON_DIR, `${itemId}.png`)
+  if (fs.existsSync(localPath)) return true
+
+  for (const server of ITEM_IMAGE_SERVERS) {
+    const url = `${server}/${itemId}/${itemId}.png`
+    const buf = await fetchImage(url)
+    if (buf && buf.length > 0) {
+      try {
+        fs.writeFileSync(localPath, buf)
+        return true
+      } catch (e) { /* ignore */ }
+    }
+  }
+  return false
+}
 
 /** 批量下载物品图片（并发控制） */
 const downloadItemIcons = async (itemIds) => {
