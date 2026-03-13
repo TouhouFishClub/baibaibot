@@ -606,9 +606,9 @@
 
       // 额外信息
       const extras = []
-      if (recipe.merchantExp > 0) extras.push(`商人经验 ${recipe.merchantExp.toLocaleString()}`)
+      if (recipe.merchantExp > 0) extras.push(`生产经验值 ${recipe.merchantExp.toLocaleString()}`)
       if (recipe.rainBonus > 0) extras.push(`雨天 +${recipe.rainBonus}%`)
-      if (recipe.cookExp > 0) extras.push(`料理经验 ${recipe.cookExp}`)
+      if (recipe.cookExp > 0) extras.push(`料理经验值 ${recipe.cookExp}`)
       if (extras.length > 0) {
         html += '<div class="extra-info">'
         for (const ext of extras) {
