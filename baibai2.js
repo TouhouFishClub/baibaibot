@@ -1915,23 +1915,23 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie4 == 'mbis'){
-    searchMabiRecipe(con.substring(3).trim(), callback);
+    searchMabiRecipe(con.substring(4).trim(), callback);
     return;
   }
 
   if(fie4 == 'mbds'){
-    searchMabiRecipe(con.substring(3).trim(), callback, true);
+    searchMabiRecipe(con.substring(4).trim(), callback, true);
     return;
   }
 
   if(fie == 'mbi'){
-    searchMabiRecipeLegacy(con.substring(4).trim(), callback);
+    searchMabiRecipeLegacy(con.substring(3).trim(), callback);
     // autoVoteSend(groupid, callback)
     return;
   }
 
   if(fie == 'mbd'){
-    searchMabiRecipeLegacy(con.substring(4).trim(), callback, true);
+    searchMabiRecipeLegacy(con.substring(3).trim(), callback, true);
     // autoVoteSend(groupid, callback)
     return;
   }
