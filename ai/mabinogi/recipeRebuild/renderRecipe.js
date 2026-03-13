@@ -1,6 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-const puppeteer = require('puppeteer')
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', '..', 'baibaiConfigs.js'))
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -10,6 +9,61 @@ const OUTPUT_DIR = path.join(IMAGE_DATA, 'mabi_recipe')
 if (!fs.existsSync(OUTPUT_DIR)) {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 }
+
+// ====== 浏览器实例池（复用，减少CPU开销） ======
+let _browser = null
+let _browserCloseTimer = null
+const BROWSER_IDLE_TIMEOUT = 60000 // 60秒无请求则关闭浏览器
+
+const getBrowser = async () => {
+  // 延长关闭计时器
+  if (_browserCloseTimer) {
+    clearTimeout(_browserCloseTimer)
+    _browserCloseTimer = null
+  }
+
+  if (_browser) {
+    try {
+      // 检测浏览器是否仍然活跃
+      await _browser.version()
+      return _browser
+    } catch (e) {
+      _browser = null
+    }
+  }
+
+  const puppeteer = require('puppeteer')
+  _browser = await puppeteer.launch({
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process',
+    ],
+  })
+  console.log('[renderRecipe] 浏览器实例已创建')
+  return _browser
+}
+
+const scheduleBrowserClose = () => {
+  if (_browserCloseTimer) clearTimeout(_browserCloseTimer)
+  _browserCloseTimer = setTimeout(async () => {
+    if (_browser) {
+      try {
+        await _browser.close()
+        console.log('[renderRecipe] 浏览器实例已关闭（空闲超时）')
+      } catch (e) { /* ignore */ }
+      _browser = null
+    }
+    _browserCloseTimer = null
+  }, BROWSER_IDLE_TIMEOUT)
+}
+
+// ====== 模板路径 ======
+const TEMPLATE_PATH = 'file:///' + path.join(__dirname, 'template.html').replace(/\\/g, '/')
 
 /**
  * 渲染配方图片
@@ -22,17 +76,14 @@ if (!fs.existsSync(OUTPUT_DIR)) {
  * @param {string} order - 消息顺序 'IF'=图片优先, 'MF'=消息优先
  */
 const renderRecipeImage = async (product, recipes, allItems, showDesc, callback, msg = '', order = 'IF') => {
-  let browser = null
+  let page = null
   try {
-    browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    })
-    const page = await browser.newPage()
+    const browser = await getBrowser()
+    page = await browser.newPage()
     await page.setViewport({ width: 820, height: 600, deviceScaleFactor: 2 })
 
     // 加载模板
-    const templatePath = path.join(__dirname, 'template.html')
-    await page.goto('file://' + templatePath, { waitUntil: 'domcontentloaded' })
+    await page.goto(TEMPLATE_PATH, { waitUntil: 'domcontentloaded' })
 
     // 准备数据 - 将配方数据序列化（仅传递需要的字段）
     const recipeData = recipes.map(r => ({
@@ -75,8 +126,8 @@ const renderRecipeImage = async (product, recipes, allItems, showDesc, callback,
       renderRecipes(data)
     }, renderData)
 
-    // 等待图片加载
-    await delay(800)
+    // 等待图片加载（物品图标）
+    await delay(600)
 
     // 截图
     const container = await page.$('#recipe-container')
@@ -93,7 +144,8 @@ const renderRecipeImage = async (product, recipes, allItems, showDesc, callback,
       return
     }
 
-    const outputFile = path.join(OUTPUT_DIR, `${product.name.replace(/[<>:"/\\|?*]/g, '_')}.png`)
+    const safeName = product.name.replace(/[<>:"/\\|?*@]/g, '_')
+    const outputFile = path.join(OUTPUT_DIR, `${safeName}.png`)
 
     await page.screenshot({
       path: outputFile,
@@ -105,9 +157,9 @@ const renderRecipeImage = async (product, recipes, allItems, showDesc, callback,
       },
     })
 
-    console.log(`[renderRecipe] 保存 ${product.name}.png 成功`)
+    console.log(`[renderRecipe] 保存 ${safeName}.png 成功`)
 
-    const imgMsg = `[CQ:image,file=${path.join('send', 'mabi_recipe', `${product.name.replace(/[<>:"/\\|?*]/g, '_')}.png`)}]`
+    const imgMsg = `[CQ:image,file=${path.join('send', 'mabi_recipe', `${safeName}.png`)}]`
     let mixMsg = ''
     switch (order) {
       case 'IF':
@@ -125,7 +177,11 @@ const renderRecipeImage = async (product, recipes, allItems, showDesc, callback,
     console.error('[renderRecipe] 渲染错误:', err)
     callback('配方图片渲染失败，请稍后再试')
   } finally {
-    if (browser) await browser.close()
+    // 关闭页面但保留浏览器实例
+    if (page) {
+      try { await page.close() } catch (e) { /* ignore */ }
+    }
+    scheduleBrowserClose()
   }
 }
 

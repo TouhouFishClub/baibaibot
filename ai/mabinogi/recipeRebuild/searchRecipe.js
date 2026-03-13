@@ -1,5 +1,13 @@
 const { loadAllRecipes, getAllItems, getNameToIds } = require('./dataLoader')
-const { renderRecipeImage } = require('./renderRecipe')
+
+// 延迟加载 renderRecipe（避免在 puppeteer 不可用时崩溃）
+let _renderRecipeImage = null
+const getRender = () => {
+  if (!_renderRecipeImage) {
+    _renderRecipeImage = require('./renderRecipe').renderRecipeImage
+  }
+  return _renderRecipeImage
+}
 
 /**
  * 搜索配方主入口
@@ -60,7 +68,7 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
       const target = targets[0]
       const recipes = recipesByProduct.get(target.id)
       if (recipes && recipes.length > 0) {
-        renderRecipeImage(target, recipes, allItems, showDesc, callback)
+        getRender()(target, recipes, allItems, showDesc, callback)
       } else {
         callback(`找到「${target.name}」但没有配方数据`)
       }
@@ -71,7 +79,7 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
         const recipes = recipesByProduct.get(exactMatch.id)
         if (recipes && recipes.length > 0) {
           const listMsg = `找到${targets.length}个匹配\n${targets.slice(0, 10).map(t => `mbi ${t.id} | ${t.name}`).join('\n')}\n已为您定位到「${exactMatch.name}」`
-          renderRecipeImage(exactMatch, recipes, allItems, showDesc, callback, listMsg, 'MF')
+          getRender()(exactMatch, recipes, allItems, showDesc, callback, listMsg, 'MF')
         }
       } else {
         // 显示列表
