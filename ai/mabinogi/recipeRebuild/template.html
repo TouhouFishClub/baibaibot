@@ -454,9 +454,16 @@
   </div>
   <script>
     const RANK_MAP = {
-      0: '练习', 1: '等级 F', 2: '等级 E', 3: '等级 D', 4: '等级 C', 5: '等级 B', 6: '等级 A',
-      7: '等级 9', 8: '等级 8', 9: '等级 7', 10: '等级 6', 11: '等级 5', 12: '等级 4', 13: '等级 3', 14: '等级 2', 15: '等级 1',
+      0: '练习', 1: 'F', 2: 'E', 3: 'D', 4: 'C', 5: 'B', 6: 'A',
+      7: '9', 8: '8', 9: '7', 10: '6', 11: '5', 12: '4', 13: '3', 14: '2', 15: '1',
       16: '1段', 17: '2段', 18: '3段'
+    }
+
+    function rankLabel(val) {
+      const s = RANK_MAP[val]
+      if (s === undefined) return val
+      if (val === 0 || val >= 16) return s
+      return '等级 ' + s
     }
 
     function getRateClass(rate) {
@@ -552,9 +559,9 @@
       html += '</div>'
 
       if (recipe.type === 'manual') {
-        html += `<span class="level-badge manual-level">难度: ${RANK_MAP[recipe.level] !== undefined ? RANK_MAP[recipe.level] : recipe.level}</span>`
+        html += `<span class="level-badge manual-level">难度: ${rankLabel(recipe.level)}</span>`
       } else if (recipe.type === 'production' && recipe.difficulty >= 0) {
-        html += `<span class="level-badge difficulty">难度: ${RANK_MAP[recipe.difficulty] !== undefined ? RANK_MAP[recipe.difficulty] : recipe.difficulty}</span>`
+        html += `<span class="level-badge difficulty">难度: ${rankLabel(recipe.difficulty)}</span>`
       } else if (recipe.type === 'cooking') {
         html += `<span class="cooking-action"><img src="${getCookingActionIconUrl(recipe.actionCn)}" onerror="this.style.display='none'" />${recipe.actionCn || recipe.action}</span>`
       }
@@ -682,8 +689,8 @@
         html += `<img src="${getSkillIconUrl(sub.skillId)}" onerror="this.style.display='none'" /> `
       }
       html += `${sub.skillName}`
-      if (sub.level) html += ` Lv.${RANK_MAP[sub.level] !== undefined ? RANK_MAP[sub.level] : sub.level}`
-      if (sub.difficulty !== undefined && sub.difficulty >= 0 && sub.type === 'production') html += ` 难度${RANK_MAP[sub.difficulty] !== undefined ? RANK_MAP[sub.difficulty] : sub.difficulty}`
+      if (sub.level) html += ` Lv.${rankLabel(sub.level)}`
+      if (sub.difficulty !== undefined && sub.difficulty >= 0 && sub.type === 'production') html += ` 难度${rankLabel(sub.difficulty)}`
       html += '</span></div>'
 
       const allMats = [...(sub.materials || []), ...(sub.completeMaterials || [])]
