@@ -241,12 +241,23 @@ const MANUAL_SKILL_MAP = {
 }
 
 const COOKING_ACTION_MAP = {
-  'mix': '拌', 'boil': '煮', 'bake': '烤', 'fry': '炸',
-  'knead': '揉面', 'make_noodle': '制面', 'make_pasta': '意面',
-  'make_jam': '果酱', 'make_pie': '派', 'make_pizza': '披萨',
-  'steam': '蒸', 'steamed_dish': '蒸菜',
-  'cook_with_strong_fire': '大火烤', 'fry_with_much_oil': '油炸',
-  'ferment': '发酵', 'fillet': '切片', 'sousvide': '低温烹饪',
+  'mix': '混合',
+  'cook_with_strong_fire': '烤(火)',
+  'steam': '煮(火)', 
+  'boil': '烧(火)', 
+  'fry_with_much_oil': '炸(火)',
+  'fry': '炒(火)',
+  'knead': '和面', 
+  'make_noodle': '做面条', 
+  'make_pasta': '制作意大利面',
+  'make_jam': '制做果酱(火)',
+  'make_pie': '制做派', 
+  'steamed_dish': '蒸(火)', 
+  'make_pizza': '制作披萨',
+  'ferment': '发酵', 
+  'sousvide': '水浴法(火)',
+  'fillet': '切片', 
+  'bake': '烤',  
 }
 
 // ====== 配方加载 ======

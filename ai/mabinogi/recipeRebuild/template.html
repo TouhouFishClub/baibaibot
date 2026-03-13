@@ -308,6 +308,11 @@
       border: 1px solid rgba(255,165,0,0.25);
       color: #ffa500;
     }
+    .cooking-action img {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+    }
 
     /* 额外信息 - 紧凑 */
     .extra-info {
@@ -475,6 +480,11 @@
       return _skillIconBase + skillId + '.png'
     }
 
+    function getCookingActionIconUrl(actionCn) {
+      if (!actionCn) return ''
+      return _skillIconBase + '10020' + actionCn + '.png'
+    }
+
     function renderRecipes(data) {
       const { product, recipes, showDesc, subRecipes, skillIconBase, itemIconBase } = data
       _skillIconBase = skillIconBase || ''
@@ -528,7 +538,9 @@
 
       // 卡片头部
       html += '<div class="card-header"><div class="skill-left">'
-      if (recipe.skillId) {
+      if (recipe.type === 'cooking' && recipe.actionCn) {
+        html += `<img class="skill-icon" src="${getCookingActionIconUrl(recipe.actionCn)}" onerror="this.src='${getSkillIconUrl(10020)}';this.onerror=null" />`
+      } else if (recipe.skillId) {
         html += `<img class="skill-icon" src="${getSkillIconUrl(recipe.skillId)}" onerror="this.style.display='none'" />`
       }
       html += `<span class="skill-name">${recipe.skillName}</span>`
@@ -542,7 +554,7 @@
       } else if (recipe.type === 'production' && recipe.difficulty >= 0) {
         html += `<span class="level-badge difficulty">难度 ${RANK_MAP[recipe.difficulty] !== undefined ? RANK_MAP[recipe.difficulty] : recipe.difficulty}</span>`
       } else if (recipe.type === 'cooking') {
-        html += `<span class="cooking-action">${recipe.actionCn || recipe.action}</span>`
+        html += `<span class="cooking-action"><img src="${getCookingActionIconUrl(recipe.actionCn)}" onerror="this.style.display='none'" />${recipe.actionCn || recipe.action}</span>`
       }
       html += '</div>'
 
