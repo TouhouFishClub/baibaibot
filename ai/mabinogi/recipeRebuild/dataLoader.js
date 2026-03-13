@@ -14,19 +14,26 @@ let _initPromise = null  // 防止并发初始化
 
 // ====== 版本检测 ======
 
-/** 从 IT 目录获取数据版本（基于 VERSION_MARK 文件名） */
+/** 从 IT 目录获取数据版本（基于 VERSION_MARK 文件名 + dataLoader.js 自身修改时间） */
 const getDataVersion = () => {
+  let base = 'unknown'
   try {
     const files = fs.readdirSync(DATA_DIR)
     const versionFile = files.find(f => f.startsWith('VERSION_MARK_'))
-    if (versionFile) return versionFile
+    if (versionFile) base = versionFile
   } catch (e) { /* ignore */ }
+  if (base === 'unknown') {
+    try {
+      base = ['production.xml', 'manualform.xml', 'cookingrecipe.xml']
+        .map(f => {
+          try { return fs.statSync(path.join(DATA_DIR, f)).mtimeMs } catch (e) { return 0 }
+        }).join('_')
+    } catch (e) { /* ignore */ }
+  }
   try {
-    return ['production.xml', 'manualform.xml', 'cookingrecipe.xml']
-      .map(f => {
-        try { return fs.statSync(path.join(DATA_DIR, f)).mtimeMs } catch (e) { return 0 }
-      }).join('_')
-  } catch (e) { return 'unknown' }
+    const loaderMtime = fs.statSync(__filename).mtimeMs
+    return `${base}_L${loaderMtime}`
+  } catch (e) { return base }
 }
 
 // ====== XML 工具函数 ======
