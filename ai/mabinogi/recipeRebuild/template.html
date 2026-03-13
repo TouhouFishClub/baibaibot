@@ -339,8 +339,8 @@
       margin-bottom: 6px;
     }
     .manual-tag {
-      font-size: 11px;
-      padding: 2px 7px;
+      font-size: 12px;
+      padding: 2px 6px;
       border-radius: 4px;
       background: rgba(100,149,237,0.08);
       border: 1px solid rgba(100,149,237,0.18);
@@ -563,7 +563,7 @@
       // 手工额外信息
       if (recipe.type === 'manual' && (recipe.maxProgress > 0 || recipe.price > 0)) {
         html += '<div class="manual-info">'
-        if (recipe.maxProgress > 0) html += `<span class="manual-tag">进度 ${recipe.maxProgress}</span>`
+        if (recipe.maxProgress > 0) html += `<span class="manual-tag">单次完成度 ${recipe.maxProgress * 100}%</span>`
         if (recipe.price > 0) html += `<span class="manual-tag">${recipe.price.toLocaleString()} G</span>`
         html += '</div>'
       }
