@@ -9,160 +9,203 @@
 
     body {
       font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
-      background: linear-gradient(135deg, #0a0e27 0%, #1a1040 50%, #0d1b2a 100%);
+      background: linear-gradient(135deg, #0a0e27 0%, #151030 50%, #0d1b2a 100%);
       color: #e0d6c8;
       padding: 0;
     }
 
     #recipe-container {
-      max-width: 780px;
+      max-width: 760px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 14px;
     }
 
-    /* 头部标题 */
+    /* 头部标题 - 紧凑 */
     .header {
-      text-align: center;
-      padding: 16px 20px;
-      background: linear-gradient(135deg, rgba(218,165,32,0.15), rgba(218,165,32,0.05));
-      border: 1px solid rgba(218,165,32,0.3);
-      border-radius: 12px;
-      margin-bottom: 16px;
-      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, rgba(218,165,32,0.12), rgba(218,165,32,0.04));
+      border: 1px solid rgba(218,165,32,0.25);
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .header .product-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 6px;
+      background: rgba(218,165,32,0.1);
+      border: 1px solid rgba(218,165,32,0.25);
       overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #daa520, transparent);
+    .header .product-icon img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
     }
+    .header .product-info { flex: 1; }
     .header .product-name {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 700;
       color: #ffd700;
-      text-shadow: 0 0 20px rgba(255,215,0,0.3);
-      letter-spacing: 2px;
+      text-shadow: 0 0 12px rgba(255,215,0,0.2);
+      line-height: 1.2;
+    }
+    .header .product-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 3px;
+      flex-wrap: wrap;
     }
     .header .product-id {
-      font-size: 12px;
-      color: rgba(218,165,32,0.6);
-      margin-top: 4px;
-    }
-    .header .badge {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 20px;
       font-size: 11px;
-      margin: 6px 3px 0;
-      border: 1px solid;
+      color: rgba(218,165,32,0.5);
     }
-    .header .badge-skill {
-      background: rgba(100,149,237,0.15);
-      border-color: rgba(100,149,237,0.4);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-size: 10px;
+      border: 1px solid;
+      line-height: 16px;
+    }
+    .badge-skill {
+      background: rgba(100,149,237,0.12);
+      border-color: rgba(100,149,237,0.35);
       color: #87ceeb;
     }
+    .badge-skill img {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+    }
+    .badge-talent {
+      background: rgba(255,165,0,0.12);
+      border-color: rgba(255,165,0,0.35);
+      color: #ffa500;
+    }
+    .badge-sight {
+      background: rgba(180,80,255,0.15);
+      border-color: rgba(180,80,255,0.4);
+      color: #d8a0ff;
+    }
+    .badge-sight img {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+    }
 
-    /* 配方卡片 */
+    /* 配方卡片 - 紧凑 */
     .recipe-card {
-      background: linear-gradient(180deg, rgba(30,25,50,0.95), rgba(20,18,40,0.98));
-      border: 1px solid rgba(218,165,32,0.2);
-      border-radius: 10px;
-      margin-bottom: 14px;
+      background: linear-gradient(180deg, rgba(26,22,45,0.96), rgba(18,16,36,0.98));
+      border: 1px solid rgba(218,165,32,0.18);
+      border-radius: 8px;
+      margin-bottom: 8px;
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
     }
     .recipe-card:last-child { margin-bottom: 0; }
 
-    /* 卡片头部 */
+    /* 卡片头部 - 紧凑 */
     .card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
-      background: linear-gradient(90deg, rgba(218,165,32,0.12), transparent);
-      border-bottom: 1px solid rgba(218,165,32,0.15);
+      padding: 7px 12px;
+      background: linear-gradient(90deg, rgba(218,165,32,0.1), transparent);
+      border-bottom: 1px solid rgba(218,165,32,0.12);
+    }
+    .card-header .skill-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-header .skill-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 3px;
     }
     .card-header .skill-name {
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 600;
       color: #ffd700;
     }
     .card-header .recipe-title {
-      font-size: 12px;
-      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      margin-left: 6px;
     }
-    .card-header .level-badge {
+    .level-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 3px 10px;
-      border-radius: 6px;
-      font-size: 12px;
+      gap: 3px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
       font-weight: 600;
     }
     .level-badge.difficulty {
-      background: rgba(220,20,60,0.15);
-      border: 1px solid rgba(220,20,60,0.3);
+      background: rgba(220,20,60,0.12);
+      border: 1px solid rgba(220,20,60,0.25);
       color: #ff6b6b;
     }
     .level-badge.manual-level {
-      background: rgba(100,149,237,0.15);
-      border: 1px solid rgba(100,149,237,0.3);
+      background: rgba(100,149,237,0.12);
+      border: 1px solid rgba(100,149,237,0.25);
       color: #87ceeb;
     }
 
-    /* 卡片内容 */
-    .card-body { padding: 14px 16px; }
+    /* 卡片内容 - 紧凑 */
+    .card-body { padding: 8px 12px; }
 
-    /* 材料区域 */
+    /* 材料标题 */
     .section-title {
-      font-size: 12px;
-      color: rgba(218,165,32,0.7);
-      text-transform: uppercase;
+      font-size: 11px;
+      color: rgba(218,165,32,0.6);
       letter-spacing: 1px;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
     .section-title::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, rgba(218,165,32,0.3), transparent);
+      background: linear-gradient(90deg, rgba(218,165,32,0.2), transparent);
     }
 
+    /* 材料网格 - 紧凑 */
     .materials-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 14px;
+      gap: 4px;
+      margin-bottom: 8px;
     }
 
     .material-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-    .material-item:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(218,165,32,0.3);
+      gap: 5px;
+      padding: 4px 8px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
     }
     .material-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 6px;
-      background: rgba(218,165,32,0.1);
-      border: 1px solid rgba(218,165,32,0.2);
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: rgba(218,165,32,0.08);
+      border: 1px solid rgba(218,165,32,0.15);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -170,138 +213,198 @@
       flex-shrink: 0;
     }
     .material-icon img {
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
       object-fit: contain;
     }
     .material-icon .placeholder {
-      font-size: 18px;
-      color: rgba(218,165,32,0.4);
+      font-size: 14px;
+      color: rgba(218,165,32,0.3);
     }
     .material-info {
       display: flex;
       flex-direction: column;
-      gap: 2px;
     }
     .material-name {
-      font-size: 13px;
+      font-size: 12px;
       color: #e0d6c8;
       font-weight: 500;
+      line-height: 1.2;
     }
     .material-count {
-      font-size: 11px;
-      color: rgba(255,215,0,0.7);
+      font-size: 10px;
+      color: rgba(255,215,0,0.65);
       font-weight: 600;
     }
 
-    /* 完成材料（衣物制作/打铁的完成阶段材料） */
+    /* 完成材料 */
     .complete-materials .material-item {
-      border-color: rgba(147,112,219,0.2);
-      background: rgba(147,112,219,0.06);
+      border-color: rgba(147,112,219,0.15);
+      background: rgba(147,112,219,0.04);
     }
-    .complete-materials .section-title { color: rgba(147,112,219,0.7); }
+    .complete-materials .section-title { color: rgba(147,112,219,0.6); }
     .complete-materials .section-title::after {
-      background: linear-gradient(90deg, rgba(147,112,219,0.3), transparent);
+      background: linear-gradient(90deg, rgba(147,112,219,0.2), transparent);
     }
 
     /* 成功率表格 */
-    .success-rates {
-      margin-top: 2px;
-    }
+    .success-rates { margin-top: 4px; }
     .rates-table {
       width: 100%;
       border-collapse: separate;
-      border-spacing: 2px;
-      font-size: 11px;
+      border-spacing: 1px;
+      font-size: 10px;
       text-align: center;
     }
     .rates-table th {
-      padding: 5px 2px;
-      background: rgba(218,165,32,0.12);
-      color: rgba(218,165,32,0.8);
+      padding: 3px 1px;
+      background: rgba(218,165,32,0.1);
+      color: rgba(218,165,32,0.7);
       font-weight: 600;
-      border-radius: 4px;
+      border-radius: 3px;
     }
     .rates-table td {
-      padding: 5px 2px;
-      background: rgba(255,255,255,0.03);
-      border-radius: 4px;
-      color: #aaa;
+      padding: 3px 1px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 3px;
+      color: #999;
     }
-    .rates-table td.rate-high { color: #4ade80; background: rgba(74,222,128,0.08); }
-    .rates-table td.rate-mid { color: #fbbf24; background: rgba(251,191,36,0.08); }
-    .rates-table td.rate-low { color: #f87171; background: rgba(248,113,113,0.08); }
-    .rates-table td.rate-zero { color: #555; }
+    .rates-table td.rate-high { color: #4ade80; background: rgba(74,222,128,0.06); }
+    .rates-table td.rate-mid { color: #fbbf24; background: rgba(251,191,36,0.06); }
+    .rates-table td.rate-low { color: #f87171; background: rgba(248,113,113,0.06); }
+    .rates-table td.rate-zero { color: #444; }
 
     /* 描述文本 */
     .desc-text {
-      font-size: 12px;
-      color: rgba(255,255,255,0.45);
-      line-height: 1.6;
-      margin-top: 10px;
-      padding: 10px 12px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.5;
+      margin-top: 6px;
+      padding: 6px 10px;
       background: rgba(255,255,255,0.02);
-      border-radius: 6px;
-      border-left: 2px solid rgba(218,165,32,0.2);
+      border-radius: 4px;
+      border-left: 2px solid rgba(218,165,32,0.15);
     }
 
-    /* 料理配方特殊样式 */
+    /* 料理动作 */
     .cooking-action {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      background: rgba(255,165,0,0.15);
-      border: 1px solid rgba(255,165,0,0.3);
+      gap: 3px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-size: 11px;
+      background: rgba(255,165,0,0.12);
+      border: 1px solid rgba(255,165,0,0.25);
       color: #ffa500;
     }
 
-    /* 额外信息 */
+    /* 额外信息 - 紧凑 */
     .extra-info {
       display: flex;
-      gap: 12px;
+      gap: 6px;
       flex-wrap: wrap;
-      margin-top: 10px;
+      margin-top: 6px;
     }
     .info-tag {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.5);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.45);
     }
 
-    /* 手工阶段信息 */
+    /* 手工信息 */
     .manual-info {
       display: flex;
-      gap: 12px;
+      gap: 6px;
       flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
     }
     .manual-tag {
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: rgba(100,149,237,0.1);
-      border: 1px solid rgba(100,149,237,0.2);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(100,149,237,0.08);
+      border: 1px solid rgba(100,149,237,0.18);
       color: #87ceeb;
+    }
+
+    /* ====== 子配方（mbd模式） ====== */
+    .sub-recipes {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(218,165,32,0.12);
+    }
+    .sub-recipe-title {
+      font-size: 11px;
+      color: rgba(218,165,32,0.5);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    .sub-recipe-block {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 6px;
+      padding: 6px 10px;
+      margin-bottom: 5px;
+    }
+    .sub-recipe-block:last-child { margin-bottom: 0; }
+    .sub-recipe-header {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 4px;
+    }
+    .sub-recipe-header .sub-product-name {
+      font-size: 12px;
+      color: #daa520;
+      font-weight: 600;
+    }
+    .sub-recipe-header .sub-skill {
+      font-size: 10px;
+      color: rgba(135,206,235,0.7);
+    }
+    .sub-recipe-header .sub-skill img {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
+    .sub-mats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+    }
+    .sub-mat {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 5px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 3px;
+      font-size: 11px;
+      color: #bbb;
+    }
+    .sub-mat img {
+      width: 18px;
+      height: 18px;
+      border-radius: 2px;
+    }
+    .sub-mat .sub-mat-count {
+      color: rgba(255,215,0,0.5);
+      font-size: 10px;
     }
 
     /* 页脚 */
     .footer {
       text-align: center;
-      padding: 12px;
-      font-size: 11px;
-      color: rgba(255,255,255,0.25);
-      margin-top: 8px;
+      padding: 8px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.2);
+      margin-top: 4px;
     }
-    .footer a { color: rgba(218,165,32,0.4); text-decoration: none; }
-
-    /* 技能等级文本映射 */
-    .skill-rank { font-weight: 600; }
   </style>
 </head>
 <body>
@@ -309,7 +412,6 @@
     <!-- JavaScript 动态填充 -->
   </div>
   <script>
-    // 技能等级映射
     const RANK_MAP = {
       0: 'N', 1: 'F', 2: 'E', 3: 'D', 4: 'C', 5: 'B', 6: 'A',
       7: '9', 8: '8', 9: '7', 10: '6', 11: '5', 12: '4', 13: '3', 14: '2', 15: '1',
@@ -331,49 +433,76 @@
       return `https://mabires2.pril.cc/invimage/kr/${itemId}/${itemId}.png`
     }
 
+    let _skillIconBase = ''
+
+    function getSkillIconUrl(skillId) {
+      if (!skillId) return ''
+      return _skillIconBase + skillId + '.png'
+    }
+
     function renderRecipes(data) {
-      const { product, recipes, showDesc } = data
+      const { product, recipes, showDesc, subRecipes, skillIconBase } = data
+      _skillIconBase = skillIconBase || ''
       const container = document.getElementById('recipe-container')
 
-      // 收集所有涉及的技能
-      const skills = [...new Set(recipes.map(r => r.skillName))]
+      // 收集所有涉及的技能（去重）
+      const skillSet = new Map()
+      for (const r of recipes) {
+        if (r.skillId && !skillSet.has(r.skillId)) {
+          skillSet.set(r.skillId, r.skillName)
+        }
+      }
+
+      // 检查是否需要第三只眼
+      const needsSight = recipes.some(r => r.requiresSightOfOtherSide)
+      // 收集特殊才能
+      const talents = [...new Set(recipes.map(r => r.specialTalent).filter(Boolean))]
 
       // 头部
       let html = `
         <div class="header">
-          <div class="product-name">${product.name}</div>
-          <div class="product-id">ID: ${product.id}</div>
-          <div>${skills.map(s => `<span class="badge badge-skill">${s}</span>`).join('')}</div>
+          <div class="product-icon">
+            <img src="${getImageUrl(product.id)}" onerror="this.style.display='none'" />
+          </div>
+          <div class="product-info">
+            <div class="product-name">${product.name}</div>
+            <div class="product-meta">
+              <span class="product-id">ID: ${product.id}</span>
+              ${Array.from(skillSet).map(([id, name]) =>
+                `<span class="badge badge-skill">${id ? `<img src="${getSkillIconUrl(id)}" onerror="this.style.display='none'" />` : ''}${name}</span>`
+              ).join('')}
+              ${talents.map(t => `<span class="badge badge-talent">🏷️ ${t}才能</span>`).join('')}
+              ${needsSight ? `<span class="badge badge-sight"><img src="${getSkillIconUrl(58010)}" onerror="this.style.display='none'" />第三只眼</span>` : ''}
+            </div>
+          </div>
         </div>
       `
 
       // 每个配方一个卡片
       for (const recipe of recipes) {
-        html += renderRecipeCard(recipe, showDesc)
+        html += renderRecipeCard(recipe, showDesc, subRecipes || {})
       }
 
-      // 页脚
-      html += `
-        <div class="footer">
-          爱琳配方百科 · 数据来自游戏拆包
-        </div>
-      `
-
+      html += `<div class="footer">爱琳配方百科 · 数据来自游戏拆包</div>`
       container.innerHTML = html
     }
 
-    function renderRecipeCard(recipe, showDesc) {
+    function renderRecipeCard(recipe, showDesc, subRecipes) {
       let html = '<div class="recipe-card">'
 
       // 卡片头部
-      html += '<div class="card-header">'
-      html += `<div>
-        <div class="skill-name">${recipe.skillName}</div>
-        <div class="recipe-title">${recipe.title || ''}</div>
-      </div>`
+      html += '<div class="card-header"><div class="skill-left">'
+      if (recipe.skillId) {
+        html += `<img class="skill-icon" src="${getSkillIconUrl(recipe.skillId)}" onerror="this.style.display='none'" />`
+      }
+      html += `<span class="skill-name">${recipe.skillName}</span>`
+      if (recipe.title) {
+        html += `<span class="recipe-title">${recipe.title}</span>`
+      }
+      html += '</div>'
 
       if (recipe.type === 'manual') {
-        html += `<span class="level-badge manual-level">等级 ${recipe.level}</span>`
+        html += `<span class="level-badge manual-level">Lv.${recipe.level}</span>`
       } else if (recipe.type === 'production' && recipe.difficulty > 0) {
         html += `<span class="level-badge difficulty">难度 ${recipe.difficulty}</span>`
       } else if (recipe.type === 'cooking') {
@@ -384,23 +513,17 @@
       // 卡片内容
       html += '<div class="card-body">'
 
-      // 手工类额外信息
-      if (recipe.type === 'manual') {
+      // 手工额外信息
+      if (recipe.type === 'manual' && (recipe.maxProgress > 0 || recipe.price > 0)) {
         html += '<div class="manual-info">'
-        if (recipe.maxProgress > 0) {
-          html += `<span class="manual-tag">最大进度 ${recipe.maxProgress}</span>`
-        }
-        if (recipe.price > 0) {
-          html += `<span class="manual-tag">售价 ${recipe.price.toLocaleString()} G</span>`
-        }
+        if (recipe.maxProgress > 0) html += `<span class="manual-tag">进度 ${recipe.maxProgress}</span>`
+        if (recipe.price > 0) html += `<span class="manual-tag">${recipe.price.toLocaleString()} G</span>`
         html += '</div>'
       }
 
-      // 产量信息
+      // 产量
       if (recipe.productCount > 1) {
-        html += `<div class="extra-info" style="margin-bottom:10px;">
-          <span class="info-tag">产量: ${recipe.productCount}</span>
-        </div>`
+        html += `<div class="extra-info" style="margin-bottom:6px;"><span class="info-tag">产量: ${recipe.productCount}</span></div>`
       }
 
       // 材料
@@ -424,33 +547,48 @@
         html += '</div></div>'
       }
 
-      // 成功率（仅详情模式 或 always for production）
-      if (recipe.successRates && Object.keys(recipe.successRates).length > 0) {
-        if (showDesc) {
-          html += renderSuccessRates(recipe.successRates)
-        }
+      // 成功率（详情模式）
+      if (recipe.successRates && Object.keys(recipe.successRates).length > 0 && showDesc) {
+        html += renderSuccessRates(recipe.successRates)
       }
 
       // 描述文本（详情模式）
       if (showDesc && recipe.desc) {
         html += `<div class="desc-text">${recipe.desc}</div>`
       }
-      if (showDesc && recipe.essentialDesc) {
-        html += `<div class="desc-text">${recipe.essentialDesc}</div>`
-      }
 
       // 额外信息
       const extras = []
       if (recipe.merchantExp > 0) extras.push(`商人经验 ${recipe.merchantExp.toLocaleString()}`)
-      if (recipe.rainBonus > 0) extras.push(`雨天加成 +${recipe.rainBonus}%`)
+      if (recipe.rainBonus > 0) extras.push(`雨天 +${recipe.rainBonus}%`)
       if (recipe.cookExp > 0) extras.push(`料理经验 ${recipe.cookExp}`)
-
       if (extras.length > 0) {
         html += '<div class="extra-info">'
         for (const ext of extras) {
           html += `<span class="info-tag">${ext}</span>`
         }
         html += '</div>'
+      }
+
+      // mbd模式：子配方
+      if (showDesc && subRecipes) {
+        const allMats = [...(recipe.materials || []), ...(recipe.completeMaterials || [])]
+        const subBlocks = []
+        for (const mat of allMats) {
+          if (mat.id > 0 && subRecipes[mat.id]) {
+            subBlocks.push({ mat, subs: subRecipes[mat.id] })
+          }
+        }
+        if (subBlocks.length > 0) {
+          html += '<div class="sub-recipes">'
+          html += '<div class="sub-recipe-title">▾ 材料配方</div>'
+          for (const { mat, subs } of subBlocks) {
+            for (const sub of subs) {
+              html += renderSubRecipe(mat, sub)
+            }
+          }
+          html += '</div>'
+        }
       }
 
       html += '</div></div>'
@@ -475,15 +613,40 @@
       `
     }
 
+    function renderSubRecipe(mat, sub) {
+      let html = '<div class="sub-recipe-block">'
+      html += '<div class="sub-recipe-header">'
+      html += `<span class="sub-product-name">${mat.name}</span>`
+      html += `<span class="sub-skill">`
+      if (sub.skillId) {
+        html += `<img src="${getSkillIconUrl(sub.skillId)}" onerror="this.style.display='none'" /> `
+      }
+      html += `${sub.skillName}`
+      if (sub.level) html += ` Lv.${sub.level}`
+      if (sub.difficulty) html += ` 难度${sub.difficulty}`
+      html += '</span></div>'
+
+      const allMats = [...(sub.materials || []), ...(sub.completeMaterials || [])]
+      if (allMats.length > 0) {
+        html += '<div class="sub-mats">'
+        for (const m of allMats) {
+          const img = m.id > 0 ? `<img src="${getImageUrl(m.id)}" onerror="this.style.display='none'" />` : ''
+          html += `<span class="sub-mat">${img}${m.name}${m.count > 0 ? `<span class="sub-mat-count">×${m.count}</span>` : ''}</span>`
+        }
+        html += '</div>'
+      }
+      html += '</div>'
+      return html
+    }
+
     function renderSuccessRates(rates) {
       const entries = Object.entries(rates)
         .map(([k, v]) => [parseInt(k), v])
-        .filter(([k]) => k >= 1)  // 跳过 rank N (0)
+        .filter(([k]) => k >= 1)
         .sort((a, b) => a[0] - b[0])
 
       if (entries.length === 0) return ''
 
-      // 分两行显示：rank名 和 成功率
       let html = '<div class="success-rates">'
       html += '<div class="section-title">各等级成功率</div>'
       html += '<table class="rates-table"><tr>'

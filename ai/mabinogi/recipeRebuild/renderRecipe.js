@@ -13,10 +13,9 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 // ====== 浏览器实例池（复用，减少CPU开销） ======
 let _browser = null
 let _browserCloseTimer = null
-const BROWSER_IDLE_TIMEOUT = 60000 // 60秒无请求则关闭浏览器
+const BROWSER_IDLE_TIMEOUT = 60000
 
 const getBrowser = async () => {
-  // 延长关闭计时器
   if (_browserCloseTimer) {
     clearTimeout(_browserCloseTimer)
     _browserCloseTimer = null
@@ -24,7 +23,6 @@ const getBrowser = async () => {
 
   if (_browser) {
     try {
-      // 检测浏览器是否仍然活跃
       await _browser.version()
       return _browser
     } catch (e) {
@@ -64,31 +62,75 @@ const scheduleBrowserClose = () => {
 
 // ====== 模板路径 ======
 const TEMPLATE_PATH = 'file:///' + path.join(__dirname, 'template.html').replace(/\\/g, '/')
+const SKILL_ICON_BASE = 'file:///' + path.join(__dirname, 'img', 'Skill').replace(/\\/g, '/') + '/'
+
+/**
+ * 构建子配方数据（mbd模式：展示材料的制作配方）
+ */
+const buildSubRecipes = (recipes, allItems, recipesByProduct) => {
+  const subRecipeMap = {} // materialId -> [{...recipe}]
+  const seen = new Set()
+
+  for (const recipe of recipes) {
+    const allMats = [...(recipe.materials || []), ...(recipe.completeMaterials || [])]
+    for (const mat of allMats) {
+      if (mat.id <= 0 || seen.has(mat.id)) continue
+      seen.add(mat.id)
+
+      const matRecipes = recipesByProduct.get(mat.id)
+      if (matRecipes && matRecipes.length > 0) {
+        // 只取第一个配方的简要信息
+        subRecipeMap[mat.id] = matRecipes.map(r => ({
+          type: r.type,
+          skillName: r.skillName,
+          skillId: r.skillId || 0,
+          title: r.title || '',
+          difficulty: r.difficulty || 0,
+          level: r.level || 0,
+          materials: (r.materials || []).map(m => ({
+            id: m.id,
+            name: m.name,
+            count: m.count,
+          })),
+          completeMaterials: (r.completeMaterials || []).map(m => ({
+            id: m.id,
+            name: m.name,
+            count: m.count,
+          })),
+        }))
+      }
+    }
+  }
+
+  return subRecipeMap
+}
 
 /**
  * 渲染配方图片
  * @param {Object} product - {id, name}
  * @param {Array} recipes - 配方数组
  * @param {Map} allItems - 所有物品数据
- * @param {boolean} showDesc - 是否显示详情
+ * @param {Map} recipesByProduct - 所有配方索引
+ * @param {boolean} showDesc - 是否显示详情（mbd模式）
  * @param {Function} callback - 回调
  * @param {string} msg - 附加消息
  * @param {string} order - 消息顺序 'IF'=图片优先, 'MF'=消息优先
  */
-const renderRecipeImage = async (product, recipes, allItems, showDesc, callback, msg = '', order = 'IF') => {
+const renderRecipeImage = async (product, recipes, allItems, recipesByProduct, showDesc, callback, msg = '', order = 'IF') => {
   let page = null
   try {
     const browser = await getBrowser()
     page = await browser.newPage()
-    await page.setViewport({ width: 820, height: 600, deviceScaleFactor: 2 })
+    await page.setViewport({ width: 800, height: 600, deviceScaleFactor: 2 })
 
     // 加载模板
     await page.goto(TEMPLATE_PATH, { waitUntil: 'domcontentloaded' })
 
-    // 准备数据 - 将配方数据序列化（仅传递需要的字段）
+    // 准备数据 - 将配方数据序列化
     const recipeData = recipes.map(r => ({
       type: r.type,
       skillName: r.skillName,
+      skillId: r.skillId || 0,
       title: r.title || '',
       desc: r.desc || '',
       essentialDesc: r.essentialDesc || '',
@@ -99,6 +141,8 @@ const renderRecipeImage = async (product, recipes, allItems, showDesc, callback,
       productCount: r.productCount || 1,
       action: r.action || '',
       actionCn: r.actionCn || '',
+      specialTalent: r.specialTalent || '',
+      requiresSightOfOtherSide: r.requiresSightOfOtherSide || false,
       materials: (r.materials || []).map(m => ({
         id: m.id,
         name: m.name,
@@ -115,10 +159,15 @@ const renderRecipeImage = async (product, recipes, allItems, showDesc, callback,
       cookExp: r.cookExp || 0,
     }))
 
+    // mbd 模式：构建子配方
+    const subRecipes = showDesc ? buildSubRecipes(recipes, allItems, recipesByProduct) : {}
+
     const renderData = {
       product: { id: product.id, name: product.name },
       recipes: recipeData,
       showDesc,
+      subRecipes,
+      skillIconBase: SKILL_ICON_BASE,
     }
 
     // 注入数据并渲染
@@ -126,8 +175,29 @@ const renderRecipeImage = async (product, recipes, allItems, showDesc, callback,
       renderRecipes(data)
     }, renderData)
 
-    // 等待图片加载（物品图标）
-    await delay(600)
+    // 等待所有图片加载完成，最多等待3秒
+    await page.evaluate(() => {
+      return new Promise((resolve) => {
+        const imgs = document.querySelectorAll('img')
+        if (imgs.length === 0) return resolve()
+
+        let loaded = 0
+        const total = imgs.length
+        const check = () => { if (++loaded >= total) resolve() }
+
+        for (const img of imgs) {
+          if (img.complete) { check(); continue }
+          img.addEventListener('load', check)
+          img.addEventListener('error', check)
+        }
+
+        // 最长等待3秒
+        setTimeout(resolve, 3000)
+      })
+    })
+
+    // 额外等待一小段时间确保渲染完成
+    await delay(100)
 
     // 截图
     const container = await page.$('#recipe-container')
@@ -177,7 +247,6 @@ const renderRecipeImage = async (product, recipes, allItems, showDesc, callback,
     console.error('[renderRecipe] 渲染错误:', err)
     callback('配方图片渲染失败，请稍后再试')
   } finally {
-    // 关闭页面但保留浏览器实例
     if (page) {
       try { await page.close() } catch (e) { /* ignore */ }
     }

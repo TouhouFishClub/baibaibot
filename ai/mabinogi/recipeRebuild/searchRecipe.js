@@ -13,7 +13,7 @@ const getRender = () => {
  * 搜索配方主入口
  * @param {string} content - 搜索关键词（物品名 or ID）
  * @param {Function} callback - 回调函数
- * @param {boolean} showDesc - 是否显示详情版
+ * @param {boolean} showDesc - 是否显示详情版（mbd：递归展示材料配方）
  */
 const searchMabiRecipe = async (content, callback, showDesc = false) => {
   if (!content.trim()) return
@@ -68,7 +68,7 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
       const target = targets[0]
       const recipes = recipesByProduct.get(target.id)
       if (recipes && recipes.length > 0) {
-        getRender()(target, recipes, allItems, showDesc, callback)
+        getRender()(target, recipes, allItems, recipesByProduct, showDesc, callback)
       } else {
         callback(`找到「${target.name}」但没有配方数据`)
       }
@@ -79,7 +79,7 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
         const recipes = recipesByProduct.get(exactMatch.id)
         if (recipes && recipes.length > 0) {
           const listMsg = `找到${targets.length}个匹配\n${targets.slice(0, 10).map(t => `mbi ${t.id} | ${t.name}`).join('\n')}\n已为您定位到「${exactMatch.name}」`
-          getRender()(exactMatch, recipes, allItems, showDesc, callback, listMsg, 'MF')
+          getRender()(exactMatch, recipes, allItems, recipesByProduct, showDesc, callback, listMsg, 'MF')
         }
       } else {
         // 显示列表

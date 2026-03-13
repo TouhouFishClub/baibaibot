@@ -198,26 +198,51 @@ const resolveCompleteEssentials = (str, allItems) => {
   return { materials, hasVariants: variants.length > 1, variantCount: variants.length }
 }
 
+// ====== 第三只眼（SightOfOtherSide）物品ID集合 ======
+// 来源：旧项目各 *Item.js 中的 SightOfOtherSide*List
+const SIGHT_OF_OTHER_SIDE_IDS = new Set([
+  // Handicraft
+  41480, 41475, 41476,
+  // Blacksmith
+  41473, 41474, 41477, 41478, 41479, 41481,
+  // PotionMaking
+  51180, 51181,
+  // MagicCraft
+  85262, 1040006, 1230007, 1420000, 1040007, 1230008, 1420001,
+  1010055, 1270022, 5000142,
+  1000059, 1010070, 1020004, 1070014, 1200043, 1210067, 1220018,
+  1250026, 1260020, 1270029, 1290021, 1400012,
+  5100276, 5100278, 5100281, 5100285, 5100286, 5100290, 5100291,
+  5100292, 5100294, 5100300, 5100302,
+  41266, 41271, 1020011,
+])
+
+// ====== SpecialTalent 翻译 ======
+const SPECIAL_TALENT_MAP = {
+  'sewing': '裁缝',
+  'blacksmith': '铁匠',
+}
+
 // ====== 配方映射表 ======
 
 const PRODUCTION_SKILL_MAP = {
-  'Spinning':            { skillName: '纺织',         skillCode: 'Spinning',            skillId: 10014 },
-  'Weaving':             { skillName: '纺织',         skillCode: 'Weaving',             skillId: 10014 },
-  'Refine':              { skillName: '冶炼',         skillCode: 'Refine',              skillId: 10015 },
-  'Milling':             { skillName: '碾磨',         skillCode: 'Milling',             skillId: 10012 },
-  'PotionMaking':        { skillName: '药剂制作',     skillCode: 'PotionMaking',        skillId: 10022 },
-  'Handicraft':          { skillName: '手艺',         skillCode: 'Handicraft',          skillId: 10013 },
-  'ManaForming':         { skillName: '魔法组合',     skillCode: 'ManaForming',         skillId: 35001 },
-  'CrystalMaking':       { skillName: '结晶制作',     skillCode: 'CrystalMaking',       skillId: 0 },
-  'MetalExtraction':     { skillName: '金属转换',     skillCode: 'MetalExtraction',     skillId: 35012 },
-  'Carpentry':           { skillName: '木工',         skillCode: 'Carpentry',           skillId: 10033 },
-  'StageTicket':         { skillName: '制作戏剧任务通行证', skillCode: 'StageTicket',   skillId: 10036 },
-  'PerfumeMaking':       { skillName: '调香',         skillCode: 'PerfumeMaking',       skillId: 0 },
-  'HeulwenEngineering':  { skillName: '希尔文工学',   skillCode: 'HeulwenEngineering',  skillId: 10040 },
-  'MagicCraft':          { skillName: '魔法工艺',     skillCode: 'MagicCraft',          skillId: 10041 },
-  'FynnsCraft':          { skillName: '菲恩工艺制作', skillCode: 'FynnsCraft',          skillId: 27103 },
-  'StationaryCraft':     { skillName: '书写用具工艺', skillCode: 'StationaryCraft',     skillId: 10104 },
-  'StellarCraft':        { skillName: '星光工艺',     skillCode: 'StellarCraft',        skillId: 0 },
+  'Spinning':            { skillName: '纺织',             skillCode: 'Spinning',            skillId: 10014 },
+  'Weaving':             { skillName: '纺织',             skillCode: 'Weaving',             skillId: 10014 },
+  'Refine':              { skillName: '冶炼',             skillCode: 'Refine',              skillId: 10015 },
+  'Milling':             { skillName: '碾磨',             skillCode: 'Milling',             skillId: 10012 },
+  'PotionMaking':        { skillName: '药剂制作',         skillCode: 'PotionMaking',        skillId: 10022 },
+  'Handicraft':          { skillName: '手艺',             skillCode: 'Handicraft',          skillId: 10013 },
+  'ManaForming':         { skillName: '魔法组合',         skillCode: 'ManaForming',         skillId: 35001 },
+  'CrystalMaking':       { skillName: '结晶制作',         skillCode: 'CrystalMaking',       skillId: 0 },
+  'MetalExtraction':     { skillName: '金属转换',         skillCode: 'MetalExtraction',     skillId: 35012 },
+  'Carpentry':           { skillName: '木工',             skillCode: 'Carpentry',           skillId: 10033 },
+  'StageTicket':         { skillName: '制作戏剧任务通行证', skillCode: 'StageTicket',       skillId: 10036 },
+  'PerfumeMaking':       { skillName: '调香',             skillCode: 'PerfumeMaking',       skillId: 0 },
+  'HeulwenEngineering':  { skillName: '希尔文工学',       skillCode: 'HeulwenEngineering',  skillId: 10040 },
+  'MagicCraft':          { skillName: '魔法工艺',         skillCode: 'MagicCraft',          skillId: 10041 },
+  'FynnsCraft':          { skillName: '菲恩工艺制作',     skillCode: 'FynnsCraft',          skillId: 27103 },
+  'StationaryCraft':     { skillName: '书写用具工艺',     skillCode: 'StationaryCraft',     skillId: 10104 },
+  'StellarCraft':        { skillName: '星光工艺',         skillCode: 'StellarCraft',        skillId: 0 },
 }
 
 const MANUAL_SKILL_MAP = {
@@ -276,6 +301,9 @@ const loadProductionRecipes = async (allItems) => {
       const materials = resolveEssentials($.Essentials, allItems)
       const productItem = allItems.get(productId)
 
+      // 第三只眼标记
+      const requiresSightOfOtherSide = SIGHT_OF_OTHER_SIDE_IDS.has(productId)
+
       recipes.push({
         type: 'production',
         productId,
@@ -283,11 +311,14 @@ const loadProductionRecipes = async (allItems) => {
         productCount: parseInt($.ProductionCount) || 1,
         skillName: skillInfo.skillName,
         skillCode: skillInfo.skillCode,
+        skillId: skillInfo.skillId,
         section,
         title, desc, essentialDesc, difficulty,
         materials, successRates,
         merchantExp: parseInt($.MerchantExp) || 0,
         rainBonus: parseInt($.SuccessRateBonusInRain) || 0,
+        specialTalent: '',
+        requiresSightOfOtherSide,
       })
     }
   }
@@ -332,6 +363,13 @@ const loadManualFormRecipes = async (allItems) => {
         productName = parts.length > 1 ? parts[parts.length - 1].trim() : manualName
       }
 
+      // 解析 SpecialTalent
+      const rawTalent = ($.SpecialTalent || '').replace(/;/g, '').trim()
+      const specialTalent = SPECIAL_TALENT_MAP[rawTalent] || ''
+
+      // 第三只眼标记
+      const requiresSightOfOtherSide = SIGHT_OF_OTHER_SIDE_IDS.has(productId)
+
       recipes.push({
         type: 'manual',
         productId,
@@ -339,6 +377,7 @@ const loadManualFormRecipes = async (allItems) => {
         productCount: 1,
         skillName: skillInfo.skillName,
         skillCode: skillInfo.skillCode,
+        skillId: skillInfo.skillId,
         section,
         manualName, title, desc, essentialDesc, completeDesc,
         level, maxProgress,
@@ -349,6 +388,8 @@ const loadManualFormRecipes = async (allItems) => {
         manualItemId: parseInt($.ManualItemID) || 0,
         formId: parseInt($.FormID) || 0,
         price: parseInt($.Price) || 0,
+        specialTalent,
+        requiresSightOfOtherSide,
       })
     }
   }
@@ -399,12 +440,15 @@ const loadCookingRecipes = async (allItems) => {
       productCount: 1,
       skillName: '料理',
       skillCode: 'Cooking',
+      skillId: 10020,
       section: action,
       title: localName,
       action,
       actionCn: COOKING_ACTION_MAP[action] || action,
       materials,
       cookExp: parseInt($.cookexp) || 0,
+      specialTalent: '',
+      requiresSightOfOtherSide: false,
     })
   }
   return recipes
