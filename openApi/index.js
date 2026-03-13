@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 // 导入需要的功能函数
-const { searchMabiRecipe } = require('../ai/mabinogi/recipeNew/searchRecipe');
+const { searchMabiRecipe } = require('../ai/mabinogi/recipeRebuild/searchRecipe');
 const { mabiTelevision } = require('../ai/mabinogi/Television/new');
 const { mabiGachaTv } = require('../ai/mabinogi/Television/gacha');
 const { op } = require('../ai/mabinogi/optionset');

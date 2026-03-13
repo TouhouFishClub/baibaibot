@@ -136,7 +136,8 @@ const { renderColorBoard } = require('./ai/mabinogi/renderColor')
 
 const { trade, tradeOcr } = require('./ai/mabinogi/trade')
 
-const { searchMabiRecipe } = require('./ai/mabinogi/recipeNew/searchRecipe')
+const { searchMabiRecipe } = require('./ai/mabinogi/recipeRebuild/searchRecipe')
+const { searchMabiRecipe: searchMabiRecipeLegacy } = require('./ai/mabinogi/recipeNew/searchRecipe')
 const { searchBasicMaterials } = require('./ai/mabinogi/recipeNew/searchBasicMaterials')
 
 
@@ -1910,6 +1911,16 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   if(fie == 'meu'){
     searchEquipUpgrade(from, groupid, con.substring(3).trim(), callback);
     // autoVoteSend(groupid, callback)
+    return;
+  }
+
+  if(fie4 == 'mbis'){
+    searchMabiRecipeLegacy(con.substring(4).trim(), callback);
+    return;
+  }
+
+  if(fie4 == 'mbds'){
+    searchMabiRecipeLegacy(con.substring(4).trim(), callback, true);
     return;
   }
 
