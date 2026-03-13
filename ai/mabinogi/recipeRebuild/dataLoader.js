@@ -223,7 +223,7 @@ const PRODUCTION_SKILL_MAP = {
   'MagicCraft':          { skillName: '魔法工艺',         skillCode: 'MagicCraft',          skillId: 10041 },
   'FynnsCraft':          { skillName: '菲恩工艺制作',     skillCode: 'FynnsCraft',          skillId: 27103 },
   'StationaryCraft':     { skillName: '书写用具工艺',     skillCode: 'StationaryCraft',     skillId: 10104 },
-  'StellarCraft':        { skillName: '星光工艺',         skillCode: 'StellarCraft',        skillId: 0 },
+  'StellarCraft':        { skillName: '星辰工艺',         skillCode: 'StellarCraft',        skillId: 27212 },
 }
 
 const MANUAL_SKILL_MAP = {
