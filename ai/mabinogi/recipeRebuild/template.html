@@ -655,7 +655,7 @@
           </div>
           <div class="material-info">
             <span class="material-name">${mat.name}</span>
-            ${mat.count > 0 ? `<span class="material-count">×${mat.count}</span>` : ''}
+            ${mat.percent !== undefined ? `<span class="material-count">${mat.percent}%</span>` : (mat.count > 0 ? `<span class="material-count">×${mat.count}</span>` : '')}
           </div>
         </div>
       `
@@ -688,7 +688,7 @@
         html += '<div class="sub-mats">'
         for (const m of allMats) {
           const img = m.id > 0 ? `<img src="${getImageUrl(m.id)}" onerror="this.style.display='none'" />` : ''
-          html += `<span class="sub-mat">${img}${m.name}${m.count > 0 ? `<span class="sub-mat-count">×${m.count}</span>` : ''}</span>`
+          html += `<span class="sub-mat">${img}${m.name}${m.percent !== undefined ? `<span class="sub-mat-count">${m.percent}%</span>` : (m.count > 0 ? `<span class="sub-mat-count">×${m.count}</span>` : '')}</span>`
         }
         html += '</div>'
       }

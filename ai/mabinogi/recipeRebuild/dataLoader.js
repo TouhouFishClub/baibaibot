@@ -433,6 +433,14 @@ const loadCookingRecipes = async (allItems) => {
       }
     }
 
+    // 归一化材料比例为百分比（总和可能不为100）
+    const total = materials.reduce((sum, m) => sum + m.count, 0)
+    if (total > 0) {
+      for (const m of materials) {
+        m.percent = Math.round(m.count / total * 1000) / 10
+      }
+    }
+
     const productItem = allItems.get(productId)
     recipes.push({
       type: 'cooking',
