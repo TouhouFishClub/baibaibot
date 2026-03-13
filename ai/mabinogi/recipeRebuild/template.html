@@ -309,8 +309,9 @@
       color: #ffa500;
     }
     .cooking-action img {
-      width: 14px;
-      height: 14px;
+      max-width: 14px;
+      max-height: 14px;
+      object-fit: contain;
       border-radius: 2px;
     }
 
@@ -538,9 +539,7 @@
 
       // 卡片头部
       html += '<div class="card-header"><div class="skill-left">'
-      if (recipe.type === 'cooking' && recipe.actionCn) {
-        html += `<img class="skill-icon" src="${getCookingActionIconUrl(recipe.actionCn)}" onerror="this.src='${getSkillIconUrl(10020)}';this.onerror=null" />`
-      } else if (recipe.skillId) {
+      if (recipe.skillId) {
         html += `<img class="skill-icon" src="${getSkillIconUrl(recipe.skillId)}" onerror="this.style.display='none'" />`
       }
       html += `<span class="skill-name">${recipe.skillName}</span>`
