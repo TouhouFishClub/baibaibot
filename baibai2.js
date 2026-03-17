@@ -181,7 +181,7 @@ const {nanoBananaReply, getNanoBananaHelp, getNanoBananaPresets} = require('./ai
 const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao')
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
 const { handleAnnualReportCommand, handleUserAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
-const { mabiSmuggler } = require('./ai/mabinogi/Television/newSmuggler')
+const { mabiSmuggler } = require('./ai/mabinogi/smuggler/newSmuggler')
 
 
 // 导入deepseek模块

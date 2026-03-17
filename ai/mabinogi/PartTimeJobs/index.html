@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPC Work Schedule with Report Times</title>
+    <style>
+        :root {
+            --hour-width: 70px; 
+            --row-height: 60px; /* Increased height for markers */
+            --header-height: 50px;
+            --start-hour: 4; 
+            --end-hour: 26;  
+            --total-hours: calc(var(--end-hour) - var(--start-hour));
+            
+            --color-work: #3498db;
+            --color-report-main: #e74c3c; /* Red for main report time */
+            --color-report-special: #f39c12; /* Orange for special report times */
+            --bg-grid: #f9f9f9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; }
+        
+        .legend {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .box { width: 20px; height: 20px; border-radius: 3px; }
+        .line { width: 30px; height: 4px; border-radius: 2px; }
+
+        .gantt-container {
+            display: flex;
+            overflow-x: auto;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            position: relative;
+            max-height: 85vh;
+            border: 1px solid #ddd;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            flex: 0 0 240px;
+            border-right: 2px solid #ddd;
+            z-index: 20;
+            background: white;
+            position: sticky;
+            left: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-header {
+            height: var(--header-height);
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            font-size: 14px;
+        }
+
+        .sidebar-row {
+            height: var(--row-height);
+            border-bottom: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 15px;
+            box-sizing: border-box;
+            font-size: 13px;
+            background: white;
+        }
+        .sidebar-row strong { color: #2c3e50; font-size: 15px; }
+        .sidebar-row span { color: #7f8c8d; font-size: 12px; }
+
+        .location-group-title {
+            background-color: #ecf0f1;
+            font-weight: bold;
+            color: #2980b9;
+            padding: 0 15px;
+            font-size: 13px;
+            border-bottom: 2px solid #bdc3c7;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            left: 0;
+            z-index: 25;
+        }
+
+        /* Timeline Area */
+        .timeline-area {
+            flex: 1;
+            position: relative;
+            min-width: calc(var(--total-hours) * var(--hour-width));
+            background: white;
+        }
+
+        .timeline-header {
+            height: var(--header-height);
+            display: flex;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 15;
+            border-bottom: 2px solid #2c3e50;
+        }
+
+        .time-slot {
+            flex: 0 0 var(--hour-width);
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #555;
+            box-sizing: border-box;
+        }
+        .time-slot.major { font-weight: bold; color: #2c3e50; background-color: #f0f4f8; }
+        .time-slot .sub-time { font-size: 10px; color: #999; margin-top: 2px; }
+
+        /* Grid & Rows */
+        .task-row {
+            height: var(--row-height);
+            position: relative;
+            border-bottom: 1px solid #f5f5f5;
+            box-sizing: border-box;
+            background-image: linear-gradient(to right, transparent 99%, #f0f0f0 1%);
+            background-size: var(--hour-width) 100%;
+        }
+
+        /* Work Bar */
+        .work-bar {
+            position: absolute;
+            top: 15px;
+            height: 24px;
+            background-color: var(--color-work);
+            border-radius: 4px;
+            color: white;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 0 5px;
+            z-index: 5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            opacity: 0.9;
+        }
+
+        /* REPORT MARKERS (The Key Feature) */
+        .report-marker {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .report-line-main {
+            width: 3px;
+            background-color: var(--color-report-main);
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: -1.5px;
+            box-shadow: 0 0 4px rgba(231, 76, 60, 0.6);
+        }
+
+        .report-label-main {
+            margin-top: 2px;
+            background-color: var(--color-report-main);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            white-space: nowrap;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+            top: 0;
+        }
+        
+        .report-label-main::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -3px;
+            border-width: 4px 3px 0;
+            border-style: solid;
+            border-color: var(--color-report-main) transparent transparent transparent;
+        }
+
+        /* Special Report Markers (Dashed) */
+        .report-line-special {
+            width: 2px;
+            background: repeating-linear-gradient(45deg, var(--color-report-special), var(--color-report-special) 2px, transparent 2px, transparent 6px);
+            height: 80%;
+            position: absolute;
+            top: 10%;
+            left: -1px;
+            opacity: 0.8;
+        }
+
+        .report-label-special {
+            margin-top: 28px; /* Push below main label if overlapping, or just lower */
+            background-color: var(--color-report-special);
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 1px 4px;
+            border-radius: 8px;
+            white-space: nowrap;
+            transform: translateX(-50%);
+            position: relative;
+            border: 1px dashed #fff;
+        }
+
+        /* Current Time Line */
+        .current-time-line {
+            position: absolute;
+            top: var(--header-height);
+            bottom: 0;
+            width: 2px;
+            background-color: #2c3e50;
+            z-index: 8;
+            pointer-events: none;
+            border-left: 1px dashed #000;
+        }
+        .current-time-label {
+            position: absolute;
+            top: var(--header-height) + 5px;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 10px;
+            transform: translateX(-50%) rotate(90deg);
+            transform-origin: left top;
+            background: rgba(255,255,255,0.8);
+            padding: 2px;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 100;
+            display: none;
+            max-width: 300px;
+            line-height: 1.5;
+            border: 1px solid #555;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>NPC Work Schedule & Report Times</h1>
+    
+    <div class="legend">
+        <div class="legend-item"><div class="box" style="background:var(--color-work)"></div> Work Hours</div>
+        <div class="legend-item"><div class="line" style="background:var(--color-report-main)"></div> Main Report Time</div>
+        <div class="legend-item"><div class="line" style="background:var(--color-report-special); border-bottom: 2px dashed var(--color-report-special)"></div> Special Task Report Time</div>
+        <div class="legend-item"><div class="line" style="background:#2c3e50; border-left: 1px dashed #000"></div> Current Time (15:22)</div>
+    </div>
+
+    <div class="gantt-container">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">Name & Location</div>
+        </div>
+
+        <div class="timeline-area" id="timelineArea">
+            <div class="timeline-header" id="timelineHeader"></div>
+            <div id="tasksContainer"></div>
+            
+            <!-- Current Time Indicator -->
+            <div class="current-time-line" id="currentTimeLine"></div>
+            <div class="current-time-label" id="currentTimeLabel">Now</div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        const rawData = [
+            {name: "Caitin", loc: "Tir Chonaill", job: "Grocery Store", type: "Delivery & Production", start: "12:00 noon", report: "2:00 pm", end: "9:00 pm", note: ""},
+            {name: "Deian", loc: "Tir Chonaill", job: "General", type: "Collection", start: "7:00 am", report: "9:00 am", end: "7:00 pm", note: ""},
+            {name: "Dilys", loc: "Tir Chonaill", job: "Healer's House", type: "Collection & Delivery", start: "6:00 am", report: "9:00 am", end: "3:00 pm", note: ""},
+            {name: "Endelyon", loc: "Tir Chonaill", job: "Church", type: "Collection", start: "12:00 noon", report: "4:00 pm", end: "9:00 pm", note: ""},
+            {name: "Ferghus", loc: "Tir Chonaill", job: "Blacksmith Shop", type: "Delivery", start: "12:00 noon", report: "1:00 pm", end: "7:00 pm", note: ""},
+            {name: "Malcolm", loc: "Tir Chonaill", job: "General Shop", type: "Delivery & Production", start: "7:00 am", report: "9:00 am", end: "7:00 pm", note: "Basic weaving/tailoring report: 12:00 noon. Advanced tailoring report: 5:00 pm."},
+            {name: "Piaras", loc: "Tir Chonaill", job: "Inn", type: "Collection, Delivery & Production", start: "7:00 am", report: "9:00 am", end: "7:00 pm", note: ""},
+            {name: "Tracy", loc: "Dugald Aisle", job: "General", type: "Collection", start: "7:00 am", report: "9:00 am", end: "7:00 pm", note: ""},
+            {name: "Aeira", loc: "Dunbarton", job: "Bookstore", type: "Delivery", start: "1:00 pm", report: "3:00 pm", end: "8:00 pm", note: ""},
+            {name: "Eavan", loc: "Dunbarton", job: "Adventurers' Assoc.", type: "Delivery", start: "7:00 am", report: "9:00 am", end: "4:00 pm", note: "Intermediate jobs report: 4:00 pm - 8:00 pm."},
+            {name: "Glenis", loc: "Dunbarton", job: "Grocery Store", type: "Collection & Delivery", start: "12:00 noon", report: "2:00 pm", end: "9:00 pm", note: ""},
+            {name: "Kristell", loc: "Dunbarton", job: "Church", type: "Collection", start: "12:00 noon", report: "4:00 pm", end: "9:00 pm", note: ""},
+            {name: "Manus", loc: "Dunbarton", job: "Healer's House", type: "Collection & Delivery", start: "6:00 am", report: "9:00 am", end: "3:00 pm", note: ""},
+            {name: "Nerys", loc: "Dunbarton", job: "Weapons Shop", type: "Delivery", start: "3:00 pm", report: "5:00 pm", end: "10:00 pm", note: ""},
+            {name: "Simon", loc: "Dunbarton", job: "Clothing Shop", type: "Delivery & Production", start: "7:00 am", report: "12:00 noon", end: "7:00 pm", note: "Intermediate/Advanced Tailoring report: 5:00 pm."},
+            {name: "Stewart", loc: "Dunbarton", job: "Library", type: "Delivery", start: "9:00 am", report: "1:00 pm", end: "7:00 pm", note: ""},
+            {name: "Walter", loc: "Dunbarton", job: "General Shop", type: "Delivery & Production", start: "7:00 am", report: "9:00 am", end: "7:00 pm", note: ""},
+            {name: "Comgan", loc: "Bangor", job: "Church", type: "Monster Hunting", start: "12:00 noon", report: "4:00 pm", end: "9:00 pm", note: ""},
+            {name: "Edern", loc: "Bangor", job: "Blacksmith Shop", type: "Production", start: "7:00 am", report: "12:00 noon", end: "7:00 pm", note: ""},
+            {name: "Elen", loc: "Bangor", job: "Blacksmith Shop", type: "Production", start: "12:00 noon", report: "1:00 pm", end: "7:00 pm", note: ""},
+            {name: "Sion", loc: "Bangor", job: "Stope", type: "Collection", start: "10:00 am", report: "3:00 pm", end: "11:00 pm", note: ""},
+            {name: "Agnes", loc: "Emain Macha", job: "Healer's House", type: "Delivery", start: "6:00 am", report: "9:00 am", end: "3:00 pm", note: ""},
+            {name: "Ailionoa", loc: "Emain Macha", job: "Clothing Shop", type: "Production", start: "7:00 am", report: "12:00 noon", end: "7:00 pm", note: ""},
+            {name: "Del", loc: "Emain Macha", job: "Flower Shop", type: "Collection & Delivery", start: "8:00 am", report: "10:00 am", end: "4:00 pm", note: ""},
+            {name: "Fraser", loc: "Emain Macha", job: "Grocery Store", type: "Delivery & Production", start: "12:00 noon", report: "2:00 pm", end: "9:00 pm", note: ""},
+            {name: "Galvin", loc: "Emain Macha", job: "General Shop", type: "Delivery", start: "7:00 am", report: "9:00 am", end: "7:00 pm", note: ""},
+            {name: "James", loc: "Emain Macha", job: "Church", type: "Collection", start: "12:00 noon", report: "4:00 pm", end: "9:00 pm", note: ""},
+            {name: "Lery", loc: "Emain Macha", job: "Puppet Shop", type: "Production", start: "7:00 am", report: "4:00 pm", end: "8:00 pm", note: ""},
+            {name: "Nele", loc: "Emain Macha", job: "Music Shop", type: "Delivery", start: "10:00 am", report: "12:00 noon", end: "3:00 pm", note: ""},
+            {name: "Osla", loc: "Emain Macha", job: "Weapons Shop", type: "Delivery", start: "3:00 pm", report: "5:00 pm", end: "10:00 pm", note: ""},
+            {name: "Shena", loc: "Emain Macha", job: "Grocery Store", type: "Production", start: "8:00 am", report: "12:00 noon", end: "9:00 pm", note: "Channel 3 weekdays only."},
+            {name: "Effie", loc: "Qilla Base Camp", job: "General Shop", type: "Collection", start: "7:00 am", report: "9:00 am", end: "7:00 pm", note: ""},
+            {name: "Heulfryn", loc: "Qilla Base Camp", job: "Healer's House", type: "Collection", start: "12:00 noon", report: "4:00 pm", end: "9:00 pm", note: ""},
+            {name: "Nicca", loc: "Qilla Base Camp", job: "Weapons Shop", type: "Monster Hunting", start: "3:00 pm", report: "5:00 pm", end: "10:00 pm", note: ""},
+            {name: "Atrata", loc: "Filia", job: "Healer's House", type: "Collection & Delivery", start: "6:00 am", report: "9:00 am", end: "3:00 pm", note: ""},
+            {name: "Castanea", loc: "Filia", job: "Church", type: "Collection", start: "12:00 noon", report: "4:00 pm", end: "9:00 pm", note: ""},
+            {name: "Granites", loc: "Filia", job: "General Shop", type: "Collection", start: "7:00 am", report: "9:00 am", end: "7:00 pm", note: ""},
+            {name: "Lepus", loc: "Filia", job: "Clothing Shop", type: "Delivery & Production", start: "7:00 am", report: "12:00 noon", end: "7:00 pm", note: "Intermediate/Advanced tailoring report: 5:00 pm."},
+            {name: "Meles", loc: "Filia", job: "Weapons Shop", type: "Monster Hunting", start: "3:00 pm", report: "5:00 pm", end: "10:00 pm", note: ""},
+            {name: "Kirine", loc: "Vales", job: "Healer's House", type: "Collection", start: "6:00 am", report: "9:00 am", end: "3:00 pm", note: ""},
+            {name: "Belita", loc: "Calida Exp. Camp", job: "Healer's House", type: "Collection", start: "6:00 am", report: "9:00 am", end: "3:00 pm", note: ""},
+            {name: "Kelpie", loc: "Calida Exp. Camp", job: "General Shop", type: "Collection", start: "7:00 am", report: "9:00 am", end: "7:00 pm", note: ""},
+            {name: "Brenda", loc: "Taillteann", job: "Clothing Shop", type: "Delivery & Production", start: "7:00 am", report: "12:00 noon", end: "7:00 pm", note: "Advanced tailoring report: 5:00 pm."},
+            {name: "Collen", loc: "Taillteann", job: "Church", type: "Collection", start: "12:00 noon", report: "4:00 pm", end: "9:00 pm", note: ""},
+            {name: "Eabha", loc: "Taillteann", job: "Alchemist House", type: "Collection", start: "9:00 am", report: "2:00 pm", end: "9:00 pm", note: ""},
+            {name: "Pierrick", loc: "Taillteann", job: "General Shop", type: "Delivery & Production", start: "7:00 am", report: "9:00 am", end: "7:00 pm", note: "Basic weaving report: 12:00 noon."},
+            {name: "Corentin", loc: "Tara", job: "Pontiff's Court", type: "Collection & Delivery", start: "8:00 am", report: "2:00 pm", end: "8:00 pm", note: ""},
+            {name: "Hans", loc: "Tara", job: "Street Artist", type: "Unique", start: "7:00 am", report: "9:00 am", end: "4:00 pm", note: ""},
+            {name: "Keith", loc: "Tara", job: "Bank", type: "Delivery", start: "7:00 am", report: "9:00 am", end: "11:00 pm", note: ""},
+            {name: "Lileas", loc: "Tara", job: "Jousting Arena", type: "Collection", start: "10:00 am", report: "3:00 pm", end: "9:00 pm", note: ""},
+            {name: "Pencast", loc: "Tara", job: "Church", type: "Collection", start: "12:00 noon", report: "4:00 pm", end: "9:00 pm", note: ""},
+            {name: "Ascon", loc: "Port Cobh", job: "Lighthouse", type: "Production", start: "4:00 pm", report: "7:00 pm", end: "11:00 pm", note: ""},
+            {name: "Barry", loc: "Commonwealth of Belvast", job: "Pub", type: "Unique", start: "10:00 am", report: "2:00 pm", end: "10:00 pm", note: ""},
+            {name: "Mont", loc: "Commonwealth of Belvast", job: "Bank", type: "Delivery", start: "6:00 am", report: "10:00 am", end: "2:00 pm", note: ""},
+            {name: "Vanalen", loc: "Commonwealth of Belvast", job: "Grocery Store", type: "Collection", start: "9:00 am", report: "12:00 noon", end: "9:00 pm", note: ""}
+        ];
+
+        function parseTime(timeStr) {
+            if (!timeStr) return null;
+            timeStr = timeStr.toLowerCase().trim();
+            if (timeStr.includes("noon")) return 12.0;
+            if (timeStr.includes("midnight")) return 24.0;
+            const parts = timeStr.match(/(\d+):?(\d*)?\s*(am|pm)?/);
+            if (!parts) return null;
+            let hours = parseInt(parts[1]);
+            let minutes = parts[2] ? parseInt(parts[2]) : 0;
+            if (parts[3] === 'pm' && hours !== 12) hours += 12;
+            if (parts[3] === 'am' && hours === 12) hours = 0;
+            return hours + (minutes / 60);
+        }
+
+        function formatTime(decimal) {
+            const h = Math.floor(decimal);
+            const m = Math.round((decimal - h) * 60);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const displayH = h % 12 || 12;
+            const displayM = m < 10 ? '0' + m : m;
+            return `${displayH}:${displayM} ${ampm}`;
+        }
+
+        // Extract special report times from notes using regex
+        function getSpecialReportTimes(note) {
+            if (!note) return [];
+            const times = [];
+            // Match patterns like "report: 5:00 pm", "report time starts at 12:00 noon"
+            const regex = /(?:report|starts at)\s+(?:time\s+)?(?:starts\s+)?(?:at\s+)?(\d+:\d+\s*(?:am|pm|noon))/gi;
+            let match;
+            while ((match = regex.exec(note)) !== null) {
+                const t = parseTime(match[1]);
+                if (t !== null) times.push(t);
+            }
+            return [...new Set(times)]; // Unique
+        }
+
+        const START_HOUR = 4;
+        const END_HOUR = 26;
+        const HOUR_WIDTH = 70;
+        
+        const groupedData = {};
+        rawData.forEach(item => {
+            if (!groupedData[item.loc]) groupedData[item.loc] = [];
+            groupedData[item.loc].push(item);
+        });
+
+        const sidebar = document.getElementById('sidebar');
+        const timelineHeader = document.getElementById('timelineHeader');
+        const tasksContainer = document.getElementById('tasksContainer');
+        const currentTimeLine = document.getElementById('currentTimeLine');
+        const currentTimeLabel = document.getElementById('currentTimeLabel');
+        const tooltip = document.getElementById('tooltip');
+
+        // Render Header
+        for (let h = START_HOUR; h < END_HOUR; h++) {
+            const slot = document.createElement('div');
+            slot.className = 'time-slot';
+            if (h % 4 === 0) slot.classList.add('major');
+            
+            const displayH = h % 24;
+            const ampm = displayH >= 12 ? 'PM' : 'AM';
+            const showH = displayH % 12 || 12;
+            
+            slot.innerHTML = `<span>${showH}</span><span class="sub-time">${ampm}</span>`;
+            timelineHeader.appendChild(slot);
+        }
+
+        // Current Time (15:22)
+        const currentDecimal = 15 + 22/60;
+        const currentOffset = (currentDecimal - START_HOUR) * HOUR_WIDTH;
+        currentTimeLine.style.left = `${currentOffset}px`;
+        currentTimeLabel.style.left = `${currentOffset}px`;
+
+        // Render Rows
+        Object.keys(groupedData).forEach(loc => {
+            // Location Header
+            const locRow = document.createElement('div');
+            locRow.className = 'location-group-title';
+            locRow.textContent = loc;
+            sidebar.appendChild(locRow);
+            
+            const headerPlaceholder = document.createElement('div');
+            headerPlaceholder.style.height = '35px';
+            headerPlaceholder.style.borderBottom = '2px solid #bdc3c7';
+            tasksContainer.appendChild(headerPlaceholder);
+
+            groupedData[loc].forEach(npc => {
+                // Sidebar
+                const sbRow = document.createElement('div');
+                sbRow.className = 'sidebar-row';
+                sbRow.innerHTML = `<strong>${npc.name}</strong><span>${npc.job}</span>`;
+                sidebar.appendChild(sbRow);
+
+                // Timeline Row
+                const tRow = document.createElement('div');
+                tRow.className = 'task-row';
+
+                // Work Bar
+                const startDec = parseTime(npc.start);
+                const endDec = parseTime(npc.end);
+                
+                if (startDec !== null && endDec !== null) {
+                    const left = (startDec - START_HOUR) * HOUR_WIDTH;
+                    const width = (endDec - startDec) * HOUR_WIDTH;
+
+                    const bar = document.createElement('div');
+                    bar.className = 'work-bar';
+                    bar.style.left = `${left}px`;
+                    bar.style.width = `${Math.max(width, 5)}px`;
+                    bar.textContent = npc.type.split('&')[0].trim();
+                    
+                    // Hover Event
+                    bar.addEventListener('mousemove', (e) => {
+                        tooltip.style.display = 'block';
+                        tooltip.style.left = `${e.pageX + 15}px`;
+                        tooltip.style.top = `${e.pageY + 15}px`;
+                        let noteHtml = npc.note ? `<br><br><span style="color:#f39c12">⚠ ${npc.note}</span>` : '';
+                        tooltip.innerHTML = `
+                            <strong>${npc.name}</strong> (${loc})<br>
+                            <span style="color:#aaa">${npc.job}</span><br>
+                            Type: ${npc.type}<br>
+                            Work: ${formatTime(startDec)} - ${formatTime(endDec)}<br>
+                            <strong>Report: ${npc.report}</strong>
+                            ${noteHtml}
+                        `;
+                    });
+                    bar.addEventListener('mouseleave', () => tooltip.style.display = 'none');
+
+                    tRow.appendChild(bar);
+                }
+
+                // MAIN REPORT MARKER
+                const reportDec = parseTime(npc.report);
+                if (reportDec !== null) {
+                    const rLeft = (reportDec - START_HOUR) * HOUR_WIDTH;
+                    const marker = document.createElement('div');
+                    marker.className = 'report-marker';
+                    marker.style.left = `${rLeft}px`;
+                    
+                    const line = document.createElement('div');
+                    line.className = 'report-line-main';
+                    
+                    const label = document.createElement('div');
+                    label.className = 'report-label-main';
+                    label.textContent = `REPORT ${formatTime(reportDec)}`;
+                    
+                    marker.appendChild(line);
+                    marker.appendChild(label);
+                    tRow.appendChild(marker);
+                }
+
+                // SPECIAL REPORT MARKERS (from notes)
+                const specialTimes = getSpecialReportTimes(npc.note);
+                specialTimes.forEach((t, index) => {
+                    // Avoid overlapping exactly with main report time visually if same
+                    if (Math.abs(t - reportDec) < 0.01) return; 
+
+                    const sLeft = (t - START_HOUR) * HOUR_WIDTH;
+                    const sMarker = document.createElement('div');
+                    sMarker.className = 'report-marker';
+                    sMarker.style.left = `${sLeft}px`;
+                    // Adjust z-index or position slightly if multiple special times? 
+                    // For simplicity, we stack labels vertically in CSS if needed, 
+                    // but here we just place them lower.
+                    
+                    const sLine = document.createElement('div');
+                    sLine.className = 'report-line-special';
+                    
+                    const sLabel = document.createElement('div');
+                    sLabel.className = 'report-label-special';
+                    sLabel.textContent = `Special: ${formatTime(t)}`;
+                    // Offset label Y based on index to prevent overlap if multiple special times
+                    sLabel.style.marginTop = `${28 + (index * 18)}px`; 
+
+                    sMarker.appendChild(sLine);
+                    sMarker.appendChild(sLabel);
+                    tRow.appendChild(sMarker);
+                });
+
+                tasksContainer.appendChild(tRow);
+            });
+        });
+    </script>
+</body>
+</html>

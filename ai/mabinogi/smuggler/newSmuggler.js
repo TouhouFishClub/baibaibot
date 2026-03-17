@@ -1,4 +1,4 @@
-const { getClient } = require('../../../mongo/index')
+const { getClient } = require('../../../mongo')
 
 const formatTime = ts => {
   const d = new Date(ts)
