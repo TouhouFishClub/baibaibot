@@ -158,11 +158,13 @@ const buildSubRecipes = (recipes, allItems, recipesByProduct) => {
             id: m.id,
             name: m.name,
             count: m.count,
+            ...(m.percent !== undefined && { percent: m.percent }),
           })),
           completeMaterials: (r.completeMaterials || []).map(m => ({
             id: m.id,
             name: m.name,
             count: m.count,
+            ...(m.percent !== undefined && { percent: m.percent }),
           })),
         }))
       }
@@ -233,11 +235,13 @@ const renderRecipeImage = async (product, recipes, allItems, recipesByProduct, s
         id: m.id,
         name: m.name,
         count: m.count,
+        ...(m.percent !== undefined && { percent: m.percent }),
       })),
       completeMaterials: (r.completeMaterials || []).map(m => ({
         id: m.id,
         name: m.name,
         count: m.count,
+        ...(m.percent !== undefined && { percent: m.percent }),
       })),
       successRates: r.successRates || {},
       merchantExp: r.merchantExp || 0,

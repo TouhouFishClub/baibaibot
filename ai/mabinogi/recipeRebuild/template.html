@@ -308,6 +308,12 @@
       border: 1px solid rgba(255,165,0,0.25);
       color: #ffa500;
     }
+    .cooking-action img {
+      max-width: 14px;
+      max-height: 14px;
+      object-fit: contain;
+      border-radius: 2px;
+    }
 
     /* 额外信息 - 紧凑 */
     .extra-info {
@@ -328,17 +334,20 @@
     /* 手工信息 */
     .manual-info {
       display: flex;
+      align-items: center;
       gap: 6px;
       flex-wrap: wrap;
       margin-bottom: 6px;
     }
     .manual-tag {
-      font-size: 11px;
-      padding: 2px 7px;
+      font-size: 12px;
+      padding: 2px 6px;
       border-radius: 4px;
       background: rgba(100,149,237,0.08);
       border: 1px solid rgba(100,149,237,0.18);
       color: #87ceeb;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.4;
     }
 
     /* ====== 子配方（mbd模式） ====== */
@@ -450,6 +459,13 @@
       16: '1段', 17: '2段', 18: '3段'
     }
 
+    function rankLabel(val) {
+      const s = RANK_MAP[val]
+      if (s === undefined) return val
+      if (val === 0 || val >= 16) return s
+      return '等级 ' + s
+    }
+
     function getRateClass(rate) {
       if (rate === 0) return 'rate-zero'
       if (rate >= 70) return 'rate-high'
@@ -473,6 +489,11 @@
     function getSkillIconUrl(skillId) {
       if (!skillId) return ''
       return _skillIconBase + skillId + '.png'
+    }
+
+    function getCookingActionIconUrl(actionCn) {
+      if (!actionCn) return ''
+      return _skillIconBase + '10020' + actionCn + '.png'
     }
 
     function renderRecipes(data) {
@@ -538,11 +559,11 @@
       html += '</div>'
 
       if (recipe.type === 'manual') {
-        html += `<span class="level-badge manual-level">Lv.${recipe.level}</span>`
+        html += `<span class="level-badge manual-level">难度: ${rankLabel(recipe.level)}</span>`
       } else if (recipe.type === 'production' && recipe.difficulty >= 0) {
-        html += `<span class="level-badge difficulty">难度 ${RANK_MAP[recipe.difficulty] !== undefined ? RANK_MAP[recipe.difficulty] : recipe.difficulty}</span>`
+        html += `<span class="level-badge difficulty">难度: ${rankLabel(recipe.difficulty)}</span>`
       } else if (recipe.type === 'cooking') {
-        html += `<span class="cooking-action">${recipe.actionCn || recipe.action}</span>`
+        html += `<span class="cooking-action"><img src="${getCookingActionIconUrl(recipe.actionCn)}" onerror="this.style.display='none'" />${recipe.actionCn || recipe.action}</span>`
       }
       html += '</div>'
 
@@ -552,7 +573,7 @@
       // 手工额外信息
       if (recipe.type === 'manual' && (recipe.maxProgress > 0 || recipe.price > 0)) {
         html += '<div class="manual-info">'
-        if (recipe.maxProgress > 0) html += `<span class="manual-tag">进度 ${recipe.maxProgress}</span>`
+        if (recipe.maxProgress > 0) html += `<span class="manual-tag">单次完成度 ${recipe.maxProgress * 100}%</span>`
         if (recipe.price > 0) html += `<span class="manual-tag">${recipe.price.toLocaleString()} G</span>`
         html += '</div>'
       }
@@ -595,9 +616,9 @@
 
       // 额外信息
       const extras = []
-      if (recipe.merchantExp > 0) extras.push(`商人经验 ${recipe.merchantExp.toLocaleString()}`)
+      if (recipe.merchantExp > 0) extras.push(`生产经验值 ${recipe.merchantExp.toLocaleString()}`)
       if (recipe.rainBonus > 0) extras.push(`雨天 +${recipe.rainBonus}%`)
-      if (recipe.cookExp > 0) extras.push(`料理经验 ${recipe.cookExp}`)
+      if (recipe.cookExp > 0) extras.push(`料理经验值 ${recipe.cookExp}`)
       if (extras.length > 0) {
         html += '<div class="extra-info">'
         for (const ext of extras) {
@@ -644,7 +665,7 @@
           </div>
           <div class="material-info">
             <span class="material-name">${mat.name}</span>
-            ${mat.count > 0 ? `<span class="material-count">×${mat.count}</span>` : ''}
+            ${mat.percent !== undefined ? `<span class="material-count">${mat.percent}%</span>` : (mat.count > 0 ? `<span class="material-count">×${mat.count}</span>` : '')}
           </div>
         </div>
       `
@@ -668,8 +689,8 @@
         html += `<img src="${getSkillIconUrl(sub.skillId)}" onerror="this.style.display='none'" /> `
       }
       html += `${sub.skillName}`
-      if (sub.level) html += ` Lv.${sub.level}`
-      if (sub.difficulty !== undefined && sub.difficulty >= 0 && sub.type === 'production') html += ` 难度${RANK_MAP[sub.difficulty] !== undefined ? RANK_MAP[sub.difficulty] : sub.difficulty}`
+      if (sub.level) html += ` Lv.${rankLabel(sub.level)}`
+      if (sub.difficulty !== undefined && sub.difficulty >= 0 && sub.type === 'production') html += ` 难度${rankLabel(sub.difficulty)}`
       html += '</span></div>'
 
       const allMats = [...(sub.materials || []), ...(sub.completeMaterials || [])]
@@ -677,7 +698,7 @@
         html += '<div class="sub-mats">'
         for (const m of allMats) {
           const img = m.id > 0 ? `<img src="${getImageUrl(m.id)}" onerror="this.style.display='none'" />` : ''
-          html += `<span class="sub-mat">${img}${m.name}${m.count > 0 ? `<span class="sub-mat-count">×${m.count}</span>` : ''}</span>`
+          html += `<span class="sub-mat">${img}${m.name}${m.percent !== undefined ? `<span class="sub-mat-count">${m.percent}%</span>` : (m.count > 0 ? `<span class="sub-mat-count">×${m.count}</span>` : '')}</span>`
         }
         html += '</div>'
       }

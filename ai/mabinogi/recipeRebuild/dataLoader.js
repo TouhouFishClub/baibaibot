@@ -14,19 +14,26 @@ let _initPromise = null  // 防止并发初始化
 
 // ====== 版本检测 ======
 
-/** 从 IT 目录获取数据版本（基于 VERSION_MARK 文件名） */
+/** 从 IT 目录获取数据版本（基于 VERSION_MARK 文件名 + dataLoader.js 自身修改时间） */
 const getDataVersion = () => {
+  let base = 'unknown'
   try {
     const files = fs.readdirSync(DATA_DIR)
     const versionFile = files.find(f => f.startsWith('VERSION_MARK_'))
-    if (versionFile) return versionFile
+    if (versionFile) base = versionFile
   } catch (e) { /* ignore */ }
+  if (base === 'unknown') {
+    try {
+      base = ['production.xml', 'manualform.xml', 'cookingrecipe.xml']
+        .map(f => {
+          try { return fs.statSync(path.join(DATA_DIR, f)).mtimeMs } catch (e) { return 0 }
+        }).join('_')
+    } catch (e) { /* ignore */ }
+  }
   try {
-    return ['production.xml', 'manualform.xml', 'cookingrecipe.xml']
-      .map(f => {
-        try { return fs.statSync(path.join(DATA_DIR, f)).mtimeMs } catch (e) { return 0 }
-      }).join('_')
-  } catch (e) { return 'unknown' }
+    const loaderMtime = fs.statSync(__filename).mtimeMs
+    return `${base}_L${loaderMtime}`
+  } catch (e) { return base }
 }
 
 // ====== XML 工具函数 ======
@@ -223,7 +230,7 @@ const PRODUCTION_SKILL_MAP = {
   'MagicCraft':          { skillName: '魔法工艺',         skillCode: 'MagicCraft',          skillId: 10041 },
   'FynnsCraft':          { skillName: '菲恩工艺制作',     skillCode: 'FynnsCraft',          skillId: 27103 },
   'StationaryCraft':     { skillName: '书写用具工艺',     skillCode: 'StationaryCraft',     skillId: 10104 },
-  'StellarCraft':        { skillName: '星光工艺',         skillCode: 'StellarCraft',        skillId: 0 },
+  'StellarCraft':        { skillName: '星辰工艺',         skillCode: 'StellarCraft',        skillId: 27212 },
 }
 
 const MANUAL_SKILL_MAP = {
@@ -234,12 +241,23 @@ const MANUAL_SKILL_MAP = {
 }
 
 const COOKING_ACTION_MAP = {
-  'mix': '拌', 'boil': '煮', 'bake': '烤', 'fry': '炸',
-  'knead': '揉面', 'make_noodle': '制面', 'make_pasta': '意面',
-  'make_jam': '果酱', 'make_pie': '派', 'make_pizza': '披萨',
-  'steam': '蒸', 'steamed_dish': '蒸菜',
-  'cook_with_strong_fire': '大火烤', 'fry_with_much_oil': '油炸',
-  'ferment': '发酵', 'fillet': '切片', 'sousvide': '低温烹饪',
+  'mix': '混合',
+  'cook_with_strong_fire': '烤(火)',
+  'steam': '煮(火)', 
+  'boil': '烧(火)', 
+  'fry_with_much_oil': '炸(火)',
+  'fry': '炒(火)',
+  'knead': '和面', 
+  'make_noodle': '做面条', 
+  'make_pasta': '制作意大利面',
+  'make_jam': '制做果酱(火)',
+  'make_pie': '制做派', 
+  'steamed_dish': '蒸(火)', 
+  'make_pizza': '制作披萨',
+  'ferment': '发酵', 
+  'sousvide': '水浴法(火)',
+  'fillet': '切片', 
+  'bake': '烤',  
 }
 
 // ====== 配方加载 ======
@@ -412,6 +430,14 @@ const loadCookingRecipes = async (allItems) => {
           name: sourceItem ? sourceItem.name : (s$.desc || `\u7269\u54C1${itemId}`),
           count: amount,
         })
+      }
+    }
+
+    // 归一化材料比例为百分比（总和可能不为100）
+    const total = materials.reduce((sum, m) => sum + m.count, 0)
+    if (total > 0) {
+      for (const m of materials) {
+        m.percent = Math.round(m.count / total * 1000) / 10
       }
     }
 
