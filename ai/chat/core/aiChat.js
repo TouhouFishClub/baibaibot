@@ -32,7 +32,7 @@ const AI_ENABLED_GROUPS = new Set([
 
 // Admin 用户列表（这些用户在所有群都可以使用 AI 增强功能）
 const ADMIN_USERS = new Set([
-  799018865, // admin 用户
+  // 799018865, // admin 用户
 ])
 
 // 机器人 QQ 号列表
