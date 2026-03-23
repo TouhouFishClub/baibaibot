@@ -1,4 +1,33 @@
-* 因为金属转换判定太多并且复杂，移除金属转换的配方，材料中的金属转换配方也同步移除
-* 缺少分解、合成配方
-* 某些物品（如兰格赫里斯追猎者铠甲）需要一件概括性装备（即任何轻铠甲都可以当材料），需要修复这个
-* 
+* 在itemdb中，会有重复的id，例如：
+<Mabi_Item ID="12439" DB_StoreType="2" Category="/not_dyeable/item_enhance_stone/can_enhance_1to7/eweca_red_upgrade_stone/" XML="&lt;xml min_lv=&quot;1&quot; max_lv=&quot;7&quot; /&gt;" Text_Name0="Eweca Red Upgrade Stone" Text_Name1="_LT[xml.itemdb.56821]" Text_Desc1="_LT[xml.itemdb.56838]" Bundle_Type="1" Bundle_Max="10" Price_Buy="100000" Price_Sell="100000" Attr_ActionFlag="0" Attr_Type="1000" Attr_Grade="0" File_FieldMesh="item_c4_eweka_redstone_i" File_InvImage="item_remodeling_stone_red_Ladeca" Inv_XSize="2" Inv_YSize="1" App_WeaponActionType="0" App_UseC4Layer="false" App_Color1="12" App_Color2="12" App_Color3="12" App_ColorOrder="0" App_SittingType="0" Taste_Beauty="0" Taste_Indivisuality="0" Taste_Luxury="0" Taste_Toughness="0" Taste_Utility="0" Taste_Rarity="0" Taste_Meaning="0" Taste_Adult="0" Taste_Maniac="0" Taste_Anime="0" Taste_Sexy="0" Par_BlockUseFlag="true" SmartSearchFlag="korea;" AuctionSearchFlag="korea;japan;china;usa;taiwan;" />
+<Mabi_Item ID="12439" DB_StoreType="2" Category="/not_dyeable/item_enhance_stone/Red_Upgrade_Stone_7/" XML="&lt;xml type=&quot;r&quot; max_lv=&quot;7&quot; /&gt;" Text_Name0="Eweca Red Upgrade Stone" feature="gf2025BattleCataclysm" Text_Name1="_LT[xml.itemdb.84885]" Text_Desc1="_LT[xml.itemdb.84908]" Bundle_Type="1" Bundle_Max="10" Price_Buy="100000" Price_Sell="100000" Attr_ActionFlag="0" Attr_Type="1000" Attr_Grade="0" File_FieldMesh="item_c4_eweka_redstone_i" File_InvImage="item_remodeling_stone_red_Ladeca" Inv_XSize="2" Inv_YSize="1" App_WeaponActionType="0" App_UseC4Layer="false" App_Color1="12" App_Color2="12" App_Color3="12" App_ColorOrder="0" App_SittingType="0" Taste_Beauty="0" Taste_Indivisuality="0" Taste_Luxury="0" Taste_Toughness="0" Taste_Utility="0" Taste_Rarity="0" Taste_Meaning="0" Taste_Adult="0" Taste_Maniac="0" Taste_Anime="0" Taste_Sexy="0" Par_BlockUseFlag="true" SmartSearchFlag="korea;" AuctionSearchFlag="korea;japan;china;usa;taiwan;" />
+此时，应该用后方的id来覆盖前方的id，否则会出现道具错误；
+production的取样也相同，例如：
+<Production ProductionId="177" ProductionType="6" Title="_LT[xml.production.7301]" ProductItemId="5100067" ProductionCount="1" Difficulty="11" MerchantExp="50000" PrimeTool="/handicraft_kit/" SecondTool="/barehand/" DurabilityDownPrime="50" DurabilityDownSecond="0" EssentialDesc="_LT[xml.production.7329]" Essentials="(!*/no_penalty/*) &amp;amp;(*/item_enhance_stone/can_enhance_1to7/eweca_red_upgrade_stone/*), 10;(!*/no_penalty/*) &amp;amp;(*/item_enhance_stone/can_enhance_1to7/ladeca_blue_upgrade_stone/*), 10;*/Fine_Strengthening/*, 100;*/magmell_coin/*, 1000;*/dragon_raid/dragonbodypiece/*, 40;*/strange_pearl/*, 10;*/giant_teardrop/*, 50;*/restoration_scroll/*, 10;*/restoration_powder/*, 100;*/distorted_powder/*, 50;" ManaRequired="0" MaxProduction="1" MaxAutoProduction="100" ClearType="0" MaxBonus="0" Desc="_LT[xml.production.7315]" SuccessRate_0="0" SuccessRate_1="0" SuccessRate_2="0" SuccessRate_3="0" SuccessRate_4="0" SuccessRate_5="0" SuccessRate_6="0" SuccessRate_7="0" SuccessRate_8="0" SuccessRate_9="0" SuccessRate_10="0" SuccessRate_11="100" SuccessRate_12="100" SuccessRate_13="100" SuccessRate_14="100" SuccessRate_15="100" ForceSuccessRate="1" ToolMissmatchMsg="_LT[xml.production.7343]" SuccessRateBonusInRain="10" Generation="25" Season="2" __feature="gf2022MeetingCare&amp;!gf2025BattleCataclysm" Feature="gf2022MeetingCare" />
+<Production ProductionId="177" ProductionType="6" Title="_LT[xml.production.7302]" ProductItemId="5100067" ProductionCount="1" Difficulty="11" MerchantExp="50000" PrimeTool="/handicraft_kit/" SecondTool="/barehand/" DurabilityDownPrime="50" DurabilityDownSecond="0" EssentialDesc="_LT[xml.production.7330]" Essentials="(!*/no_penalty/*) &amp;amp;(*/item_enhance_stone/Red_Upgrade_Stone_7/*), 10;(!*/no_penalty/*) &amp;amp;(*/item_enhance_stone/Blue_Upgrade_Stone_7/*), 10;*/Fine_Strengthening/*, 100;*/magmell_coin/*, 1000;*/dragon_raid/dragonbodypiece/*, 40;*/strange_pearl/*, 10;*/giant_teardrop/*, 50;*/restoration_scroll/*, 10;*/restoration_powder/*, 100;*/distorted_powder/*, 50;" ManaRequired="0" MaxProduction="1" MaxAutoProduction="100" ClearType="0" MaxBonus="0" Desc="_LT[xml.production.7316]" SuccessRate_0="0" SuccessRate_1="0" SuccessRate_2="0" SuccessRate_3="0" SuccessRate_4="0" SuccessRate_5="0" SuccessRate_6="0" SuccessRate_7="0" SuccessRate_8="0" SuccessRate_9="0" SuccessRate_10="0" SuccessRate_11="100" SuccessRate_12="100" SuccessRate_13="100" SuccessRate_14="100" SuccessRate_15="100" ForceSuccessRate="1" ToolMissmatchMsg="_LT[xml.production.7344]" SuccessRateBonusInRain="10" Generation="25" Season="2" __feature="gf2025BattleCataclysm" Feature="gf2025BattleCataclysm" />
+保留后方的id；
+
+* 某些物品（如兰格赫里斯追猎者铠甲(女款)）需要一件概括性装备（即任何轻铠甲都可以当材料），需要修复这个，具体代码和类型关系如下：
+| 代码 | 类型 |
+|-------|-------|
+| (!*/no_penalty/*) &amp;amp;(*/item_enhance_stone/Red_Upgrade_Stone_7/*) | 7阶段红色改造石（固定为12439） |
+| (!*/no_penalty/*) &amp;amp;(*/item_enhance_stone/Blue_Upgrade_Stone_7/*) | 7阶段蓝色改造石（固定为12438） |
+| (!*/event/*) &amp;amp;(*/Red_Upgrade_Stone_6/no_penalty/*) | 保护的6阶段红色改造石（固定12525） |
+| (!*/event/*) &amp;amp;(*/Blue_Upgrade_Stone_6/no_penalty/*) | 保护的6阶段蓝色改造石（固定12442） |
+| (!*/Bhafelsepaer_armor/*) &amp;amp; (*/armor/heavyarmor/steel/*) | 金属板甲类（可用13001展示，不展示配方） |
+| (!*/Bhafelsepaer_armor/*) &amp;amp; (*/gauntlet/steel/*) | 金属手套类（可用16505展示，不展示配方） |
+| (!*/Bhafelsepaer_armor/*) &amp;amp; (*/foot/armorboots/steel/*) | 金属靴类（可用17501展示，不展示配方） |
+| (!*/gigantic_noblesse_armor/*) &amp;amp; (*/armor/heavyarmor/steel/*) | 金属板甲类（可用13001展示，不展示配方） |
+| (!*/gigantic_noblesse_armor/*) &amp;amp; (*/gauntlet/steel/*) | 金属手套类（可用16505展示，不展示配方） |
+| (!*/gigantic_noblesse_armor/*) &amp;amp; (*/foot/armorboots/steel/*) | 金属靴类（可用17501展示，不展示配方） |
+| (!*/gigantic_noblesse_armor/*) &amp;amp; (*/head/helmet/steel/*) | 金属头盔类（可用18515展示，不展示配方） |
+| (!*/no_penalty/*) &amp;amp;(*/Blue_Upgrade_Stone_6/*) | 6阶段蓝色改造石（固定为12283） |
+| (!*/no_penalty/*) &amp;amp;(*/Red_Upgrade_Stone_6/*) | 6阶段红色改造石（固定为12284） |
+| (!*/Leanghirith_armor/*) &amp;amp; (*/armor/lightarmor/leather/*) | 皮甲类（可用13076展示，不展示配方） |
+| (!*/Leanghirith_armor/*) &amp;amp; (*/hand/glove/leather/*) | 皮手套类（可用16000展示，不展示配方） |
+| (!*/Leanghirith_armor/*) &amp;amp; (*/foot/shoes/leather/*) | 皮鞋类（可用17001展示，不展示配方） |
+在显示类型物品，可以找其中一个物品来显示（原版使用的gif切换，但是这里是图片就不这样显示），物品对应关系参考ai\mabinogi\recipeNew\js\Item.js
+
+* productId为4200100、4200101的配方不能被搜索出来
+* 缺少分解、合成配方。合成配方因为缺少拆包，所以通过原版recipeNew（ai\mabinogi\recipeNew\js\SynthesisItem.js）的数据导入（注意复制文件，recipeNew后期会删除），分解配方使用拆包数据（ai\mabinogi\data\IT\dissolution.xml）
+* 因为金属转换、分解同一物品有多数配方，展示效果不好，所以仅在搜索所需物品的时候展示，材料配方中不允许展示这两类配方
