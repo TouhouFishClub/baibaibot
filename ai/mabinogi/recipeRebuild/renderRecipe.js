@@ -134,6 +134,10 @@ const downloadItemIcons = async (itemIds) => {
 /**
  * 构建子配方数据（mbd模式：展示材料的制作配方）
  */
+// 金属转换和分解同一物品有多数配方，展示效果不好，子配方中不展示
+const EXCLUDED_SUB_RECIPE_TYPES = new Set(['dissolution'])
+const EXCLUDED_SUB_RECIPE_SKILLS = new Set(['MetalExtraction'])
+
 const buildSubRecipes = (recipes, allItems, recipesByProduct) => {
   const subRecipeMap = {} // materialId -> [{...recipe}]
   const seen = new Set()
@@ -142,12 +146,17 @@ const buildSubRecipes = (recipes, allItems, recipesByProduct) => {
     const allMats = [...(recipe.materials || []), ...(recipe.completeMaterials || [])]
     for (const mat of allMats) {
       if (mat.id <= 0 || seen.has(mat.id)) continue
+      if (mat.noRecipe) continue
       seen.add(mat.id)
 
       const matRecipes = recipesByProduct.get(mat.id)
       if (matRecipes && matRecipes.length > 0) {
-        // 只取第一个配方的简要信息
-        subRecipeMap[mat.id] = matRecipes.map(r => ({
+        const filtered = matRecipes.filter(r =>
+          !EXCLUDED_SUB_RECIPE_TYPES.has(r.type) &&
+          !EXCLUDED_SUB_RECIPE_SKILLS.has(r.skillCode)
+        )
+        if (filtered.length === 0) continue
+        subRecipeMap[mat.id] = filtered.map(r => ({
           type: r.type,
           skillName: r.skillName,
           skillId: r.skillId || 0,
@@ -236,12 +245,14 @@ const renderRecipeImage = async (product, recipes, allItems, recipesByProduct, s
         name: m.name,
         count: m.count,
         ...(m.percent !== undefined && { percent: m.percent }),
+        ...(m.noRecipe && { noRecipe: true }),
       })),
       completeMaterials: (r.completeMaterials || []).map(m => ({
         id: m.id,
         name: m.name,
         count: m.count,
         ...(m.percent !== undefined && { percent: m.percent }),
+        ...(m.noRecipe && { noRecipe: true }),
       })),
       successRates: r.successRates || {},
       merchantExp: r.merchantExp || 0,

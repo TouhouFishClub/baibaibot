@@ -33,6 +33,11 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
       const item = allItems.get(id)
       if (item) {
         targets.push({ id: item.id, name: item.name })
+      } else if (recipesByProduct.has(id)) {
+        // 物品不在itemdb中但有配方数据（如4200100等）
+        const recipes = recipesByProduct.get(id)
+        const name = recipes[0] ? recipes[0].productName : `物品${id}`
+        targets.push({ id, name })
       }
     } else {
       // 按名称搜索 - 支持多关键词（空格或逗号分隔）

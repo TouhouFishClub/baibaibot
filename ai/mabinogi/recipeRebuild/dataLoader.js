@@ -24,7 +24,7 @@ const getDataVersion = () => {
   } catch (e) { /* ignore */ }
   if (base === 'unknown') {
     try {
-      base = ['production.xml', 'manualform.xml', 'cookingrecipe.xml']
+      base = ['production.xml', 'manualform.xml', 'cookingrecipe.xml', 'dissolution.xml']
         .map(f => {
           try { return fs.statSync(path.join(DATA_DIR, f)).mtimeMs } catch (e) { return 0 }
         }).join('_')
@@ -121,11 +121,18 @@ const loadAllItemsFromXml = async () => {
       const name = transform[$.Text_Name1] || $.Text_Name0 || ''
       if (!name) continue
 
-      // 同ID不同feature取第一个有名字的
-      if (!itemMap.has(id)) {
-        itemMap.set(id, { id, name, category: $.Category || '' })
+      // 同ID后方覆盖前方（新版本feature的条目排在后面）
+      const prevItem = itemMap.get(id)
+      itemMap.set(id, { id, name, category: $.Category || '' })
+      // 名称索引：如果旧名称不同，从旧名称索引中移除
+      if (prevItem && prevItem.name !== name) {
+        const oldArr = nameMap.get(prevItem.name)
+        if (oldArr) {
+          const idx = oldArr.indexOf(id)
+          if (idx !== -1) oldArr.splice(idx, 1)
+          if (oldArr.length === 0) nameMap.delete(prevItem.name)
+        }
       }
-      // 名称索引
       if (!nameMap.has(name)) nameMap.set(name, [])
       const arr = nameMap.get(name)
       if (!arr.includes(id)) arr.push(id)
@@ -133,6 +140,74 @@ const loadAllItemsFromXml = async () => {
   }
 
   return { itemMap, nameMap }
+}
+
+// ====== 复杂模式匹配规则（处理 & 和 ! 操作符） ======
+// 更具体的规则排在前面，避免被宽泛规则覆盖
+const COMPLEX_PATTERN_RULES = [
+  { match: 'item_enhance_stone/Red_Upgrade_Stone_7', id: 12439 },
+  { match: 'item_enhance_stone/Blue_Upgrade_Stone_7', id: 12438 },
+  { match: 'item_enhance_stone/can_enhance_1to7/eweca_red_upgrade_stone', id: 12439 },
+  { match: 'item_enhance_stone/can_enhance_1to7/ladeca_blue_upgrade_stone', id: 12438 },
+  { match: 'Red_Upgrade_Stone_6/no_penalty', id: 12525 },
+  { match: 'Blue_Upgrade_Stone_6/no_penalty', id: 12442 },
+  { match: 'Red_Upgrade_Stone_of_Protection', id: 12525 },
+  { match: 'Blue_Upgrade_Stone_of_Protection', id: 12442 },
+  { match: 'Red_Upgrade_Stone_6', id: 12284 },
+  { match: 'Blue_Upgrade_Stone_6', id: 12283 },
+  { match: 'armor/heavyarmor/steel', id: 13001, noRecipe: true },
+  { match: 'gauntlet/steel', id: 16505, noRecipe: true },
+  { match: 'foot/armorboots/steel', id: 17501, noRecipe: true },
+  { match: 'head/helmet/steel', id: 18515, noRecipe: true },
+  { match: 'armor/lightarmor/leather', id: 13076, noRecipe: true },
+  { match: 'hand/glove/leather', id: 16000, noRecipe: true },
+  { match: 'foot/shoes/leather', id: 17001, noRecipe: true },
+]
+
+/** 解析复杂模式：含 AND/NOT 条件的分类匹配 */
+const resolveComplexPattern = (rawPattern, allItems) => {
+  const sep = rawPattern.includes('&amp;') ? '&amp;' : '&'
+  const parts = rawPattern.split(sep).map(p => p.trim())
+
+  // 提取正向模式部分（不含 ! 的部分）
+  let positiveRaw = ''
+  for (const part of parts) {
+    let p = part.replace(/^\(/, '').replace(/\)$/, '').trim()
+    if (!p.startsWith('!')) {
+      positiveRaw = p
+      break
+    }
+  }
+  if (!positiveRaw) return null
+
+  // 在规则表中查找匹配
+  for (const rule of COMPLEX_PATTERN_RULES) {
+    if (positiveRaw.includes(rule.match)) {
+      const item = allItems.get(rule.id)
+      const name = item ? item.name : rule.match.split('/').pop()
+      return { id: rule.id, name, noRecipe: rule.noRecipe || false }
+    }
+  }
+
+  // 规则表无匹配时，尝试用正向模式做通用匹配
+  let bestMatch = null
+  const negativePatterns = parts
+    .map(p => p.replace(/^\(/, '').replace(/\)$/, '').trim())
+    .filter(p => p.startsWith('!'))
+    .map(p => p.substring(1))
+
+  for (const [, item] of allItems) {
+    if (!matchCategory(positiveRaw, item.category)) continue
+    let excluded = false
+    for (const neg of negativePatterns) {
+      if (matchCategory(neg, item.category)) { excluded = true; break }
+    }
+    if (excluded) continue
+    bestMatch = item
+    if (!item.name.includes('活动')) break
+  }
+
+  return bestMatch ? { id: bestMatch.id, name: bestMatch.name } : null
 }
 
 // ====== 材料解析（带备忘录缓存） ======
@@ -146,11 +221,17 @@ const _patternCache = new Map()
 const resolvePattern = (pattern, allItems) => {
   if (_patternCache.has(pattern)) return _patternCache.get(pattern)
 
+  // 检测是否为复杂模式（含 & 操作符）
+  if (pattern.includes('&amp;') || (pattern.includes('&') && pattern.includes('!'))) {
+    const result = resolveComplexPattern(pattern, allItems)
+    _patternCache.set(pattern, result)
+    return result
+  }
+
   let bestMatch = null
   for (const [, item] of allItems) {
     if (matchCategory(pattern, item.category)) {
       bestMatch = item
-      // 优先选非活动物品
       if (!item.name.includes('活动')) break
     }
   }
@@ -166,19 +247,26 @@ const resolvePattern = (pattern, allItems) => {
 const resolveEssentials = (str, allItems) => {
   if (!str) return []
   const materials = []
-  const parts = str.split(';')
+  // &amp; 中的 ; 不能作为分隔符，先替换保护
+  const AMP_PLACEHOLDER = '\x00AMP\x00'
+  const safe = str.replace(/&amp;/g, AMP_PLACEHOLDER)
+  const parts = safe.split(';')
 
   for (let i = 0; i < parts.length; i++) {
-    const sub = parts[i].split(',')
+    const restored = parts[i].replace(/\x00AMP\x00/g, '&amp;')
+    const sub = restored.split(',')
     const pattern = (sub[0] || '').trim()
     const count = parseInt(sub[1]) || 0
     if (!pattern) continue
 
     const match = resolvePattern(pattern, allItems)
     if (match) {
-      materials.push({ id: match.id, name: match.name, count })
+      materials.push({
+        id: match.id, name: match.name, count,
+        ...(match.noRecipe && { noRecipe: true }),
+      })
     } else {
-      const seg = pattern.split('/').filter(s => s && s !== '*')
+      const seg = pattern.split('/').filter(s => s && s !== '*' && !s.includes('!') && !s.includes('&') && !s.includes('(') && !s.includes(')'))
       materials.push({ id: 0, name: seg.pop() || pattern, count })
     }
   }
@@ -264,10 +352,10 @@ const COOKING_ACTION_MAP = {
 
 /** 加载 production.xml */
 const loadProductionRecipes = async (allItems) => {
-  const recipes = []
+  const recipeMap = new Map() // ProductionId → recipe（同ID后方覆盖前方）
   const xmlPath = path.join(DATA_DIR, 'production.xml')
   const txtPath = path.join(DATA_DIR, 'production.china.txt')
-  if (!fs.existsSync(xmlPath)) return recipes
+  if (!fs.existsSync(xmlPath)) return []
 
   const xmlData = await readXmlParse(xmlPath)
   const transform = loadTranslation(txtPath, 'production')
@@ -281,9 +369,8 @@ const loadProductionRecipes = async (allItems) => {
       const $ = prods[i].$
       const productId = parseInt($.ProductItemId)
       if (!productId) continue
-      // 跳过练习条目
-      if (parseInt($.ProductionId) >= 10000) continue
-      // 跳过已废弃的 feature（ __feature 以 ! 开头表示旧版本，已被新版本替代）
+      const prodId = parseInt($.ProductionId)
+      if (prodId >= 10000) continue
       if ($.__feature && $.__feature.startsWith('!')) continue
 
       const title = $.Title ? (transform[$.Title] || $.Title) : ''
@@ -291,7 +378,6 @@ const loadProductionRecipes = async (allItems) => {
       const essentialDesc = $.EssentialDesc ? (transform[$.EssentialDesc] || '') : ''
       const difficulty = parseInt($.Difficulty) || 0
 
-      // 成功率
       const successRates = {}
       for (let r = 0; r <= 18; r++) {
         if ($[`SuccessRate_${r}`] !== undefined) {
@@ -301,11 +387,10 @@ const loadProductionRecipes = async (allItems) => {
 
       const materials = resolveEssentials($.Essentials, allItems)
       const productItem = allItems.get(productId)
-
-      // 第三只眼标记：根据 ApplySpecialization="true"
       const requiresSightOfOtherSide = $.ApplySpecialization === 'true'
 
-      recipes.push({
+      // 同ProductionId后方覆盖前方（新版本feature条目排在后面）
+      recipeMap.set(`${section}_${prodId}`, {
         type: 'production',
         productId,
         productName: productItem ? productItem.name : title,
@@ -323,7 +408,7 @@ const loadProductionRecipes = async (allItems) => {
       })
     }
   }
-  return recipes
+  return [...recipeMap.values()]
 }
 
 /** 加载 manualform.xml */
@@ -463,6 +548,173 @@ const loadCookingRecipes = async (allItems) => {
   return recipes
 }
 
+// ====== 分解配方加载 ======
+
+/** 解析分解配方的 Essentials（格式与 production 不同：itemId[=quality] [/count]） */
+const resolveDissolutionEssentials = (str, allItems) => {
+  if (!str) return []
+  const materials = []
+  const parts = str.split(/[;,]/)
+
+  for (const part of parts) {
+    let trimmed = part.trim()
+    if (!trimmed) continue
+
+    // 去除开头多余的 /（如 "/51004 /1"）
+    if (trimmed.startsWith('/')) trimmed = trimmed.substring(1).trim()
+
+    let count = 1
+    // 提取 /N 或 /N-N 格式的数量
+    const slashMatch = trimmed.match(/\/(\d+)(?:\s*-\s*(\d+))?/)
+    if (slashMatch) {
+      count = parseInt(slashMatch[1])
+      trimmed = trimmed.substring(0, trimmed.indexOf('/')).trim()
+    }
+
+    // 去除 =quality 标记（如 "51105=25"）
+    const eqIdx = trimmed.indexOf('=')
+    if (eqIdx > 0) trimmed = trimmed.substring(0, eqIdx).trim()
+
+    const id = parseInt(trimmed)
+    if (!id || id <= 0) continue
+
+    const item = allItems.get(id)
+    materials.push({
+      id,
+      name: item ? item.name : `物品${id}`,
+      count,
+    })
+  }
+  return materials
+}
+
+const DISSOLUTION_PRODUCT_TYPE_MAP = {
+  'Spinning':       { skillName: '纺织', skillCode: 'Spinning' },
+  'Weaving':        { skillName: '纺织', skillCode: 'Weaving' },
+  'Refine':         { skillName: '冶炼', skillCode: 'Refine' },
+  'Potionmaking':   { skillName: '药剂制作', skillCode: 'PotionMaking' },
+  'MagicCraft':     { skillName: '魔法工艺', skillCode: 'MagicCraft' },
+}
+
+/** 加载 dissolution.xml */
+const loadDissolutionRecipes = async (allItems) => {
+  const recipeMap = new Map()
+  const xmlPath = path.join(DATA_DIR, 'dissolution.xml')
+  if (!fs.existsSync(xmlPath)) return []
+
+  const xmlData = await readXmlParse(xmlPath)
+  const dissolList = (xmlData.DissolutionInfo && xmlData.DissolutionInfo.Dissolution) || []
+
+  for (let i = 0; i < dissolList.length; i++) {
+    const $ = dissolList[i].$
+    const dissolId = parseInt($.ID)
+    const productId = parseInt($.DissolutionItemID)
+    if (!productId) continue
+    if ($.__feature && $.__feature.startsWith('!')) continue
+
+    const productItem = allItems.get(productId)
+    const productType = $.ProductType || ''
+    const typeInfo = DISSOLUTION_PRODUCT_TYPE_MAP[productType] || { skillName: productType, skillCode: productType }
+
+    const successRates = {}
+    for (let r = 0; r <= 18; r++) {
+      if ($[`SuccessRate_${r}`] !== undefined) {
+        successRates[r] = parseInt($[`SuccessRate_${r}`])
+      }
+    }
+
+    const materials = resolveDissolutionEssentials($.Essentials, allItems)
+
+    recipeMap.set(dissolId, {
+      type: 'dissolution',
+      productId,
+      productName: productItem ? productItem.name : `物品${productId}`,
+      productCount: parseInt($.DissolutionItemCount) || 1,
+      skillName: `分解(${typeInfo.skillName})`,
+      skillCode: 'Dissolution',
+      skillId: 10030,
+      section: productType,
+      title: '', desc: '', essentialDesc: '',
+      difficulty: parseInt($.Difficulty) || 0,
+      materials, successRates,
+      merchantExp: 0,
+      rainBonus: parseInt($.SuccessRateBonusInRain) || 0,
+      specialTalent: '',
+      requiresSightOfOtherSide: false,
+    })
+  }
+  return [...recipeMap.values()]
+}
+
+// ====== 合成配方加载 ======
+
+/** 加载 SynthesisItem.js 数据 */
+const loadSynthesisRecipes = (allItems) => {
+  const filePath = path.join(__dirname, 'data', 'SynthesisItem.js')
+  if (!fs.existsSync(filePath)) return []
+
+  const content = fs.readFileSync(filePath, 'utf-8')
+  const vm = require('vm')
+  const context = {}
+
+  try {
+    vm.runInNewContext(content, context)
+  } catch (e) {
+    console.error('[dataLoader] SynthesisItem.js 解析失败:', e.message)
+    return []
+  }
+
+  const list = context.SynthesisList || []
+  const recipes = []
+
+  for (const productId of list) {
+    const data = context[`SynthesisItem${productId}`]
+    if (!data || !Array.isArray(data) || data.length < 2) continue
+
+    const [level, matArray] = data
+    if (!Array.isArray(matArray)) continue
+
+    const productItem = allItems.get(productId)
+    const materials = []
+    for (let i = 0; i < matArray.length; i += 2) {
+      const matRef = matArray[i]
+      const matCount = parseInt(matArray[i + 1]) || 1
+
+      if (typeof matRef === 'string') {
+        materials.push({ id: 0, name: matRef, count: matCount })
+      } else {
+        const matId = parseInt(matRef)
+        if (matId > 0) {
+          const matItem = allItems.get(matId)
+          materials.push({
+            id: matId,
+            name: matItem ? matItem.name : `物品${matId}`,
+            count: matCount,
+          })
+        }
+      }
+    }
+
+    recipes.push({
+      type: 'synthesis',
+      productId,
+      productName: productItem ? productItem.name : `物品${productId}`,
+      productCount: 1,
+      skillName: '合成',
+      skillCode: 'Synthesis',
+      skillId: 10029,
+      section: 'Synthesis',
+      title: '', desc: '', essentialDesc: '',
+      difficulty: level || 0,
+      materials,
+      successRates: {},
+      specialTalent: '',
+      requiresSightOfOtherSide: false,
+    })
+  }
+  return recipes
+}
+
 // ====== 缓存管理 ======
 
 /** 保存缓存到JSON文件 */
@@ -569,13 +821,15 @@ const _doLoad = async () => {
   _patternCache.clear()
 
   const t1 = Date.now()
-  const [prodRecipes, manualRecipes, cookingRecipes] = await Promise.all([
+  const [prodRecipes, manualRecipes, cookingRecipes, dissolRecipes] = await Promise.all([
     loadProductionRecipes(itemMap),
     loadManualFormRecipes(itemMap),
     loadCookingRecipes(itemMap),
+    loadDissolutionRecipes(itemMap),
   ])
-  const allRecipes = [...prodRecipes, ...manualRecipes, ...cookingRecipes]
-  console.log(`[dataLoader] \u914D\u65B9\u52A0\u8F7D\u5B8C\u6210: \u751F\u4EA7${prodRecipes.length}, \u624B\u5DE5${manualRecipes.length}, \u6599\u7406${cookingRecipes.length} (${Date.now() - t1}ms) [\u552F\u4E00pattern\u6570: ${_patternCache.size}]`)
+  const synthRecipes = loadSynthesisRecipes(itemMap)
+  const allRecipes = [...prodRecipes, ...manualRecipes, ...cookingRecipes, ...dissolRecipes, ...synthRecipes]
+  console.log(`[dataLoader] 配方加载完成: 生产${prodRecipes.length}, 手工${manualRecipes.length}, 料理${cookingRecipes.length}, 分解${dissolRecipes.length}, 合成${synthRecipes.length} (${Date.now() - t1}ms) [唯一pattern数: ${_patternCache.size}]`)
 
   // 清空 pattern 缓存释放内存
   _patternCache.clear()
