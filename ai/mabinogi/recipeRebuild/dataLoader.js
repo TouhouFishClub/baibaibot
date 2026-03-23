@@ -155,13 +155,13 @@ const COMPLEX_PATTERN_RULES = [
   { match: 'Blue_Upgrade_Stone_of_Protection', id: 12442 },
   { match: 'Red_Upgrade_Stone_6', id: 12284 },
   { match: 'Blue_Upgrade_Stone_6', id: 12283 },
-  { match: 'armor/heavyarmor/steel', id: 13001, noRecipe: true },
-  { match: 'gauntlet/steel', id: 16505, noRecipe: true },
-  { match: 'foot/armorboots/steel', id: 17501, noRecipe: true },
-  { match: 'head/helmet/steel', id: 18515, noRecipe: true },
-  { match: 'armor/lightarmor/leather', id: 13076, noRecipe: true },
-  { match: 'hand/glove/leather', id: 16000, noRecipe: true },
-  { match: 'foot/shoes/leather', id: 17001, noRecipe: true },
+  { match: 'armor/heavyarmor/steel', id: 13001, noRecipe: true, displayName: '金属板甲类' },
+  { match: 'gauntlet/steel', id: 16505, noRecipe: true, displayName: '金属手套类' },
+  { match: 'foot/armorboots/steel', id: 17501, noRecipe: true, displayName: '金属靴类' },
+  { match: 'head/helmet/steel', id: 18515, noRecipe: true, displayName: '金属头盔类' },
+  { match: 'armor/lightarmor/leather', id: 13076, noRecipe: true, displayName: '皮甲类' },
+  { match: 'hand/glove/leather', id: 16000, noRecipe: true, displayName: '皮手套类' },
+  { match: 'foot/shoes/leather', id: 17001, noRecipe: true, displayName: '皮鞋类' },
 ]
 
 /** 解析复杂模式：含 AND/NOT 条件的分类匹配 */
@@ -184,7 +184,7 @@ const resolveComplexPattern = (rawPattern, allItems) => {
   for (const rule of COMPLEX_PATTERN_RULES) {
     if (positiveRaw.includes(rule.match)) {
       const item = allItems.get(rule.id)
-      const name = item ? item.name : rule.match.split('/').pop()
+      const name = rule.displayName || (item ? item.name : rule.match.split('/').pop())
       return { id: rule.id, name, noRecipe: rule.noRecipe || false }
     }
   }
@@ -596,9 +596,14 @@ const DISSOLUTION_PRODUCT_TYPE_MAP = {
   'MagicCraft':     { skillName: '魔法工艺', skillCode: 'MagicCraft' },
 }
 
-/** 加载 dissolution.xml */
+/**
+ * 加载 dissolution.xml
+ * 数据方向：DissolutionItemID 是被分解的物品（输入），Essentials 是分解产出（输出）
+ * 对每个产出物品创建一条配方，材料为被分解的物品
+ */
 const loadDissolutionRecipes = async (allItems) => {
-  const recipeMap = new Map()
+  const seenMap = new Map() // dissolId → 去重
+  const recipes = []
   const xmlPath = path.join(DATA_DIR, 'dissolution.xml')
   if (!fs.existsSync(xmlPath)) return []
 
@@ -608,11 +613,19 @@ const loadDissolutionRecipes = async (allItems) => {
   for (let i = 0; i < dissolList.length; i++) {
     const $ = dissolList[i].$
     const dissolId = parseInt($.ID)
-    const productId = parseInt($.DissolutionItemID)
-    if (!productId) continue
     if ($.__feature && $.__feature.startsWith('!')) continue
+    // 同ID后方覆盖前方
+    if (seenMap.has(dissolId)) {
+      const prevIndices = seenMap.get(dissolId)
+      for (const idx of prevIndices) recipes[idx] = null
+    }
 
-    const productItem = allItems.get(productId)
+    const inputItemId = parseInt($.DissolutionItemID)
+    if (!inputItemId) continue
+    const inputCount = parseInt($.DissolutionItemCount) || 1
+    const inputItem = allItems.get(inputItemId)
+    const inputName = inputItem ? inputItem.name : `物品${inputItemId}`
+
     const productType = $.ProductType || ''
     const typeInfo = DISSOLUTION_PRODUCT_TYPE_MAP[productType] || { skillName: productType, skillCode: productType }
 
@@ -623,27 +636,35 @@ const loadDissolutionRecipes = async (allItems) => {
       }
     }
 
-    const materials = resolveDissolutionEssentials($.Essentials, allItems)
+    const difficulty = parseInt($.Difficulty) || 0
+    const rainBonus = parseInt($.SuccessRateBonusInRain) || 0
+    const outputItems = resolveDissolutionEssentials($.Essentials, allItems)
 
-    recipeMap.set(dissolId, {
-      type: 'dissolution',
-      productId,
-      productName: productItem ? productItem.name : `物品${productId}`,
-      productCount: parseInt($.DissolutionItemCount) || 1,
-      skillName: `分解(${typeInfo.skillName})`,
-      skillCode: 'Dissolution',
-      skillId: 10030,
-      section: productType,
-      title: '', desc: '', essentialDesc: '',
-      difficulty: parseInt($.Difficulty) || 0,
-      materials, successRates,
-      merchantExp: 0,
-      rainBonus: parseInt($.SuccessRateBonusInRain) || 0,
-      specialTalent: '',
-      requiresSightOfOtherSide: false,
-    })
+    const indices = []
+    for (const output of outputItems) {
+      indices.push(recipes.length)
+      recipes.push({
+        type: 'dissolution',
+        productId: output.id,
+        productName: output.name,
+        productCount: output.count,
+        skillName: `分解(${typeInfo.skillName})`,
+        skillCode: 'Dissolution',
+        skillId: 10030,
+        section: productType,
+        title: '', desc: '', essentialDesc: '',
+        difficulty,
+        materials: [{ id: inputItemId, name: inputName, count: inputCount }],
+        successRates,
+        merchantExp: 0,
+        rainBonus,
+        specialTalent: '',
+        requiresSightOfOtherSide: false,
+      })
+    }
+    seenMap.set(dissolId, indices)
   }
-  return [...recipeMap.values()]
+  return recipes.filter(Boolean)
 }
 
 // ====== 合成配方加载 ======
@@ -702,7 +723,7 @@ const loadSynthesisRecipes = (allItems) => {
       productCount: 1,
       skillName: '合成',
       skillCode: 'Synthesis',
-      skillId: 10029,
+      skillId: 10031,
       section: 'Synthesis',
       title: '', desc: '', essentialDesc: '',
       difficulty: level || 0,

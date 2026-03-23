@@ -10,6 +10,15 @@ const getRender = () => {
 }
 
 /**
+ * 过滤展示用配方：当存在非分解配方时，隐藏分解配方
+ * 分解配方仅在物品唯一获取途径是分解时才展示
+ */
+const filterRecipesForDisplay = (recipes) => {
+  const nonDissol = recipes.filter(r => r.type !== 'dissolution')
+  return nonDissol.length > 0 ? nonDissol : recipes
+}
+
+/**
  * 搜索配方主入口
  * @param {string} content - 搜索关键词（物品名 or ID）
  * @param {Function} callback - 回调函数
@@ -71,8 +80,8 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
     if (targets.length === 1) {
       // 精确匹配到一个
       const target = targets[0]
-      const recipes = recipesByProduct.get(target.id)
-      if (recipes && recipes.length > 0) {
+      const recipes = filterRecipesForDisplay(recipesByProduct.get(target.id) || [])
+      if (recipes.length > 0) {
         getRender()(target, recipes, allItems, recipesByProduct, showDesc, callback)
       } else {
         callback(`找到「${target.name}」但没有配方数据`)
@@ -81,8 +90,8 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
       // 多个匹配 - 检查是否有完全匹配
       const exactMatch = targets.find(t => t.name === content)
       if (exactMatch) {
-        const recipes = recipesByProduct.get(exactMatch.id)
-        if (recipes && recipes.length > 0) {
+        const recipes = filterRecipesForDisplay(recipesByProduct.get(exactMatch.id) || [])
+        if (recipes.length > 0) {
           const listMsg = `找到${targets.length}个匹配\n${targets.slice(0, 10).map(t => `mbi ${t.id} | ${t.name}`).join('\n')}\n已为您定位到「${exactMatch.name}」`
           getRender()(exactMatch, recipes, allItems, recipesByProduct, showDesc, callback, listMsg, 'MF')
         }
