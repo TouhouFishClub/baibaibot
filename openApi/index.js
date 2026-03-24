@@ -19,6 +19,8 @@ const { tcArticle } = require('../ai/mabinogi/newArticle');
 const rua = require('../ai/mabinogi/ruawork')
 const { jrrp } = require('../ai/rp_new')
 const { mabiWeather } = require('../ai/mabinogi/weather')
+const {mabiSmuggler} = require("../ai/mabinogi/smuggler/newSmuggler");
+const {chishenme} = require("../ai/chishenme");
 
 
 /**
@@ -492,6 +494,12 @@ router.get('/uni', (req, res) => {
     } else if (content.toUpperCase().startsWith('TC公告')) {
       // 获取洛奇TC公告
       tcArticle(content.substring(4), createCallback(res));
+    } else if(content.toUpperCase().startsWith('走私查询')) {
+      // 走私查询
+      mabiSmuggler(createCallback(res));
+    } else if(content.toUpperCase().endsWith('吃什么')) {
+      // 吃什么
+      chishenme(from, content.substring(0, content.length - 2), createCallback(res))
     } else if (content.includes('|')) {
       // 包含"|"，执行保存或删除操作（问答模块）
       const parts = content.split('|');
