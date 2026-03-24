@@ -347,48 +347,48 @@ router.get('/meu', (req, res) => {
 /**
  * mbtv - 洛奇电视查询
  */
-// router.get('/mbtv', (req, res) => {
-//   try {
-//     let content = '';
-//     if (req.query && req.query.content) {
-//       try {
-//         content = decodeURIComponent(req.query.content);
-//       } catch (e) {
-//         content = req.query.content;
-//       }
-//     }
-//     const from = req.query && req.query.from ? req.query.from : '0';
-//
-//     mabiTelevision(content, from, createCallback(res)).catch(err => {
-//       handleError(res, err);
-//     });
-//   } catch (error) {
-//     handleError(res, error);
-//   }
-// });
+router.get('/mbtv', (req, res) => {
+  try {
+    let content = '';
+    if (req.query && req.query.content) {
+      try {
+        content = decodeURIComponent(req.query.content);
+      } catch (e) {
+        content = req.query.content;
+      }
+    }
+    const from = req.query && req.query.from ? req.query.from : '0';
+
+    mabiTelevision(content, from, createCallback(res)).catch(err => {
+      handleError(res, err);
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+});
 
 /**
  * mbcd - 洛奇抽卡电视查询
  */
-// router.get('/mbcd', (req, res) => {
-//   try {
-//     let content = '';
-//     if (req.query && req.query.content) {
-//       try {
-//         content = decodeURIComponent(req.query.content);
-//       } catch (e) {
-//         content = req.query.content;
-//       }
-//     }
-//     const from = req.query && req.query.from ? req.query.from : '0';
-//
-//     mabiGachaTv(content, from, createCallback(res)).catch(err => {
-//       handleError(res, err);
-//     });
-//   } catch (error) {
-//     handleError(res, error);
-//   }
-// });
+router.get('/mbcd', (req, res) => {
+  try {
+    let content = '';
+    if (req.query && req.query.content) {
+      try {
+        content = decodeURIComponent(req.query.content);
+      } catch (e) {
+        content = req.query.content;
+      }
+    }
+    const from = req.query && req.query.from ? req.query.from : '0';
+
+    mabiGachaTv(content, from, createCallback(res)).catch(err => {
+      handleError(res, err);
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+});
 
 /**
  * uni - 通用内容存储和查询接口
@@ -400,6 +400,7 @@ router.get('/meu', (req, res) => {
  */
 router.get('/uni', (req, res) => {
   try {
+    console(`[UNI]${JSON.stringify(req.query)}`)
     // 获取并处理content参数
     let content = '';
     if (req.query && req.query.content) {
