@@ -5,8 +5,8 @@ const fs = require('fs');
 
 // 导入需要的功能函数
 const { searchMabiRecipe } = require('../ai/mabinogi/recipeRebuild/searchRecipe');
-const { mabiTelevision } = require('../ai/mabinogi/Television/new');
-const { mabiGachaTv } = require('../ai/mabinogi/Television/gacha');
+const { mabiTelevision } = require('../ai/mabinogi/Television/newMbtv');
+const { mabiGachaTv } = require('../ai/mabinogi/Television/newMbcd');
 const { op } = require('../ai/mabinogi/optionset');
 const { searchEquipUpgrade } = require('../ai/mabinogi/ItemUpgrade/index');
 const { saveTxt, answer } = require('../lib/mongo.js');
