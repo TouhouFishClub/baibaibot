@@ -400,7 +400,7 @@ router.get('/mbcd', (req, res) => {
  */
 router.get('/uni', (req, res) => {
   try {
-    console(`[UNI]${JSON.stringify(req.query)}`)
+    console.log(`[UNI]${JSON.stringify(req.query)}`)
     // 获取并处理content参数
     let content = '';
     if (req.query && req.query.content) {
