@@ -252,8 +252,8 @@ router.get('/mbi', (req, res) => {
         message: '请提供查询内容'
       });
     }
-    
-    searchMabiRecipe(content, createCallback(res));
+    // mbi与mbd同步
+    searchMabiRecipe(content, createCallback(res), true);
   } catch (error) {
     handleError(res, error);
   }
