@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>百百机器人 - 帮助</title>
+  <style>
+    @font-face {
+      font-family: 'MAINFONT';
+      src: url({{fontBase64}}) format('truetype');
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      width: 780px;
+      font-family: MAINFONT, 'Microsoft YaHei', sans-serif;
+      background: #1a1d23;
+      color: #e0e0e0;
+      padding: 0;
+    }
+    .container {
+      padding: 40px 36px 30px;
+    }
+
+    /* 顶部标题栏 */
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #2d313a;
+    }
+    .header .logo {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: #fff;
+      margin-right: 18px;
+      flex-shrink: 0;
+    }
+    .header .info h1 {
+      font-size: 28px;
+      color: #fff;
+      letter-spacing: 2px;
+    }
+    .header .info .subtitle {
+      font-size: 14px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    /* 功能卡片 */
+    .cmd-card {
+      background: #22262f;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      border-left: 4px solid #667eea;
+    }
+    .cmd-card:nth-child(2) { border-left-color: #f093fb; }
+    .cmd-card:nth-child(3) { border-left-color: #4facfe; }
+    .cmd-card:nth-child(4) { border-left-color: #43e97b; }
+    .cmd-card:nth-child(5) { border-left-color: #fa709a; }
+    .cmd-card:nth-child(6) { border-left-color: #fee140; }
+
+    .cmd-card .cmd-header {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .cmd-card .cmd-name {
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+      margin-right: 12px;
+    }
+    .cmd-card .cmd-label {
+      font-size: 13px;
+      color: #aaa;
+      background: #2d313a;
+      padding: 2px 10px;
+      border-radius: 4px;
+    }
+    .cmd-card .cmd-desc {
+      font-size: 14px;
+      color: #bbb;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+    .cmd-card .cmd-usage {
+      margin-top: 6px;
+    }
+    .cmd-card .cmd-usage .usage-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 5px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .cmd-card .cmd-usage .usage-row .tag {
+      background: #333842;
+      color: #80cbc4;
+      padding: 1px 8px;
+      border-radius: 4px;
+      margin-right: 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+    .cmd-card .cmd-usage .usage-row .text {
+      color: #ccc;
+    }
+    .example {
+      background: #1a1d23;
+      border-radius: 6px;
+      padding: 8px 14px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #90caf9;
+      line-height: 1.7;
+    }
+    .example .ex-label {
+      color: #666;
+      margin-right: 6px;
+    }
+    .example code {
+      color: #ce93d8;
+      background: #2a2d36;
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+
+    /* 通用提示 */
+    .tips {
+      background: #22262f;
+      border-radius: 12px;
+      padding: 16px 24px;
+      margin-top: 4px;
+      border-left: 4px solid #78909c;
+    }
+    .tips .tips-title {
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .tips .tips-content {
+      font-size: 13px;
+      color: #999;
+      line-height: 1.8;
+    }
+
+    .footer {
+      text-align: center;
+      color: #555;
+      font-size: 12px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #2d313a;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- 标题 -->
+  <div class="header">
+    <div class="logo">百</div>
+    <div class="info">
+      <h1>百百机器人</h1>
+      <div class="subtitle">洛奇小助手 · Mabinogi Helper</div>
+    </div>
+  </div>
+
+  <!-- opt 释放查询 -->
+  <div class="cmd-card">
+    <div class="cmd-header">
+      <span class="cmd-name">opt / 释放查询</span>
+      <span class="cmd-label">释放卷查询</span>
+    </div>
+    <div class="cmd-desc">查询洛奇释放卷轴的属性、等级与出处信息。支持多条件组合筛选。</div>
+    <div class="cmd-usage">
+      <div class="usage-row"><span class="tag">按名称</span><span class="text">opt 关键词 — 模糊搜索卷轴名称（支持正则）</span></div>
+      <div class="usage-row"><span class="tag">按ID</span><span class="text">opt 数字ID — 精确查询指定ID的卷轴</span></div>
+      <div class="usage-row"><span class="tag">多条件</span><span class="text">用逗号分隔条件，可组合：等级、接头/接尾、属性名</span></div>
+      <div class="usage-row"><span class="tag">等级</span><span class="text">练习 / 1~9 / a~f（对应Rank）</span></div>
+      <div class="usage-row"><span class="tag">比较</span><span class="text">属性>数值 或 属性&lt;数值，按数值大小筛选</span></div>
+      <div class="usage-row"><span class="tag">负面</span><span class="text">-关键词 — 筛选含指定负面属性的卷轴</span></div>
+      <div class="usage-row"><span class="tag">出处</span><span class="text">opt w关键词 — 搜索卷轴的掉落出处</span></div>
+    </div>
+    <div class="example">
+      <span class="ex-label">示例：</span>
+      <code>opt 智力</code> · <code>opt 4,接头,智力,-修理费</code> · <code>opt 智力>10</code> · <code>opt w地下城</code>
+    </div>
+  </div>
+
+  <!-- mbi 配方百科 -->
+  <div class="cmd-card">
+    <div class="cmd-header">
+      <span class="cmd-name">mbi</span>
+      <span class="cmd-label">配方百科</span>
+    </div>
+    <div class="cmd-desc">查询洛奇物品的制作配方详情，包含所需材料与技能信息。</div>
+    <div class="cmd-usage">
+      <div class="usage-row"><span class="tag">按名称</span><span class="text">mbi 物品名 — 搜索含该关键词的物品配方</span></div>
+      <div class="usage-row"><span class="tag">按ID</span><span class="text">mbi 数字ID — 精确查询指定物品的配方</span></div>
+      <div class="usage-row"><span class="tag">多关键词</span><span class="text">mbi 关键词1 关键词2 — 多词取交集缩小范围</span></div>
+    </div>
+    <div class="example">
+      <span class="ex-label">示例：</span>
+      <code>mbi 工程手套</code> · <code>mbi 铁 矿</code> · <code>mbi 4200100</code>
+    </div>
+  </div>
+
+  <!-- meu 装备改造 -->
+  <div class="cmd-card">
+    <div class="cmd-header">
+      <span class="cmd-name">meu</span>
+      <span class="cmd-label">装备改造</span>
+    </div>
+    <div class="cmd-desc">查询可改造装备的升级路线与属性变化。</div>
+    <div class="cmd-usage">
+      <div class="usage-row"><span class="tag">按名称</span><span class="text">meu 装备名 — 模糊搜索可改造装备</span></div>
+      <div class="usage-row"><span class="tag">按ID</span><span class="text">meu 数字ID — 精确查询指定装备</span></div>
+      <div class="usage-row"><span class="tag">多关键词</span><span class="text">meu 关键词1,关键词2 — 多词取交集</span></div>
+    </div>
+    <div class="example">
+      <span class="ex-label">示例：</span>
+      <code>meu 帝王</code> · <code>meu 凯尔特,战士</code>
+    </div>
+  </div>
+
+  <!-- mbtv 查询出货 -->
+  <div class="cmd-card">
+    <div class="cmd-header">
+      <span class="cmd-name">mbtv</span>
+      <span class="cmd-label">出货记录查询</span>
+    </div>
+    <div class="cmd-desc">查询地下城出货电视记录。支持通配符与分字段精确搜索。</div>
+    <div class="cmd-usage">
+      <div class="usage-row"><span class="tag">基础</span><span class="text">mbtv 关键词 — 同时搜索奖励名/角色名/地下城名</span></div>
+      <div class="usage-row"><span class="tag">分字段</span><span class="text">用 - 分隔：奖励名-角色名-地下城名（各段AND）</span></div>
+      <div class="usage-row"><span class="tag">跳过字段</span><span class="text">留空即可，如 -角色名- 仅筛选角色、--地下城名 仅筛选地下城</span></div>
+      <div class="usage-row"><span class="tag">通配符</span><span class="text">% 代表任意字符（类似SQL的LIKE）</span></div>
+      <div class="usage-row"><span class="tag">服务器</span><span class="text">前缀 ylx/猫服 = 猫服，yt/亚特 = 亚特服（自动记忆）</span></div>
+    </div>
+    <div class="example">
+      <span class="ex-label">示例：</span>
+      <code>mbtv 特殊%华尔兹%女</code> · <code>mbtv 道具名-角色名</code> · <code>mbtv --格伦贝尔纳</code>
+    </div>
+  </div>
+
+  <!-- mbcd 查询抽蛋 -->
+  <div class="cmd-card">
+    <div class="cmd-header">
+      <span class="cmd-name">mbcd</span>
+      <span class="cmd-label">抽蛋记录查询</span>
+    </div>
+    <div class="cmd-desc">查询扭蛋抽取记录。用法与 mbtv 类似。</div>
+    <div class="cmd-usage">
+      <div class="usage-row"><span class="tag">基础</span><span class="text">mbcd 关键词 — 同时搜索道具名/角色名</span></div>
+      <div class="usage-row"><span class="tag">分字段</span><span class="text">用 - 分隔：道具名-角色名-手帕名（各段AND）</span></div>
+      <div class="usage-row"><span class="tag">通配符</span><span class="text">% 代表任意字符</span></div>
+      <div class="usage-row"><span class="tag">服务器</span><span class="text">前缀同 mbtv</span></div>
+    </div>
+    <div class="example">
+      <span class="ex-label">示例：</span>
+      <code>mbcd 翅膀</code> · <code>mbcd 翅膀-角色名</code> · <code>mbcd --手帕名</code>
+    </div>
+  </div>
+
+  <!-- mbzz 查询打造 -->
+  <div class="cmd-card">
+    <div class="cmd-header">
+      <span class="cmd-name">mbzz</span>
+      <span class="cmd-label">装备打造查询</span>
+    </div>
+    <div class="cmd-desc">查询装备制造的电视记录。</div>
+    <div class="cmd-usage">
+      <div class="usage-row"><span class="tag">基础</span><span class="text">mbzz 关键词 — 同时搜索物品名/角色名</span></div>
+      <div class="usage-row"><span class="tag">分字段</span><span class="text">用 - 分隔：物品名-角色名（各段AND）</span></div>
+      <div class="usage-row"><span class="tag">通配符</span><span class="text">% 代表任意字符</span></div>
+      <div class="usage-row"><span class="tag">服务器</span><span class="text">前缀同 mbtv</span></div>
+    </div>
+    <div class="example">
+      <span class="ex-label">示例：</span>
+      <code>mbzz 铠甲</code> · <code>mbzz 铠甲-角色名</code>
+    </div>
+  </div>
+
+  <!-- 通用提示 -->
+  <div class="tips">
+    <div class="tips-title">其他说明</div>
+    <div class="tips-content">
+      · 发送 <code>菜单</code> 或 <code>menu</code> 可查看洛奇功能完整菜单<br>
+      · 发送 <code>百百</code> 可查看通用功能导航<br>
+      · 更多功能与建议请访问 GitHub：github.com/TouhouFishClub/baibaibot
+    </div>
+  </div>
+
+  <div class="footer">百百机器人 · 洛奇小助手 · Powered by BaiBaiBot</div>
+</div>
+</body>
+</html>
