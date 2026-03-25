@@ -1428,7 +1428,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
-  if(content === '帮助' || content === 'help') {
+  if(content === '百百帮助') {
     renderHelpImage(callback)
     return
   }
