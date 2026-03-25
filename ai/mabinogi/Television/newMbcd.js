@@ -14,6 +14,10 @@ const formatTime = ts => {
 
 const addZero = n => (n < 10 ? '0' + n : n)
 
+const partToRegex = part => {
+  return part.replace(/([.+?^${}()|[\]\\])/g, '\\$1').replace(/%/g, '.*')
+}
+
 /**
  * 构建 MongoDB 查询
  * @param {string} filter - 原始搜索字符串
@@ -26,16 +30,18 @@ const addZero = n => (n < 10 ? '0' + n : n)
  *     例: "道具-角色"  → item_name 包含"道具" AND character_name 包含"角色"
  *     例: "-角色-"     → 仅 character_name 包含"角色"
  *     例: "--手帕"     → 仅 draw_pool 包含"手帕"
+ *   %通配符：代表任意字符，如 "特殊%华尔兹%女" 匹配 "特殊浪漫华尔兹服饰（女款）"
  */
 const buildMongoQuery = (filter) => {
   if (!filter || !filter.length) return {}
 
   // 没有分隔符：同时搜 item_name 和 character_name
   if (filter.indexOf('-') === -1) {
+    const regex = new RegExp(partToRegex(filter), 'i')
     return {
       $or: [
-        { item_name: new RegExp(filter, 'i') },
-        { character_name: new RegExp(filter, 'i') }
+        { item_name: regex },
+        { character_name: regex }
       ]
     }
   }
@@ -47,7 +53,7 @@ const buildMongoQuery = (filter) => {
 
   sp.forEach((part, i) => {
     if (part && fields[i]) {
-      conditions.push({ [fields[i]]: new RegExp(part, 'i') })
+      conditions.push({ [fields[i]]: new RegExp(partToRegex(part), 'i') })
     }
   })
 

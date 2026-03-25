@@ -55,75 +55,84 @@ const formatTime = ts => {
 
 const addZero = n => (n < 10 ? '0' + n : n)
 
-const buildMongoQuery = (whereClause, queryParams) => {
-  let mongoQuery = {}
+const partToRegex = part => {
+  return part.replace(/([.+?^${}()|[\]\\])/g, '\\$1').replace(/%/g, '.*')
+}
 
-  if (whereClause) {
-    const whereStr = whereClause.replace(/^WHERE\s*/i, '')
+/**
+ * 构建 MongoDB 查询
+ * @param {string} filter - 原始搜索字符串
+ * @returns {Promise<object>} MongoDB 查询对象
+ *
+ * 格式说明：
+ *   无分隔符：同时模糊搜索 reward、character_name 和 dungeon_name（$or）
+ *   有分隔符(-)：按位置精确指定字段 -> 奖励名-角色名-地下城名
+ *     例: "道具"           → reward OR character_name OR dungeon_name 包含"道具"
+ *     例: "道具-角色"      → reward 包含"道具" AND character_name 包含"角色"
+ *     例: "-角色-"         → 仅 character_name 包含"角色"
+ *     例: "--地下城"       → 仅 dungeon_name 包含"地下城"
+ *   %通配符：代表任意字符，如 "特殊%华尔兹%女" 匹配 "特殊浪漫华尔兹服饰（女款）"
+ *   芙兰队：特殊查询模式，查询特定角色在格伦贝尔纳10频道的记录
+ */
+const buildMongoQuery = async filter => {
+  if (!filter || !filter.length) return {}
 
-    // 芙兰队特殊查询模式
-    if (whereStr.includes('character_name LIKE') && whereStr.includes('channel =') && whereStr.includes('dungeon_name =')) {
-      const namePatterns = ['Fl', '莉丽', '娜兹', 'Sa', '永夜', '温雯', '圣祐', '幽鬼']
-      const nameRegex = new RegExp(namePatterns.join('|'), 'i')
-      mongoQuery = {
-        character_name: nameRegex,
-        channel: 10,
-        dungeon_name: '格伦贝尔纳'
-      }
+  // 芙兰队特殊查询
+  if (filter.startsWith('芙兰队')) {
+    const namePatterns = ['Fl', '莉丽', '娜兹', 'Sa', '永夜', '温雯', '圣祐', '幽鬼']
+    const query = {
+      character_name: new RegExp(namePatterns.join('|'), 'i'),
+      channel: 10,
+      dungeon_name: '格伦贝尔纳'
+    }
 
-      if (whereStr.includes('REGEXP')) {
-        const rewardRegex = new RegExp(
-          '渴望的|盼望的|期盼的|沉没的|消失的|被覆盖的|逃跑的|观望的|转的|囚禁|不动之|冻结的|兔猿人|极地骷髅战士|极地冰狼|踪迹|轨迹|痕迹|符文猫|斯内塔|冰雪索灵|白桦树|波纹|镜子',
-          'i'
-        )
-        mongoQuery.reward = rewardRegex
-      }
+    if (filter.includes('新卷')) {
+      const regStr = await createSearchRegexp('新卷')
+      query.reward = new RegExp(regStr, 'i')
+    }
+    if (filter.includes('+1卷')) {
+      query.reward = new RegExp('\\+1咒语书', 'i')
+    }
 
-      if (whereStr.includes('\\\\+1咒语书')) {
-        mongoQuery.reward = new RegExp('\\+1咒语书', 'i')
-      }
-    } else if (whereStr.includes('REGEXP')) {
-      // 新卷正则查询
-      const rewardRegex = new RegExp(
-        '渴望的|盼望的|期盼的|沉没的|消失的|被覆盖的|逃跑的|观望的|转的|囚禁|不动之|冻结的|兔猿人|极地骷髅战士|极地冰狼|踪迹|轨迹|痕迹|符文猫|斯内塔|冰雪索灵|白桦树|波纹|镜子',
-        'i'
-      )
-      mongoQuery.reward = rewardRegex
-    } else if (queryParams && queryParams.length > 0) {
-      // 过滤掉空参数，但保留索引信息的视图
-      const nonEmptyParams = queryParams.filter(p => p)
+    return query
+  }
 
-      // LIKE 查询
-      // 无短横线的普通搜索：SQL 构造里会带 OR
-      if (nonEmptyParams.length >= 1 && whereStr.includes('OR')) {
-        const searchTerm = nonEmptyParams[0].replace(/%/g, '')
-        mongoQuery = {
-          $or: [
-            { reward: new RegExp(searchTerm, 'i') },
-            { character_name: new RegExp(searchTerm, 'i') },
-            { dungeon_name: new RegExp(searchTerm, 'i') }
-          ]
-        }
+  // 没有分隔符：同时搜 reward、character_name、dungeon_name
+  if (filter.indexOf('-') === -1) {
+    if (/^新.*卷$/.test(filter)) {
+      const regStr = await createSearchRegexp(filter)
+      return { reward: new RegExp(regStr, 'i') }
+    }
+    const regex = new RegExp(partToRegex(filter), 'i')
+    return {
+      $or: [
+        { reward: regex },
+        { character_name: regex },
+        { dungeon_name: regex }
+      ]
+    }
+  }
+
+  // 有分隔符：按位置对应字段 reward-character_name-dungeon_name
+  const sp = filter.split('-')
+  const fields = ['reward', 'character_name', 'dungeon_name']
+  const conditions = []
+
+  for (let i = 0; i < sp.length; i++) {
+    const part = sp[i]
+    if (part && fields[i]) {
+      if (i === 0 && /^新.*卷$/.test(part)) {
+        const regStr = await createSearchRegexp(part)
+        conditions.push({ reward: new RegExp(regStr, 'i') })
       } else {
-        // 多条件 AND（reward-character-dungeon）；通过索引判断字段
-        mongoQuery = {}
-        queryParams.forEach((param, index) => {
-          if (param) {
-            const searchTerm = param.replace(/%/g, '')
-            if (index === 0) {
-              mongoQuery.reward = new RegExp(searchTerm, 'i')
-            } else if (index === 1) {
-              mongoQuery.character_name = new RegExp(searchTerm, 'i')
-            } else if (index === 2) {
-              mongoQuery.dungeon_name = new RegExp(searchTerm, 'i')
-            }
-          }
-        })
+        conditions.push({ [fields[i]]: new RegExp(partToRegex(part), 'i') })
       }
     }
   }
 
-  return mongoQuery
+  if (conditions.length === 0) return {}
+  if (conditions.length === 1) return conditions[0]
+  return { $and: conditions }
 }
 
 const mabiTelevision = async (content, qq, callback) => {
@@ -154,75 +163,18 @@ const mabiTelevision = async (content, qq, callback) => {
     }
   }
 
-  // 亚特服暂不提供数据
-  // if (sv === 'yate') {
-  //   callback('亚特区暂无数据，如有意向提供数据请联系百百妈')
-  //   return
-  // }
-
   if (content.length > 20 || content.toLowerCase() === 'help' || content === '帮助') {
     help(callback)
     return
   }
 
   const filter = content.trim()
-  let limit = 20
-  let queryParams = []
-  let whereClause = ''
-
-  if (filter.startsWith('芙兰队')) {
-    const namePatterns = ['Fl%', '莉丽%', '娜兹%', 'Sa%', '永夜%', '温雯%', '圣祐%', '幽鬼%']
-    const nameConditions = namePatterns.map(() => 'character_name LIKE ?').join(' OR ')
-    let teamWhereClause = `WHERE (${nameConditions}) AND channel = ? AND dungeon_name = ? AND (TIME(data_time) >= '20:00:00' OR TIME(data_time) <= '01:00:00')`
-    queryParams = [...namePatterns, 10, '格伦贝尔纳']
-
-    if (filter.includes('新卷')) {
-      const regStr = await createSearchRegexp('新卷')
-      teamWhereClause += ` AND reward REGEXP '${regStr}'`
-    }
-    if (filter.includes('+1卷')) {
-      teamWhereClause += ` AND reward REGEXP '\\\\+1咒语书'`
-    }
-
-    whereClause = teamWhereClause
-    limit = 50
-  } else if (filter.length) {
-    if (filter.indexOf('-') > -1) {
-      const sp = filter.split('-')
-      const [rewordFilter, nameFilter, dungeonFilter] = sp
-      if (rewordFilter || nameFilter || dungeonFilter) {
-        let rewordSql = ' reward LIKE ?'
-        if (/^新.*卷$/.test(sp[0])) {
-          const regStr = await createSearchRegexp(sp[0])
-          rewordSql = ` reward REGEXP '${regStr}'`
-        }
-        whereClause = `WHERE${sp
-          .map((x, i) => x && [rewordSql, ' character_name LIKE ?', ' dungeon_name LIKE ?'][i])
-          .filter(x => x)
-          .join(' AND')}`
-        // 保留索引位置，避免因过滤空字符串导致字段错位
-        queryParams = sp.map((x, i) => {
-          if (!x) return null
-          // 奖励字段为“新卷”一类时，已经用 REGEXP 处理，这里不再作为 LIKE 参数
-          if (i === 0 && /^新.*卷$/.test(x)) return null
-          return `%${x}%`
-        })
-      }
-    } else {
-      if (/^新.*卷$/.test(filter)) {
-        const regStr = await createSearchRegexp(filter)
-        whereClause = `WHERE reward REGEXP '${regStr}'`
-      } else {
-        whereClause = `WHERE reward LIKE ? OR character_name LIKE ? OR dungeon_name LIKE ?`
-        queryParams = [`%${filter}%`, `%${filter}%`, `%${filter}%`]
-      }
-    }
-  }
+  const limit = filter.startsWith('芙兰队') ? 50 : 20
 
   const collectionName = `cl_mbtv_${sv}`
   const col = db.collection(collectionName)
 
-  const mongoQuery = buildMongoQuery(whereClause, queryParams)
+  const mongoQuery = await buildMongoQuery(filter)
 
   // 兼容旧版 mongodb 驱动，使用 count 而不是 countDocuments
   const total = await col.count(mongoQuery)
@@ -278,4 +230,3 @@ const mabiTelevision = async (content, qq, callback) => {
 module.exports = {
   mabiTelevision
 }
-
