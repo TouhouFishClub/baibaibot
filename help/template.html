@@ -31,7 +31,9 @@
       padding: 0;
       border-bottom: 2px solid #2d313a;
       overflow: hidden;
-      min-height: 320px;
+      min-height: 180px;
+      height: 180px;
+      background: #15181d;
     }
     .header .bg {
       position: absolute;
@@ -40,16 +42,31 @@
       width: 100%;
       height: 100%;
       background-image: url({{ocBase64}});
-      background-size: cover;
-      background-position: center center;
-      filter: brightness(0.45) blur(2px);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center top;
+      filter: brightness(0.58);
+    }
+    .header .bg-blur {
+      position: absolute;
+      left: 0;
+      bottom: -18px;
+      width: 100%;
+      height: 88px;
+      background-image: url({{ocBase64}});
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center top;
+      filter: blur(12px) brightness(0.5);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.92) 70%, rgba(0,0,0,1) 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.92) 70%, rgba(0,0,0,1) 100%);
     }
     .header .header-content {
       position: relative;
       z-index: 1;
       display: flex;
       align-items: center;
-      padding: 110px 40px 40px;
+      padding: 56px 40px 24px;
     }
     .header .logo {
       width: 72px;
@@ -194,6 +211,7 @@
   <!-- 标题 -->
   <div class="header">
     <div class="bg"></div>
+    <div class="bg-blur"></div>
     <div class="header-content">
       <div class="logo"><img src="{{avatarBase64}}" alt="百百"></div>
       <div class="info">
