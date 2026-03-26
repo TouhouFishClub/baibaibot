@@ -31,42 +31,37 @@
       padding: 0;
       border-bottom: 2px solid #2d313a;
       overflow: hidden;
-      min-height: 180px;
-      height: 180px;
       background: #15181d;
     }
     .header .bg {
-      position: absolute;
-      top: 0;
-      left: 0;
+      display: block;
       width: 100%;
-      height: 100%;
-      background-image: url({{ocBase64}});
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center top;
+      height: auto;
       filter: brightness(0.58);
     }
     .header .bg-blur {
       position: absolute;
       left: 0;
-      bottom: -18px;
+      bottom: 0;
       width: 100%;
-      height: 88px;
-      background-image: url({{ocBase64}});
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center top;
-      filter: blur(12px) brightness(0.5);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.92) 70%, rgba(0,0,0,1) 100%);
-      mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.92) 70%, rgba(0,0,0,1) 100%);
+      height: 90px;
+      background: linear-gradient(
+        to bottom,
+        rgba(21,24,29,0) 0%,
+        rgba(21,24,29,0.55) 60%,
+        rgba(21,24,29,0.92) 100%
+      );
+      backdrop-filter: blur(4px);
     }
     .header .header-content {
-      position: relative;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
       z-index: 1;
       display: flex;
       align-items: center;
-      padding: 56px 40px 24px;
+      padding: 26px 40px 24px;
     }
     .header .logo {
       width: 72px;
@@ -210,7 +205,7 @@
 <div class="container">
   <!-- 标题 -->
   <div class="header">
-    <div class="bg"></div>
+    <img class="bg" src="{{ocBase64}}" alt="百百人设">
     <div class="bg-blur"></div>
     <div class="header-content">
       <div class="logo"><img src="{{avatarBase64}}" alt="百百"></div>
