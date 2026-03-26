@@ -19,9 +19,41 @@
       background: #1a1d23;
       color: #e0e0e0;
       padding: 0;
+      position: relative;
+      overflow: hidden;
     }
     .container {
       padding: 40px 36px 30px;
+      position: relative;
+      z-index: 2;
+    }
+    .bg-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .bg-container .bg {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: brightness(0.58);
+    }
+    .bg-container .bg-blur {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 110px;
+      background: linear-gradient(
+        to bottom,
+        rgba(26,29,35,0) 0%,
+        rgba(26,29,35,0.55) 55%,
+        rgba(26,29,35,0.92) 100%
+      );
+      backdrop-filter: blur(6px);
     }
 
     /* 顶部标题栏 */
@@ -29,29 +61,10 @@
       position: relative;
       margin: -40px -36px 28px;
       padding: 0;
-      border-bottom: 2px solid #2d313a;
+      /* border-bottom: 2px solid #2d313a; */
       overflow: hidden;
-      background: #15181d;
-    }
-    .header .bg {
-      display: block;
-      width: 100%;
-      height: auto;
-      filter: brightness(0.58);
-    }
-    .header .bg-blur {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 90px;
-      background: linear-gradient(
-        to bottom,
-        rgba(21,24,29,0) 0%,
-        rgba(21,24,29,0.55) 60%,
-        rgba(21,24,29,0.92) 100%
-      );
-      backdrop-filter: blur(4px);
+      /* background: #15181d; */
+      height: 180px;
     }
     .header .header-content {
       position: absolute;
@@ -202,11 +215,15 @@
   </style>
 </head>
 <body>
+  <div class="bg-container">
+    <img class="bg" src="{{ocBase64}}" alt="百百人设">
+    <!-- <img class="bg" src="./oc.png" alt="百百人设"> -->
+    <div class="bg-blur"></div>
+    
+  </div>
 <div class="container">
   <!-- 标题 -->
   <div class="header">
-    <img class="bg" src="{{ocBase64}}" alt="百百人设">
-    <div class="bg-blur"></div>
     <div class="header-content">
       <div class="logo"><img src="{{avatarBase64}}" alt="百百"></div>
       <div class="info">
