@@ -26,34 +26,57 @@
 
     /* 顶部标题栏 */
     .header {
+      position: relative;
+      margin: -40px -36px 28px;
+      padding: 0;
+      border-bottom: 2px solid #2d313a;
+      overflow: hidden;
+      min-height: 180px;
+    }
+    .header .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url({{ocBase64}});
+      background-size: cover;
+      background-position: center top;
+      filter: brightness(0.45) blur(2px);
+    }
+    .header .header-content {
+      position: relative;
+      z-index: 1;
       display: flex;
       align-items: center;
-      margin-bottom: 28px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #2d313a;
+      padding: 48px 40px 36px;
     }
     .header .logo {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      color: #fff;
-      margin-right: 18px;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 20px;
       flex-shrink: 0;
+      border: 3px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .header .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .header .info h1 {
-      font-size: 28px;
+      font-size: 30px;
       color: #fff;
       letter-spacing: 2px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
     .header .info .subtitle {
       font-size: 14px;
-      color: #888;
-      margin-top: 4px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 6px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
     }
 
     /* 功能卡片 */
@@ -170,10 +193,13 @@
 <div class="container">
   <!-- 标题 -->
   <div class="header">
-    <div class="logo">百</div>
-    <div class="info">
-      <h1>百百机器人</h1>
-      <div class="subtitle">洛奇小助手 · Mabinogi Helper</div>
+    <div class="bg"></div>
+    <div class="header-content">
+      <div class="logo"><img src="{{avatarBase64}}" alt="百百"></div>
+      <div class="info">
+        <h1>百百机器人</h1>
+        <div class="subtitle">洛奇小助手 · Mabinogi Helper</div>
+      </div>
     </div>
   </div>
 
@@ -181,21 +207,21 @@
   <div class="cmd-card">
     <div class="cmd-header">
       <span class="cmd-name">opt / 释放查询</span>
-      <span class="cmd-label">释放卷查询</span>
+      <span class="cmd-label">释放卷轴查询</span>
     </div>
     <div class="cmd-desc">查询洛奇释放卷轴的属性、等级与出处信息。支持多条件组合筛选。</div>
     <div class="cmd-usage">
-      <div class="usage-row"><span class="tag">按名称</span><span class="text">opt 关键词 — 模糊搜索卷轴名称（支持正则）</span></div>
+      <div class="usage-row"><span class="tag">按名称</span><span class="text">opt 关键词 — 模糊搜索卷轴名称</span></div>
       <div class="usage-row"><span class="tag">按ID</span><span class="text">opt 数字ID — 精确查询指定ID的卷轴</span></div>
-      <div class="usage-row"><span class="tag">多条件</span><span class="text">用逗号分隔条件，可组合：等级、接头/接尾、属性名</span></div>
+      <div class="usage-row"><span class="tag">多条件</span><span class="text">用逗号分隔条件，可组合：等级、接头/接尾、属性名，最多支持5个参数</span></div>
       <div class="usage-row"><span class="tag">等级</span><span class="text">练习 / 1~9 / a~f（对应Rank）</span></div>
       <div class="usage-row"><span class="tag">比较</span><span class="text">属性>数值 或 属性&lt;数值，按数值大小筛选</span></div>
       <div class="usage-row"><span class="tag">负面</span><span class="text">-关键词 — 筛选含指定负面属性的卷轴</span></div>
-      <div class="usage-row"><span class="tag">出处</span><span class="text">opt w关键词 — 搜索卷轴的掉落出处</span></div>
+      <div class="usage-row"><span class="tag">出处</span><span class="text">optw 关键词 — 搜索卷轴的掉落出处</span></div>
     </div>
     <div class="example">
       <span class="ex-label">示例：</span>
-      <code>opt 智力</code> · <code>opt 4,接头,智力,-修理费</code> · <code>opt 智力>10</code> · <code>opt w地下城</code>
+      <code>opt 智力</code> · <code>opt 4,接头,智力,-修理费</code> · <code>opt 大伤>10</code> · <code>optw布里列赫</code>
     </div>
   </div>
 
@@ -213,7 +239,7 @@
     </div>
     <div class="example">
       <span class="ex-label">示例：</span>
-      <code>mbi 工程手套</code> · <code>mbi 铁 矿</code> · <code>mbi 4200100</code>
+      <code>mbi 工程手套</code> · <code>mbi 释魂 骑士枪</code> · <code>mbi 4200100</code>
     </div>
   </div>
 
@@ -231,7 +257,7 @@
     </div>
     <div class="example">
       <span class="ex-label">示例：</span>
-      <code>meu 帝王</code> · <code>meu 凯尔特,战士</code>
+      <code>meu 帝王</code> · <code>meu 释魂 骑士枪</code>
     </div>
   </div>
 
@@ -251,7 +277,7 @@
     </div>
     <div class="example">
       <span class="ex-label">示例：</span>
-      <code>mbtv 特殊%华尔兹%女</code> · <code>mbtv 道具名-角色名</code> · <code>mbtv --格伦贝尔纳</code>
+      <code>mbtv 王冠</code> · <code>mbtv 逃跑的-Fl</code> · <code>mbtv --格伦贝尔纳</code>
     </div>
   </div>
 
@@ -270,7 +296,7 @@
     </div>
     <div class="example">
       <span class="ex-label">示例：</span>
-      <code>mbcd 翅膀</code> · <code>mbcd 翅膀-角色名</code> · <code>mbcd --手帕名</code>
+      <code>mbcd 特殊%华尔兹%女</code> · <code>mbcd 特殊-Flandre</code> · <code>mbcd --华尔兹手帕</code>
     </div>
   </div>
 
@@ -289,7 +315,7 @@
     </div>
     <div class="example">
       <span class="ex-label">示例：</span>
-      <code>mbzz 铠甲</code> · <code>mbzz 铠甲-角色名</code>
+      <code>mbzz 释魂</code> · <code>mbzz 释魂-Fl</code>
     </div>
   </div>
 

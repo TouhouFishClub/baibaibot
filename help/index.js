@@ -8,6 +8,14 @@ const FONT_BASE64 = font2base64.encodeToDataUrlSync(
   path.join(__dirname, '..', 'font', 'hk4e_zh-cn.ttf')
 )
 
+const fileToDataUrl = (filePath, mime) => {
+  const buf = fs.readFileSync(filePath)
+  return `data:${mime};base64,${buf.toString('base64')}`
+}
+
+const OC_BASE64 = fileToDataUrl(path.join(__dirname, 'oc.png'), 'image/png')
+const AVATAR_BASE64 = fileToDataUrl(path.join(__dirname, 'avatar.png'), 'image/png')
+
 const TEMPLATE_PATH = path.join(__dirname, 'template.html')
 const OUTPUT_DIR = path.join(IMAGE_DATA, 'help')
 const OUTPUT_FILE = 'help.png'
@@ -28,7 +36,10 @@ const renderHelpImage = async (callback) => {
     }
 
     const template = loadTemplate()
-    const html = template.replace(/\{\{fontBase64\}\}/g, FONT_BASE64)
+    const html = template
+      .replace(/\{\{fontBase64\}\}/g, FONT_BASE64)
+      .replace(/\{\{ocBase64\}\}/g, OC_BASE64)
+      .replace(/\{\{avatarBase64\}\}/g, AVATAR_BASE64)
     const output = path.join(OUTPUT_DIR, OUTPUT_FILE)
 
     await nodeHtmlToImage({ output, html })
