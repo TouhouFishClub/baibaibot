@@ -1,0 +1,542 @@
+[
+    {
+        "name": "儿童药水",
+        "area": "迪尔科内尔",
+        "img": "迪尔科内尔_儿童药水.png",
+        "price": 11,
+        "weight": 1,
+        "boxCount": 35,
+        "level": 1
+    },
+    {
+        "name": "减肥药水",
+        "area": "迪尔科内尔",
+        "img": "迪尔科内尔_减肥药水.png",
+        "price": 24,
+        "weight": 1,
+        "boxCount": 30,
+        "level": 2
+    },
+    {
+        "name": "止呼噜药",
+        "area": "迪尔科内尔",
+        "img": "迪尔科内尔_止呼噜药.png",
+        "price": 56,
+        "weight": 2,
+        "boxCount": 26,
+        "level": 3
+    },
+    {
+        "name": "人参药水",
+        "area": "迪尔科内尔",
+        "img": "迪尔科内尔_人参药水.png",
+        "price": 128,
+        "weight": 3,
+        "boxCount": 22,
+        "level": 4
+    },
+    {
+        "name": "爱情药水",
+        "area": "迪尔科内尔",
+        "img": "迪尔科内尔_爱情药水.png",
+        "price": 176,
+        "weight": 3,
+        "boxCount": 25,
+        "level": 5
+    },
+    {
+        "name": "蜘蛛丝手套",
+        "area": "敦巴伦",
+        "img": "敦巴伦_蜘蛛丝手套.png",
+        "price": 47,
+        "weight": 4,
+        "boxCount": 14,
+        "level": 1
+    },
+    {
+        "name": "羊毛靴",
+        "area": "敦巴伦",
+        "img": "敦巴伦_羊毛靴.png",
+        "price": 158,
+        "weight": 8,
+        "boxCount": 10,
+        "level": 2
+    },
+    {
+        "name": "食人魔屠夫假面",
+        "area": "敦巴伦",
+        "img": "敦巴伦_食人魔屠夫假面.png",
+        "price": 89,
+        "weight": 4,
+        "boxCount": 26,
+        "level": 3
+    },
+    {
+        "name": "男妖正装",
+        "area": "敦巴伦",
+        "img": "敦巴伦_男妖正装.png",
+        "price": 537,
+        "weight": 25,
+        "boxCount": 5,
+        "level": 4
+    },
+    {
+        "name": "女妖泳衣",
+        "area": "敦巴伦",
+        "img": "敦巴伦_女妖泳衣.png",
+        "price": 676,
+        "weight": 6,
+        "boxCount": 5,
+        "level": 5
+    },
+    {
+        "name": "卡普海苔",
+        "area": "卡普",
+        "img": "卡普_卡普海苔.png",
+        "price": 12,
+        "weight": 2,
+        "boxCount": 32,
+        "level": 1
+    },
+    {
+        "name": "卡普海贝",
+        "area": "卡普",
+        "img": "卡普_卡普海贝.png",
+        "price": 47,
+        "weight": 3,
+        "boxCount": 36,
+        "level": 2
+    },
+    {
+        "name": "鲨鱼翅",
+        "area": "卡普",
+        "img": "卡普_鲨鱼翅.png",
+        "price": 260,
+        "weight": 10,
+        "boxCount": 25,
+        "level": 3
+    },
+    {
+        "name": "海蜇",
+        "area": "卡普",
+        "img": "卡普_海蜇.png",
+        "price": 196,
+        "weight": 6,
+        "boxCount": 30,
+        "level": 4
+    },
+    {
+        "name": "水怪鳞片",
+        "area": "卡普",
+        "img": "卡普_水怪鳞片.png",
+        "price": 201,
+        "weight": 2,
+        "boxCount": 28,
+        "level": 5
+    },
+    {
+        "name": "班格的煤炭",
+        "area": "班格",
+        "img": "班格_班格的煤炭.png",
+        "price": 50,
+        "weight": 8,
+        "boxCount": 10,
+        "level": 1
+    },
+    {
+        "name": "大理石",
+        "area": "班格",
+        "img": "班格_大理石.png",
+        "price": 298,
+        "weight": 20,
+        "boxCount": 10,
+        "level": 2
+    },
+    {
+        "name": "黄水晶",
+        "area": "班格",
+        "img": "班格_黄水晶.png",
+        "price": 381,
+        "weight": 18,
+        "boxCount": 12,
+        "level": 3
+    },
+    {
+        "name": "苏格兰高地矿石",
+        "area": "班格",
+        "img": "班格_苏格兰高地矿石.png",
+        "price": 767,
+        "weight": 25,
+        "boxCount": 8,
+        "level": 4
+    },
+    {
+        "name": "铅",
+        "area": "班格",
+        "img": "班格_铅.png",
+        "price": 829,
+        "weight": 18,
+        "boxCount": 16,
+        "level": 5
+    },
+    {
+        "name": "威化",
+        "area": "艾明马恰",
+        "img": "艾明马恰_威化.png",
+        "price": 11,
+        "weight": 3,
+        "boxCount": 25,
+        "level": 1
+    },
+    {
+        "name": "啤酒",
+        "area": "艾明马恰",
+        "img": "艾明马恰_啤酒.png",
+        "price": 48,
+        "weight": 4,
+        "boxCount": 30,
+        "level": 2
+    },
+    {
+        "name": "熏制的野味",
+        "area": "艾明马恰",
+        "img": "艾明马恰_熏制的野味.png",
+        "price": 186,
+        "weight": 10,
+        "boxCount": 40,
+        "level": 3
+    },
+    {
+        "name": "蘑菇意大利面",
+        "area": "艾明马恰",
+        "img": "艾明马恰_蘑菇意大利面.png",
+        "price": 91,
+        "weight": 4,
+        "boxCount": 32,
+        "level": 4
+    },
+    {
+        "name": "碳烤熊肉",
+        "area": "艾明马恰",
+        "img": "艾明马恰_碳烤熊肉.png",
+        "price": 611,
+        "weight": 14,
+        "boxCount": 12,
+        "level": 5
+    },
+    {
+        "name": "热气结晶",
+        "area": "塔汀",
+        "img": "塔汀_热气结晶.png",
+        "price": 11,
+        "weight": 2,
+        "boxCount": 33,
+        "level": 1
+    },
+    {
+        "name": "音乐盒保存石",
+        "area": "塔汀",
+        "img": "塔汀_音乐盒保存石.png",
+        "price": 36,
+        "weight": 3,
+        "boxCount": 24,
+        "level": 2
+    },
+    {
+        "name": "帕拉鲁结晶",
+        "area": "塔汀",
+        "img": "塔汀_帕拉鲁结晶.png",
+        "price": 127,
+        "weight": 6,
+        "boxCount": 38,
+        "level": 3
+    },
+    {
+        "name": "环形栅栏结晶",
+        "area": "塔汀",
+        "img": "塔汀_环形栅栏结晶.png",
+        "price": 119,
+        "weight": 3,
+        "boxCount": 30,
+        "level": 4
+    },
+    {
+        "name": "炼金结晶",
+        "area": "塔汀",
+        "img": "塔汀_炼金结晶.png",
+        "price": 691,
+        "weight": 5,
+        "boxCount": 8,
+        "level": 5
+    },
+    {
+        "name": "迷你化妆台",
+        "area": "塔拉",
+        "img": "塔拉_迷你化妆台.png",
+        "price": 192,
+        "weight": 15,
+        "boxCount": 10,
+        "level": 1
+    },
+    {
+        "name": "茶几",
+        "area": "塔拉",
+        "img": "塔拉_茶几.png",
+        "price": 856,
+        "weight": 38,
+        "boxCount": 3,
+        "level": 2
+    },
+    {
+        "name": "摇椅",
+        "area": "塔拉",
+        "img": "塔拉_摇椅.png",
+        "price": 858,
+        "weight": 25,
+        "boxCount": 5,
+        "level": 3
+    },
+    {
+        "name": "儿童高低床",
+        "area": "塔拉",
+        "img": "塔拉_儿童高低床.png",
+        "price": 3499,
+        "weight": 60,
+        "boxCount": 3,
+        "level": 4
+    },
+    {
+        "name": "大型红酒架",
+        "area": "塔拉",
+        "img": "塔拉_大型红酒架.png",
+        "price": 8462,
+        "weight": 90,
+        "boxCount": 2,
+        "level": 5
+    },
+    {
+        "name": "铁鞭",
+        "area": "贝尔法斯特",
+        "img": "贝尔法斯特_铁鞭.png",
+        "price": 116,
+        "weight": 8,
+        "boxCount": 15,
+        "level": 1
+    },
+    {
+        "name": "黑光剑",
+        "area": "贝尔法斯特",
+        "img": "贝尔法斯特_黑光剑.png",
+        "price": 440,
+        "weight": 12,
+        "boxCount": 12,
+        "level": 2
+    },
+    {
+        "name": "金库",
+        "area": "贝尔法斯特",
+        "img": "贝尔法斯特_金库.png",
+        "price": 8882,
+        "weight": 90,
+        "boxCount": 2,
+        "level": 3
+    },
+    {
+        "name": "骷髅食人魔铠甲",
+        "area": "贝尔法斯特",
+        "img": "贝尔法斯特_骷髅食人魔铠甲.png",
+        "price": 14355,
+        "weight": 115,
+        "boxCount": 1,
+        "level": 4
+    },
+    {
+        "name": "莫兰特头盔仿品",
+        "area": "贝尔法斯特",
+        "img": "贝尔法斯特_莫兰特头盔仿品.png",
+        "price": 4219,
+        "weight": 30,
+        "boxCount": 6,
+        "level": 5
+    },
+    {
+        "name": "薄荷巧克力粉",
+        "area": "克拉",
+        "img": "克拉_薄荷巧克力粉.png",
+        "price": 33,
+        "weight": 1,
+        "boxCount": 60,
+        "level": 1
+    },
+    {
+        "name": "新鲜的石榴",
+        "area": "克拉",
+        "img": "克拉_新鲜的石榴.png",
+        "price": 53,
+        "weight": 2,
+        "boxCount": 50,
+        "level": 2
+    },
+    {
+        "name": "魔法之门模型",
+        "area": "克拉",
+        "img": "克拉_魔法之门模型.png",
+        "price": 98,
+        "weight": 2,
+        "boxCount": 65,
+        "level": 3
+    },
+    {
+        "name": "探险用救助工具",
+        "area": "克拉",
+        "img": "克拉_探险用救助工具.png",
+        "price": 228,
+        "weight": 3,
+        "boxCount": 38,
+        "level": 4
+    },
+    {
+        "name": "卡皮仙人掌精油",
+        "area": "克拉",
+        "img": "克拉_卡皮仙人掌精油.png",
+        "price": 549,
+        "weight": 2,
+        "boxCount": 26,
+        "level": 5
+    },
+    {
+        "name": "玻璃鹅卵石",
+        "area": "菲利亚",
+        "img": "菲利亚_玻璃鹅卵石.png",
+        "price": 73,
+        "weight": 10,
+        "boxCount": 60,
+        "level": 1
+    },
+    {
+        "name": "桂皮香水",
+        "area": "菲利亚",
+        "img": "菲利亚_桂皮香水.png",
+        "price": 563,
+        "weight": 22,
+        "boxCount": 15,
+        "level": 2
+    },
+    {
+        "name": "干藏红花",
+        "area": "菲利亚",
+        "img": "菲利亚_干藏红花.png",
+        "price": 896,
+        "weight": 25,
+        "boxCount": 10,
+        "level": 3
+    },
+    {
+        "name": "伦迦天然岩盐",
+        "area": "菲利亚",
+        "img": "菲利亚_伦迦天然岩盐.png",
+        "price": 2204,
+        "weight": 40,
+        "boxCount": 5,
+        "level": 4
+    },
+    {
+        "name": "菲利亚肉脯",
+        "area": "菲利亚",
+        "img": "菲利亚_菲利亚肉脯.png",
+        "price": 1383,
+        "weight": 20,
+        "boxCount": 12,
+        "level": 5
+    },
+    {
+        "name": "克拉格遗迹纪念品",
+        "area": "库拉",
+        "img": "库拉_克拉格遗迹纪念品.png",
+        "price": 9,
+        "weight": 2,
+        "boxCount": 50,
+        "level": 1
+    },
+    {
+        "name": "仪式用大型面具",
+        "area": "库拉",
+        "img": "库拉_仪式用大型面具.png",
+        "price": 57,
+        "weight": 3,
+        "boxCount": 40,
+        "level": 2
+    },
+    {
+        "name": "拉泰尔树莓",
+        "area": "库拉",
+        "img": "库拉_拉泰尔树莓.png",
+        "price": 55,
+        "weight": 2,
+        "boxCount": 60,
+        "level": 3
+    },
+    {
+        "name": "遗迹复原工具套装",
+        "area": "库拉",
+        "img": "库拉_遗迹复原工具套装.png",
+        "price": 74,
+        "weight": 2,
+        "boxCount": 70,
+        "level": 4
+    },
+    {
+        "name": "克拉格天然橡皮",
+        "area": "库拉",
+        "img": "库拉_克拉格天然橡皮.png",
+        "price": 916,
+        "weight": 5,
+        "boxCount": 8,
+        "level": 5
+    },
+    {
+        "name": "巴勒斯棉大衣",
+        "area": "巴勒斯",
+        "img": "巴勒斯_巴勒斯棉大衣.png",
+        "price": 47,
+        "weight": 1,
+        "boxCount": 50,
+        "level": 1
+    },
+    {
+        "name": "天然冰河矿泉水",
+        "area": "巴勒斯",
+        "img": "巴勒斯_天然冰河矿泉水.png",
+        "price": 132,
+        "weight": 2,
+        "boxCount": 35,
+        "level": 2
+    },
+    {
+        "name": "滑冰鞋",
+        "area": "巴勒斯",
+        "img": "巴勒斯_滑冰鞋.png",
+        "price": 212,
+        "weight": 1,
+        "boxCount": 50,
+        "level": 3
+    },
+    {
+        "name": "滑雪板",
+        "area": "巴勒斯",
+        "img": "巴勒斯_滑雪板.png",
+        "price": 1057,
+        "weight": 3,
+        "boxCount": 20,
+        "level": 4
+    },
+    {
+        "name": "巴勒斯伏特加",
+        "area": "巴勒斯",
+        "img": "巴勒斯_巴勒斯伏特加.png",
+        "price": 1274,
+        "weight": 2,
+        "boxCount": 16,
+        "level": 5
+    }
+]
