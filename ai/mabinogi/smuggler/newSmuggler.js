@@ -40,7 +40,12 @@ const calcVehicles = product => {
     const totalItems = actualSlots * product.boxCount
     const totalCost = totalItems * product.price
     return { ...v, actualSlots, totalItems, totalCost }
-  }).sort((a, b) => b.totalCost - a.totalCost)
+  }).sort((a, b) => {
+    if (b.totalCost !== a.totalCost) return b.totalCost - a.totalCost
+    const sa = a.speed ?? 0
+    const sb = b.speed ?? 0
+    return sb - sa
+  })
 }
 
 const LEVEL_STARS = { 1: '★', 2: '★★', 3: '★★★', 4: '★★★★', 5: '★★★★★' }
@@ -213,7 +218,7 @@ body{
             <td>
               <div class="v-name">
                 ${v.img ? `<img class="v-icon" src="${v.img}" />` : ''}
-                <span>${v.name.replace(/\[.*?\]/g, '')}${i === 0 ? '<span class="optimal-badge">最优</span>' : ''}</span>
+                <span>${v.name}${i === 0 ? '<span class="optimal-badge">最优</span>' : ''}</span>
               </div>
             </td>
             <td>${v.block}</td>
