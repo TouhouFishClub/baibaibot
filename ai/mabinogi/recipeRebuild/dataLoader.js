@@ -1,6 +1,10 @@
 const fs = require('fs')
 const path = require('path')
 const xml2js = require('xml2js')
+const {
+  loadChinaFeaturesByItemId,
+  pickMabiItemAmongDuplicates,
+} = require(path.join(__dirname, '..', 'lib', 'chinaFeatureItemMap.js'))
 
 // ====== 路径常量 ======
 const DATA_DIR = path.join(__dirname, '..', 'data', 'IT')
@@ -32,7 +36,11 @@ const getDataVersion = () => {
   }
   try {
     const loaderMtime = fs.statSync(__filename).mtimeMs
-    return `${base}_L${loaderMtime}`
+    let cf = 0
+    try {
+      cf = fs.statSync(path.join(__dirname, '..', 'lib', 'chinaFeatureItemMap.js')).mtimeMs
+    } catch (e2) { /* ignore */ }
+    return `${base}_L${loaderMtime}_CF${cf}`
   } catch (e) { return base }
 }
 
@@ -104,6 +112,7 @@ const ITEM_DB_FILES = [
 const loadAllItemsFromXml = async () => {
   const itemMap = new Map()  // id → { id, name, category }
   const nameMap = new Map()  // name → [id, ...]
+  const chinaFeaturesByItemId = await loadChinaFeaturesByItemId(DATA_DIR)
 
   for (const dbFile of ITEM_DB_FILES) {
     const xmlPath = path.join(DATA_DIR, dbFile.xml)
@@ -114,17 +123,29 @@ const loadAllItemsFromXml = async () => {
     const transform = loadTranslation(txtPath, dbFile.tag)
     const items = (xmlData.Items && xmlData.Items.Mabi_Item) || []
 
+    const byId = new Map()
     for (let i = 0; i < items.length; i++) {
-      const $ = items[i].$
-      const id = parseInt($.ID)
+      const id = parseInt(items[i].$.ID, 10)
       if (!id) continue
+      if (!byId.has(id)) byId.set(id, [])
+      byId.get(id).push(items[i])
+    }
+    const seenIdInFile = new Set()
+
+    for (let i = 0; i < items.length; i++) {
+      const id = parseInt(items[i].$.ID, 10)
+      if (!id) continue
+      if (seenIdInFile.has(id)) continue
+      seenIdInFile.add(id)
+
+      const group = byId.get(id)
+      const picked = pickMabiItemAmongDuplicates(group, chinaFeaturesByItemId.get(id))
+      const $ = picked.$
       const name = transform[$.Text_Name1] || $.Text_Name0 || ''
       if (!name) continue
 
-      // 同ID后方覆盖前方（新版本feature的条目排在后面）
       const prevItem = itemMap.get(id)
       itemMap.set(id, { id, name, category: $.Category || '' })
-      // 名称索引：如果旧名称不同，从旧名称索引中移除
       if (prevItem && prevItem.name !== name) {
         const oldArr = nameMap.get(prevItem.name)
         if (oldArr) {

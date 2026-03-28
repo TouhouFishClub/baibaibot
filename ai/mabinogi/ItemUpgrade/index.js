@@ -1,6 +1,10 @@
 const fs = require('fs-extra')
 const path = require('path')
 const xml2js = require('xml2js')
+const {
+	loadChinaFeaturesByItemId,
+	pickMabiItemAmongDuplicates,
+} = require(path.join(__dirname, '..', 'lib', 'chinaFeatureItemMap.js'))
 const nodeHtmlToImage = require('node-html-to-image')
 const { IMAGE_DATA } = require(path.join(__dirname, '..', '..', '..', 'baibaiConfigs.js'))
 const font2base64 = require('node-font2base64')
@@ -52,10 +56,28 @@ const filterItem = async () => {
 	let filterData = {}
 	// 按名称去重：同名时只保留 ID 更大的那条
 	let nameMap = {}
+	const chinaFeaturesByItemId = await loadChinaFeaturesByItemId(path.join(__dirname, '..', 'data', 'IT'))
 	for(let index = 0; index < xmlData.length; index ++) {
 		let data = xmlData[index]
-		for(let i = 0; i < data.Items.Mabi_Item.length; i ++) {
-			let item = data.Items.Mabi_Item[i]
+		const rawItems = data.Items.Mabi_Item || []
+		const byId = new Map()
+		for (let j = 0; j < rawItems.length; j++) {
+			const idNum = parseInt(rawItems[j].$.ID, 10)
+			if (!idNum) continue
+			if (!byId.has(idNum)) byId.set(idNum, [])
+			byId.get(idNum).push(rawItems[j])
+		}
+		const seenInFile = new Set()
+		const mabiItemsCollapsed = []
+		for (let j = 0; j < rawItems.length; j++) {
+			const idNum = parseInt(rawItems[j].$.ID, 10)
+			if (!idNum || seenInFile.has(idNum)) continue
+			seenInFile.add(idNum)
+			const picked = pickMabiItemAmongDuplicates(byId.get(idNum), chinaFeaturesByItemId.get(idNum))
+			if (picked) mabiItemsCollapsed.push(picked)
+		}
+		for(let i = 0; i < mabiItemsCollapsed.length; i ++) {
+			let item = mabiItemsCollapsed[i]
 			// if(item.$.Category && item.$.Category.startsWith('/jewel')) {
 			// 	gemInfo[item.$.ID] = txtData[index][item.$.Text_Name1]
 			// 	continue
