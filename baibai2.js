@@ -1511,6 +1511,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     if(port == '29334'){
       return
     }
+    if(port == '30026'){
+      return
+    }
     // if(port == '30016') {
     //   return
     // }
@@ -1551,6 +1554,9 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   // 今日猪猪
   if(con.startsWith('jrzz') || con.startsWith('今日猪猪')) {
+    if(port == '30026'){
+      return
+    }
     let userInfo
     if(msgObjSource?.sender) {
       userInfo = {
