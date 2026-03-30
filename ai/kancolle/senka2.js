@@ -34,10 +34,10 @@ async function s2n() {
     method: "POST",
     headers:{
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Referer':'https://w08r.kancolle-server.com/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+token+'&api_starttime='+now,
+      'Referer':'https://w08r.kancolle-server.com/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+tk2+'&api_starttime='+now,
       'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
     },
-    body:'api_token='+token+'&api_verno=1'
+    body:'api_token='+tk2+'&api_verno=1'
   }
   // if(noproxy==1){
   //   req.proxy = 'http://192.168.17.236:2346'
