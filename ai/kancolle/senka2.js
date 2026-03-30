@@ -64,7 +64,7 @@ async function s2n() {
         try {
           var dat = JSON.parse(body);
           console.log(dat);
-          var slst = dat.api_mst_ship;
+          var slst = dat.api_data.api_mst_ship;
           for(var p in slst){
             var isd = slst[p].api_id;
             var nn = slst[p].api_name;
