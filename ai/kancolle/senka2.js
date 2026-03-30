@@ -26,6 +26,7 @@ function connectMongo(){
 connectMongo();
 
 async function s2n() {
+  console.log('now s2n:');
   var url = 'https://w08r.kancolle-server.com/kcsapi/api_start2/getData';
   var now = new Date().getTime();
   var req = {
@@ -56,18 +57,9 @@ async function s2n() {
   // }
   request(req, function(error, response, body) {
     if (error && error.code) {
-      console.log('pipe error catched!')
-      console.log(error);
-      if (noproxy == undefined) {
-        noproxy = 0;
-      }
-      var delay = noproxy ? (1000 * noproxy + 2000) : 1000
-      setTimeout(function () {
 
-
-
-      }, delay);
     } else {
+      console.log(body);
       if (body.startsWith("svdata=")) {
         body = body.substring(7);
         try {
