@@ -59,12 +59,11 @@ async function s2n() {
     if (error && error.code) {
 
     } else {
-      console.log(body);
       if (body.startsWith("svdata=")) {
         body = body.substring(7);
         try {
           var dat = JSON.parse(body);
-          var slst = dat.api_mst_useitem;
+          var slst = dat.api_mst_ship;
           for(var i=0;i<slst.length;i++){
             var isd = slst[i].api_id;
             var nn = slst[i].api_name;
