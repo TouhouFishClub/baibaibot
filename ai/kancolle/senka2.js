@@ -2290,7 +2290,20 @@ setTimeout(function(){
 
 },500)
 
-s2n();
+setInterval(async () => {
+  try {
+    s2n();
+  } catch (e) {}
+}, 1 * 60 * 60 * 1000);
+
+
+setTimeout(async () => {
+  try {
+    s2n();
+  } catch (e) {}
+}, 1 * 5000);
+
+
 
 
 
