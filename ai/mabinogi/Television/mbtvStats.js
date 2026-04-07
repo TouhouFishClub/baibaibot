@@ -75,6 +75,10 @@ const parseMbtvsArgs = raw => {
       const end = parseDateEnd(args[1])
       if (!start || !end) return { error: '时间格式无效，请使用 2026-1-1 形式' }
       if (end < start) return { error: '结束时间不能早于开始时间' }
+      const ONE_YEAR_MS = 366 * 24 * 60 * 60 * 1000
+      if (end.getTime() - start.getTime() > ONE_YEAR_MS) {
+        return { error: '开始时间与结束时间的范围不能超过1年' }
+      }
       return { start, end, filter: '' }
     }
     const start = parseDateStart(args[1])
@@ -86,6 +90,10 @@ const parseMbtvsArgs = raw => {
   const end = parseDateEnd(args[2])
   if (!start || !end) return { error: '时间格式无效，请使用 2026-1-1 形式' }
   if (end < start) return { error: '结束时间不能早于开始时间' }
+  const ONE_YEAR_MS = 366 * 24 * 60 * 60 * 1000
+  if (end.getTime() - start.getTime() > ONE_YEAR_MS) {
+    return { error: '开始时间与结束时间的范围不能超过1年' }
+  }
   return { start, end, filter: args[0] }
 }
 
