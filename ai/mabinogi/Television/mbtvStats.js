@@ -129,6 +129,16 @@ const normalizeRewardForPie = reward => {
       return raw.substring(idx + 1).replace(/[。.]$/, '').trim()
     }
   }
+  if (raw.indexOf('咒语书') > -1) {
+    const plusIdx = raw.indexOf('+1')
+    if (plusIdx > -1) {
+      // 例：套装效果风车强化+1咒语书 -> 风车强化+1
+      const head = raw.substring(0, plusIdx)
+      const cut = Math.max(head.indexOf('效果'), head.indexOf('专用'))
+      const core = (cut > -1 ? head.substring(cut + 2) : head).trim()
+      if (core) return `${core}+1`
+    }
+  }
   return raw
 }
 
@@ -140,7 +150,8 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
   const channelTotal = new Map()
   const dayYlx = new Map()
   const dayYate = new Map()
-  const charTotal = new Map()
+  const charYlx = new Map()
+  const charYate = new Map()
 
   const bump = (m, k) => {
     const key = k && String(k).length ? String(k) : '(空)'
@@ -165,7 +176,10 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
       const dayMap = server === 'ylx' ? dayYlx : dayYate
       if (!dayMap.has(dk)) dayMap.set(dk, new Set())
       if (chName) dayMap.get(dk).add(chName)
-      if (chName) charTotal.set(chName, (charTotal.get(chName) || 0) + 1)
+      if (chName) {
+        const charMap = server === 'ylx' ? charYlx : charYate
+        charMap.set(chName, (charMap.get(chName) || 0) + 1)
+      }
     }
   }
 
@@ -180,7 +194,8 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
     channelTotal,
     dayYlx,
     dayYate,
-    charTotal
+    charYlx,
+    charYate
   }
 }
 
@@ -206,7 +221,8 @@ const buildChartPayload = (start, end, agg, filterText) => {
     channelTotal,
     dayYlx,
     dayYate,
-    charTotal
+    charYlx,
+    charYate
   } = agg
 
   const pieRewardYlx = topNWithOther(rewardYlx, 15)
@@ -220,9 +236,14 @@ const buildChartPayload = (start, end, agg, filterText) => {
   const yateSeries = labels.map(d => (dayYate.get(d) ? dayYate.get(d).size : 0))
   const sumSeries = labels.map((d, i) => ylxSeries[i] + yateSeries[i])
 
-  const topChars = [...charTotal.entries()]
+  const topYlx = [...charYlx.entries()]
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
+    .slice(0, 10)
+    .map(([name, c], i) => ({ rank: i + 1, name, count: c }))
+
+  const topYate = [...charYate.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
     .map(([name, c], i) => ({ rank: i + 1, name, count: c }))
 
   const totalRecords =
@@ -238,7 +259,8 @@ const buildChartPayload = (start, end, agg, filterText) => {
     pieDungeon,
     pieChannel,
     line: { labels, ylxSeries, yateSeries, sumSeries },
-    topChars,
+    topYlx,
+    topYate,
     piePalette
   }
 }
@@ -312,6 +334,9 @@ const renderStatsImage = async (payload, outputPath) => {
       padding: 18px 22px;
     }
     .top5 h3 { font-size: 16px; color: #c5d0e0; margin-bottom: 12px; font-weight: normal; }
+    .top-split { display: flex; gap: 14px; }
+    .top-col { width: calc((100% - 14px) / 2); }
+    .top-col .sub-title { color: #aeb8ca; font-size: 14px; margin-bottom: 6px; }
     .top5 ol { list-style: none; counter-reset: r; }
     .top5 li {
       counter-increment: r;
@@ -361,16 +386,33 @@ const renderStatsImage = async (payload, outputPath) => {
   </div>
 
   <div class="top5">
-    <h3>出货次数最多的角色 TOP5（两区合计）</h3>
-    <ol>
-      ${
-        payload.topChars.length
-          ? payload.topChars
-              .map(x => `<li><span>${escHtml(x.name)}</span><span class="cnt">${x.count} 次</span></li>`)
-              .join('')
-          : '<li style="padding-left:40px;list-style:none"><span>（无有效角色名）</span></li>'
-      }
-    </ol>
+    <h3>出货次数最多角色 TOP10（分服）</h3>
+    <div class="top-split">
+      <div class="top-col">
+        <div class="sub-title">伊鲁夏</div>
+        <ol>
+          ${
+            payload.topYlx.length
+              ? payload.topYlx
+                  .map(x => `<li><span>${escHtml(x.name)}</span><span class="cnt">${x.count} 次</span></li>`)
+                  .join('')
+              : '<li style="padding-left:40px;list-style:none"><span>（无有效角色名）</span></li>'
+          }
+        </ol>
+      </div>
+      <div class="top-col">
+        <div class="sub-title">亚特</div>
+        <ol>
+          ${
+            payload.topYate.length
+              ? payload.topYate
+                  .map(x => `<li><span>${escHtml(x.name)}</span><span class="cnt">${x.count} 次</span></li>`)
+                  .join('')
+              : '<li style="padding-left:40px;list-style:none"><span>（无有效角色名）</span></li>'
+          }
+        </ol>
+      </div>
+    </div>
   </div>
 
   <script type="application/json" id="payload">${dataJson}</script>

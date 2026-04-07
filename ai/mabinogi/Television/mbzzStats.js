@@ -142,13 +142,20 @@ const enumerateDays = (start, end) => {
   return days
 }
 
+const normalizeItemForPie = name => {
+  const raw = name && String(name).length ? String(name) : '(无名称)'
+  // 统一去掉冗长前缀，提升图例可读性
+  return raw.replace(/布里安恩德斯/g, '').trim()
+}
+
 const aggregateFromDocs = (docsYlx, docsYate) => {
   const itemYlx = new Map()
   const itemYate = new Map()
   const itemTotal = new Map()
   const dayYlx = new Map()
   const dayYate = new Map()
-  const charTotal = new Map()
+  const charYlx = new Map()
+  const charYate = new Map()
 
   const bumpItem = (m, name) => {
     const k = name && String(name).length ? name : '(无名称)'
@@ -160,19 +167,23 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
       const t = doc.time ? new Date(doc.time) : new Date(doc.ts)
       const dk = dateKey(t)
       const ch = doc.character_name || ''
-      bumpItem(server === 'ylx' ? itemYlx : itemYate, doc.item_name)
-      bumpItem(itemTotal, doc.item_name)
+      const itemLabel = normalizeItemForPie(doc.item_name)
+      bumpItem(server === 'ylx' ? itemYlx : itemYate, itemLabel)
+      bumpItem(itemTotal, itemLabel)
       const dayMap = server === 'ylx' ? dayYlx : dayYate
       if (!dayMap.has(dk)) dayMap.set(dk, new Set())
       if (ch) dayMap.get(dk).add(ch)
-      if (ch) charTotal.set(ch, (charTotal.get(ch) || 0) + 1)
+      if (ch) {
+        const charMap = server === 'ylx' ? charYlx : charYate
+        charMap.set(ch, (charMap.get(ch) || 0) + 1)
+      }
     }
   }
 
   walk(docsYlx, 'ylx')
   walk(docsYate, 'yate')
 
-  return { itemYlx, itemYate, itemTotal, dayYlx, dayYate, charTotal }
+  return { itemYlx, itemYate, itemTotal, dayYlx, dayYate, charYlx, charYate }
 }
 
 const piePalette = [
@@ -189,7 +200,7 @@ const piePalette = [
 ]
 
 const buildChartPayload = (start, end, agg, itemFilter) => {
-  const { itemYlx, itemYate, itemTotal, dayYlx, dayYate, charTotal } = agg
+  const { itemYlx, itemYate, itemTotal, dayYlx, dayYate, charYlx, charYate } = agg
 
   const pieYlx = topNWithOther(itemYlx, 15)
   const pieYate = topNWithOther(itemYate, 15)
@@ -200,9 +211,14 @@ const buildChartPayload = (start, end, agg, itemFilter) => {
   const yateSeries = labels.map(d => (dayYate.get(d) ? dayYate.get(d).size : 0))
   const sumSeries = labels.map((d, i) => ylxSeries[i] + yateSeries[i])
 
-  const topChars = [...charTotal.entries()]
+  const topYlx = [...charYlx.entries()]
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
+    .slice(0, 10)
+    .map(([name, c], i) => ({ rank: i + 1, name, count: c }))
+
+  const topYate = [...charYate.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
     .map(([name, c], i) => ({ rank: i + 1, name, count: c }))
 
   return {
@@ -213,7 +229,8 @@ const buildChartPayload = (start, end, agg, itemFilter) => {
     pieYate,
     pieTotal,
     line: { labels, ylxSeries, yateSeries, sumSeries },
-    topChars,
+    topYlx,
+    topYate,
     piePalette
   }
 }
@@ -312,6 +329,9 @@ const renderStatsImage = async (payload, outputPath) => {
       margin-bottom: 12px;
       font-weight: normal;
     }
+    .top-split { display: flex; gap: 14px; }
+    .top-col { width: calc((100% - 14px) / 2); }
+    .top-col .sub-title { color: #aeb8ca; font-size: 14px; margin-bottom: 6px; }
     .top5 ol {
       list-style: none;
       counter-reset: r;
@@ -362,19 +382,39 @@ const renderStatsImage = async (payload, outputPath) => {
     <canvas id="lineDaily"></canvas>
   </div>
   <div class="top5">
-    <h3>制作次数最多的角色 TOP5（两区合计）</h3>
-    <ol>
-      ${
-        payload.topChars.length
-          ? payload.topChars
-              .map(
-                x =>
-                  `<li><span>${escHtml(x.name)}</span><span class="cnt">${x.count} 次</span></li>`
-              )
-              .join('')
-          : '<li style="padding-left:40px;list-style:none"><span>（无有效角色名）</span></li>'
-      }
-    </ol>
+    <h3>制作次数最多角色 TOP10（分服）</h3>
+    <div class="top-split">
+      <div class="top-col">
+        <div class="sub-title">伊鲁夏</div>
+        <ol>
+          ${
+            payload.topYlx.length
+              ? payload.topYlx
+                  .map(
+                    x =>
+                      `<li><span>${escHtml(x.name)}</span><span class="cnt">${x.count} 次</span></li>`
+                  )
+                  .join('')
+              : '<li style="padding-left:40px;list-style:none"><span>（无有效角色名）</span></li>'
+          }
+        </ol>
+      </div>
+      <div class="top-col">
+        <div class="sub-title">亚特</div>
+        <ol>
+          ${
+            payload.topYate.length
+              ? payload.topYate
+                  .map(
+                    x =>
+                      `<li><span>${escHtml(x.name)}</span><span class="cnt">${x.count} 次</span></li>`
+                  )
+                  .join('')
+              : '<li style="padding-left:40px;list-style:none"><span>（无有效角色名）</span></li>'
+          }
+        </ol>
+      </div>
+    </div>
   </div>
   <script type="application/json" id="payload">${dataJson}</script>
   <script>
