@@ -166,7 +166,7 @@ const {AIdraw,yishijie,generageImageXL} = require('./ai/games/card2/AIDraw')
 const {BA_Schedule} = require('./ai/BlueArchive/schedule')
 const {BaRaidRanking} = require('./ai/BlueArchive/RaidRanking')
 // const {autoVoteSend} = require('./ai/mabinogi/2023_vote_rank')
-const {mabiTelevision} = require('./ai/mabinogi/Television/newMbtv')
+const {mabiTelevision, mabiTelevisionStats} = require('./ai/mabinogi/Television/newMbtv')
 const {mabiGachaTv} = require('./ai/mabinogi/Television/newMbcd')
 const {mabiCraftTv, mabiCraftTvStats} = require('./ai/mabinogi/Television/newMbzz')
 
@@ -1881,6 +1881,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   if(fie4 == 'opts') {
     op(from, name, con.substring(4).trim(), 'image', callback);
+    return
+  }
+  if(con.length >= 5 && con.toLowerCase().startsWith('mbtvs')) {
+    mabiTelevisionStats(con.substring(5).trim(), from, callback).catch(err => { console.log(err) });
     return
   }
   if(fie4 == 'mbtv') {
