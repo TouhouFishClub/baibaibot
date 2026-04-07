@@ -274,14 +274,14 @@ const renderStatsImage = async (payload, outputPath) => {
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.08);
       padding: 14px 12px 8px;
-      min-height: 460px;
+      min-height: 380px;
     }
     .w3 { width: calc((100% - 32px) / 3); }
     .w2 { width: calc((100% - 16px) / 2); }
     .pie-box h3 {
       text-align: center; font-size: 15px; font-weight: normal; color: #aeb8ca; margin-bottom: 6px;
     }
-    .pie-box canvas { margin: 0 auto; display: block; max-height: 380px; }
+    .pie-box canvas { margin: 0 auto; display: block; height: 320px !important; max-height: none; }
     .line-wrap {
       background: rgba(255,255,255,0.04);
       border-radius: 12px;
@@ -388,10 +388,12 @@ const renderStatsImage = async (payload, outputPath) => {
       options: {
         animation: false,
         responsive: true,
+        maintainAspectRatio: false,
+        layout: { padding: { bottom: 6 } },
         plugins: {
           legend: {
             position: 'bottom',
-            labels: { boxWidth: 10, padding: 10, font: { size: 11 } }
+            labels: { boxWidth: 10, padding: 8, font: { size: 11 } }
           }
         }
       }
