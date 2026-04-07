@@ -450,7 +450,7 @@ const renderStatsImage = async (payload, outputPath) => {
         plugins: {
           legend: {
             position: 'bottom',
-            labels: { boxWidth: 10, padding: 8, font: { size: 11 } }
+            labels: { boxWidth: 11, padding: 8, font: { size: 13 } }
           }
         }
       }
