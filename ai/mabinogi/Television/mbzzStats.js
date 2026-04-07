@@ -239,11 +239,10 @@ const renderStatsImage = async (payload, outputPath) => {
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       width: 1280px;
-      min-height: 2600px;
       font-family: 'HANYIWENHEI', sans-serif;
       background: linear-gradient(165deg, #151820 0%, #1c2230 45%, #12151c 100%);
       color: #e8eaef;
-      padding: 28px 32px 36px;
+      padding: 28px 32px 32px;
     }
     .hero {
       border-left: 4px solid #5b8fce;
@@ -292,6 +291,7 @@ const renderStatsImage = async (payload, outputPath) => {
       border: 1px solid rgba(255,255,255,0.08);
       padding: 16px 18px 8px;
       margin-bottom: 18px;
+      min-height: 300px;
     }
     .line-wrap h3 {
       font-size: 16px;
