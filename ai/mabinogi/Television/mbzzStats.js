@@ -191,9 +191,9 @@ const piePalette = [
 const buildChartPayload = (start, end, agg, itemFilter) => {
   const { itemYlx, itemYate, itemTotal, dayYlx, dayYate, charTotal } = agg
 
-  const pieYlx = topNWithOther(itemYlx, 8)
-  const pieYate = topNWithOther(itemYate, 8)
-  const pieTotal = topNWithOther(itemTotal, 8)
+  const pieYlx = topNWithOther(itemYlx, 15)
+  const pieYate = topNWithOther(itemYate, 15)
+  const pieTotal = topNWithOther(itemTotal, 15)
 
   const labels = enumerateDays(start, end)
   const ylxSeries = labels.map(d => (dayYlx.get(d) ? dayYlx.get(d).size : 0))
@@ -275,7 +275,7 @@ const renderStatsImage = async (payload, outputPath) => {
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.08);
       padding: 14px 12px 8px;
-      min-height: 300px;
+      min-height: 380px;
     }
     .pie-box h3 {
       text-align: center;
@@ -284,7 +284,7 @@ const renderStatsImage = async (payload, outputPath) => {
       color: #aeb8ca;
       margin-bottom: 6px;
     }
-    .pie-box canvas { margin: 0 auto; display: block; max-height: 240px; }
+    .pie-box canvas { margin: 0 auto; display: block; max-height: 320px; }
     .line-wrap {
       background: rgba(255,255,255,0.04);
       border-radius: 12px;
@@ -388,12 +388,19 @@ const renderStatsImage = async (payload, outputPath) => {
         animation: false,
         responsive: true,
         plugins: {
-          legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 10, padding: 10, font: { size: 11 } }
+          }
         }
       }
     };
     function mkPie(id, slice) {
       const bg = payload.piePalette.slice(0, slice.data.length);
+      const lastIdx = slice.labels.length - 1;
+      if (lastIdx >= 0 && slice.labels[lastIdx] === '其他') {
+        bg[lastIdx] = '#3a4252';
+      }
       new Chart(document.getElementById(id), {
         ...pieOpts,
         data: {

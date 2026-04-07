@@ -196,11 +196,11 @@ const buildChartPayload = (start, end, agg, filterText) => {
     charTotal
   } = agg
 
-  const pieRewardYlx = topNWithOther(rewardYlx, 8)
-  const pieRewardYate = topNWithOther(rewardYate, 8)
-  const pieRewardTotal = topNWithOther(rewardTotal, 8)
-  const pieDungeon = topNWithOther(dungeonTotal, 8)
-  const pieChannel = topNWithOther(channelTotal, 10)
+  const pieRewardYlx = topNWithOther(rewardYlx, 15)
+  const pieRewardYate = topNWithOther(rewardYate, 15)
+  const pieRewardTotal = topNWithOther(rewardTotal, 15)
+  const pieDungeon = topNWithOther(dungeonTotal, 15)
+  const pieChannel = topNWithOther(channelTotal, 15)
 
   const labels = enumerateDays(start, end)
   const ylxSeries = labels.map(d => (dayYlx.get(d) ? dayYlx.get(d).size : 0))
@@ -274,14 +274,14 @@ const renderStatsImage = async (payload, outputPath) => {
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.08);
       padding: 14px 12px 8px;
-      min-height: 300px;
+      min-height: 380px;
     }
     .w3 { width: calc((100% - 32px) / 3); }
     .w2 { width: calc((100% - 16px) / 2); }
     .pie-box h3 {
       text-align: center; font-size: 15px; font-weight: normal; color: #aeb8ca; margin-bottom: 6px;
     }
-    .pie-box canvas { margin: 0 auto; display: block; max-height: 240px; }
+    .pie-box canvas { margin: 0 auto; display: block; max-height: 320px; }
     .line-wrap {
       background: rgba(255,255,255,0.04);
       border-radius: 12px;
@@ -371,11 +371,20 @@ const renderStatsImage = async (payload, outputPath) => {
       options: {
         animation: false,
         responsive: true,
-        plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 10, padding: 10, font: { size: 11 } }
+          }
+        }
       }
     };
     function mkPie(id, slice) {
       const bg = payload.piePalette.slice(0, slice.data.length);
+      const lastIdx = slice.labels.length - 1;
+      if (lastIdx >= 0 && slice.labels[lastIdx] === '其他') {
+        bg[lastIdx] = '#3a4252';
+      }
       new Chart(document.getElementById(id), {
         ...pieOpts,
         data: { labels: slice.labels, datasets: [{ data: slice.data, backgroundColor: bg, borderWidth: 1, borderColor: '#1a1d26' }] }
