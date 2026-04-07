@@ -120,6 +120,18 @@ const enumerateDays = (start, end) => {
   return days
 }
 
+const normalizeRewardForPie = reward => {
+  const raw = reward && String(reward).trim().length ? String(reward).trim() : '(空)'
+  if (raw === '(空)') return raw
+  if (raw.indexOf('魔法释放') > -1) {
+    const idx = raw.lastIndexOf('-')
+    if (idx > -1 && idx < raw.length - 1) {
+      return raw.substring(idx + 1).replace(/[。.]$/, '').trim()
+    }
+  }
+  return raw
+}
+
 const aggregateFromDocs = (docsYlx, docsYate) => {
   const rewardYlx = new Map()
   const rewardYate = new Map()
@@ -141,11 +153,12 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
       const dk = dateKey(t)
       const chName = doc.character_name || ''
       const reward = doc.reward || ''
+      const rewardLabel = normalizeRewardForPie(reward)
       const dungeon = doc.dungeon_name || ''
       const channel = doc.channel === undefined || doc.channel === null ? '' : String(doc.channel)
 
-      bump(server === 'ylx' ? rewardYlx : rewardYate, reward)
-      bump(rewardTotal, reward)
+      bump(server === 'ylx' ? rewardYlx : rewardYate, rewardLabel)
+      bump(rewardTotal, rewardLabel)
       bump(dungeonTotal, dungeon)
       bump(channelTotal, channel ? `CH${channel}` : '(空)')
 
@@ -281,7 +294,7 @@ const renderStatsImage = async (payload, outputPath) => {
     .pie-box h3 {
       text-align: center; font-size: 15px; font-weight: normal; color: #aeb8ca; margin-bottom: 6px;
     }
-    .pie-box canvas { margin: 0 auto; display: block; height: 320px !important; max-height: none; }
+    .pie-box canvas { margin: 0 auto; display: block; width: 100% !important; height: auto !important; max-height: 300px; }
     .line-wrap {
       background: rgba(255,255,255,0.04);
       border-radius: 12px;
@@ -388,8 +401,9 @@ const renderStatsImage = async (payload, outputPath) => {
       options: {
         animation: false,
         responsive: true,
-        maintainAspectRatio: false,
-        layout: { padding: { bottom: 6 } },
+        maintainAspectRatio: true,
+        aspectRatio: 1.05,
+        layout: { padding: { bottom: 2 } },
         plugins: {
           legend: {
             position: 'bottom',

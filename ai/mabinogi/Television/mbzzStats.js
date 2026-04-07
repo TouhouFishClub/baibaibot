@@ -284,7 +284,7 @@ const renderStatsImage = async (payload, outputPath) => {
       color: #aeb8ca;
       margin-bottom: 6px;
     }
-    .pie-box canvas { margin: 0 auto; display: block; height: 320px !important; max-height: none; }
+    .pie-box canvas { margin: 0 auto; display: block; width: 100% !important; height: auto !important; max-height: 300px; }
     .line-wrap {
       background: rgba(255,255,255,0.04);
       border-radius: 12px;
@@ -404,8 +404,9 @@ const renderStatsImage = async (payload, outputPath) => {
       options: {
         animation: false,
         responsive: true,
-        maintainAspectRatio: false,
-        layout: { padding: { bottom: 6 } },
+        maintainAspectRatio: true,
+        aspectRatio: 1.05,
+        layout: { padding: { bottom: 2 } },
         plugins: {
           legend: {
             position: 'bottom',
