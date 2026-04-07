@@ -314,7 +314,7 @@ const renderStatsImage = async (payload, outputPath) => {
     .w3 { width: calc((100% - 32px) / 3); }
     .w2 { width: calc((100% - 16px) / 2); }
     .pie-box h3 {
-      text-align: center; font-size: 15px; font-weight: normal; color: #aeb8ca; margin-bottom: 6px;
+      text-align: center; font-size: 17px; font-weight: normal; color: #aeb8ca; margin-bottom: 6px;
     }
     .pie-box canvas { margin: 0 auto; display: block; width: 100% !important; height: auto !important; max-height: 300px; }
     .line-wrap {
@@ -325,7 +325,7 @@ const renderStatsImage = async (payload, outputPath) => {
       margin-bottom: 18px;
       min-height: 300px;
     }
-    .line-wrap h3 { font-size: 16px; color: #aeb8ca; margin-bottom: 8px; font-weight: normal; }
+    .line-wrap h3 { font-size: 18px; color: #aeb8ca; margin-bottom: 8px; font-weight: normal; }
     .line-wrap canvas { max-height: 300px; }
     .top5 {
       background: linear-gradient(90deg, rgba(91,143,206,0.12) 0%, rgba(255,255,255,0.03) 100%);
@@ -333,7 +333,7 @@ const renderStatsImage = async (payload, outputPath) => {
       border: 1px solid rgba(91,143,206,0.25);
       padding: 18px 22px;
     }
-    .top5 h3 { font-size: 16px; color: #c5d0e0; margin-bottom: 12px; font-weight: normal; }
+    .top5 h3 { font-size: 18px; color: #c5d0e0; margin-bottom: 12px; font-weight: normal; }
     .top-split { display: flex; gap: 14px; }
     .top-col { width: calc((100% - 14px) / 2); }
     .top-col .sub-title { color: #aeb8ca; font-size: 14px; margin-bottom: 6px; }
@@ -449,7 +449,7 @@ const renderStatsImage = async (payload, outputPath) => {
         plugins: {
           legend: {
             position: 'bottom',
-            labels: { boxWidth: 10, padding: 8, font: { size: 11 } }
+            labels: { boxWidth: 12, padding: 8, font: { size: 16 } }
           }
         }
       }
