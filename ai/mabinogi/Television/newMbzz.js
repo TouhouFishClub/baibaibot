@@ -2,6 +2,7 @@ const path = require('path-extra')
 const { render } = require('./render')
 const { IMAGE_DATA } = require('../../../baibaiConfigs')
 const { getClient } = require('../../../mongo/index')
+const { mabiCraftTvStats } = require('./mbzzStats')
 
 const help = callback => {
   callback('这是帮助')
@@ -155,5 +156,6 @@ const mabiCraftTv = async (content, qq, callback) => {
 }
 
 module.exports = {
-  mabiCraftTv
+  mabiCraftTv,
+  mabiCraftTvStats
 }
