@@ -275,7 +275,7 @@ const renderStatsImage = async (payload, outputPath) => {
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.08);
       padding: 14px 12px 8px;
-      min-height: 380px;
+      min-height: 460px;
     }
     .pie-box h3 {
       text-align: center;
@@ -284,7 +284,7 @@ const renderStatsImage = async (payload, outputPath) => {
       color: #aeb8ca;
       margin-bottom: 6px;
     }
-    .pie-box canvas { margin: 0 auto; display: block; max-height: 320px; }
+    .pie-box canvas { margin: 0 auto; display: block; max-height: 380px; }
     .line-wrap {
       background: rgba(255,255,255,0.04);
       border-radius: 12px;
@@ -381,6 +381,23 @@ const renderStatsImage = async (payload, outputPath) => {
     Chart.defaults.color = '#9aa3b5';
     Chart.defaults.borderColor = 'rgba(255,255,255,0.12)';
     Chart.defaults.font.family = 'HANYIWENHEI, sans-serif';
+    const piePalette = ['#6C9BD2','#E8A87C','#C38D9E','#41B3A3','#E27D60','#8FC1A9','#F64C72','#99738E','#85CDCA','#EAB965'];
+    function buildPieColors(count, labels) {
+      const colors = [];
+      for (let i = 0; i < count; i++) {
+        if (i < piePalette.length) {
+          colors.push(piePalette[i]);
+        } else {
+          const hue = (i * 137.508) % 360;
+          colors.push('hsl(' + hue.toFixed(1) + ', 58%, 62%)');
+        }
+      }
+      const lastIdx = labels.length - 1;
+      if (lastIdx >= 0 && labels[lastIdx] === '其他') {
+        colors[lastIdx] = '#3a4252';
+      }
+      return colors;
+    }
     const payload = JSON.parse(document.getElementById('payload').textContent);
     const pieOpts = {
       type: 'pie',
@@ -396,11 +413,7 @@ const renderStatsImage = async (payload, outputPath) => {
       }
     };
     function mkPie(id, slice) {
-      const bg = payload.piePalette.slice(0, slice.data.length);
-      const lastIdx = slice.labels.length - 1;
-      if (lastIdx >= 0 && slice.labels[lastIdx] === '其他') {
-        bg[lastIdx] = '#3a4252';
-      }
+      const bg = buildPieColors(slice.data.length, slice.labels);
       new Chart(document.getElementById(id), {
         ...pieOpts,
         data: {
