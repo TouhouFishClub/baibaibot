@@ -3,7 +3,6 @@ const nodeHtmlToImage = require('node-html-to-image')
 const font2base64 = require('node-font2base64')
 const { IMAGE_DATA } = require('../../../baibaiConfigs')
 const { getClient } = require('../../../mongo/index')
-const { buildMongoQuery } = require('./newMbtv')
 
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(
   path.join(__dirname, '..', '..', '..', 'font', 'hk4e_zh-cn.ttf')
@@ -442,6 +441,13 @@ const mabiTelevisionStats = async (content, _qq, callback) => {
     return
   }
   const db = client.db('db_bot')
+
+  // 避免 newMbtv <-> mbtvStats 循环依赖导致的导出未初始化
+  const { buildMongoQuery } = require('./newMbtv')
+  if (typeof buildMongoQuery !== 'function') {
+    callback('mbtv 统计模块加载失败（buildMongoQuery 不可用），请稍后重试或重启进程。')
+    return
+  }
 
   const baseQuery = await buildMongoQuery(filter)
   const timeQuery = { time: { $gte: start, $lte: end } }
