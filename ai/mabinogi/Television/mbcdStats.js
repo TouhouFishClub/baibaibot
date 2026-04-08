@@ -180,6 +180,24 @@ const docsToItemPie = docs => {
   return topNWithOther(m, 15)
 }
 
+const rankItemsByShare = docs => {
+  const m = new Map()
+  for (const doc of docs) {
+    const it = doc.item_name && String(doc.item_name).trim() ? String(doc.item_name).trim() : '（无名称）'
+    m.set(it, (m.get(it) || 0) + 1)
+  }
+  const total = [...m.values()].reduce((s, v) => s + v, 0)
+  return [...m.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 30)
+    .map(([name, count], i) => ({
+      rank: i + 1,
+      name,
+      count,
+      pct: total > 0 ? (100 * count) / total : 0
+    }))
+}
+
 const top10CharsFromDocs = docs => {
   const m = new Map()
   for (const doc of docs) {
@@ -321,12 +339,18 @@ const buildPayload = async (db, start, end, keyword) => {
   if (poolYlx.length || poolYate.length) {
     const topYlx = poolYlx.length ? top10CharsFromDocs(poolYlx) : []
     const topYate = poolYate.length ? top10CharsFromDocs(poolYate) : []
+    const itemRankYlx = poolYlx.length ? rankItemsByShare(poolYlx) : []
+    const itemRankYate = poolYate.length ? rankItemsByShare(poolYate) : []
     pool = {
       poolName: kw,
       pieYlx: poolYlx.length ? docsToItemPie(poolYlx) : null,
       pieYate: poolYate.length ? docsToItemPie(poolYate) : null,
+      itemRankYlx,
+      itemRankYate,
       topYlx,
       topYate,
+      showItemRankYlx: itemRankYlx.length > 0,
+      showItemRankYate: itemRankYate.length > 0,
       showRankYlx: topYlx.length > 0,
       showRankYate: topYate.length > 0
     }
@@ -635,6 +659,16 @@ const renderStatsImage = async (payload, outputPath) => {
           .join('')}</ol>`
       : ''
 
+  const itemShareRankList = list =>
+    list.length
+      ? `<ol class="rank">${list
+          .map(
+            x =>
+              `<li><span>${escHtml(x.name)}</span><span class="cnt">${x.count} 次 · ${x.pct.toFixed(2)}%</span></li>`
+          )
+          .join('')}</ol>`
+      : ''
+
   const poolBlock =
     payload.pool &&
     `<div class="block">
@@ -651,6 +685,29 @@ const renderStatsImage = async (payload, outputPath) => {
             : ''
         }
       </div>
+      ${
+        payload.pool.showItemRankYlx || payload.pool.showItemRankYate
+          ? `<h3 class="mid">物品占比 Rank30</h3>
+      <div class="top-split">
+        ${
+          payload.pool.showItemRankYlx
+            ? `<div class="top-col">
+          <div class="sub-title">伊鲁夏</div>
+          ${itemShareRankList(payload.pool.itemRankYlx)}
+        </div>`
+            : ''
+        }
+        ${
+          payload.pool.showItemRankYate
+            ? `<div class="top-col">
+          <div class="sub-title">亚特</div>
+          ${itemShareRankList(payload.pool.itemRankYate)}
+        </div>`
+            : ''
+        }
+      </div>`
+          : ''
+      }
       ${
         payload.pool.showRankYlx || payload.pool.showRankYate
           ? `<h3 class="mid">出货角色 Rank10</h3>
