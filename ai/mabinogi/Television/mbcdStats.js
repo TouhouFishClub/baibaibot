@@ -374,32 +374,57 @@ const buildPayload = async (db, start, end, keyword) => {
       return m
     }
 
-    const buildPerItem = async (col, docs) => {
-      const byItem = splitDocsByItem(docs)
-      const items = []
-      for (const [itemName, itemDocs] of byItem.entries()) {
-        const rows = await buildRows(col, itemDocs)
-        items.push({ itemName, rows, matched: itemDocs.length })
+    const buildPoolGroups = async (col, docs) => {
+      const byPool = new Map()
+      for (const doc of docs) {
+        const pool =
+          doc.draw_pool && String(doc.draw_pool).trim() ? String(doc.draw_pool).trim() : UNKNOWN_POOL_LABEL
+        const item =
+          doc.item_name && String(doc.item_name).trim() ? String(doc.item_name).trim() : '（无名称）'
+        if (!byPool.has(pool)) byPool.set(pool, new Map())
+        const itemMap = byPool.get(pool)
+        itemMap.set(item, (itemMap.get(item) || 0) + 1)
       }
-      items.sort((a, b) => b.matched - a.matched)
-      // 命中物品太多会撑爆图片，默认最多展示 8 个；其余只在“命中道具”列表里提示
-      return { items: items.slice(0, 8), hiddenCount: Math.max(0, items.length - 8) }
+
+      const groups = []
+      for (const [poolName, itemMap] of byPool.entries()) {
+        const poolTotal = await countDrawsInPool(col, start, end, poolName)
+        const rows = [...itemMap.entries()]
+          .map(([itemName, matched]) => {
+            const denom = poolTotal > 0 ? poolTotal : matched
+            const pct = denom ? (100 * matched) / denom : 0
+            return { itemName, matched, total: poolTotal, pct }
+          })
+          .sort((a, b) => b.pct - a.pct || b.matched - a.matched)
+        groups.push({
+          poolName,
+          poolMatched: rows.reduce((s, x) => s + x.matched, 0),
+          rows
+        })
+      }
+      groups.sort((a, b) => b.poolMatched - a.poolMatched)
+      // 蛋池过多时限制展示数量，避免图片过长
+      return { groups: groups.slice(0, 8), hiddenCount: Math.max(0, groups.length - 8) }
     }
 
-    const perItemYlx = itemYlx.length ? await buildPerItem(colYlx, itemYlx) : { items: [], hiddenCount: 0 }
-    const perItemYate = itemYate.length ? await buildPerItem(colYate, itemYate) : { items: [], hiddenCount: 0 }
+    const perPoolYlx = itemYlx.length
+      ? await buildPoolGroups(colYlx, itemYlx)
+      : { groups: [], hiddenCount: 0 }
+    const perPoolYate = itemYate.length
+      ? await buildPoolGroups(colYate, itemYate)
+      : { groups: [], hiddenCount: 0 }
 
     const topYlx = itemYlx.length ? top10CharsFromDocs(itemYlx) : []
     const topYate = itemYate.length ? top10CharsFromDocs(itemYate) : []
     item = {
       keyword: kw,
       matchedNames,
-      perItemYlx,
-      perItemYate,
+      perPoolYlx,
+      perPoolYate,
       topYlx,
       topYate,
-      showTableYlx: perItemYlx.items.length > 0,
-      showTableYate: perItemYate.items.length > 0,
+      showTableYlx: perPoolYlx.groups.length > 0,
+      showTableYate: perPoolYate.groups.length > 0,
       showRankYlx: topYlx.length > 0,
       showRankYate: topYate.length > 0
     }
@@ -517,24 +542,19 @@ const renderStatsImage = async (payload, outputPath) => {
       </div>
     </div>`
 
-  const formatItemRows = rows =>
-    rows.length
-      ? rows
-          .map(
-            r =>
-              `<tr><td>${escHtml(r.pool)}</td><td class="num">${r.matched}</td><td class="num">${r.total}</td><td class="num">${r.pct.toFixed(2)}%</td></tr>`
-          )
-          .join('')
-      : ''
-
-  const formatPerItemTables = perItem =>
-    (perItem.items || [])
+  const formatPerPoolTables = perPool =>
+    (perPool.groups || [])
       .map(
         x => `<div class="tbl-wrap" style="margin-top:10px;">
-          <div class="sub-title">物品：${escHtml(x.itemName)} <span class="tag">命中 ${x.matched} 次</span></div>
+          <div class="sub-title">蛋池：${escHtml(x.poolName)} <span class="tag">命中 ${x.poolMatched} 次</span></div>
           <table>
-            <thead><tr><th>蛋池</th><th>匹配</th><th>蛋池计</th><th>占比</th></tr></thead>
-            <tbody>${formatItemRows(x.rows)}</tbody>
+            <thead><tr><th>物品</th><th class="num">匹配</th><th class="num">蛋池计</th><th class="num">占比</th></tr></thead>
+            <tbody>${x.rows
+              .map(
+                r =>
+                  `<tr><td>${escHtml(r.itemName)}</td><td class="num">${r.matched}</td><td class="num">${r.total}</td><td class="num">${r.pct.toFixed(2)}%</td></tr>`
+              )
+              .join('')}</tbody>
           </table>
         </div>`
       )
@@ -551,20 +571,20 @@ const renderStatsImage = async (payload, outputPath) => {
         ${
           payload.item.showTableYlx
             ? `<div class="tbl-wrap">
-          <div class="sub-title">伊鲁夏 · 各物品在各蛋池占比（分别展示）${
-            payload.item.perItemYlx.hiddenCount ? ` <span class="tag">另有 ${payload.item.perItemYlx.hiddenCount} 个物品未展开</span>` : ''
+          <div class="sub-title">伊鲁夏 · 按蛋池分组展示匹配物品占比${
+            payload.item.perPoolYlx.hiddenCount ? ` <span class="tag">另有 ${payload.item.perPoolYlx.hiddenCount} 个蛋池未展开</span>` : ''
           }</div>
-          ${formatPerItemTables(payload.item.perItemYlx)}
+          ${formatPerPoolTables(payload.item.perPoolYlx)}
         </div>`
             : ''
         }
         ${
           payload.item.showTableYate
             ? `<div class="tbl-wrap">
-          <div class="sub-title">亚特 · 各物品在各蛋池占比（分别展示）${
-            payload.item.perItemYate.hiddenCount ? ` <span class="tag">另有 ${payload.item.perItemYate.hiddenCount} 个物品未展开</span>` : ''
+          <div class="sub-title">亚特 · 按蛋池分组展示匹配物品占比${
+            payload.item.perPoolYate.hiddenCount ? ` <span class="tag">另有 ${payload.item.perPoolYate.hiddenCount} 个蛋池未展开</span>` : ''
           }</div>
-          ${formatPerItemTables(payload.item.perItemYate)}
+          ${formatPerPoolTables(payload.item.perPoolYate)}
         </div>`
             : ''
         }
