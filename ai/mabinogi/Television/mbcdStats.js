@@ -70,7 +70,9 @@ const parseMbcdsArgs = raw => {
     .filter(Boolean)
 
   if (args.length === 0) {
-    return { error: '缺少参数。例：mbcds 关键词 / mbcds 2026-1-1 / mbcds 2026-1-1 2026-4-1' }
+    // 无参数：默认近 3 个月的“总览统计”
+    const { start, end } = rangeDefaultThreeMonths()
+    return { start, end, keyword: null }
   }
 
   if (args.length === 1) {
@@ -362,20 +364,42 @@ const buildPayload = async (db, start, end, keyword) => {
       return rows
     }
 
-    const rowsYlx = itemYlx.length ? await buildRows(colYlx, itemYlx) : []
-    const rowsYate = itemYate.length ? await buildRows(colYate, itemYate) : []
+    const splitDocsByItem = docs => {
+      const m = new Map()
+      for (const doc of docs) {
+        const it = doc.item_name && String(doc.item_name).trim() ? String(doc.item_name).trim() : '（无名称）'
+        if (!m.has(it)) m.set(it, [])
+        m.get(it).push(doc)
+      }
+      return m
+    }
+
+    const buildPerItem = async (col, docs) => {
+      const byItem = splitDocsByItem(docs)
+      const items = []
+      for (const [itemName, itemDocs] of byItem.entries()) {
+        const rows = await buildRows(col, itemDocs)
+        items.push({ itemName, rows, matched: itemDocs.length })
+      }
+      items.sort((a, b) => b.matched - a.matched)
+      // 命中物品太多会撑爆图片，默认最多展示 8 个；其余只在“命中道具”列表里提示
+      return { items: items.slice(0, 8), hiddenCount: Math.max(0, items.length - 8) }
+    }
+
+    const perItemYlx = itemYlx.length ? await buildPerItem(colYlx, itemYlx) : { items: [], hiddenCount: 0 }
+    const perItemYate = itemYate.length ? await buildPerItem(colYate, itemYate) : { items: [], hiddenCount: 0 }
 
     const topYlx = itemYlx.length ? top10CharsFromDocs(itemYlx) : []
     const topYate = itemYate.length ? top10CharsFromDocs(itemYate) : []
     item = {
       keyword: kw,
       matchedNames,
-      rowsYlx,
-      rowsYate,
+      perItemYlx,
+      perItemYate,
       topYlx,
       topYate,
-      showTableYlx: rowsYlx.length > 0,
-      showTableYate: rowsYate.length > 0,
+      showTableYlx: perItemYlx.items.length > 0,
+      showTableYate: perItemYate.items.length > 0,
       showRankYlx: topYlx.length > 0,
       showRankYate: topYate.length > 0
     }
@@ -503,6 +527,19 @@ const renderStatsImage = async (payload, outputPath) => {
           .join('')
       : ''
 
+  const formatPerItemTables = perItem =>
+    (perItem.items || [])
+      .map(
+        x => `<div class="tbl-wrap" style="margin-top:10px;">
+          <div class="sub-title">物品：${escHtml(x.itemName)} <span class="tag">命中 ${x.matched} 次</span></div>
+          <table>
+            <thead><tr><th>蛋池</th><th>匹配</th><th>蛋池计</th><th>占比</th></tr></thead>
+            <tbody>${formatItemRows(x.rows)}</tbody>
+          </table>
+        </div>`
+      )
+      .join('')
+
   const itemBlock =
     payload.item &&
     `<div class="block">
@@ -514,22 +551,20 @@ const renderStatsImage = async (payload, outputPath) => {
         ${
           payload.item.showTableYlx
             ? `<div class="tbl-wrap">
-          <div class="sub-title">伊鲁夏 · 各蛋池占比（匹配次数 / 该蛋池总次数）</div>
-          <table>
-            <thead><tr><th>蛋池</th><th>匹配</th><th>蛋池计</th><th>占比</th></tr></thead>
-            <tbody>${formatItemRows(payload.item.rowsYlx)}</tbody>
-          </table>
+          <div class="sub-title">伊鲁夏 · 各物品在各蛋池占比（分别展示）${
+            payload.item.perItemYlx.hiddenCount ? ` <span class="tag">另有 ${payload.item.perItemYlx.hiddenCount} 个物品未展开</span>` : ''
+          }</div>
+          ${formatPerItemTables(payload.item.perItemYlx)}
         </div>`
             : ''
         }
         ${
           payload.item.showTableYate
             ? `<div class="tbl-wrap">
-          <div class="sub-title">亚特 · 各蛋池占比</div>
-          <table>
-            <thead><tr><th>蛋池</th><th>匹配</th><th>蛋池计</th><th>占比</th></tr></thead>
-            <tbody>${formatItemRows(payload.item.rowsYate)}</tbody>
-          </table>
+          <div class="sub-title">亚特 · 各物品在各蛋池占比（分别展示）${
+            payload.item.perItemYate.hiddenCount ? ` <span class="tag">另有 ${payload.item.perItemYate.hiddenCount} 个物品未展开</span>` : ''
+          }</div>
+          ${formatPerItemTables(payload.item.perItemYate)}
         </div>`
             : ''
         }
