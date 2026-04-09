@@ -338,7 +338,7 @@ const buildPoolSRareMap = async (db, poolNames) => {
           }
         }
       },
-      { projection: { info: 1, _id: 0 } }
+      { projection: { info: 1 } }
     )
     .toArray()
 
