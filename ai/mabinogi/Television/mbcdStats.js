@@ -329,29 +329,39 @@ const buildPoolSRareMap = async (db, poolNames) => {
 
   const col = db.collection('cl_mabinogi_gacha_info')
   const docs = await col
-    .find(
+    .aggregate([
       {
-        info: {
-          $elemMatch: {
-            pool: { $in: uniqPools },
-            rareTag: 'S'
+        $match: {
+          info: {
+            $elemMatch: {
+              pool: { $in: uniqPools },
+              rareTag: 'S'
+            }
           }
         }
       },
-      { projection: { info: 1 } }
-    )
+      { $unwind: '$info' },
+      {
+        $match: {
+          'info.pool': { $in: uniqPools },
+          'info.rareTag': 'S'
+        }
+      },
+      {
+        $group: {
+          _id: '$info.pool',
+          rare: { $first: '$info.rare' }
+        }
+      }
+    ])
     .toArray()
 
   const poolSRareMap = new Map()
   for (const doc of docs) {
-    const info = Array.isArray(doc.info) ? doc.info : []
-    for (const it of info) {
-      if (!it || it.rareTag !== 'S') continue
-      const pool = it.pool && String(it.pool).trim()
-      if (!pool || !uniqPools.includes(pool) || poolSRareMap.has(pool)) continue
-      const rare = toFiniteNumber(it.rare)
-      if (rare > 0) poolSRareMap.set(pool, rare)
-    }
+    const pool = doc._id && String(doc._id).trim()
+    if (!pool || !uniqPools.includes(pool) || poolSRareMap.has(pool)) continue
+    const rare = toFiniteNumber(doc.rare)
+    if (rare > 0) poolSRareMap.set(pool, rare)
   }
   return poolSRareMap
 }
