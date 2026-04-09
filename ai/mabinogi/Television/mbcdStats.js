@@ -284,6 +284,78 @@ const aggregateSummaryFromDocs = (docs, start, end) => {
   }
 }
 
+const toFiniteNumber = x => {
+  const n = Number(x)
+  return Number.isFinite(n) ? n : 0
+}
+
+const buildRevenueRows = (docs, poolSRareMap) => {
+  const poolCount = new Map()
+  for (const doc of docs) {
+    const pool =
+      doc.draw_pool && String(doc.draw_pool).trim() ? String(doc.draw_pool).trim() : UNKNOWN_POOL_LABEL
+    poolCount.set(pool, (poolCount.get(pool) || 0) + 1)
+  }
+
+  const rows = []
+  for (const [poolName, count] of poolCount.entries()) {
+    if (poolName === UNKNOWN_POOL_LABEL) continue
+    const sRarePct = toFiniteNumber(poolSRareMap.get(poolName))
+    // 没有目标礼包的 S 级概率时直接忽略
+    if (!(sRarePct > 0)) continue
+    const estRevenue = sRarePct > 0 ? (count / sRarePct / 60) * 264 : 0
+    rows.push({
+      poolName,
+      count,
+      sRarePct,
+      estRevenue
+    })
+  }
+
+  rows.sort((a, b) => b.estRevenue - a.estRevenue || b.count - a.count)
+  return rows
+}
+
+const buildPoolSRareMap = async (db, poolNames) => {
+  const uniqPools = [
+    ...new Set(
+      poolNames
+        .map(x => String(x || '').trim())
+        .filter(Boolean)
+        .filter(x => x !== UNKNOWN_POOL_LABEL)
+    )
+  ]
+  if (!uniqPools.length) return new Map()
+
+  const col = db.collection('cl_mabinogi_gacha_info')
+  const docs = await col
+    .find(
+      {
+        info: {
+          $elemMatch: {
+            pool: { $in: uniqPools },
+            rareTag: 'S'
+          }
+        }
+      },
+      { projection: { info: 1, _id: 0 } }
+    )
+    .toArray()
+
+  const poolSRareMap = new Map()
+  for (const doc of docs) {
+    const info = Array.isArray(doc.info) ? doc.info : []
+    for (const it of info) {
+      if (!it || it.rareTag !== 'S') continue
+      const pool = it.pool && String(it.pool).trim()
+      if (!pool || !uniqPools.includes(pool) || poolSRareMap.has(pool)) continue
+      const rare = toFiniteNumber(it.rare)
+      if (rare > 0) poolSRareMap.set(pool, rare)
+    }
+  }
+  return poolSRareMap
+}
+
 const escapeJsonForHtml = obj =>
   JSON.stringify(obj)
     .replace(/</g, '\\u003c')
@@ -303,12 +375,22 @@ const buildPayload = async (db, start, end, keyword) => {
       colYlx.find(timeQ, fields).toArray(),
       colYate.find(timeQ, fields).toArray()
     ])
+    const allPools = [...docsYlx, ...docsYate].map(doc =>
+      doc.draw_pool && String(doc.draw_pool).trim() ? String(doc.draw_pool).trim() : UNKNOWN_POOL_LABEL
+    )
+    const poolSRareMap = await buildPoolSRareMap(db, allPools)
     return {
       rangeText: formatRangeText(start, end),
       keyword: '',
       summary: {
-        ylx: aggregateSummaryFromDocs(docsYlx, start, end),
-        yate: aggregateSummaryFromDocs(docsYate, start, end)
+        ylx: {
+          ...aggregateSummaryFromDocs(docsYlx, start, end),
+          revenueRows: buildRevenueRows(docsYlx, poolSRareMap)
+        },
+        yate: {
+          ...aggregateSummaryFromDocs(docsYate, start, end),
+          revenueRows: buildRevenueRows(docsYate, poolSRareMap)
+        }
       },
       character: null,
       pool: null,
@@ -516,6 +598,19 @@ const renderStatsImage = async (payload, outputPath) => {
           .join('')}</ol>`
       : ''
 
+  const summaryRevenueTable = rows =>
+    rows && rows.length
+      ? `<table>
+          <thead><tr><th>礼包名称</th><th class="num">出货数量</th><th class="num">S级百分比</th><th class="num">推测营收</th></tr></thead>
+          <tbody>${rows
+            .map(
+              r =>
+                `<tr><td>${escHtml(r.poolName)}</td><td class="num">${r.count}</td><td class="num">${r.sRarePct > 0 ? r.sRarePct.toFixed(2) + '%' : '—'}</td><td class="num revenue-gold">${r.estRevenue > 0 ? ('¥' + r.estRevenue.toFixed(2)) : '—'}</td></tr>`
+            )
+            .join('')}</tbody>
+        </table>`
+      : '<div class="sub">该时间段内未匹配到可用的 S 级概率数据。</div>'
+
   const summaryBlock =
     payload.summary &&
     `<div class="block">
@@ -532,6 +627,8 @@ const renderStatsImage = async (payload, outputPath) => {
           ${summaryRankList(payload.summary.ylx.topItems)}
           <h3 class="mid">每日出货人数（按蛋池）</h3>
           <div class="line-box"><canvas id="lineSummaryYlx"></canvas></div>
+          <h3 class="mid">蛋池收益估算（按营收排序）</h3>
+          ${summaryRevenueTable(payload.summary.ylx.revenueRows)}
         </div>
         <div class="tbl-wrap">
           <div class="sub-title">亚特 · 蛋池占比</div>
@@ -544,6 +641,8 @@ const renderStatsImage = async (payload, outputPath) => {
           ${summaryRankList(payload.summary.yate.topItems)}
           <h3 class="mid">每日出货人数（按蛋池）</h3>
           <div class="line-box"><canvas id="lineSummaryYate"></canvas></div>
+          <h3 class="mid">蛋池收益估算（按营收排序）</h3>
+          ${summaryRevenueTable(payload.summary.yate.revenueRows)}
         </div>
       </div>
     </div>`
@@ -821,6 +920,7 @@ const renderStatsImage = async (payload, outputPath) => {
     }
     th { color: #aeb8ca; font-weight: normal; }
     .num { text-align: right; font-variant-numeric: tabular-nums; color: #7eb8ff; }
+    .revenue-gold { color: #f2d27a; font-weight: bold; }
     .top-split { display: flex; gap: 14px; }
     .top-col { width: calc((100% - 14px) / 2); }
     ol.rank {
