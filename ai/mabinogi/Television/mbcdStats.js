@@ -530,7 +530,7 @@ const renderStatsImage = async (payload, outputPath) => {
           ${summaryRankList(payload.summary.ylx.topChars)}
           <h3 class="mid">出货物品 Rank10</h3>
           ${summaryRankList(payload.summary.ylx.topItems)}
-          <h3 class="mid">每日出货人数（按蛋池 + 总和）</h3>
+          <h3 class="mid">每日出货人数（按蛋池）</h3>
           <div class="line-box"><canvas id="lineSummaryYlx"></canvas></div>
         </div>
         <div class="tbl-wrap">
@@ -542,7 +542,7 @@ const renderStatsImage = async (payload, outputPath) => {
           ${summaryRankList(payload.summary.yate.topChars)}
           <h3 class="mid">出货物品 Rank10</h3>
           ${summaryRankList(payload.summary.yate.topItems)}
-          <h3 class="mid">每日出货人数（按蛋池 + 总和）</h3>
+          <h3 class="mid">每日出货人数（按蛋池）</h3>
           <div class="line-box"><canvas id="lineSummaryYate"></canvas></div>
         </div>
       </div>
@@ -920,16 +920,6 @@ const renderStatsImage = async (payload, outputPath) => {
       });
       var datasets = [];
       var colorIdx = 0;
-      // 总和优先
-      datasets.push({
-        label: '总和',
-        data: line.totalSeries || [],
-        borderColor: '#41B3A3',
-        backgroundColor: 'rgba(65,179,163,0.10)',
-        tension: 0.25,
-        fill: false,
-        pointRadius: 0
-      });
       var series = line.series || {};
       Object.keys(series).forEach(function (k) {
         var c = buildPieColors(100, [])[colorIdx % piePalette.length];
