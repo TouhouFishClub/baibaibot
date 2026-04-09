@@ -303,7 +303,7 @@ const buildRevenueRows = (docs, poolSRareMap) => {
     const sRarePct = toFiniteNumber(poolSRareMap.get(poolName))
     // 没有目标礼包的 S 级概率时直接忽略
     if (!(sRarePct > 0)) continue
-    const estRevenue = sRarePct > 0 ? (count / sRarePct / 60) * 264 : 0
+    const estRevenue = sRarePct > 0 ? (count / (sRarePct / 100) / 60) * 264 : 0
     rows.push({
       poolName,
       count,
