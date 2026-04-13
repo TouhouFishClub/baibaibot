@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "description": "强化药水规则：普通100%成功+1点；进阶需已消耗强化次数≥5，成功时+1~2点；中级需≥8，成功时+1~3点。有成功率的药水失败也会消耗一次强化次数。",
+  "successRateByStatCategory": {
+    "move_speed": { "advanced": 0.15, "intermediate": 0.1, "label": "移动速度" },
+    "extra_damage": { "advanced": 0.15, "intermediate": 0.1, "label": "额外伤害" },
+    "crit_damage": { "advanced": 0.25, "intermediate": 0.15, "label": "暴击伤害" },
+    "music_bonus": { "advanced": 0.25, "intermediate": 0.15, "label": "音乐技能增益效果" },
+    "max_damage": { "advanced": 0.4, "intermediate": 0.25, "label": "最大伤害" },
+    "magic_attack": { "advanced": 0.4, "intermediate": 0.25, "label": "魔法攻击力" },
+    "default_other": { "advanced": 0.55, "intermediate": 0.4, "label": "其他能力值（智力/意志/力量/敏捷/生命等）" }
+  },
+  "tiers": {
+    "normal": {
+      "id": "normal",
+      "nameSuffix": "强化药水",
+      "minPriorEnhancements": 0,
+      "successRate": 1,
+      "gainOnSuccess": { "min": 1, "max": 1 },
+      "note": "100%成功，每次强化1点"
+    },
+    "advanced": {
+      "id": "advanced",
+      "nameSuffix": "进阶强化药水",
+      "minPriorEnhancements": 5,
+      "gainOnSuccess": { "min": 1, "max": 2 },
+      "note": "图腾已消耗强化次数≥5次后才可使用；成功时随机+1~2点"
+    },
+    "intermediate": {
+      "id": "intermediate",
+      "nameSuffix": "中级强化药水",
+      "minPriorEnhancements": 8,
+      "gainOnSuccess": { "min": 1, "max": 3 },
+      "note": "图腾已消耗强化次数≥8次后才可使用；成功时随机+1~3点"
+    }
+  },
+  "statToRateCategory": {
+    "intelligence": "default_other",
+    "will": "default_other",
+    "magic_attack": "magic_attack",
+    "extra_damage": "extra_damage",
+    "move_speed": "move_speed",
+    "strength": "default_other",
+    "dexterity": "default_other",
+    "max_damage": "max_damage",
+    "crit_damage": "crit_damage",
+    "hp": "default_other",
+    "music_bonus": "music_bonus"
+  },
+  "potionsByStat": [
+    {
+      "statKey": "intelligence",
+      "statName": "智力",
+      "potions": [
+        { "tier": "normal", "displayName": "智力强化药水" },
+        { "tier": "advanced", "displayName": "智力进阶强化药水" },
+        { "tier": "intermediate", "displayName": "智力中级强化药水" }
+      ]
+    },
+    {
+      "statKey": "will",
+      "statName": "意志",
+      "potions": [
+        { "tier": "normal", "displayName": "意志强化药水" },
+        { "tier": "advanced", "displayName": "意志进阶强化药水" },
+        { "tier": "intermediate", "displayName": "意志中级强化药水" }
+      ]
+    },
+    {
+      "statKey": "magic_attack",
+      "statName": "魔法攻击力",
+      "potions": [
+        { "tier": "normal", "displayName": "魔法攻击力强化药水" },
+        { "tier": "advanced", "displayName": "魔法攻击力进阶强化药水" },
+        { "tier": "intermediate", "displayName": "魔法攻击力中级强化药水" }
+      ]
+    },
+    {
+      "statKey": "extra_damage",
+      "statName": "额外伤害",
+      "potions": [
+        { "tier": "normal", "displayName": "额外伤害强化药水" },
+        { "tier": "advanced", "displayName": "额外伤害进阶强化药水" },
+        { "tier": "intermediate", "displayName": "额外伤害中级强化药水" }
+      ]
+    },
+    {
+      "statKey": "move_speed",
+      "statName": "移动速度",
+      "potions": [
+        { "tier": "normal", "displayName": "移动速度强化药水" },
+        { "tier": "advanced", "displayName": "移动速度进阶强化药水" },
+        { "tier": "intermediate", "displayName": "移动速度中级强化药水" }
+      ]
+    },
+    {
+      "statKey": "strength",
+      "statName": "力量",
+      "potions": [
+        { "tier": "normal", "displayName": "力量强化药水" },
+        { "tier": "advanced", "displayName": "力量进阶强化药水" },
+        { "tier": "intermediate", "displayName": "力量中级强化药水" }
+      ]
+    },
+    {
+      "statKey": "dexterity",
+      "statName": "敏捷",
+      "potions": [
+        { "tier": "normal", "displayName": "敏捷强化药水" },
+        { "tier": "advanced", "displayName": "敏捷进阶强化药水" },
+        { "tier": "intermediate", "displayName": "敏捷中级强化药水" }
+      ]
+    },
+    {
+      "statKey": "max_damage",
+      "statName": "最大伤害",
+      "potions": [
+        { "tier": "normal", "displayName": "最大伤害强化药水" },
+        { "tier": "advanced", "displayName": "最大伤害进阶强化药水" },
+        { "tier": "intermediate", "displayName": "最大伤害中级强化药水" }
+      ]
+    },
+    {
+      "statKey": "crit_damage",
+      "statName": "暴击伤害",
+      "potions": [
+        { "tier": "normal", "displayName": "暴击伤害强化药水" },
+        { "tier": "advanced", "displayName": "暴击伤害进阶强化药水" },
+        { "tier": "intermediate", "displayName": "暴击伤害中级强化药水" }
+      ]
+    },
+    {
+      "statKey": "hp",
+      "statName": "生命值",
+      "potions": [
+        { "tier": "normal", "displayName": "生命值强化药水" },
+        { "tier": "advanced", "displayName": "生命值进阶强化药水" },
+        { "tier": "intermediate", "displayName": "生命值中级强化药水" }
+      ]
+    },
+    {
+      "statKey": "music_bonus",
+      "statName": "音乐技能增益效果",
+      "potions": [
+        { "tier": "normal", "displayName": "音乐技能增益效果强化药水" },
+        { "tier": "advanced", "displayName": "音乐技能增益效果进阶强化药水" },
+        { "tier": "intermediate", "displayName": "音乐技能增益效果中级强化药水" }
+      ]
+    }
+  ]
+}
