@@ -8,6 +8,40 @@ const help = callback => {
   callback('这是帮助')
 }
 
+const BUJUAN_LIST = [
+  '暮色',
+  '无穷的',
+  '一往无前的',
+  '醒来的',
+  '黑暗的',
+  '破坏性的',
+  '威胁的',
+  '传说中的',
+  '无尽的',
+  '解放的',
+  '决定性的',
+  '被遗忘的',
+  '坚毅的',
+  '幽暗的',
+  '被束缚的',
+  '复调',
+  '果实',
+  '斗志',
+  '重现',
+  '守卫者',
+  '束缚',
+  '灵魂',
+  '强击',
+  '空间',
+  '斗士',
+  '遗产',
+  '残骸',
+  '节奏',
+  '暴走',
+  '塑像',
+  '残影'
+]
+
 const createSearchRegexp = async filterStr => {
   const scrolls = [
     '渴望的',
@@ -48,6 +82,11 @@ const createSearchRegexp = async filterStr => {
   }
 }
 
+const createBujuanRegexp = () => {
+  // 用于 reward 末尾匹配卷轴名
+  return BUJUAN_LIST.map(x => `${partToRegex(x)}$`).join('|')
+}
+
 const formatTime = ts => {
   const d = new Date(ts)
   return `${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} ${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}`
@@ -86,12 +125,13 @@ const buildMongoQuery = async filter => {
       dungeon_name: '格伦贝尔纳'
     }
 
-    if (filter.includes('新卷')) {
-      const regStr = await createSearchRegexp('新卷')
-      query.reward = new RegExp(regStr, 'i')
-    }
     if (filter.includes('+1卷')) {
       query.reward = new RegExp('\\+1咒语书', 'i')
+    } else if (filter.includes('布卷')) {
+      query.reward = new RegExp(createBujuanRegexp(), 'i')
+    } else if (filter.includes('雪卷')) {
+      const regStr = await createSearchRegexp('雪卷')
+      query.reward = new RegExp(regStr, 'i')
     }
 
     return query
@@ -99,7 +139,10 @@ const buildMongoQuery = async filter => {
 
   // 没有分隔符：同时搜 reward、character_name、dungeon_name
   if (filter.indexOf('-') === -1) {
-    if (/^新.*卷$/.test(filter)) {
+    if (filter === '布卷') {
+      return { reward: new RegExp(createBujuanRegexp(), 'i') }
+    }
+    if (/^雪.*卷$/.test(filter)) {
       const regStr = await createSearchRegexp(filter)
       return { reward: new RegExp(regStr, 'i') }
     }
@@ -121,7 +164,9 @@ const buildMongoQuery = async filter => {
   for (let i = 0; i < sp.length; i++) {
     const part = sp[i]
     if (part && fields[i]) {
-      if (i === 0 && /^新.*卷$/.test(part)) {
+      if (i === 0 && part === '布卷') {
+        conditions.push({ reward: new RegExp(createBujuanRegexp(), 'i') })
+      } else if (i === 0 && /^雪.*卷$/.test(part)) {
         const regStr = await createSearchRegexp(part)
         conditions.push({ reward: new RegExp(regStr, 'i') })
       } else {
@@ -227,6 +272,10 @@ const mabiTelevision = async (content, qq, callback) => {
   callback(imgMsg)
 }
 
+const { mabiTelevisionStats } = require('./mbtvStats')
+
 module.exports = {
-  mabiTelevision
+  mabiTelevision,
+  mabiTelevisionStats,
+  buildMongoQuery
 }

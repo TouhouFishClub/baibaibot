@@ -166,9 +166,9 @@ const {AIdraw,yishijie,generageImageXL} = require('./ai/games/card2/AIDraw')
 const {BA_Schedule} = require('./ai/BlueArchive/schedule')
 const {BaRaidRanking} = require('./ai/BlueArchive/RaidRanking')
 // const {autoVoteSend} = require('./ai/mabinogi/2023_vote_rank')
-const {mabiTelevision} = require('./ai/mabinogi/Television/newMbtv')
-const {mabiGachaTv} = require('./ai/mabinogi/Television/newMbcd')
-const {mabiCraftTv} = require('./ai/mabinogi/Television/newMbzz')
+const {mabiTelevision, mabiTelevisionStats} = require('./ai/mabinogi/Television/newMbtv')
+const {mabiGachaTv, mabiMbcdStats} = require('./ai/mabinogi/Television/newMbcd')
+const {mabiCraftTv, mabiCraftTvStats} = require('./ai/mabinogi/Television/newMbzz')
 
 const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
 const { mabiBroadcast } = require('./ai/mabinogi/Television/broadcast')
@@ -1883,6 +1883,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     op(from, name, con.substring(4).trim(), 'image', callback);
     return
   }
+  if(con.length >= 5 && con.toLowerCase().startsWith('mbtvs')) {
+    mabiTelevisionStats(con.substring(5).trim(), from, callback).catch(err => { console.log(err) });
+    return
+  }
   if(fie4 == 'mbtv') {
     // if(from != 799018865)
     //   if(Date.now() < new Date('2025-09-15').getTime())
@@ -1891,12 +1895,22 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     mabiTelevision(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
     return
   }
+  if(con.length >= 5 && con.toLowerCase().startsWith('mbcds')) {
+    mabiMbcdStats(con.substring(5).trim(), from, callback).catch(err => {
+      console.log(err)
+    })
+    return
+  }
   if(fie4 == 'mbcd') {
     // if(from != 799018865)
     //   if(Date.now() < new Date('2025-09-15').getTime())
     //     callback('因数据源不再可信，mbtv及mbcd现已下线')
     //   return
     mabiGachaTv(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
+    return
+  }
+  if(con.length >= 5 && con.toLowerCase().startsWith('mbzzs')) {
+    mabiCraftTvStats(con.substring(5).trim(), from, callback).catch(err => { console.log(err) })
     return
   }
   if(fie4 == 'mbzz') {
@@ -1914,7 +1928,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(fie == 'opt' && fi != 'opts'){
-    op(from, name, con.substring(3).trim(), 'html', callback);
+    op(from, name, con.substring(3).trim(), 'image', callback);
     // autoVoteSend(groupid, callback)
     return;
   }

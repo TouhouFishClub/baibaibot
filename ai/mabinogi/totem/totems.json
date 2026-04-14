@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "description": "图腾模型、最大强化次数与各能力值强化上限（仅录入游戏内存在的模型）",
+  "totems": [
+    {
+      "id": "lowen_advanced",
+      "name": "萝温高级模型",
+      "maxEnhancements": 10,
+      "stats": [
+        { "key": "intelligence", "name": "智力", "maxPoints": 7 },
+        { "key": "will", "name": "意志", "maxPoints": 7 },
+        { "key": "magic_attack", "name": "魔法攻击力", "maxPoints": 4 },
+        { "key": "extra_damage", "name": "额外伤害", "maxPoints": 1 },
+        { "key": "move_speed", "name": "移动速度", "maxPoints": 1 }
+      ]
+    },
+    {
+      "id": "roshinet_advanced",
+      "name": "罗希内高级模型",
+      "maxEnhancements": 10,
+      "stats": [
+        { "key": "strength", "name": "力量", "maxPoints": 7 },
+        { "key": "dexterity", "name": "敏捷", "maxPoints": 7 },
+        { "key": "max_damage", "name": "最大伤害", "maxPoints": 4 },
+        { "key": "crit_damage", "name": "暴击伤害", "maxPoints": 2 },
+        { "key": "move_speed", "name": "移动速度", "maxPoints": 1 }
+      ]
+    },
+    {
+      "id": "romantic_farm_daisy_advanced",
+      "name": "浪漫农场雏菊高级模型",
+      "maxEnhancements": 8,
+      "stats": [
+        { "key": "dexterity", "name": "敏捷", "maxPoints": 6 },
+        { "key": "hp", "name": "生命值", "maxPoints": 8 },
+        { "key": "max_damage", "name": "最大伤害", "maxPoints": 3 },
+        { "key": "music_bonus", "name": "音乐技能增益效果", "maxPoints": 2 },
+        { "key": "move_speed", "name": "移动速度", "maxPoints": 1 }
+      ]
+    }
+  ]
+}

@@ -62,6 +62,8 @@ const buildMongoQuery = (filter) => {
   return { $and: conditions }
 }
 
+const { mabiMbcdStats } = require('./mbcdStats')
+
 const mabiGachaTv = async (content, qq, callback) => {
   const client = await getClient()
   const db = client.db('db_bot')
@@ -156,6 +158,8 @@ const mabiGachaTv = async (content, qq, callback) => {
 }
 
 module.exports = {
-  mabiGachaTv
+  mabiGachaTv,
+  mabiMbcdStats,
+  buildMongoQuery
 }
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="740" viewBox="0 0 860 740">
+<defs>
+  <marker id="ah" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0,0 10,3.5 0,7" fill="#999"/></marker>
+  <filter id="sh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.08"/></filter>
+</defs>
+<rect width="100%" height="100%" fill="#faf6ed"/>
+<rect x="15" y="80" width="250" height="188" rx="10" fill="#f5efe0" stroke="#c9a84c" stroke-width="1.5" filter="url(#sh)"/>
+<text x="140" y="102" text-anchor="middle" fill="#8b6914" font-size="14" font-weight="700" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">浪漫农场雏菊高级模型</text>
+<text x="25" y="124" fill="#666" font-size="11" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">固定能力值：</text>
+<text x="29" y="140" fill="#333" font-size="12" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">体力+10</text>
+<text x="25" y="160" fill="#666" font-size="11" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">强化能力值：</text>
+<text x="29" y="178" fill="#333" font-size="12" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">敏捷(0/6)</text>
+<text x="29" y="196" fill="#333" font-size="12" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">生命值(0/8)</text>
+<text x="29" y="214" fill="#333" font-size="12" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">最大伤害(0/3)</text>
+<text x="29" y="232" fill="#333" font-size="12" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">音乐技能增益效果(0/2)</text>
+<text x="29" y="250" fill="#333" font-size="12" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">移动速度(0/1)</text>
+<rect x="550" y="17" width="80" height="36" rx="18" fill="#fef3cd" stroke="#d4a827" stroke-width="1.5" filter="url(#sh)"/>
+<text x="590" y="40" text-anchor="middle" fill="#8b6914" font-size="15" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">开始</text>
+<polyline points="590,53 590,75" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="425" y="83" width="330" height="64" rx="8" fill="#d4e6f1" stroke="#5b9bd5" stroke-width="1.5" filter="url(#sh)"/>
+<text x="590" y="103" text-anchor="middle" fill="#333" font-size="13" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">使用敏捷/生命值普通药水强化至5次</text>
+<text x="590" y="120" text-anchor="middle" fill="#333" font-size="13" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">（尽量用生命值药水，因为敏捷药水</text>
+<text x="590" y="137" text-anchor="middle" fill="#333" font-size="13" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">罗西内也需要）</text>
+<polyline points="590,147 590,175" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="425" y="178" width="330" height="44" rx="8" fill="#d4e6f1" stroke="#5b9bd5" stroke-width="1.5" filter="url(#sh)"/>
+<text x="590" y="205" text-anchor="middle" fill="#333" font-size="13" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">使用音乐技能进阶药水强化第6次</text>
+<text x="639" y="174" text-anchor="start" fill="#888" font-size="10" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">成功率 25%</text>
+<polyline points="590,222 590,255" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#ah)"/>
+<polygon points="590,256 725,295 590,334 455,295" fill="#fce4e4" stroke="#cc6666" stroke-width="1.5" filter="url(#sh)"/>
+<text x="590" y="299" text-anchor="middle" fill="#b33" font-size="12" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">是否成功并且为buff2</text>
+<polyline points="590,334 590,375" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="598" y="333" text-anchor="start" fill="#c33" font-size="12" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">是 12.5%</text>
+<polyline points="725,295 765,295" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="730" y="285" text-anchor="start" fill="#c33" font-size="12" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">否 87.5%</text>
+<rect x="775" y="280" width="60" height="30" rx="15" fill="#fef3cd" stroke="#d4a827" stroke-width="1.5" filter="url(#sh)"/>
+<text x="805" y="300" text-anchor="middle" fill="#8b6914" font-size="15" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">结束</text>
+<rect x="425" y="378" width="330" height="44" rx="8" fill="#d4e6f1" stroke="#5b9bd5" stroke-width="1.5" filter="url(#sh)"/>
+<text x="590" y="405" text-anchor="middle" fill="#333" font-size="13" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">使用音乐技能进阶药水强化第7次</text>
+<text x="639" y="374" text-anchor="start" fill="#888" font-size="10" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">成功率 25%</text>
+<polyline points="590,422 590,455" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="425" y="458" width="330" height="44" rx="8" fill="#d4e6f1" stroke="#5b9bd5" stroke-width="1.5" filter="url(#sh)"/>
+<text x="590" y="485" text-anchor="middle" fill="#333" font-size="13" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">使用移动速度进阶药水强化第8次</text>
+<text x="639" y="454" text-anchor="start" fill="#888" font-size="10" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">成功率 15%</text>
+<polyline points="590,502 590,545" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="550" y="547" width="80" height="36" rx="18" fill="#fef3cd" stroke="#d4a827" stroke-width="1.5" filter="url(#sh)"/>
+<text x="590" y="570" text-anchor="middle" fill="#8b6914" font-size="15" font-weight="600" font-family="Microsoft YaHei,PingFang SC,SimHei,sans-serif">结束</text>
+</svg>
