@@ -118,7 +118,7 @@ const buildMongoQuery = async filter => {
 
   // 芙兰队特殊查询
   if (filter.startsWith('芙兰队')) {
-    const namePatterns = ['Fl', '莉丽', '娜兹', 'Sa', '永夜', '温雯', '圣祐', '幽鬼']
+    const namePatterns = ['Fl', '莉丽', '娜兹', 'Sa', '永夜', '温雯', '圣祐', '滺祈', '幽鬼']
     const query = {
       character_name: new RegExp(namePatterns.join('|'), 'i'),
       channel: 10,
