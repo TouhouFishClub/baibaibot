@@ -190,7 +190,10 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
       pageErrors: [],
       consoleErrors: [],
       pageState: null,
-      cookies: []
+      cookies: [],
+      pageMeta: null,
+      htmlPreview: '',
+      scriptPreview: []
     }
   }
 
@@ -336,6 +339,42 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
     await sleep(3000)
     result.debug.timeline.push(`[${Date.now()}] wait 3s done`)
 
+    result.debug.pageMeta = await page.evaluate(() => ({
+      url: location.href,
+      title: document.title,
+      readyState: document.readyState
+    }))
+
+    // 等关键脚本把变量挂上来（代理慢时可能比 DOMContentLoaded 慢很多）
+    try {
+      await page.waitForFunction(() => {
+        const hasCsrf = !!document.querySelector('#csrf_token')
+        const hasUpdateCall = typeof window.update_call === 'function'
+        const hasSiteKey = !!window.__recaptchaSiteKey
+        return hasCsrf || hasUpdateCall || hasSiteKey
+      }, { timeout: 25000 })
+      result.debug.timeline.push(`[${Date.now()}] waitForFunction key-vars done`)
+    } catch (e) {
+      result.debug.timeline.push(`[${Date.now()}] waitForFunction key-vars timeout: ${e?.message || e}`)
+    }
+
+    // 如果 update_call 仍不存在，尝试主动补载 commerce.js
+    const hasUpdateCallNow = await page.evaluate(() => typeof window.update_call === 'function')
+    if (!hasUpdateCallNow) {
+      await page.evaluate(() => {
+        const appendScript = src => new Promise(resolve => {
+          const s = document.createElement('script')
+          s.src = src
+          s.onload = () => resolve(true)
+          s.onerror = () => resolve(false)
+          document.head.appendChild(s)
+        })
+        return appendScript('https://lute.fantazm.net/js/commerce.js')
+      })
+      await sleep(2500)
+      result.debug.timeline.push(`[${Date.now()}] inject commerce.js attempted`)
+    }
+
     result.debug.pageState = await page.evaluate(() => {
       const csrf = document.querySelector('#csrf_token')?.value || ''
       const hasGrecaptcha = typeof grecaptcha !== 'undefined'
@@ -345,6 +384,16 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
       return { csrf, hasGrecaptcha, siteKey, hasUpdateCall, tableRows }
     })
     result.debug.timeline.push(`[${Date.now()}] pageState collected`)
+
+    const extraDebug = await page.evaluate(() => {
+      const bodyText = (document.body?.innerText || '').trim().slice(0, 600)
+      const scripts = Array.from(document.scripts || [])
+        .map(s => s.src || '[inline]')
+        .slice(0, 20)
+      return { bodyText, scripts }
+    })
+    result.debug.htmlPreview = extraDebug.bodyText || ''
+    result.debug.scriptPreview = extraDebug.scripts || []
 
     // 主动触发一次页面方法，避免某些情况下 ready 回调没有抓到
     await page.evaluate(() => {
@@ -428,6 +477,11 @@ const buildCaptureText = capture => {
     lines.push(`debug.pageErrors: ${(debug.pageErrors || []).length}`)
     lines.push(`debug.consoleErrors: ${(debug.consoleErrors || []).length}`)
     if (debug.pageState) lines.push(`debug.pageState: ${JSON.stringify(debug.pageState)}`)
+    if (debug.pageMeta) lines.push(`debug.pageMeta: ${JSON.stringify(debug.pageMeta)}`)
+    if (Array.isArray(debug.scriptPreview) && debug.scriptPreview.length) {
+      lines.push(`debug.scriptPreview: ${JSON.stringify(debug.scriptPreview)}`)
+    }
+    if (debug.htmlPreview) lines.push(`debug.htmlPreview: ${debug.htmlPreview}`)
     if (Array.isArray(debug.cookies) && debug.cookies.length) lines.push(`debug.cookies: ${debug.cookies.join('; ')}`)
     if (Array.isArray(debug.timeline) && debug.timeline.length) {
       lines.push('debug.timeline:')
