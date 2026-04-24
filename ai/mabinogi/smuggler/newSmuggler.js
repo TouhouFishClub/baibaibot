@@ -165,7 +165,7 @@ const fetchLuteSmug2 = async ({ csrfToken, recaptchaToken, cookie = '', tzOffset
   }
 }
 
-const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
+const fetchLuteSmug2WithBrowser = async (attemptIndex = 0, bootstrapHints = null) => {
   let puppeteer = null
   let browser = null
   const activeProxy = LUTE_PPTR_PROXY_CHAIN[Math.max(0, Math.min(attemptIndex, LUTE_PPTR_PROXY_CHAIN.length - 1))]
@@ -193,7 +193,11 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
       cookies: [],
       pageMeta: null,
       htmlPreview: '',
-      scriptPreview: []
+      scriptPreview: [],
+      bootstrapHints: {
+        csrf: bootstrapHints?.csrf || '',
+        siteKey: bootstrapHints?.siteKey || ''
+      }
     }
   }
 
@@ -375,6 +379,30 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
       result.debug.timeline.push(`[${Date.now()}] inject commerce.js attempted`)
     }
 
+    // 页面缺字段时，使用 bootstrap 里拿到的值兜底注入
+    if (bootstrapHints?.siteKey || bootstrapHints?.csrf) {
+      await page.evaluate(hints => {
+        if (hints.siteKey && !window.__recaptchaSiteKey) {
+          window.__recaptchaSiteKey = hints.siteKey
+        }
+        if (hints.csrf) {
+          let el = document.querySelector('#csrf_token')
+          if (!el) {
+            el = document.createElement('input')
+            el.type = 'hidden'
+            el.id = 'csrf_token'
+            el.name = 'csrf_token'
+            document.body.appendChild(el)
+          }
+          if (!el.value) el.value = hints.csrf
+        }
+      }, {
+        siteKey: bootstrapHints?.siteKey || '',
+        csrf: bootstrapHints?.csrf || ''
+      })
+      result.debug.timeline.push(`[${Date.now()}] bootstrap hints injected`)
+    }
+
     // 如果 grecaptcha 未加载，主动注入 Google reCAPTCHA 脚本
     const hasRecaptchaNow = await page.evaluate(() => typeof window.grecaptcha !== 'undefined')
     if (!hasRecaptchaNow) {
@@ -547,7 +575,7 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
       errMsg.includes('Navigation timeout')
     )
     if (shouldRetry) {
-      const next = await fetchLuteSmug2WithBrowser(attemptIndex + 1)
+      const next = await fetchLuteSmug2WithBrowser(attemptIndex + 1, bootstrapHints)
       next.debug = next.debug || {}
       next.debug.timeline = [
         `[${Date.now()}] retry from ${activeProxy || 'DIRECT'} because: ${errMsg}`,
@@ -584,6 +612,10 @@ const buildCaptureText = capture => {
       lines.push(`debug.proxy.http: ${debug.proxy.http || '<empty>'}`)
       lines.push(`debug.proxy.socks: ${debug.proxy.socks || '<empty>'}`)
       lines.push(`debug.proxy.selected: ${debug.proxy.selected || '<empty>'}`)
+    }
+    if (debug.bootstrapHints) {
+      lines.push(`debug.bootstrapHints.siteKey: ${debug.bootstrapHints.siteKey || '<empty>'}`)
+      lines.push(`debug.bootstrapHints.csrf: ${debug.bootstrapHints.csrf || '<empty>'}`)
     }
     lines.push(`debug.smug2.requests: ${debug.smug2Requests?.length || 0}`)
     lines.push(`debug.smug2.responses: ${debug.smug2Responses?.length || 0}`)
@@ -942,7 +974,7 @@ const mabiSuperSmuggler = async callback => {
     let response = null
     let preDebug = null
     try {
-      response = await fetchLuteSmug2WithBrowser()
+      response = await fetchLuteSmug2WithBrowser(0, bootstrap)
       preDebug = {
         source: response.source,
         error: '',
