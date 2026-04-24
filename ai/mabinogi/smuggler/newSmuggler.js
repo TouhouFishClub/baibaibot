@@ -153,7 +153,17 @@ const fetchLuteSmug2WithBrowser = async () => {
     statusCode: 0,
     headers: {},
     raw: '',
-    data: null
+    data: null,
+    debug: {
+      timeline: [],
+      smug2Requests: [],
+      smug2Responses: [],
+      recaptchaRequests: [],
+      pageErrors: [],
+      consoleErrors: [],
+      pageState: null,
+      cookies: []
+    }
   }
 
   try {
@@ -180,34 +190,96 @@ const fetchLuteSmug2WithBrowser = async () => {
 
     const page = await browser.newPage()
     await page.setUserAgent(LUTE_UA)
+    result.debug.timeline.push(`[${Date.now()}] browser+page ready`)
+
+    page.on('pageerror', err => {
+      result.debug.pageErrors.push(err?.message || String(err))
+    })
+    page.on('console', msg => {
+      if (msg.type() === 'error') {
+        result.debug.consoleErrors.push(msg.text())
+      }
+    })
 
     let captured = false
     page.on('request', req => {
-      if (req.url().includes('/ajax/smug2')) {
-        result.requestBody = req.postData() || ''
+      const url = req.url()
+      if (url.includes('/ajax/smug2')) {
+        const postData = req.postData() || ''
+        result.requestBody = postData
+        result.debug.smug2Requests.push({
+          method: req.method(),
+          url,
+          postData,
+          headers: req.headers()
+        })
+      }
+      if (url.includes('recaptcha') || url.includes('google.com/recaptcha') || url.includes('gstatic.com/recaptcha')) {
+        result.debug.recaptchaRequests.push({
+          method: req.method(),
+          url
+        })
       }
     })
 
     page.on('response', async res => {
-      if (!res.url().includes('/ajax/smug2') || captured) return
-      captured = true
-      result.statusCode = res.status()
-      result.headers = res.headers() || {}
-      try {
-        result.raw = await res.text()
-      } catch {
-        result.raw = ''
+      const url = res.url()
+      if (url.includes('/ajax/smug2')) {
+        let body = ''
+        try { body = await res.text() } catch { body = '' }
+
+        const record = {
+          status: res.status(),
+          url,
+          headers: res.headers() || {},
+          bodyLen: body.length,
+          bodyPreview: body.slice(0, 400)
+        }
+        result.debug.smug2Responses.push(record)
+
+        if (!captured) {
+          captured = true
+          result.statusCode = res.status()
+          result.headers = res.headers() || {}
+          result.raw = body
+        }
       }
     })
 
     await page.goto(LUTE_COMMERCE_URL, { waitUntil: 'domcontentloaded', timeout: 60000 })
+    result.debug.timeline.push(`[${Date.now()}] goto commerce done`)
     await page.waitForTimeout(3000)
+    result.debug.timeline.push(`[${Date.now()}] wait 3s done`)
+
+    result.debug.pageState = await page.evaluate(() => {
+      const csrf = document.querySelector('#csrf_token')?.value || ''
+      const hasGrecaptcha = typeof grecaptcha !== 'undefined'
+      const siteKey = window.__recaptchaSiteKey || ''
+      const hasUpdateCall = typeof update_call === 'function'
+      const tableRows = document.querySelectorAll('#smug_content tbody tr').length
+      return { csrf, hasGrecaptcha, siteKey, hasUpdateCall, tableRows }
+    })
+    result.debug.timeline.push(`[${Date.now()}] pageState collected`)
 
     // 主动触发一次页面方法，避免某些情况下 ready 回调没有抓到
     await page.evaluate(() => {
       if (typeof update_call === 'function') update_call()
     })
+    result.debug.timeline.push(`[${Date.now()}] update_call() triggered #1`)
+    await page.waitForTimeout(3000)
+    await page.evaluate(() => {
+      if (typeof update_call === 'function') update_call()
+    })
+    result.debug.timeline.push(`[${Date.now()}] update_call() triggered #2`)
     await page.waitForTimeout(5000)
+    result.debug.timeline.push(`[${Date.now()}] wait after update_call done`)
+
+    try {
+      const cookies = await page.cookies()
+      result.debug.cookies = cookies.map(c => `${c.name}=${c.value}`)
+    } catch {
+      result.debug.cookies = []
+    }
 
     const text = (result.raw || '').trim()
     if (text) {
@@ -241,6 +313,26 @@ const buildCaptureText = capture => {
   if (capture.requestBody !== undefined) lines.push(`request.body: ${capture.requestBody || '<empty>'}`)
   lines.push(`response.status: ${capture.response?.statusCode}`)
   lines.push(`response.content-type: ${capture.response?.headers?.['content-type'] || '<empty>'}`)
+  const debug = capture.response?.debug || null
+  if (debug) {
+    lines.push(`debug.smug2.requests: ${debug.smug2Requests?.length || 0}`)
+    lines.push(`debug.smug2.responses: ${debug.smug2Responses?.length || 0}`)
+    lines.push(`debug.recaptcha.requests: ${debug.recaptchaRequests?.length || 0}`)
+    lines.push(`debug.pageErrors: ${(debug.pageErrors || []).length}`)
+    lines.push(`debug.consoleErrors: ${(debug.consoleErrors || []).length}`)
+    if (debug.pageState) lines.push(`debug.pageState: ${JSON.stringify(debug.pageState)}`)
+    if (Array.isArray(debug.cookies) && debug.cookies.length) lines.push(`debug.cookies: ${debug.cookies.join('; ')}`)
+    if (Array.isArray(debug.timeline) && debug.timeline.length) {
+      lines.push('debug.timeline:')
+      lines.push(debug.timeline.join('\n'))
+    }
+    if (Array.isArray(debug.smug2Requests) && debug.smug2Requests.length) {
+      lines.push(`debug.lastSmug2Request: ${JSON.stringify(debug.smug2Requests[debug.smug2Requests.length - 1])}`)
+    }
+    if (Array.isArray(debug.smug2Responses) && debug.smug2Responses.length) {
+      lines.push(`debug.lastSmug2Response: ${JSON.stringify(debug.smug2Responses[debug.smug2Responses.length - 1])}`)
+    }
+  }
 
   if (Array.isArray(capture.response?.data)) {
     lines.push(`response.json.length: ${capture.response.data.length}`)
