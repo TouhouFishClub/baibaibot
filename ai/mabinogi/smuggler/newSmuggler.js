@@ -187,6 +187,8 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0, bootstrapHints = null
       smug2Requests: [],
       smug2Responses: [],
       recaptchaRequests: [],
+      recaptchaResponses: [],
+      recaptchaFailedRequests: [],
       pageErrors: [],
       consoleErrors: [],
       pageState: null,
@@ -288,8 +290,25 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0, bootstrapHints = null
       }
     })
 
+    page.on('requestfailed', req => {
+      const url = req.url()
+      if (url.includes('recaptcha') || url.includes('google.com/recaptcha') || url.includes('gstatic.com/recaptcha')) {
+        result.debug.recaptchaFailedRequests.push({
+          method: req.method(),
+          url,
+          failure: req.failure()?.errorText || 'unknown'
+        })
+      }
+    })
+
     page.on('response', async res => {
       const url = res.url()
+      if (url.includes('recaptcha') || url.includes('google.com/recaptcha') || url.includes('gstatic.com/recaptcha')) {
+        result.debug.recaptchaResponses.push({
+          url,
+          status: res.status()
+        })
+      }
       if (url.includes('/ajax/smug2')) {
         let body = ''
         try { body = await res.text() } catch { body = '' }
@@ -492,7 +511,7 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0, bootstrapHints = null
     // 兜底：如果仍未发出 smug2 请求，手动执行 grecaptcha 并直接请求 smug2
     if ((result.debug.smug2Requests || []).length === 0) {
       const manualFallback = await page.evaluate(async () => {
-        const out = { ok: false, reason: '', tokenLen: 0, bodyLen: 0 }
+        const out = { ok: false, reason: '', tokenLen: 0, bodyLen: 0, executeError: '' }
         try {
           const siteKey = window.__recaptchaSiteKey || ''
           const csrf = document.querySelector('#csrf_token')?.value || ''
@@ -507,10 +526,21 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0, bootstrapHints = null
 
           const token = await new Promise(resolve => {
             try {
+              let settled = false
+              const done = val => {
+                if (!settled) {
+                  settled = true
+                  resolve(val)
+                }
+              }
+              setTimeout(() => done(''), 15000)
               window.grecaptcha.ready(() => {
                 window.grecaptcha.execute(siteKey, { action: 'ajax_smuggler' })
-                  .then(resolve)
-                  .catch(() => resolve(''))
+                  .then(done)
+                  .catch(err => {
+                    out.executeError = err?.message || String(err)
+                    done('')
+                  })
               })
             } catch {
               resolve('')
@@ -620,6 +650,8 @@ const buildCaptureText = capture => {
     lines.push(`debug.smug2.requests: ${debug.smug2Requests?.length || 0}`)
     lines.push(`debug.smug2.responses: ${debug.smug2Responses?.length || 0}`)
     lines.push(`debug.recaptcha.requests: ${debug.recaptchaRequests?.length || 0}`)
+    lines.push(`debug.recaptcha.responses: ${debug.recaptchaResponses?.length || 0}`)
+    lines.push(`debug.recaptcha.failed: ${debug.recaptchaFailedRequests?.length || 0}`)
     lines.push(`debug.pageErrors: ${(debug.pageErrors || []).length}`)
     lines.push(`debug.consoleErrors: ${(debug.consoleErrors || []).length}`)
     if (debug.pageState) lines.push(`debug.pageState: ${JSON.stringify(debug.pageState)}`)
@@ -638,6 +670,12 @@ const buildCaptureText = capture => {
     }
     if (Array.isArray(debug.smug2Responses) && debug.smug2Responses.length) {
       lines.push(`debug.lastSmug2Response: ${JSON.stringify(debug.smug2Responses[debug.smug2Responses.length - 1])}`)
+    }
+    if (Array.isArray(debug.recaptchaResponses) && debug.recaptchaResponses.length) {
+      lines.push(`debug.lastRecaptchaResponse: ${JSON.stringify(debug.recaptchaResponses[debug.recaptchaResponses.length - 1])}`)
+    }
+    if (Array.isArray(debug.recaptchaFailedRequests) && debug.recaptchaFailedRequests.length) {
+      lines.push(`debug.lastRecaptchaFailed: ${JSON.stringify(debug.recaptchaFailedRequests[debug.recaptchaFailedRequests.length - 1])}`)
     }
   }
   if (capture.preDebug) {
