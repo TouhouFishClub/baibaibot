@@ -19,7 +19,7 @@ const { tcArticle } = require('../ai/mabinogi/newArticle');
 const rua = require('../ai/mabinogi/ruawork')
 const { jrrp } = require('../ai/rp_new')
 const { mabiWeather } = require('../ai/mabinogi/weather')
-const {mabiSmuggler} = require("../ai/mabinogi/smuggler/newSmuggler");
+const {mabiSmuggler, mabiSuperSmuggler} = require("../ai/mabinogi/smuggler/newSmuggler");
 const {chishenme} = require("../ai/chishenme");
 
 
@@ -497,6 +497,13 @@ router.get('/uni', (req, res) => {
     } else if(content.toUpperCase().startsWith('走私查询')) {
       // 走私查询
       mabiSmuggler(createCallback(res));
+    } else if(content.toUpperCase().startsWith('超级走私查询')) {
+      // 超级走私查询
+      if (String(from) !== '799018865') {
+        
+      } else {
+        mabiSuperSmuggler(createCallback(res));
+      }
     } else if(content.toUpperCase().endsWith('吃什么')) {
       // 吃什么
       chishenme(from, content.substring(0, content.length - 2), createCallback(res))

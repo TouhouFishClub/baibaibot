@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs')
+const https = require('https')
 const nodeHtmlToImage = require('node-html-to-image')
 const font2base64 = require('node-font2base64')
 const { getClient } = require('../../../mongo')
@@ -56,6 +57,118 @@ const STATUS_MAP = {
   disappear_forecast: { label: '即将消失', color: '#EF5350', icon: '⚠️' }
 }
 const DEFAULT_STATUS = { label: '走私消息', color: '#78909C', icon: '📢' }
+
+const LUTE_COMMERCE_URL = 'https://lute.fantazm.net/commerce'
+const LUTE_SMUG2_URL = 'https://lute.fantazm.net/ajax/smug2'
+const LUTE_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+
+const requestText = (url, options = {}, postBody = null) => new Promise((resolve, reject) => {
+  const req = https.request(url, options, res => {
+    let data = ''
+    res.setEncoding('utf8')
+    res.on('data', chunk => { data += chunk })
+    res.on('end', () => {
+      resolve({
+        statusCode: res.statusCode || 0,
+        headers: res.headers || {},
+        body: data
+      })
+    })
+  })
+
+  req.on('error', reject)
+  req.setTimeout(15000, () => req.destroy(new Error('request timeout')))
+  if (postBody) req.write(postBody)
+  req.end()
+})
+
+const extractLuteBootstrap = html => {
+  const csrf = html.match(/id="csrf_token"[^>]*value="([^"]+)"/i)?.[1] || ''
+  const siteKey = html.match(/__recaptchaSiteKey\s*=\s*"([^"]+)"/i)?.[1] || ''
+  return { csrf, siteKey }
+}
+
+const getLuteBootstrap = async () => {
+  const res = await requestText(LUTE_COMMERCE_URL, {
+    method: 'GET',
+    headers: {
+      'User-Agent': LUTE_UA,
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    }
+  })
+  if (res.statusCode !== 200) {
+    throw new Error(`lute commerce 请求失败: ${res.statusCode}`)
+  }
+
+  const { csrf, siteKey } = extractLuteBootstrap(res.body)
+  const setCookie = Array.isArray(res.headers['set-cookie']) ? res.headers['set-cookie'] : []
+  const cookie = setCookie.map(v => v.split(';')[0]).join('; ')
+
+  return { csrf, siteKey, cookie, html: res.body }
+}
+
+const buildSmug2Body = ({ csrfToken, recaptchaToken, tzOffset }) => {
+  const payload = new URLSearchParams()
+  payload.set('date', String(tzOffset))
+  payload.set('csrf_token', csrfToken || '')
+  payload.set('tk', recaptchaToken || '')
+  return payload.toString()
+}
+
+const fetchLuteSmug2 = async ({ csrfToken, recaptchaToken, cookie = '', tzOffset = new Date().getTimezoneOffset() }) => {
+  const postBody = buildSmug2Body({ csrfToken, recaptchaToken, tzOffset })
+  const res = await requestText(LUTE_SMUG2_URL, {
+    method: 'POST',
+    headers: {
+      'User-Agent': LUTE_UA,
+      'Referer': LUTE_COMMERCE_URL,
+      'X-Requested-With': 'XMLHttpRequest',
+      'Accept': 'application/json, text/javascript, */*; q=0.01',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'Content-Length': Buffer.byteLength(postBody),
+      ...(cookie ? { Cookie: cookie } : {})
+    }
+  }, postBody)
+
+  const text = (res.body || '').trim()
+  let parsed = null
+  if (text) {
+    try { parsed = JSON.parse(text) } catch { parsed = null }
+  }
+
+  return {
+    statusCode: res.statusCode,
+    headers: res.headers,
+    raw: res.body,
+    data: Array.isArray(parsed) ? parsed : null
+  }
+}
+
+const escapeHtml = text => String(text || '')
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;')
+
+const buildCaptureText = capture => {
+  if (!capture) return ''
+  const lines = []
+  lines.push(`bootstrap.csrf: ${capture.bootstrap?.csrf || '<empty>'}`)
+  lines.push(`bootstrap.siteKey: ${capture.bootstrap?.siteKey || '<empty>'}`)
+  lines.push(`request.date(tzOffset): ${capture.tzOffset}`)
+  lines.push(`response.status: ${capture.response?.statusCode}`)
+  lines.push(`response.content-type: ${capture.response?.headers?.['content-type'] || '<empty>'}`)
+
+  if (Array.isArray(capture.response?.data)) {
+    lines.push(`response.json.length: ${capture.response.data.length}`)
+    lines.push(JSON.stringify(capture.response.data, null, 2))
+  } else {
+    lines.push(`response.raw.length: ${(capture.response?.raw || '').length}`)
+    lines.push(capture.response?.raw ? capture.response.raw : '<empty body>')
+  }
+  return lines.join('\n')
+}
 
 const buildHtml = ctx => `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -169,6 +282,18 @@ body{
   text-align:center;padding:8px;
   font-size:10px;color:rgba(255,255,255,.15);margin-top:4px;
 }
+.capture-data{
+  white-space:pre-wrap;
+  word-break:break-all;
+  font-family:Consolas,Monaco,'Courier New',monospace;
+  font-size:11px;
+  line-height:1.45;
+  color:rgba(255,255,255,.82);
+  background:rgba(0,0,0,.28);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  padding:10px;
+}
 </style>
 </head>
 <body>
@@ -246,11 +371,19 @@ body{
     <div class="card-body"><div class="no-info">📍 ${ctx.area}（暂无地图）</div></div>
   </div>` : ''}
 
+  ${ctx.captureText ? `
+  <div class="card">
+    <div class="card-header"><span class="card-title">▸ 抓包返回数据</span></div>
+    <div class="card-body">
+      <div class="capture-data">${escapeHtml(ctx.captureText)}</div>
+    </div>
+  </div>` : ''}
+
   <div class="footer">走私查询 · Powered by Baibaibot</div>
 </body>
 </html>`
 
-const mabiSmuggler = async callback => {
+const renderSmugglerImage = async (callback, captureText = '') => {
   try {
     const client = await getClient()
     const col = client.db('db_bot').collection('cl_mabinogi_smuggler')
@@ -308,7 +441,8 @@ const mabiSmuggler = async callback => {
       areaImg,
       vehicleRows,
       levelColor,
-      levelStars
+      levelStars,
+      captureText
     })
 
     const outDir = path.join(IMAGE_DATA, 'mabi_other')
@@ -326,6 +460,32 @@ const mabiSmuggler = async callback => {
   }
 }
 
+const mabiSmuggler = async callback => {
+  await renderSmugglerImage(callback)
+}
+
+const mabiSuperSmuggler = async callback => {
+  try {
+    const bootstrap = await getLuteBootstrap()
+    const tzOffset = new Date().getTimezoneOffset()
+    const response = await fetchLuteSmug2({
+      csrfToken: bootstrap.csrf,
+      recaptchaToken: '',
+      cookie: bootstrap.cookie,
+      tzOffset
+    })
+
+    const captureText = buildCaptureText({ bootstrap, response, tzOffset })
+    await renderSmugglerImage(callback, captureText)
+  } catch (err) {
+    console.error('mabiSuperSmuggler query error', err)
+    callback(`超级走私查询失败：${err.message || '未知错误'}`)
+  }
+}
+
 module.exports = {
-  mabiSmuggler
+  mabiSmuggler,
+  mabiSuperSmuggler,
+  getLuteBootstrap,
+  fetchLuteSmug2
 }

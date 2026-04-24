@@ -182,7 +182,7 @@ const {gptImageReply, getGptImageHelp, getGptImagePresets} = require('./ai/banan
 const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao')
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
 const { handleAnnualReportCommand, handleUserAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
-const { mabiSmuggler } = require('./ai/mabinogi/smuggler/newSmuggler')
+const { mabiSmuggler, mabiSuperSmuggler } = require('./ai/mabinogi/smuggler/newSmuggler')
 const { renderHelpImage } = require('./help/index')
 
 // 导入deepseek模块
@@ -1316,6 +1316,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
 
   if(content.trim() === '走私查询'){
     mabiSmuggler(callback)
+    return
+  }
+
+  if(content.trim() === '超级走私查询'){
+    if (String(from) !== '799018865') {
+      return
+    }
+    mabiSuperSmuggler(callback)
     return
   }
 
