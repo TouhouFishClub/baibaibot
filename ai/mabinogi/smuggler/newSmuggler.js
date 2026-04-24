@@ -1,6 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const https = require('https')
+const { HttpsProxyAgent } = require('https-proxy-agent')
 const nodeHtmlToImage = require('node-html-to-image')
 const font2base64 = require('node-font2base64')
 const { getClient } = require('../../../mongo')
@@ -62,9 +63,23 @@ const LUTE_COMMERCE_URL = 'https://lute.fantazm.net/commerce'
 const LUTE_SMUG2_URL = 'https://lute.fantazm.net/ajax/smug2'
 const LUTE_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+const LUTE_HTTP_PROXY = process.env.LUTE_HTTP_PROXY || 'http://192.168.17.241:2346'
+const LUTE_SOCKS_PROXY = process.env.LUTE_SOCKS_PROXY || 'socks5://192.168.17.241:2345'
+
+const buildProxyAgent = () => {
+  try {
+    return new HttpsProxyAgent(LUTE_HTTP_PROXY)
+  } catch {
+    return null
+  }
+}
 
 const requestText = (url, options = {}, postBody = null) => new Promise((resolve, reject) => {
-  const req = https.request(url, options, res => {
+  const agent = buildProxyAgent()
+  const req = https.request(url, {
+    ...options,
+    ...(agent ? { agent } : {})
+  }, res => {
     let data = ''
     res.setEncoding('utf8')
     res.on('data', chunk => { data += chunk })
@@ -156,6 +171,11 @@ const fetchLuteSmug2WithBrowser = async () => {
     raw: '',
     data: null,
     debug: {
+      proxy: {
+        http: LUTE_HTTP_PROXY,
+        socks: LUTE_SOCKS_PROXY,
+        selected: ''
+      },
       timeline: [],
       smug2Requests: [],
       smug2Responses: [],
@@ -178,6 +198,7 @@ const fetchLuteSmug2WithBrowser = async () => {
       headless: true,
       ignoreHTTPSErrors: true,
       args: [
+        `--proxy-server=${LUTE_HTTP_PROXY}`,
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
@@ -192,6 +213,7 @@ const fetchLuteSmug2WithBrowser = async () => {
       ],
       timeout: 60000
     })
+    result.debug.proxy.selected = LUTE_HTTP_PROXY
 
     const page = await browser.newPage()
     await page.setUserAgent(LUTE_UA)
@@ -371,6 +393,11 @@ const buildCaptureText = capture => {
   lines.push(`response.content-type: ${capture.response?.headers?.['content-type'] || '<empty>'}`)
   const debug = capture.response?.debug || null
   if (debug) {
+    if (debug.proxy) {
+      lines.push(`debug.proxy.http: ${debug.proxy.http || '<empty>'}`)
+      lines.push(`debug.proxy.socks: ${debug.proxy.socks || '<empty>'}`)
+      lines.push(`debug.proxy.selected: ${debug.proxy.selected || '<empty>'}`)
+    }
     lines.push(`debug.smug2.requests: ${debug.smug2Requests?.length || 0}`)
     lines.push(`debug.smug2.responses: ${debug.smug2Responses?.length || 0}`)
     lines.push(`debug.recaptcha.requests: ${debug.recaptchaRequests?.length || 0}`)
