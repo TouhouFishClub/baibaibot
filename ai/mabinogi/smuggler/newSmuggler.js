@@ -61,6 +61,7 @@ const DEFAULT_STATUS = { label: '走私消息', color: '#78909C', icon: '📢' }
 const LUTE_COMMERCE_URL = 'https://lute.fantazm.net/commerce'
 const LUTE_SMUG2_URL = 'https://lute.fantazm.net/ajax/smug2'
 const LUTE_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const requestText = (url, options = {}, postBody = null) => new Promise((resolve, reject) => {
   const req = https.request(url, options, res => {
@@ -286,7 +287,7 @@ const fetchLuteSmug2WithBrowser = async () => {
       } catch (e) {
         lastGotoErr = e
         result.debug.timeline.push(`[${Date.now()}] goto commerce failed (attempt ${i}): ${e?.message || e}`)
-        await page.waitForTimeout(2000)
+        await sleep(2000)
       }
     }
     if (!gotoOk) {
@@ -303,7 +304,7 @@ const fetchLuteSmug2WithBrowser = async () => {
       } catch {}
       throw new Error(`navigation failed: ${lastGotoErr?.message || 'unknown'} | url=${currentUrl} | readyState=${readyState} | title=${title}`)
     }
-    await page.waitForTimeout(3000)
+    await sleep(3000)
     result.debug.timeline.push(`[${Date.now()}] wait 3s done`)
 
     result.debug.pageState = await page.evaluate(() => {
@@ -321,12 +322,12 @@ const fetchLuteSmug2WithBrowser = async () => {
       if (typeof update_call === 'function') update_call()
     })
     result.debug.timeline.push(`[${Date.now()}] update_call() triggered #1`)
-    await page.waitForTimeout(3000)
+    await sleep(3000)
     await page.evaluate(() => {
       if (typeof update_call === 'function') update_call()
     })
     result.debug.timeline.push(`[${Date.now()}] update_call() triggered #2`)
-    await page.waitForTimeout(5000)
+    await sleep(5000)
     result.debug.timeline.push(`[${Date.now()}] wait after update_call done`)
 
     try {
