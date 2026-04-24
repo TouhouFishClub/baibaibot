@@ -175,6 +175,7 @@ const fetchLuteSmug2WithBrowser = async () => {
 
     browser = await puppeteer.launch({
       headless: true,
+      ignoreHTTPSErrors: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -183,14 +184,42 @@ const fetchLuteSmug2WithBrowser = async () => {
         '--no-first-run',
         '--no-zygote',
         '--single-process',
-        '--disable-gpu'
+        '--disable-gpu',
+        '--ignore-certificate-errors',
+        '--allow-running-insecure-content',
+        '--disable-features=site-per-process'
       ],
       timeout: 60000
     })
 
     const page = await browser.newPage()
     await page.setUserAgent(LUTE_UA)
+    page.setDefaultNavigationTimeout(120000)
+    page.setDefaultTimeout(120000)
     result.debug.timeline.push(`[${Date.now()}] browser+page ready`)
+
+    await page.setRequestInterception(true)
+    page.on('request', req => {
+      const url = req.url()
+      const type = req.resourceType()
+      // 屏蔽广告/统计等第三方资源，降低超时概率
+      if (
+        url.includes('googlesyndication') ||
+        url.includes('doubleclick') ||
+        url.includes('google-analytics') ||
+        url.includes('googletagmanager') ||
+        url.includes('fundingchoicesmessages') ||
+        url.includes('adtrafficquality') ||
+        url.includes('facebook') ||
+        url.includes('twitter') ||
+        type === 'media' ||
+        type === 'font'
+      ) {
+        req.abort()
+        return
+      }
+      req.continue()
+    })
 
     page.on('pageerror', err => {
       result.debug.pageErrors.push(err?.message || String(err))
@@ -246,8 +275,34 @@ const fetchLuteSmug2WithBrowser = async () => {
       }
     })
 
-    await page.goto(LUTE_COMMERCE_URL, { waitUntil: 'domcontentloaded', timeout: 60000 })
-    result.debug.timeline.push(`[${Date.now()}] goto commerce done`)
+    let gotoOk = false
+    let lastGotoErr = null
+    for (let i = 1; i <= 2; i++) {
+      try {
+        await page.goto(LUTE_COMMERCE_URL, { waitUntil: 'domcontentloaded', timeout: 120000 })
+        gotoOk = true
+        result.debug.timeline.push(`[${Date.now()}] goto commerce done (attempt ${i})`)
+        break
+      } catch (e) {
+        lastGotoErr = e
+        result.debug.timeline.push(`[${Date.now()}] goto commerce failed (attempt ${i}): ${e?.message || e}`)
+        await page.waitForTimeout(2000)
+      }
+    }
+    if (!gotoOk) {
+      const currentUrl = page.url()
+      let readyState = 'unknown'
+      let title = ''
+      try {
+        const state = await page.evaluate(() => ({
+          readyState: document.readyState,
+          title: document.title
+        }))
+        readyState = state.readyState
+        title = state.title
+      } catch {}
+      throw new Error(`navigation failed: ${lastGotoErr?.message || 'unknown'} | url=${currentUrl} | readyState=${readyState} | title=${title}`)
+    }
     await page.waitForTimeout(3000)
     result.debug.timeline.push(`[${Date.now()}] wait 3s done`)
 
