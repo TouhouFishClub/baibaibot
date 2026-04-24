@@ -333,6 +333,23 @@ const buildCaptureText = capture => {
       lines.push(`debug.lastSmug2Response: ${JSON.stringify(debug.smug2Responses[debug.smug2Responses.length - 1])}`)
     }
   }
+  if (capture.preDebug) {
+    lines.push('preDebug.present: true')
+    lines.push(`preDebug.source: ${capture.preDebug.source || '<unknown>'}`)
+    lines.push(`preDebug.error: ${capture.preDebug.error || '<none>'}`)
+    lines.push(`preDebug.smug2.requests: ${capture.preDebug.smug2RequestCount ?? 0}`)
+    lines.push(`preDebug.smug2.responses: ${capture.preDebug.smug2ResponseCount ?? 0}`)
+    lines.push(`preDebug.recaptcha.requests: ${capture.preDebug.recaptchaRequestCount ?? 0}`)
+    if (capture.preDebug.pageState) lines.push(`preDebug.pageState: ${JSON.stringify(capture.preDebug.pageState)}`)
+    if (capture.preDebug.lastSmug2Request) lines.push(`preDebug.lastSmug2Request: ${JSON.stringify(capture.preDebug.lastSmug2Request)}`)
+    if (capture.preDebug.lastSmug2Response) lines.push(`preDebug.lastSmug2Response: ${JSON.stringify(capture.preDebug.lastSmug2Response)}`)
+    if (Array.isArray(capture.preDebug.timeline) && capture.preDebug.timeline.length) {
+      lines.push('preDebug.timeline:')
+      lines.push(capture.preDebug.timeline.join('\n'))
+    }
+  } else {
+    lines.push('preDebug.present: false')
+  }
 
   if (Array.isArray(capture.response?.data)) {
     lines.push(`response.json.length: ${capture.response.data.length}`)
@@ -648,8 +665,20 @@ const mabiSuperSmuggler = async callback => {
     }
 
     let response = null
+    let preDebug = null
     try {
       response = await fetchLuteSmug2WithBrowser()
+      preDebug = {
+        source: response.source,
+        error: '',
+        smug2RequestCount: response.debug?.smug2Requests?.length || 0,
+        smug2ResponseCount: response.debug?.smug2Responses?.length || 0,
+        recaptchaRequestCount: response.debug?.recaptchaRequests?.length || 0,
+        pageState: response.debug?.pageState || null,
+        lastSmug2Request: response.debug?.smug2Requests?.slice(-1)?.[0] || null,
+        lastSmug2Response: response.debug?.smug2Responses?.slice(-1)?.[0] || null,
+        timeline: response.debug?.timeline || []
+      }
     } catch (e) {
       response = {
         source: 'puppeteer-error',
@@ -658,6 +687,17 @@ const mabiSuperSmuggler = async callback => {
         headers: {},
         raw: e?.message || 'puppeteer capture failed',
         data: null
+      }
+      preDebug = {
+        source: 'puppeteer-error',
+        error: e?.message || 'puppeteer capture failed',
+        smug2RequestCount: 0,
+        smug2ResponseCount: 0,
+        recaptchaRequestCount: 0,
+        pageState: null,
+        lastSmug2Request: null,
+        lastSmug2Response: null,
+        timeline: []
       }
     }
 
@@ -682,7 +722,8 @@ const mabiSuperSmuggler = async callback => {
       source: response.source || 'puppeteer',
       bootstrap,
       requestBody: response.requestBody,
-      response
+      response,
+      preDebug
     })
     await renderSmugglerImage(callback, captureText)
   } catch (err) {
