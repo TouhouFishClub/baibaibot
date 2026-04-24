@@ -65,6 +65,11 @@ const LUTE_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (K
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 const LUTE_HTTP_PROXY = process.env.LUTE_HTTP_PROXY || 'http://192.168.17.241:2346'
 const LUTE_SOCKS_PROXY = process.env.LUTE_SOCKS_PROXY || 'socks5://192.168.17.241:2345'
+const LUTE_PPTR_PROXY_CHAIN = [
+  process.env.LUTE_PPTR_PROXY || LUTE_SOCKS_PROXY,
+  LUTE_HTTP_PROXY,
+  '' // direct
+]
 
 const buildProxyAgent = () => {
   try {
@@ -160,9 +165,10 @@ const fetchLuteSmug2 = async ({ csrfToken, recaptchaToken, cookie = '', tzOffset
   }
 }
 
-const fetchLuteSmug2WithBrowser = async () => {
+const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
   let puppeteer = null
   let browser = null
+  const activeProxy = LUTE_PPTR_PROXY_CHAIN[Math.max(0, Math.min(attemptIndex, LUTE_PPTR_PROXY_CHAIN.length - 1))]
   const result = {
     source: 'puppeteer',
     requestBody: '',
@@ -174,7 +180,8 @@ const fetchLuteSmug2WithBrowser = async () => {
       proxy: {
         http: LUTE_HTTP_PROXY,
         socks: LUTE_SOCKS_PROXY,
-        selected: ''
+        selected: activeProxy || 'DIRECT',
+        attemptIndex
       },
       timeline: [],
       smug2Requests: [],
@@ -198,7 +205,7 @@ const fetchLuteSmug2WithBrowser = async () => {
       headless: true,
       ignoreHTTPSErrors: true,
       args: [
-        `--proxy-server=${LUTE_HTTP_PROXY}`,
+        ...(activeProxy ? [`--proxy-server=${activeProxy}`] : []),
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
@@ -213,7 +220,7 @@ const fetchLuteSmug2WithBrowser = async () => {
       ],
       timeout: 60000
     })
-    result.debug.proxy.selected = LUTE_HTTP_PROXY
+    result.debug.proxy.selected = activeProxy || 'DIRECT'
 
     const page = await browser.newPage()
     await page.setUserAgent(LUTE_UA)
@@ -369,6 +376,23 @@ const fetchLuteSmug2WithBrowser = async () => {
       }
     }
     return result
+  } catch (err) {
+    const errMsg = err?.message || String(err)
+    const shouldRetry = attemptIndex < (LUTE_PPTR_PROXY_CHAIN.length - 1) && (
+      errMsg.includes('ERR_PROXY_CONNECTION_FAILED') ||
+      errMsg.includes('navigation failed') ||
+      errMsg.includes('Navigation timeout')
+    )
+    if (shouldRetry) {
+      const next = await fetchLuteSmug2WithBrowser(attemptIndex + 1)
+      next.debug = next.debug || {}
+      next.debug.timeline = [
+        `[${Date.now()}] retry from ${activeProxy || 'DIRECT'} because: ${errMsg}`,
+        ...(next.debug.timeline || [])
+      ]
+      return next
+    }
+    throw err
   } finally {
     if (browser) await browser.close()
   }
