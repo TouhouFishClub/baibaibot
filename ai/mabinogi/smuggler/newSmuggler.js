@@ -63,8 +63,8 @@ const LUTE_COMMERCE_URL = 'https://lute.fantazm.net/commerce'
 const LUTE_SMUG2_URL = 'https://lute.fantazm.net/ajax/smug2'
 const LUTE_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-const LUTE_HTTP_PROXY = process.env.LUTE_HTTP_PROXY || 'http://192.168.17.241:2346'
-const LUTE_SOCKS_PROXY = process.env.LUTE_SOCKS_PROXY || 'socks5://192.168.17.241:2345'
+const LUTE_HTTP_PROXY = process.env.LUTE_HTTP_PROXY || 'http://192.168.17.236:2346'
+const LUTE_SOCKS_PROXY = process.env.LUTE_SOCKS_PROXY || 'socks5://192.168.17.236:2345'
 const LUTE_PPTR_PROXY_CHAIN = [
   process.env.LUTE_PPTR_PROXY || LUTE_SOCKS_PROXY,
   LUTE_HTTP_PROXY,
