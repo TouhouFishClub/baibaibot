@@ -144,6 +144,86 @@ const fetchLuteSmug2 = async ({ csrfToken, recaptchaToken, cookie = '', tzOffset
   }
 }
 
+const fetchLuteSmug2WithBrowser = async () => {
+  let puppeteer = null
+  let browser = null
+  const result = {
+    source: 'puppeteer',
+    requestBody: '',
+    statusCode: 0,
+    headers: {},
+    raw: '',
+    data: null
+  }
+
+  try {
+    try {
+      puppeteer = require('puppeteer')
+    } catch {
+      throw new Error('未安装 puppeteer，无法进行浏览器抓包')
+    }
+
+    browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--disable-gpu'
+      ],
+      timeout: 60000
+    })
+
+    const page = await browser.newPage()
+    await page.setUserAgent(LUTE_UA)
+
+    let captured = false
+    page.on('request', req => {
+      if (req.url().includes('/ajax/smug2')) {
+        result.requestBody = req.postData() || ''
+      }
+    })
+
+    page.on('response', async res => {
+      if (!res.url().includes('/ajax/smug2') || captured) return
+      captured = true
+      result.statusCode = res.status()
+      result.headers = res.headers() || {}
+      try {
+        result.raw = await res.text()
+      } catch {
+        result.raw = ''
+      }
+    })
+
+    await page.goto(LUTE_COMMERCE_URL, { waitUntil: 'domcontentloaded', timeout: 60000 })
+    await page.waitForTimeout(3000)
+
+    // 主动触发一次页面方法，避免某些情况下 ready 回调没有抓到
+    await page.evaluate(() => {
+      if (typeof update_call === 'function') update_call()
+    })
+    await page.waitForTimeout(5000)
+
+    const text = (result.raw || '').trim()
+    if (text) {
+      try {
+        const parsed = JSON.parse(text)
+        if (Array.isArray(parsed)) result.data = parsed
+      } catch {
+        result.data = null
+      }
+    }
+    return result
+  } finally {
+    if (browser) await browser.close()
+  }
+}
+
 const escapeHtml = text => String(text || '')
   .replace(/&/g, '&amp;')
   .replace(/</g, '&lt;')
@@ -154,9 +234,11 @@ const escapeHtml = text => String(text || '')
 const buildCaptureText = capture => {
   if (!capture) return ''
   const lines = []
-  lines.push(`bootstrap.csrf: ${capture.bootstrap?.csrf || '<empty>'}`)
-  lines.push(`bootstrap.siteKey: ${capture.bootstrap?.siteKey || '<empty>'}`)
-  lines.push(`request.date(tzOffset): ${capture.tzOffset}`)
+  lines.push(`capture.source: ${capture.source || 'direct'}`)
+  if (capture.bootstrap?.csrf !== undefined) lines.push(`bootstrap.csrf: ${capture.bootstrap?.csrf || '<empty>'}`)
+  if (capture.bootstrap?.siteKey !== undefined) lines.push(`bootstrap.siteKey: ${capture.bootstrap?.siteKey || '<empty>'}`)
+  if (capture.tzOffset !== undefined) lines.push(`request.date(tzOffset): ${capture.tzOffset}`)
+  if (capture.requestBody !== undefined) lines.push(`request.body: ${capture.requestBody || '<empty>'}`)
   lines.push(`response.status: ${capture.response?.statusCode}`)
   lines.push(`response.content-type: ${capture.response?.headers?.['content-type'] || '<empty>'}`)
 
@@ -466,16 +548,50 @@ const mabiSmuggler = async callback => {
 
 const mabiSuperSmuggler = async callback => {
   try {
-    const bootstrap = await getLuteBootstrap()
-    const tzOffset = new Date().getTimezoneOffset()
-    const response = await fetchLuteSmug2({
-      csrfToken: bootstrap.csrf,
-      recaptchaToken: '',
-      cookie: bootstrap.cookie,
-      tzOffset
-    })
+    let bootstrap = null
+    try {
+      bootstrap = await getLuteBootstrap()
+    } catch {
+      bootstrap = null
+    }
 
-    const captureText = buildCaptureText({ bootstrap, response, tzOffset })
+    let response = null
+    try {
+      response = await fetchLuteSmug2WithBrowser()
+    } catch (e) {
+      response = {
+        source: 'puppeteer-error',
+        requestBody: '',
+        statusCode: 0,
+        headers: {},
+        raw: e?.message || 'puppeteer capture failed',
+        data: null
+      }
+    }
+
+    if (!Array.isArray(response.data) || response.data.length === 0) {
+      const tzOffset = new Date().getTimezoneOffset()
+      if (bootstrap) {
+        const fallback = await fetchLuteSmug2({
+          csrfToken: bootstrap.csrf,
+          recaptchaToken: '',
+          cookie: bootstrap.cookie,
+          tzOffset
+        })
+        response = {
+          ...fallback,
+          source: response.source === 'puppeteer-error' ? 'direct-fallback-after-puppeteer-error' : 'direct-fallback',
+          requestBody: buildSmug2Body({ csrfToken: bootstrap.csrf, recaptchaToken: '', tzOffset })
+        }
+      }
+    }
+
+    const captureText = buildCaptureText({
+      source: response.source || 'puppeteer',
+      bootstrap,
+      requestBody: response.requestBody,
+      response
+    })
     await renderSmugglerImage(callback, captureText)
   } catch (err) {
     console.error('mabiSuperSmuggler query error', err)
