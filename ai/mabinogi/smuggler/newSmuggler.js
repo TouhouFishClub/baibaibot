@@ -375,6 +375,35 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
       result.debug.timeline.push(`[${Date.now()}] inject commerce.js attempted`)
     }
 
+    // 如果 grecaptcha 未加载，主动注入 Google reCAPTCHA 脚本
+    const hasRecaptchaNow = await page.evaluate(() => typeof window.grecaptcha !== 'undefined')
+    if (!hasRecaptchaNow) {
+      const siteKeyFromWindow = await page.evaluate(() => window.__recaptchaSiteKey || '')
+      if (siteKeyFromWindow) {
+        await page.evaluate(siteKey => {
+          const appendRecaptcha = src => new Promise(resolve => {
+            const exist = Array.from(document.scripts || []).some(s => (s.src || '').includes('recaptcha/api.js'))
+            if (exist) {
+              resolve(true)
+              return
+            }
+            const s = document.createElement('script')
+            s.src = src
+            s.async = true
+            s.defer = true
+            s.onload = () => resolve(true)
+            s.onerror = () => resolve(false)
+            document.head.appendChild(s)
+          })
+          return appendRecaptcha(`https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}`)
+        }, siteKeyFromWindow)
+        await sleep(3000)
+        result.debug.timeline.push(`[${Date.now()}] inject recaptcha api attempted`)
+      } else {
+        result.debug.timeline.push(`[${Date.now()}] skip recaptcha inject: empty siteKey`)
+      }
+    }
+
     result.debug.pageState = await page.evaluate(() => {
       const csrf = document.querySelector('#csrf_token')?.value || ''
       const hasGrecaptcha = typeof grecaptcha !== 'undefined'
@@ -397,16 +426,81 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
 
     // 主动触发一次页面方法，避免某些情况下 ready 回调没有抓到
     await page.evaluate(() => {
-      if (typeof update_call === 'function') update_call()
+      if (typeof update_call === 'function') {
+        update_call()
+      }
     })
     result.debug.timeline.push(`[${Date.now()}] update_call() triggered #1`)
     await sleep(3000)
     await page.evaluate(() => {
-      if (typeof update_call === 'function') update_call()
+      if (typeof update_call === 'function') {
+        update_call()
+      }
     })
     result.debug.timeline.push(`[${Date.now()}] update_call() triggered #2`)
     await sleep(5000)
     result.debug.timeline.push(`[${Date.now()}] wait after update_call done`)
+
+    // 兜底：如果仍未发出 smug2 请求，手动执行 grecaptcha 并直接请求 smug2
+    if ((result.debug.smug2Requests || []).length === 0) {
+      const manualFallback = await page.evaluate(async () => {
+        const out = { ok: false, reason: '', tokenLen: 0, bodyLen: 0 }
+        try {
+          const siteKey = window.__recaptchaSiteKey || ''
+          const csrf = document.querySelector('#csrf_token')?.value || ''
+          if (!siteKey) {
+            out.reason = 'empty siteKey'
+            return out
+          }
+          if (typeof window.grecaptcha === 'undefined') {
+            out.reason = 'grecaptcha not loaded'
+            return out
+          }
+
+          const token = await new Promise(resolve => {
+            try {
+              window.grecaptcha.ready(() => {
+                window.grecaptcha.execute(siteKey, { action: 'ajax_smuggler' })
+                  .then(resolve)
+                  .catch(() => resolve(''))
+              })
+            } catch {
+              resolve('')
+            }
+          })
+          out.tokenLen = (token || '').length
+          if (!token) {
+            out.reason = 'empty token'
+            return out
+          }
+
+          const body = new URLSearchParams({
+            date: String(new Date().getTimezoneOffset()),
+            csrf_token: csrf,
+            tk: token
+          }).toString()
+
+          const resp = await fetch('/ajax/smug2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body
+          })
+          const text = await resp.text()
+          out.ok = true
+          out.bodyLen = text.length
+          out.reason = `status=${resp.status}`
+          return out
+        } catch (e) {
+          out.reason = e?.message || String(e)
+          return out
+        }
+      })
+      result.debug.timeline.push(`[${Date.now()}] manual recaptcha fallback: ${JSON.stringify(manualFallback)}`)
+      await sleep(1500)
+    }
 
     try {
       const cookies = await page.cookies()
