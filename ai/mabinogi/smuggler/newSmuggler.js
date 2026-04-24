@@ -425,19 +425,39 @@ const fetchLuteSmug2WithBrowser = async (attemptIndex = 0) => {
     result.debug.scriptPreview = extraDebug.scripts || []
 
     // 主动触发一次页面方法，避免某些情况下 ready 回调没有抓到
-    await page.evaluate(() => {
-      if (typeof update_call === 'function') {
-        update_call()
-      }
-    })
-    result.debug.timeline.push(`[${Date.now()}] update_call() triggered #1`)
+    try {
+      const call1 = await page.evaluate(() => {
+        try {
+          if (typeof update_call === 'function') {
+            update_call()
+            return 'called'
+          }
+          return 'missing'
+        } catch (e) {
+          return `error:${e?.message || String(e)}`
+        }
+      })
+      result.debug.timeline.push(`[${Date.now()}] update_call() #1 => ${call1}`)
+    } catch (e) {
+      result.debug.timeline.push(`[${Date.now()}] update_call() #1 evaluate error: ${e?.message || e}`)
+    }
     await sleep(3000)
-    await page.evaluate(() => {
-      if (typeof update_call === 'function') {
-        update_call()
-      }
-    })
-    result.debug.timeline.push(`[${Date.now()}] update_call() triggered #2`)
+    try {
+      const call2 = await page.evaluate(() => {
+        try {
+          if (typeof update_call === 'function') {
+            update_call()
+            return 'called'
+          }
+          return 'missing'
+        } catch (e) {
+          return `error:${e?.message || String(e)}`
+        }
+      })
+      result.debug.timeline.push(`[${Date.now()}] update_call() #2 => ${call2}`)
+    } catch (e) {
+      result.debug.timeline.push(`[${Date.now()}] update_call() #2 evaluate error: ${e?.message || e}`)
+    }
     await sleep(5000)
     result.debug.timeline.push(`[${Date.now()}] wait after update_call done`)
 
