@@ -100,7 +100,12 @@ const matchCategory = (pattern, category) => {
 /** 材料匹配时排除不应作为材料的物品 */
 const isExcludedMaterialItem = (item) => {
   const category = item && item.category ? item.category : ''
-  return category.includes('npc_weapon') || category.includes('weapon_skin')
+  const feature = item && item.feature ? item.feature.toLowerCase() : ''
+  return (
+    category.includes('npc_weapon')
+    || category.includes('weapon_skin')
+    || feature.includes('npc')
+  )
 }
 
 // ====== 物品数据库配置 ======
@@ -116,7 +121,7 @@ const ITEM_DB_FILES = [
 
 /** 从XML加载所有物品数据，返回 { itemMap, nameMap } */
 const loadAllItemsFromXml = async () => {
-  const itemMap = new Map()  // id → { id, name, category }
+  const itemMap = new Map()  // id → { id, name, category, feature }
   const nameMap = new Map()  // name → [id, ...]
   const chinaFeaturesByItemId = await loadChinaFeaturesByItemId(DATA_DIR)
 
@@ -151,7 +156,12 @@ const loadAllItemsFromXml = async () => {
       if (!name) continue
 
       const prevItem = itemMap.get(id)
-      itemMap.set(id, { id, name, category: $.Category || '' })
+      itemMap.set(id, {
+        id,
+        name,
+        category: $.Category || '',
+        feature: $.__feature || '',
+      })
       if (prevItem && prevItem.name !== name) {
         const oldArr = nameMap.get(prevItem.name)
         if (oldArr) {
@@ -775,7 +785,7 @@ const saveCache = (version, itemMap, nameMap, allRecipes) => {
 
     const itemsArr = []
     for (const [id, item] of itemMap) {
-      itemsArr.push([id, item.name, item.category])
+      itemsArr.push([id, item.name, item.category, item.feature || ''])
     }
 
     const namesArr = []
@@ -819,8 +829,8 @@ const loadCacheFile = (expectedVersion) => {
 const buildFromCache = (cacheData) => {
   const allItems = new Map()
   for (let i = 0; i < cacheData.items.length; i++) {
-    const [id, name, category] = cacheData.items[i]
-    allItems.set(id, { id, name, category })
+    const [id, name, category, feature] = cacheData.items[i]
+    allItems.set(id, { id, name, category, feature: feature || '' })
   }
 
   const nameToIds = new Map()
