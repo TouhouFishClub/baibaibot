@@ -118,6 +118,12 @@ const isBetterMaterialCandidate = (candidate, currentBest) => {
   if (!candidate) return false
   if (!currentBest) return true
 
+  const candidateIsSacItem = /(?:^|\/)sac_item(?:\/|$)/.test(candidate.category || '')
+  const bestIsSacItem = /(?:^|\/)sac_item(?:\/|$)/.test(currentBest.category || '')
+  if (candidateIsSacItem !== bestIsSacItem) {
+    return !candidateIsSacItem
+  }
+
   const candidateStartsWithAt = candidate.name && candidate.name.startsWith('@')
   const bestStartsWithAt = currentBest.name && currentBest.name.startsWith('@')
   if (candidateStartsWithAt !== bestStartsWithAt) {
