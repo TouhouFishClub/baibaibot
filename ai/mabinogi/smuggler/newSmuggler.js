@@ -5,6 +5,9 @@ const font2base64 = require('node-font2base64')
 const { getClient } = require('../../../mongo')
 const { IMAGE_DATA } = require('../../../baibaiConfigs')
 
+// 引入韩服走私抓取/定时入库模块（require 时会自动启动 36 分钟定时任务）
+const { getRecentSmugKrItems } = require('./smugKrScheduler')
+
 const products = require('./assets/product.json')
 const vehicles = require('./assets/vehicle.json')
 
@@ -57,205 +60,6 @@ const STATUS_MAP = {
 }
 const DEFAULT_STATUS = { label: '走私消息', color: '#78909C', icon: '📢' }
 
-const LUTE_COMMERCE_URL = 'https://lute.fantazm.net/commerce'
-const LUTE_SMUG2_URL_PART = '/ajax/smug2'
-const LUTE_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-
-// 代理链：环境变量 LUTE_PPTR_PROXY 显式覆盖（含空字符串=直连）；
-// 否则按 socks5 -> http -> 直连依次重试
-const LUTE_PPTR_PROXY_CHAIN = (() => {
-  if (process.env.LUTE_PPTR_PROXY !== undefined) {
-    return [process.env.LUTE_PPTR_PROXY]
-  }
-  return [
-    process.env.LUTE_SOCKS_PROXY || 'socks5://192.168.17.236:2345',
-    process.env.LUTE_HTTP_PROXY || 'http://192.168.17.236:2346',
-    ''
-  ]
-})()
-
-// 用浏览器跑一次商业页，被动抓 /ajax/smug2 的响应；同时兜底读取 #smug_content tbody
-// 关键点：
-//   - 不去手动跑 grecaptcha / 注入 commerce.js，让页面自己执行 update_call()
-//   - 在 goto 之前就挂 page.waitForResponse，避免错过早响应
-//   - 不拦截 font / recaptcha / jquery，否则 reCAPTCHA 评分会走低或脚本断链
-const captureSmug2OnceWithProxy = async (proxyServer = '') => {
-  let puppeteer
-  try {
-    puppeteer = require('puppeteer')
-  } catch {
-    throw new Error('未安装 puppeteer 模块')
-  }
-
-  const launchArgs = [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-blink-features=AutomationControlled',
-    '--disable-features=IsolateOrigins,site-per-process',
-    '--no-first-run',
-    '--no-zygote',
-    '--ignore-certificate-errors',
-    '--lang=ko-KR'
-  ]
-  if (proxyServer) launchArgs.push(`--proxy-server=${proxyServer}`)
-
-  const browser = await puppeteer.launch({
-    headless: true,
-    ignoreHTTPSErrors: true,
-    args: launchArgs,
-    timeout: 60000
-  })
-
-  const tStart = Date.now()
-  const debug = {
-    proxy: proxyServer || 'DIRECT',
-    timeline: [],
-    smug2Captured: false,
-    pageState: null,
-    domRows: []
-  }
-  const log = msg => debug.timeline.push(`+${Date.now() - tStart}ms ${msg}`)
-
-  try {
-    const page = await browser.newPage()
-    await page.setUserAgent(LUTE_UA)
-    await page.setViewport({ width: 1280, height: 900 })
-    page.setDefaultNavigationTimeout(60000)
-    page.setDefaultTimeout(60000)
-
-    // 反自动化检测
-    await page.evaluateOnNewDocument(() => {
-      Object.defineProperty(navigator, 'webdriver', { get: () => undefined })
-      window.chrome = window.chrome || { runtime: {} }
-      Object.defineProperty(navigator, 'languages', { get: () => ['ko-KR', 'ko', 'en-US', 'en'] })
-    })
-
-    // 拦截广告/统计资源；图片也拦掉以减少超时风险
-    // 但不拦 font/recaptcha/jquery/socket.io——这些影响主流程
-    await page.setRequestInterception(true)
-    page.on('request', req => {
-      const u = req.url()
-      const t = req.resourceType()
-      const block = (
-        t === 'image' ||
-        t === 'media' ||
-        u.includes('googlesyndication') ||
-        u.includes('doubleclick') ||
-        u.includes('googletagmanager') ||
-        u.includes('google-analytics') ||
-        u.includes('fundingchoicesmessages') ||
-        u.includes('adtrafficquality') ||
-        u.includes('pagead2.googlesyndication') ||
-        u.includes('adsbygoogle')
-      )
-      if (block) {
-        req.abort().catch(() => {})
-        return
-      }
-      req.continue().catch(() => {})
-    })
-
-    // 在跳转之前就挂上 smug2 的捕获器
-    let smug2Result = null
-    page.on('response', async res => {
-      const url = res.url()
-      if (!url.includes(LUTE_SMUG2_URL_PART)) return
-      try {
-        const body = await res.text()
-        if (!smug2Result && body) {
-          smug2Result = {
-            status: res.status(),
-            url,
-            headers: res.headers(),
-            body
-          }
-          debug.smug2Captured = true
-          log(`smug2 captured: status=${res.status()} bodyLen=${body.length}`)
-        }
-      } catch (e) {
-        log(`smug2 read error: ${e?.message || e}`)
-      }
-    })
-
-    page.on('pageerror', err => log(`pageerror: ${err?.message || err}`))
-
-    log(`goto ${LUTE_COMMERCE_URL}`)
-    await page.goto(LUTE_COMMERCE_URL, { waitUntil: 'domcontentloaded', timeout: 60000 })
-    log('domcontentloaded')
-
-    // 轮询：直到 smug2 被抓到，或 #smug_content tbody 被填上行，或超时
-    const startWait = Date.now()
-    const maxWaitMs = 45000
-    while (Date.now() - startWait < maxWaitMs) {
-      if (smug2Result) break
-      let rowCount = 0
-      try {
-        rowCount = await page.evaluate(() => {
-          const tb = document.querySelector('#smug_content tbody')
-          return tb ? tb.querySelectorAll('tr').length : 0
-        })
-      } catch {}
-      if (rowCount > 0) {
-        log(`dom rows populated: ${rowCount}`)
-        break
-      }
-      await sleep(500)
-    }
-
-    // 抓 DOM 行作为兜底
-    try {
-      const state = await page.evaluate(() => {
-        const tb = document.querySelector('#smug_content tbody')
-        const rows = tb
-          ? Array.from(tb.querySelectorAll('tr')).map(tr => {
-              const tds = Array.from(tr.querySelectorAll('td'))
-              return tds.map(td => (td.innerText || '').replace(/\s+/g, ' ').trim())
-            })
-          : []
-        return {
-          csrf: document.querySelector('#csrf_token')?.value || '',
-          siteKey: window.__recaptchaSiteKey || '',
-          hasGrecaptcha: typeof window.grecaptcha !== 'undefined',
-          hasUpdateCall: typeof window.update_call === 'function',
-          rowCount: rows.length,
-          rows,
-          smugStat: (document.querySelector('#smug_stat')?.innerText || '').trim(),
-          smugTime: (document.querySelector('#smug_time')?.innerText || '').trim()
-        }
-      })
-      debug.pageState = state
-      debug.domRows = state.rows || []
-    } catch (e) {
-      log(`pageState eval error: ${e?.message || e}`)
-    }
-
-    return { smug2Result, debug }
-  } finally {
-    try { await browser.close() } catch {}
-  }
-}
-
-const fetchLuteSmugViaBrowser = async () => {
-  const errors = []
-  for (const proxy of LUTE_PPTR_PROXY_CHAIN) {
-    try {
-      const res = await captureSmug2OnceWithProxy(proxy)
-      const hasSmug2 = !!res.smug2Result?.body
-      const hasDomRows = Array.isArray(res.debug.domRows) && res.debug.domRows.length > 0
-      if (hasSmug2 || hasDomRows) {
-        return res
-      }
-      errors.push({ proxy: proxy || 'DIRECT', message: 'capture empty' })
-    } catch (e) {
-      errors.push({ proxy: proxy || 'DIRECT', message: e?.message || String(e) })
-    }
-  }
-  throw new Error(`所有代理都失败: ${errors.map(e => `[${e.proxy}] ${e.message}`).join(' | ')}`)
-}
-
-
 const escapeHtml = text => String(text || '')
   .replace(/&/g, '&amp;')
   .replace(/</g, '&lt;')
@@ -263,77 +67,42 @@ const escapeHtml = text => String(text || '')
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#39;')
 
-// 从 lute 接口返回的单条对象里抽出有用字段
-const formatSmugItem = (item, idx) => {
-  if (!item || typeof item !== 'object') return ''
-  const date = item.date || ''
-  const time = item.time || ''
-  const dateStr = date && time
-    ? `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)} ${time}`
-    : (time || date || '')
+// 把入库后的单条记录格式化成一行文本
+// krTime 在 CN 本地时区显示出的时分秒就是韩国本地时间（见 smugKrScheduler.js 注释）
+const formatSmugKrRow = (doc, idx) => {
+  if (!doc) return ''
+  let timeStr = ''
+  if (doc.krTime instanceof Date && !isNaN(doc.krTime.getTime())) {
+    timeStr = formatTime(doc.krTime.getTime())
+  } else if (doc.krTs) {
+    timeStr = formatTime(doc.krTs)
+  } else if (doc.date && doc.time) {
+    timeStr = `${doc.date.slice(0, 4)}-${doc.date.slice(4, 6)}-${doc.date.slice(6, 8)} ${doc.time}`
+  }
   const segs = [
-    dateStr,
-    item.position || '',
-    item.goods || '',
-    item.values !== undefined && item.values !== '' ? `${item.values}D` : ''
-  ].filter(s => s !== '')
+    timeStr,
+    doc.position || '',
+    doc.goods || '',
+    doc.values ? `${doc.values}D` : ''
+  ].filter(Boolean)
   return `#${idx + 1} ${segs.join(' | ')}`
 }
 
-const buildCaptureText = capture => {
-  if (!capture) return ''
+const buildCaptureTextFromDb = ({ rows, error }) => {
   const lines = []
-  const { proxy, smug2Result, debug, error } = capture
-
-  lines.push(`抓取代理: ${proxy || 'DIRECT'}`)
   if (error) {
-    lines.push(`错误: ${error}`)
+    lines.push(`读取数据库失败: ${error}`)
+    return lines.join('\n')
   }
-
-  if (smug2Result) {
-    lines.push(`/ajax/smug2 状态: ${smug2Result.status}`)
-    lines.push(`返回长度: ${(smug2Result.body || '').length}`)
-  } else {
-    lines.push('未抓到 /ajax/smug2 响应（兜底使用 DOM 数据）')
+  if (!Array.isArray(rows) || rows.length === 0) {
+    lines.push('数据库暂无韩服走私记录（定时任务每 36 分钟刷新一次）')
+    return lines.join('\n')
   }
-
-  let parsed = null
-  if (smug2Result?.body) {
-    try { parsed = JSON.parse(smug2Result.body) } catch { parsed = null }
-  }
-
-  if (Array.isArray(parsed) && parsed.length > 0) {
-    lines.push('')
-    lines.push(`=== 走私数据(接口, ${parsed.length} 条) ===`)
-    parsed.forEach((it, i) => {
-      const formatted = formatSmugItem(it, i)
-      if (formatted) lines.push(formatted)
-    })
-  } else if (debug?.domRows?.length) {
-    lines.push('')
-    lines.push(`=== 走私数据(DOM 兜底, ${debug.domRows.length} 行) ===`)
-    debug.domRows.forEach((row, i) => {
-      lines.push(`#${i + 1} ${row.filter(Boolean).join(' | ')}`)
-    })
-  } else if (smug2Result?.body) {
-    lines.push('')
-    lines.push(`response.raw: ${smug2Result.body.slice(0, 800)}`)
-  }
-
-  if (debug?.pageState) {
-    lines.push('')
-    const ps = debug.pageState
-    lines.push(`页面状态: csrf=${ps.csrf ? 'ok' : 'no'} siteKey=${ps.siteKey ? 'ok' : 'no'} grecaptcha=${ps.hasGrecaptcha} update_call=${ps.hasUpdateCall} rows=${ps.rowCount}`)
-    if (ps.smugStat) lines.push(`smug_stat: ${ps.smugStat}`)
-    if (ps.smugTime) lines.push(`smug_time: ${ps.smugTime}`)
-  }
-
-  if (Array.isArray(debug?.timeline) && debug.timeline.length) {
-    lines.push('')
-    lines.push('=== timeline ===')
-    lines.push(...debug.timeline)
-  }
-
+  lines.push(`=== 韩服走私数据 (最近 ${rows.length} 条, 韩国本地时间) ===`)
+  rows.forEach((doc, i) => {
+    const formatted = formatSmugKrRow(doc, i)
+    if (formatted) lines.push(formatted)
+  })
   return lines.join('\n')
 }
 
@@ -634,20 +403,11 @@ const mabiSmuggler = async callback => {
 const mabiSuperSmuggler = async callback => {
   let captureText = ''
   try {
-    const { smug2Result, debug } = await fetchLuteSmugViaBrowser()
-    captureText = buildCaptureText({
-      proxy: debug?.proxy,
-      smug2Result,
-      debug
-    })
+    const rows = await getRecentSmugKrItems(10)
+    captureText = buildCaptureTextFromDb({ rows })
   } catch (err) {
-    console.error('mabiSuperSmuggler capture error', err)
-    captureText = buildCaptureText({
-      proxy: '',
-      smug2Result: null,
-      debug: { timeline: [] },
-      error: err?.message || String(err)
-    })
+    console.error('mabiSuperSmuggler db query error', err)
+    captureText = buildCaptureTextFromDb({ error: err?.message || String(err) })
   }
 
   try {
