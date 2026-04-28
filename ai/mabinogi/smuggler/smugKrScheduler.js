@@ -251,8 +251,27 @@ const SMUG_KR_OFFSET_HOURS = 1
 const SMUG_KR_DB_NAME = 'db_bot'
 const SMUG_KR_COLLECTION = 'cl_mabinogi_smuggler_kr'
 
+// 抓取退避策略：连续失败 ≥ 退避起始阈值时，按指数延长真实尝试间隔
+//   失败次数 < 阈值: 正常每 36 分钟跑一次
+//   失败次数 ≥ 阈值: 跳过定时器触发，直到达到 backoff 间隔（1h, 2h, 4h, 4h... 封顶 4h）
+// 维护期可极大降低 puppeteer 启动 + 代理重试的资源浪费与日志噪音
+const BACKOFF_FAIL_THRESHOLD = 3
+const BACKOFF_LEVEL_MS = [
+  60 * 60 * 1000,   // 第3次失败后: 1h
+  2 * 60 * 60 * 1000, // 第4次: 2h
+  4 * 60 * 60 * 1000  // 第5次及以上: 4h（封顶）
+]
+
 let _smugKrSchedulerStarted = false
 let _smugKrFetching = false
+let _consecutiveFailures = 0
+let _lastAttemptAt = 0
+
+const getBackoffMs = () => {
+  if (_consecutiveFailures < BACKOFF_FAIL_THRESHOLD) return 0
+  const idx = Math.min(_consecutiveFailures - BACKOFF_FAIL_THRESHOLD, BACKOFF_LEVEL_MS.length - 1)
+  return BACKOFF_LEVEL_MS[idx]
+}
 
 const buildSmugKrDoc = item => {
   if (!item || typeof item !== 'object') return null
@@ -364,9 +383,20 @@ const scheduledFetchSmugKr = async () => {
     console.warn('[smugglerKr] 上一次抓取尚未结束，跳过本次')
     return
   }
+
+  // 退避：连续失败到阈值后，按指数间隔决定本次是否真正发起抓取
+  const backoff = getBackoffMs()
+  if (backoff > 0 && Date.now() - _lastAttemptAt < backoff) {
+    const waitMin = Math.round((backoff - (Date.now() - _lastAttemptAt)) / 60000)
+    console.warn(`[smugglerKr] 退避中（已连续失败 ${_consecutiveFailures} 次），跳过本次，约 ${waitMin} 分钟后再尝试`)
+    return
+  }
+
   _smugKrFetching = true
+  _lastAttemptAt = Date.now()
   const startedAt = new Date()
   const tag = startedAt.toISOString()
+  let success = false
   try {
     const { smug2Result, debug } = await fetchLuteSmugViaBrowser()
     let parsed = null
@@ -379,9 +409,22 @@ const scheduledFetchSmugKr = async () => {
     }
     const r = await persistSmugKrItems(parsed)
     console.log(`[${tag}] [smugglerKr] OK proxy=${debug?.proxy} 总=${r.total} 新增=${r.inserted} 跳过=${r.skipped} 无效=${r.invalid}`)
+    success = true
   } catch (err) {
     console.error(`[${tag}] [smugglerKr] 抓取失败:`, err?.message || err)
   } finally {
+    if (success) {
+      if (_consecutiveFailures > 0) {
+        console.log(`[smugglerKr] 已恢复（之前连续失败 ${_consecutiveFailures} 次），重置退避`)
+      }
+      _consecutiveFailures = 0
+    } else {
+      _consecutiveFailures++
+      const next = getBackoffMs()
+      if (next > 0) {
+        console.warn(`[smugglerKr] 已连续失败 ${_consecutiveFailures} 次，进入退避：约 ${next / 3600000}h 后再尝试`)
+      }
+    }
     _smugKrFetching = false
   }
 }
@@ -412,7 +455,12 @@ const getRecentSmugKrItems = async (limit = 10) => {
 
 // 取下一次走私预测：找出 krTs 大于当前国服最新 forecast.ts 的最早 KR 记录
 // （韩服比国服领先 1~2 个 36 分钟周期，所以这条 KR 记录即为国服下一次走私）
+//
+// 维护期/异常恢复期保护：krTs 必须仍在未来（带 10 分钟容差），防止
+//   - 国服维护拉长导致 lastCnTs 卡在过去 → 误把旧 KR 当下一次预测
+//   - 韩服维护结束后第一次抓到的是断点附近的过期数据
 const SMUG_CN_COLLECTION = 'cl_mabinogi_smuggler'
+const PREDICTION_FUTURE_TOLERANCE_MS = 10 * 60 * 1000
 const getNextSmugKrPrediction = async () => {
   const client = await getClient()
   if (!client) throw new Error('mongo getClient() 失败')
@@ -426,8 +474,11 @@ const getNextSmugKrPrediction = async () => {
     .next()
 
   const lastCnTs = latestCn ? latestCn.ts : 0
+  const nowMinusTol = Date.now() - PREDICTION_FUTURE_TOLERANCE_MS
+  const tsLowerBound = Math.max(lastCnTs, nowMinusTol)
+
   const nextKr = await krCol
-    .find({ krTs: { $gt: lastCnTs } })
+    .find({ krTs: { $gt: tsLowerBound } })
     .sort({ krTs: 1 })
     .limit(1)
     .next()

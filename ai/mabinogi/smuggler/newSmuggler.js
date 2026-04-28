@@ -8,6 +8,10 @@ const { IMAGE_DATA } = require('../../../baibaiConfigs')
 // 引入韩服走私抓取/定时入库模块（require 时会自动启动 36 分钟定时任务）
 const { getNextSmugKrPrediction } = require('./smugKrScheduler')
 
+// 主走私查询：当国服最新一条 forecast 距今超过这个阈值时，认为可能维护中／bot 失联
+// 36 分钟一个周期 + 一些缓冲 ≈ 50 分钟
+const STALE_DOC_THRESHOLD_MS = 50 * 60 * 1000
+
 const products = require('./assets/product.json')
 const vehicles = require('./assets/vehicle.json')
 
@@ -120,6 +124,15 @@ body{
 .status-icon{font-size:22px;}
 .status-label{font-size:18px;font-weight:700;color:${ctx.statusColor};}
 .status-time{margin-left:auto;font-size:12px;color:rgba(255,255,255,.4);}
+.stale-banner{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:8px;
+  background:linear-gradient(135deg,rgba(239,83,80,.15),rgba(239,83,80,.06));
+  border:1px solid rgba(239,83,80,.4);
+  color:#ffb3b0;font-size:12px;font-weight:600;
+  margin-bottom:14px;letter-spacing:.3px;
+}
+.stale-banner .stale-icon{font-size:16px;}
 .card{
   background:linear-gradient(180deg,rgba(26,24,50,.95),rgba(16,14,34,.98));
   border:1px solid rgba(218,165,32,.15);
@@ -262,6 +275,12 @@ body{
     <span class="status-time">${ctx.timeStr}</span>
   </div>
 
+  ${ctx.staleBanner ? `
+  <div class="stale-banner">
+    <span class="stale-icon">⚠️</span>
+    <span>${ctx.staleBanner}</span>
+  </div>` : ''}
+
   ${ctx.product ? `
   <div class="card">
     <div class="card-header"><span class="card-title">▸ 贸易物品</span></div>
@@ -400,6 +419,17 @@ const renderSmugglerImage = async (callback, prediction = null) => {
     const itemName = doc.item || null
     const statusInfo = STATUS_MAP[doc.type] || DEFAULT_STATUS
 
+    // 陈旧数据降级：最新 doc 距今 ≥ 50 分钟（>1 个周期）则提示可能维护中/失联
+    let staleBanner = ''
+    if (typeof doc.ts === 'number' && doc.ts > 0) {
+      const ageMs = Date.now() - doc.ts
+      if (ageMs >= STALE_DOC_THRESHOLD_MS) {
+        const ageMin = Math.round(ageMs / 60000)
+        const ageStr = ageMin >= 60 ? `${Math.floor(ageMin / 60)}小时${ageMin % 60}分钟` : `${ageMin}分钟`
+        staleBanner = `数据已 ${ageStr} 未更新，国服可能正在维护或消息源失联，下方信息仅供参考`
+      }
+    }
+
     const product = itemName ? findProduct(itemName) : null
 
     const sortedVehicles = calcVehicles(product)
@@ -433,7 +463,8 @@ const renderSmugglerImage = async (callback, prediction = null) => {
       vehicleRows,
       levelColor,
       levelStars,
-      prediction
+      prediction,
+      staleBanner
     })
 
     const outDir = path.join(IMAGE_DATA, 'mabi_other')
