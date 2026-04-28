@@ -97,6 +97,12 @@ const matchCategory = (pattern, category) => {
   return true
 }
 
+/** 材料匹配时排除不应作为材料的物品 */
+const isExcludedMaterialItem = (item) => {
+  const category = item && item.category ? item.category : ''
+  return category.includes('npc_weapon') || category.includes('weapon_skin')
+}
+
 // ====== 物品数据库配置 ======
 const ITEM_DB_FILES = [
   { xml: 'itemdb.xml', txt: 'itemdb.china.txt', tag: 'itemdb' },
@@ -218,6 +224,7 @@ const resolveComplexPattern = (rawPattern, allItems) => {
     .map(p => p.substring(1))
 
   for (const [, item] of allItems) {
+    if (isExcludedMaterialItem(item)) continue
     if (!matchCategory(positiveRaw, item.category)) continue
     let excluded = false
     for (const neg of negativePatterns) {
@@ -251,6 +258,7 @@ const resolvePattern = (pattern, allItems) => {
 
   let bestMatch = null
   for (const [, item] of allItems) {
+    if (isExcludedMaterialItem(item)) continue
     if (matchCategory(pattern, item.category)) {
       bestMatch = item
       if (!item.name.includes('活动')) break
