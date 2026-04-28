@@ -313,6 +313,13 @@ const resolvePattern = (pattern, allItems) => {
 const resolveEssentials = (str, allItems) => {
   if (!str) return []
   const materials = []
+  const GENERIC_CATEGORY_TOKENS = new Set([
+    'equip',
+    'stack_item',
+    'item',
+    'material',
+    'sac_item',
+  ])
   // &amp; 中的 ; 不能作为分隔符，先替换保护
   const AMP_PLACEHOLDER = '\x00AMP\x00'
   const safe = str.replace(/&amp;/g, AMP_PLACEHOLDER)
@@ -332,8 +339,12 @@ const resolveEssentials = (str, allItems) => {
         ...(match.noRecipe && { noRecipe: true }),
       })
     } else {
-      const seg = pattern.split('/').filter(s => s && s !== '*' && !s.includes('!') && !s.includes('&') && !s.includes('(') && !s.includes(')'))
-      materials.push({ id: 0, name: seg.pop() || pattern, count })
+      const seg = pattern.split('/').filter(s => {
+        if (!s || s === '*') return false
+        if (s.includes('!') || s.includes('&') || s.includes('(') || s.includes(')')) return false
+        return !GENERIC_CATEGORY_TOKENS.has(s.toLowerCase())
+      })
+      materials.push({ id: 0, name: seg.pop() || '未知材料', count })
     }
   }
   return materials
