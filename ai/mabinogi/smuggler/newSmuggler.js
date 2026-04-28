@@ -6,7 +6,7 @@ const { getClient } = require('../../../mongo')
 const { IMAGE_DATA } = require('../../../baibaiConfigs')
 
 // 引入韩服走私抓取/定时入库模块（require 时会自动启动 36 分钟定时任务）
-const { getRecentSmugKrItems } = require('./smugKrScheduler')
+const { getNextSmugKrPrediction } = require('./smugKrScheduler')
 
 const products = require('./assets/product.json')
 const vehicles = require('./assets/vehicle.json')
@@ -60,50 +60,40 @@ const STATUS_MAP = {
 }
 const DEFAULT_STATUS = { label: '走私消息', color: '#78909C', icon: '📢' }
 
-const escapeHtml = text => String(text || '')
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;')
-  .replace(/"/g, '&quot;')
-  .replace(/'/g, '&#39;')
+// 把"下次走私"的 KR 记录组装成 buildHtml 需要的预测上下文
+//   doc: cl_mabinogi_smuggler_kr 的一条记录（含可能的 goodsCN/positionCN）
+const buildPredictionCtx = doc => {
+  if (!doc) return null
 
-// 把入库后的单条记录格式化成一行文本
-// krTime 在 CN 本地时区显示出的时分秒就是韩国本地时间（见 smugKrScheduler.js 注释）
-const formatSmugKrRow = (doc, idx) => {
-  if (!doc) return ''
-  let timeStr = ''
-  if (doc.krTime instanceof Date && !isNaN(doc.krTime.getTime())) {
-    timeStr = formatTime(doc.krTime.getTime())
-  } else if (doc.krTs) {
-    timeStr = formatTime(doc.krTs)
-  } else if (doc.date && doc.time) {
-    timeStr = `${doc.date.slice(0, 4)}-${doc.date.slice(4, 6)}-${doc.date.slice(6, 8)} ${doc.time}`
-  }
-  const segs = [
+  const ts = doc.krTs || (doc.krTime ? new Date(doc.krTime).getTime() : 0)
+  const timeStr = ts ? formatTime(ts) : ''
+
+  const goodsCN = (doc.goodsCN || '').trim()
+  const positionCN = (doc.positionCN || '').trim()
+
+  const product = goodsCN ? findProduct(goodsCN) : null
+  const productImg = product
+    ? imgToBase64(path.join(__dirname, 'assets', 'product', product.img))
+    : ''
+  const areaImg = positionCN
+    ? imgToBase64(path.join(__dirname, 'assets', 'area', `${positionCN}.png`))
+    : ''
+  const levelColor = product ? (LEVEL_COLORS[product.level] || '#999') : '#999'
+  const levelStars = product ? (LEVEL_STARS[product.level] || '') : ''
+
+  return {
     timeStr,
-    doc.position || '',
-    doc.goods || '',
-    doc.values ? `${doc.values}D` : ''
-  ].filter(Boolean)
-  return `#${idx + 1} ${segs.join(' | ')}`
-}
-
-const buildCaptureTextFromDb = ({ rows, error }) => {
-  const lines = []
-  if (error) {
-    lines.push(`读取数据库失败: ${error}`)
-    return lines.join('\n')
+    goodsKR: doc.goods || '',
+    goodsCN,
+    positionKR: doc.position || '',
+    positionCN,
+    values: doc.values || '',
+    product,
+    productImg,
+    areaImg,
+    levelColor,
+    levelStars
   }
-  if (!Array.isArray(rows) || rows.length === 0) {
-    lines.push('数据库暂无韩服走私记录（定时任务每 36 分钟刷新一次）')
-    return lines.join('\n')
-  }
-  lines.push(`=== 韩服走私数据 (最近 ${rows.length} 条, 韩国本地时间) ===`)
-  rows.forEach((doc, i) => {
-    const formatted = formatSmugKrRow(doc, i)
-    if (formatted) lines.push(formatted)
-  })
-  return lines.join('\n')
 }
 
 const buildHtml = ctx => `<!DOCTYPE html>
@@ -218,18 +208,51 @@ body{
   text-align:center;padding:8px;
   font-size:10px;color:rgba(255,255,255,.15);margin-top:4px;
 }
-.capture-data{
-  white-space:pre-wrap;
-  word-break:break-all;
-  font-family:Consolas,Monaco,'Courier New',monospace;
-  font-size:11px;
-  line-height:1.45;
-  color:rgba(255,255,255,.82);
-  background:rgba(0,0,0,.28);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:8px;
-  padding:10px;
+/* 下次走私（预测）卡片样式：比"本次走私"更轻一些 */
+.pred-time{
+  display:inline-block;
+  font-size:13px;color:#daa520;font-weight:600;
+  padding:4px 10px;border-radius:6px;
+  background:rgba(218,165,32,.08);
+  border:1px solid rgba(218,165,32,.25);
+  margin-bottom:10px;
 }
+.pred-row{display:flex;gap:12px;align-items:flex-start;}
+.pred-product-img{
+  width:60px;height:60px;border-radius:6px;object-fit:contain;
+  background:rgba(218,165,32,.06);
+  border:1px solid rgba(218,165,32,.18);
+  padding:4px;
+}
+.pred-info{flex:1;display:flex;flex-direction:column;gap:4px;}
+.pred-name-cn{font-size:16px;font-weight:700;color:#ffd700;}
+.pred-name-kr{font-size:14px;font-weight:600;color:#bbb;font-style:italic;}
+.pred-meta{font-size:12px;color:rgba(255,255,255,.55);}
+.pred-meta span{color:#64B5F6;font-weight:600;}
+.pred-level{
+  display:inline-block;padding:1px 8px;border-radius:10px;
+  font-size:11px;font-weight:700;letter-spacing:1px;
+  border:1px solid;
+  align-self:flex-start;
+}
+.pred-area-section{position:relative;margin-top:10px;}
+.pred-area-img{
+  width:100%;border-radius:6px;
+  border:1px solid rgba(218,165,32,.15);
+  display:block;
+}
+.pred-area-label{
+  position:absolute;bottom:8px;left:8px;
+  padding:3px 10px;border-radius:5px;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(4px);
+  font-size:12px;color:#fff;font-weight:600;
+  border:1px solid rgba(255,255,255,.15);
+}
+.pred-pos-text{
+  margin-top:8px;font-size:13px;color:rgba(255,255,255,.7);
+}
+.pred-hint{font-size:11px;color:rgba(255,255,255,.35);margin-top:8px;}
 </style>
 </head>
 <body>
@@ -307,11 +330,43 @@ body{
     <div class="card-body"><div class="no-info">📍 ${ctx.area}（暂无地图）</div></div>
   </div>` : ''}
 
-  ${ctx.captureText ? `
+  ${ctx.prediction ? `
   <div class="card">
-    <div class="card-header"><span class="card-title">▸ 抓包返回数据</span></div>
+    <div class="card-header"><span class="card-title">▸ 下次走私（预测）</span></div>
     <div class="card-body">
-      <div class="capture-data">${escapeHtml(ctx.captureText)}</div>
+      <div class="pred-time">⏱ 约 ${ctx.prediction.timeStr}</div>
+
+      ${ctx.prediction.product ? `
+      <div class="pred-row">
+        ${ctx.prediction.productImg ? `<img class="pred-product-img" src="${ctx.prediction.productImg}" />` : ''}
+        <div class="pred-info">
+          <div class="pred-name-cn">${ctx.prediction.goodsCN}</div>
+          <div class="pred-meta">产地：<span>${ctx.prediction.product.area}</span></div>
+          <span class="pred-level" style="background:${ctx.prediction.levelColor}18;border-color:${ctx.prediction.levelColor}44;color:${ctx.prediction.levelColor};">
+            ${ctx.prediction.levelStars} ${ctx.prediction.product.level}级货物
+          </span>
+        </div>
+      </div>` : ctx.prediction.goodsCN ? `
+      <div class="pred-row">
+        <div class="pred-info">
+          <div class="pred-name-cn">${ctx.prediction.goodsCN}</div>
+        </div>
+      </div>` : `
+      <div class="pred-row">
+        <div class="pred-info">
+          <div class="pred-name-kr">${ctx.prediction.goodsKR || '未知物品'}</div>
+        </div>
+      </div>`}
+
+      ${ctx.prediction.areaImg ? `
+      <div class="pred-area-section">
+        <img class="pred-area-img" src="${ctx.prediction.areaImg}" />
+        <div class="pred-area-label">📍 ${ctx.prediction.positionCN}</div>
+      </div>` : ctx.prediction.positionCN ? `
+      <div class="pred-pos-text">📍 ${ctx.prediction.positionCN}</div>` : `
+      <div class="pred-pos-text">📍 ${ctx.prediction.positionKR || '未知位置'}</div>`}
+
+      <div class="pred-hint">数据来源：韩服走私观测；时间为大致预测，可能有数十秒至数分钟误差</div>
     </div>
   </div>` : ''}
 
@@ -319,7 +374,7 @@ body{
 </body>
 </html>`
 
-const renderSmugglerImage = async (callback, captureText = '') => {
+const renderSmugglerImage = async (callback, prediction = null) => {
   try {
     const client = await getClient()
     const col = client.db('db_bot').collection('cl_mabinogi_smuggler')
@@ -378,7 +433,7 @@ const renderSmugglerImage = async (callback, captureText = '') => {
       vehicleRows,
       levelColor,
       levelStars,
-      captureText
+      prediction
     })
 
     const outDir = path.join(IMAGE_DATA, 'mabi_other')
@@ -401,17 +456,16 @@ const mabiSmuggler = async callback => {
 }
 
 const mabiSuperSmuggler = async callback => {
-  let captureText = ''
+  let prediction = null
   try {
-    const rows = await getRecentSmugKrItems(10)
-    captureText = buildCaptureTextFromDb({ rows })
+    const next = await getNextSmugKrPrediction()
+    if (next?.doc) prediction = buildPredictionCtx(next.doc)
   } catch (err) {
-    console.error('mabiSuperSmuggler db query error', err)
-    captureText = buildCaptureTextFromDb({ error: err?.message || String(err) })
+    console.error('mabiSuperSmuggler prediction error', err)
   }
 
   try {
-    await renderSmugglerImage(callback, captureText)
+    await renderSmugglerImage(callback, prediction)
   } catch (err) {
     console.error('mabiSuperSmuggler render error', err)
     callback(`超级走私查询失败：${err?.message || '未知错误'}`)

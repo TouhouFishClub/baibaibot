@@ -3,12 +3,53 @@
 //   - DB:        db_bot.cl_mabinogi_smuggler_kr
 //   - 主键 _id:  ${date}_${time}_${position}_${goods}（天然去重）
 //   - 时间字段: krTime —— API 返回的本地时间(CN, UTC+8) +1 小时即韩国本地时间
+//   - 中文字段: goodsCN / positionCN —— 通过 assets/translation.json 翻译得到
+//     translation.json 不入库不入 git，由 buildTranslation.js 维护
 //
 // 该模块在被 require 时会自动启动 36 分钟定时任务。
 // 如需关闭：设置环境变量 LUTE_SMUG_AUTO_START=0
 // =============================================================================
 
+const fs = require('fs')
+const path = require('path')
 const { getClient } = require('../../../mongo')
+
+// === 韩中翻译表（本地维护，文件可能不存在）===
+const TRANSLATION_PATH = path.join(__dirname, 'assets', 'translation.json')
+
+let translation = { goods: {}, position: {} }
+
+const reloadTranslation = () => {
+  try {
+    const raw = fs.readFileSync(TRANSLATION_PATH, 'utf8')
+    // 容忍尾部逗号等手动维护痕迹
+    const cleaned = raw.replace(/,(\s*[}\]])/g, '$1')
+    const parsed = JSON.parse(cleaned)
+    translation = {
+      goods: (parsed && parsed.goods) || {},
+      position: (parsed && parsed.position) || {}
+    }
+    const goodsCount = Object.keys(translation.goods).filter(k => k && translation.goods[k]).length
+    const posCount = Object.keys(translation.position).filter(k => k && translation.position[k]).length
+    console.log(`[smugglerKr] translation 加载完成: goods=${goodsCount} position=${posCount}`)
+  } catch (e) {
+    if (e && e.code !== 'ENOENT') {
+      console.warn(`[smugglerKr] translation.json 解析失败: ${e?.message || e}`)
+    }
+    translation = { goods: {}, position: {} }
+  }
+}
+reloadTranslation()
+
+const getTranslation = () => translation
+
+const lookupCN = (table, key) => {
+  if (!key) return null
+  const v = table[key]
+  if (typeof v !== 'string') return null
+  const t = v.trim()
+  return t || null
+}
 
 // === 抓取配置 ===
 const LUTE_COMMERCE_URL = 'https://lute.fantazm.net/commerce'
@@ -232,6 +273,9 @@ const buildSmugKrDoc = item => {
   const position = String(item.position || '')
   const goods = String(item.goods || '')
 
+  const goodsCN = lookupCN(translation.goods, goods)
+  const positionCN = lookupCN(translation.position, position)
+
   return {
     _id: `${date}_${time}_${position}_${goods}`,
     date,
@@ -242,7 +286,9 @@ const buildSmugKrDoc = item => {
     goods_link: String(item.goods_link || ''),
     values: String(item.values ?? ''),
     krTime,
-    krTs: krTime.getTime()
+    krTs: krTime.getTime(),
+    goodsCN,
+    positionCN
   }
 }
 
@@ -262,11 +308,21 @@ const persistSmugKrItems = async items => {
       continue
     }
     try {
-      const r = await col.updateOne(
-        { _id: doc._id },
-        { $setOnInsert: { ...doc, createdAt: new Date() } },
-        { upsert: true }
-      )
+      // CN 字段从 $setOnInsert 抽出来放到 $set —— 这样未来翻译表更新时
+      // 已存在记录也能在下次 upsert 时被补上。无翻译时不写以避免覆盖。
+      const { goodsCN, positionCN, ...core } = doc
+      const setFields = {}
+      if (goodsCN) setFields.goodsCN = goodsCN
+      if (positionCN) setFields.positionCN = positionCN
+
+      const update = {
+        $setOnInsert: { ...core, createdAt: new Date() }
+      }
+      if (Object.keys(setFields).length > 0) {
+        update.$set = setFields
+      }
+
+      const r = await col.updateOne({ _id: doc._id }, update, { upsert: true })
       const upsertedCount = (r && (r.upsertedCount || (r.upserted && r.upserted.length))) || 0
       if (upsertedCount > 0) {
         summary.inserted++
@@ -279,6 +335,28 @@ const persistSmugKrItems = async items => {
     }
   }
   return summary
+}
+
+// 用当前 translation.json 给已存在的 kr 记录补 goodsCN/positionCN
+// 仅写入翻译非空且与现值不同的字段；不会清空已有值
+const backfillCnFields = async () => {
+  const client = await getClient()
+  if (!client) throw new Error('mongo getClient() 失败')
+  const col = client.db(SMUG_KR_DB_NAME).collection(SMUG_KR_COLLECTION)
+  const all = await col.find({}).toArray()
+  let updated = 0
+  for (const doc of all) {
+    const setFields = {}
+    const goodsCN = lookupCN(translation.goods, doc.goods || '')
+    const positionCN = lookupCN(translation.position, doc.position || '')
+    if (goodsCN && goodsCN !== doc.goodsCN) setFields.goodsCN = goodsCN
+    if (positionCN && positionCN !== doc.positionCN) setFields.positionCN = positionCN
+    if (Object.keys(setFields).length > 0) {
+      await col.updateOne({ _id: doc._id }, { $set: setFields })
+      updated++
+    }
+  }
+  return { total: all.length, updated }
 }
 
 const scheduledFetchSmugKr = async () => {
@@ -332,6 +410,32 @@ const getRecentSmugKrItems = async (limit = 10) => {
   return col.find({}).sort({ krTs: -1 }).limit(limit).toArray()
 }
 
+// 取下一次走私预测：找出 krTs 大于当前国服最新 forecast.ts 的最早 KR 记录
+// （韩服比国服领先 1~2 个 36 分钟周期，所以这条 KR 记录即为国服下一次走私）
+const SMUG_CN_COLLECTION = 'cl_mabinogi_smuggler'
+const getNextSmugKrPrediction = async () => {
+  const client = await getClient()
+  if (!client) throw new Error('mongo getClient() 失败')
+  const krCol = client.db(SMUG_KR_DB_NAME).collection(SMUG_KR_COLLECTION)
+  const cnCol = client.db(SMUG_KR_DB_NAME).collection(SMUG_CN_COLLECTION)
+
+  const latestCn = await cnCol
+    .find({ type: 'forecast', area: { $ne: null }, item: { $ne: null } })
+    .sort({ ts: -1 })
+    .limit(1)
+    .next()
+
+  const lastCnTs = latestCn ? latestCn.ts : 0
+  const nextKr = await krCol
+    .find({ krTs: { $gt: lastCnTs } })
+    .sort({ krTs: 1 })
+    .limit(1)
+    .next()
+
+  if (!nextKr) return null
+  return { doc: nextKr, lastCnTs, latestCnDoc: latestCn || null }
+}
+
 module.exports = {
   startSmugKrScheduler,
   scheduledFetchSmugKr,
@@ -339,6 +443,10 @@ module.exports = {
   buildSmugKrDoc,
   fetchLuteSmugViaBrowser,
   getRecentSmugKrItems,
+  getNextSmugKrPrediction,
+  reloadTranslation,
+  getTranslation,
+  backfillCnFields,
   SMUG_KR_DB_NAME,
   SMUG_KR_COLLECTION
 }
