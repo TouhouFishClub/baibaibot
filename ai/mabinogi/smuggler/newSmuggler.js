@@ -1,7 +1,5 @@
 const path = require('path')
 const fs = require('fs')
-const https = require('https')
-const { HttpsProxyAgent } = require('https-proxy-agent')
 const nodeHtmlToImage = require('node-html-to-image')
 const font2base64 = require('node-font2base64')
 const { getClient } = require('../../../mongo')
@@ -60,564 +58,203 @@ const STATUS_MAP = {
 const DEFAULT_STATUS = { label: '走私消息', color: '#78909C', icon: '📢' }
 
 const LUTE_COMMERCE_URL = 'https://lute.fantazm.net/commerce'
-const LUTE_SMUG2_URL = 'https://lute.fantazm.net/ajax/smug2'
+const LUTE_SMUG2_URL_PART = '/ajax/smug2'
 const LUTE_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-const LUTE_HTTP_PROXY = process.env.LUTE_HTTP_PROXY || 'http://192.168.17.236:2346'
-const LUTE_SOCKS_PROXY = process.env.LUTE_SOCKS_PROXY || 'socks5://192.168.17.236:2345'
-const LUTE_PPTR_PROXY_CHAIN = [
-  process.env.LUTE_PPTR_PROXY || LUTE_SOCKS_PROXY,
-  LUTE_HTTP_PROXY,
-  '' // direct
-]
 
-const buildProxyAgent = () => {
+// 代理链：环境变量 LUTE_PPTR_PROXY 显式覆盖（含空字符串=直连）；
+// 否则按 socks5 -> http -> 直连依次重试
+const LUTE_PPTR_PROXY_CHAIN = (() => {
+  if (process.env.LUTE_PPTR_PROXY !== undefined) {
+    return [process.env.LUTE_PPTR_PROXY]
+  }
+  return [
+    process.env.LUTE_SOCKS_PROXY || 'socks5://192.168.17.236:2345',
+    process.env.LUTE_HTTP_PROXY || 'http://192.168.17.236:2346',
+    ''
+  ]
+})()
+
+// 用浏览器跑一次商业页，被动抓 /ajax/smug2 的响应；同时兜底读取 #smug_content tbody
+// 关键点：
+//   - 不去手动跑 grecaptcha / 注入 commerce.js，让页面自己执行 update_call()
+//   - 在 goto 之前就挂 page.waitForResponse，避免错过早响应
+//   - 不拦截 font / recaptcha / jquery，否则 reCAPTCHA 评分会走低或脚本断链
+const captureSmug2OnceWithProxy = async (proxyServer = '') => {
+  let puppeteer
   try {
-    return new HttpsProxyAgent(LUTE_HTTP_PROXY)
+    puppeteer = require('puppeteer')
   } catch {
-    return null
+    throw new Error('未安装 puppeteer 模块')
   }
-}
 
-const requestText = (url, options = {}, postBody = null) => new Promise((resolve, reject) => {
-  const agent = buildProxyAgent()
-  const req = https.request(url, {
-    ...options,
-    ...(agent ? { agent } : {})
-  }, res => {
-    let data = ''
-    res.setEncoding('utf8')
-    res.on('data', chunk => { data += chunk })
-    res.on('end', () => {
-      resolve({
-        statusCode: res.statusCode || 0,
-        headers: res.headers || {},
-        body: data
-      })
-    })
+  const launchArgs = [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-blink-features=AutomationControlled',
+    '--disable-features=IsolateOrigins,site-per-process',
+    '--no-first-run',
+    '--no-zygote',
+    '--ignore-certificate-errors',
+    '--lang=ko-KR'
+  ]
+  if (proxyServer) launchArgs.push(`--proxy-server=${proxyServer}`)
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    ignoreHTTPSErrors: true,
+    args: launchArgs,
+    timeout: 60000
   })
 
-  req.on('error', reject)
-  req.setTimeout(15000, () => req.destroy(new Error('request timeout')))
-  if (postBody) req.write(postBody)
-  req.end()
-})
-
-const extractLuteBootstrap = html => {
-  const csrf = html.match(/id="csrf_token"[^>]*value="([^"]+)"/i)?.[1] || ''
-  const siteKey = html.match(/__recaptchaSiteKey\s*=\s*"([^"]+)"/i)?.[1] || ''
-  return { csrf, siteKey }
-}
-
-const getLuteBootstrap = async () => {
-  const res = await requestText(LUTE_COMMERCE_URL, {
-    method: 'GET',
-    headers: {
-      'User-Agent': LUTE_UA,
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-    }
-  })
-  if (res.statusCode !== 200) {
-    throw new Error(`lute commerce 请求失败: ${res.statusCode}`)
+  const tStart = Date.now()
+  const debug = {
+    proxy: proxyServer || 'DIRECT',
+    timeline: [],
+    smug2Captured: false,
+    pageState: null,
+    domRows: []
   }
-
-  const { csrf, siteKey } = extractLuteBootstrap(res.body)
-  const setCookie = Array.isArray(res.headers['set-cookie']) ? res.headers['set-cookie'] : []
-  const cookie = setCookie.map(v => v.split(';')[0]).join('; ')
-
-  return { csrf, siteKey, cookie, html: res.body }
-}
-
-const buildSmug2Body = ({ csrfToken, recaptchaToken, tzOffset }) => {
-  const payload = new URLSearchParams()
-  payload.set('date', String(tzOffset))
-  payload.set('csrf_token', csrfToken || '')
-  payload.set('tk', recaptchaToken || '')
-  return payload.toString()
-}
-
-const fetchLuteSmug2 = async ({ csrfToken, recaptchaToken, cookie = '', tzOffset = new Date().getTimezoneOffset() }) => {
-  const postBody = buildSmug2Body({ csrfToken, recaptchaToken, tzOffset })
-  const res = await requestText(LUTE_SMUG2_URL, {
-    method: 'POST',
-    headers: {
-      'User-Agent': LUTE_UA,
-      'Referer': LUTE_COMMERCE_URL,
-      'X-Requested-With': 'XMLHttpRequest',
-      'Accept': 'application/json, text/javascript, */*; q=0.01',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'Content-Length': Buffer.byteLength(postBody),
-      ...(cookie ? { Cookie: cookie } : {})
-    }
-  }, postBody)
-
-  const text = (res.body || '').trim()
-  let parsed = null
-  if (text) {
-    try { parsed = JSON.parse(text) } catch { parsed = null }
-  }
-
-  return {
-    statusCode: res.statusCode,
-    headers: res.headers,
-    raw: res.body,
-    data: Array.isArray(parsed) ? parsed : null
-  }
-}
-
-const fetchLuteSmug2WithBrowser = async (attemptIndex = 0, bootstrapHints = null) => {
-  let puppeteer = null
-  let browser = null
-  const activeProxy = LUTE_PPTR_PROXY_CHAIN[Math.max(0, Math.min(attemptIndex, LUTE_PPTR_PROXY_CHAIN.length - 1))]
-  const result = {
-    source: 'puppeteer',
-    requestBody: '',
-    statusCode: 0,
-    headers: {},
-    raw: '',
-    data: null,
-    debug: {
-      proxy: {
-        http: LUTE_HTTP_PROXY,
-        socks: LUTE_SOCKS_PROXY,
-        selected: activeProxy || 'DIRECT',
-        attemptIndex
-      },
-      timeline: [],
-      smug2Requests: [],
-      smug2Responses: [],
-      recaptchaRequests: [],
-      recaptchaResponses: [],
-      recaptchaFailedRequests: [],
-      pageErrors: [],
-      consoleErrors: [],
-      pageState: null,
-      cookies: [],
-      pageMeta: null,
-      htmlPreview: '',
-      scriptPreview: [],
-      bootstrapHints: {
-        csrf: bootstrapHints?.csrf || '',
-        siteKey: bootstrapHints?.siteKey || ''
-      }
-    }
-  }
+  const log = msg => debug.timeline.push(`+${Date.now() - tStart}ms ${msg}`)
 
   try {
-    try {
-      puppeteer = require('puppeteer')
-    } catch {
-      throw new Error('未安装 puppeteer，无法进行浏览器抓包')
-    }
-
-    browser = await puppeteer.launch({
-      headless: true,
-      ignoreHTTPSErrors: true,
-      args: [
-        ...(activeProxy ? [`--proxy-server=${activeProxy}`] : []),
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--single-process',
-        '--disable-gpu',
-        '--ignore-certificate-errors',
-        '--allow-running-insecure-content',
-        '--disable-features=site-per-process'
-      ],
-      timeout: 60000
-    })
-    result.debug.proxy.selected = activeProxy || 'DIRECT'
-
     const page = await browser.newPage()
     await page.setUserAgent(LUTE_UA)
-    page.setDefaultNavigationTimeout(120000)
-    page.setDefaultTimeout(120000)
-    result.debug.timeline.push(`[${Date.now()}] browser+page ready`)
+    await page.setViewport({ width: 1280, height: 900 })
+    page.setDefaultNavigationTimeout(60000)
+    page.setDefaultTimeout(60000)
 
+    // 反自动化检测
+    await page.evaluateOnNewDocument(() => {
+      Object.defineProperty(navigator, 'webdriver', { get: () => undefined })
+      window.chrome = window.chrome || { runtime: {} }
+      Object.defineProperty(navigator, 'languages', { get: () => ['ko-KR', 'ko', 'en-US', 'en'] })
+    })
+
+    // 拦截广告/统计资源；图片也拦掉以减少超时风险
+    // 但不拦 font/recaptcha/jquery/socket.io——这些影响主流程
     await page.setRequestInterception(true)
     page.on('request', req => {
-      const url = req.url()
-      const type = req.resourceType()
-      // 屏蔽广告/统计等第三方资源，降低超时概率
-      if (
-        url.includes('googlesyndication') ||
-        url.includes('doubleclick') ||
-        url.includes('google-analytics') ||
-        url.includes('googletagmanager') ||
-        url.includes('fundingchoicesmessages') ||
-        url.includes('adtrafficquality') ||
-        url.includes('facebook') ||
-        url.includes('twitter') ||
-        type === 'media' ||
-        type === 'font'
-      ) {
-        req.abort()
+      const u = req.url()
+      const t = req.resourceType()
+      const block = (
+        t === 'image' ||
+        t === 'media' ||
+        u.includes('googlesyndication') ||
+        u.includes('doubleclick') ||
+        u.includes('googletagmanager') ||
+        u.includes('google-analytics') ||
+        u.includes('fundingchoicesmessages') ||
+        u.includes('adtrafficquality') ||
+        u.includes('pagead2.googlesyndication') ||
+        u.includes('adsbygoogle')
+      )
+      if (block) {
+        req.abort().catch(() => {})
         return
       }
-      req.continue()
+      req.continue().catch(() => {})
     })
 
-    page.on('pageerror', err => {
-      result.debug.pageErrors.push(err?.message || String(err))
-    })
-    page.on('console', msg => {
-      if (msg.type() === 'error') {
-        result.debug.consoleErrors.push(msg.text())
-      }
-    })
-
-    let captured = false
-    page.on('request', req => {
-      const url = req.url()
-      if (url.includes('/ajax/smug2')) {
-        const postData = req.postData() || ''
-        result.requestBody = postData
-        result.debug.smug2Requests.push({
-          method: req.method(),
-          url,
-          postData,
-          headers: req.headers()
-        })
-      }
-      if (url.includes('recaptcha') || url.includes('google.com/recaptcha') || url.includes('gstatic.com/recaptcha')) {
-        result.debug.recaptchaRequests.push({
-          method: req.method(),
-          url
-        })
-      }
-    })
-
-    page.on('requestfailed', req => {
-      const url = req.url()
-      if (url.includes('recaptcha') || url.includes('google.com/recaptcha') || url.includes('gstatic.com/recaptcha')) {
-        result.debug.recaptchaFailedRequests.push({
-          method: req.method(),
-          url,
-          failure: req.failure()?.errorText || 'unknown'
-        })
-      }
-    })
-
+    // 在跳转之前就挂上 smug2 的捕获器
+    let smug2Result = null
     page.on('response', async res => {
       const url = res.url()
-      if (url.includes('recaptcha') || url.includes('google.com/recaptcha') || url.includes('gstatic.com/recaptcha')) {
-        result.debug.recaptchaResponses.push({
-          url,
-          status: res.status()
-        })
-      }
-      if (url.includes('/ajax/smug2')) {
-        let body = ''
-        try { body = await res.text() } catch { body = '' }
-
-        const record = {
-          status: res.status(),
-          url,
-          headers: res.headers() || {},
-          bodyLen: body.length,
-          bodyPreview: body.slice(0, 400)
-        }
-        result.debug.smug2Responses.push(record)
-
-        if (!captured) {
-          captured = true
-          result.statusCode = res.status()
-          result.headers = res.headers() || {}
-          result.raw = body
-        }
-      }
-    })
-
-    let gotoOk = false
-    let lastGotoErr = null
-    for (let i = 1; i <= 2; i++) {
+      if (!url.includes(LUTE_SMUG2_URL_PART)) return
       try {
-        await page.goto(LUTE_COMMERCE_URL, { waitUntil: 'domcontentloaded', timeout: 120000 })
-        gotoOk = true
-        result.debug.timeline.push(`[${Date.now()}] goto commerce done (attempt ${i})`)
-        break
-      } catch (e) {
-        lastGotoErr = e
-        result.debug.timeline.push(`[${Date.now()}] goto commerce failed (attempt ${i}): ${e?.message || e}`)
-        await sleep(2000)
-      }
-    }
-    if (!gotoOk) {
-      const currentUrl = page.url()
-      let readyState = 'unknown'
-      let title = ''
-      try {
-        const state = await page.evaluate(() => ({
-          readyState: document.readyState,
-          title: document.title
-        }))
-        readyState = state.readyState
-        title = state.title
-      } catch {}
-      throw new Error(`navigation failed: ${lastGotoErr?.message || 'unknown'} | url=${currentUrl} | readyState=${readyState} | title=${title}`)
-    }
-    await sleep(3000)
-    result.debug.timeline.push(`[${Date.now()}] wait 3s done`)
-
-    result.debug.pageMeta = await page.evaluate(() => ({
-      url: location.href,
-      title: document.title,
-      readyState: document.readyState
-    }))
-
-    // 等关键脚本把变量挂上来（代理慢时可能比 DOMContentLoaded 慢很多）
-    try {
-      await page.waitForFunction(() => {
-        const hasCsrf = !!document.querySelector('#csrf_token')
-        const hasUpdateCall = typeof window.update_call === 'function'
-        const hasSiteKey = !!window.__recaptchaSiteKey
-        return hasCsrf || hasUpdateCall || hasSiteKey
-      }, { timeout: 25000 })
-      result.debug.timeline.push(`[${Date.now()}] waitForFunction key-vars done`)
-    } catch (e) {
-      result.debug.timeline.push(`[${Date.now()}] waitForFunction key-vars timeout: ${e?.message || e}`)
-    }
-
-    // 如果 update_call 仍不存在，尝试主动补载 commerce.js
-    const hasUpdateCallNow = await page.evaluate(() => typeof window.update_call === 'function')
-    if (!hasUpdateCallNow) {
-      await page.evaluate(() => {
-        const appendScript = src => new Promise(resolve => {
-          const s = document.createElement('script')
-          s.src = src
-          s.onload = () => resolve(true)
-          s.onerror = () => resolve(false)
-          document.head.appendChild(s)
-        })
-        return appendScript('https://lute.fantazm.net/js/commerce.js')
-      })
-      await sleep(2500)
-      result.debug.timeline.push(`[${Date.now()}] inject commerce.js attempted`)
-    }
-
-    // 页面缺字段时，使用 bootstrap 里拿到的值兜底注入
-    if (bootstrapHints?.siteKey || bootstrapHints?.csrf) {
-      await page.evaluate(hints => {
-        if (hints.siteKey && !window.__recaptchaSiteKey) {
-          window.__recaptchaSiteKey = hints.siteKey
-        }
-        if (hints.csrf) {
-          let el = document.querySelector('#csrf_token')
-          if (!el) {
-            el = document.createElement('input')
-            el.type = 'hidden'
-            el.id = 'csrf_token'
-            el.name = 'csrf_token'
-            document.body.appendChild(el)
-          }
-          if (!el.value) el.value = hints.csrf
-        }
-      }, {
-        siteKey: bootstrapHints?.siteKey || '',
-        csrf: bootstrapHints?.csrf || ''
-      })
-      result.debug.timeline.push(`[${Date.now()}] bootstrap hints injected`)
-    }
-
-    // 如果 grecaptcha 未加载，主动注入 Google reCAPTCHA 脚本
-    const hasRecaptchaNow = await page.evaluate(() => typeof window.grecaptcha !== 'undefined')
-    if (!hasRecaptchaNow) {
-      const siteKeyFromWindow = await page.evaluate(() => window.__recaptchaSiteKey || '')
-      if (siteKeyFromWindow) {
-        await page.evaluate(siteKey => {
-          const appendRecaptcha = src => new Promise(resolve => {
-            const exist = Array.from(document.scripts || []).some(s => (s.src || '').includes('recaptcha/api.js'))
-            if (exist) {
-              resolve(true)
-              return
-            }
-            const s = document.createElement('script')
-            s.src = src
-            s.async = true
-            s.defer = true
-            s.onload = () => resolve(true)
-            s.onerror = () => resolve(false)
-            document.head.appendChild(s)
-          })
-          return appendRecaptcha(`https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}`)
-        }, siteKeyFromWindow)
-        await sleep(3000)
-        result.debug.timeline.push(`[${Date.now()}] inject recaptcha api attempted`)
-      } else {
-        result.debug.timeline.push(`[${Date.now()}] skip recaptcha inject: empty siteKey`)
-      }
-    }
-
-    result.debug.pageState = await page.evaluate(() => {
-      const csrf = document.querySelector('#csrf_token')?.value || ''
-      const hasGrecaptcha = typeof grecaptcha !== 'undefined'
-      const siteKey = window.__recaptchaSiteKey || ''
-      const hasUpdateCall = typeof update_call === 'function'
-      const tableRows = document.querySelectorAll('#smug_content tbody tr').length
-      return { csrf, hasGrecaptcha, siteKey, hasUpdateCall, tableRows }
-    })
-    result.debug.timeline.push(`[${Date.now()}] pageState collected`)
-
-    const extraDebug = await page.evaluate(() => {
-      const bodyText = (document.body?.innerText || '').trim().slice(0, 600)
-      const scripts = Array.from(document.scripts || [])
-        .map(s => s.src || '[inline]')
-        .slice(0, 20)
-      return { bodyText, scripts }
-    })
-    result.debug.htmlPreview = extraDebug.bodyText || ''
-    result.debug.scriptPreview = extraDebug.scripts || []
-
-    // 主动触发一次页面方法，避免某些情况下 ready 回调没有抓到
-    try {
-      const call1 = await page.evaluate(() => {
-        try {
-          if (typeof update_call === 'function') {
-            update_call()
-            return 'called'
-          }
-          return 'missing'
-        } catch (e) {
-          return `error:${e?.message || String(e)}`
-        }
-      })
-      result.debug.timeline.push(`[${Date.now()}] update_call() #1 => ${call1}`)
-    } catch (e) {
-      result.debug.timeline.push(`[${Date.now()}] update_call() #1 evaluate error: ${e?.message || e}`)
-    }
-    await sleep(3000)
-    try {
-      const call2 = await page.evaluate(() => {
-        try {
-          if (typeof update_call === 'function') {
-            update_call()
-            return 'called'
-          }
-          return 'missing'
-        } catch (e) {
-          return `error:${e?.message || String(e)}`
-        }
-      })
-      result.debug.timeline.push(`[${Date.now()}] update_call() #2 => ${call2}`)
-    } catch (e) {
-      result.debug.timeline.push(`[${Date.now()}] update_call() #2 evaluate error: ${e?.message || e}`)
-    }
-    await sleep(5000)
-    result.debug.timeline.push(`[${Date.now()}] wait after update_call done`)
-
-    // 兜底：如果仍未发出 smug2 请求，手动执行 grecaptcha 并直接请求 smug2
-    if ((result.debug.smug2Requests || []).length === 0) {
-      const manualFallback = await page.evaluate(async () => {
-        const out = { ok: false, reason: '', tokenLen: 0, bodyLen: 0, executeError: '' }
-        try {
-          const siteKey = window.__recaptchaSiteKey || ''
-          const csrf = document.querySelector('#csrf_token')?.value || ''
-          if (!siteKey) {
-            out.reason = 'empty siteKey'
-            return out
-          }
-          if (typeof window.grecaptcha === 'undefined') {
-            out.reason = 'grecaptcha not loaded'
-            return out
-          }
-
-          const token = await new Promise(resolve => {
-            try {
-              let settled = false
-              const done = val => {
-                if (!settled) {
-                  settled = true
-                  resolve(val)
-                }
-              }
-              setTimeout(() => done(''), 15000)
-              window.grecaptcha.ready(() => {
-                window.grecaptcha.execute(siteKey, { action: 'ajax_smuggler' })
-                  .then(done)
-                  .catch(err => {
-                    out.executeError = err?.message || String(err)
-                    done('')
-                  })
-              })
-            } catch {
-              resolve('')
-            }
-          })
-          out.tokenLen = (token || '').length
-          if (!token) {
-            out.reason = 'empty token'
-            return out
-          }
-
-          const body = new URLSearchParams({
-            date: String(new Date().getTimezoneOffset()),
-            csrf_token: csrf,
-            tk: token
-          }).toString()
-
-          const resp = await fetch('/ajax/smug2', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-              'X-Requested-With': 'XMLHttpRequest'
-            },
+        const body = await res.text()
+        if (!smug2Result && body) {
+          smug2Result = {
+            status: res.status(),
+            url,
+            headers: res.headers(),
             body
-          })
-          const text = await resp.text()
-          out.ok = true
-          out.bodyLen = text.length
-          out.reason = `status=${resp.status}`
-          return out
-        } catch (e) {
-          out.reason = e?.message || String(e)
-          return out
+          }
+          debug.smug2Captured = true
+          log(`smug2 captured: status=${res.status()} bodyLen=${body.length}`)
+        }
+      } catch (e) {
+        log(`smug2 read error: ${e?.message || e}`)
+      }
+    })
+
+    page.on('pageerror', err => log(`pageerror: ${err?.message || err}`))
+
+    log(`goto ${LUTE_COMMERCE_URL}`)
+    await page.goto(LUTE_COMMERCE_URL, { waitUntil: 'domcontentloaded', timeout: 60000 })
+    log('domcontentloaded')
+
+    // 轮询：直到 smug2 被抓到，或 #smug_content tbody 被填上行，或超时
+    const startWait = Date.now()
+    const maxWaitMs = 45000
+    while (Date.now() - startWait < maxWaitMs) {
+      if (smug2Result) break
+      let rowCount = 0
+      try {
+        rowCount = await page.evaluate(() => {
+          const tb = document.querySelector('#smug_content tbody')
+          return tb ? tb.querySelectorAll('tr').length : 0
+        })
+      } catch {}
+      if (rowCount > 0) {
+        log(`dom rows populated: ${rowCount}`)
+        break
+      }
+      await sleep(500)
+    }
+
+    // 抓 DOM 行作为兜底
+    try {
+      const state = await page.evaluate(() => {
+        const tb = document.querySelector('#smug_content tbody')
+        const rows = tb
+          ? Array.from(tb.querySelectorAll('tr')).map(tr => {
+              const tds = Array.from(tr.querySelectorAll('td'))
+              return tds.map(td => (td.innerText || '').replace(/\s+/g, ' ').trim())
+            })
+          : []
+        return {
+          csrf: document.querySelector('#csrf_token')?.value || '',
+          siteKey: window.__recaptchaSiteKey || '',
+          hasGrecaptcha: typeof window.grecaptcha !== 'undefined',
+          hasUpdateCall: typeof window.update_call === 'function',
+          rowCount: rows.length,
+          rows,
+          smugStat: (document.querySelector('#smug_stat')?.innerText || '').trim(),
+          smugTime: (document.querySelector('#smug_time')?.innerText || '').trim()
         }
       })
-      result.debug.timeline.push(`[${Date.now()}] manual recaptcha fallback: ${JSON.stringify(manualFallback)}`)
-      await sleep(1500)
+      debug.pageState = state
+      debug.domRows = state.rows || []
+    } catch (e) {
+      log(`pageState eval error: ${e?.message || e}`)
     }
 
-    try {
-      const cookies = await page.cookies()
-      result.debug.cookies = cookies.map(c => `${c.name}=${c.value}`)
-    } catch {
-      result.debug.cookies = []
-    }
-
-    const text = (result.raw || '').trim()
-    if (text) {
-      try {
-        const parsed = JSON.parse(text)
-        if (Array.isArray(parsed)) result.data = parsed
-      } catch {
-        result.data = null
-      }
-    }
-    return result
-  } catch (err) {
-    const errMsg = err?.message || String(err)
-    const shouldRetry = attemptIndex < (LUTE_PPTR_PROXY_CHAIN.length - 1) && (
-      errMsg.includes('ERR_PROXY_CONNECTION_FAILED') ||
-      errMsg.includes('navigation failed') ||
-      errMsg.includes('Navigation timeout')
-    )
-    if (shouldRetry) {
-      const next = await fetchLuteSmug2WithBrowser(attemptIndex + 1, bootstrapHints)
-      next.debug = next.debug || {}
-      next.debug.timeline = [
-        `[${Date.now()}] retry from ${activeProxy || 'DIRECT'} because: ${errMsg}`,
-        ...(next.debug.timeline || [])
-      ]
-      return next
-    }
-    throw err
+    return { smug2Result, debug }
   } finally {
-    if (browser) await browser.close()
+    try { await browser.close() } catch {}
   }
 }
+
+const fetchLuteSmugViaBrowser = async () => {
+  const errors = []
+  for (const proxy of LUTE_PPTR_PROXY_CHAIN) {
+    try {
+      const res = await captureSmug2OnceWithProxy(proxy)
+      const hasSmug2 = !!res.smug2Result?.body
+      const hasDomRows = Array.isArray(res.debug.domRows) && res.debug.domRows.length > 0
+      if (hasSmug2 || hasDomRows) {
+        return res
+      }
+      errors.push({ proxy: proxy || 'DIRECT', message: 'capture empty' })
+    } catch (e) {
+      errors.push({ proxy: proxy || 'DIRECT', message: e?.message || String(e) })
+    }
+  }
+  throw new Error(`所有代理都失败: ${errors.map(e => `[${e.proxy}] ${e.message}`).join(' | ')}`)
+}
+
 
 const escapeHtml = text => String(text || '')
   .replace(/&/g, '&amp;')
@@ -626,83 +263,77 @@ const escapeHtml = text => String(text || '')
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#39;')
 
+// 从 lute 接口返回的单条对象里抽出有用字段
+const formatSmugItem = (item, idx) => {
+  if (!item || typeof item !== 'object') return ''
+  const date = item.date || ''
+  const time = item.time || ''
+  const dateStr = date && time
+    ? `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)} ${time}`
+    : (time || date || '')
+  const segs = [
+    dateStr,
+    item.position || '',
+    item.goods || '',
+    item.values !== undefined && item.values !== '' ? `${item.values}D` : ''
+  ].filter(s => s !== '')
+  return `#${idx + 1} ${segs.join(' | ')}`
+}
+
 const buildCaptureText = capture => {
   if (!capture) return ''
   const lines = []
-  lines.push(`capture.source: ${capture.source || 'direct'}`)
-  if (capture.bootstrap?.csrf !== undefined) lines.push(`bootstrap.csrf: ${capture.bootstrap?.csrf || '<empty>'}`)
-  if (capture.bootstrap?.siteKey !== undefined) lines.push(`bootstrap.siteKey: ${capture.bootstrap?.siteKey || '<empty>'}`)
-  if (capture.tzOffset !== undefined) lines.push(`request.date(tzOffset): ${capture.tzOffset}`)
-  if (capture.requestBody !== undefined) lines.push(`request.body: ${capture.requestBody || '<empty>'}`)
-  lines.push(`response.status: ${capture.response?.statusCode}`)
-  lines.push(`response.content-type: ${capture.response?.headers?.['content-type'] || '<empty>'}`)
-  const debug = capture.response?.debug || null
-  if (debug) {
-    if (debug.proxy) {
-      lines.push(`debug.proxy.http: ${debug.proxy.http || '<empty>'}`)
-      lines.push(`debug.proxy.socks: ${debug.proxy.socks || '<empty>'}`)
-      lines.push(`debug.proxy.selected: ${debug.proxy.selected || '<empty>'}`)
-    }
-    if (debug.bootstrapHints) {
-      lines.push(`debug.bootstrapHints.siteKey: ${debug.bootstrapHints.siteKey || '<empty>'}`)
-      lines.push(`debug.bootstrapHints.csrf: ${debug.bootstrapHints.csrf || '<empty>'}`)
-    }
-    lines.push(`debug.smug2.requests: ${debug.smug2Requests?.length || 0}`)
-    lines.push(`debug.smug2.responses: ${debug.smug2Responses?.length || 0}`)
-    lines.push(`debug.recaptcha.requests: ${debug.recaptchaRequests?.length || 0}`)
-    lines.push(`debug.recaptcha.responses: ${debug.recaptchaResponses?.length || 0}`)
-    lines.push(`debug.recaptcha.failed: ${debug.recaptchaFailedRequests?.length || 0}`)
-    lines.push(`debug.pageErrors: ${(debug.pageErrors || []).length}`)
-    lines.push(`debug.consoleErrors: ${(debug.consoleErrors || []).length}`)
-    if (debug.pageState) lines.push(`debug.pageState: ${JSON.stringify(debug.pageState)}`)
-    if (debug.pageMeta) lines.push(`debug.pageMeta: ${JSON.stringify(debug.pageMeta)}`)
-    if (Array.isArray(debug.scriptPreview) && debug.scriptPreview.length) {
-      lines.push(`debug.scriptPreview: ${JSON.stringify(debug.scriptPreview)}`)
-    }
-    if (debug.htmlPreview) lines.push(`debug.htmlPreview: ${debug.htmlPreview}`)
-    if (Array.isArray(debug.cookies) && debug.cookies.length) lines.push(`debug.cookies: ${debug.cookies.join('; ')}`)
-    if (Array.isArray(debug.timeline) && debug.timeline.length) {
-      lines.push('debug.timeline:')
-      lines.push(debug.timeline.join('\n'))
-    }
-    if (Array.isArray(debug.smug2Requests) && debug.smug2Requests.length) {
-      lines.push(`debug.lastSmug2Request: ${JSON.stringify(debug.smug2Requests[debug.smug2Requests.length - 1])}`)
-    }
-    if (Array.isArray(debug.smug2Responses) && debug.smug2Responses.length) {
-      lines.push(`debug.lastSmug2Response: ${JSON.stringify(debug.smug2Responses[debug.smug2Responses.length - 1])}`)
-    }
-    if (Array.isArray(debug.recaptchaResponses) && debug.recaptchaResponses.length) {
-      lines.push(`debug.lastRecaptchaResponse: ${JSON.stringify(debug.recaptchaResponses[debug.recaptchaResponses.length - 1])}`)
-    }
-    if (Array.isArray(debug.recaptchaFailedRequests) && debug.recaptchaFailedRequests.length) {
-      lines.push(`debug.lastRecaptchaFailed: ${JSON.stringify(debug.recaptchaFailedRequests[debug.recaptchaFailedRequests.length - 1])}`)
-    }
-  }
-  if (capture.preDebug) {
-    lines.push('preDebug.present: true')
-    lines.push(`preDebug.source: ${capture.preDebug.source || '<unknown>'}`)
-    lines.push(`preDebug.error: ${capture.preDebug.error || '<none>'}`)
-    lines.push(`preDebug.smug2.requests: ${capture.preDebug.smug2RequestCount ?? 0}`)
-    lines.push(`preDebug.smug2.responses: ${capture.preDebug.smug2ResponseCount ?? 0}`)
-    lines.push(`preDebug.recaptcha.requests: ${capture.preDebug.recaptchaRequestCount ?? 0}`)
-    if (capture.preDebug.pageState) lines.push(`preDebug.pageState: ${JSON.stringify(capture.preDebug.pageState)}`)
-    if (capture.preDebug.lastSmug2Request) lines.push(`preDebug.lastSmug2Request: ${JSON.stringify(capture.preDebug.lastSmug2Request)}`)
-    if (capture.preDebug.lastSmug2Response) lines.push(`preDebug.lastSmug2Response: ${JSON.stringify(capture.preDebug.lastSmug2Response)}`)
-    if (Array.isArray(capture.preDebug.timeline) && capture.preDebug.timeline.length) {
-      lines.push('preDebug.timeline:')
-      lines.push(capture.preDebug.timeline.join('\n'))
-    }
-  } else {
-    lines.push('preDebug.present: false')
+  const { proxy, smug2Result, debug, error } = capture
+
+  lines.push(`抓取代理: ${proxy || 'DIRECT'}`)
+  if (error) {
+    lines.push(`错误: ${error}`)
   }
 
-  if (Array.isArray(capture.response?.data)) {
-    lines.push(`response.json.length: ${capture.response.data.length}`)
-    lines.push(JSON.stringify(capture.response.data, null, 2))
+  if (smug2Result) {
+    lines.push(`/ajax/smug2 状态: ${smug2Result.status}`)
+    lines.push(`返回长度: ${(smug2Result.body || '').length}`)
   } else {
-    lines.push(`response.raw.length: ${(capture.response?.raw || '').length}`)
-    lines.push(capture.response?.raw ? capture.response.raw : '<empty body>')
+    lines.push('未抓到 /ajax/smug2 响应（兜底使用 DOM 数据）')
   }
+
+  let parsed = null
+  if (smug2Result?.body) {
+    try { parsed = JSON.parse(smug2Result.body) } catch { parsed = null }
+  }
+
+  if (Array.isArray(parsed) && parsed.length > 0) {
+    lines.push('')
+    lines.push(`=== 走私数据(接口, ${parsed.length} 条) ===`)
+    parsed.forEach((it, i) => {
+      const formatted = formatSmugItem(it, i)
+      if (formatted) lines.push(formatted)
+    })
+  } else if (debug?.domRows?.length) {
+    lines.push('')
+    lines.push(`=== 走私数据(DOM 兜底, ${debug.domRows.length} 行) ===`)
+    debug.domRows.forEach((row, i) => {
+      lines.push(`#${i + 1} ${row.filter(Boolean).join(' | ')}`)
+    })
+  } else if (smug2Result?.body) {
+    lines.push('')
+    lines.push(`response.raw: ${smug2Result.body.slice(0, 800)}`)
+  }
+
+  if (debug?.pageState) {
+    lines.push('')
+    const ps = debug.pageState
+    lines.push(`页面状态: csrf=${ps.csrf ? 'ok' : 'no'} siteKey=${ps.siteKey ? 'ok' : 'no'} grecaptcha=${ps.hasGrecaptcha} update_call=${ps.hasUpdateCall} rows=${ps.rowCount}`)
+    if (ps.smugStat) lines.push(`smug_stat: ${ps.smugStat}`)
+    if (ps.smugTime) lines.push(`smug_time: ${ps.smugTime}`)
+  }
+
+  if (Array.isArray(debug?.timeline) && debug.timeline.length) {
+    lines.push('')
+    lines.push('=== timeline ===')
+    lines.push(...debug.timeline)
+  }
+
   return lines.join('\n')
 }
 
@@ -1001,85 +632,33 @@ const mabiSmuggler = async callback => {
 }
 
 const mabiSuperSmuggler = async callback => {
+  let captureText = ''
   try {
-    let bootstrap = null
-    try {
-      bootstrap = await getLuteBootstrap()
-    } catch {
-      bootstrap = null
-    }
-
-    let response = null
-    let preDebug = null
-    try {
-      response = await fetchLuteSmug2WithBrowser(0, bootstrap)
-      preDebug = {
-        source: response.source,
-        error: '',
-        smug2RequestCount: response.debug?.smug2Requests?.length || 0,
-        smug2ResponseCount: response.debug?.smug2Responses?.length || 0,
-        recaptchaRequestCount: response.debug?.recaptchaRequests?.length || 0,
-        pageState: response.debug?.pageState || null,
-        lastSmug2Request: response.debug?.smug2Requests?.slice(-1)?.[0] || null,
-        lastSmug2Response: response.debug?.smug2Responses?.slice(-1)?.[0] || null,
-        timeline: response.debug?.timeline || []
-      }
-    } catch (e) {
-      response = {
-        source: 'puppeteer-error',
-        requestBody: '',
-        statusCode: 0,
-        headers: {},
-        raw: e?.message || 'puppeteer capture failed',
-        data: null
-      }
-      preDebug = {
-        source: 'puppeteer-error',
-        error: e?.message || 'puppeteer capture failed',
-        smug2RequestCount: 0,
-        smug2ResponseCount: 0,
-        recaptchaRequestCount: 0,
-        pageState: null,
-        lastSmug2Request: null,
-        lastSmug2Response: null,
-        timeline: []
-      }
-    }
-
-    if (!Array.isArray(response.data) || response.data.length === 0) {
-      const tzOffset = new Date().getTimezoneOffset()
-      if (bootstrap) {
-        const fallback = await fetchLuteSmug2({
-          csrfToken: bootstrap.csrf,
-          recaptchaToken: '',
-          cookie: bootstrap.cookie,
-          tzOffset
-        })
-        response = {
-          ...fallback,
-          source: response.source === 'puppeteer-error' ? 'direct-fallback-after-puppeteer-error' : 'direct-fallback',
-          requestBody: buildSmug2Body({ csrfToken: bootstrap.csrf, recaptchaToken: '', tzOffset })
-        }
-      }
-    }
-
-    const captureText = buildCaptureText({
-      source: response.source || 'puppeteer',
-      bootstrap,
-      requestBody: response.requestBody,
-      response,
-      preDebug
+    const { smug2Result, debug } = await fetchLuteSmugViaBrowser()
+    captureText = buildCaptureText({
+      proxy: debug?.proxy,
+      smug2Result,
+      debug
     })
+  } catch (err) {
+    console.error('mabiSuperSmuggler capture error', err)
+    captureText = buildCaptureText({
+      proxy: '',
+      smug2Result: null,
+      debug: { timeline: [] },
+      error: err?.message || String(err)
+    })
+  }
+
+  try {
     await renderSmugglerImage(callback, captureText)
   } catch (err) {
-    console.error('mabiSuperSmuggler query error', err)
-    callback(`超级走私查询失败：${err.message || '未知错误'}`)
+    console.error('mabiSuperSmuggler render error', err)
+    callback(`超级走私查询失败：${err?.message || '未知错误'}`)
   }
 }
 
 module.exports = {
   mabiSmuggler,
-  mabiSuperSmuggler,
-  getLuteBootstrap,
-  fetchLuteSmug2
+  mabiSuperSmuggler
 }
