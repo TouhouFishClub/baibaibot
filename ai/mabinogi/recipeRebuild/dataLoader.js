@@ -101,11 +101,36 @@ const matchCategory = (pattern, category) => {
 const isExcludedMaterialItem = (item) => {
   const category = item && item.category ? item.category : ''
   const feature = item && item.feature ? item.feature.toLowerCase() : ''
+  const name = item && item.name ? item.name : ''
+  const isNpcOrMonsterVariant = /\((monster|npc)\)/i.test(name)
+  const hasNpcWeaponTag = /(?:^|\/)npc_weapon(?:\/|$)/.test(category)
+  const hasWeaponSkinTag = /(?:^|\/)weapon_skin(?:\/|$)/.test(category)
   return (
-    category.includes('npc_weapon')
-    || category.includes('weapon_skin')
+    hasNpcWeaponTag
+    || hasWeaponSkinTag
     || feature.includes('npc')
+    || isNpcOrMonsterVariant
   )
+}
+
+/** 选择更适合做材料展示的候选物品 */
+const isBetterMaterialCandidate = (candidate, currentBest) => {
+  if (!candidate) return false
+  if (!currentBest) return true
+
+  const candidateStartsWithAt = candidate.name && candidate.name.startsWith('@')
+  const bestStartsWithAt = currentBest.name && currentBest.name.startsWith('@')
+  if (candidateStartsWithAt !== bestStartsWithAt) {
+    return !candidateStartsWithAt
+  }
+
+  const candidateIsEvent = candidate.name && candidate.name.includes('活动')
+  const bestIsEvent = currentBest.name && currentBest.name.includes('活动')
+  if (candidateIsEvent !== bestIsEvent) {
+    return !candidateIsEvent
+  }
+
+  return candidate.id < currentBest.id
 }
 
 // ====== 物品数据库配置 ======
@@ -241,8 +266,9 @@ const resolveComplexPattern = (rawPattern, allItems) => {
       if (matchCategory(neg, item.category)) { excluded = true; break }
     }
     if (excluded) continue
-    bestMatch = item
-    if (!item.name.includes('活动')) break
+    if (isBetterMaterialCandidate(item, bestMatch)) {
+      bestMatch = item
+    }
   }
 
   return bestMatch ? { id: bestMatch.id, name: bestMatch.name } : null
@@ -270,8 +296,9 @@ const resolvePattern = (pattern, allItems) => {
   for (const [, item] of allItems) {
     if (isExcludedMaterialItem(item)) continue
     if (matchCategory(pattern, item.category)) {
-      bestMatch = item
-      if (!item.name.includes('活动')) break
+      if (isBetterMaterialCandidate(item, bestMatch)) {
+        bestMatch = item
+      }
     }
   }
 
