@@ -480,11 +480,17 @@ const getRecentSmugKrItems = async (limit = 10) => {
 // 取下一次走私预测：找出 krTs 大于当前国服最新 forecast.ts 的最早 KR 记录
 // （韩服比国服领先 1~2 个 36 分钟周期，所以这条 KR 记录即为国服下一次走私）
 //
+// 同周期防重复：要求 krTs 至少领先国服当前 cycle ≥ 18 分钟（半个 cycle）。
+// 国服与韩服的 cycle 节奏一致但起点不必完全对齐，同周期下两服 ts 的差通常
+// 在几秒到几分钟内；下一个 cycle 则差 ~36 分钟。取一半 cycle 作分界即可
+// 区分"同 cycle"和"下一 cycle"，避免预测卡和当前走私显示同一条。
+//
 // 维护期/异常恢复期保护：krTs 必须仍在未来（带 10 分钟容差），防止
 //   - 国服维护拉长导致 lastCnTs 卡在过去 → 误把旧 KR 当下一次预测
 //   - 韩服维护结束后第一次抓到的是断点附近的过期数据
 const SMUG_CN_COLLECTION = 'cl_mabinogi_smuggler'
 const PREDICTION_FUTURE_TOLERANCE_MS = 10 * 60 * 1000
+const PREDICTION_MIN_LEAD_MS = 18 * 60 * 1000  // 半个 cycle
 const getNextSmugKrPrediction = async () => {
   const client = await getClient()
   if (!client) throw new Error('mongo getClient() 失败')
@@ -499,7 +505,9 @@ const getNextSmugKrPrediction = async () => {
 
   const lastCnTs = latestCn ? latestCn.ts : 0
   const nowMinusTol = Date.now() - PREDICTION_FUTURE_TOLERANCE_MS
-  const tsLowerBound = Math.max(lastCnTs, nowMinusTol)
+  // 关键：lastCnTs + 半个 cycle 才视为下一 cycle 的 KR 记录
+  const cycleLowerBound = lastCnTs > 0 ? lastCnTs + PREDICTION_MIN_LEAD_MS : 0
+  const tsLowerBound = Math.max(cycleLowerBound, nowMinusTol)
 
   const nextKr = await krCol
     .find({ krTs: { $gt: tsLowerBound } })
