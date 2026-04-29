@@ -80,6 +80,17 @@ const fmtClock = ts => {
   return `${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`
 }
 
+// 倒计时（剩余 ms）格式化：3分5秒 / 12分钟 / 45秒
+const fmtCountdown = ms => {
+  const safe = Math.max(0, ms)
+  const total = Math.round(safe / 1000)
+  const m = Math.floor(total / 60)
+  const s = total % 60
+  if (m === 0) return `${s}秒`
+  if (s === 0) return `${m}分钟`
+  return `${m}分${s}秒`
+}
+
 // 反推 doc 所属 cycle 的 anchor (forecast.ts)
 const anchorOfDoc = d => {
   if (!d || typeof d.ts !== 'number') return null
@@ -139,15 +150,22 @@ const computeSmugglerStatus = (docs, now) => {
     return { stale: true, anchorTs, area, item }
   }
 
+  // 倒计时锚点：
+  //   forecast  / absent     → 距离下一次"出现"剩余时间
+  //   appear    / disappear  → 距离实际"消失"剩余时间
+  const appearTs = anchorTs + PHASE_F2A_MS
+  const goneTs = anchorTs + PHASE_F2A_MS + PHASE_A2DF_MS + PHASE_DF2GONE_MS
+  const nextAppearTs = anchorTs + CYCLE_MS + PHASE_F2A_MS
+
   let etaText = ''
   if (status === 'forecast') {
-    etaText = `预计于 ${fmtClock(anchorTs + PHASE_F2A_MS)} 出现`
+    etaText = `${fmtCountdown(appearTs - now)} 后出现 (${fmtClock(appearTs)})`
   } else if (status === 'appear') {
-    etaText = `已于 ${fmtClock(anchorTs + PHASE_F2A_MS)} 出现`
+    etaText = `${fmtCountdown(goneTs - now)} 后消失 (${fmtClock(goneTs)})`
   } else if (status === 'disappear_forecast') {
-    etaText = `预计于 ${fmtClock(anchorTs + PHASE_F2A_MS + PHASE_A2DF_MS + PHASE_DF2GONE_MS)} 消失`
+    etaText = `${fmtCountdown(goneTs - now)} 后消失 (${fmtClock(goneTs)})`
   } else if (status === 'absent') {
-    etaText = `下次出现时间约 ${fmtClock(anchorTs + CYCLE_MS + PHASE_F2A_MS)}`
+    etaText = `${fmtCountdown(nextAppearTs - now)} 后出现 (${fmtClock(nextAppearTs)})`
   }
 
   return { stale: false, status, anchorTs, area, item, etaText }
