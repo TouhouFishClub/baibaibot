@@ -186,8 +186,8 @@ const main = async () => {
 
   fs.writeFileSync(TRANSLATION_PATH, JSON.stringify(final, null, 2) + '\n', 'utf8')
   console.log(`[buildTranslation] 写入 ${TRANSLATION_PATH}`)
-  console.log(`  goods:    新增=${goodsAdded} 一致=${goodsKept} 冲突=${goodsConflict} 总=${Object.keys(final.goods).length}`)
-  console.log(`  position: 新增=${posAdded} 一致=${posKept} 冲突=${posConflict} 总=${Object.keys(final.position).length}`)
+  console.log(`  goods:    新增=${goodsAdded} 一致=${goodsKept} 冲突=${goodsConflict} 总=${Object.keys(final.goods).length}/48`)
+  console.log(`  position: 新增=${posAdded} 一致=${posKept} 冲突=${posConflict} 总=${Object.keys(final.position).length}/29`)
 
   if (FLAG_BACKFILL) {
     console.log('[buildTranslation] --backfill: 回填 DB 中存量 kr 记录的 CN 字段')
