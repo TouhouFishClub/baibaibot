@@ -97,6 +97,48 @@ const matchCategory = (pattern, category) => {
   return true
 }
 
+/** 材料匹配时排除不应作为材料的物品 */
+const isExcludedMaterialItem = (item) => {
+  const category = item && item.category ? item.category : ''
+  const feature = item && item.feature ? item.feature.toLowerCase() : ''
+  const name = item && item.name ? item.name : ''
+  const isNpcOrMonsterVariant = /\((monster|npc)\)/i.test(name)
+  const hasNpcWeaponTag = /(?:^|\/)npc_weapon(?:\/|$)/.test(category)
+  const hasWeaponSkinTag = /(?:^|\/)weapon_skin(?:\/|$)/.test(category)
+  return (
+    hasNpcWeaponTag
+    || hasWeaponSkinTag
+    || feature.includes('npc')
+    || isNpcOrMonsterVariant
+  )
+}
+
+/** 选择更适合做材料展示的候选物品 */
+const isBetterMaterialCandidate = (candidate, currentBest) => {
+  if (!candidate) return false
+  if (!currentBest) return true
+
+  const candidateIsSacItem = /(?:^|\/)sac_item(?:\/|$)/.test(candidate.category || '')
+  const bestIsSacItem = /(?:^|\/)sac_item(?:\/|$)/.test(currentBest.category || '')
+  if (candidateIsSacItem !== bestIsSacItem) {
+    return !candidateIsSacItem
+  }
+
+  const candidateStartsWithAt = candidate.name && candidate.name.startsWith('@')
+  const bestStartsWithAt = currentBest.name && currentBest.name.startsWith('@')
+  if (candidateStartsWithAt !== bestStartsWithAt) {
+    return !candidateStartsWithAt
+  }
+
+  const candidateIsEvent = candidate.name && candidate.name.includes('活动')
+  const bestIsEvent = currentBest.name && currentBest.name.includes('活动')
+  if (candidateIsEvent !== bestIsEvent) {
+    return !candidateIsEvent
+  }
+
+  return candidate.id < currentBest.id
+}
+
 // ====== 物品数据库配置 ======
 const ITEM_DB_FILES = [
   { xml: 'itemdb.xml', txt: 'itemdb.china.txt', tag: 'itemdb' },
@@ -110,7 +152,7 @@ const ITEM_DB_FILES = [
 
 /** 从XML加载所有物品数据，返回 { itemMap, nameMap } */
 const loadAllItemsFromXml = async () => {
-  const itemMap = new Map()  // id → { id, name, category }
+  const itemMap = new Map()  // id → { id, name, category, feature }
   const nameMap = new Map()  // name → [id, ...]
   const chinaFeaturesByItemId = await loadChinaFeaturesByItemId(DATA_DIR)
 
@@ -145,7 +187,12 @@ const loadAllItemsFromXml = async () => {
       if (!name) continue
 
       const prevItem = itemMap.get(id)
-      itemMap.set(id, { id, name, category: $.Category || '' })
+      itemMap.set(id, {
+        id,
+        name,
+        category: $.Category || '',
+        feature: $.__feature || '',
+      })
       if (prevItem && prevItem.name !== name) {
         const oldArr = nameMap.get(prevItem.name)
         if (oldArr) {
@@ -218,14 +265,16 @@ const resolveComplexPattern = (rawPattern, allItems) => {
     .map(p => p.substring(1))
 
   for (const [, item] of allItems) {
+    if (isExcludedMaterialItem(item)) continue
     if (!matchCategory(positiveRaw, item.category)) continue
     let excluded = false
     for (const neg of negativePatterns) {
       if (matchCategory(neg, item.category)) { excluded = true; break }
     }
     if (excluded) continue
-    bestMatch = item
-    if (!item.name.includes('活动')) break
+    if (isBetterMaterialCandidate(item, bestMatch)) {
+      bestMatch = item
+    }
   }
 
   return bestMatch ? { id: bestMatch.id, name: bestMatch.name } : null
@@ -251,9 +300,11 @@ const resolvePattern = (pattern, allItems) => {
 
   let bestMatch = null
   for (const [, item] of allItems) {
+    if (isExcludedMaterialItem(item)) continue
     if (matchCategory(pattern, item.category)) {
-      bestMatch = item
-      if (!item.name.includes('活动')) break
+      if (isBetterMaterialCandidate(item, bestMatch)) {
+        bestMatch = item
+      }
     }
   }
 
@@ -268,6 +319,13 @@ const resolvePattern = (pattern, allItems) => {
 const resolveEssentials = (str, allItems) => {
   if (!str) return []
   const materials = []
+  const GENERIC_CATEGORY_TOKENS = new Set([
+    'equip',
+    'stack_item',
+    'item',
+    'material',
+    'sac_item',
+  ])
   // &amp; 中的 ; 不能作为分隔符，先替换保护
   const AMP_PLACEHOLDER = '\x00AMP\x00'
   const safe = str.replace(/&amp;/g, AMP_PLACEHOLDER)
@@ -287,8 +345,12 @@ const resolveEssentials = (str, allItems) => {
         ...(match.noRecipe && { noRecipe: true }),
       })
     } else {
-      const seg = pattern.split('/').filter(s => s && s !== '*' && !s.includes('!') && !s.includes('&') && !s.includes('(') && !s.includes(')'))
-      materials.push({ id: 0, name: seg.pop() || pattern, count })
+      const seg = pattern.split('/').filter(s => {
+        if (!s || s === '*') return false
+        if (s.includes('!') || s.includes('&') || s.includes('(') || s.includes(')')) return false
+        return !GENERIC_CATEGORY_TOKENS.has(s.toLowerCase())
+      })
+      materials.push({ id: 0, name: seg.pop() || '未知材料', count })
     }
   }
   return materials
@@ -767,7 +829,7 @@ const saveCache = (version, itemMap, nameMap, allRecipes) => {
 
     const itemsArr = []
     for (const [id, item] of itemMap) {
-      itemsArr.push([id, item.name, item.category])
+      itemsArr.push([id, item.name, item.category, item.feature || ''])
     }
 
     const namesArr = []
@@ -811,8 +873,8 @@ const loadCacheFile = (expectedVersion) => {
 const buildFromCache = (cacheData) => {
   const allItems = new Map()
   for (let i = 0; i < cacheData.items.length; i++) {
-    const [id, name, category] = cacheData.items[i]
-    allItems.set(id, { id, name, category })
+    const [id, name, category, feature] = cacheData.items[i]
+    allItems.set(id, { id, name, category, feature: feature || '' })
   }
 
   const nameToIds = new Map()

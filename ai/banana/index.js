@@ -128,7 +128,7 @@ async function callNanoBananaAPI(prompt, imgUrl, isPro = false) {
               
               // 下载图片到本地
               try {
-                const localPath = await downloadImage(imageUrl, response.data.id);
+                const localPath = await downloadImage(imageUrl, response.data.id, 'nanoBanana');
                 resolve(`[CQ:image,file=${localPath}]`);
               } catch (downloadError) {
                 let errorMsg = `图片生成成功，但下载失败。图片ID: ${response.data.id}`;
@@ -274,10 +274,10 @@ async function getImageDetail(imageId, isPro = false) {
  * @param {string} imageId - 图片ID
  * @returns {Promise<string>} 返回Promise，resolve时传递图片相对路径
  */
-async function downloadImage(imageUrl, imageId) {
-  const fileName = `nanoBanana_${imageId}_${Date.now()}.jpg`;
-  const localPath = path.join(IMAGE_DATA, 'nanoBanana', fileName);
-  const relativePath = path.join('send', 'nanoBanana', fileName);
+async function downloadImage(imageUrl, imageId, modelFolder = 'nanoBanana') {
+  const fileName = `${modelFolder}_${imageId}_${Date.now()}.jpg`;
+  const localPath = path.join(IMAGE_DATA, modelFolder, fileName);
+  const relativePath = path.join('send', modelFolder, fileName);
 
   console.log(`准备下载图片到: ${localPath}`);
 

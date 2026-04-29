@@ -178,10 +178,11 @@ const {tcArticle} = require('./ai/mabinogi/newArticle')
 const {LiveInspect, LiveAnalyzer} = require('./ai/mabinogi/live-inspect')
 const {chujue} = require('./ai/image/generator/chujue/index.js')
 const {nanoBananaReply, getNanoBananaHelp, getNanoBananaPresets} = require('./ai/banana')
+const {gptImageReply, getGptImageHelp, getGptImagePresets} = require('./ai/banana/gptimage')
 const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao')
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
 const { handleAnnualReportCommand, handleUserAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
-const { mabiSmuggler } = require('./ai/mabinogi/smuggler/newSmuggler')
+const { mabiSmuggler, mabiSuperSmuggler } = require('./ai/mabinogi/smuggler/newSmuggler')
 const { renderHelpImage } = require('./help/index')
 
 // 导入deepseek模块
@@ -1318,6 +1319,14 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
 
+  if(content.trim() === '超级走私查询'){
+    if (String(from) !== '799018865') {
+      return
+    }
+    mabiSuperSmuggler(callback)
+    return
+  }
+
   if(content.trim()=='时尚品鉴'){
     beautyReply(content,groupid,callback);
     return;
@@ -2089,6 +2098,32 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   // 规则：非回复时必须关键词开头，回复时关键词可以在中间
   const isReply = content.includes('[CQ:reply,id=');
   const lowerContent = content.toLowerCase();
+
+  // gpi (GPT-Image-2) 功能检测
+  let shouldTriggerGpi = false;
+  if (isReply) {
+    shouldTriggerGpi = lowerContent.includes('gpi');
+  } else {
+    shouldTriggerGpi = lowerContent.startsWith('gpi');
+  }
+  
+  if (shouldTriggerGpi) {
+    if (lowerContent.trim() === 'gpi' || lowerContent.trim() === 'gpi help') {
+      getGptImageHelp(callback, from, groupid);
+    }
+    else if (lowerContent.trim() === 'gpi 词条' ||
+            lowerContent.trim() === 'gpi 内置' ||
+            lowerContent.trim() === 'gpi 内置词条' ||
+            lowerContent.trim() === 'gpi词条' ||
+            lowerContent.trim() === 'gpi内置' ||
+            lowerContent.trim() === 'gpi内置词条') {
+      getGptImagePresets(callback);
+    }
+    else {
+      gptImageReply(content, from, name, groupid, callback, groupName, nickname, 'group', port, msgObjSource);
+    }
+    return;
+  }
   
   // nbp2 (小豆包版 Nano Banana Pro 2) 功能检测 - 必须先于 nbp 检测
   let shouldTriggerNbp2 = false;

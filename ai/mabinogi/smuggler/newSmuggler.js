@@ -5,6 +5,13 @@ const font2base64 = require('node-font2base64')
 const { getClient } = require('../../../mongo')
 const { IMAGE_DATA } = require('../../../baibaiConfigs')
 
+// 引入韩服走私抓取/定时入库模块（require 时会自动启动 36 分钟定时任务）
+const { getNextSmugKrPrediction } = require('./smugKrScheduler')
+
+// 主走私查询：当国服最新一条 forecast 距今超过这个阈值时，认为可能维护中／bot 失联
+// 36 分钟一个周期 + 一些缓冲 ≈ 50 分钟
+const STALE_DOC_THRESHOLD_MS = 50 * 60 * 1000
+
 const products = require('./assets/product.json')
 const vehicles = require('./assets/vehicle.json')
 
@@ -52,10 +59,135 @@ const LEVEL_STARS = { 1: '★', 2: '★★', 3: '★★★', 4: '★★★★', 
 const LEVEL_COLORS = { 1: '#8BC34A', 2: '#42A5F5', 3: '#AB47BC', 4: '#FF7043', 5: '#FFD700' }
 const STATUS_MAP = {
   forecast: { label: '即将出现', color: '#FFA726', icon: '⏳' },
-  appear: { label: '正在出售', color: '#66BB6A', icon: '✅' },
-  disappear_forecast: { label: '即将消失', color: '#EF5350', icon: '⚠️' }
+  appear: { label: '出现中', color: '#66BB6A', icon: '✅' },
+  disappear_forecast: { label: '即将消失', color: '#EF5350', icon: '⚠️' },
+  absent: { label: '未出现', color: '#78909C', icon: '🛑' }
 }
 const DEFAULT_STATUS = { label: '走私消息', color: '#78909C', icon: '📢' }
+
+// === 走私 cycle 相位（由抓包数据反推得到的现实时间偏移）===
+//   forecast(0)  ──4分30秒──>  appear(4.5min)  ──7分30秒──>  disappear_forecast(12min)
+//                                                       ──4分30秒──>  实际消失(16.5min)
+//                                                       ──19分30秒──> 下一个 forecast(36min)
+const PHASE_F2A_MS = 4.5 * 60 * 1000        // forecast → appear
+const PHASE_A2DF_MS = 7.5 * 60 * 1000       // appear → disappear_forecast
+const PHASE_DF2GONE_MS = 4.5 * 60 * 1000    // disappear_forecast → 实际消失
+const CYCLE_MS = 36 * 60 * 1000             // 完整 cycle
+
+const fmtClock = ts => {
+  const d = new Date(ts)
+  const z = n => (n < 10 ? '0' + n : n)
+  return `${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`
+}
+
+// 反推 doc 所属 cycle 的 anchor (forecast.ts)
+const anchorOfDoc = d => {
+  if (!d || typeof d.ts !== 'number') return null
+  if (d.type === 'forecast') return d.ts
+  if (d.type === 'appear') return d.ts - PHASE_F2A_MS
+  if (d.type === 'disappear_forecast') return d.ts - PHASE_F2A_MS - PHASE_A2DF_MS
+  return null
+}
+
+// 给定最近一段时间内所有走私事件，算出当前 cycle 状态
+//   抗丢包：每条记录都能反推出 anchor，互为冗余
+//   抗重复：anchor 接近（< 90s）的记录视为同一 cycle，appear/forecast 优先填 area+item
+const ANCHOR_GROUP_TOLERANCE_MS = 90 * 1000
+const computeSmugglerStatus = (docs, now) => {
+  if (!Array.isArray(docs) || docs.length === 0) return null
+
+  let anchorTs = null
+  let area = null
+  let item = null
+
+  for (const d of docs) {
+    const a = anchorOfDoc(d)
+    if (a == null) continue
+
+    if (anchorTs == null || a > anchorTs + ANCHOR_GROUP_TOLERANCE_MS) {
+      anchorTs = a
+      area = d.area || null
+      item = d.item || null
+    } else if (Math.abs(a - anchorTs) <= ANCHOR_GROUP_TOLERANCE_MS) {
+      if (d.type === 'appear') {
+        if (d.area) area = d.area
+        if (d.item) item = d.item
+      } else if (d.type === 'forecast' && !item) {
+        if (d.area && !area) area = d.area
+        if (d.item) item = d.item
+      } else if (d.area && !area) {
+        area = d.area
+      }
+    }
+  }
+
+  if (anchorTs == null) return null
+
+  const phase = now - anchorTs
+  let status
+  if (phase < 0) {
+    status = 'forecast'
+  } else if (phase < PHASE_F2A_MS) {
+    status = 'forecast'
+  } else if (phase < PHASE_F2A_MS + PHASE_A2DF_MS) {
+    status = 'appear'
+  } else if (phase < PHASE_F2A_MS + PHASE_A2DF_MS + PHASE_DF2GONE_MS) {
+    status = 'disappear_forecast'
+  } else if (phase < CYCLE_MS) {
+    status = 'absent'
+  } else {
+    return { stale: true, anchorTs, area, item }
+  }
+
+  let etaText = ''
+  if (status === 'forecast') {
+    etaText = `预计于 ${fmtClock(anchorTs + PHASE_F2A_MS)} 出现`
+  } else if (status === 'appear') {
+    etaText = `已于 ${fmtClock(anchorTs + PHASE_F2A_MS)} 出现`
+  } else if (status === 'disappear_forecast') {
+    etaText = `预计于 ${fmtClock(anchorTs + PHASE_F2A_MS + PHASE_A2DF_MS + PHASE_DF2GONE_MS)} 消失`
+  } else if (status === 'absent') {
+    etaText = `下次出现时间约 ${fmtClock(anchorTs + CYCLE_MS + PHASE_F2A_MS)}`
+  }
+
+  return { stale: false, status, anchorTs, area, item, etaText }
+}
+
+// 把"下次走私"的 KR 记录组装成 buildHtml 需要的预测上下文
+//   doc: cl_mabinogi_smuggler_kr 的一条记录（含可能的 goodsCN/positionCN）
+const buildPredictionCtx = doc => {
+  if (!doc) return null
+
+  const ts = doc.krTs || (doc.krTime ? new Date(doc.krTime).getTime() : 0)
+  const timeStr = ts ? formatTime(ts) : ''
+
+  const goodsCN = (doc.goodsCN || '').trim()
+  const positionCN = (doc.positionCN || '').trim()
+
+  const product = goodsCN ? findProduct(goodsCN) : null
+  const productImg = product
+    ? imgToBase64(path.join(__dirname, 'assets', 'product', product.img))
+    : ''
+  const areaImg = positionCN
+    ? imgToBase64(path.join(__dirname, 'assets', 'area', `${positionCN}.png`))
+    : ''
+  const levelColor = product ? (LEVEL_COLORS[product.level] || '#999') : '#999'
+  const levelStars = product ? (LEVEL_STARS[product.level] || '') : ''
+
+  return {
+    timeStr,
+    goodsKR: doc.goods || '',
+    goodsCN,
+    positionKR: doc.position || '',
+    positionCN,
+    values: doc.values || '',
+    product,
+    productImg,
+    areaImg,
+    levelColor,
+    levelStars
+  }
+}
 
 const buildHtml = ctx => `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -81,6 +213,15 @@ body{
 .status-icon{font-size:22px;}
 .status-label{font-size:18px;font-weight:700;color:${ctx.statusColor};}
 .status-time{margin-left:auto;font-size:12px;color:rgba(255,255,255,.4);}
+.stale-banner{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:8px;
+  background:linear-gradient(135deg,rgba(239,83,80,.15),rgba(239,83,80,.06));
+  border:1px solid rgba(239,83,80,.4);
+  color:#ffb3b0;font-size:12px;font-weight:600;
+  margin-bottom:14px;letter-spacing:.3px;
+}
+.stale-banner .stale-icon{font-size:16px;}
 .card{
   background:linear-gradient(180deg,rgba(26,24,50,.95),rgba(16,14,34,.98));
   border:1px solid rgba(218,165,32,.15);
@@ -169,6 +310,51 @@ body{
   text-align:center;padding:8px;
   font-size:10px;color:rgba(255,255,255,.15);margin-top:4px;
 }
+/* 下次走私（预测）卡片样式：比"本次走私"更轻一些 */
+.pred-time{
+  display:inline-block;
+  font-size:13px;color:#daa520;font-weight:600;
+  padding:4px 10px;border-radius:6px;
+  background:rgba(218,165,32,.08);
+  border:1px solid rgba(218,165,32,.25);
+  margin-bottom:10px;
+}
+.pred-row{display:flex;gap:12px;align-items:flex-start;}
+.pred-product-img{
+  width:60px;height:60px;border-radius:6px;object-fit:contain;
+  background:rgba(218,165,32,.06);
+  border:1px solid rgba(218,165,32,.18);
+  padding:4px;
+}
+.pred-info{flex:1;display:flex;flex-direction:column;gap:4px;}
+.pred-name-cn{font-size:16px;font-weight:700;color:#ffd700;}
+.pred-name-kr{font-size:14px;font-weight:600;color:#bbb;font-style:italic;}
+.pred-meta{font-size:12px;color:rgba(255,255,255,.55);}
+.pred-meta span{color:#64B5F6;font-weight:600;}
+.pred-level{
+  display:inline-block;padding:1px 8px;border-radius:10px;
+  font-size:11px;font-weight:700;letter-spacing:1px;
+  border:1px solid;
+  align-self:flex-start;
+}
+.pred-area-section{position:relative;margin-top:10px;}
+.pred-area-img{
+  width:100%;border-radius:6px;
+  border:1px solid rgba(218,165,32,.15);
+  display:block;
+}
+.pred-area-label{
+  position:absolute;bottom:8px;left:8px;
+  padding:3px 10px;border-radius:5px;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(4px);
+  font-size:12px;color:#fff;font-weight:600;
+  border:1px solid rgba(255,255,255,.15);
+}
+.pred-pos-text{
+  margin-top:8px;font-size:13px;color:rgba(255,255,255,.7);
+}
+.pred-hint{font-size:11px;color:rgba(255,255,255,.35);margin-top:8px;}
 </style>
 </head>
 <body>
@@ -177,6 +363,12 @@ body{
     <span class="status-label">${ctx.statusLabel}</span>
     <span class="status-time">${ctx.timeStr}</span>
   </div>
+
+  ${ctx.staleBanner ? `
+  <div class="stale-banner">
+    <span class="stale-icon">⚠️</span>
+    <span>${ctx.staleBanner}</span>
+  </div>` : ''}
 
   ${ctx.product ? `
   <div class="card">
@@ -246,35 +438,104 @@ body{
     <div class="card-body"><div class="no-info">📍 ${ctx.area}（暂无地图）</div></div>
   </div>` : ''}
 
+  ${ctx.prediction ? `
+  <div class="card">
+    <div class="card-header"><span class="card-title">▸ 下次走私（预测）</span></div>
+    <div class="card-body">
+      <div class="pred-time">⏱ 约 ${ctx.prediction.timeStr}</div>
+
+      ${ctx.prediction.product ? `
+      <div class="pred-row">
+        ${ctx.prediction.productImg ? `<img class="pred-product-img" src="${ctx.prediction.productImg}" />` : ''}
+        <div class="pred-info">
+          <div class="pred-name-cn">${ctx.prediction.goodsCN}</div>
+          <div class="pred-meta">产地：<span>${ctx.prediction.product.area}</span></div>
+          <span class="pred-level" style="background:${ctx.prediction.levelColor}18;border-color:${ctx.prediction.levelColor}44;color:${ctx.prediction.levelColor};">
+            ${ctx.prediction.levelStars} ${ctx.prediction.product.level}级货物
+          </span>
+        </div>
+      </div>` : ctx.prediction.goodsCN ? `
+      <div class="pred-row">
+        <div class="pred-info">
+          <div class="pred-name-cn">${ctx.prediction.goodsCN}</div>
+        </div>
+      </div>` : `
+      <div class="pred-row">
+        <div class="pred-info">
+          <div class="pred-name-kr">${ctx.prediction.goodsKR || '未知物品'}</div>
+        </div>
+      </div>`}
+
+      ${ctx.prediction.areaImg ? `
+      <div class="pred-area-section">
+        <img class="pred-area-img" src="${ctx.prediction.areaImg}" />
+        <div class="pred-area-label">📍 ${ctx.prediction.positionCN}</div>
+      </div>` : ctx.prediction.positionCN ? `
+      <div class="pred-pos-text">📍 ${ctx.prediction.positionCN}</div>` : `
+      <div class="pred-pos-text">📍 ${ctx.prediction.positionKR || '未知位置'}</div>`}
+
+      <div class="pred-hint">数据来源：韩服走私观测；时间为大致预测，可能有数十秒至数分钟误差</div>
+    </div>
+  </div>` : ''}
+
   <div class="footer">走私查询 · Powered by Baibaibot</div>
 </body>
 </html>`
 
-const mabiSmuggler = async callback => {
+const renderSmugglerImage = async (callback, prediction = null) => {
   try {
     const client = await getClient()
     const col = client.db('db_bot').collection('cl_mabinogi_smuggler')
+    const now = Date.now()
 
-    const fullDoc = await col
-      .find({ area: { $ne: null }, item: { $ne: null } })
-      .sort({ ts: -1 })
-      .limit(1)
-      .next()
+    // 拉最近 60 分钟（>1 个 cycle）内所有走私事件，按 ts 升序
+    // 这些事件互为冗余 anchor 推算，能抵抗少量抓包丢失/重复
+    const recentDocs = await col
+      .find({
+        ts: { $gte: now - 60 * 60 * 1000 },
+        type: { $in: ['forecast', 'appear', 'disappear_forecast'] },
+        area: { $ne: null }
+      })
+      .sort({ ts: 1 })
+      .toArray()
 
-    let doc = fullDoc
-    if (!doc) {
-      doc = await col.find({}).sort({ ts: -1 }).limit(1).next()
+    let stateInfo = computeSmugglerStatus(recentDocs, now)
+
+    let timeStr = ''
+    let area = '未知地区'
+    let itemName = null
+    let statusInfo = DEFAULT_STATUS
+    let staleBanner = ''
+
+    if (stateInfo && !stateInfo.stale) {
+      // 正常路径：根据 anchor 推出当前相位状态
+      statusInfo = STATUS_MAP[stateInfo.status] || DEFAULT_STATUS
+      timeStr = stateInfo.etaText
+      area = stateInfo.area || '未知地区'
+      itemName = stateInfo.item || null
+    } else {
+      // 降级：60 分钟内无事件，或 anchor 已超过 1 个完整 cycle
+      const latestEver =
+        await col.find({ area: { $ne: null }, item: { $ne: null } }).sort({ ts: -1 }).limit(1).next() ||
+        await col.find({}).sort({ ts: -1 }).limit(1).next()
+
+      if (!latestEver) {
+        callback('当前没有检测到任何走私贩子相关消息')
+        return
+      }
+
+      statusInfo = STATUS_MAP.absent
+      area = latestEver.area || '未知地区'
+      itemName = latestEver.item || null
+      timeStr = `上次更新 ${formatTime(latestEver.ts || latestEver.time || now)}`
+
+      const ageMs = now - (latestEver.ts || 0)
+      if (ageMs >= STALE_DOC_THRESHOLD_MS) {
+        const ageMin = Math.round(ageMs / 60000)
+        const ageStr = ageMin >= 60 ? `${Math.floor(ageMin / 60)}小时${ageMin % 60}分钟` : `${ageMin}分钟`
+        staleBanner = `数据已 ${ageStr} 未更新，国服可能正在维护或消息源失联，下方信息仅供参考`
+      }
     }
-
-    if (!doc) {
-      callback('当前没有检测到任何走私贩子相关消息')
-      return
-    }
-
-    const timeStr = doc.time ? formatTime(doc.time) : formatTime(doc.ts || Date.now())
-    const area = doc.area || '未知地区'
-    const itemName = doc.item || null
-    const statusInfo = STATUS_MAP[doc.type] || DEFAULT_STATUS
 
     const product = itemName ? findProduct(itemName) : null
 
@@ -308,7 +569,9 @@ const mabiSmuggler = async callback => {
       areaImg,
       vehicleRows,
       levelColor,
-      levelStars
+      levelStars,
+      prediction,
+      staleBanner
     })
 
     const outDir = path.join(IMAGE_DATA, 'mabi_other')
@@ -326,6 +589,28 @@ const mabiSmuggler = async callback => {
   }
 }
 
+const mabiSmuggler = async callback => {
+  await renderSmugglerImage(callback)
+}
+
+const mabiSuperSmuggler = async callback => {
+  let prediction = null
+  try {
+    const next = await getNextSmugKrPrediction()
+    if (next?.doc) prediction = buildPredictionCtx(next.doc)
+  } catch (err) {
+    console.error('mabiSuperSmuggler prediction error', err)
+  }
+
+  try {
+    await renderSmugglerImage(callback, prediction)
+  } catch (err) {
+    console.error('mabiSuperSmuggler render error', err)
+    callback(`超级走私查询失败：${err?.message || '未知错误'}`)
+  }
+}
+
 module.exports = {
-  mabiSmuggler
+  mabiSmuggler,
+  mabiSuperSmuggler
 }
