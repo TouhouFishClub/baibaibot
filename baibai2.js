@@ -1320,7 +1320,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(content.trim() === '超级走私查询'){
-    if (String(from) !== '799018865') {
+    if (String(from) !== '799018865' || String(from) !== '10798431236597006773') {
       return
     }
     mabiSuperSmuggler(callback)
