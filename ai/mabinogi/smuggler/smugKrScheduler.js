@@ -266,6 +266,10 @@ let _smugKrSchedulerStarted = false
 let _smugKrFetching = false
 let _consecutiveFailures = 0
 let _lastAttemptAt = 0
+let _lastSuccessAt = 0
+
+// 外部触发器节流：距上次成功 < 15 分钟则不重复抓
+const TRIGGER_THROTTLE_MS = 15 * 60 * 1000
 
 const getBackoffMs = () => {
   if (_consecutiveFailures < BACKOFF_FAIL_THRESHOLD) return 0
@@ -418,6 +422,7 @@ const scheduledFetchSmugKr = async () => {
         console.log(`[smugglerKr] 已恢复（之前连续失败 ${_consecutiveFailures} 次），重置退避`)
       }
       _consecutiveFailures = 0
+      _lastSuccessAt = Date.now()
     } else {
       _consecutiveFailures++
       const next = getBackoffMs()
@@ -427,6 +432,25 @@ const scheduledFetchSmugKr = async () => {
     }
     _smugKrFetching = false
   }
+}
+
+// 外部触发的"立即补抓一次"：例如国服收到 forecast 时调用
+//   - 复用 _smugKrFetching 互斥，绝不与定时任务并发
+//   - 距上次成功 < 15 分钟则跳过，避免短时间内反复抓
+const triggerSmugKrFetch = async (reason = 'manual') => {
+  if (_smugKrFetching) {
+    console.log(`[smugglerKr] trigger(${reason}) 跳过：另一次抓取正在进行中`)
+    return { triggered: false, reason: 'busy' }
+  }
+  const sinceSuccess = Date.now() - _lastSuccessAt
+  if (_lastSuccessAt > 0 && sinceSuccess < TRIGGER_THROTTLE_MS) {
+    const remainMin = Math.ceil((TRIGGER_THROTTLE_MS - sinceSuccess) / 60000)
+    console.log(`[smugglerKr] trigger(${reason}) 跳过：距上次成功仅 ${Math.round(sinceSuccess / 60000)}min，<${TRIGGER_THROTTLE_MS / 60000}min（约 ${remainMin}min 后可触发）`)
+    return { triggered: false, reason: 'throttled' }
+  }
+  console.log(`[smugglerKr] trigger(${reason}) 发起一次补抓`)
+  await scheduledFetchSmugKr()
+  return { triggered: true, reason: 'ok' }
 }
 
 const startSmugKrScheduler = () => {
@@ -490,6 +514,7 @@ const getNextSmugKrPrediction = async () => {
 module.exports = {
   startSmugKrScheduler,
   scheduledFetchSmugKr,
+  triggerSmugKrFetch,
   persistSmugKrItems,
   buildSmugKrDoc,
   fetchLuteSmugViaBrowser,

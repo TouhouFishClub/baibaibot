@@ -59,10 +59,99 @@ const LEVEL_STARS = { 1: '★', 2: '★★', 3: '★★★', 4: '★★★★', 
 const LEVEL_COLORS = { 1: '#8BC34A', 2: '#42A5F5', 3: '#AB47BC', 4: '#FF7043', 5: '#FFD700' }
 const STATUS_MAP = {
   forecast: { label: '即将出现', color: '#FFA726', icon: '⏳' },
-  appear: { label: '正在出售', color: '#66BB6A', icon: '✅' },
-  disappear_forecast: { label: '即将消失', color: '#EF5350', icon: '⚠️' }
+  appear: { label: '出现中', color: '#66BB6A', icon: '✅' },
+  disappear_forecast: { label: '即将消失', color: '#EF5350', icon: '⚠️' },
+  absent: { label: '未出现', color: '#78909C', icon: '🛑' }
 }
 const DEFAULT_STATUS = { label: '走私消息', color: '#78909C', icon: '📢' }
+
+// === 走私 cycle 相位（由抓包数据反推得到的现实时间偏移）===
+//   forecast(0)  ──4分30秒──>  appear(4.5min)  ──7分30秒──>  disappear_forecast(12min)
+//                                                       ──4分30秒──>  实际消失(16.5min)
+//                                                       ──19分30秒──> 下一个 forecast(36min)
+const PHASE_F2A_MS = 4.5 * 60 * 1000        // forecast → appear
+const PHASE_A2DF_MS = 7.5 * 60 * 1000       // appear → disappear_forecast
+const PHASE_DF2GONE_MS = 4.5 * 60 * 1000    // disappear_forecast → 实际消失
+const CYCLE_MS = 36 * 60 * 1000             // 完整 cycle
+
+const fmtClock = ts => {
+  const d = new Date(ts)
+  const z = n => (n < 10 ? '0' + n : n)
+  return `${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`
+}
+
+// 反推 doc 所属 cycle 的 anchor (forecast.ts)
+const anchorOfDoc = d => {
+  if (!d || typeof d.ts !== 'number') return null
+  if (d.type === 'forecast') return d.ts
+  if (d.type === 'appear') return d.ts - PHASE_F2A_MS
+  if (d.type === 'disappear_forecast') return d.ts - PHASE_F2A_MS - PHASE_A2DF_MS
+  return null
+}
+
+// 给定最近一段时间内所有走私事件，算出当前 cycle 状态
+//   抗丢包：每条记录都能反推出 anchor，互为冗余
+//   抗重复：anchor 接近（< 90s）的记录视为同一 cycle，appear/forecast 优先填 area+item
+const ANCHOR_GROUP_TOLERANCE_MS = 90 * 1000
+const computeSmugglerStatus = (docs, now) => {
+  if (!Array.isArray(docs) || docs.length === 0) return null
+
+  let anchorTs = null
+  let area = null
+  let item = null
+
+  for (const d of docs) {
+    const a = anchorOfDoc(d)
+    if (a == null) continue
+
+    if (anchorTs == null || a > anchorTs + ANCHOR_GROUP_TOLERANCE_MS) {
+      anchorTs = a
+      area = d.area || null
+      item = d.item || null
+    } else if (Math.abs(a - anchorTs) <= ANCHOR_GROUP_TOLERANCE_MS) {
+      if (d.type === 'appear') {
+        if (d.area) area = d.area
+        if (d.item) item = d.item
+      } else if (d.type === 'forecast' && !item) {
+        if (d.area && !area) area = d.area
+        if (d.item) item = d.item
+      } else if (d.area && !area) {
+        area = d.area
+      }
+    }
+  }
+
+  if (anchorTs == null) return null
+
+  const phase = now - anchorTs
+  let status
+  if (phase < 0) {
+    status = 'forecast'
+  } else if (phase < PHASE_F2A_MS) {
+    status = 'forecast'
+  } else if (phase < PHASE_F2A_MS + PHASE_A2DF_MS) {
+    status = 'appear'
+  } else if (phase < PHASE_F2A_MS + PHASE_A2DF_MS + PHASE_DF2GONE_MS) {
+    status = 'disappear_forecast'
+  } else if (phase < CYCLE_MS) {
+    status = 'absent'
+  } else {
+    return { stale: true, anchorTs, area, item }
+  }
+
+  let etaText = ''
+  if (status === 'forecast') {
+    etaText = `预计于 ${fmtClock(anchorTs + PHASE_F2A_MS)} 出现`
+  } else if (status === 'appear') {
+    etaText = `已于 ${fmtClock(anchorTs + PHASE_F2A_MS)} 出现`
+  } else if (status === 'disappear_forecast') {
+    etaText = `预计于 ${fmtClock(anchorTs + PHASE_F2A_MS + PHASE_A2DF_MS + PHASE_DF2GONE_MS)} 消失`
+  } else if (status === 'absent') {
+    etaText = `下次出现时间约 ${fmtClock(anchorTs + CYCLE_MS + PHASE_F2A_MS)}`
+  }
+
+  return { stale: false, status, anchorTs, area, item, etaText }
+}
 
 // 把"下次走私"的 KR 记录组装成 buildHtml 需要的预测上下文
 //   doc: cl_mabinogi_smuggler_kr 的一条记录（含可能的 goodsCN/positionCN）
@@ -397,32 +486,50 @@ const renderSmugglerImage = async (callback, prediction = null) => {
   try {
     const client = await getClient()
     const col = client.db('db_bot').collection('cl_mabinogi_smuggler')
+    const now = Date.now()
 
-    const fullDoc = await col
-      .find({ area: { $ne: null }, item: { $ne: null } })
-      .sort({ ts: -1 })
-      .limit(1)
-      .next()
+    // 拉最近 60 分钟（>1 个 cycle）内所有走私事件，按 ts 升序
+    // 这些事件互为冗余 anchor 推算，能抵抗少量抓包丢失/重复
+    const recentDocs = await col
+      .find({
+        ts: { $gte: now - 60 * 60 * 1000 },
+        type: { $in: ['forecast', 'appear', 'disappear_forecast'] },
+        area: { $ne: null }
+      })
+      .sort({ ts: 1 })
+      .toArray()
 
-    let doc = fullDoc
-    if (!doc) {
-      doc = await col.find({}).sort({ ts: -1 }).limit(1).next()
-    }
+    let stateInfo = computeSmugglerStatus(recentDocs, now)
 
-    if (!doc) {
-      callback('当前没有检测到任何走私贩子相关消息')
-      return
-    }
-
-    const timeStr = doc.time ? formatTime(doc.time) : formatTime(doc.ts || Date.now())
-    const area = doc.area || '未知地区'
-    const itemName = doc.item || null
-    const statusInfo = STATUS_MAP[doc.type] || DEFAULT_STATUS
-
-    // 陈旧数据降级：最新 doc 距今 ≥ 50 分钟（>1 个周期）则提示可能维护中/失联
+    let timeStr = ''
+    let area = '未知地区'
+    let itemName = null
+    let statusInfo = DEFAULT_STATUS
     let staleBanner = ''
-    if (typeof doc.ts === 'number' && doc.ts > 0) {
-      const ageMs = Date.now() - doc.ts
+
+    if (stateInfo && !stateInfo.stale) {
+      // 正常路径：根据 anchor 推出当前相位状态
+      statusInfo = STATUS_MAP[stateInfo.status] || DEFAULT_STATUS
+      timeStr = stateInfo.etaText
+      area = stateInfo.area || '未知地区'
+      itemName = stateInfo.item || null
+    } else {
+      // 降级：60 分钟内无事件，或 anchor 已超过 1 个完整 cycle
+      const latestEver =
+        await col.find({ area: { $ne: null }, item: { $ne: null } }).sort({ ts: -1 }).limit(1).next() ||
+        await col.find({}).sort({ ts: -1 }).limit(1).next()
+
+      if (!latestEver) {
+        callback('当前没有检测到任何走私贩子相关消息')
+        return
+      }
+
+      statusInfo = STATUS_MAP.absent
+      area = latestEver.area || '未知地区'
+      itemName = latestEver.item || null
+      timeStr = `上次更新 ${formatTime(latestEver.ts || latestEver.time || now)}`
+
+      const ageMs = now - (latestEver.ts || 0)
       if (ageMs >= STALE_DOC_THRESHOLD_MS) {
         const ageMin = Math.round(ageMs / 60000)
         const ageStr = ageMin >= 60 ? `${Math.floor(ageMin / 60)}小时${ageMin % 60}分钟` : `${ageMin}分钟`

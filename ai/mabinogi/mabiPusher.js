@@ -1,4 +1,5 @@
 const { getClient } = require('../../mongo/index')
+const { triggerSmugKrFetch } = require('./smuggler/smugKrScheduler')
 
 const CROSS_IP_DEDUP_MS = 30 * 1000
 const SAME_IP_DEDUP_MS = 0
@@ -178,6 +179,16 @@ async function handlePush(byte, str, server, ip) {
 				area,
 				item
 			})
+
+			// forecast 触发一次韩服补抓：避免韩服 36 分钟周期与国服周期错位
+			// 异步、不阻塞主推流；triggerSmugKrFetch 内部含互斥与节流
+			if (type === 'forecast') {
+				setImmediate(() => {
+					triggerSmugKrFetch('cn_forecast').catch(e => {
+						console.error('[mabiPusher] triggerSmugKrFetch error', e?.message || e)
+					})
+				})
+			}
 		} catch (err) {
 			// 分发失败不影响主记录
 			console.error('mabinogi pusher byte=8 dispatch error', err, { str, server })
