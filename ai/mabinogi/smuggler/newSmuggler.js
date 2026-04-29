@@ -192,6 +192,17 @@ const buildPredictionCtx = doc => {
   const levelColor = product ? (LEVEL_COLORS[product.level] || '#999') : '#999'
   const levelStars = product ? (LEVEL_STARS[product.level] || '') : ''
 
+  let bestVehicleName = ''
+  let bestVehicleImg = ''
+  if (product) {
+    const sorted = calcVehicles(product)
+    const best = sorted[0]
+    if (best && best.totalItems > 0) {
+      bestVehicleName = best.name || ''
+      bestVehicleImg = imgToBase64(path.join(__dirname, 'assets', 'vehicle', `${best.name}.png`))
+    }
+  }
+
   return {
     timeStr,
     goodsKR: doc.goods || '',
@@ -203,7 +214,9 @@ const buildPredictionCtx = doc => {
     productImg,
     areaImg,
     levelColor,
-    levelStars
+    levelStars,
+    bestVehicleName,
+    bestVehicleImg
   }
 }
 
@@ -337,14 +350,26 @@ body{
   border:1px solid rgba(218,165,32,.25);
   margin-bottom:10px;
 }
-.pred-row{display:flex;gap:12px;align-items:flex-start;}
+.pred-row{display:flex;gap:10px;align-items:flex-start;}
+.pred-left-wrap{display:flex;gap:12px;align-items:flex-start;flex:1;min-width:0;}
+.pred-best-vehicle{
+  flex-shrink:0;width:78px;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:8px 6px;border-radius:8px;
+  background:rgba(218,165,32,.06);
+  border:1px solid rgba(218,165,32,.22);
+}
+.pred-best-img{width:44px;height:44px;object-fit:contain;border-radius:4px;}
+.pred-best-name{
+  font-size:10px;line-height:1.25;color:rgba(255,255,255,.75);
+  text-align:center;word-break:break-all;font-weight:600;
+}
 .pred-product-img{
   width:60px;height:60px;border-radius:6px;object-fit:contain;
   background:rgba(218,165,32,.06);
   border:1px solid rgba(218,165,32,.18);
   padding:4px;
 }
-.pred-info{flex:1;display:flex;flex-direction:column;gap:4px;}
+.pred-info{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;}
 .pred-name-cn{font-size:16px;font-weight:700;color:#ffd700;}
 .pred-name-kr{font-size:14px;font-weight:600;color:#bbb;font-style:italic;}
 .pred-meta{font-size:12px;color:rgba(255,255,255,.55);}
@@ -464,14 +489,21 @@ body{
 
       ${ctx.prediction.product ? `
       <div class="pred-row">
-        ${ctx.prediction.productImg ? `<img class="pred-product-img" src="${ctx.prediction.productImg}" />` : ''}
-        <div class="pred-info">
-          <div class="pred-name-cn">${ctx.prediction.goodsCN}</div>
-          <div class="pred-meta">产地：<span>${ctx.prediction.product.area}</span></div>
-          <span class="pred-level" style="background:${ctx.prediction.levelColor}18;border-color:${ctx.prediction.levelColor}44;color:${ctx.prediction.levelColor};">
-            ${ctx.prediction.levelStars} ${ctx.prediction.product.level}级货物
-          </span>
+        <div class="pred-left-wrap">
+          ${ctx.prediction.productImg ? `<img class="pred-product-img" src="${ctx.prediction.productImg}" />` : ''}
+          <div class="pred-info">
+            <div class="pred-name-cn">${ctx.prediction.goodsCN}</div>
+            <div class="pred-meta">产地：<span>${ctx.prediction.product.area}</span></div>
+            <span class="pred-level" style="background:${ctx.prediction.levelColor}18;border-color:${ctx.prediction.levelColor}44;color:${ctx.prediction.levelColor};">
+              ${ctx.prediction.levelStars} ${ctx.prediction.product.level}级货物
+            </span>
+          </div>
         </div>
+        ${ctx.prediction.bestVehicleName ? `
+        <div class="pred-best-vehicle">
+          ${ctx.prediction.bestVehicleImg ? `<img class="pred-best-img" src="${ctx.prediction.bestVehicleImg}" alt="" />` : ''}
+          <div class="pred-best-name">${ctx.prediction.bestVehicleName}</div>
+        </div>` : ''}
       </div>` : ctx.prediction.goodsCN ? `
       <div class="pred-row">
         <div class="pred-info">
