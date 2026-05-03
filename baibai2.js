@@ -1315,7 +1315,8 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if(content.trim() === '走私查询'){
-    mabiSmuggler(callback)
+    // mabiSmuggler(callback)
+    mabiSuperSmuggler(callback)
     return
   }
 
