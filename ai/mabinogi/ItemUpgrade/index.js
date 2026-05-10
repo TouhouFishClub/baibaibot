@@ -768,7 +768,9 @@ const renderImage = (targetItem, upgradeInfos, callback, otherMsg = '') => {
 				<div class="need-gem">
 					${x.need_gem.split(';').map(gemItem => {
 						let [gemId, size] = gemItem.split(',').map(x => x.trim())
-						return `${gemInfo.find(x => x.id == gemId).localnameCn || gemId}(${size})`
+						// 改版后取消了宝石大小
+						// return `${gemInfo.find(x => x.id == gemId).localnameCn || gemId}(${size})`
+						return `${gemInfo.find(x => x.id == gemId).localnameCn || gemId}`
 					}).join('<br/>')}
 				</div>
 			</div>
