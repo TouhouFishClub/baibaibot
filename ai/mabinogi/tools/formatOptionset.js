@@ -21,12 +21,15 @@ module.exports = function(callback) {
 		  options = options.concat(custom)
 	  }
     options.forEach(val => {
+      // 临时修改，布里列赫遗物usage=11是接头 usage=12是接尾
+      const usageSupported =
+        val.Usage === '0' || val.Usage === '1' || val.Usage === '11' || val.Usage === '12'
       if(
       	(
       		transform[val.LocalName] &&
 		      transform[val.LocalName2] &&
 		      transform[val.OptionDesc] &&
-		      (val.Usage === '1' || val.Usage === '0')
+		      usageSupported
 	      )
 	      ||
 	      val.custom
@@ -39,8 +42,14 @@ module.exports = function(callback) {
         obj.OptionDesc = val.custom ? val.OptionDesc : transform[val.OptionDesc]
         obj.LevelQuery = 16 - val.Level
         obj.Level = 16 - val.Level < 10 ? 16 - val.Level : ['A', 'B', 'C', 'D', 'E', 'F', '练习'][6 - val.Level]
-        obj.Usage = val.Usage === '0' ? '接头': '接尾'
-        obj.UsageQuery = val.Usage
+        if (val.custom) {
+          obj.Usage = val.Usage === '0' ? '接头' : '接尾'
+          obj.UsageQuery = val.Usage
+        } else {
+          const isPrefix = val.Usage === '0' || val.Usage === '11'
+          obj.Usage = isPrefix ? '接头' : '接尾'
+          obj.UsageQuery = isPrefix ? '0' : '1'
+        }
         let buffArr = [], debuffArr = []
         obj.OptionDesc.split('\\n').forEach(val => {
           if(/^\[.*\]$/.test(val)){
