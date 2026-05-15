@@ -16,6 +16,7 @@ var path = require('path');
 
 
 const{saveTxt,answer,getMsgCount} = require(path.join(__dirname, '/lib/mongo.js'))
+const { isJichou } = require('./lib/jichou')
 const { drawTxtImage, renderTxtImage } = require('./cq/drawImageBytxt')
 const xchange = require('./ai/xchange')
 const {cal} = require('./ai/calculator');
@@ -590,6 +591,9 @@ function handleMsg_D0(msgObj,port, configs){
   ]).has(msgObj.user_id)) {
     return
   }
+  if (msgObj.user_id && isJichou(msgObj.user_id)) {
+    return
+  }
   // if(port==25334){
   //   console.log('sssssssssssssssssssssss:');
   //   console.log(msgObj);
@@ -935,6 +939,10 @@ function handleMsg_D(msgObj,port, configs) {
 }
 
 function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msgType,port, msgObjSource){
+
+  if (from && isJichou(from)) {
+    return
+  }
 
   content=content.trim();
 
