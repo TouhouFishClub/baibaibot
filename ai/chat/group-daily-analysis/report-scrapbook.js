@@ -605,8 +605,9 @@ function buildTitlesHtml(titles) {
     return '<div class="user-section"><div class="section-title">群友画像 Portraits</div><div class="empty">暂无用户画像</div></div>'
   }
   const cards = titles.map(t => {
-    const mbtiBadge = t.mbti
-      ? '<div class="badge mbti">' + escapeHtml(t.mbti) + '</div>'
+    const profileLabel = t.profile_display || t.mbti
+    const profileBadge = profileLabel
+      ? '<div class="badge mbti">' + escapeHtml(profileLabel) + '</div>'
       : ''
     return `
     <div class="user-card">
@@ -617,7 +618,7 @@ function buildTitlesHtml(titles) {
           <div class="u-name">${escapeHtml(t.name)}</div>
           <div class="badges">
             <div class="badge title">${escapeHtml(t.title)}</div>
-            ${mbtiBadge}
+            ${profileBadge}
           </div>
         </div>
       </div>

@@ -20,6 +20,9 @@ const MAX_GOLDEN_QUOTES = 5
 const TOP_ACTIVE_USERS = 15
 const MIN_MESSAGES = 20
 
+/** 群友画像人格展示：sbti=娱乐向 SBTI（原版默认），mbti=原始四字母 */
+const PROFILE_DISPLAY_MODE = 'sbti'
+
 let DEEPSEEK_API_KEY = ''
 const secretPaths = [
   path.join(__dirname, '../core/.secret.json'),
@@ -49,6 +52,7 @@ module.exports = {
   MAX_GOLDEN_QUOTES,
   TOP_ACTIVE_USERS,
   MIN_MESSAGES,
+  PROFILE_DISPLAY_MODE,
   DEEPSEEK_API_KEY,
   DEEPSEEK_API_URL: 'https://api.deepseek.com/chat/completions',
   DEEPSEEK_MODEL: 'deepseek-chat'

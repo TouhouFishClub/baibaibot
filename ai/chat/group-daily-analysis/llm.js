@@ -4,8 +4,10 @@ const {
   DEEPSEEK_MODEL,
   MAX_TOPICS,
   MAX_USER_TITLES,
-  MAX_GOLDEN_QUOTES
+  MAX_GOLDEN_QUOTES,
+  PROFILE_DISPLAY_MODE
 } = require('./config')
+const { enrichTitlesProfiles } = require('./profile-map')
 
 function emptyUsage() {
   return { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 }
@@ -194,24 +196,26 @@ async function analyzeUserTitles(messagesText, topUsers, userMap) {
   ).join('\n')
 
   const systemPrompt = `你是群聊用户画像助手。为活跃群友分配趣味称号，最多 ${MAX_USER_TITLES} 人。
+根据聊天语气与行为推测每人的 MBTI 四字母（如 INTJ、ENFP）；报告卡片会映射为娱乐向 SBTI 人格展示，但仍需输出标准 MBTI。
 返回 JSON：
 {
   "titles": [
     {
       "user_id": "QQ号",
       "title": "称号（8字内）",
-      "mbti": "可选MBTI四字母",
+      "mbti": "MBTI四字母，如 INTJ",
       "reason": "30-60字理由"
     }
   ]
 }
-user_id 必须是 QQ 号字符串。`
+user_id 必须是 QQ 号字符串。mbti 必须是 4 个大写字母。`
 
   const userPrompt = '活跃成员（务必从下列 QQ 号中选人，user_id 填 QQ 数字）：\n' + activeList
     + '\n\n聊天记录节选：\n' + messagesText.slice(0, 8000)
 
   const { text, usage } = await callDeepSeek(systemPrompt, userPrompt, 3500)
   let titles = parseTitlesFromLlmText(text, userMap)
+  titles = enrichTitlesProfiles(titles, PROFILE_DISPLAY_MODE)
 
   if (titles.length === 0) {
     console.warn('[群分析] 用户画像 JSON 解析后为空，原始回复前 200 字:', (text || '').slice(0, 200))
@@ -381,7 +385,7 @@ async function analyzeAll(messagesText, topUsers, userMap) {
 
   if ((!titles || titles.length === 0) && topUsers && topUsers.length > 0) {
     console.warn('[群分析] 用户画像 LLM 无有效结果，使用活跃度榜单生成基础画像（共 ' + topUsers.length + ' 人）')
-    titles = buildFallbackTitles(topUsers, userMap)
+    titles = enrichTitlesProfiles(buildFallbackTitles(topUsers, userMap), PROFILE_DISPLAY_MODE)
   }
 
   return { topics, titles, quotes, qualityReview, tokenUsage }
