@@ -788,14 +788,18 @@ async function renderReportImage(reportData, outputPath) {
   const dir = path.dirname(outputPath)
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
 
+  const htmlPath = outputPath.replace(/\.(png|jpg|jpeg)$/i, '.html')
+  fs.writeFileSync(htmlPath, html, 'utf-8')
+
+  // domcontentloaded：字体已在 HTML 内（base64）；勿用 networkidle0，否则 QQ 头像会拖死
   await nodeHtmlToImage({
     output: outputPath,
     html,
+    waitUntil: 'domcontentloaded',
+    timeout: 120000,
     puppeteerArgs: { args: ['--no-sandbox', '--disable-setuid-sandbox'] }
   })
 
-  const htmlPath = outputPath.replace(/\.(png|jpg|jpeg)$/i, '.html')
-  fs.writeFileSync(htmlPath, html, 'utf-8')
   return outputPath
 }
 
