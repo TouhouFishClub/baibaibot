@@ -183,6 +183,7 @@ const {gptImageReply, getGptImageHelp, getGptImagePresets} = require('./ai/banan
 const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao')
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
 const { handleAnnualReportCommand, handleUserAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
+const { handleGroupDailyAnalysisCommand, matchGroupAnalysisCommand } = require('./ai/chat/group-daily-analysis')
 const { mabiSmuggler, mabiSuperSmuggler } = require('./ai/mabinogi/smuggler/newSmuggler')
 const { renderHelpImage } = require('./help/index')
 
@@ -1145,6 +1146,13 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   
+  // 群聊日报分析（群分析 / 群分析 3 / 群分析 20260312）
+  const groupDailyMatch = matchGroupAnalysisCommand(content)
+  if (groupDailyMatch.matched) {
+    handleGroupDailyAnalysisCommand(groupid, from, content, groupName, callback, groupDailyMatch.force)
+    return
+  }
+
   // 群友年度报告功能：@xxx 2025年度报告 或 2025年度报告 @xxx
   if(content.includes('[CQ:at') && content.includes('2025年度报告')) {
     const isRegen = content.includes('重新生成')
