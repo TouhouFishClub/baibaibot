@@ -9,6 +9,31 @@ function countEmojis(text) {
   return faceCount + unicodeCount
 }
 
+function buildScrapbookHourlyChart(hourlyChart) {
+  const max = Math.max(...hourlyChart.map(x => x.count), 1)
+  const parts = []
+  for (const { hour, count } of hourlyChart) {
+    const pct = count === 0 ? 0 : Math.max((count / max) * 100, 4)
+    let barBg = 'var(--color-blue)'
+    let opacity = '1'
+    if (count === 0) {
+      barBg = 'var(--ink-secondary)'
+      opacity = '0.2'
+    } else if (pct >= 70) {
+      barBg = 'var(--accent-orange)'
+    } else if (pct >= 30) {
+      barBg = 'var(--color-green)'
+    }
+    const height = count === 0 ? '4px' : pct.toFixed(1) + '%'
+    let col = '<div class="chart-column">'
+    if (count > 0) col += '<div class="chart-value-top">' + count + '</div>'
+    col += '<div class="chart-bar-vertical" style="height:' + height + ';background:' + barBg + ';opacity:' + opacity + '"></div>'
+    col += '<div class="chart-label-xaxis">' + String(hour).padStart(2, '0') + '</div></div>'
+    parts.push(col)
+  }
+  return parts.join('')
+}
+
 function computeStatistics(messages, userMap) {
   const userMsgCount = new Map()
   const hourDistribution = new Map()
@@ -47,15 +72,9 @@ function computeStatistics(messages, userMap) {
     .sort((a, b) => b[1] - a[1])
     .map(([uid, count]) => ({
       uid: String(uid),
-      name: userMap[uid] || `用户${uid}`,
+      name: userMap[uid] || userMap[parseInt(uid, 10)] || ('用户' + uid),
       messageCount: count
     }))
-
-  const maxHourCount = Math.max(...hourlyChart.map(x => x.count), 1)
-  const hourlyChartHtml = hourlyChart.map(({ hour, count }) => {
-    const pct = Math.max((count / maxHourCount) * 100, 3)
-    return '<div class="bar-col"><div class="bar-fill" style="height:' + pct.toFixed(1) + '%"></div><span class="bar-label">' + hour + '</span><span class="bar-count">' + count + '</span></div>'
-  }).join('')
 
   return {
     messageCount: messages.length,
@@ -65,9 +84,9 @@ function computeStatistics(messages, userMap) {
     mostActivePeriod: String(peakHour).padStart(2, '0') + ':00 - ' + String(peakHour).padStart(2, '0') + ':59',
     peakHour,
     hourlyChart,
-    hourlyChartHtml: '<div class="hour-chart">' + hourlyChartHtml + '</div>',
+    hourlyChartHtml: '<div class="chart-section-horizontal">' + buildScrapbookHourlyChart(hourlyChart) + '</div>',
     topUsers
   }
 }
 
-module.exports = { computeStatistics }
+module.exports = { computeStatistics, buildScrapbookHourlyChart }

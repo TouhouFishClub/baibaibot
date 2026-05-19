@@ -90,6 +90,17 @@ function getImageCQ(outputPath) {
   return '[CQ:image,file=' + rel + ']'
 }
 
+function formatReportDate(spec) {
+  if (spec.mode === 'date') {
+    const m = String(spec.month + 1).padStart(2, '0')
+    const d = String(spec.date).padStart(2, '0')
+    return spec.year + '年' + m + '月' + d + '日'
+  }
+  const dayKey = getChinaDateKey()
+  const [year, month, date] = dayKey.split('-')
+  return year + '年' + month + '月' + date + '日'
+}
+
 function resolveRange(spec) {
   if (spec.mode === 'date') {
     const range = getAnalysisRangeByDate(spec.year, spec.month, spec.date)
@@ -141,6 +152,8 @@ async function generateGroupDailyReport(options) {
   let topics = []
   let titles = []
   let quotes = []
+  let qualityReview = null
+  let tokenUsage = { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 }
 
   if (DEEPSEEK_API_KEY && messagesText) {
     console.log('[群分析] 调用 LLM 分析...')
@@ -148,18 +161,23 @@ async function generateGroupDailyReport(options) {
     topics = llmResult.topics
     titles = llmResult.titles
     quotes = llmResult.quotes
+    qualityReview = llmResult.qualityReview
+    tokenUsage = llmResult.tokenUsage
   } else {
     console.warn('[群分析] 未配置 DeepSeek，仅输出统计数据')
   }
 
   const reportData = {
     groupName: groupName || ('群' + groupId),
+    reportDate: formatReportDate(spec),
     dateRangeText: rangeDesc,
     generatedAt: formatChinaDateTime(new Date()),
     stats,
     topics,
     titles,
-    quotes
+    quotes,
+    qualityReview,
+    tokenUsage
   }
 
   console.log('[群分析] 生成报告图片...')
