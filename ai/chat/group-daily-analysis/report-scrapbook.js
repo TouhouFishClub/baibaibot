@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const { getFontFacesCss } = require('./fonts')
 const { renderTopicDetailHtml } = require('./topic-detail')
+const { sectionTitle, stampBlock, footerIcon } = require('./assets')
 
 function escapeHtml(str) {
   return String(str || '')
@@ -15,8 +16,8 @@ function getAvatarUrl(uid) {
   return 'https://q1.qlogo.cn/g?b=qq&nk=' + uid + '&s=100'
 }
 
-/** 报告版心宽度（略宽于原版 1000px，避免 Highlight Time 区换行） */
-const REPORT_WIDTH = 1200
+/** 报告版心宽度（原版 1000px，略加宽以容纳 Highlight 单行） */
+const REPORT_WIDTH = 1060
 
 const SCRAPBOOK_CSS = `
 :root {
@@ -134,12 +135,23 @@ body {
   border-radius: 8px;
   pointer-events: none;
 }
+.stamp-inner { text-align: center; z-index: 1; }
 .stamp-num { font-family: var(--font-title); font-size: 1.8rem; color: var(--accent-orange); line-height: 1; margin: 5px 0; }
 .stamp-label { font-family: var(--font-hand); font-size: 1rem; color: var(--ink-secondary); }
+.doodle { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertical-align: middle; }
+.doodle svg { width: 1em; height: 1em; fill: currentColor; }
+.doodle svg path { fill: currentColor; }
+.stamp-doodle svg { width: 2.2rem; height: 2.2rem; }
+.highlight-time-label {
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  color: var(--ink-secondary);
+  margin-bottom: 5px;
+}
 .highlight-section {
   flex: 1;
   flex-shrink: 0;
-  min-width: 320px;
+  min-width: 288px;
   background: var(--color-yellow);
   padding: 20px 24px;
   border: 2px solid var(--ink-primary);
@@ -183,6 +195,35 @@ body {
   align-items: center;
   gap: 8px;
   color: var(--accent-orange);
+}
+.section-title .doodle {
+  color: var(--accent-orange);
+  font-size: 1.3em;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.section-title .doodle svg,
+.footer-icon svg {
+  width: 1.15em;
+  height: 1.15em;
+  display: block;
+}
+.footer-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: bold;
+  font-size: 1.15rem;
+  color: var(--ink-primary);
+  flex-wrap: nowrap;
+}
+.footer-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent-orange);
+  opacity: 0.85;
 }
 .chart-section {
   grid-column: span 12;
@@ -582,10 +623,13 @@ body {
   z-index: 2;
 }
 .footer-card.stats-card { background-color: #f5f0ff; transform: rotate(-0.5deg); border-color: #9575cd; }
+.footer-card.stats-card .card-tape { background: rgba(149,117,205,0.4); }
 .footer-card.info-card { background-color: #fffdf0; transform: rotate(-1deg); border-color: #ffb74d; }
 .footer-card.info-card .card-tape { background: rgba(255,183,77,0.4); }
-.footer-card-title { font-weight: bold; font-size: 1.15rem; color: var(--ink-primary); }
-.footer-card-content { font-size: 0.95rem; color: #666; line-height: 1.4; }
+.footer-card.repo-card { background-color: #f0f7ff; transform: rotate(1.5deg); border-color: #64b5f6; }
+.footer-card.repo-card .card-tape { background: rgba(100,181,246,0.4); }
+.footer-card-content { font-size: 0.95rem; color: #666; line-height: 1.4; word-break: break-all; }
+.footer-doodle svg { width: 1.5rem; height: 1.5rem; }
 .empty { color: #aaa; font-style: italic; padding: 8px 0; font-family: var(--font-hand); }
 `
 
@@ -593,7 +637,7 @@ const ROTATIONS = ['-1deg', '1.5deg', '-0.5deg', '1deg', '-1.5deg', '0.5deg']
 
 function buildTopicsHtml(topics, userMap) {
   if (!topics || !topics.length) {
-    return '<div class="topic-section"><div class="section-title">今日话题 Topics</div><div class="empty">暂无话题总结</div></div>'
+    return '<div class="topic-section">' + sectionTitle('topic', '今日话题 Topics') + '<div class="empty">暂无话题总结</div></div>'
   }
   const items = topics.map((t, i) => {
     const contributors = (t.contributors || []).join(' · ') || '群友'
@@ -614,14 +658,14 @@ function buildTopicsHtml(topics, userMap) {
   return `
   <div class="topic-section">
     <div class="paper-holes">${Array(8).fill('<div class="hole"></div>').join('')}</div>
-    <div class="section-title">今日话题 Topics</div>
+    ${sectionTitle('topic', '今日话题 Topics')}
     ${items}
   </div>`
 }
 
 function buildTitlesHtml(titles) {
   if (!titles || !titles.length) {
-    return '<div class="user-section"><div class="section-title">群友画像 Portraits</div><div class="empty">暂无用户画像</div></div>'
+    return '<div class="user-section">' + sectionTitle('portraits', '群友画像 Portraits', { center: true }) + '<div class="empty">暂无用户画像</div></div>'
   }
   const cards = titles.map(t => {
     const profileLabel = t.profile_display || t.mbti
@@ -646,14 +690,14 @@ function buildTitlesHtml(titles) {
   }).join('')
   return `
   <div class="user-section">
-    <div class="section-title">群友画像 Portraits</div>
+    ${sectionTitle('portraits', '群友画像 Portraits', { center: true })}
     <div class="masonry-grid">${cards}</div>
   </div>`
 }
 
 function buildQuotesHtml(quotes) {
   if (!quotes || !quotes.length) {
-    return '<div class="quotes-section"><div class="section-title">群贤毕至 Bible Quotes</div><div class="empty">今日暂无金句</div></div>'
+    return '<div class="quotes-section">' + sectionTitle('quotes', '群贤毕至 Bible Quotes', { center: true }) + '<div class="empty">今日暂无金句</div></div>'
   }
   const items = quotes.map(q => {
     const uid = q.uid || ''
@@ -680,7 +724,7 @@ function buildQuotesHtml(quotes) {
   }).join('')
   return `
   <div class="quotes-section">
-    <div class="section-title">群贤毕至 Bible Quotes</div>
+    ${sectionTitle('quotes', '群贤毕至 Bible Quotes', { center: true })}
     ${items}
   </div>`
 }
@@ -714,7 +758,7 @@ function buildQualityReviewHtml(qualityReview) {
 
   return `
   <div class="quality-section">
-    <div class="section-title">群聊质量锐评</div>
+    ${sectionTitle('quality', '群聊质量锐评')}
     <div class="quality-item">
       <div class="quality-header">
         <div class="theme-title-badge">${escapeHtml(qualityReview.title || '聊天质量锐评')}</div>
@@ -733,15 +777,23 @@ function buildFooterHtml(generatedAt, tokenUsage) {
   <div class="footer">
     <div class="footer-card info-card">
       <div class="card-tape"></div>
-      <div class="footer-card-title">百百机器人</div>
+      <div class="footer-card-title">${footerIcon('star', '#ff9800')}百百机器人</div>
       <div class="footer-card-content">
         <div>群聊日报分析</div>
         <div>${escapeHtml(generatedAt)}</div>
+        <div style="font-size:0.85em;opacity:0.7;">百百 QQ 群分析</div>
+      </div>
+    </div>
+    <div class="footer-card repo-card">
+      <div class="card-tape"></div>
+      <div class="footer-card-title">${footerIcon('github', '#2196f3')}Github Repo</div>
+      <div class="footer-card-content">
+        <div style="font-family:var(--font-body);font-size:0.8rem;">SXP-Simon/astrbot_plugin_qq_group_daily_analysis</div>
       </div>
     </div>
     <div class="footer-card stats-card">
       <div class="card-tape"></div>
-      <div class="footer-card-title">LLM Token 消耗</div>
+      <div class="footer-card-title">${footerIcon('token', '#673ab7')}LLM Token 消耗</div>
       <div class="footer-card-content">
         <div>Total: ${usage.total_tokens || 0} Tokens</div>
         <div>Prompt/Compl: ${usage.prompt_tokens || 0}/${usage.completion_tokens || 0}</div>
@@ -788,14 +840,14 @@ function generateHtml(reportData) {
 
   <div class="stats-wrapper">
     <div class="stats-grid">
-      <div class="stamp"><div class="stamp-num">${stats.messageCount}</div><div class="stamp-label">消息总数</div></div>
-      <div class="stamp"><div class="stamp-num">${stats.participantCount}</div><div class="stamp-label">参与人数</div></div>
-      <div class="stamp"><div class="stamp-num">${stats.emojiCount}</div><div class="stamp-label">表情统计</div></div>
-      <div class="stamp"><div class="stamp-num">${stats.totalCharacters}</div><div class="stamp-label">总字符数</div></div>
+      ${stampBlock('message', 'var(--accent-orange)', stats.messageCount, '消息总数')}
+      ${stampBlock('users', 'var(--color-green)', stats.participantCount, '参与人数')}
+      ${stampBlock('emoji', 'var(--color-blue)', stats.emojiCount, '表情统计')}
+      ${stampBlock('text', 'var(--color-purple)', stats.totalCharacters, '总字符数')}
     </div>
     <div class="highlight-section">
       <div class="tape-top"></div>
-      <div class="time-desc">✨ Highlight Time</div>
+      <div class="highlight-time-label">✨ Highlight Time</div>
       <div class="time-big">${escapeHtml(stats.mostActivePeriod)}</div>
       <div class="time-desc">（此刻，世界色彩斑斓）</div>
     </div>
@@ -804,7 +856,7 @@ function generateHtml(reportData) {
   <div class="grid-layout">
     <div class="chart-section">
       <div class="coil"></div>
-      <div class="section-title">24H 活跃轨迹</div>
+      ${sectionTitle('chart', '24H 活跃轨迹')}
       ${stats.hourlyChartHtml || ''}
     </div>
 
