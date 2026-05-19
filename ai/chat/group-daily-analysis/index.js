@@ -177,7 +177,8 @@ async function generateGroupDailyReport(options) {
     titles,
     quotes,
     qualityReview,
-    tokenUsage
+    tokenUsage,
+    userMap
   }
 
   console.log('[群分析] 生成报告图片...')

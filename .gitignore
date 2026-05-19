@@ -22,6 +22,7 @@ secret.txt
 .secret.json
 jichou.json
 evedata.xlsx
+ai/chat/group-daily-analysis/fonts-base64.json
 ai/chat/QQgroup-annual-report-analyzer/demo/
 ai/mabinogi/recipeRebuild/img/item/
 ai/mabinogi/recipeRebuild/cache/

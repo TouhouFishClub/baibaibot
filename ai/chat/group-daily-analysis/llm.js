@@ -23,10 +23,94 @@ function extractJson(text) {
   let jsonStr = (text || '').trim()
   const codeMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/)
   if (codeMatch) jsonStr = codeMatch[1].trim()
-  const start = jsonStr.indexOf('{')
-  const end = jsonStr.lastIndexOf('}')
-  if (start >= 0 && end > start) jsonStr = jsonStr.slice(start, end + 1)
-  return JSON.parse(jsonStr)
+
+  const tryParse = (s) => {
+    try {
+      return JSON.parse(s)
+    } catch (e) {
+      return null
+    }
+  }
+
+  let parsed = tryParse(jsonStr)
+  if (parsed) return parsed
+
+  const objStart = jsonStr.indexOf('{')
+  const objEnd = jsonStr.lastIndexOf('}')
+  if (objStart >= 0 && objEnd > objStart) {
+    parsed = tryParse(jsonStr.slice(objStart, objEnd + 1))
+    if (parsed) return parsed
+  }
+
+  const arrStart = jsonStr.indexOf('[')
+  const arrEnd = jsonStr.lastIndexOf(']')
+  if (arrStart >= 0 && arrEnd > arrStart) {
+    parsed = tryParse(jsonStr.slice(arrStart, arrEnd + 1))
+    if (parsed) return parsed
+  }
+
+  throw new Error('JSON 解析失败')
+}
+
+function extractTitleList(parsed) {
+  if (Array.isArray(parsed)) return parsed
+  if (!parsed || typeof parsed !== 'object') return []
+  return parsed.titles || parsed.portraits || parsed.users || parsed.user_titles || []
+}
+
+function buildFallbackTitles(topUsers, userMap) {
+  const defaultTitles = ['话痨之王', '气氛组核心', '摸鱼达人', '梗王候补', '深夜选手', '水群大户', '潜水退潮', '随机游走']
+  return topUsers.slice(0, MAX_USER_TITLES).map((u, i) => ({
+    uid: String(u.uid),
+    name: u.name || userMap[u.uid] || ('用户' + u.uid),
+    title: defaultTitles[i] || '活跃群友',
+    mbti: '',
+    reason: '当日发言 ' + u.messageCount + ' 条，活跃度排名第 ' + (i + 1) + ' 名（统计回退）'
+  }))
+}
+
+function normalizeTitleItem(raw, userMap) {
+  if (!raw || typeof raw !== 'object') return null
+
+  const rawId = raw.user_id ?? raw.userId ?? raw.uid ?? raw.qq ?? raw.id ?? raw.QQ
+  let uid = normalizeUid(rawId)
+  let name = uid ? lookupNickname(uid, userMap) : null
+
+  if (!uid || !/^\d{5,12}$/.test(uid)) {
+    const nick = String(raw.name || raw.nickname || raw.nick || rawId || '').trim()
+    if (nick) {
+      for (const key of Object.keys(userMap)) {
+        if (!/^\d{5,12}$/.test(String(key))) continue
+        if (userMap[key] === nick) {
+          uid = String(key)
+          name = nick
+          break
+        }
+      }
+    }
+  }
+
+  if (!uid || !/^\d{5,12}$/.test(uid)) return null
+
+  const title = String(raw.title || raw.称号 || raw.label || '').trim()
+  const reason = String(raw.reason || raw.desc || raw.description || raw.comment || '').trim()
+  if (!title) return null
+
+  return {
+    uid,
+    name: name || userMap[uid] || userMap[parseInt(uid, 10)] || ('用户' + uid),
+    title,
+    mbti: String(raw.mbti || raw.MBTI || '').trim(),
+    reason: reason || ('当日活跃群友，获得称号「' + title + '」')
+  }
+}
+
+function parseTitlesFromLlmText(text, userMap) {
+  const parsed = extractJson(text)
+  return extractTitleList(parsed)
+    .map(item => normalizeTitleItem(item, userMap))
+    .filter(Boolean)
+    .slice(0, MAX_USER_TITLES)
 }
 
 async function callDeepSeek(systemPrompt, userPrompt, maxTokens = 3000) {
@@ -123,19 +207,16 @@ async function analyzeUserTitles(messagesText, topUsers, userMap) {
 }
 user_id 必须是 QQ 号字符串。`
 
-  const userPrompt = '活跃成员：\n' + activeList + '\n\n聊天记录节选：\n' + messagesText.slice(0, 8000)
+  const userPrompt = '活跃成员（务必从下列 QQ 号中选人，user_id 填 QQ 数字）：\n' + activeList
+    + '\n\n聊天记录节选：\n' + messagesText.slice(0, 8000)
+
   const { text, usage } = await callDeepSeek(systemPrompt, userPrompt, 3500)
-  const parsed = extractJson(text)
-  const titles = (parsed.titles || []).slice(0, MAX_USER_TITLES).map(t => {
-    const uid = String(t.user_id || '').trim()
-    return {
-      uid,
-      name: lookupNickname(uid, userMap) || '群友',
-      title: (t.title || '神秘人').trim(),
-      mbti: (t.mbti || '').trim(),
-      reason: (t.reason || '').trim()
-    }
-  }).filter(t => t.uid && t.title)
+  let titles = parseTitlesFromLlmText(text, userMap)
+
+  if (titles.length === 0) {
+    console.warn('[群分析] 用户画像 JSON 解析后为空，原始回复前 200 字:', (text || '').slice(0, 200))
+  }
+
   return { titles, usage }
 }
 
@@ -297,6 +378,11 @@ async function analyzeAll(messagesText, topUsers, userMap) {
   if (titleR) titles = titleR.titles
   if (quoteR) quotes = quoteR.quotes
   if (qualityR) qualityReview = qualityR.review
+
+  if ((!titles || titles.length === 0) && topUsers && topUsers.length > 0) {
+    console.warn('[群分析] 用户画像 LLM 无有效结果，使用活跃度榜单生成基础画像（共 ' + topUsers.length + ' 人）')
+    titles = buildFallbackTitles(topUsers, userMap)
+  }
 
   return { topics, titles, quotes, qualityReview, tokenUsage }
 }

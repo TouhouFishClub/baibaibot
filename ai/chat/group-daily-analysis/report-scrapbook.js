@@ -1,5 +1,7 @@
 const fs = require('fs')
 const path = require('path')
+const { getFontFacesCss } = require('./fonts')
+const { renderTopicDetailHtml } = require('./topic-detail')
 
 function escapeHtml(str) {
   return String(str || '')
@@ -30,9 +32,9 @@ const SCRAPBOOK_CSS = `
   --title-bg: #fffde7;
   --title-border: #ffb74d;
   --title-text: #bf360c;
-  --font-title: cursive, "Microsoft YaHei", KaiTi, "STKaiti", serif;
-  --font-hand: cursive, KaiTi, "STKaiti", "Microsoft YaHei", serif;
-  --font-body: "Microsoft YaHei", "PingFang SC", sans-serif;
+  --font-title: 'ScrapbookTitle', "Microsoft YaHei", sans-serif;
+  --font-hand: 'ScrapbookHand', KaiTi, "STKaiti", serif;
+  --font-body: 'ScrapbookBody', "Microsoft YaHei", "PingFang SC", sans-serif;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -275,7 +277,34 @@ body {
 .topic-item:nth-child(3n) .topic-title { background: linear-gradient(transparent 60%, var(--color-green) 60%); }
 .topic-index { font-family: var(--font-hand); color: var(--ink-secondary); font-size: 1rem; }
 .topic-contributors { font-family: var(--font-hand); color: var(--ink-secondary); font-size: 1rem; margin: 4px 0; }
-.topic-detail { font-family: var(--font-hand); color: #666; font-size: 1.1rem; margin-top: 8px; line-height: 1.6; }
+.topic-detail { font-family: var(--font-hand); color: #444; font-size: 1.15rem; margin-top: 10px; line-height: 2.2; word-break: break-word; }
+.user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f3f3f3;
+  border: 1px solid #e0e0e0;
+  border-radius: 999px;
+  padding: 2px 12px 2px 4px;
+  margin: 0 4px;
+  vertical-align: middle;
+  white-space: nowrap;
+  box-shadow: 1px 1px 0 rgba(0,0,0,0.06);
+}
+.user-pill-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid #fff;
+  background: #eee;
+}
+.user-pill-name {
+  font-family: var(--font-body);
+  font-size: 0.92em;
+  color: var(--ink-primary);
+  font-weight: 500;
+}
 .user-section { grid-column: span 12; margin-top: 20px; }
 .masonry-grid { column-count: 2; column-gap: 25px; }
 .user-card {
@@ -525,12 +554,13 @@ body {
 
 const ROTATIONS = ['-1deg', '1.5deg', '-0.5deg', '1deg', '-1.5deg', '0.5deg']
 
-function buildTopicsHtml(topics) {
+function buildTopicsHtml(topics, userMap) {
   if (!topics || !topics.length) {
     return '<div class="topic-section"><div class="section-title">今日话题 Topics</div><div class="empty">暂无话题总结</div></div>'
   }
   const items = topics.map((t, i) => {
     const contributors = (t.contributors || []).join(' · ') || '群友'
+    const detailHtml = renderTopicDetailHtml(t.detail, userMap || {}, t.contributors)
     return `
     <div class="topic-item">
       <div class="check-box"><div class="check-tick"></div></div>
@@ -540,7 +570,7 @@ function buildTopicsHtml(topics) {
           <span class="topic-index">#${String(i + 1).padStart(2, '0')}</span>
         </div>
         <div class="topic-contributors">🙋‍♀️ 参与者：${escapeHtml(contributors)}</div>
-        <div class="topic-detail">${escapeHtml(t.detail)}</div>
+        <div class="topic-detail">${detailHtml}</div>
       </div>
     </div>`
   }).join('')
@@ -693,7 +723,8 @@ function generateHtml(reportData) {
     titles,
     quotes,
     qualityReview,
-    tokenUsage
+    tokenUsage,
+    userMap
   } = reportData
 
   const headerTitle = escapeHtml(groupName) + ' 群聊日报'
@@ -704,7 +735,7 @@ function generateHtml(reportData) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escapeHtml(groupName)} 群聊日报</title>
-<style>${SCRAPBOOK_CSS}</style>
+<style>${getFontFacesCss()}${SCRAPBOOK_CSS}</style>
 </head>
 <body>
 <div class="container">
@@ -739,7 +770,7 @@ function generateHtml(reportData) {
       ${stats.hourlyChartHtml || ''}
     </div>
 
-    ${buildTopicsHtml(topics)}
+    ${buildTopicsHtml(topics, userMap)}
     ${buildTitlesHtml(titles)}
     ${buildQuotesHtml(quotes)}
     ${buildQualityReviewHtml(qualityReview)}
