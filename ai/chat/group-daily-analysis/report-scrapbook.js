@@ -15,6 +15,9 @@ function getAvatarUrl(uid) {
   return 'https://q1.qlogo.cn/g?b=qq&nk=' + uid + '&s=100'
 }
 
+/** 报告版心宽度（略宽于原版 1000px，避免 Highlight Time 区换行） */
+const REPORT_WIDTH = 1200
+
 const SCRAPBOOK_CSS = `
 :root {
   --bg-paper: #fdfbf7;
@@ -44,11 +47,13 @@ body {
   background-image: radial-gradient(#ddd 2px, transparent 2px);
   background-size: 20px 20px;
   min-height: 100vh;
+  min-width: ${REPORT_WIDTH}px;
   padding: 40px 20px;
   line-height: 1.6;
 }
 .container {
-  max-width: 1000px;
+  max-width: ${REPORT_WIDTH}px;
+  width: 100%;
   margin: 0 auto;
   position: relative;
   background: #fff;
@@ -105,8 +110,8 @@ body {
   background: rgba(255, 171, 145, 0.7);
   opacity: 0.8;
 }
-.stats-wrapper { display: flex; gap: 25px; margin-bottom: 40px; align-items: stretch; }
-.stats-grid { flex: 2; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.stats-wrapper { display: flex; gap: 22px; margin-bottom: 40px; align-items: stretch; }
+.stats-grid { flex: 1.55; min-width: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 .stamp {
   width: 100%;
   height: 100%;
@@ -133,8 +138,10 @@ body {
 .stamp-label { font-family: var(--font-hand); font-size: 1rem; color: var(--ink-secondary); }
 .highlight-section {
   flex: 1;
+  flex-shrink: 0;
+  min-width: 320px;
   background: var(--color-yellow);
-  padding: 20px;
+  padding: 20px 24px;
   border: 2px solid var(--ink-primary);
   border-radius: 20px;
   box-shadow: 6px 6px 0 var(--color-pink);
@@ -146,6 +153,11 @@ body {
   position: relative;
   background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.2) 0, rgba(255,255,255,0.2) 10px, transparent 10px, transparent 20px);
 }
+.highlight-section .time-desc,
+.highlight-section .time-big {
+  white-space: nowrap;
+  max-width: 100%;
+}
 .tape-top {
   width: 60px; height: 20px;
   background: rgba(255,255,255,0.5);
@@ -153,8 +165,15 @@ body {
   top: -10px; left: 50%;
   transform: translateX(-50%);
 }
-.time-big { font-family: var(--font-title); font-size: 2.2rem; color: var(--ink-primary); margin: 10px 0; }
-.time-desc { font-family: var(--font-hand); color: var(--ink-secondary); font-size: 1.2rem; }
+.time-big {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  color: var(--ink-primary);
+  margin: 10px 0;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+}
+.time-desc { font-family: var(--font-hand); color: var(--ink-secondary); font-size: 1.35rem; line-height: 1.3; }
 .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 30px; }
 .section-title {
   font-family: var(--font-title);
@@ -752,7 +771,7 @@ function generateHtml(reportData) {
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=${REPORT_WIDTH}">
 <title>${escapeHtml(groupName)} 群聊日报</title>
 <style>${getFontFacesCss()}${SCRAPBOOK_CSS}</style>
 </head>
@@ -816,7 +835,14 @@ async function renderReportImage(reportData, outputPath) {
     html,
     waitUntil: 'domcontentloaded',
     timeout: 120000,
-    puppeteerArgs: { args: ['--no-sandbox', '--disable-setuid-sandbox'] }
+    puppeteerArgs: { args: ['--no-sandbox', '--disable-setuid-sandbox'] },
+    beforeScreenshot: async (page) => {
+      await page.setViewport({
+        width: REPORT_WIDTH + 80,
+        height: 900,
+        deviceScaleFactor: 2
+      })
+    }
   })
 
   return outputPath
