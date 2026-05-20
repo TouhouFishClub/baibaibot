@@ -1,8 +1,7 @@
 const { getClient } = require('../../mongo/index')
 const { triggerSmugKrFetch } = require('./smuggler/smugKrScheduler')
 
-const CROSS_IP_DEDUP_MS = 30 * 1000
-const SAME_IP_DEDUP_MS = 0
+const DEDUP_MS = 30 * 1000
 
 // 春灬语默获得了道具奇妙的皇家骑士学院手套
 const SIMPLE_GAIN_REGEX = /^(.+?)获得了道具(.+)$/
@@ -32,22 +31,12 @@ async function handlePush(byte, str, server, ip) {
 	const col = client.db('db_bot').collection('cl_mabinogi_pusher')
 	const now = Date.now()
 
-	// 不同 IP 推送相同数据 → 多终端看到同一事件，去重
-	const crossIpDup = await col.findOne({
+	// 短时间重复推送相同数据 → 去重（含同 IP 多客户端）
+	const dup = await col.findOne({
 		byte, str, server,
-		ip: { $ne: ip },
-		ts: { $gte: now - CROSS_IP_DEDUP_MS }
+		ts: { $gte: now - DEDUP_MS }
 	})
-	if (crossIpDup) return false
-
-	// 同一 IP 极短时间内重复推送 → 防抖（SAME_IP_DEDUP_MS 为 0 时跳过）
-	if (SAME_IP_DEDUP_MS > 0) {
-		const sameIpDup = await col.findOne({
-			byte, str, server, ip,
-			ts: { $gte: now - SAME_IP_DEDUP_MS }
-		})
-		if (sameIpDup) return false
-	}
+	if (dup) return false
 
 	await col.insertOne({
 		byte, str, server, ip,
