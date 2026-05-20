@@ -3,7 +3,7 @@ const readline = require('readline')
 const { ObjectId } = require('mongodb')
 const { getClient } = require('../mongo/index')
 
-const DEDUP_MS = 30 * 1000
+const DEFAULT_DEDUP_MS = 30 * 1000
 
 const SERVERS = ['ylx', 'yate']
 
@@ -96,7 +96,7 @@ async function removeDocs (col, filter) {
 	return 0
 }
 
-async function findDuplicatesInCollection (col, getKey, query) {
+async function findDuplicatesInCollection (col, getKey, query, dedupMs) {
 	const duplicates = []
 	/** @type {Map<string, { doc: object, ts: number }[]>} */
 	const recentByKey = new Map()
@@ -109,7 +109,7 @@ async function findDuplicatesInCollection (col, getKey, query) {
 
 		const key = getKey(doc)
 		let list = recentByKey.get(key) || []
-		list = list.filter((e) => ts - e.ts < DEDUP_MS)
+		list = list.filter((e) => ts - e.ts < dedupMs)
 
 		if (list.length > 0) {
 			duplicates.push({
@@ -128,7 +128,7 @@ async function findDuplicatesInCollection (col, getKey, query) {
 	return duplicates
 }
 
-async function scanCollection (db, target, colName, sinceTs) {
+async function scanCollection (db, target, colName, sinceTs, dedupMs) {
 	const col = db.collection(colName)
 	const query = buildTsQuery(sinceTs)
 	const total = await countDocs(col, query)
@@ -136,16 +136,16 @@ async function scanCollection (db, target, colName, sinceTs) {
 		return { colName, total: 0, duplicates: [] }
 	}
 
-	const duplicates = await findDuplicatesInCollection(col, target.getKey, query)
+	const duplicates = await findDuplicatesInCollection(col, target.getKey, query, dedupMs)
 	return { colName, total, duplicates }
 }
 
-async function runScan (db, sinceTs) {
+async function runScan (db, sinceTs, dedupMs) {
 	const allItems = []
 
 	for (const target of SCAN_TARGETS) {
 		if (typeof target.colName === 'string') {
-			const result = await scanCollection(db, target, target.colName, sinceTs)
+			const result = await scanCollection(db, target, target.colName, sinceTs, dedupMs)
 			for (const item of result.duplicates) {
 				allItems.push({
 					target,
@@ -161,7 +161,7 @@ async function runScan (db, sinceTs) {
 		} else {
 			for (const sv of SERVERS) {
 				const colName = target.colName(sv)
-				const result = await scanCollection(db, target, colName, sinceTs)
+				const result = await scanCollection(db, target, colName, sinceTs, dedupMs)
 				for (const item of result.duplicates) {
 					allItems.push({
 						target,
@@ -206,23 +206,56 @@ function groupByCollection (items) {
 	return map
 }
 
+function parseDedupMs (argv) {
+	const fromEq = argv.find((a) => /^--ms=/.test(a) || /^-ms=/.test(a))
+	if (fromEq) {
+		const n = Number(fromEq.split('=').slice(1).join('='))
+		if (!Number.isFinite(n) || n <= 0) {
+			console.error('--ms= 后必须是大于 0 的毫秒数')
+			process.exit(1)
+		}
+		return Math.floor(n)
+	}
+
+	const idx = argv.findIndex((a) => a === '--ms' || a === '-ms')
+	if (idx >= 0) {
+		const n = Number(argv[idx + 1])
+		if (!Number.isFinite(n) || n <= 0) {
+			console.error('--ms 后必须是大于 0 的毫秒数，例如: --ms 1000')
+			process.exit(1)
+		}
+		return Math.floor(n)
+	}
+
+	return DEFAULT_DEDUP_MS
+}
+
+function isDaysToken (argv, index) {
+	const a = argv[index]
+	if (!/^\d+$/.test(a)) return false
+	if (index > 0 && (argv[index - 1] === '--ms' || argv[index - 1] === '-ms')) return false
+	return true
+}
+
 function parseCli () {
 	const argv = process.argv.slice(2)
 	const scanOnly = argv.includes('scan') || argv.includes('--scan-only')
 	const fullScan = argv.includes('all')
+	const dedupMs = parseDedupMs(argv)
 
 	let confirmMode = 'each'
 	if (argv.includes('yes-all')) confirmMode = 'all'
 	else if (argv.includes('yes-col') || argv.includes('yes-collection')) confirmMode = 'collection'
 
-	const daysArg = argv.find((a) => /^\d+$/.test(a))
+	const daysArg = argv.find((a, i) => isDaysToken(argv, i))
+
+	const base = { scanOnly, confirmMode, dedupMs }
 
 	if (fullScan) {
 		return {
+			...base,
 			sinceTs: null,
-			rangeLabel: '全量（所有含有效 ts 的记录）',
-			scanOnly,
-			confirmMode
+			rangeLabel: '全量（所有含有效 ts 的记录）'
 		}
 	}
 
@@ -234,10 +267,9 @@ function parseCli () {
 
 	const sinceTs = Date.now() - days * 24 * 60 * 60 * 1000
 	return {
+		...base,
 		sinceTs,
-		rangeLabel: `近 ${days} 天 (ts >= ${sinceTs})`,
-		scanOnly,
-		confirmMode
+		rangeLabel: `近 ${days} 天 (ts >= ${sinceTs})`
 	}
 }
 
@@ -374,10 +406,17 @@ async function confirmAndDelete (items, scanOnly, confirmMode) {
 	return { deleted, skipped, quit }
 }
 
-async function main () {
-	const { sinceTs, rangeLabel, scanOnly, confirmMode } = parseCli()
+function dedupMsLabel (dedupMs) {
+	if (dedupMs === DEFAULT_DEDUP_MS) {
+		return `${dedupMs}ms（默认，与 mabiPusher 一致）`
+	}
+	return `${dedupMs}ms（${(dedupMs / 1000).toFixed(3).replace(/\.?0+$/, '')} 秒内相同内容视为重复）`
+}
 
-	console.log(`去重窗口: ${DEDUP_MS}ms（与 mabiPusher 一致）`)
+async function main () {
+	const { sinceTs, rangeLabel, scanOnly, confirmMode, dedupMs } = parseCli()
+
+	console.log(`去重窗口: ${dedupMsLabel(dedupMs)}`)
 	console.log(`扫描范围: ${rangeLabel}`)
 	console.log(`模式: ${confirmModeLabel(scanOnly, confirmMode)}\n`)
 
@@ -389,7 +428,7 @@ async function main () {
 	const db = client.db('db_bot')
 
 	try {
-		const items = await runScan(db, sinceTs)
+		const items = await runScan(db, sinceTs, dedupMs)
 		const { deleted, skipped, quit } = await confirmAndDelete(items, scanOnly, confirmMode)
 
 		console.log('\n======== 汇总 ========')

@@ -39,7 +39,7 @@ node script/<脚本名>.js [参数...]
 
 ## dedupDistributedRecords.js
 
-检查并清理因「同 IP 多开推送客户端 / 短时重复推送」产生的重复入库。判定规则与 [`ai/mabinogi/mabiPusher.js`](../ai/mabinogi/mabiPusher.js) 一致：**30 秒内相同内容视为重复，保留最早一条**。
+检查并清理因「同 IP 多开推送客户端 / 短时重复推送」产生的重复入库。**默认**与 [`ai/mabinogi/mabiPusher.js`](../ai/mabinogi/mabiPusher.js) 一致：**30 秒**内相同内容视为重复，保留最早一条；可用 `--ms` 自定义时间窗口。
 
 ### 扫描的集合
 
@@ -59,9 +59,13 @@ node script/<脚本名>.js [参数...]
 |------|------|
 | `30`（数字） | 扫描近 N 天（默认 30） |
 | `all` | 全量扫描（所有含有效 `ts` 的记录） |
+| `--ms 1000` | 去重窗口为 **1000 毫秒**（1 秒内相同内容视为重复） |
+| `--ms=30000` | 同上，等号写法 |
 | `scan` | 仅扫描并列出，不删除 |
 | `yes-col` | 按**集合**各确认一次后批量删除 |
 | `yes-all` | 扫描后**一次性**确认删除全部重复 |
+
+未指定 `--ms` 时默认 `30000`（30 秒）。`--ms` 后的数字不会被当作「天数」解析。
 
 交互确认（未带 `yes-*` 时）：`y` 删除当前条，`n` 跳过，`q` 退出。
 
@@ -74,7 +78,10 @@ node script/dedupDistributedRecords.js
 # 近 7 天，仅查看
 node script/dedupDistributedRecords.js 7 scan
 
-# 全量仅扫描（推荐第一步）
+# 1 秒内相同 raw 视为重复，全量仅扫描
+node script/dedupDistributedRecords.js all scan --ms 1000
+
+# 全量仅扫描（默认 30 秒窗口，推荐第一步）
 node script/dedupDistributedRecords.js all scan
 
 # 全量，按集合确认删除（全量清理推荐）
@@ -98,7 +105,7 @@ node script/dedupDistributedRecords.js 365 yes-col
 - **删除前建议备份** MongoDB 相关集合。
 - 脚本在能连上生产库的服务器上运行；本地若连不上内网 Mongo 会超时。
 - 只会删除「重复条」（窗口内较晚的记录），不会删除每组中最早的一条。
-- 若两条记录间隔超过 30 秒，即使内容相同也不会被判为重复。
+- 若两条记录间隔超过当前去重窗口（默认 30 秒，或 `--ms` 指定值），即使内容相同也不会被判为重复。
 
 ---
 
