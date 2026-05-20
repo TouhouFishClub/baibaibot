@@ -1,6 +1,6 @@
 # 洛奇推送数据维护脚本
 
-在项目根目录执行（需能访问 `baibaiConfigs` 中配置的 MongoDB）：
+在项目根目录执行（需能访问 `baibaiConfigs` 中配置的 MongoDB）。本项目使用 **mongodb@2.x** 驱动，脚本已使用 `count` / `remove` 等旧版 API。
 
 ```bash
 cd /path/to/baibaibot

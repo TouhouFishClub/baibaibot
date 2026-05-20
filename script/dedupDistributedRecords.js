@@ -83,6 +83,19 @@ function buildTsQuery (sinceTs) {
 	return sinceTs == null ? { ts: { $exists: true, $type: 'number' } } : { ts: { $gte: sinceTs } }
 }
 
+/** 兼容 mongodb@2.x（count / remove，无 countDocuments、deleteMany） */
+async function countDocs (col, query) {
+	const n = await col.count(query)
+	return typeof n === 'number' ? n : 0
+}
+
+async function removeDocs (col, filter) {
+	const res = await col.remove(filter)
+	if (res && typeof res.deletedCount === 'number') return res.deletedCount
+	if (res && res.result && typeof res.result.n === 'number') return res.result.n
+	return 0
+}
+
 async function findDuplicatesInCollection (col, getKey, query) {
 	const duplicates = []
 	/** @type {Map<string, { doc: object, ts: number }[]>} */
@@ -118,7 +131,7 @@ async function findDuplicatesInCollection (col, getKey, query) {
 async function scanCollection (db, target, colName, sinceTs) {
 	const col = db.collection(colName)
 	const query = buildTsQuery(sinceTs)
-	const total = await col.countDocuments(query)
+	const total = await countDocs(col, query)
 	if (!total) {
 		return { colName, total: 0, duplicates: [] }
 	}
@@ -179,8 +192,7 @@ function printItemDetail (item, index, total) {
 
 async function deleteBatch (col, batch) {
 	const ids = batch.map((item) => item.dup._id)
-	const res = await col.deleteMany({ _id: { $in: ids } })
-	return res.deletedCount || 0
+	return removeDocs(col, { _id: { $in: ids } })
 }
 
 function groupByCollection (items) {
@@ -342,8 +354,8 @@ async function confirmAndDelete (items, scanOnly, confirmMode) {
 			}
 
 			if (answer === 'y' || answer === 'yes') {
-				const res = await col.deleteOne({ _id: dup._id })
-				if (res.deletedCount === 1) {
+				const n = await removeDocs(col, { _id: dup._id })
+				if (n >= 1) {
 					console.log('  -> 已删除')
 					deleted++
 				} else {
