@@ -147,7 +147,7 @@ app.ws('/lagrange/:bot_name', (ws, req) => {
   console.log(`======================\n\nbot_name: ${bot_name}\nheaders: ${JSON.stringify(req.headers, null, 2)}\n\n======================`)
   if(req.headers){
     var botid = req.headers['x-self-id'];
-    if((botid+"").startsWith("18402")){
+    if(((botid+"").startsWith("18402"))||((botid+"").startsWith("27713"))){
       setPushWs(ws);
     }
 
