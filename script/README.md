@@ -109,6 +109,37 @@ node script/dedupDistributedRecords.js 365 yes-col
 
 ---
 
+## backfillMbcdNewFormat.js
+
+将 `cl_mabinogi_pusher` 中 **byte=2**、新格式抽蛋播报（`{角色}获得了{物品}道具`）在修复 `mabiPusher` 之前未写入 `cl_mbcd_ylx` / `cl_mbcd_yate` 的记录补写回去。
+
+### 会处理的记录
+
+- `time >=` 起始日期（默认 **2026-06-12 国服零点**）
+- `byte === 2`
+- `str` 匹配新格式 `获得了{物品}道具`（末尾句号可有可无）
+- 在对应 `cl_mbcd_{server}` 中尚不存在相同 `server` + `raw` + `ts` 的记录
+
+旧格式 `获得了道具{物品}` 已由当时逻辑正常分发，本脚本不会重复处理。
+
+### 命令
+
+| 命令 | 说明 |
+|------|------|
+| `node script/backfillMbcdNewFormat.js scan` | 仅扫描待补写数量与样例，**不写入** |
+| `node script/backfillMbcdNewFormat.js` | 扫描后交互确认再写入 |
+| `node script/backfillMbcdNewFormat.js yes` | 扫描后直接写入（跳过确认） |
+| `node script/backfillMbcdNewFormat.js --since 2026-06-11` | 自定义起始日期 |
+| `node script/backfillMbcdNewFormat.js scan --since=2026-06-12` | 组合使用 |
+
+### 推荐流程
+
+1. `node script/backfillMbcdNewFormat.js scan` — 确认待补写条数与样例  
+2. `node script/backfillMbcdNewFormat.js` — 确认后写入  
+3. （可选）`node script/fillUnknownDrawPool.js 30` — 为仍缺手帕名的记录回填 `draw_pool`
+
+---
+
 ## 相关代码
 
 - 推送与去重逻辑：[`ai/mabinogi/mabiPusher.js`](../ai/mabinogi/mabiPusher.js)

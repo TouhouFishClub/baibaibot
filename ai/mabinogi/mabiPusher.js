@@ -4,7 +4,27 @@ const { triggerSmugKrFetch } = require('./smuggler/smugKrScheduler')
 const DEDUP_MS = 30 * 1000
 
 // 春灬语默获得了道具奇妙的皇家骑士学院手套
-const SIMPLE_GAIN_REGEX = /^(.+?)获得了道具(.+)$/
+// 海豹不会游泳获得了像素星穹蓝色2次头衔兑换券道具。
+const SIMPLE_GAIN_ITEM_AFTER_REGEX = /^(.+?)获得了道具(.+)$/
+const SIMPLE_GAIN_ITEM_BEFORE_REGEX = /^(.+?)获得了(.+?)道具。?$/
+
+function parseSimpleGain(str) {
+	const itemAfterMatch = str.match(SIMPLE_GAIN_ITEM_AFTER_REGEX)
+	if (itemAfterMatch) {
+		return {
+			character_name: itemAfterMatch[1].trim(),
+			item_name: itemAfterMatch[2].trim()
+		}
+	}
+	const itemBeforeMatch = str.match(SIMPLE_GAIN_ITEM_BEFORE_REGEX)
+	if (itemBeforeMatch) {
+		return {
+			character_name: itemBeforeMatch[1].trim(),
+			item_name: itemBeforeMatch[2].trim()
+		}
+	}
+	return null
+}
 
 // 汐殇** 从 格伦贝尔纳获得了 套装效果拉蒂卡移动速度增加+1咒语书。 (频道5)
 // 注意：这里的“从”是结构分隔词，要求前后至少一个空白，避免误切角色名里的“从”
@@ -47,11 +67,9 @@ async function handlePush(byte, str, server, ip) {
 	// 额外分发：byte 为 2 时，根据内容写入不同集合
 	if (Number(byte) === 2) {
 		try {
-			const simpleMatch = str.match(SIMPLE_GAIN_REGEX)
-			if (simpleMatch) {
-				const [, characterNameRaw, itemNameRaw] = simpleMatch
-				const character_name = characterNameRaw.trim()
-				const item_name = itemNameRaw.trim()
+			const simpleParsed = parseSimpleGain(str)
+			if (simpleParsed) {
+				const { character_name, item_name } = simpleParsed
 
 				const colName = `cl_mbcd_${server}`
 				const simpleCol = client.db('db_bot').collection(colName)
