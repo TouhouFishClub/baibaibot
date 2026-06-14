@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 
-const ADMIN_IDS = new Set([799018865])
+const ADMIN_IDS = new Set([799018865, 1224099915])
 
 const BOT_IDS = new Set([
   2854196310, 981069482, 3291864216, 1840239061, 2771362647,
