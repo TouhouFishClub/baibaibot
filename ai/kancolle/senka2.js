@@ -2241,6 +2241,9 @@ function searchShip(name,callback){
       var ret = '未找到监控：'+name;
       callback(ret)
     }else{
+      if(arr.length>120){
+        arr = arr.length-120;
+      }
       var img1 = new imageMagick("static/blank.png");
       var height = Math.min(arr.length*16+50,2000);
       img1.autoOrient()
