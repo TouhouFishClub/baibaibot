@@ -317,22 +317,22 @@ const escapeJsonForHtml = obj =>
     .replace(/\u2028/g, '\\u2028')
     .replace(/\u2029/g, '\\u2029')
 
-const renderChannelGrid = (channels, serverClass) =>
+const renderChannelGrid = channels =>
   `<span class="ch-grid">${channels
     .map(
       (on, i) =>
-        `<span class="ch-cell ${on ? 'on ' + serverClass : 'off'}" title="频道${i + 1}"></span>`
+        `<span class="ch-cell ${on ? 'on' : 'off'}" title="频道${i + 1}">${i + 1}</span>`
     )
     .join('')}</span>`
 
-const renderTopList = (items, serverClass) => {
+const renderTopList = items => {
   if (!items.length) {
     return '<li style="padding-left:40px;list-style:none"><span>（无有效角色名）</span></li>'
   }
   return items
     .map(
       x =>
-        `<li><span class="char-name">${escHtml(x.name)}</span><span class="row-meta"><span class="cnt">${x.count} 次</span>${renderChannelGrid(x.channels, serverClass)}</span></li>`
+        `<li><span class="char-name">${escHtml(x.name)}</span><span class="row-meta"><span class="cnt">${x.count} 次</span>${renderChannelGrid(x.channels)}</span></li>`
     )
     .join('')
 }
@@ -427,12 +427,18 @@ const renderStatsImage = async (payload, outputPath) => {
       width: 18px;
       height: 18px;
       border-radius: 3px;
+      font-size: 8px;
+      line-height: 18px;
+      text-align: center;
     }
-    .ch-cell.on.ylx { background: #6C9BD2; box-shadow: 0 0 6px rgba(108,155,210,0.45); }
-    .ch-cell.on.yate { background: #E8A87C; box-shadow: 0 0 6px rgba(232,168,124,0.45); }
+    .ch-cell.on {
+      background: #6C9BD2;
+      color: #ffffff;
+      box-shadow: 0 0 6px rgba(108,155,210,0.45);
+    }
     .ch-cell.off {
       background: #2a3140;
-      color: #5c6578;
+      color: #6b7280;
       border: 1px solid rgba(255,255,255,0.06);
     }
     .top5 li:last-child { border-bottom: 0; }
@@ -479,13 +485,13 @@ const renderStatsImage = async (payload, outputPath) => {
       <div class="top-col">
         <div class="sub-title">伊鲁夏</div>
         <ol>
-          ${renderTopList(payload.topYlx, 'ylx')}
+          ${renderTopList(payload.topYlx)}
         </ol>
       </div>
       <div class="top-col">
         <div class="sub-title">亚特</div>
         <ol>
-          ${renderTopList(payload.topYate, 'yate')}
+          ${renderTopList(payload.topYate)}
         </ol>
       </div>
     </div>
