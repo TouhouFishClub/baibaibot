@@ -128,6 +128,23 @@ const enumerateDays = (start, end) => {
   return days
 }
 
+const CHANNEL_COUNT = 10
+
+const parseChannelNum = channel => {
+  if (channel === undefined || channel === null || channel === '') return null
+  const n = Number(channel)
+  return Number.isFinite(n) && n >= 1 && n <= CHANNEL_COUNT ? n : null
+}
+
+const channelsToBits = channelSet => {
+  const bits = new Array(CHANNEL_COUNT).fill(false)
+  if (!channelSet) return bits
+  for (const ch of channelSet) {
+    if (ch >= 1 && ch <= CHANNEL_COUNT) bits[ch - 1] = true
+  }
+  return bits
+}
+
 const normalizeRewardForPie = reward => {
   const raw = reward && String(reward).trim().length ? String(reward).trim() : '(空)'
   if (raw === '(空)') return raw
@@ -161,6 +178,8 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
   const dayYate = new Map()
   const charYlx = new Map()
   const charYate = new Map()
+  const charChannelsYlx = new Map()
+  const charChannelsYate = new Map()
 
   const bump = (m, k) => {
     const key = k && String(k).length ? String(k) : '(空)'
@@ -188,6 +207,12 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
       if (chName) {
         const charMap = server === 'ylx' ? charYlx : charYate
         charMap.set(chName, (charMap.get(chName) || 0) + 1)
+        const chNum = parseChannelNum(channel)
+        if (chNum != null) {
+          const channelMap = server === 'ylx' ? charChannelsYlx : charChannelsYate
+          if (!channelMap.has(chName)) channelMap.set(chName, new Set())
+          channelMap.get(chName).add(chNum)
+        }
       }
     }
   }
@@ -205,7 +230,9 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
     dayYlx,
     dayYate,
     charYlx,
-    charYate
+    charYate,
+    charChannelsYlx,
+    charChannelsYate
   }
 }
 
@@ -222,6 +249,17 @@ const piePalette = [
   '#EAB965'
 ]
 
+const buildTopWithChannels = (charMap, charChannelMap) =>
+  [...charMap.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([name, c], i) => ({
+      rank: i + 1,
+      name,
+      count: c,
+      channels: channelsToBits(charChannelMap.get(name))
+    }))
+
 const buildChartPayload = (start, end, agg, filterText) => {
   const {
     rewardYlx,
@@ -233,7 +271,9 @@ const buildChartPayload = (start, end, agg, filterText) => {
     dayYlx,
     dayYate,
     charYlx,
-    charYate
+    charYate,
+    charChannelsYlx,
+    charChannelsYate
   } = agg
 
   const pieRewardYlx = topNWithOther(rewardYlx, 15)
@@ -248,15 +288,8 @@ const buildChartPayload = (start, end, agg, filterText) => {
   const yateSeries = labels.map(d => (dayYate.get(d) ? dayYate.get(d).size : 0))
   const sumSeries = labels.map((d, i) => ylxSeries[i] + yateSeries[i])
 
-  const topYlx = [...charYlx.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([name, c], i) => ({ rank: i + 1, name, count: c }))
-
-  const topYate = [...charYate.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([name, c], i) => ({ rank: i + 1, name, count: c }))
+  const topYlx = buildTopWithChannels(charYlx, charChannelsYlx)
+  const topYate = buildTopWithChannels(charYate, charChannelsYate)
 
   const totalRecords =
     [...rewardYlx.values()].reduce((s, v) => s + v, 0) + [...rewardYate.values()].reduce((s, v) => s + v, 0)
@@ -283,6 +316,26 @@ const escapeJsonForHtml = obj =>
     .replace(/</g, '\\u003c')
     .replace(/\u2028/g, '\\u2028')
     .replace(/\u2029/g, '\\u2029')
+
+const renderChannelGrid = (channels, serverClass) =>
+  `<span class="ch-grid">${channels
+    .map(
+      (on, i) =>
+        `<span class="ch-cell ${on ? 'on ' + serverClass : 'off'}" title="频道${i + 1}"></span>`
+    )
+    .join('')}</span>`
+
+const renderTopList = (items, serverClass) => {
+  if (!items.length) {
+    return '<li style="padding-left:40px;list-style:none"><span>（无有效角色名）</span></li>'
+  }
+  return items
+    .map(
+      x =>
+        `<li><span class="char-name">${escHtml(x.name)}</span><span class="row-meta"><span class="cnt">${x.count} 次</span>${renderChannelGrid(x.channels, serverClass)}</span></li>`
+    )
+    .join('')
+}
 
 const renderStatsImage = async (payload, outputPath) => {
   const dataJson = escapeJsonForHtml(payload)
@@ -360,6 +413,27 @@ const renderStatsImage = async (payload, outputPath) => {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
+    }
+    .top5 li .char-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .row-meta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .ch-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 18px);
+      grid-template-rows: repeat(2, 18px);
+      gap: 3px;
+    }
+    .ch-cell {
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+    }
+    .ch-cell.on.ylx { background: #6C9BD2; box-shadow: 0 0 6px rgba(108,155,210,0.45); }
+    .ch-cell.on.yate { background: #E8A87C; box-shadow: 0 0 6px rgba(232,168,124,0.45); }
+    .ch-cell.off {
+      background: #2a3140;
+      color: #5c6578;
+      border: 1px solid rgba(255,255,255,0.06);
     }
     .top5 li:last-child { border-bottom: 0; }
     .top5 li::before {
@@ -405,25 +479,13 @@ const renderStatsImage = async (payload, outputPath) => {
       <div class="top-col">
         <div class="sub-title">伊鲁夏</div>
         <ol>
-          ${
-            payload.topYlx.length
-              ? payload.topYlx
-                  .map(x => `<li><span>${escHtml(x.name)}</span><span class="cnt">${x.count} 次</span></li>`)
-                  .join('')
-              : '<li style="padding-left:40px;list-style:none"><span>（无有效角色名）</span></li>'
-          }
+          ${renderTopList(payload.topYlx, 'ylx')}
         </ol>
       </div>
       <div class="top-col">
         <div class="sub-title">亚特</div>
         <ol>
-          ${
-            payload.topYate.length
-              ? payload.topYate
-                  .map(x => `<li><span>${escHtml(x.name)}</span><span class="cnt">${x.count} 次</span></li>`)
-                  .join('')
-              : '<li style="padding-left:40px;list-style:none"><span>（无有效角色名）</span></li>'
-          }
+          ${renderTopList(payload.topYate, 'yate')}
         </ol>
       </div>
     </div>
