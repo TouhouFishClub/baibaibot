@@ -155,7 +155,8 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
   const rewardYate = new Map()
   const rewardTotal = new Map()
   const dungeonTotal = new Map()
-  const channelTotal = new Map()
+  const channelYlx = new Map()
+  const channelYate = new Map()
   const dayYlx = new Map()
   const dayYate = new Map()
   const charYlx = new Map()
@@ -179,7 +180,7 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
       bump(server === 'ylx' ? rewardYlx : rewardYate, rewardLabel)
       bump(rewardTotal, rewardLabel)
       bump(dungeonTotal, dungeon)
-      bump(channelTotal, channel ? `CH${channel}` : '(空)')
+      bump(server === 'ylx' ? channelYlx : channelYate, channel ? `CH${channel}` : '(空)')
 
       const dayMap = server === 'ylx' ? dayYlx : dayYate
       if (!dayMap.has(dk)) dayMap.set(dk, new Set())
@@ -199,7 +200,8 @@ const aggregateFromDocs = (docsYlx, docsYate) => {
     rewardYate,
     rewardTotal,
     dungeonTotal,
-    channelTotal,
+    channelYlx,
+    channelYate,
     dayYlx,
     dayYate,
     charYlx,
@@ -226,7 +228,8 @@ const buildChartPayload = (start, end, agg, filterText) => {
     rewardYate,
     rewardTotal,
     dungeonTotal,
-    channelTotal,
+    channelYlx,
+    channelYate,
     dayYlx,
     dayYate,
     charYlx,
@@ -237,7 +240,8 @@ const buildChartPayload = (start, end, agg, filterText) => {
   const pieRewardYate = topNWithOther(rewardYate, 15)
   const pieRewardTotal = topNWithOther(rewardTotal, 15)
   const pieDungeon = topNWithOther(dungeonTotal, 15)
-  const pieChannel = topNWithOther(channelTotal, 15)
+  const pieChannelYlx = topNWithOther(channelYlx, 15)
+  const pieChannelYate = topNWithOther(channelYate, 15)
 
   const labels = enumerateDays(start, end)
   const ylxSeries = labels.map(d => (dayYlx.get(d) ? dayYlx.get(d).size : 0))
@@ -265,7 +269,8 @@ const buildChartPayload = (start, end, agg, filterText) => {
     pieRewardYate,
     pieRewardTotal,
     pieDungeon,
-    pieChannel,
+    pieChannelYlx,
+    pieChannelYate,
     line: { labels, ylxSeries, yateSeries, sumSeries },
     topYlx,
     topYate,
@@ -384,8 +389,9 @@ const renderStatsImage = async (payload, outputPath) => {
     <div class="pie-box w3"><h3>伊鲁夏 · 奖励分布</h3><canvas id="pieRewardYlx"></canvas></div>
     <div class="pie-box w3"><h3>亚特 · 奖励分布</h3><canvas id="pieRewardYate"></canvas></div>
     <div class="pie-box w3"><h3>两区合计 · 奖励分布</h3><canvas id="pieRewardTotal"></canvas></div>
-    <div class="pie-box w2"><h3>两区合计 · 地下城分布</h3><canvas id="pieDungeon"></canvas></div>
-    <div class="pie-box w2"><h3>两区合计 · 频道分布</h3><canvas id="pieChannel"></canvas></div>
+    <div class="pie-box w3"><h3>两区合计 · 地下城分布</h3><canvas id="pieDungeon"></canvas></div>
+    <div class="pie-box w3"><h3>伊鲁夏 · 频道分布</h3><canvas id="pieChannelYlx"></canvas></div>
+    <div class="pie-box w3"><h3>亚特 · 频道分布</h3><canvas id="pieChannelYate"></canvas></div>
   </div>
 
   <div class="line-wrap">
@@ -473,7 +479,8 @@ const renderStatsImage = async (payload, outputPath) => {
     mkPie('pieRewardYate', payload.pieRewardYate);
     mkPie('pieRewardTotal', payload.pieRewardTotal);
     mkPie('pieDungeon', payload.pieDungeon);
-    mkPie('pieChannel', payload.pieChannel);
+    mkPie('pieChannelYlx', payload.pieChannelYlx);
+    mkPie('pieChannelYate', payload.pieChannelYate);
 
     const lineLabels = payload.line.labels.map(function (d) {
       var p = d.split('-');
