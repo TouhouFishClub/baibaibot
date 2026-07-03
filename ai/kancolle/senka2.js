@@ -2242,7 +2242,7 @@ function searchShip(name,callback){
       callback(ret)
     }else{
       var img1 = new imageMagick("static/blank.png");
-      var height = Math.min(arr.length*16+50,2000);
+      var height = Math.min(arr.length*16+50,2400);
       img1.autoOrient()
         .resize(1000,height,'!')
         .fontSize(14)
