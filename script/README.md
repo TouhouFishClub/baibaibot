@@ -142,6 +142,36 @@ node script/dedupDistributedRecords.js 365 yes-col
 
 ---
 
+## fixReprintDrawPool.js
+
+将**指定日期**内、误记到旧蛋池或其他手帕名、但道具实际属于复刻池「怡丝丽尔芭蕾手帕限时重推」的抽蛋记录，改回正确 `draw_pool`。
+
+典型场景：复刻公告写法为「怡丝丽尔芭蕾手帕限时重推」，旧逻辑按 `礼包` 关键词回填失败，或 `cl_mabinogi_gacha_info` 中同一道具最后一条 `info.pool` 仍指向旧池「怡丝丽尔芭蕾手帕礼包」。
+
+### 判定逻辑
+
+1. 从活动页 `var pl` 与 MongoDB `cl_mabinogi_gacha_info`（`info.pool = 怡丝丽尔芭蕾手帕限时重推`）加载复刻池道具列表
+2. 扫描 `cl_mbcd_ylx` / `cl_mbcd_yate` 当日记录
+3. `draw_pool !== 怡丝丽尔芭蕾手帕限时重推` 且 `item_name` 属于复刻池 → 修正
+
+### 命令
+
+| 命令 | 说明 |
+|------|------|
+| `node script/fixReprintDrawPool.js scan` | 扫描**今天**（北京时间），不写入 |
+| `node script/fixReprintDrawPool.js scan 2026-07-08` | 扫描指定日期 |
+| `node script/fixReprintDrawPool.js 2026-07-08` | 扫描后交互确认再修复 |
+| `node script/fixReprintDrawPool.js yes 2026-07-08` | 扫描后直接修复 |
+
+可选自定义活动页：`node script/fixReprintDrawPool.js scan 2026-07-08 https://luoqi.tiancity.com/homepage/event/2026/0708yslepl/`
+
+### 推荐流程
+
+1. `scan 2026-07-08` — 查看误记数量与来源分布  
+2. `yes 2026-07-08` — 确认无误后批量修正
+
+---
+
 ## 相关代码
 
 - 推送与去重逻辑：[`ai/mabinogi/mabiPusher.js`](../ai/mabinogi/mabiPusher.js)
