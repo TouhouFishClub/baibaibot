@@ -243,6 +243,17 @@ const randomGacha = (gachaInfo, count, rareLimitSet) => {
 	return { items, matchInfo }
 }
 
+const parseGachaNameFromLine = tar => {
+	let name = splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/g, '').trim()
+	if(name.indexOf('[') > -1) {
+		name = name.substring(0, name.indexOf('[')).trim()
+	}
+	if(name.indexOf('<') > -1) {
+		name = name.substring(0, name.indexOf('<')).trim()
+	}
+	return name.match(/礼包|手帕|钥匙/) ? name : ''
+}
+
 const loadGachaGroup = async (page = 1, source = false) => {
 	let article = await fetchData(`https://luoqi.tiancity.com/homepage/article/Class_231_Time_${page}.html`)
 	// 拆分
@@ -261,8 +272,7 @@ const loadGachaGroup = async (page = 1, source = false) => {
 			console.log(tar)
 			if(tar) {
 				let obj = {}
-				// console.log(splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/, '').split(' '))
-				obj.name = splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/, '').split(' ').filter(x => x && x.match(/礼包/))[0]
+				obj.name = parseGachaNameFromLine(tar)
 				obj.link = splitStr(tar, '<a href="', '"', true)
 				target.push(obj)
 			}
