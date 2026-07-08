@@ -354,6 +354,7 @@ const loadGachaGroup = async (page = 1, source = false) => {
 									{ _id: rareList[j] },
 									{
 										'$set': {
+											alias: rareList[j].replace(/[()（）]/g, ''),
 											info: target.info.concat([{
 												pool: info.name,
 												rare,

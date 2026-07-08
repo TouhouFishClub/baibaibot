@@ -28,12 +28,14 @@ node script/<脚本名>.js [参数...]
 | `node script/fillUnknownDrawPool.js` | 默认近 **1** 天 |
 | `node script/fillUnknownDrawPool.js 3` | 近 **3** 天 |
 | `node script/fillUnknownDrawPool.js 30` | 近 **30** 天 |
+| `node script/fillUnknownDrawPool.js scan 30` | 仅扫描近 30 天，列出可回填/跳过原因，**不写入** |
 
 ### 说明
 
-- 按 `item_name` 去括号后匹配 `alias`，取该 alias 在 gacha 信息中**最后一条** `info[].pool` 作为手帕名。
+- 按 `item_name` 去括号后匹配 `alias`；若无 `alias` 则回退 `_id` 精确匹配，取该道具在 gacha 信息中**最后一条** `info[].pool` 作为手帕名。
 - 同一 `item_name` 在时间窗口内会批量 `updateMany`，无需人工确认。
-- 若 gacha 表无对应 alias，该条会跳过。
+- 若 gacha 表无对应道具，该条会跳过；可用 `scan` 模式查看具体是哪些 `item_name` 未匹配。
+- 若大量跳过且原因为「gacha 表无匹配」，可运行一次 `node ai/mabinogi/gacha/format.js` 为旧文档补全 `alias` 字段。
 
 ---
 
