@@ -40,7 +40,7 @@ function normalizeItemNameForAlias (itemName) {
 function parsePoolItemsFromEventHtml (html) {
   const pl = splitStr(splitStr(html, 'var pl', '}'), '{', '}')
   if (!pl.trim()) return new Set()
-  const raremap = {}
+  let raremap = {}
   // eslint-disable-next-line no-eval
   eval(`raremap = ${pl.trim()}`)
   const items = new Set()
