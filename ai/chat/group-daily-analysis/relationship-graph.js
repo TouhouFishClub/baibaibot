@@ -3,6 +3,7 @@ const {
   MAX_RELATION_EDGES,
   MAX_RELATION_FACTIONS
 } = require('./config')
+const { userPillHtml } = require('./topic-detail')
 
 const RELATION_COLORS = {
   '互怼': '#f44336',
@@ -275,28 +276,32 @@ function buildRelationLegendHtml(relations) {
   ).join('') + '</div>'
 }
 
-function buildRelationCardsHtml(relations) {
+function buildRelationCardsHtml(relations, userMap) {
   if (!relations || !relations.length) return ''
-  return '<div class="relation-cards">' + relations.map(rel => `
+  return '<div class="relation-cards">' + relations.map(rel => {
+    const fromName = rel.fromName || lookupName(rel.from, userMap)
+    const toName = rel.toName || lookupName(rel.to, userMap)
+    return `
     <div class="relation-card" style="border-color:${rel.color}">
       <div class="relation-card-head">
         <span class="relation-type" style="color:${rel.color}">${escapeXml(rel.type)}</span>
         <span class="relation-strength">${'★'.repeat(rel.strength)}${'☆'.repeat(5 - rel.strength)}</span>
       </div>
-      <div class="relation-pair">${escapeXml(rel.fromName)} ↔ ${escapeXml(rel.toName)}</div>
+      <div class="relation-pair">${userPillHtml(fromName, rel.from)}<span class="relation-link">↔</span>${userPillHtml(toName, rel.to)}</div>
       <div class="relation-desc">${escapeXml(rel.desc)}</div>
-    </div>`).join('') + '</div>'
+    </div>`
+  }).join('') + '</div>'
 }
 
 function buildFactionTagsHtml(factions, userMap) {
   if (!factions || !factions.length) return ''
   return '<div class="relation-factions">' + factions.map(f => {
-    const members = (f.members || [])
-      .map(uid => lookupName(uid, userMap))
+    const memberPills = (f.members || [])
       .slice(0, 5)
-      .join(' · ')
+      .map(uid => userPillHtml(lookupName(uid, userMap), uid))
+      .join('')
     return '<div class="relation-faction"><div class="relation-faction-name">🧩 ' + escapeXml(f.name) + '</div>' +
-      (members ? '<div class="relation-faction-members">' + escapeXml(members) + '</div>' : '') +
+      (memberPills ? '<div class="relation-faction-members">' + memberPills + '</div>' : '') +
       (f.desc ? '<div class="relation-faction-desc">' + escapeXml(f.desc) + '</div>' : '') +
       '</div>'
   }).join('') + '</div>'

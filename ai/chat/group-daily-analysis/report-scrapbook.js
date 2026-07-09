@@ -567,7 +567,12 @@ body {
   font-family: var(--font-hand);
 }
 .relation-faction-name { font-weight: 700; color: #6a1b9a; margin-bottom: 4px; }
-.relation-faction-members { font-size: 0.92rem; color: #5d4037; }
+.relation-faction-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
 .relation-faction-desc { font-size: 0.88rem; color: #8d6e63; margin-top: 4px; }
 .relation-cards {
   display: grid;
@@ -590,7 +595,20 @@ body {
 }
 .relation-type { font-weight: 700; font-size: 0.95rem; }
 .relation-strength { color: #ffb300; font-size: 0.85rem; letter-spacing: 1px; }
-.relation-pair { font-size: 1rem; color: var(--ink-primary); margin-bottom: 4px; }
+.relation-pair {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  color: var(--ink-primary);
+  margin-bottom: 4px;
+}
+.relation-link {
+  font-family: var(--font-hand);
+  color: var(--ink-secondary);
+  flex-shrink: 0;
+}
 .relation-desc { font-size: 0.9rem; color: var(--ink-secondary); line-height: 1.5; }
 .quality-section { grid-column: span 12; margin-top: 10px; }
 .quality-item {
@@ -844,7 +862,7 @@ function buildRelationshipsHtml(groupRelations, userMap, topUsers) {
     : ''
   const legend = buildRelationLegendHtml(groupRelations.relations)
   const factions = buildFactionTagsHtml(groupRelations.factions, userMap)
-  const cards = buildRelationCardsHtml(groupRelations.relations)
+  const cards = buildRelationCardsHtml(groupRelations.relations, userMap)
 
   return `
   <div class="relation-section">

@@ -106,6 +106,7 @@ function renderTopicDetailHtml(detail, userMap, contributors) {
 
 module.exports = {
   renderTopicDetailHtml,
+  userPillHtml,
   escapeHtml,
   getAvatarUrl
 }
