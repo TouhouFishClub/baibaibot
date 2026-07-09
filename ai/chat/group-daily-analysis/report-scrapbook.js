@@ -936,7 +936,7 @@ function buildFooterHtml(generatedAt, tokenUsage) {
       <div class="card-tape"></div>
       <div class="footer-card-title">${footerIcon('github', '#2196f3')}Github Repo</div>
       <div class="footer-card-content">
-        <div style="font-family:var(--font-body);font-size:0.8rem;">SXP-Simon/astrbot_plugin_qq_group_daily_analysis</div>
+        <div style="font-family:var(--font-body);font-size:0.8rem;">TouhouFishClub/baibaibot</div>
       </div>
     </div>
     <div class="footer-card stats-card">
