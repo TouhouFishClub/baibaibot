@@ -5,9 +5,13 @@ const {
   MAX_TOPICS,
   MAX_USER_TITLES,
   MAX_GOLDEN_QUOTES,
+  MAX_RELATION_EDGES,
+  MAX_RELATION_FACTIONS,
+  MAX_RELATION_NODES,
   PROFILE_DISPLAY_MODE
 } = require('./config')
 const { enrichTitlesProfiles } = require('./profile-map')
+const { normalizeRelations, buildFallbackRelations } = require('./relationship-graph')
 
 function emptyUsage() {
   return { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 }
@@ -302,6 +306,71 @@ async function analyzeChatQuality(messagesText, userMap) {
   return { review, usage }
 }
 
+async function analyzeGroupRelations(messagesText, topUsers, userMap, interactionHints) {
+  const activeList = topUsers.slice(0, MAX_RELATION_NODES).map(u =>
+    '- ' + u.name + ' (QQ:' + u.uid + ', 发言' + u.messageCount + '条)'
+  ).join('\n')
+
+  const systemPrompt = `你是群聊社交关系分析助手。根据聊天记录识别群友之间的互动关系，用于绘制关系网络图。
+返回 JSON：
+{
+  "summary": "80-120字群关系总览",
+  "relations": [
+    {
+      "from": "QQ号",
+      "to": "QQ号",
+      "type": "关系类型（4字内，如互怼、搭档、水友、师徒）",
+      "strength": 1-5,
+      "desc": "20-40字说明"
+    }
+  ],
+  "factions": [
+    {
+      "name": "小圈子名",
+      "members": ["QQ号"],
+      "desc": "15-30字描述"
+    }
+  ]
+}
+规则：
+- relations 最多 ${MAX_RELATION_EDGES} 条，from/to 必须是活跃成员 QQ 号
+- 同一对人只输出一条
+- strength 1=疏远 5=非常紧密
+- factions 最多 ${MAX_RELATION_FACTIONS} 个
+- 关系需有聊天依据，可结合 @互动、接梗、争论、组队等`
+
+  const hintBlock = interactionHints && interactionHints.length
+    ? '\n\n@互动统计（可参考）：\n' + interactionHints.join('\n')
+    : ''
+  const nickRef = buildNicknameReference(userMap)
+  const userPrompt = '活跃成员：\n' + activeList
+    + '\n\n聊天记录节选：\n' + messagesText.slice(0, 9000)
+    + hintBlock
+    + (nickRef ? '\n\nQQ号与昵称对照：\n' + nickRef : '')
+
+  const { text, usage } = await callDeepSeek(systemPrompt, userPrompt, 3500)
+  const parsed = extractJson(text)
+  const graph = normalizeRelations(parsed, userMap, topUsers)
+  if (!graph.relations.length) {
+    throw new Error('群关系 JSON 解析后无有效边')
+  }
+  return {
+    groupRelations: {
+      summary: resolveNicknamesInText(graph.summary, userMap),
+      relations: graph.relations.map(rel => ({
+        ...rel,
+        desc: resolveNicknamesInText(rel.desc, userMap)
+      })),
+      factions: graph.factions.map(f => ({
+        ...f,
+        desc: resolveNicknamesInText(f.desc, userMap)
+      })),
+      nodeUids: graph.nodeUids
+    },
+    usage
+  }
+}
+
 function buildNicknameReference(userMap) {
   const seen = new Set()
   const lines = []
@@ -353,12 +422,13 @@ function resolveContributors(ids, userMap) {
   }).filter(Boolean).slice(0, 5)
 }
 
-async function analyzeAll(messagesText, topUsers, userMap) {
+async function analyzeAll(messagesText, topUsers, userMap, interactionHints = []) {
   let tokenUsage = emptyUsage()
   let topics = []
   let titles = []
   let quotes = []
   let qualityReview = null
+  let groupRelations = null
 
   const run = async (fn) => {
     try {
@@ -371,24 +441,31 @@ async function analyzeAll(messagesText, topUsers, userMap) {
     }
   }
 
-  const [topicR, titleR, quoteR, qualityR] = await Promise.all([
+  const [topicR, titleR, quoteR, qualityR, relationR] = await Promise.all([
     run(() => analyzeTopics(messagesText, userMap)),
     run(() => analyzeUserTitles(messagesText, topUsers, userMap)),
     run(() => analyzeGoldenQuotes(messagesText, userMap)),
-    run(() => analyzeChatQuality(messagesText, userMap))
+    run(() => analyzeChatQuality(messagesText, userMap)),
+    run(() => analyzeGroupRelations(messagesText, topUsers, userMap, interactionHints))
   ])
 
   if (topicR) topics = topicR.topics
   if (titleR) titles = titleR.titles
   if (quoteR) quotes = quoteR.quotes
   if (qualityR) qualityReview = qualityR.review
+  if (relationR) groupRelations = relationR.groupRelations
 
   if ((!titles || titles.length === 0) && topUsers && topUsers.length > 0) {
     console.warn('[群分析] 用户画像 LLM 无有效结果，使用活跃度榜单生成基础画像（共 ' + topUsers.length + ' 人）')
     titles = enrichTitlesProfiles(buildFallbackTitles(topUsers, userMap), PROFILE_DISPLAY_MODE)
   }
 
-  return { topics, titles, quotes, qualityReview, tokenUsage }
+  if (!groupRelations) {
+    console.warn('[群分析] 群关系 LLM 无有效结果，使用互动统计生成基础关系图')
+    groupRelations = buildFallbackRelations(interactionHints, topUsers, userMap)
+  }
+
+  return { topics, titles, quotes, qualityReview, groupRelations, tokenUsage }
 }
 
 module.exports = {
@@ -396,5 +473,6 @@ module.exports = {
   analyzeTopics,
   analyzeUserTitles,
   analyzeGoldenQuotes,
-  analyzeChatQuality
+  analyzeChatQuality,
+  analyzeGroupRelations
 }

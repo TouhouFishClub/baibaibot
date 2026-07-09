@@ -29,10 +29,12 @@ const {
   fetchGroupMessages,
   buildUserMap,
   sampleMessages,
-  formatMessagesForLlm
+  formatMessagesForLlm,
+  extractInteractionHints
 } = require('./data')
 const { computeStatistics } = require('./statistics')
 const { analyzeAll } = require('./llm')
+const { buildFallbackRelations } = require('./relationship-graph')
 const { renderReportImage } = require('./report')
 
 const CACHE_DIR = path.join(IMAGE_DATA, 'group-daily-report')
@@ -236,6 +238,7 @@ async function generateGroupDailyReport(options) {
 
   const userMap = buildUserMap(messages)
   const stats = computeStatistics(messages, userMap)
+  const interactionHints = extractInteractionHints(messages, userMap)
   const sampled = sampleMessages(messages, MAX_MESSAGES_FOR_LLM)
   const messagesText = formatMessagesForLlm(sampled, userMap, MAX_LLM_TEXT_CHARS)
 
@@ -243,15 +246,17 @@ async function generateGroupDailyReport(options) {
   let titles = []
   let quotes = []
   let qualityReview = null
+  let groupRelations = buildFallbackRelations(interactionHints, stats.topUsers, userMap)
   let tokenUsage = { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 }
 
   if (DEEPSEEK_API_KEY && messagesText) {
     console.log('[群分析] 调用 LLM 分析...')
-    const llmResult = await analyzeAll(messagesText, stats.topUsers, userMap)
+    const llmResult = await analyzeAll(messagesText, stats.topUsers, userMap, interactionHints)
     topics = llmResult.topics
     titles = llmResult.titles
     quotes = llmResult.quotes
     qualityReview = llmResult.qualityReview
+    groupRelations = llmResult.groupRelations
     tokenUsage = llmResult.tokenUsage
   } else {
     console.warn('[群分析] 未配置 DeepSeek，仅输出统计数据')
@@ -267,6 +272,7 @@ async function generateGroupDailyReport(options) {
     titles,
     quotes,
     qualityReview,
+    groupRelations,
     tokenUsage,
     userMap
   }

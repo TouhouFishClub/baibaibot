@@ -96,6 +96,35 @@ function formatMessagesForLlm(messages, userMap, maxChars) {
   return lines.join('\n')
 }
 
+function extractInteractionHints(messages, userMap, limit = 25) {
+  const pairCount = new Map()
+  const atPattern = /\[CQ:at,qq=(\d+)/gi
+
+  for (const msg of messages) {
+    const fromUid = String(msg.uid || '')
+    if (!fromUid) continue
+    const content = msg.d || ''
+    let match
+    atPattern.lastIndex = 0
+    while ((match = atPattern.exec(content)) !== null) {
+      const toUid = match[1]
+      if (!toUid || toUid === fromUid) continue
+      const key = [fromUid, toUid].sort().join('|')
+      pairCount.set(key, (pairCount.get(key) || 0) + 1)
+    }
+  }
+
+  return Array.from(pairCount.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([key, count]) => {
+      const [a, b] = key.split('|')
+      const nameA = userMap[a] || userMap[parseInt(a, 10)] || a
+      const nameB = userMap[b] || userMap[parseInt(b, 10)] || b
+      return nameA + ' (' + a + ') <-> ' + nameB + ' (' + b + '): @互动 ' + count + ' 次'
+    })
+}
+
 function toLlmRecords(messages, userMap) {
   return messages.map(msg => {
     const content = cleanMessageContent(msg.d || '')
@@ -115,5 +144,6 @@ module.exports = {
   buildUserMap,
   sampleMessages,
   formatMessagesForLlm,
+  extractInteractionHints,
   toLlmRecords
 }

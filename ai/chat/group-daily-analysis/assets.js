@@ -10,7 +10,7 @@ const ICON_DIR = path.join(__dirname, 'assets', 'icons')
 
 const ICON_NAMES = [
   'stamp-message', 'stamp-users', 'stamp-emoji', 'stamp-text',
-  'chart', 'topic', 'portraits', 'quotes', 'quality',
+  'chart', 'topic', 'portraits', 'quotes', 'quality', 'network',
   'star', 'github', 'token'
 ]
 

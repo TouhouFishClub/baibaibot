@@ -3,6 +3,12 @@ const path = require('path')
 const { getFontFacesCss } = require('./fonts')
 const { renderTopicDetailHtml } = require('./topic-detail')
 const { sectionTitle, stampBlock, footerIcon } = require('./assets')
+const {
+  buildRelationshipGraphSvg,
+  buildRelationLegendHtml,
+  buildRelationCardsHtml,
+  buildFactionTagsHtml
+} = require('./relationship-graph')
 
 function escapeHtml(str) {
   return String(str || '')
@@ -488,6 +494,104 @@ body {
 .quote-wrapper:nth-child(odd) .q-analysis-note { transform: rotate(-1deg) translateX(10px); }
 .quote-wrapper:nth-child(even) .q-analysis-note { transform: rotate(1deg) translateX(-10px); text-align: left; background: #f3e5f5; }
 .note-label { font-weight: bold; color: var(--accent-orange); display: block; margin-bottom: 4px; font-family: var(--font-title); }
+.relation-section { grid-column: span 12; margin-top: 20px; }
+.relation-panel {
+  background: #fff;
+  border: 2px solid var(--ink-primary);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 6px 6px 0 var(--color-pink);
+  position: relative;
+}
+.relation-panel::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 2px dashed #e0d5cc;
+  border-radius: 12px;
+  pointer-events: none;
+}
+.relation-summary {
+  font-family: var(--font-hand);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--ink-primary);
+  margin: 12px 0 18px;
+  padding: 14px 18px;
+  background: #fff9c4;
+  border: 2px dashed #ffb74d;
+  border-radius: 12px;
+  transform: rotate(-0.3deg);
+}
+.relation-graph-wrap {
+  overflow: hidden;
+  border-radius: 16px;
+  margin: 8px 0 16px;
+}
+.relation-graph-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.relation-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin: 8px 0 18px;
+  font-family: var(--font-hand);
+  font-size: 0.95rem;
+}
+.relation-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-secondary);
+}
+.relation-legend-item i {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.relation-factions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.relation-faction {
+  background: #f3e5f5;
+  border: 2px solid #ce93d8;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-family: var(--font-hand);
+}
+.relation-faction-name { font-weight: 700; color: #6a1b9a; margin-bottom: 4px; }
+.relation-faction-members { font-size: 0.92rem; color: #5d4037; }
+.relation-faction-desc { font-size: 0.88rem; color: #8d6e63; margin-top: 4px; }
+.relation-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+.relation-card {
+  background: #fff;
+  border: 2px solid var(--ink-secondary);
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.06);
+  font-family: var(--font-hand);
+}
+.relation-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.relation-type { font-weight: 700; font-size: 0.95rem; }
+.relation-strength { color: #ffb300; font-size: 0.85rem; letter-spacing: 1px; }
+.relation-pair { font-size: 1rem; color: var(--ink-primary); margin-bottom: 4px; }
+.relation-desc { font-size: 0.9rem; color: var(--ink-secondary); line-height: 1.5; }
 .quality-section { grid-column: span 12; margin-top: 10px; }
 .quality-item {
   background: #fff9c4;
@@ -729,6 +833,32 @@ function buildQuotesHtml(quotes) {
   </div>`
 }
 
+function buildRelationshipsHtml(groupRelations, userMap, topUsers) {
+  if (!groupRelations || !(groupRelations.relations || []).length) {
+    return '<div class="relation-section">' + sectionTitle('network', '群关系图谱 Social Graph', { center: true }) + '<div class="empty">暂无关系分析数据</div></div>'
+  }
+
+  const graphSvg = buildRelationshipGraphSvg(groupRelations, userMap, topUsers || [])
+  const summary = groupRelations.summary
+    ? '<div class="relation-summary">🕸️ ' + escapeHtml(groupRelations.summary) + '</div>'
+    : ''
+  const legend = buildRelationLegendHtml(groupRelations.relations)
+  const factions = buildFactionTagsHtml(groupRelations.factions, userMap)
+  const cards = buildRelationCardsHtml(groupRelations.relations)
+
+  return `
+  <div class="relation-section">
+    ${sectionTitle('network', '群关系图谱 Social Graph', { center: true })}
+    <div class="relation-panel">
+      ${summary}
+      <div class="relation-graph-wrap">${graphSvg}</div>
+      ${legend}
+      ${factions}
+      ${cards}
+    </div>
+  </div>`
+}
+
 function buildQualityReviewHtml(qualityReview) {
   if (!qualityReview) return ''
   const dims = (qualityReview.dimensions || []).filter(d => d.percentage > 0)
@@ -813,6 +943,7 @@ function generateHtml(reportData) {
     titles,
     quotes,
     qualityReview,
+    groupRelations,
     tokenUsage,
     userMap
   } = reportData
@@ -862,6 +993,7 @@ function generateHtml(reportData) {
 
     ${buildTopicsHtml(topics, userMap)}
     ${buildTitlesHtml(titles)}
+    ${buildRelationshipsHtml(groupRelations, userMap, stats && stats.topUsers)}
     ${buildQuotesHtml(quotes)}
     ${buildQualityReviewHtml(qualityReview)}
   </div>
