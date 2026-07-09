@@ -1146,7 +1146,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
   
-  // 群聊日报分析（群分析 / 群分析 3 / 群分析 20260312）
+  // 群聊日报分析（群分析 / 群分析 3 / 群分析 20260312 / 群分析 -g 群号 / 群分析 -g 群号 20260312-20260412）
   const groupDailyMatch = matchGroupAnalysisCommand(content)
   if (groupDailyMatch.matched) {
     handleGroupDailyAnalysisCommand(groupid, from, content, groupName, callback, groupDailyMatch.force)

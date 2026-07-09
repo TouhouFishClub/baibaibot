@@ -52,6 +52,42 @@ function getAnalysisRangeByDate(year, month, date) {
   }
 }
 
+/**
+ * 指定东八区日期区间 [start, end]（含首尾自然日）
+ * @param {{ year: number, month: number, date: number }} startParsed
+ * @param {{ year: number, month: number, date: number }} endParsed
+ */
+function getAnalysisRangeByDateRange(startParsed, endParsed) {
+  const startDate = chinaDayStart(startParsed.year, startParsed.month, startParsed.date)
+  const dayEnd = new Date(chinaDayStart(endParsed.year, endParsed.month, endParsed.date + 1).getTime() - 1)
+  const now = new Date()
+  const today = chinaParts(Date.now())
+  const isEndToday = endParsed.year === today.year && endParsed.month === today.month && endParsed.date === today.date
+  const endDate = isEndToday && now < dayEnd ? now : dayEnd
+
+  const sm = String(startParsed.month + 1).padStart(2, '0')
+  const sd = String(startParsed.date).padStart(2, '0')
+  const em = String(endParsed.month + 1).padStart(2, '0')
+  const ed = String(endParsed.date).padStart(2, '0')
+  const startLabel = startParsed.year + '\u5e74' + parseInt(sm, 10) + '\u6708' + parseInt(sd, 10) + '\u65e5'
+  const endLabel = endParsed.year + '\u5e74' + parseInt(em, 10) + '\u6708' + parseInt(ed, 10) + '\u65e5'
+
+  return {
+    startDate,
+    endDate,
+    startLabel,
+    endLabel,
+    rangeLabel: startLabel + ' ~ ' + endLabel
+  }
+}
+
+/** 东八区自然日区间天数（含首尾） */
+function countChinaDaysInclusive(startParsed, endParsed) {
+  const startMs = chinaDayStart(startParsed.year, startParsed.month, startParsed.date).getTime()
+  const endMs = chinaDayStart(endParsed.year, endParsed.month, endParsed.date).getTime()
+  return Math.round((endMs - startMs) / (24 * 60 * 60 * 1000)) + 1
+}
+
 /** 解析 YYYYMMDD，无效返回 null */
 function parseYyyymmdd(str) {
   if (!/^\d{8}$/.test(str)) return null
@@ -95,6 +131,8 @@ module.exports = {
   OFFSET_MS,
   getAnalysisRange,
   getAnalysisRangeByDate,
+  getAnalysisRangeByDateRange,
+  countChinaDaysInclusive,
   parseYyyymmdd,
   getChinaDateKey,
   formatChinaDateTime,

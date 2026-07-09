@@ -12,6 +12,7 @@ const BOT_IDS = new Set([
 
 const DEFAULT_DAYS = 1
 const MAX_DAYS = 7
+const MAX_RANGE_DAYS = 62
 const MAX_MESSAGES_FOR_LLM = 2500
 const MAX_LLM_TEXT_CHARS = 14000
 const MAX_TOPICS = 5
@@ -45,6 +46,7 @@ module.exports = {
   BOT_IDS,
   DEFAULT_DAYS,
   MAX_DAYS,
+  MAX_RANGE_DAYS,
   MAX_MESSAGES_FOR_LLM,
   MAX_LLM_TEXT_CHARS,
   MAX_TOPICS,

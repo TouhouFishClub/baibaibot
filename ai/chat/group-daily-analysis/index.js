@@ -10,6 +10,7 @@ const {
   ADMIN_IDS,
   DEFAULT_DAYS,
   MAX_DAYS,
+  MAX_RANGE_DAYS,
   MIN_MESSAGES,
   MAX_MESSAGES_FOR_LLM,
   MAX_LLM_TEXT_CHARS,
@@ -18,6 +19,8 @@ const {
 const {
   getAnalysisRange,
   getAnalysisRangeByDate,
+  getAnalysisRangeByDateRange,
+  countChinaDaysInclusive,
   parseYyyymmdd,
   getChinaDateKey,
   formatChinaDateTime
@@ -38,31 +41,82 @@ if (!fs.existsSync(CACHE_DIR)) {
   fs.mkdirSync(CACHE_DIR, { recursive: true })
 }
 
+const USAGE_HINT = '\u8bf7\u4f7f\u7528\u300c\u7fa4\u5206\u6790\u300d\u300c\u7fa4\u5206\u6790 3\u300d\u300c\u7fa4\u5206\u6790 20260312\u300d\u300c\u7fa4\u5206\u6790 -g \u7fa4\u53f7\u300d\u6216\u300c\u7fa4\u5206\u6790 -g \u7fa4\u53f7 20260312-20260412\u300d'
+
 /**
  * 解析群分析命令参数
- * @returns {{ mode: 'days', days: number } | { mode: 'date', yyyymmdd: string, year: number, month: number, date: number } | { mode: 'error', message: string } | null}
+ * @returns {{ mode: 'days', days: number, targetGroupId: string | null } | { mode: 'date', yyyymmdd: string, year: number, month: number, date: number, targetGroupId: string | null } | { mode: 'range', startYyyymmdd: string, endYyyymmdd: string, startYear: number, startMonth: number, startDate: number, endYear: number, endMonth: number, endDate: number, targetGroupId: string | null } | { mode: 'error', message: string, targetGroupId: string | null } | null}
  */
 function parseGroupAnalysisCommand(content) {
   const trimmed = (content || '').trim().replace(/^重新生成/, '').trim()
-  const m = trimmed.match(/^群分析\s*(\S+)?$/)
-  if (!m) return null
+  if (!/^群分析(?:\s|$)/.test(trimmed)) return null
 
-  const arg = m[1]
-  if (!arg) return { mode: 'days', days: DEFAULT_DAYS }
+  const rest = trimmed.replace(/^群分析\s*/, '').trim()
+  if (!rest) return { mode: 'days', days: DEFAULT_DAYS, targetGroupId: null }
+
+  const tokens = rest.split(/\s+/).filter(Boolean)
+  let targetGroupId = null
+  const timeTokens = []
+
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i] === '-g' && i + 1 < tokens.length && /^\d+$/.test(tokens[i + 1])) {
+      targetGroupId = tokens[i + 1]
+      i++
+    } else {
+      timeTokens.push(tokens[i])
+    }
+  }
+
+  const base = { targetGroupId }
+
+  if (timeTokens.length === 0) {
+    return { mode: 'days', days: DEFAULT_DAYS, ...base }
+  }
+  if (timeTokens.length > 1) {
+    return { mode: 'error', message: USAGE_HINT, ...base }
+  }
+
+  const arg = timeTokens[0]
+  const rangeMatch = arg.match(/^(\d{8})-(\d{8})$/)
+  if (rangeMatch) {
+    const start = parseYyyymmdd(rangeMatch[1])
+    const end = parseYyyymmdd(rangeMatch[2])
+    if (!start) return { mode: 'error', message: '\u8d77\u59cb\u65e5\u671f\u65e0\u6548\uff1a' + rangeMatch[1] + '\uff08\u8bf7\u4f7f\u7528 YYYYMMDD\uff09', ...base }
+    if (!end) return { mode: 'error', message: '\u7ed3\u675f\u65e5\u671f\u65e0\u6548\uff1a' + rangeMatch[2] + '\uff08\u8bf7\u4f7f\u7528 YYYYMMDD\uff09', ...base }
+    if (rangeMatch[1] > rangeMatch[2]) {
+      return { mode: 'error', message: '\u8d77\u59cb\u65e5\u671f\u4e0d\u80fd\u665a\u4e8e\u7ed3\u675f\u65e5\u671f', ...base }
+    }
+    const spanDays = countChinaDaysInclusive(start, end)
+    if (spanDays > MAX_RANGE_DAYS) {
+      return { mode: 'error', message: '\u65e5\u671f\u533a\u95f4\u4e0d\u80fd\u8d85\u8fc7 ' + MAX_RANGE_DAYS + ' \u5929\uff08\u5f53\u524d ' + spanDays + ' \u5929\uff09', ...base }
+    }
+    return {
+      mode: 'range',
+      startYyyymmdd: rangeMatch[1],
+      endYyyymmdd: rangeMatch[2],
+      startYear: start.year,
+      startMonth: start.month,
+      startDate: start.date,
+      endYear: end.year,
+      endMonth: end.month,
+      endDate: end.date,
+      ...base
+    }
+  }
 
   if (/^\d{8}$/.test(arg)) {
     const parsed = parseYyyymmdd(arg)
-    if (!parsed) return { mode: 'error', message: '\u65e5\u671f\u65e0\u6548\uff1a' + arg + '\uff08\u8bf7\u4f7f\u7528 YYYYMMDD\uff0c\u5982 20260312\uff09' }
-    return { mode: 'date', ...parsed }
+    if (!parsed) return { mode: 'error', message: '\u65e5\u671f\u65e0\u6548\uff1a' + arg + '\uff08\u8bf7\u4f7f\u7528 YYYYMMDD\uff0c\u5982 20260312\uff09', ...base }
+    return { mode: 'date', ...parsed, ...base }
   }
 
   if (!/^\d{1,2}$/.test(arg)) {
-    return { mode: 'error', message: '\u8bf7\u4f7f\u7528\u300c\u7fa4\u5206\u6790\u300d\u300c\u7fa4\u5206\u6790 3\u300d\u6216\u300c\u7fa4\u5206\u6790 20260312\u300d' }
+    return { mode: 'error', message: USAGE_HINT, ...base }
   }
 
   const days = parseInt(arg, 10)
-  if (isNaN(days) || days < 1) return { mode: 'days', days: DEFAULT_DAYS }
-  return { mode: 'days', days: Math.min(days, MAX_DAYS) }
+  if (isNaN(days) || days < 1) return { mode: 'days', days: DEFAULT_DAYS, ...base }
+  return { mode: 'days', days: Math.min(days, MAX_DAYS), ...base }
 }
 
 /** @deprecated 兼容旧调用 */
@@ -81,6 +135,9 @@ function getCachePath(groupId, spec) {
   if (spec.mode === 'date') {
     return path.join(CACHE_DIR, 'daily_' + groupId + '_date_' + spec.yyyymmdd + '.png')
   }
+  if (spec.mode === 'range') {
+    return path.join(CACHE_DIR, 'daily_' + groupId + '_range_' + spec.startYyyymmdd + '_' + spec.endYyyymmdd + '.png')
+  }
   const dayKey = getChinaDateKey()
   return path.join(CACHE_DIR, 'daily_' + groupId + '_' + spec.days + 'd_' + dayKey + '.png')
 }
@@ -96,6 +153,13 @@ function formatReportDate(spec) {
     const d = String(spec.date).padStart(2, '0')
     return spec.year + '年' + m + '月' + d + '日'
   }
+  if (spec.mode === 'range') {
+    const sm = String(spec.startMonth + 1).padStart(2, '0')
+    const sd = String(spec.startDate).padStart(2, '0')
+    const em = String(spec.endMonth + 1).padStart(2, '0')
+    const ed = String(spec.endDate).padStart(2, '0')
+    return spec.startYear + '年' + sm + '月' + sd + '日 ~ ' + spec.endYear + '年' + em + '月' + ed + '日'
+  }
   const dayKey = getChinaDateKey()
   const [year, month, date] = dayKey.split('-')
   return year + '年' + month + '月' + date + '日'
@@ -110,12 +174,40 @@ function resolveRange(spec) {
       rangeDesc: formatDateRange(range.startDate, range.endDate) + '\uff08\u4e1c\u516b\u533a ' + range.dateLabel + '\uff09'
     }
   }
+  if (spec.mode === 'range') {
+    const range = getAnalysisRangeByDateRange(
+      { year: spec.startYear, month: spec.startMonth, date: spec.startDate },
+      { year: spec.endYear, month: spec.endMonth, date: spec.endDate }
+    )
+    return {
+      startDate: range.startDate,
+      endDate: range.endDate,
+      rangeDesc: formatDateRange(range.startDate, range.endDate) + '\uff08\u4e1c\u516b\u533a ' + range.rangeLabel + '\uff09'
+    }
+  }
   const range = getAnalysisRange(spec.days)
   return {
     startDate: range.startDate,
     endDate: range.endDate,
     rangeDesc: formatDateRange(range.startDate, range.endDate) + '\uff08\u4e1c\u516b\u533a\u8fd1' + spec.days + '\u5929\uff09'
   }
+}
+
+function getLogLabel(spec) {
+  if (spec.mode === 'date') return '指定日 ' + spec.yyyymmdd
+  if (spec.mode === 'range') return '指定区间 ' + spec.startYyyymmdd + '-' + spec.endYyyymmdd
+  return '近' + spec.days + '天'
+}
+
+function buildAnalysisHint(spec, targetGroupId) {
+  const groupLabel = targetGroupId ? ('群 ' + targetGroupId) : '本群'
+  if (spec.mode === 'date') {
+    return '\ud83d\udcca \u6b63\u5728\u5206\u6790 ' + groupLabel + ' ' + spec.yyyymmdd.slice(0, 4) + '\u5e74' + parseInt(spec.yyyymmdd.slice(4, 6), 10) + '\u6708' + parseInt(spec.yyyymmdd.slice(6, 8), 10) + '\u65e5\u804a\u5929\u8bb0\u5f55\uff0c\u8bf7\u7a0d\u5019\uff08\u7ea6 1-3 \u5206\u949f\uff09...'
+  }
+  if (spec.mode === 'range') {
+    return '\ud83d\udcca \u6b63\u5728\u5206\u6790 ' + groupLabel + ' ' + spec.startYyyymmdd + ' ~ ' + spec.endYyyymmdd + ' \u804a\u5929\u8bb0\u5f55\uff0c\u8bf7\u7a0d\u5019\uff08\u7ea6 1-3 \u5206\u949f\uff09...'
+  }
+  return '\ud83d\udcca \u6b63\u5728\u5206\u6790 ' + groupLabel + ' \u8fd1 ' + spec.days + ' \u5929\u804a\u5929\u8bb0\u5f55\uff0c\u8bf7\u7a0d\u5019\uff08\u7ea6 1-3 \u5206\u949f\uff09...'
 }
 
 async function generateGroupDailyReport(options) {
@@ -134,9 +226,7 @@ async function generateGroupDailyReport(options) {
     return getImageCQ(cachePath)
   }
 
-  const logLabel = spec.mode === 'date'
-    ? ('指定日 ' + spec.yyyymmdd)
-    : ('近' + spec.days + '天')
+  const logLabel = getLogLabel(spec)
   console.log('[群分析] 拉取消息 群' + groupId + ' ' + logLabel)
 
   const messages = await fetchGroupMessages(groupId, startDate, endDate)
@@ -199,20 +289,20 @@ async function handleGroupDailyAnalysisCommand(groupId, userId, content, groupNa
     return
   }
 
+  const targetGroupId = spec.targetGroupId || groupId
+  const targetGroupName = spec.targetGroupId ? ('群' + spec.targetGroupId) : groupName
+
   try {
     if (forceRegenerate) {
-      const cachePath = getCachePath(groupId, spec)
+      const cachePath = getCachePath(targetGroupId, spec)
       if (fs.existsSync(cachePath)) fs.unlinkSync(cachePath)
     }
 
-    const hint = spec.mode === 'date'
-      ? ('\ud83d\udcca \u6b63\u5728\u5206\u6790 ' + spec.yyyymmdd.slice(0, 4) + '\u5e74' + parseInt(spec.yyyymmdd.slice(4, 6), 10) + '\u6708' + parseInt(spec.yyyymmdd.slice(6, 8), 10) + '\u65e5\u7fa4\u804a\u8bb0\u5f55\uff0c\u8bf7\u7a0d\u5019\uff08\u7ea6 1-3 \u5206\u949f\uff09...')
-      : ('\ud83d\udcca \u6b63\u5728\u5206\u6790\u8fd1 ' + spec.days + ' \u5929\u7fa4\u804a\u8bb0\u5f55\uff0c\u8bf7\u7a0d\u5019\uff08\u7ea6 1-3 \u5206\u949f\uff09...')
-    callback(hint)
+    callback(buildAnalysisHint(spec, spec.targetGroupId))
 
     const imgMsg = await generateGroupDailyReport({
-      groupId,
-      groupName,
+      groupId: targetGroupId,
+      groupName: targetGroupName,
       spec,
       forceRegenerate
     })
