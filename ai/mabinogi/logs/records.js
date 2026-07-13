@@ -16,7 +16,6 @@ function buildRecordForTarget({
   boss,
   characterClasses
 }) {
-  const maxHp = Number(target?.bossHP?.maxHp)
   const pcAttackers = collectPcAttackers({ targets: [target] })
   if (!pcAttackers.length) return []
 
@@ -58,6 +57,32 @@ function buildRecordForTarget({
   return records
 }
 
+function collectPetakPhases(targets) {
+  const byKey = new Map()
+  for (const target of targets || []) {
+    const maxHp = Number(target?.bossHP?.maxHp)
+    const boss = matchBossByHp(maxHp)
+    if (boss?.groupKey !== 'petak') continue
+    if (!byKey.has(boss.key)) {
+      byKey.set(boss.key, { boss, target })
+    }
+  }
+
+  const phases = []
+  for (const key of ['petak_p1', 'petak_p2']) {
+    const phase = byKey.get(key)
+    if (phase) phases.push(phase)
+  }
+  return phases
+}
+
+function canRecordPetakCombined(phases) {
+  if (!phases.length) return false
+  const p1 = phases.find(phase => phase.boss.key === 'petak_p1')
+  if (p1) return isBossKillCompleted(p1.target)
+  return phases.some(phase => isBossKillCompleted(phase.target))
+}
+
 function buildPetakCombinedRecords({
   runId,
   dungeonName,
@@ -69,7 +94,7 @@ function buildPetakCombinedRecords({
 
   const sortedPhases = [...phases].sort((a, b) => getBossKillHp(a.boss) - getBossKillHp(b.boss))
   const sampleBoss = sortedPhases[0].boss
-  const combinedKillHp = sortedPhases.reduce((sum, phase) => sum + getBossKillHp(phase.boss), 0)
+  const bossHp = sortedPhases.reduce((sum, phase) => sum + getBossKillHp(phase.boss), 0)
   const duration = sortedPhases.reduce((sum, phase) => sum + (Number(phase.target.duration) || 0), 0)
   const recordTimeMs = Math.max(...sortedPhases.map(phase => centiToMs(phase.target.cleanedAt) || uploadTime.getTime()))
   const recordTime = new Date(recordTimeMs)
@@ -89,9 +114,11 @@ function buildPetakCombinedRecords({
     }
   }
 
+  const teamTotalDamage = [...damageByCharacter.values()].reduce((sum, value) => sum + value, 0)
   const records = []
   for (const [characterId, totalDamage] of damageByCharacter) {
     const dps = duration > 0 ? totalDamage / duration : 0
+    const damagePercent = teamTotalDamage > 0 ? (totalDamage / teamTotalDamage) * 100 : 0
     records.push({
       _id: crypto.randomUUID(),
       runId,
@@ -99,7 +126,7 @@ function buildPetakCombinedRecords({
       bossKey: 'petak',
       bossGroup: 'petak',
       bossName: sampleBoss.displayName,
-      bossHp: combinedKillHp,
+      bossHp,
       recordTime,
       recordTs: recordTime.getTime(),
       duration,
@@ -110,7 +137,7 @@ function buildPetakCombinedRecords({
       characterClass: characterClasses.get(characterId) || '未知',
       dps,
       totalDamage,
-      damagePercent: combinedKillHp > 0 ? (totalDamage / combinedKillHp) * 100 : 0,
+      damagePercent,
       uploadedAt: uploadTime,
       uploadedTs: uploadTime.getTime()
     })
@@ -128,19 +155,14 @@ function buildDpsRecords({
   const records = []
   const uploadTime = uploadedAt instanceof Date ? uploadedAt : new Date(uploadedAt)
   const characterClasses = buildRunCharacterClasses(data)
-  const petakPhases = []
+  const targets = data.targets || []
+  const petakPhases = collectPetakPhases(targets)
 
-  for (const target of data.targets || []) {
-    if (!isBossKillCompleted(target)) continue
-
+  for (const target of targets) {
     const maxHp = Number(target?.bossHP?.maxHp)
     const boss = matchBossByHp(maxHp)
-    if (!boss) continue
-
-    if (boss.groupKey === 'petak') {
-      petakPhases.push({ boss, target })
-      continue
-    }
+    if (!boss || boss.groupKey === 'petak') continue
+    if (!isBossKillCompleted(target)) continue
 
     records.push(...buildRecordForTarget({
       runId,
@@ -152,18 +174,22 @@ function buildDpsRecords({
     }))
   }
 
-  records.push(...buildPetakCombinedRecords({
-    runId,
-    dungeonName,
-    uploadTime,
-    phases: petakPhases,
-    characterClasses
-  }))
+  if (canRecordPetakCombined(petakPhases)) {
+    records.push(...buildPetakCombinedRecords({
+      runId,
+      dungeonName,
+      uploadTime,
+      phases: petakPhases,
+      characterClasses
+    }))
+  }
 
   return records
 }
 
 module.exports = {
   buildDpsRecords,
-  buildPetakCombinedRecords
+  buildPetakCombinedRecords,
+  collectPetakPhases,
+  canRecordPetakCombined
 }
