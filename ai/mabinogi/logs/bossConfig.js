@@ -62,7 +62,8 @@ const BOSSES = [
     aliases: ['塔赫杜因盖尔塔', '盖尔塔'],
     groupKey: 'galta',
     referenceHp: 262_500,
-    hpTolerance: 50_000
+    hpTolerance: 50_000,
+    minDuration: 0.1
   }
 ]
 
@@ -76,6 +77,11 @@ function getBossKillHp(boss) {
 
 function getBossHpTolerance(boss) {
   return boss?.hpTolerance ?? HP_TOLERANCE
+}
+
+function getBossMinDuration(boss, defaultMinDuration) {
+  if (boss?.minDuration != null) return boss.minDuration
+  return defaultMinDuration
 }
 
 function matchesDungeonName(dungeonName) {
@@ -303,6 +309,7 @@ module.exports = {
   getBossMatchHp,
   getBossKillHp,
   getBossHpTolerance,
+  getBossMinDuration,
   matchesDungeonName,
   isKnownBossTarget,
   getBossKeysByGroup,

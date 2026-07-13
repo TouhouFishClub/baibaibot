@@ -6,7 +6,7 @@ const {
   maxHistoryDays,
   maxFileBytes
 } = require('./config')
-const { matchesDungeonName, isKnownBossTarget } = require('./bossConfig')
+const { matchesDungeonName, isKnownBossTarget, matchBossByHp, getBossMinDuration } = require('./bossConfig')
 
 function centiToMs(value) {
   if (value == null || value === '') return null
@@ -77,7 +77,11 @@ function validateSemantic(data, dungeonName) {
     if (!Number.isFinite(maxHp) || (maxHp < minBossMaxHp && !isKnownBossTarget(target))) {
       return { ok: false, reason: 'boss_hp_too_low' }
     }
-    if (!Number.isFinite(target.duration) || target.duration < minDuration || target.duration > maxDuration) {
+    const boss = matchBossByHp(maxHp)
+    const requiredMinDuration = boss
+      ? getBossMinDuration(boss, minDuration)
+      : minDuration
+    if (!Number.isFinite(target.duration) || target.duration < requiredMinDuration || target.duration > maxDuration) {
       return { ok: false, reason: 'invalid_duration' }
     }
     if (!Number.isFinite(target.totalDamage) || target.totalDamage <= 0) {

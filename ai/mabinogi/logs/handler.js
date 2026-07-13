@@ -167,7 +167,7 @@ async function handleUpload(req, res) {
     }
   }
 
-  const sourceRelPath = saveSourceFile(playerId, contentSha256, gzData)
+  const sourceRelPath = saveSourceFile(playerId, playerName, contentSha256, gzData)
   const reportId = newReportId()
   const now = new Date()
 
