@@ -42,7 +42,7 @@ async function loadRunDetail(runId) {
 
   const panels = buildRunPanels(parsed.data)
   if (!panels.length) {
-    return { error: `场次「${shortRunId(report._id)}」没有可展示的 Boss 数据` }
+    return { error: `场次「${shortRunId(report._id)}」没有已击杀的 Boss 数据` }
   }
 
   const records = await listDpsRecords({ runId: report._id }, { limit: 200 })
