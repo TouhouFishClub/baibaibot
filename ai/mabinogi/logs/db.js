@@ -103,6 +103,37 @@ async function getReportById(reportId) {
   return client.db(DB_NAME).collection(COL_UPLOADS).findOne({ _id: reportId })
 }
 
+async function findReportByRunId(runId) {
+  const raw = String(runId || '').trim()
+  if (!raw) return null
+
+  await ensureIndexes()
+  const exact = await getReportById(raw)
+  if (exact) return exact
+
+  const normalized = raw.toLowerCase().replace(/-/g, '')
+  if (!/^[0-9a-f]{6,32}$/.test(normalized)) {
+    return null
+  }
+
+  const client = await getClient()
+  const col = client.db(DB_NAME).collection(COL_UPLOADS)
+  const rows = await col.find({
+    status: { $in: ['parsed', 'failed'] }
+  })
+    .sort({ uploadedAt: -1 })
+    .limit(300)
+    .toArray()
+
+  for (const item of rows) {
+    const id = String(item._id || '').toLowerCase().replace(/-/g, '')
+    if (id === normalized || id.startsWith(normalized)) {
+      return item
+    }
+  }
+  return null
+}
+
 async function listReports({ playerId, limit = 20, skip = 0 } = {}) {
   await ensureIndexes()
   const client = await getClient()
@@ -256,6 +287,7 @@ module.exports = {
   updateReportParsed,
   updateReportFailed,
   getReportById,
+  findReportByRunId,
   listReports,
   listPendingReports,
   listDpsRecords,

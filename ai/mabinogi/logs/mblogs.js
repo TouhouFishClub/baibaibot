@@ -8,6 +8,8 @@ const {
   listRecordsByDungeon,
   listRecordsByBoss
 } = require('./db')
+const { isRunIdKeyword, loadRunDetail } = require('./runQuery')
+const { renderRunDetail } = require('./renderRunDetail')
 
 const ADMIN_QQ = '799018865'
 
@@ -57,6 +59,7 @@ function buildMblogsHelp() {
     '  mblogs 角色名             查询该角色各 Boss 最高 DPS',
     `  mblogs ${DEFAULT_DUNGEON}           查询副本各 Boss 排行榜`,
     `  mblogs Boss名             查询单个 Boss，默认前${BOSS_DEFAULT_RANK}名`,
+    '  mblogs <场次ID>           查询单场战斗详情图（支持短 ID）',
     '',
     '参数：',
     '  --rank N    显示前 N 名（副本默认 10，Boss 默认 30，角色默认 3）',
@@ -69,6 +72,7 @@ function buildMblogsHelp() {
     '  mblogs 枯木之佩塔克 --job 流子',
     '  mblogs 枯木之佩塔克 --rank 15 --job 黑魔导士',
     '  mblogs 布里列赫 --all',
+    '  mblogs c31651e9',
     '  mblogs --help',
     '',
     `支持副本：${DUNGEONS.map(item => item.name).join('、')}`,
@@ -231,6 +235,18 @@ async function queryMblogs(content, { showAll = false, rank, job } = {}) {
     return { help: buildMblogsHelp() }
   }
 
+  const keyword = String(content || '').trim()
+  if (isRunIdKeyword(keyword)) {
+    const detail = await loadRunDetail(keyword)
+    if (detail.error) {
+      return { error: detail.error }
+    }
+    return {
+      mode: 'run',
+      ...detail
+    }
+  }
+
   const query = resolveQueryType(content)
   if (query.type === 'help') {
     return { error: '用法：mblogs 角色名 / mblogs 布里列赫 / mblogs Boss名 / mblogs 布里列赫 --all / mblogs 布里列赫 --rank 20 / mblogs Boss名 --job 流星射手' }
@@ -316,6 +332,18 @@ async function mblogs(content, from, callback) {
       return
     }
 
+    if (result.mode === 'run') {
+      const outputDir = path.join(IMAGE_DATA, 'mabi_other', 'MabiRunDetail.png')
+      await renderRunDetail({
+        title: result.title,
+        description: result.description,
+        panels: result.panels,
+        output: outputDir
+      })
+      callback(`[CQ:image,file=${path.join('send', 'mabi_other', 'MabiRunDetail.png')}]`)
+      return
+    }
+
     const outputDir = path.join(IMAGE_DATA, 'mabi_other', 'MabiLogs.png')
     const columns = buildColumns(result.mode)
     const renderOption = {
@@ -343,5 +371,6 @@ module.exports = {
   parseMblogsInput,
   resolveRank,
   buildMblogsHelp,
-  isMblogsHelpRequest
+  isMblogsHelpRequest,
+  isRunIdKeyword
 }
