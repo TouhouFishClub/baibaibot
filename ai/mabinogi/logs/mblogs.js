@@ -10,6 +10,11 @@ const {
 
 const ADMIN_QQ = '799018865'
 
+const DEFAULT_DUNGEON = '布里列赫'
+const DEFAULT_RANK = 10
+const BOSS_DEFAULT_RANK = 30
+const CHARACTER_DEFAULT_RANK = 3
+
 const addZero = n => (n < 10 ? '0' + n : n)
 
 const formatTime = ts => {
@@ -33,24 +38,73 @@ function flattenGroups(groups) {
   return rows
 }
 
-const DEFAULT_DUNGEON = '布里列赫'
-
 function parseMblogsInput(content) {
   const tokens = String(content || '').trim().split(/\s+/).filter(Boolean)
-  const showAll = tokens.includes('--all')
-  const keyword = tokens.filter(token => token !== '--all').join(' ')
-  return { keyword, showAll }
+  let showAll = false
+  let rank = null
+  let job = null
+  const keywordParts = []
+
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i]
+    if (token === '--all') {
+      showAll = true
+      continue
+    }
+    if (token === '--rank') {
+      const value = Number(tokens[++i])
+      if (Number.isFinite(value) && value > 0) {
+        rank = Math.floor(value)
+      }
+      continue
+    }
+    if (token === '--job') {
+      const jobParts = []
+      while (i + 1 < tokens.length && !String(tokens[i + 1]).startsWith('--')) {
+        jobParts.push(tokens[++i])
+      }
+      job = jobParts.join(' ').trim() || null
+      continue
+    }
+    keywordParts.push(token)
+  }
+
+  return {
+    keyword: keywordParts.join(' '),
+    showAll,
+    rank,
+    job
+  }
 }
 
-function buildRankDescription({ mode, showAll }) {
+function resolveRank(query, rank) {
+  if (rank) return rank
+  if (query.type === 'boss') return BOSS_DEFAULT_RANK
+  if (query.type === 'character') return CHARACTER_DEFAULT_RANK
+  return DEFAULT_RANK
+}
+
+function buildRankDescription({ mode, showAll, rank, job }) {
   if (mode === 'character') {
-    return '各 Boss 前三名（仅统计已击杀）'
+    const parts = [`各 Boss 前 ${rank} 名（仅统计已击杀）`]
+    if (job) parts.push(`职业：${job}`)
+    return parts.join('，')
   }
-  const rank = mode === 'dungeon' ? '各 Boss 前十名' : '前十名'
+
+  const scope = mode === 'dungeon' ? `各 Boss 前 ${rank} 名` : `前 ${rank} 名`
+  const parts = [scope]
   if (showAll) {
-    return `${rank}（仅统计已击杀）`
+    parts.push('仅统计已击杀')
+  } else {
+    parts.push('每角色仅保留最高 DPS')
   }
-  return `${rank}（每角色仅保留最高 DPS）`
+  if (job) parts.push(`职业：${job}`)
+  return `${parts[0]}（${parts.slice(1).join('，')}）`
+}
+
+function buildTitle(baseTitle, job) {
+  if (!job) return baseTitle
+  return `${baseTitle} · ${job}`
 }
 
 function buildColumns(mode) {
@@ -127,36 +181,42 @@ function mapRow(record) {
   }
 }
 
-async function queryMblogs(content, { showAll = false } = {}) {
+async function queryMblogs(content, { showAll = false, rank, job } = {}) {
   const query = resolveQueryType(content)
   if (query.type === 'help') {
-    return { error: '用法：mblogs 角色名 / mblogs 布里列赫 / mblogs Boss名 / mblogs 布里列赫 --all' }
+    return { error: '用法：mblogs 角色名 / mblogs 布里列赫 / mblogs Boss名 / mblogs 布里列赫 --all / mblogs 布里列赫 --rank 20 / mblogs Boss名 --job 流星射手' }
   }
 
-  const rankOptions = { bestPerCharacter: !showAll }
+  const limit = resolveRank(query, rank)
+  const queryOptions = {
+    bestPerCharacter: !showAll,
+    characterClass: job || undefined
+  }
 
   if (query.type === 'character') {
-    const groups = await listRecordsByCharacter(query.name, 3)
+    const groups = await listRecordsByCharacter(query.name, limit, queryOptions)
     const rows = flattenGroups(groups).map(mapRow)
     if (!rows.length) {
-      return { error: `未找到角色「${query.name}」的通关 DPS 记录` }
+      const suffix = job ? `（职业：${job}）` : ''
+      return { error: `未找到角色「${query.name}」的通关 DPS 记录${suffix}` }
     }
     return {
-      title: `DPS记录：${query.name}`,
-      description: buildRankDescription({ mode: 'character', showAll }),
+      title: buildTitle(`DPS记录：${query.name}`, job),
+      description: buildRankDescription({ mode: 'character', showAll, rank: limit, job }),
       mode: 'character',
       rows
     }
   }
 
   if (query.type === 'dungeon') {
-    const groups = await listRecordsByDungeon(query.dungeon.name, 10, rankOptions)
+    const groups = await listRecordsByDungeon(query.dungeon.name, limit, queryOptions)
     if (!groups.length) {
-      return { error: `未找到副本「${query.dungeon.name}」的 DPS 记录` }
+      const suffix = job ? `（职业：${job}）` : ''
+      return { error: `未找到副本「${query.dungeon.name}」的 DPS 记录${suffix}` }
     }
     return {
-      title: `DPS记录：${query.dungeon.name}`,
-      description: buildRankDescription({ mode: 'dungeon', showAll }),
+      title: buildTitle(`DPS记录：${query.dungeon.name}`, job),
+      description: buildRankDescription({ mode: 'dungeon', showAll, rank: limit, job }),
       mode: 'dungeon',
       sections: groups.map(group => ({
         title: group.bossName,
@@ -165,14 +225,15 @@ async function queryMblogs(content, { showAll = false } = {}) {
     }
   }
 
-  const records = await listRecordsByBoss(query.boss.groupKey, 10, rankOptions)
+  const records = await listRecordsByBoss(query.boss.groupKey, limit, queryOptions)
   const rows = records.map(mapRow)
   if (!rows.length) {
-    return { error: `未找到 Boss「${query.boss.displayName}」的 DPS 记录` }
+    const suffix = job ? `（职业：${job}）` : ''
+    return { error: `未找到 Boss「${query.boss.displayName}」的 DPS 记录${suffix}` }
   }
   return {
-    title: `DPS记录：${query.boss.displayName}`,
-    description: buildRankDescription({ mode: 'boss', showAll }),
+    title: buildTitle(`DPS记录：${query.boss.displayName}`, job),
+    description: buildRankDescription({ mode: 'boss', showAll, rank: limit, job }),
     mode: 'boss',
     rows
   }
@@ -186,15 +247,25 @@ async function mblogs(content, from, callback) {
 
   const keyword = String(content || '').trim()
   if (keyword.toLowerCase() === 'help' || keyword === '帮助') {
-    callback(`用法：\nmblogs（默认${DEFAULT_DUNGEON}）\nmblogs 角色名\nmblogs ${DEFAULT_DUNGEON}\nmblogs Boss名\nmblogs ${DEFAULT_DUNGEON} --all`)
+    callback([
+      '用法：',
+      `mblogs（默认${DEFAULT_DUNGEON}，前${DEFAULT_RANK}名）`,
+      'mblogs 角色名',
+      `mblogs ${DEFAULT_DUNGEON}`,
+      `mblogs Boss名（默认前${BOSS_DEFAULT_RANK}名）`,
+      'mblogs 布里列赫 --all',
+      'mblogs 布里列赫 --rank 20',
+      'mblogs 枯木之佩塔克 --job 流星射手',
+      'mblogs 枯木之佩塔克 --rank 15 --job 流星射手'
+    ].join('\n'))
     return
   }
 
-  const { keyword: queryKeyword, showAll } = parseMblogsInput(keyword)
+  const { keyword: queryKeyword, showAll, rank, job } = parseMblogsInput(keyword)
   const resolvedKeyword = queryKeyword || DEFAULT_DUNGEON
 
   try {
-    const result = await queryMblogs(resolvedKeyword, { showAll })
+    const result = await queryMblogs(resolvedKeyword, { showAll, rank, job })
     if (result.error) {
       callback(result.error)
       return
@@ -223,5 +294,7 @@ async function mblogs(content, from, callback) {
 
 module.exports = {
   mblogs,
-  queryMblogs
+  queryMblogs,
+  parseMblogsInput,
+  resolveRank
 }
