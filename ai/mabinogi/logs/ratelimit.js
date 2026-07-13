@@ -29,7 +29,16 @@ function hitBucket(map, key, windowMs, limit, now) {
   return false
 }
 
+function isLoopback(ip) {
+  if (!ip) return false
+  const normalized = String(ip).replace(/^::ffff:/, '')
+  return normalized === '127.0.0.1' || normalized === '::1' || normalized === 'localhost'
+}
+
 function isRateLimited(ip, playerId) {
+  if (isLoopback(ip)) {
+    return { limited: false }
+  }
   const now = Date.now()
   pruneTimestamps(buckets.global, 60 * 1000, now)
 

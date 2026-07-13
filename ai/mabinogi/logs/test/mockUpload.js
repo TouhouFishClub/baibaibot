@@ -11,6 +11,7 @@
  */
 const fs = require('fs')
 const path = require('path')
+const zlib = require('zlib')
 const crypto = require('crypto')
 const http = require('http')
 const https = require('https')
@@ -103,20 +104,42 @@ function pickManifestFallback(manifest) {
   return samples.find(item => item.clientShouldUpload !== false) || samples[0] || {}
 }
 
+function inferMetadataFromGzip(fileName) {
+  try {
+    const buffer = fs.readFileSync(path.join(MOCK_DIR, fileName))
+    const data = JSON.parse(zlib.gunzipSync(buffer).toString('utf8'))
+    for (const target of data.targets || []) {
+      for (const attacker of target.attackers || []) {
+        if (attacker?.isPC && attacker.id) {
+          return {
+            playerId: String(attacker.id),
+            playerName: String(attacker.name || '').trim() || String(attacker.id)
+          }
+        }
+      }
+    }
+  } catch (error) {
+    // ignore
+  }
+  return null
+}
+
 function buildSampleForFile(fileName, manifestEntry, manifest) {
   const defaults = manifest.defaults || {}
   const fallback = pickManifestFallback(manifest)
+  const inferred = manifestEntry ? null : inferMetadataFromGzip(fileName)
 
   return {
     id: manifestEntry?.id || fileName.replace(/\.json\.gz$/, ''),
     file: fileName,
-    playerId: manifestEntry?.playerId || defaults.playerId || fallback.playerId || '123456789',
-    playerName: manifestEntry?.playerName ?? defaults.playerName ?? fallback.playerName ?? '测试角色',
+    playerId: manifestEntry?.playerId || inferred?.playerId || defaults.playerId || fallback.playerId || '123456789',
+    playerName: manifestEntry?.playerName ?? inferred?.playerName ?? defaults.playerName ?? fallback.playerName ?? '测试角色',
     dungeonName: manifestEntry?.dungeonName || defaults.dungeonName || fallback.dungeonName || '布里列赫',
     fileName: manifestEntry?.fileName || fileName,
     clientVersion: manifestEntry?.clientVersion || defaults.clientVersion || fallback.clientVersion || '2.2.2',
     clientShouldUpload: manifestEntry?.clientShouldUpload,
-    exampleRequest: manifestEntry?.exampleRequest
+    exampleRequest: manifestEntry?.exampleRequest,
+    _inferred: Boolean(inferred)
   }
 }
 
@@ -256,7 +279,9 @@ async function main() {
   for (const sample of samples) {
     const shouldUpload = sample.clientShouldUpload !== false
     const useManifestAuth = args.useManifestAuth && Boolean(sample.exampleRequest)
-    const metaHint = manifestIndex.has(sample.file) ? '' : ' (无 manifest 元数据，使用默认值)'
+    const metaHint = manifestIndex.has(sample.file)
+      ? ''
+      : (sample._inferred ? ' (从 gzip 推断 playerId)' : ' (无 manifest，使用默认值)')
     try {
       const result = await uploadSample({ endpoint, secretKey, sample, useManifestAuth })
       const expect = shouldUpload ? 'accept' : 'reject-or-skip'
