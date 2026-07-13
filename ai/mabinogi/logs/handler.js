@@ -1,5 +1,7 @@
 const multer = require('multer')
 const { verifyUploadHeaders, verifySignature } = require('./auth')
+const { reserveNonce } = require('./db')
+const { uploadSecretKey } = require('./config')
 const { isRateLimited } = require('./ratelimit')
 const { parseGzipJson, validateUploadFields } = require('./validate')
 const { saveSourceFile, readSourceFile } = require('./storage')
@@ -40,7 +42,11 @@ async function handleUpload(req, res) {
     return sendJson(res, 400, { ok: false, error: fieldCheck.reason })
   }
 
-  const headerResult = await verifyUploadHeaders(req)
+  if (!uploadSecretKey.length) {
+    return sendJson(res, 401, { ok: false, error: 'server_secret_missing' })
+  }
+
+  const headerResult = await verifyUploadHeaders(req, { reserve: false })
   if (!headerResult.ok) {
     return sendJson(res, 401, { ok: false, error: headerResult.reason })
   }
@@ -67,6 +73,11 @@ async function handleUpload(req, res) {
   const signResult = verifySignature(headerResult.timestamp, headerResult.nonce, playerId, gzData, authHeader)
   if (!signResult.ok) {
     return sendJson(res, 401, { ok: false, error: signResult.reason })
+  }
+
+  const nonceOk = await reserveNonce(headerResult.nonce)
+  if (!nonceOk) {
+    return sendJson(res, 401, { ok: false, error: 'nonce_replay' })
   }
 
   if (signResult.fileHashHex !== contentSha256) {

@@ -56,7 +56,7 @@ function verifySignature(timestamp, nonce, playerId, gzData, authHeader) {
   return { ok: true, fileHashHex }
 }
 
-async function verifyUploadHeaders(req) {
+async function verifyUploadHeaders(req, { reserve = true } = {}) {
   const timestamp = req.headers['x-timestamp'] || req.headers['X-Timestamp']
   const nonce = req.headers['x-nonce'] || req.headers['X-Nonce']
 
@@ -66,9 +66,11 @@ async function verifyUploadHeaders(req) {
   const nonceFormat = verifyNonceFormat(nonce)
   if (!nonceFormat.ok) return nonceFormat
 
-  const nonceOk = await reserveNonce(nonce)
-  if (!nonceOk) {
-    return { ok: false, reason: 'nonce_replay' }
+  if (reserve) {
+    const nonceOk = await reserveNonce(nonce)
+    if (!nonceOk) {
+      return { ok: false, reason: 'nonce_replay' }
+    }
   }
 
   return { ok: true, timestamp: tsResult.timestamp, nonce }

@@ -24,10 +24,17 @@ const DEFAULTS = {
 }
 
 function loadSecretFile() {
+  if (process.env.BLONY_UPLOAD_SECRET) {
+    return {
+      BLONY_UPLOAD_SECRET: process.env.BLONY_UPLOAD_SECRET,
+      BLONY_UPLOAD_ENDPOINT: process.env.BLONY_UPLOAD_ENDPOINT || ''
+    }
+  }
   try {
     return JSON.parse(fs.readFileSync(SECRET_PATH, 'utf8'))
   } catch (error) {
     console.warn('[dps-logs] 未找到 .secret.json，上传鉴权将不可用:', error.message)
+    console.warn(`[dps-logs] 请在 ${SECRET_PATH} 配置 BLONY_UPLOAD_SECRET，或设置环境变量 BLONY_UPLOAD_SECRET`)
     return {}
   }
 }
