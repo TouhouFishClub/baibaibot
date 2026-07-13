@@ -86,7 +86,12 @@ async function handleUpload(req, res) {
 
   const duplicate = await findDuplicate({ playerId, contentSha256, fileName })
   if (duplicate) {
-    return sendJson(res, 200, { ok: true, reportId: duplicate._id, duplicate: true })
+    return sendJson(res, 200, {
+      ok: true,
+      reportId: duplicate._id,
+      duplicate: true,
+      reason: 'content_or_filename_duplicate'
+    })
   }
 
   const parsed = parseGzipJson(gzData)
@@ -109,22 +114,35 @@ async function handleUpload(req, res) {
   const reportId = newReportId()
   const now = new Date()
 
-  await insertPendingReport({
-    _id: reportId,
-    playerId,
-    playerName,
-    dungeonName,
-    fileName,
-    clientVersion,
-    contentSha256,
-    sourceRelPath,
-    teamSignature,
-    status: 'pending',
-    parseError: null,
-    uploadedAt: now,
-    uploadedTs: now.getTime(),
-    ip
-  })
+  try {
+    await insertPendingReport({
+      _id: reportId,
+      playerId,
+      playerName,
+      dungeonName,
+      fileName,
+      clientVersion,
+      contentSha256,
+      sourceRelPath,
+      teamSignature,
+      status: 'pending',
+      parseError: null,
+      uploadedAt: now,
+      uploadedTs: now.getTime(),
+      ip
+    })
+  } catch (error) {
+    if (error && error.code === 11000) {
+      const dup = await findDuplicate({ playerId, contentSha256, fileName })
+      return sendJson(res, 200, {
+        ok: true,
+        reportId: dup?._id,
+        duplicate: true,
+        reason: 'content_or_filename_duplicate'
+      })
+    }
+    throw error
+  }
 
   enqueueParseJob({ reportId, sourceRelPath, dungeonName })
   return sendJson(res, 200, { ok: true, reportId })

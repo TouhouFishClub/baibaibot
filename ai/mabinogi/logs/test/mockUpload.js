@@ -260,7 +260,9 @@ async function main() {
     try {
       const result = await uploadSample({ endpoint, secretKey, sample, useManifestAuth })
       const expect = shouldUpload ? 'accept' : 'reject-or-skip'
-      console.log(`[${result.sample}] HTTP ${result.status} expect=${expect}${metaHint}`)
+      const dup = result.json?.duplicate ? ' [重复，未入库]' : ''
+      const reason = result.json?.reason ? ` reason=${result.json.reason}` : ''
+      console.log(`[${result.sample}] HTTP ${result.status} expect=${expect}${dup}${reason}${metaHint}`)
       console.log(result.json || result.text)
     } catch (error) {
       console.error(`[${sample.id || sample.file}] 上传失败:`, error.message)
