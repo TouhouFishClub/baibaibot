@@ -6,7 +6,7 @@
  * MongoDB 无需预先建表，首次写入时集合会自动创建；
  * 本脚本仅创建索引（与 db.js ensureIndexes 一致）。
  */
-const { getClient } = require('../../../mongo/index')
+const { getClient } = require('../../../../mongo/index')
 const { nonceTtlSeconds } = require('../config')
 
 const DB_NAME = 'db_bot'
