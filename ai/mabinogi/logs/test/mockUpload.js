@@ -1,11 +1,13 @@
 /**
- * 使用 test/mock/manifest.json 模拟客户端 multipart 上传。
+ * 扫描 test/mock 下全部 *.json.gz 并模拟客户端 multipart 上传。
+ * manifest.json 仅提供各包的元数据与 exampleRequest（验签参考），不决定上传列表。
  *
  * 用法:
  *   node ai/mabinogi/logs/test/mockUpload.js
  *   node ai/mabinogi/logs/test/mockUpload.js --only 01,02
  *   node ai/mabinogi/logs/test/mockUpload.js --endpoint http://127.0.0.1:10086/mabinogi/dpsPusher
  *   node ai/mabinogi/logs/test/mockUpload.js --secret blony-upload-test-secret
+ *   node ai/mabinogi/logs/test/mockUpload.js --use-manifest-auth  # 使用 manifest 内预置签名
  */
 const fs = require('fs')
 const path = require('path')
@@ -19,7 +21,7 @@ const MANIFEST_PATH = path.join(MOCK_DIR, 'manifest.json')
 const SECRET_PATH = path.join(__dirname, '..', '.secret.json')
 
 function parseArgs(argv) {
-  const args = { only: null, endpoint: null, secret: null }
+  const args = { only: null, endpoint: null, secret: null, useManifestAuth: false }
   for (let i = 2; i < argv.length; i++) {
     if (argv[i] === '--only') {
       args.only = String(argv[i + 1] || '').split(',').map(s => s.trim()).filter(Boolean)
@@ -30,6 +32,8 @@ function parseArgs(argv) {
     } else if (argv[i] === '--secret') {
       args.secret = argv[i + 1]
       i++
+    } else if (argv[i] === '--use-manifest-auth') {
+      args.useManifestAuth = true
     }
   }
   return args
@@ -66,6 +70,60 @@ function loadDefaultSecret() {
     // ignore
   }
   return 'blony-upload-test-secret'
+}
+
+function loadManifest() {
+  if (!fs.existsSync(MANIFEST_PATH)) {
+    return { samples: [], defaults: {} }
+  }
+  return JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'))
+}
+
+function buildManifestIndex(manifest) {
+  const map = new Map()
+  for (const sample of manifest.samples || []) {
+    if (sample?.file) {
+      map.set(sample.file, sample)
+    }
+  }
+  return map
+}
+
+function listMockPackages() {
+  if (!fs.existsSync(MOCK_DIR)) {
+    return []
+  }
+  return fs.readdirSync(MOCK_DIR)
+    .filter(name => name.endsWith('.json.gz'))
+    .sort()
+}
+
+function pickManifestFallback(manifest) {
+  const samples = manifest.samples || []
+  return samples.find(item => item.clientShouldUpload !== false) || samples[0] || {}
+}
+
+function buildSampleForFile(fileName, manifestEntry, manifest) {
+  const defaults = manifest.defaults || {}
+  const fallback = pickManifestFallback(manifest)
+
+  return {
+    id: manifestEntry?.id || fileName.replace(/\.json\.gz$/, ''),
+    file: fileName,
+    playerId: manifestEntry?.playerId || defaults.playerId || fallback.playerId || '123456789',
+    playerName: manifestEntry?.playerName ?? defaults.playerName ?? fallback.playerName ?? '测试角色',
+    dungeonName: manifestEntry?.dungeonName || defaults.dungeonName || fallback.dungeonName || '布里列赫',
+    fileName: manifestEntry?.fileName || fileName,
+    clientVersion: manifestEntry?.clientVersion || defaults.clientVersion || fallback.clientVersion || '2.2.2',
+    clientShouldUpload: manifestEntry?.clientShouldUpload,
+    exampleRequest: manifestEntry?.exampleRequest
+  }
+}
+
+function matchOnlyFilter(fileName, onlyList) {
+  if (!onlyList?.length) return true
+  const base = fileName.replace(/\.json\.gz$/, '')
+  return onlyList.some(key => base.startsWith(key) || fileName.startsWith(key) || base.includes(key))
 }
 
 function sha256Hex(buffer) {
@@ -134,9 +192,6 @@ function postMultipart(urlString, headers, body) {
 
 async function uploadSample({ endpoint, secretKey, sample, useManifestAuth }) {
   const filePath = path.join(MOCK_DIR, sample.file)
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`缺少样本文件: ${filePath}`)
-  }
   const fileBuffer = fs.readFileSync(filePath)
   const contentSha256 = sha256Hex(fileBuffer)
   const fields = {
@@ -175,37 +230,37 @@ async function uploadSample({ endpoint, secretKey, sample, useManifestAuth }) {
 
 async function main() {
   const args = parseArgs(process.argv)
-  if (!fs.existsSync(MANIFEST_PATH)) {
-    console.error(`未找到 ${MANIFEST_PATH}`)
-    console.error('请把 mock 样本与 manifest.json 放到 ai/mabinogi/logs/test/mock/')
+  const packages = listMockPackages().filter(file => matchOnlyFilter(file, args.only))
+
+  if (!packages.length) {
+    console.error(`未在 ${MOCK_DIR} 找到可上传的 *.json.gz`)
     process.exit(1)
   }
 
-  const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'))
+  const manifest = loadManifest()
+  const manifestIndex = buildManifestIndex(manifest)
   const endpoint = args.endpoint || manifest.endpoint || loadDefaultEndpoint()
-  const secret = args.secret || manifest.testSecret || loadDefaultSecret()
+  const secret = args.secret || loadDefaultSecret() || manifest.testSecret
   const secretKey = resolveSecretKey(secret)
-  const samples = (manifest.samples || []).filter(sample => {
-    if (!args.only) return true
-    const id = sample.id || ''
-    return args.only.some(key => id.startsWith(key) || sample.file.startsWith(key))
-  })
 
-  if (!samples.length) {
-    console.error('没有可上传的样本')
-    process.exit(1)
-  }
+  const samples = packages.map(fileName => buildSampleForFile(fileName, manifestIndex.get(fileName), manifest))
 
   console.log(`Endpoint: ${endpoint}`)
-  console.log(`Samples: ${samples.length}`)
+  console.log(`Packages: ${samples.length} (scan mock/*.json.gz)`)
+  console.log(`Secret: ${secret ? '(loaded)' : '(missing)'}`)
+  if (fs.existsSync(MANIFEST_PATH)) {
+    const matched = samples.filter(item => manifestIndex.has(item.file)).length
+    console.log(`Manifest: ${matched}/${samples.length} 个包有元数据/验签示例`)
+  }
 
   for (const sample of samples) {
     const shouldUpload = sample.clientShouldUpload !== false
-    const useManifestAuth = Boolean(sample.exampleRequest)
+    const useManifestAuth = args.useManifestAuth && Boolean(sample.exampleRequest)
+    const metaHint = manifestIndex.has(sample.file) ? '' : ' (无 manifest 元数据，使用默认值)'
     try {
       const result = await uploadSample({ endpoint, secretKey, sample, useManifestAuth })
       const expect = shouldUpload ? 'accept' : 'reject-or-skip'
-      console.log(`[${result.sample}] HTTP ${result.status} expect=${expect}`)
+      console.log(`[${result.sample}] HTTP ${result.status} expect=${expect}${metaHint}`)
       console.log(result.json || result.text)
     } catch (error) {
       console.error(`[${sample.id || sample.file}] 上传失败:`, error.message)
