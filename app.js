@@ -16,6 +16,7 @@ const UPLOAD_URL = '../coolq-data/cq/data/image/send/upload/'
 const { myip } = require('./baibaiConfigs')
 const { analyzerMessage } = require('./ai/GenshinImpact/GenshinPush')
 const { handlePush: handleMabiPush } = require('./ai/mabinogi/mabiPusher')
+const { initDpsLogs } = require('./ai/mabinogi/logs')
 const { getClient } = require('./mongo/index')
 const {
   analysisMessage,
@@ -782,6 +783,8 @@ const formatDate = ts => {
 	let date = new Date(ts)
 	return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`
 }
+
+initDpsLogs(app)
 
 app.post('/mabi/push/:server', async (req, res) => {
 	const server = req.params.server

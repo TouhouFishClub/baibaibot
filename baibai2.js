@@ -169,6 +169,7 @@ const {BaRaidRanking} = require('./ai/BlueArchive/RaidRanking')
 // const {autoVoteSend} = require('./ai/mabinogi/2023_vote_rank')
 const {mabiTelevision, mabiTelevisionStats} = require('./ai/mabinogi/Television/newMbtv')
 const {mabiGachaTv, mabiMbcdStats} = require('./ai/mabinogi/Television/newMbcd')
+const { mblogs } = require('./ai/mabinogi/logs/mblogs')
 const {mabiCraftTv, mabiCraftTvStats} = require('./ai/mabinogi/Television/newMbzz')
 
 const { mabinogi_red_packet, mabinogi_red_packet_remove, mabinogi_red_packet_set, mabinogi_red_packet_list} = require('./ai/mabinogi/2022_red_packet')
@@ -1933,6 +1934,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     //     callback('因数据源不再可信，mbtv及mbcd现已下线')
     //   return
     mabiGachaTv(con.substring(4).trim(), from, callback).catch(err => {console.log(err)});
+    return
+  }
+  if(con.length >= 6 && con.toLowerCase().startsWith('mblogs')) {
+    mblogs(con.substring(6).trim(), from, callback).catch(err => { console.log(err) })
     return
   }
   if(con.length >= 5 && con.toLowerCase().startsWith('mbzzs')) {

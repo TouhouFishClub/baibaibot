@@ -1,0 +1,27 @@
+{
+  "endpoint": "http://127.0.0.1:10086/mabinogi/dpsPusher",
+  "testSecret": "blony-upload-test-secret",
+  "samples": [
+    {
+      "id": "01",
+      "file": "01_minimal_single_boss.json.gz",
+      "clientShouldUpload": true,
+      "playerId": "123456789",
+      "playerName": "测试角色",
+      "dungeonName": "布里列赫",
+      "fileName": "2026-07-12_15-04-05_布里列赫.json.gz",
+      "clientVersion": "2.2.2",
+      "contentSha256": "b039e1d9a8e00a93ca0d99f10ba5748d5864bc636dfaa06b63342cf9bfdcc97e"
+    },
+    {
+      "id": "05",
+      "file": "05_should_be_filtered_out.json.gz",
+      "clientShouldUpload": false,
+      "playerId": "123456789",
+      "playerName": "测试角色",
+      "dungeonName": "布里列赫",
+      "fileName": "filtered_out.json.gz",
+      "clientVersion": "2.2.2"
+    }
+  ]
+}

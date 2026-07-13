@@ -9,6 +9,8 @@ static/*.png
 static
 package-lock.json
 test/
+!ai/mabinogi/logs/test/
+!ai/mabinogi/logs/test/**
 public/fh
 public/bangumi
 tmp/
