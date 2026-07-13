@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 const { centiToMs } = require('./validate')
-const { matchBossByHp, isBossKillCompleted } = require('./bossConfig')
+const { matchBossByHp, isBossKillCompleted, getBossKillHp } = require('./bossConfig')
 const { collectPcAttackers, buildTeammateNames } = require('./team')
 const { buildRunCharacterClasses } = require('./classDetect')
 
@@ -41,7 +41,7 @@ function buildDpsRecords({
         bossKey: boss.key,
         bossGroup: boss.groupKey,
         bossName: boss.displayName,
-        bossHp: maxHp,
+        bossHp: getBossKillHp(boss),
         recordTime,
         recordTs: recordTime.getTime(),
         duration,

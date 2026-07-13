@@ -9,21 +9,23 @@ const DUNGEONS = [
 ]
 
 // displayName：对外展示；groupKey：排行榜聚合（佩塔克一/二阶段合并）
-// 阶段区分仅依赖 referenceHp，不依赖游戏内 targetName
+// 佩塔克：用数据包 maxHp 识别阶段，用 markKillHp 判定击杀；其余 Boss 用 referenceHp 同时识别与判定
 const BOSSES = [
   {
     key: 'petak_p1',
     displayName: '枯木之佩塔克',
     aliases: ['枯木之佩塔克', '枯木的佩塔克', '佩塔克'],
     groupKey: 'petak',
-    referenceHp: 411_100_000
+    maxHp: 698_516_992,
+    markKillHp: 411_100_000
   },
   {
     key: 'petak_p2',
     displayName: '枯木之佩塔克',
     aliases: ['枯木之佩塔克', '枯木的佩塔克', '佩塔克'],
     groupKey: 'petak',
-    referenceHp: 488_900_000
+    maxHp: 850_368_576,
+    markKillHp: 488_900_000
   },
   {
     key: 'brontanas',
@@ -48,12 +50,20 @@ const BOSSES = [
   }
 ]
 
-function matchBossByHp(maxHp) {
-  if (!Number.isFinite(maxHp)) return null
+function getBossMatchHp(boss) {
+  return boss.maxHp ?? boss.referenceHp
+}
+
+function getBossKillHp(boss) {
+  return boss.markKillHp ?? boss.referenceHp ?? boss.maxHp
+}
+
+function matchBossByHp(packageMaxHp) {
+  if (!Number.isFinite(packageMaxHp)) return null
   let matched = null
   let bestDiff = Infinity
   for (const boss of BOSSES) {
-    const diff = Math.abs(maxHp - boss.referenceHp)
+    const diff = Math.abs(packageMaxHp - getBossMatchHp(boss))
     if (diff <= HP_TOLERANCE && diff < bestDiff) {
       matched = boss
       bestDiff = diff
@@ -63,12 +73,15 @@ function matchBossByHp(maxHp) {
 }
 
 function isBossKillCompleted(target) {
-  const maxHp = Number(target?.bossHP?.maxHp ?? target?.maxHp)
+  const packageMaxHp = Number(target?.bossHP?.maxHp ?? target?.maxHp)
   const totalDamage = Number(target.totalDamage)
-  if (!Number.isFinite(maxHp) || !Number.isFinite(totalDamage)) {
+  if (!Number.isFinite(packageMaxHp) || !Number.isFinite(totalDamage)) {
     return false
   }
-  return Math.abs(totalDamage - maxHp) <= HP_TOLERANCE
+
+  const boss = matchBossByHp(packageMaxHp)
+  const killHp = boss ? getBossKillHp(boss) : packageMaxHp
+  return Math.abs(totalDamage - killHp) <= HP_TOLERANCE
 }
 
 function getBossKeysByGroup(groupKey) {
@@ -78,7 +91,7 @@ function getBossKeysByGroup(groupKey) {
 function getGroupSortHp(groupKey) {
   const bosses = BOSSES.filter(boss => boss.groupKey === groupKey)
   if (!bosses.length) return 0
-  return Math.min(...bosses.map(boss => boss.referenceHp))
+  return Math.min(...bosses.map(boss => getBossKillHp(boss)))
 }
 
 function resolveBossQuery(keyword) {
@@ -185,6 +198,8 @@ module.exports = {
   BOSSES,
   matchBossByHp,
   isBossKillCompleted,
+  getBossMatchHp,
+  getBossKillHp,
   getBossKeysByGroup,
   getGroupSortHp,
   resolveBossQuery,

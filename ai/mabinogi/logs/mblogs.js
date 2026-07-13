@@ -33,8 +33,50 @@ function flattenGroups(groups) {
   return rows
 }
 
+const DEFAULT_DUNGEON = '布里列赫'
+
 function buildColumns(mode) {
   const common = [
+    { label: '副本', key: 'dungeonName', format: v => truncate(v, 8) },
+    { label: '记录时间', key: 'recordTime', format: v => formatTime(v) },
+    { label: '队友数', key: 'teamSize' },
+    { label: '队友', key: 'teammateNames', format: v => truncate(v, 14) },
+    { label: '攻略时间', key: 'duration', format: v => formatDuration(v) },
+    { label: 'DPS', key: 'dps', format: v => formatDps(v) },
+    { label: 'Boss血量', key: 'bossHp', format: v => formatHp(v) },
+    { label: '角色伤害', key: 'totalDamage', format: v => formatDamage(v) },
+    { label: '占比', key: 'damagePercent', format: v => formatPercent(v) },
+    { label: '场次ID', key: 'runId', format: v => shortRunId(v) }
+  ]
+
+  if (mode === 'dungeon') {
+    return [
+      { label: '角色', key: 'characterName', format: v => truncate(v, 10) },
+      { label: '职业', key: 'characterClass', format: v => truncate(v, 8) },
+      ...common
+    ]
+  }
+
+  if (mode === 'boss') {
+    return [
+      { label: '角色', key: 'characterName', format: v => truncate(v, 10) },
+      { label: '职业', key: 'characterClass', format: v => truncate(v, 8) },
+      { label: '副本', key: 'dungeonName', format: v => truncate(v, 8) },
+      { label: '记录时间', key: 'recordTime', format: v => formatTime(v) },
+      { label: '队友数', key: 'teamSize' },
+      { label: '队友', key: 'teammateNames', format: v => truncate(v, 14) },
+      { label: 'Boss', key: 'bossName', format: v => truncate(v, 12) },
+      { label: '攻略时间', key: 'duration', format: v => formatDuration(v) },
+      { label: 'DPS', key: 'dps', format: v => formatDps(v) },
+      { label: 'Boss血量', key: 'bossHp', format: v => formatHp(v) },
+      { label: '角色伤害', key: 'totalDamage', format: v => formatDamage(v) },
+      { label: '占比', key: 'damagePercent', format: v => formatPercent(v) },
+      { label: '场次ID', key: 'runId', format: v => shortRunId(v) }
+    ]
+  }
+
+  return [
+    { label: '职业', key: 'characterClass', format: v => truncate(v, 8) },
     { label: '副本', key: 'dungeonName', format: v => truncate(v, 8) },
     { label: '记录时间', key: 'recordTime', format: v => formatTime(v) },
     { label: '队友数', key: 'teamSize' },
@@ -46,19 +88,6 @@ function buildColumns(mode) {
     { label: '角色伤害', key: 'totalDamage', format: v => formatDamage(v) },
     { label: '占比', key: 'damagePercent', format: v => formatPercent(v) },
     { label: '场次ID', key: 'runId', format: v => shortRunId(v) }
-  ]
-
-  if (mode === 'dungeon' || mode === 'boss') {
-    return [
-      { label: '角色', key: 'characterName', format: v => truncate(v, 10) },
-      { label: '职业', key: 'characterClass', format: v => truncate(v, 8) },
-      ...common
-    ]
-  }
-
-  return [
-    { label: '职业', key: 'characterClass', format: v => truncate(v, 8) },
-    ...common
   ]
 }
 
@@ -102,15 +131,17 @@ async function queryMblogs(content) {
 
   if (query.type === 'dungeon') {
     const groups = await listRecordsByDungeon(query.dungeon.name, 10)
-    const rows = flattenGroups(groups).map(mapRow)
-    if (!rows.length) {
+    if (!groups.length) {
       return { error: `未找到副本「${query.dungeon.name}」的 DPS 记录` }
     }
     return {
       title: `DPS记录：${query.dungeon.name}`,
       description: '各 Boss 前十名（仅统计已击杀）',
       mode: 'dungeon',
-      rows
+      sections: groups.map(group => ({
+        title: group.bossName,
+        rows: group.records.map(mapRow)
+      }))
     }
   }
 
@@ -134,25 +165,33 @@ async function mblogs(content, from, callback) {
   }
 
   const keyword = String(content || '').trim()
-  if (!keyword || keyword.toLowerCase() === 'help' || keyword === '帮助') {
-    callback('用法：\nmblogs 角色名\nmblogs 布里列赫\nmblogs Boss名')
+  if (keyword.toLowerCase() === 'help' || keyword === '帮助') {
+    callback(`用法：\nmblogs（默认${DEFAULT_DUNGEON}）\nmblogs 角色名\nmblogs ${DEFAULT_DUNGEON}\nmblogs Boss名`)
     return
   }
 
+  const queryKeyword = keyword || DEFAULT_DUNGEON
+
   try {
-    const result = await queryMblogs(keyword)
+    const result = await queryMblogs(queryKeyword)
     if (result.error) {
       callback(result.error)
       return
     }
 
     const outputDir = path.join(IMAGE_DATA, 'mabi_other', 'MabiLogs.png')
-    await render(result.rows, {
+    const columns = buildColumns(result.mode)
+    const renderOption = {
       title: result.title,
       description: result.description,
       output: outputDir,
-      columns: buildColumns(result.mode)
-    })
+      columns
+    }
+    if (result.sections) {
+      await render([], { ...renderOption, sections: result.sections })
+    } else {
+      await render(result.rows, renderOption)
+    }
 
     callback(`[CQ:image,file=${path.join('send', 'mabi_other', 'MabiLogs.png')}]`)
   } catch (error) {

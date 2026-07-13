@@ -7,7 +7,7 @@
  *   node ai/mabinogi/logs/test/mockUpload.js --only 01,02
  *   node ai/mabinogi/logs/test/mockUpload.js --endpoint http://127.0.0.1:10086/mabinogi/dpsPusher
  *   node ai/mabinogi/logs/test/mockUpload.js --secret blony-upload-test-secret
- *   node ai/mabinogi/logs/test/mockUpload.js --use-manifest-auth  # 使用 manifest 内预置签名
+ *   node ai/mabinogi/logs/test/mockUpload.js --no-force  # 启用同队伍 5 分钟去重
  */
 const fs = require('fs')
 const path = require('path')
@@ -22,7 +22,7 @@ const MANIFEST_PATH = path.join(MOCK_DIR, 'manifest.json')
 const SECRET_PATH = path.join(__dirname, '..', '.secret.json')
 
 function parseArgs(argv) {
-  const args = { only: null, endpoint: null, secret: null, useManifestAuth: false }
+  const args = { only: null, endpoint: null, secret: null, useManifestAuth: false, force: true }
   for (let i = 2; i < argv.length; i++) {
     if (argv[i] === '--only') {
       args.only = String(argv[i + 1] || '').split(',').map(s => s.trim()).filter(Boolean)
@@ -35,6 +35,8 @@ function parseArgs(argv) {
       i++
     } else if (argv[i] === '--use-manifest-auth') {
       args.useManifestAuth = true
+    } else if (argv[i] === '--no-force') {
+      args.force = false
     }
   }
   return args
@@ -213,7 +215,7 @@ function postMultipart(urlString, headers, body) {
   })
 }
 
-async function uploadSample({ endpoint, secretKey, sample, useManifestAuth }) {
+async function uploadSample({ endpoint, secretKey, sample, useManifestAuth, force }) {
   const filePath = path.join(MOCK_DIR, sample.file)
   const fileBuffer = fs.readFileSync(filePath)
   const contentSha256 = sha256Hex(fileBuffer)
@@ -245,6 +247,7 @@ async function uploadSample({ endpoint, secretKey, sample, useManifestAuth }) {
     Authorization: `HMAC-SHA256 ${signature}`,
     'X-Timestamp': String(timestamp),
     'X-Nonce': nonce,
+    ...(force ? { 'X-Mock-Skip-Team-Dedup': '1' } : {}),
     'Content-Type': `multipart/form-data; boundary=${boundary}`
   }, body)
 
@@ -271,6 +274,7 @@ async function main() {
   console.log(`Endpoint: ${endpoint}`)
   console.log(`Packages: ${samples.length} (scan mock/*.json.gz)`)
   console.log(`Secret: ${secret ? '(loaded)' : '(missing)'}`)
+  console.log(`Force: ${args.force ? 'on（跳过同队伍去重）' : 'off（启用同队伍去重）'}`)
   if (fs.existsSync(MANIFEST_PATH)) {
     const matched = samples.filter(item => manifestIndex.has(item.file)).length
     console.log(`Manifest: ${matched}/${samples.length} 个包有元数据/验签示例`)
@@ -283,7 +287,7 @@ async function main() {
       ? ''
       : (sample._inferred ? ' (从 gzip 推断 playerId)' : ' (无 manifest，使用默认值)')
     try {
-      const result = await uploadSample({ endpoint, secretKey, sample, useManifestAuth })
+      const result = await uploadSample({ endpoint, secretKey, sample, useManifestAuth, force: args.force })
       const expect = shouldUpload ? 'accept' : 'reject-or-skip'
       const dup = result.json?.duplicate ? ' [重复，未入库]' : ''
       const reason = result.json?.reason ? ` reason=${result.json.reason}` : ''

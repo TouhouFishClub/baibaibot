@@ -57,5 +57,6 @@ function isRateLimited(ip, playerId) {
 }
 
 module.exports = {
-  isRateLimited
+  isRateLimited,
+  isLoopback
 }

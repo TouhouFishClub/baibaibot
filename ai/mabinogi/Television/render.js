@@ -7,20 +7,40 @@ const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '
 /*
 * option = {
 *   title: 'TITLE',
+*   description: 'DESC',
 *   output: outputDir,
-*   columns: [
-*     {
-*       label: 'label',
-*       key: 'key',
-*       width?: 123,
-*       format?: fn()
-*     }
-*   ]
+*   columns: [...],
+*   sections?: [{ title?: string, rows: [...], columns?: [...] }]
 * }
 */
+const calcColumnWidth = (rows, columns) => columns.reduce((p, { key, format }) => p + Math.max(40, ...rows.map(x => `${(format ? format(x[key]) : x[key])}`.split('').reduce((sp, char) => sp + (/^[\u4E00-\u9FA5]$/.test(char) ? 20 : 12), 0))), 0) + 50 * columns.length
+
+const renderTable = (rows, columns) => `
+  <table>
+    <colgroup>
+      ${columns.map(col => `<col${col.width ? ` width="${col.width}"` : ''}>`).join('')}
+    </colgroup>
+    <thead>
+      <tr>
+        ${columns.map(col => `<th>${col.label}</th>`).join('')}
+      </tr>
+    </thead>
+    <tbody>
+      ${rows.map(item => `
+        <tr>
+          ${columns.map(col => `<td>${col.format ? col.format(item[col.key]) : item[col.key]}</td>`).join('')}
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>`
+
 const render = async (data, option) => {
-  // console.log(data)
-  const width = option.columns.reduce((p, { key, format }) => p + Math.max(40, ...data.map(x => `${(format ? format(x[key]) : x[key])}`.split('').reduce((sp, char) => sp + (/^[\u4E00-\u9FA5]$/.test(char) ? 20: 12), 0))), 0) + 50 * option.columns.length
+  const sections = option.sections || [{ rows: data }]
+  const defaultColumns = option.columns
+  const width = Math.max(...sections.map(section => {
+    const columns = section.columns || defaultColumns
+    return calcColumnWidth(section.rows, columns)
+  }))
 
 let html = `
 <!DOCTYPE html>
@@ -107,6 +127,15 @@ let html = `
     tbody td {
       text-align: left;
     }
+    .section {
+      margin-top: 24px;
+    }
+    .section-title {
+      font-family: HANYIWENHEI;
+      font-size: 24px;
+      color: #ccc;
+      padding: 12px 45px 8px;
+    }
   </style>
 </head>
 <body>
@@ -118,23 +147,13 @@ let html = `
       ${option.description}
     </div>
   </div>
-  <table>
-    <colgroup>
-      ${option.columns.map(col => `<col${col.width ? ` width="${col.width}"` : ''}>`).join('')}
-    </colgroup>
-    <thead>
-      <tr>
-        ${option.columns.map(col => `<th>${col.label}</th>`).join('')}
-      </tr>
-    </thead>
-    <tbody>
-      ${data.map(item => `
-        <tr>
-          ${option.columns.map(col => `<td>${col.format ? col.format(item[col.key]) : item[col.key]}</td>`).join('')}
-        </tr>
-      `).join('')}
-    </tbody>
-  </table>
+  ${sections.map(section => {
+    const columns = section.columns || defaultColumns
+    const sectionTitle = section.title
+      ? `<div class="section-title">${section.title}</div>`
+      : ''
+    return `<div class="section">${sectionTitle}${renderTable(section.rows, columns)}</div>`
+  }).join('')}
 </body>
 </html>`
   await nodeHtmlToImage({

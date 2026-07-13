@@ -2,7 +2,7 @@ const multer = require('multer')
 const { verifyUploadHeaders, verifySignature } = require('./auth')
 const { reserveNonce } = require('./db')
 const { uploadSecretKey } = require('./config')
-const { isRateLimited } = require('./ratelimit')
+const { isRateLimited, isLoopback } = require('./ratelimit')
 const { parseGzipJson, validateUploadFields } = require('./validate')
 const { saveSourceFile, readSourceFile } = require('./storage')
 const {
@@ -100,14 +100,17 @@ async function handleUpload(req, res) {
   }
 
   const teamSignature = buildTeamSignature(parsed.data)
-  const teamDuplicate = await findTeamDuplicate({ dungeonName, teamSignature })
-  if (teamDuplicate) {
-    return sendJson(res, 200, {
-      ok: true,
-      reportId: teamDuplicate._id,
-      duplicate: true,
-      reason: 'team_duplicate'
-    })
+  const skipTeamDedup = isLoopback(ip) && String(req.headers['x-mock-skip-team-dedup'] || '') === '1'
+  if (!skipTeamDedup) {
+    const teamDuplicate = await findTeamDuplicate({ dungeonName, teamSignature })
+    if (teamDuplicate) {
+      return sendJson(res, 200, {
+        ok: true,
+        reportId: teamDuplicate._id,
+        duplicate: true,
+        reason: 'team_duplicate'
+      })
+    }
   }
 
   const sourceRelPath = saveSourceFile(playerId, contentSha256, gzData)
