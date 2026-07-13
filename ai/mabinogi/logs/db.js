@@ -2,7 +2,7 @@ const crypto = require('crypto')
 const { getClient } = require('../../../mongo/index')
 const { TEAM_DEDUP_MS } = require('./team')
 const { nonceTtlSeconds } = require('./config')
-const { getBossKeysByGroup, getGroupSortHp } = require('./bossConfig')
+const { getBossKeysByGroup, getGroupSortHp, resolveBossGroupKey } = require('./bossConfig')
 
 const DB_NAME = 'db_bot'
 const COL_UPLOADS = 'cl_mabinogi_dps_upload'
@@ -190,14 +190,19 @@ async function listRecordsByDungeon(dungeonName, limitPerBoss = 10) {
 
 async function listRecordsByBoss(groupKey, limit = 10) {
   const bossKeys = getBossKeysByGroup(groupKey)
-  const all = await listDpsRecords({ bossKey: { $in: bossKeys } }, { limit: 500 })
+  const all = await listDpsRecords({
+    $or: [
+      { bossGroup: groupKey },
+      { bossKey: { $in: bossKeys } }
+    ]
+  }, { limit: 500 })
   return all.sort((a, b) => b.dps - a.dps).slice(0, limit)
 }
 
 function groupTopByBoss(records, limitPerBoss) {
   const groups = new Map()
   for (const record of records) {
-    const key = record.bossGroup || record.bossKey || record.bossName || 'unknown'
+    const key = resolveBossGroupKey(record.bossGroup || record.bossKey || record.bossName || 'unknown')
     if (!groups.has(key)) groups.set(key, [])
     groups.get(key).push(record)
   }

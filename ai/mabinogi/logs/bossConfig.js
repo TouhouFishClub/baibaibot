@@ -85,7 +85,23 @@ function isBossKillCompleted(target) {
 }
 
 function getBossKeysByGroup(groupKey) {
-  return BOSSES.filter(boss => boss.groupKey === groupKey).map(boss => boss.key)
+  const keys = BOSSES.filter(boss => boss.groupKey === groupKey).map(boss => boss.key)
+  if (groupKey === 'petak' && !keys.includes('petak')) {
+    keys.push('petak')
+  }
+  return keys
+}
+
+function resolveBossGroupKey(bossKeyOrGroup) {
+  const value = String(bossKeyOrGroup || '').trim()
+  if (!value) return value
+  const boss = BOSSES.find(item => item.key === value)
+  if (boss) return boss.groupKey
+  return value
+}
+
+function getPetakCombinedKillHp(phases = BOSSES.filter(boss => boss.groupKey === 'petak')) {
+  return phases.reduce((sum, boss) => sum + getBossKillHp(boss), 0)
 }
 
 function getGroupSortHp(groupKey) {
@@ -201,6 +217,8 @@ module.exports = {
   getBossMatchHp,
   getBossKillHp,
   getBossKeysByGroup,
+  resolveBossGroupKey,
+  getPetakCombinedKillHp,
   getGroupSortHp,
   resolveBossQuery,
   resolveQueryType,
