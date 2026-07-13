@@ -42,11 +42,7 @@ function flattenGroups(groups) {
 function isMblogsHelpRequest(content) {
   const tokens = String(content || '').trim().split(/\s+/).filter(Boolean)
   if (!tokens.length) return false
-  if (tokens.length === 1) {
-    const token = tokens[0]
-    return token === '--help' || token.toLowerCase() === 'help' || token === '帮助'
-  }
-  return tokens.every(token => token === '--help' || token.toLowerCase() === 'help' || token === '帮助')
+  return tokens.some(token => token === '--help' || token.toLowerCase() === 'help' || token === '帮助')
 }
 
 function buildMblogsHelp() {
@@ -84,12 +80,17 @@ function buildMblogsHelp() {
 function parseMblogsInput(content) {
   const tokens = String(content || '').trim().split(/\s+/).filter(Boolean)
   let showAll = false
+  let help = false
   let rank = null
   let job = null
   const keywordParts = []
 
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i]
+    if (token === '--help' || token.toLowerCase() === 'help' || token === '帮助') {
+      help = true
+      continue
+    }
     if (token === '--all') {
       showAll = true
       continue
@@ -115,6 +116,7 @@ function parseMblogsInput(content) {
   return {
     keyword: keywordParts.join(' '),
     showAll,
+    help,
     rank,
     job
   }
@@ -225,6 +227,10 @@ function mapRow(record) {
 }
 
 async function queryMblogs(content, { showAll = false, rank, job } = {}) {
+  if (isMblogsHelpRequest(content)) {
+    return { help: buildMblogsHelp() }
+  }
+
   const query = resolveQueryType(content)
   if (query.type === 'help') {
     return { error: '用法：mblogs 角色名 / mblogs 布里列赫 / mblogs Boss名 / mblogs 布里列赫 --all / mblogs 布里列赫 --rank 20 / mblogs Boss名 --job 流星射手' }
@@ -290,16 +296,21 @@ async function mblogs(content, from, callback) {
   }
 
   const keyword = String(content || '').trim()
-  if (isMblogsHelpRequest(keyword)) {
+  const parsed = parseMblogsInput(keyword)
+  if (isMblogsHelpRequest(keyword) || parsed.help) {
     callback(buildMblogsHelp())
     return
   }
 
-  const { keyword: queryKeyword, showAll, rank, job } = parseMblogsInput(keyword)
+  const { keyword: queryKeyword, showAll, rank, job } = parsed
   const resolvedKeyword = queryKeyword || DEFAULT_DUNGEON
 
   try {
     const result = await queryMblogs(resolvedKeyword, { showAll, rank, job })
+    if (result.help) {
+      callback(result.help)
+      return
+    }
     if (result.error) {
       callback(result.error)
       return
