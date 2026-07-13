@@ -1,4 +1,7 @@
 const HP_TOLERANCE = 10_000_000
+const PETAK_PHASE_TOLERANCE = 40_000_000
+const PETAK_COMBINED_KILL_HP = 900_000_000
+const PETAK_COMBINED_TOLERANCE = 40_000_000
 
 const DUNGEONS = [
   {
@@ -72,6 +75,44 @@ function matchBossByHp(packageMaxHp) {
   return matched
 }
 
+function getKillTolerance(boss) {
+  return boss?.groupKey === 'petak' ? PETAK_PHASE_TOLERANCE : HP_TOLERANCE
+}
+
+function isPetakPhaseKillCompleted(target) {
+  const packageMaxHp = Number(target?.bossHP?.maxHp ?? target?.maxHp)
+  const totalDamage = Number(target.totalDamage)
+  if (!Number.isFinite(packageMaxHp) || !Number.isFinite(totalDamage)) {
+    return false
+  }
+
+  const boss = matchBossByHp(packageMaxHp)
+  if (!boss || boss.groupKey !== 'petak') return false
+  const killHp = getBossKillHp(boss)
+  return Math.abs(totalDamage - killHp) <= PETAK_PHASE_TOLERANCE
+}
+
+function getPetakPhaseKillDiff(target) {
+  const packageMaxHp = Number(target?.bossHP?.maxHp ?? target?.maxHp)
+  const totalDamage = Number(target.totalDamage)
+  const boss = matchBossByHp(packageMaxHp)
+  if (!boss || boss.groupKey !== 'petak') return Infinity
+  return Math.abs(totalDamage - getBossKillHp(boss))
+}
+
+function isPetakCombinedKillCompleted(phases) {
+  const p1 = phases.find(phase => phase.boss.key === 'petak_p1')
+  const p2 = phases.find(phase => phase.boss.key === 'petak_p2')
+  if (!p1 || !p2) return false
+  if (!isPetakPhaseKillCompleted(p1.target) || !isPetakPhaseKillCompleted(p2.target)) {
+    return false
+  }
+
+  const combinedDamage = Number(p1.target.totalDamage) + Number(p2.target.totalDamage)
+  if (!Number.isFinite(combinedDamage)) return false
+  return Math.abs(combinedDamage - PETAK_COMBINED_KILL_HP) <= PETAK_COMBINED_TOLERANCE
+}
+
 function isBossKillCompleted(target) {
   const packageMaxHp = Number(target?.bossHP?.maxHp ?? target?.maxHp)
   const totalDamage = Number(target.totalDamage)
@@ -80,6 +121,10 @@ function isBossKillCompleted(target) {
   }
 
   const boss = matchBossByHp(packageMaxHp)
+  if (boss?.groupKey === 'petak') {
+    return isPetakPhaseKillCompleted(target)
+  }
+
   const killHp = boss ? getBossKillHp(boss) : packageMaxHp
   return Math.abs(totalDamage - killHp) <= HP_TOLERANCE
 }
@@ -101,7 +146,7 @@ function resolveBossGroupKey(bossKeyOrGroup) {
 }
 
 function getPetakCombinedKillHp(phases = BOSSES.filter(boss => boss.groupKey === 'petak')) {
-  return phases.reduce((sum, boss) => sum + getBossKillHp(boss), 0)
+  return PETAK_COMBINED_KILL_HP
 }
 
 function getGroupSortHp(groupKey) {
@@ -210,10 +255,17 @@ function shortRunId(runId) {
 
 module.exports = {
   HP_TOLERANCE,
+  PETAK_PHASE_TOLERANCE,
+  PETAK_COMBINED_KILL_HP,
+  PETAK_COMBINED_TOLERANCE,
   DUNGEONS,
   BOSSES,
   matchBossByHp,
   isBossKillCompleted,
+  isPetakPhaseKillCompleted,
+  isPetakCombinedKillCompleted,
+  getPetakPhaseKillDiff,
+  getKillTolerance,
   getBossMatchHp,
   getBossKillHp,
   getBossKeysByGroup,

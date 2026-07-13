@@ -3,7 +3,11 @@ const { centiToMs } = require('./validate')
 const {
   matchBossByHp,
   isBossKillCompleted,
-  getBossKillHp
+  isPetakPhaseKillCompleted,
+  isPetakCombinedKillCompleted,
+  getPetakPhaseKillDiff,
+  getBossKillHp,
+  PETAK_COMBINED_KILL_HP
 } = require('./bossConfig')
 const { collectPcAttackers, buildTeammateNames } = require('./team')
 const { buildRunCharacterClasses } = require('./classDetect')
@@ -57,15 +61,27 @@ function buildRecordForTarget({
   return records
 }
 
+function pickBestPetakPhase(current, candidate) {
+  if (!current) return candidate
+  const currentPassed = isPetakPhaseKillCompleted(current.target)
+  const candidatePassed = isPetakPhaseKillCompleted(candidate.target)
+  if (currentPassed !== candidatePassed) {
+    return candidatePassed ? candidate : current
+  }
+
+  const currentDiff = getPetakPhaseKillDiff(current.target)
+  const candidateDiff = getPetakPhaseKillDiff(candidate.target)
+  return candidateDiff < currentDiff ? candidate : current
+}
+
 function collectPetakPhases(targets) {
   const byKey = new Map()
   for (const target of targets || []) {
     const maxHp = Number(target?.bossHP?.maxHp)
     const boss = matchBossByHp(maxHp)
     if (boss?.groupKey !== 'petak') continue
-    if (!byKey.has(boss.key)) {
-      byKey.set(boss.key, { boss, target })
-    }
+    const candidate = { boss, target }
+    byKey.set(boss.key, pickBestPetakPhase(byKey.get(boss.key), candidate))
   }
 
   const phases = []
@@ -77,10 +93,7 @@ function collectPetakPhases(targets) {
 }
 
 function canRecordPetakCombined(phases) {
-  if (!phases.length) return false
-  const p1 = phases.find(phase => phase.boss.key === 'petak_p1')
-  if (p1) return isBossKillCompleted(p1.target)
-  return phases.some(phase => isBossKillCompleted(phase.target))
+  return isPetakCombinedKillCompleted(phases)
 }
 
 function buildPetakCombinedRecords({
@@ -94,7 +107,7 @@ function buildPetakCombinedRecords({
 
   const sortedPhases = [...phases].sort((a, b) => getBossKillHp(a.boss) - getBossKillHp(b.boss))
   const sampleBoss = sortedPhases[0].boss
-  const bossHp = sortedPhases.reduce((sum, phase) => sum + getBossKillHp(phase.boss), 0)
+  const bossHp = PETAK_COMBINED_KILL_HP
   const duration = sortedPhases.reduce((sum, phase) => sum + (Number(phase.target.duration) || 0), 0)
   const recordTimeMs = Math.max(...sortedPhases.map(phase => centiToMs(phase.target.cleanedAt) || uploadTime.getTime()))
   const recordTime = new Date(recordTimeMs)
