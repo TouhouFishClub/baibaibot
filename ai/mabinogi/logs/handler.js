@@ -16,6 +16,8 @@ const {
 const { enqueueParseJob } = require('./queue')
 const { maxFileBytes } = require('./config')
 const { buildTeamSignature } = require('./team')
+const { extractSummary } = require('./parser')
+const { logReceive } = require('./receiveLog')
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -34,20 +36,36 @@ function sendJson(res, status, body) {
   res.status(status).json(body)
 }
 
+function logUploadReject(ip, reason, fields = {}, extra = {}) {
+  logReceive({
+    event: 'upload_reject',
+    ip,
+    reason,
+    playerId: fields.playerId ? String(fields.playerId).trim() : undefined,
+    playerName: fields.playerName ? String(fields.playerName).trim() : undefined,
+    dungeonName: fields.dungeonName ? String(fields.dungeonName).trim() : undefined,
+    fileName: fields.fileName ? String(fields.fileName).trim() : undefined,
+    ...extra
+  })
+}
+
 async function handleUpload(req, res) {
   const ip = getClientIp(req)
   const fields = req.body || {}
   const fieldCheck = validateUploadFields(fields)
   if (!fieldCheck.ok) {
+    logUploadReject(ip, fieldCheck.reason, fields)
     return sendJson(res, 400, { ok: false, error: fieldCheck.reason })
   }
 
   if (!uploadSecretKey.length) {
+    logUploadReject(ip, 'server_secret_missing', fields)
     return sendJson(res, 401, { ok: false, error: 'server_secret_missing' })
   }
 
   const headerResult = await verifyUploadHeaders(req, { reserve: false })
   if (!headerResult.ok) {
+    logUploadReject(ip, headerResult.reason, fields)
     return sendJson(res, 401, { ok: false, error: headerResult.reason })
   }
 
@@ -60,11 +78,13 @@ async function handleUpload(req, res) {
 
   const rate = isRateLimited(ip, playerId)
   if (rate.limited) {
+    logUploadReject(ip, 'rate_limited', fields, { scope: rate.reason })
     return sendJson(res, 429, { ok: false, error: 'rate_limited', scope: rate.reason })
   }
 
   const file = (req.files || []).find(item => item.fieldname === 'file') || req.file
   if (!file || !file.buffer) {
+    logUploadReject(ip, 'missing_file', fields)
     return sendJson(res, 400, { ok: false, error: 'missing_file' })
   }
 
@@ -72,20 +92,34 @@ async function handleUpload(req, res) {
   const authHeader = req.headers.authorization || req.headers.Authorization
   const signResult = verifySignature(headerResult.timestamp, headerResult.nonce, playerId, gzData, authHeader)
   if (!signResult.ok) {
+    logUploadReject(ip, signResult.reason, fields)
     return sendJson(res, 401, { ok: false, error: signResult.reason })
   }
 
   const nonceOk = await reserveNonce(headerResult.nonce)
   if (!nonceOk) {
+    logUploadReject(ip, 'nonce_replay', fields)
     return sendJson(res, 401, { ok: false, error: 'nonce_replay' })
   }
 
   if (signResult.fileHashHex !== contentSha256) {
+    logUploadReject(ip, 'content_sha256_mismatch', fields)
     return sendJson(res, 400, { ok: false, error: 'content_sha256_mismatch' })
   }
 
   const duplicate = await findDuplicate({ playerId, contentSha256, fileName })
   if (duplicate) {
+    logReceive({
+      event: 'upload_duplicate',
+      ip,
+      reason: 'content_or_filename_duplicate',
+      duplicate: true,
+      playerId,
+      playerName,
+      dungeonName,
+      fileName,
+      reportId: duplicate._id
+    })
     return sendJson(res, 200, {
       ok: true,
       reportId: duplicate._id,
@@ -96,6 +130,7 @@ async function handleUpload(req, res) {
 
   const parsed = parseGzipJson(gzData)
   if (!parsed.ok) {
+    logUploadReject(ip, parsed.reason, fields, { fileBytes: gzData.length })
     return sendJson(res, 400, { ok: false, error: parsed.reason })
   }
 
@@ -104,6 +139,25 @@ async function handleUpload(req, res) {
   if (!skipTeamDedup) {
     const teamDuplicate = await findTeamDuplicate({ dungeonName, teamSignature })
     if (teamDuplicate) {
+      const summary = extractSummary(parsed.data)
+      logReceive({
+        event: 'upload_duplicate',
+        ip,
+        reason: 'team_duplicate',
+        duplicate: true,
+        playerId,
+        playerName,
+        dungeonName,
+        fileName,
+        reportId: teamDuplicate._id,
+        targetCount: summary.targetCount,
+        targets: summary.targets.map(item => ({
+          targetName: item.targetName,
+          maxHp: item.maxHp,
+          totalDamage: item.totalDamage,
+          duration: item.duration
+        }))
+      })
       return sendJson(res, 200, {
         ok: true,
         reportId: teamDuplicate._id,
@@ -137,6 +191,17 @@ async function handleUpload(req, res) {
   } catch (error) {
     if (error && error.code === 11000) {
       const dup = await findDuplicate({ playerId, contentSha256, fileName })
+      logReceive({
+        event: 'upload_duplicate',
+        ip,
+        reason: 'content_or_filename_duplicate',
+        duplicate: true,
+        playerId,
+        playerName,
+        dungeonName,
+        fileName,
+        reportId: dup?._id
+      })
       return sendJson(res, 200, {
         ok: true,
         reportId: dup?._id,
@@ -146,6 +211,29 @@ async function handleUpload(req, res) {
     }
     throw error
   }
+
+  const summary = extractSummary(parsed.data)
+  logReceive({
+    event: 'upload_accept',
+    ip,
+    playerId,
+    playerName,
+    dungeonName,
+    fileName,
+    clientVersion,
+    contentSha256,
+    fileBytes: gzData.length,
+    reportId,
+    targetCount: summary.targetCount,
+    totalDamage: summary.totalDamage,
+    targets: summary.targets.map(item => ({
+      targetName: item.targetName,
+      maxHp: item.maxHp,
+      totalDamage: item.totalDamage,
+      duration: item.duration,
+      attackerCount: item.attackerCount
+    }))
+  })
 
   enqueueParseJob({ reportId, sourceRelPath, dungeonName })
   return sendJson(res, 200, { ok: true, reportId })

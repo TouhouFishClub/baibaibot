@@ -9,6 +9,7 @@ const {
   getReportById
 } = require('./db')
 const { buildDpsRecords } = require('./records')
+const { logReceive } = require('./receiveLog')
 
 const queue = []
 let draining = false
@@ -18,18 +19,34 @@ async function processReportJob(job) {
   const upload = await getReportById(reportId)
   const buffer = readSourceFile(sourceRelPath)
   if (!buffer) {
+    logReceive({ event: 'parse_fail', reportId, dungeonName, reason: 'source_file_missing' })
     await updateReportFailed(reportId, 'source_file_missing')
     return
   }
 
   const parsed = parseGzipJson(buffer)
   if (!parsed.ok) {
+    logReceive({ event: 'parse_fail', reportId, dungeonName, reason: parsed.reason })
     await updateReportFailed(reportId, parsed.reason)
     return
   }
 
   const semantic = validateSemantic(parsed.data, dungeonName)
   if (!semantic.ok) {
+    const summary = extractSummary(parsed.data)
+    logReceive({
+      event: 'parse_fail',
+      reportId,
+      dungeonName,
+      reason: semantic.reason,
+      targetCount: summary.targetCount,
+      targets: summary.targets.map(item => ({
+        targetName: item.targetName,
+        maxHp: item.maxHp,
+        totalDamage: item.totalDamage,
+        duration: item.duration
+      }))
+    })
     await updateReportFailed(reportId, semantic.reason)
     return
   }
@@ -49,6 +66,24 @@ async function processReportJob(job) {
   if (dpsRecords.length) {
     await insertDpsRecords(dpsRecords)
   }
+
+  logReceive({
+    event: 'parse_ok',
+    reportId,
+    dungeonName,
+    playerId: upload?.playerId,
+    playerName: upload?.playerName,
+    targetCount: summary.targetCount,
+    validRecordCount: dpsRecords.length,
+    totalDamage: summary.totalDamage,
+    records: dpsRecords.map(item => ({
+      bossName: item.bossName,
+      bossHp: item.bossHp,
+      characterName: item.characterName,
+      dps: item.dps,
+      percent: item.percent
+    }))
+  })
 }
 
 async function drainQueue() {

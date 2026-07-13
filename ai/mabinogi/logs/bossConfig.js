@@ -8,6 +8,11 @@ const DUNGEONS = [
     key: 'bri_lech',
     name: '布里列赫',
     aliases: ['布里列赫']
+  },
+  {
+    key: 'pespiade',
+    name: '佩斯皮亚德',
+    aliases: ['佩斯皮亚德']
   }
 ]
 
@@ -50,6 +55,14 @@ const BOSSES = [
     aliases: ['雷内恩的米耶尔：悔恨', '悔恨', '米耶尔：悔恨'],
     groupKey: 'mayer_regret',
     referenceHp: 3_449_000_000
+  },
+  {
+    key: 'galta',
+    displayName: '塔赫杜因盖尔塔',
+    aliases: ['塔赫杜因盖尔塔', '盖尔塔'],
+    groupKey: 'galta',
+    referenceHp: 262_500,
+    hpTolerance: 50_000
   }
 ]
 
@@ -61,13 +74,33 @@ function getBossKillHp(boss) {
   return boss.markKillHp ?? boss.referenceHp ?? boss.maxHp
 }
 
+function getBossHpTolerance(boss) {
+  return boss?.hpTolerance ?? HP_TOLERANCE
+}
+
+function matchesDungeonName(dungeonName) {
+  const name = String(dungeonName || '')
+  if (!name) return false
+  return DUNGEONS.some(dungeon => {
+    const names = [dungeon.name, ...(dungeon.aliases || [])]
+    return names.some(alias => name.includes(alias))
+  })
+}
+
+function isKnownBossTarget(target) {
+  const maxHp = Number(target?.bossHP?.maxHp)
+  if (!Number.isFinite(maxHp)) return false
+  return matchBossByHp(maxHp) != null
+}
+
 function matchBossByHp(packageMaxHp) {
   if (!Number.isFinite(packageMaxHp)) return null
   let matched = null
   let bestDiff = Infinity
   for (const boss of BOSSES) {
     const diff = Math.abs(packageMaxHp - getBossMatchHp(boss))
-    if (diff <= HP_TOLERANCE && diff < bestDiff) {
+    const tolerance = getBossHpTolerance(boss)
+    if (diff <= tolerance && diff < bestDiff) {
       matched = boss
       bestDiff = diff
     }
@@ -126,7 +159,8 @@ function isBossKillCompleted(target) {
   }
 
   const killHp = boss ? getBossKillHp(boss) : packageMaxHp
-  return Math.abs(totalDamage - killHp) <= HP_TOLERANCE
+  const tolerance = boss ? getBossHpTolerance(boss) : HP_TOLERANCE
+  return Math.abs(totalDamage - killHp) <= tolerance
 }
 
 function getBossKeysByGroup(groupKey) {
@@ -268,6 +302,9 @@ module.exports = {
   getKillTolerance,
   getBossMatchHp,
   getBossKillHp,
+  getBossHpTolerance,
+  matchesDungeonName,
+  isKnownBossTarget,
   getBossKeysByGroup,
   resolveBossGroupKey,
   getPetakCombinedKillHp,

@@ -1,12 +1,12 @@
 const zlib = require('zlib')
 const {
-  dungeonKeyword,
   minBossMaxHp,
   minDuration,
   maxDuration,
   maxHistoryDays,
   maxFileBytes
 } = require('./config')
+const { matchesDungeonName, isKnownBossTarget } = require('./bossConfig')
 
 function centiToMs(value) {
   if (value == null || value === '') return null
@@ -65,7 +65,7 @@ function validateUploadFields(fields) {
 }
 
 function validateSemantic(data, dungeonName) {
-  if (!dungeonName || !String(dungeonName).includes(dungeonKeyword)) {
+  if (!matchesDungeonName(dungeonName)) {
     return { ok: false, reason: 'dungeon_keyword_mismatch' }
   }
 
@@ -74,7 +74,7 @@ function validateSemantic(data, dungeonName) {
 
   for (const target of data.targets) {
     const maxHp = target?.bossHP?.maxHp
-    if (!Number.isFinite(maxHp) || maxHp < minBossMaxHp) {
+    if (!Number.isFinite(maxHp) || (maxHp < minBossMaxHp && !isKnownBossTarget(target))) {
       return { ok: false, reason: 'boss_hp_too_low' }
     }
     if (!Number.isFinite(target.duration) || target.duration < minDuration || target.duration > maxDuration) {
