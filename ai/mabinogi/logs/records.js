@@ -3,9 +3,7 @@ const { centiToMs } = require('./validate')
 const {
   matchBossByHp,
   isBossKillCompleted,
-  isPetakPhaseKillCompleted,
   isPetakCombinedKillCompleted,
-  getPetakPhaseKillDiff,
   getBossKillHp,
   PETAK_COMBINED_KILL_HP
 } = require('./bossConfig')
@@ -61,35 +59,52 @@ function buildRecordForTarget({
   return records
 }
 
-function pickBestPetakPhase(current, candidate) {
-  if (!current) return candidate
-  const currentPassed = isPetakPhaseKillCompleted(current.target)
-  const candidatePassed = isPetakPhaseKillCompleted(candidate.target)
-  if (currentPassed !== candidatePassed) {
-    return candidatePassed ? candidate : current
-  }
-
-  const currentDiff = getPetakPhaseKillDiff(current.target)
-  const candidateDiff = getPetakPhaseKillDiff(candidate.target)
-  return candidateDiff < currentDiff ? candidate : current
+function getPetakTargetSortTime(target) {
+  return centiToMs(target.appearedAt)
+    || centiToMs(target.deathTime)
+    || centiToMs(target.cleanedAt)
+    || 0
 }
 
-function collectPetakPhases(targets) {
-  const byKey = new Map()
+function collectPetakTargets(targets) {
+  const items = []
   for (const target of targets || []) {
     const maxHp = Number(target?.bossHP?.maxHp)
     const boss = matchBossByHp(maxHp)
     if (boss?.groupKey !== 'petak') continue
-    const candidate = { boss, target }
-    byKey.set(boss.key, pickBestPetakPhase(byKey.get(boss.key), candidate))
+    items.push({ boss, target, sortTime: getPetakTargetSortTime(target) })
+  }
+  return items.sort((a, b) => a.sortTime - b.sortTime)
+}
+
+// 按出现时间顺序将 P1 与紧随其后的 P2 配对，不跨轮次组合
+function collectPetakPhasePairs(targets) {
+  const sorted = collectPetakTargets(targets)
+  const pairs = []
+  let pendingP1 = null
+
+  for (const item of sorted) {
+    if (item.boss.key === 'petak_p1') {
+      pendingP1 = item
+      continue
+    }
+
+    if (item.boss.key === 'petak_p2') {
+      if (!pendingP1) continue
+      pairs.push([
+        { boss: pendingP1.boss, target: pendingP1.target },
+        { boss: item.boss, target: item.target }
+      ])
+      pendingP1 = null
+    }
   }
 
-  const phases = []
-  for (const key of ['petak_p1', 'petak_p2']) {
-    const phase = byKey.get(key)
-    if (phase) phases.push(phase)
-  }
-  return phases
+  return pairs
+}
+
+function collectPetakPhases(targets) {
+  const pairs = collectPetakPhasePairs(targets)
+  return pairs[0] || []
 }
 
 function canRecordPetakCombined(phases) {
@@ -169,7 +184,7 @@ function buildDpsRecords({
   const uploadTime = uploadedAt instanceof Date ? uploadedAt : new Date(uploadedAt)
   const characterClasses = buildRunCharacterClasses(data)
   const targets = data.targets || []
-  const petakPhases = collectPetakPhases(targets)
+  const petakPairs = collectPetakPhasePairs(targets)
 
   for (const target of targets) {
     const maxHp = Number(target?.bossHP?.maxHp)
@@ -187,12 +202,13 @@ function buildDpsRecords({
     }))
   }
 
-  if (canRecordPetakCombined(petakPhases)) {
+  for (const phases of petakPairs) {
+    if (!canRecordPetakCombined(phases)) continue
     records.push(...buildPetakCombinedRecords({
       runId,
       dungeonName,
       uploadTime,
-      phases: petakPhases,
+      phases,
       characterClasses
     }))
   }
@@ -203,6 +219,7 @@ function buildDpsRecords({
 module.exports = {
   buildDpsRecords,
   buildPetakCombinedRecords,
+  collectPetakPhasePairs,
   collectPetakPhases,
   canRecordPetakCombined
 }
