@@ -1,10 +1,5 @@
 const { centiToMs } = require('./validate')
-const {
-  matchBossByHp,
-  isBossKillCompleted,
-  isPetakCombinedKillCompleted
-} = require('./bossConfig')
-const { collectPetakPhasePairs } = require('./records')
+const { getKilledTargetsForRun } = require('./records')
 
 const COLORS = [
   '#ffc107',
@@ -281,39 +276,8 @@ function buildBossPanel(target) {
   }
 }
 
-function getTargetKey(target) {
-  return String(target?.targetId || target?.targetName || '')
-}
-
-function filterKilledTargets(targets = []) {
-  const sorted = sortTargets(targets)
-  const includedPetakKeys = new Set()
-
-  for (const phases of collectPetakPhasePairs(sorted)) {
-    if (!isPetakCombinedKillCompleted(phases)) continue
-    for (const phase of phases) {
-      includedPetakKeys.add(getTargetKey(phase.target))
-    }
-  }
-
-  const result = []
-  for (const target of sorted) {
-    const boss = matchBossByHp(Number(target?.bossHP?.maxHp))
-    if (boss?.groupKey === 'petak') {
-      if (includedPetakKeys.has(getTargetKey(target))) {
-        result.push(target)
-      }
-      continue
-    }
-    if (isBossKillCompleted(target)) {
-      result.push(target)
-    }
-  }
-  return result
-}
-
 function buildRunPanels(data) {
-  return filterKilledTargets(data?.targets || []).map(buildBossPanel)
+  return getKilledTargetsForRun(data?.targets || []).map(buildBossPanel)
 }
 
 module.exports = {
@@ -326,7 +290,6 @@ module.exports = {
   getDisplayName,
   buildRunPanels,
   buildBossPanel,
-  filterKilledTargets,
   computeDpsSeries,
   sampleBossHpMarkers
 }

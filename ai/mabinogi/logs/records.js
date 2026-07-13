@@ -59,43 +59,36 @@ function buildRecordForTarget({
   return records
 }
 
-function getPetakTargetSortTime(target) {
+function getTargetSortTime(target) {
   return centiToMs(target.appearedAt)
     || centiToMs(target.deathTime)
     || centiToMs(target.cleanedAt)
     || 0
 }
 
-function collectPetakTargets(targets) {
-  const items = []
-  for (const target of targets || []) {
-    const maxHp = Number(target?.bossHP?.maxHp)
-    const boss = matchBossByHp(maxHp)
-    if (boss?.groupKey !== 'petak') continue
-    items.push({ boss, target, sortTime: getPetakTargetSortTime(target) })
-  }
-  return items.sort((a, b) => a.sortTime - b.sortTime)
+function getTargetKey(target) {
+  return String(target?.targetId || target?.targetName || '')
 }
 
-// 按出现时间顺序将 P1 与紧随其后的 P2 配对，不跨轮次组合
+function sortTargetsByTime(targets = []) {
+  return [...targets].sort((a, b) => getTargetSortTime(a) - getTargetSortTime(b))
+}
+
+// 在全 targets 时间序中，仅当 P1 与紧随其后的 P2 相邻时配对
 function collectPetakPhasePairs(targets) {
-  const sorted = collectPetakTargets(targets)
+  const sorted = sortTargetsByTime(targets)
   const pairs = []
-  let pendingP1 = null
 
-  for (const item of sorted) {
-    if (item.boss.key === 'petak_p1') {
-      pendingP1 = item
-      continue
-    }
-
-    if (item.boss.key === 'petak_p2') {
-      if (!pendingP1) continue
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const current = sorted[i]
+    const next = sorted[i + 1]
+    const bossCurrent = matchBossByHp(Number(current?.bossHP?.maxHp))
+    const bossNext = matchBossByHp(Number(next?.bossHP?.maxHp))
+    if (bossCurrent?.key === 'petak_p1' && bossNext?.key === 'petak_p2') {
       pairs.push([
-        { boss: pendingP1.boss, target: pendingP1.target },
-        { boss: item.boss, target: item.target }
+        { boss: bossCurrent, target: current },
+        { boss: bossNext, target: next }
       ])
-      pendingP1 = null
     }
   }
 
@@ -216,10 +209,39 @@ function buildDpsRecords({
   return records
 }
 
+function getKilledTargetsForRun(targets = []) {
+  const sorted = sortTargetsByTime(targets)
+  const includedPetakKeys = new Set()
+
+  for (const phases of collectPetakPhasePairs(sorted)) {
+    if (!canRecordPetakCombined(phases)) continue
+    for (const phase of phases) {
+      includedPetakKeys.add(getTargetKey(phase.target))
+    }
+  }
+
+  const result = []
+  for (const target of sorted) {
+    const boss = matchBossByHp(Number(target?.bossHP?.maxHp))
+    if (boss?.groupKey === 'petak') {
+      if (includedPetakKeys.has(getTargetKey(target))) {
+        result.push(target)
+      }
+      continue
+    }
+    if (isBossKillCompleted(target)) {
+      result.push(target)
+    }
+  }
+  return result
+}
+
 module.exports = {
   buildDpsRecords,
   buildPetakCombinedRecords,
   collectPetakPhasePairs,
   collectPetakPhases,
-  canRecordPetakCombined
+  canRecordPetakCombined,
+  getKilledTargetsForRun,
+  sortTargetsByTime
 }
