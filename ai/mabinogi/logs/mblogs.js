@@ -35,6 +35,24 @@ function flattenGroups(groups) {
 
 const DEFAULT_DUNGEON = '布里列赫'
 
+function parseMblogsInput(content) {
+  const tokens = String(content || '').trim().split(/\s+/).filter(Boolean)
+  const showAll = tokens.includes('--all')
+  const keyword = tokens.filter(token => token !== '--all').join(' ')
+  return { keyword, showAll }
+}
+
+function buildRankDescription({ mode, showAll }) {
+  if (mode === 'character') {
+    return '各 Boss 前三名（仅统计已击杀）'
+  }
+  const rank = mode === 'dungeon' ? '各 Boss 前十名' : '前十名'
+  if (showAll) {
+    return `${rank}（仅统计已击杀）`
+  }
+  return `${rank}（每角色仅保留最高 DPS）`
+}
+
 function buildColumns(mode) {
   const common = [
     { label: '副本', key: 'dungeonName', format: v => truncate(v, 8) },
@@ -109,11 +127,13 @@ function mapRow(record) {
   }
 }
 
-async function queryMblogs(content) {
+async function queryMblogs(content, { showAll = false } = {}) {
   const query = resolveQueryType(content)
   if (query.type === 'help') {
-    return { error: '用法：mblogs 角色名 / mblogs 布里列赫 / mblogs Boss名' }
+    return { error: '用法：mblogs 角色名 / mblogs 布里列赫 / mblogs Boss名 / mblogs 布里列赫 --all' }
   }
+
+  const rankOptions = { bestPerCharacter: !showAll }
 
   if (query.type === 'character') {
     const groups = await listRecordsByCharacter(query.name, 3)
@@ -123,20 +143,20 @@ async function queryMblogs(content) {
     }
     return {
       title: `DPS记录：${query.name}`,
-      description: '各 Boss 前三名（仅统计已击杀）',
+      description: buildRankDescription({ mode: 'character', showAll }),
       mode: 'character',
       rows
     }
   }
 
   if (query.type === 'dungeon') {
-    const groups = await listRecordsByDungeon(query.dungeon.name, 10)
+    const groups = await listRecordsByDungeon(query.dungeon.name, 10, rankOptions)
     if (!groups.length) {
       return { error: `未找到副本「${query.dungeon.name}」的 DPS 记录` }
     }
     return {
       title: `DPS记录：${query.dungeon.name}`,
-      description: '各 Boss 前十名（仅统计已击杀）',
+      description: buildRankDescription({ mode: 'dungeon', showAll }),
       mode: 'dungeon',
       sections: groups.map(group => ({
         title: group.bossName,
@@ -145,14 +165,14 @@ async function queryMblogs(content) {
     }
   }
 
-  const records = await listRecordsByBoss(query.boss.groupKey, 10)
+  const records = await listRecordsByBoss(query.boss.groupKey, 10, rankOptions)
   const rows = records.map(mapRow)
   if (!rows.length) {
     return { error: `未找到 Boss「${query.boss.displayName}」的 DPS 记录` }
   }
   return {
     title: `DPS记录：${query.boss.displayName}`,
-    description: '前十名（仅统计已击杀）',
+    description: buildRankDescription({ mode: 'boss', showAll }),
     mode: 'boss',
     rows
   }
@@ -166,14 +186,15 @@ async function mblogs(content, from, callback) {
 
   const keyword = String(content || '').trim()
   if (keyword.toLowerCase() === 'help' || keyword === '帮助') {
-    callback(`用法：\nmblogs（默认${DEFAULT_DUNGEON}）\nmblogs 角色名\nmblogs ${DEFAULT_DUNGEON}\nmblogs Boss名`)
+    callback(`用法：\nmblogs（默认${DEFAULT_DUNGEON}）\nmblogs 角色名\nmblogs ${DEFAULT_DUNGEON}\nmblogs Boss名\nmblogs ${DEFAULT_DUNGEON} --all`)
     return
   }
 
-  const queryKeyword = keyword || DEFAULT_DUNGEON
+  const { keyword: queryKeyword, showAll } = parseMblogsInput(keyword)
+  const resolvedKeyword = queryKeyword || DEFAULT_DUNGEON
 
   try {
-    const result = await queryMblogs(queryKeyword)
+    const result = await queryMblogs(resolvedKeyword, { showAll })
     if (result.error) {
       callback(result.error)
       return

@@ -176,19 +176,32 @@ async function listDpsRecords(query, { sort = { dps: -1 }, limit = 100 } = {}) {
     .toArray()
 }
 
+function dedupeBestPerCharacter(records) {
+  const best = new Map()
+  for (const record of records) {
+    const key = String(record.characterId || record.characterName || '').trim()
+    if (!key) continue
+    const prev = best.get(key)
+    if (!prev || Number(record.dps) > Number(prev.dps)) {
+      best.set(key, record)
+    }
+  }
+  return [...best.values()]
+}
+
 async function listRecordsByCharacter(characterName, limitPerBoss = 3) {
   const regex = new RegExp(characterName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
   const all = await listDpsRecords({ characterName: regex }, { limit: 500 })
   return groupTopByBoss(all, limitPerBoss)
 }
 
-async function listRecordsByDungeon(dungeonName, limitPerBoss = 10) {
+async function listRecordsByDungeon(dungeonName, limitPerBoss = 10, { bestPerCharacter = true } = {}) {
   const regex = new RegExp(dungeonName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
   const all = await listDpsRecords({ dungeonName: regex }, { limit: 1000 })
-  return groupTopByBoss(all, limitPerBoss)
+  return groupTopByBoss(all, limitPerBoss, { bestPerCharacter })
 }
 
-async function listRecordsByBoss(groupKey, limit = 10) {
+async function listRecordsByBoss(groupKey, limit = 10, { bestPerCharacter = true } = {}) {
   const bossKeys = getBossKeysByGroup(groupKey)
   const all = await listDpsRecords({
     $or: [
@@ -196,10 +209,14 @@ async function listRecordsByBoss(groupKey, limit = 10) {
       { bossKey: { $in: bossKeys } }
     ]
   }, { limit: 500 })
-  return all.sort((a, b) => b.dps - a.dps).slice(0, limit)
+  let sorted = all.sort((a, b) => b.dps - a.dps)
+  if (bestPerCharacter) {
+    sorted = dedupeBestPerCharacter(sorted)
+  }
+  return sorted.slice(0, limit)
 }
 
-function groupTopByBoss(records, limitPerBoss) {
+function groupTopByBoss(records, limitPerBoss, { bestPerCharacter = false } = {}) {
   const groups = new Map()
   for (const record of records) {
     const key = resolveBossGroupKey(record.bossGroup || record.bossKey || record.bossName || 'unknown')
@@ -209,7 +226,11 @@ function groupTopByBoss(records, limitPerBoss) {
 
   const result = []
   for (const [groupKey, items] of groups) {
-    const sorted = items.sort((a, b) => b.dps - a.dps).slice(0, limitPerBoss)
+    let candidates = items
+    if (bestPerCharacter) {
+      candidates = dedupeBestPerCharacter(items)
+    }
+    const sorted = candidates.sort((a, b) => b.dps - a.dps).slice(0, limitPerBoss)
     result.push({
       bossKey: groupKey,
       bossName: sorted[0]?.bossName || groupKey,
@@ -236,5 +257,6 @@ module.exports = {
   listRecordsByCharacter,
   listRecordsByDungeon,
   listRecordsByBoss,
+  dedupeBestPerCharacter,
   reserveNonce
 }
