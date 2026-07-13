@@ -191,8 +191,7 @@ function dedupeBestPerCharacter(records) {
 
 function appendClassFilter(query, characterClass) {
   if (!characterClass) return query
-  const regex = new RegExp(String(characterClass).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-  return { ...query, characterClass: regex }
+  return { ...query, characterClass: String(characterClass) }
 }
 
 async function listRecordsByCharacter(characterName, limitPerBoss = 3, { characterClass } = {}) {
