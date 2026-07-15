@@ -309,7 +309,7 @@ function buildRunDetailHtml({ title, description, panels }) {
       white-space: nowrap;
     }
     .rank-number { color: #888; font-weight: 700; }
-    .rank-name { color: #ccc; max-width: 90px; overflow: hidden; text-overflow: ellipsis; }
+    .rank-name { color: #ccc; max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
     .rank-dps { color: #64b5f6; font-weight: 700; }
     .chart-body { padding: 4px 8px 8px; }
   </style>

@@ -1,5 +1,7 @@
 const { centiToMs } = require('./validate')
 const { getKilledTargetsForRun } = require('./records')
+const { buildRunCharacterClasses } = require('./classDetect')
+const { UNKNOWN_CLASS } = require('./classConfig')
 
 const COLORS = [
   '#ffc107',
@@ -57,13 +59,17 @@ function formatDuration(seconds) {
   return `${hours}时${mins}分`
 }
 
-function getDisplayName(id, name) {
+function getDisplayName(id, name, characterClass) {
   const textId = String(id || '')
   const shortId = textId.length > 6 ? textId.slice(-6) : textId
   const label = String(name || '').trim()
   const isValidName = label && label !== textId && label !== shortId
-  if (isValidName) return `${label}(${shortId})`
-  return `未知(${shortId})`
+  const base = isValidName ? `${label}(${shortId})` : `未知(${shortId})`
+  const cls = String(characterClass || '').trim()
+  if (cls && cls !== UNKNOWN_CLASS) {
+    return `【${cls}】${base}`
+  }
+  return base
 }
 
 function compareHits(a, b) {
@@ -71,7 +77,7 @@ function compareHits(a, b) {
   return (a.seq ?? Number.MAX_SAFE_INTEGER) - (b.seq ?? Number.MAX_SAFE_INTEGER)
 }
 
-function collectHitRecords(target) {
+function collectHitRecords(target, characterClasses) {
   const records = []
   for (const attacker of target.attackers || []) {
     if (!attacker?.isPC) continue
@@ -79,12 +85,17 @@ function collectHitRecords(target) {
       for (const record of skill.hitRecords || []) {
         const timestamp = historyTimeToMs(record.timestamp)
         if (!timestamp) continue
+        const characterId = String(attacker.id || '')
         records.push({
           seq: record.seq,
           timestamp,
           damage: Number(record.damage) || 0,
-          attackerId: String(attacker.id || ''),
-          attackerName: getDisplayName(attacker.id, attacker.name)
+          attackerId: characterId,
+          attackerName: getDisplayName(
+            attacker.id,
+            attacker.name,
+            characterClasses?.get(characterId)
+          )
         })
       }
     }
@@ -128,7 +139,7 @@ function calculateTargetTimeRange(target) {
   return { minTime, maxTime }
 }
 
-function extractChartSeries(target) {
+function extractChartSeries(target, characterClasses) {
   const series = []
   for (const attacker of target.attackers || []) {
     if (!attacker?.isPC || !attacker.skillsDetail?.length) continue
@@ -148,9 +159,14 @@ function extractChartSeries(target) {
     if (!records.length) continue
     records.sort(compareHits)
 
-    const name = getDisplayName(attacker.id, attacker.name)
+    const characterId = String(attacker.id || '')
+    const name = getDisplayName(
+      attacker.id,
+      attacker.name,
+      characterClasses?.get(characterId)
+    )
     series.push({
-      attackerId: String(attacker.id || name),
+      attackerId: characterId || name,
       attackerName: name,
       records
     })
@@ -234,16 +250,20 @@ function sortTargets(targets = []) {
   })
 }
 
-function buildAttackerRows(target) {
+function buildAttackerRows(target, characterClasses) {
   const attackers = (target.attackers || [])
     .filter(item => item?.isPC)
-    .map(item => ({
-      id: String(item.id || ''),
-      name: getDisplayName(item.id, item.name),
-      totalDamage: Number(item.totalDamage) || 0,
-      dps: Number(item.dps) || 0,
-      percent: Number(item.percent) || 0
-    }))
+    .map(item => {
+      const characterId = String(item.id || '')
+      return {
+        id: characterId,
+        characterClass: characterClasses?.get(characterId) || UNKNOWN_CLASS,
+        name: getDisplayName(item.id, item.name, characterClasses?.get(characterId)),
+        totalDamage: Number(item.totalDamage) || 0,
+        dps: Number(item.dps) || 0,
+        percent: Number(item.percent) || 0
+      }
+    })
     .sort((a, b) => b.totalDamage - a.totalDamage)
 
   const maxDamage = attackers.reduce((max, item) => Math.max(max, item.totalDamage), 0) || 1
@@ -254,9 +274,9 @@ function buildAttackerRows(target) {
   }))
 }
 
-function buildBossPanel(target) {
+function buildBossPanel(target, characterClasses) {
   const timeRange = calculateTargetTimeRange(target)
-  const chartSeries = extractChartSeries(target)
+  const chartSeries = extractChartSeries(target, characterClasses)
   const dpsSeries = computeDpsSeries(chartSeries)
   const bossHpMarkers = timeRange
     ? sampleBossHpMarkers(target.bossHP, timeRange.minTime, timeRange.maxTime, Boolean(target.deathTime))
@@ -269,7 +289,7 @@ function buildBossPanel(target) {
     duration: Number(target.duration) || 0,
     totalDamage: Number(target.totalDamage) || 0,
     dps: Number(target.dps) || 0,
-    attackers: buildAttackerRows(target),
+    attackers: buildAttackerRows(target, characterClasses),
     timeRange,
     dpsSeries,
     bossHpMarkers
@@ -277,7 +297,8 @@ function buildBossPanel(target) {
 }
 
 function buildRunPanels(data) {
-  return getKilledTargetsForRun(data?.targets || []).map(buildBossPanel)
+  const characterClasses = buildRunCharacterClasses(data)
+  return getKilledTargetsForRun(data?.targets || []).map(target => buildBossPanel(target, characterClasses))
 }
 
 module.exports = {
