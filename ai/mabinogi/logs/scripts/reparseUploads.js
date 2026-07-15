@@ -1,9 +1,10 @@
 /**
  * 用当前规则重新解析已上传的 DPS 源文件，只「补缺」不覆盖。
  *
- * - 已存在的 dps_records（同 runId + bossGroup + characterId）不改、不删、不覆盖
- * - 仅 insert 新增可识别击杀记录（例如放宽后才通过的佩塔克）
- * - 不修改已成功入库的记录字段
+ * 去重策略（按 Boss 组）：
+ * - 某场次若已存在该 bossGroup（如 brontanas / petak）的任意记录 → 整组跳过
+ * - 仅插入「本场次完全没有」的 bossGroup（例如以前合击未过、现在才通过的佩塔克）
+ * - 绝不更新/删除已有 records
  *
  * 用法:
  *   node ai/mabinogi/logs/scripts/reparseUploads.js            # dry-run 预览
@@ -18,6 +19,7 @@ const { parseGzipJson, validateSemantic } = require('../validate')
 const { extractSummary } = require('../parser')
 const { buildDpsRecords } = require('../records')
 const { insertDpsRecords, updateReportParsed } = require('../db')
+const { resolveBossGroupKey } = require('../bossConfig')
 
 const DB_NAME = 'db_bot'
 const COL_UPLOADS = 'cl_mabinogi_dps_upload'
@@ -43,11 +45,8 @@ function parseArgs(argv) {
   return args
 }
 
-function recordIdentity(record) {
-  const runId = String(record.runId || '')
-  const bossGroup = String(record.bossGroup || record.bossKey || '')
-  const characterId = String(record.characterId || record.characterName || '')
-  return `${runId}|${bossGroup}|${characterId}`
+function recordBossGroup(record) {
+  return resolveBossGroupKey(record.bossGroup || record.bossKey || record.bossName || '')
 }
 
 function filterByBoss(records, boss) {
@@ -57,21 +56,38 @@ function filterByBoss(records, boss) {
     const group = String(item.bossGroup || '').toLowerCase()
     const key = String(item.bossKey || '').toLowerCase()
     const name = String(item.bossName || '')
-    return group === kw || key === kw || key.includes(kw) || name.includes(boss)
+    const resolved = String(recordBossGroup(item) || '').toLowerCase()
+    return group === kw || key === kw || resolved === kw || key.includes(kw) || name.includes(boss)
   })
 }
 
-async function loadExistingIdentities(colRecords, runId) {
-  const existing = await colRecords.find({ runId }, {
-    projection: {
-      runId: 1,
-      bossGroup: 1,
-      bossKey: 1,
-      characterId: 1,
-      characterName: 1
-    }
-  }).toArray()
-  return new Set(existing.map(recordIdentity))
+async function loadExistingBossGroups(colRecords, runId) {
+  const existing = await colRecords.find(
+    { runId: String(runId) },
+    { projection: { bossGroup: 1, bossKey: 1, bossName: 1 } }
+  ).toArray()
+
+  // 兼容 runId 偶发非字符串存储
+  if (!existing.length) {
+    const again = await colRecords.find(
+      { runId },
+      { projection: { bossGroup: 1, bossKey: 1, bossName: 1 } }
+    ).toArray()
+    return new Set(again.map(recordBossGroup).filter(Boolean))
+  }
+  return new Set(existing.map(recordBossGroup).filter(Boolean))
+}
+
+function pickMissingBossRecords(built, existingBossGroups) {
+  const byGroup = new Map()
+  for (const item of built) {
+    const group = recordBossGroup(item)
+    if (!group) continue
+    if (existingBossGroups.has(group)) continue
+    if (!byGroup.has(group)) byGroup.set(group, [])
+    byGroup.get(group).push(item)
+  }
+  return [...byGroup.values()].flat()
 }
 
 async function main() {
@@ -90,6 +106,7 @@ async function main() {
 
   console.log(`[reparse] SOURCE_ROOT=${SOURCE_ROOT}`)
   console.log(`[reparse] uploads=${rows.length} mode=${args.yes ? 'WRITE' : 'DRY-RUN'}${args.boss ? ` boss=${args.boss}` : ''}`)
+  console.log('[reparse] strategy: skip bossGroup if any record already exists for this runId')
 
   const summary = {
     scanned: 0,
@@ -150,21 +167,21 @@ async function main() {
         continue
       }
 
-      const existingKeys = await loadExistingIdentities(recordsCol, reportId)
-      const toInsert = built.filter(item => !existingKeys.has(recordIdentity(item)))
+      const existingBossGroups = await loadExistingBossGroups(recordsCol, reportId)
+      const toInsert = pickMissingBossRecords(built, existingBossGroups)
 
       if (!toInsert.length) {
-        console.log(`[ok] ${label} no missing records (built=${built.length})`)
+        console.log(`[ok] ${label} no missing boss groups (existing=[${[...existingBossGroups].join(',')}])`)
         summary.skipNoNew++
         continue
       }
 
       const byBoss = {}
       for (const item of toInsert) {
-        const key = item.bossGroup || item.bossKey || 'unknown'
+        const key = recordBossGroup(item) || 'unknown'
         byBoss[key] = (byBoss[key] || 0) + 1
       }
-      console.log(`[new] ${label} +${toInsert.length} ${JSON.stringify(byBoss)}`)
+      console.log(`[new] ${label} +${toInsert.length} ${JSON.stringify(byBoss)} (had=[${[...existingBossGroups].join(',')}])`)
       summary.wouldInsert += toInsert.length
 
       if (!args.yes) continue
@@ -172,13 +189,14 @@ async function main() {
       await insertDpsRecords(toInsert)
       summary.inserted += toInsert.length
 
-      // 仅刷新摘要计数/状态，不碰已有 records 内容
-      const allIdentities = new Set([...existingKeys, ...toInsert.map(recordIdentity)])
+      const afterGroups = new Set([...existingBossGroups, ...toInsert.map(recordBossGroup)])
       const summaryData = extractSummary(parsed.data)
+      const totalRecords = await recordsCol.countDocuments({ runId: String(reportId) })
       await updateReportParsed(reportId, {
         ...summaryData,
-        validRecordCount: allIdentities.size,
-        reparsedAt: new Date()
+        validRecordCount: totalRecords,
+        reparsedAt: new Date(),
+        reparseBossGroups: [...afterGroups]
       })
       summary.updatedUpload++
     } catch (error) {
