@@ -1,7 +1,5 @@
 const HP_TOLERANCE = 10_000_000
-const PETAK_PHASE_TOLERANCE = 40_000_000
-const PETAK_COMBINED_KILL_HP = 900_000_000
-const PETAK_COMBINED_TOLERANCE = 60_000_000
+const PETAK_KILL_MAXHP_RATIO = 0.5
 
 const DUNGEONS = [
   {
@@ -17,23 +15,21 @@ const DUNGEONS = [
 ]
 
 // displayName：对外展示；groupKey：排行榜聚合（佩塔克一/二阶段合并）
-// 佩塔克：用数据包 maxHp 识别阶段，用 markKillHp 判定击杀；其余 Boss 用 referenceHp 同时识别与判定
+// 佩塔克：用数据包 maxHp 识别阶段；击杀见 isPetakP1KillCompleted / isPetakP2KillCompleted
 const BOSSES = [
   {
     key: 'petak_p1',
     displayName: '枯木之佩塔克',
     aliases: ['枯木之佩塔克', '枯木的佩塔克', '佩塔克'],
     groupKey: 'petak',
-    maxHp: 698_516_992,
-    markKillHp: 411_100_000
+    maxHp: 698_516_992
   },
   {
     key: 'petak_p2',
     displayName: '枯木之佩塔克',
     aliases: ['枯木之佩塔克', '枯木的佩塔克', '佩塔克'],
     groupKey: 'petak',
-    maxHp: 850_368_576,
-    markKillHp: 488_900_000
+    maxHp: 850_368_576
   },
   {
     key: 'brontanas',
@@ -72,6 +68,9 @@ function getBossMatchHp(boss) {
 }
 
 function getBossKillHp(boss) {
+  if (boss?.groupKey === 'petak' && boss.maxHp != null) {
+    return boss.maxHp * PETAK_KILL_MAXHP_RATIO
+  }
   return boss.markKillHp ?? boss.referenceHp ?? boss.maxHp
 }
 
@@ -115,53 +114,90 @@ function matchBossByHp(packageMaxHp) {
 }
 
 function getKillTolerance(boss) {
-  return boss?.groupKey === 'petak' ? PETAK_PHASE_TOLERANCE : HP_TOLERANCE
+  return HP_TOLERANCE
 }
 
-function isPetakPhaseKillCompleted(target) {
-  const packageMaxHp = Number(target?.bossHP?.maxHp ?? target?.maxHp)
-  const totalDamage = Number(target.totalDamage)
-  if (!Number.isFinite(packageMaxHp) || !Number.isFinite(totalDamage)) {
-    return false
-  }
+function getTargetMaxHp(target) {
+  return Number(target?.bossHP?.maxHp ?? target?.maxHp)
+}
 
-  const boss = matchBossByHp(packageMaxHp)
-  if (!boss || boss.groupKey !== 'petak') return false
-  const killHp = getBossKillHp(boss)
-  return Math.abs(totalDamage - killHp) <= PETAK_PHASE_TOLERANCE
+function getTargetDamage(target) {
+  return Number(target?.totalDamage)
+}
+
+/** P1：总伤 ≥ maxHp 的 50% */
+function isPetakP1KillCompleted(target) {
+  const maxHp = getTargetMaxHp(target)
+  const totalDamage = getTargetDamage(target)
+  if (!Number.isFinite(maxHp) || maxHp <= 0 || !Number.isFinite(totalDamage)) return false
+  const boss = matchBossByHp(maxHp)
+  if (!boss || boss.key !== 'petak_p1') return false
+  return totalDamage >= maxHp * PETAK_KILL_MAXHP_RATIO
+}
+
+/**
+ * P1 超过 50% maxHp 的那部分血量
+ * 例：maxHp=698M、伤害=390M → 超过 41M
+ */
+function getPetakP1OverHalfHp(p1Target) {
+  const maxHp = getTargetMaxHp(p1Target)
+  const totalDamage = getTargetDamage(p1Target)
+  if (!Number.isFinite(maxHp) || !Number.isFinite(totalDamage)) return 0
+  return Math.max(0, totalDamage - maxHp * PETAK_KILL_MAXHP_RATIO)
+}
+
+/**
+ * P2：伤害 ≥ maxHp×50% −（P1 超过 50% 的血量）
+ * 即 p1.dmg + p2.dmg ≥ 0.5*(p1.maxHp + p2.maxHp)，且 P1 须先过半血
+ */
+function isPetakP2KillCompleted(p1Target, p2Target) {
+  const p2MaxHp = getTargetMaxHp(p2Target)
+  const p2Damage = getTargetDamage(p2Target)
+  if (!Number.isFinite(p2MaxHp) || p2MaxHp <= 0 || !Number.isFinite(p2Damage)) return false
+  const boss = matchBossByHp(p2MaxHp)
+  if (!boss || boss.key !== 'petak_p2') return false
+  if (!isPetakP1KillCompleted(p1Target)) return false
+
+  const p1OverHalf = getPetakP1OverHalfHp(p1Target)
+  const threshold = p2MaxHp * PETAK_KILL_MAXHP_RATIO - p1OverHalf
+  return p2Damage >= threshold
+}
+
+/** @deprecated 兼容旧调用：仅 P1 用 50% 规则；P2 单独无法判定 */
+function isPetakPhaseKillCompleted(target) {
+  const maxHp = getTargetMaxHp(target)
+  const boss = matchBossByHp(maxHp)
+  if (boss?.key === 'petak_p1') return isPetakP1KillCompleted(target)
+  return false
 }
 
 function getPetakPhaseKillDiff(target) {
-  const packageMaxHp = Number(target?.bossHP?.maxHp ?? target?.maxHp)
-  const totalDamage = Number(target.totalDamage)
-  const boss = matchBossByHp(packageMaxHp)
+  const maxHp = getTargetMaxHp(target)
+  const totalDamage = getTargetDamage(target)
+  const boss = matchBossByHp(maxHp)
   if (!boss || boss.groupKey !== 'petak') return Infinity
-  return Math.abs(totalDamage - getBossKillHp(boss))
+  const need = maxHp * PETAK_KILL_MAXHP_RATIO
+  return need - totalDamage
 }
 
 function isPetakCombinedKillCompleted(phases) {
   const p1 = phases.find(phase => phase.boss.key === 'petak_p1')
   const p2 = phases.find(phase => phase.boss.key === 'petak_p2')
   if (!p1 || !p2) return false
-  if (!isPetakPhaseKillCompleted(p1.target) || !isPetakPhaseKillCompleted(p2.target)) {
-    return false
-  }
-
-  const combinedDamage = Number(p1.target.totalDamage) + Number(p2.target.totalDamage)
-  if (!Number.isFinite(combinedDamage)) return false
-  return Math.abs(combinedDamage - PETAK_COMBINED_KILL_HP) <= PETAK_COMBINED_TOLERANCE
+  return isPetakP1KillCompleted(p1.target) && isPetakP2KillCompleted(p1.target, p2.target)
 }
 
 function isBossKillCompleted(target) {
-  const packageMaxHp = Number(target?.bossHP?.maxHp ?? target?.maxHp)
-  const totalDamage = Number(target.totalDamage)
+  const packageMaxHp = getTargetMaxHp(target)
+  const totalDamage = getTargetDamage(target)
   if (!Number.isFinite(packageMaxHp) || !Number.isFinite(totalDamage)) {
     return false
   }
 
   const boss = matchBossByHp(packageMaxHp)
+  // 佩塔克必须 P1+P2 成对判定，单阶段不算击杀
   if (boss?.groupKey === 'petak') {
-    return isPetakPhaseKillCompleted(target)
+    return false
   }
 
   const killHp = boss ? getBossKillHp(boss) : packageMaxHp
@@ -185,8 +221,13 @@ function resolveBossGroupKey(bossKeyOrGroup) {
   return value
 }
 
-function getPetakCombinedKillHp(phases = BOSSES.filter(boss => boss.groupKey === 'petak')) {
-  return PETAK_COMBINED_KILL_HP
+function getPetakCombinedKillHp(phases) {
+  if (Array.isArray(phases) && phases.length) {
+    const sum = phases.reduce((acc, phase) => acc + (getTargetDamage(phase.target) || 0), 0)
+    if (Number.isFinite(sum) && sum > 0) return sum
+  }
+  const petakBosses = BOSSES.filter(boss => boss.groupKey === 'petak')
+  return petakBosses.reduce((sum, boss) => sum + getBossKillHp(boss), 0)
 }
 
 function getGroupSortHp(groupKey) {
@@ -295,15 +336,16 @@ function shortRunId(runId) {
 
 module.exports = {
   HP_TOLERANCE,
-  PETAK_PHASE_TOLERANCE,
-  PETAK_COMBINED_KILL_HP,
-  PETAK_COMBINED_TOLERANCE,
+  PETAK_KILL_MAXHP_RATIO,
   DUNGEONS,
   BOSSES,
   matchBossByHp,
   isBossKillCompleted,
   isPetakPhaseKillCompleted,
+  isPetakP1KillCompleted,
+  isPetakP2KillCompleted,
   isPetakCombinedKillCompleted,
+  getPetakP1OverHalfHp,
   getPetakPhaseKillDiff,
   getKillTolerance,
   getBossMatchHp,

@@ -5,7 +5,7 @@ const {
   isBossKillCompleted,
   isPetakCombinedKillCompleted,
   getBossKillHp,
-  PETAK_COMBINED_KILL_HP
+  getPetakCombinedKillHp
 } = require('./bossConfig')
 const { collectPcAttackers, buildTeammateNames } = require('./team')
 const { buildRunCharacterClasses } = require('./classDetect')
@@ -74,7 +74,7 @@ function sortTargetsByTime(targets = []) {
   return [...targets].sort((a, b) => getTargetSortTime(a) - getTargetSortTime(b))
 }
 
-// 在全 targets 时间序中，仅当 P1 与紧随其后的 P2 相邻时配对
+// 在全 targets 时间序中，仅当相邻且 P2 出现在 P1 之后时配对
 function collectPetakPhasePairs(targets) {
   const sorted = sortTargetsByTime(targets)
   const pairs = []
@@ -84,12 +84,12 @@ function collectPetakPhasePairs(targets) {
     const next = sorted[i + 1]
     const bossCurrent = matchBossByHp(Number(current?.bossHP?.maxHp))
     const bossNext = matchBossByHp(Number(next?.bossHP?.maxHp))
-    if (bossCurrent?.key === 'petak_p1' && bossNext?.key === 'petak_p2') {
-      pairs.push([
-        { boss: bossCurrent, target: current },
-        { boss: bossNext, target: next }
-      ])
-    }
+    if (bossCurrent?.key !== 'petak_p1' || bossNext?.key !== 'petak_p2') continue
+    if (getTargetSortTime(next) <= getTargetSortTime(current)) continue
+    pairs.push([
+      { boss: bossCurrent, target: current },
+      { boss: bossNext, target: next }
+    ])
   }
 
   return pairs
@@ -115,7 +115,7 @@ function buildPetakCombinedRecords({
 
   const sortedPhases = [...phases].sort((a, b) => getBossKillHp(a.boss) - getBossKillHp(b.boss))
   const sampleBoss = sortedPhases[0].boss
-  const bossHp = PETAK_COMBINED_KILL_HP
+  const bossHp = getPetakCombinedKillHp(sortedPhases)
   const duration = sortedPhases.reduce((sum, phase) => sum + (Number(phase.target.duration) || 0), 0)
   const recordTimeMs = Math.max(...sortedPhases.map(phase => centiToMs(phase.target.cleanedAt) || uploadTime.getTime()))
   const recordTime = new Date(recordTimeMs)
