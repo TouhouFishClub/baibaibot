@@ -6,6 +6,7 @@ const PROJECT_ROOT = path.resolve(MODULE_DIR, '../../..')
 const SECRET_PATH = path.join(MODULE_DIR, '.secret.json')
 // 与 baibaiConfigs 中 ../coolq-data 同理：从仓库根目录向上一级的 mabidata/logs
 const SOURCE_ROOT = path.resolve(PROJECT_ROOT, '../mabidata/logs')
+const ARCH_ROOT = path.resolve(PROJECT_ROOT, '../mabidata/arch')
 
 const DEFAULTS = {
   signatureMaxSkewSeconds: 300,
@@ -16,6 +17,8 @@ const DEFAULTS = {
   minDuration: 10,
   maxDuration: 7200,
   maxHistoryDays: 30,
+  // 每日备份到 mabidata/arch/YYYY-MM-DD（本地 03:00）
+  backupHourLocal: 3,
   rateLimit: {
     perIpPerMinute: 30,
     perPlayerPerHour: 20,
@@ -57,6 +60,7 @@ module.exports = {
   MODULE_DIR,
   PROJECT_ROOT,
   SOURCE_ROOT,
+  ARCH_ROOT,
   uploadSecret: secretFile.BLONY_UPLOAD_SECRET || '',
   uploadSecretKey: resolveSecretKey(secretFile.BLONY_UPLOAD_SECRET || ''),
   uploadEndpoint: secretFile.BLONY_UPLOAD_ENDPOINT || '',

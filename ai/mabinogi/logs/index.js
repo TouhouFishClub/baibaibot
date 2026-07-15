@@ -1,5 +1,6 @@
 const { registerRoutes } = require('./handler')
 const { recoverPendingJobs } = require('./queue')
+const { startLogsBackupScheduler } = require('./backupScheduler')
 
 let started = false
 
@@ -10,6 +11,7 @@ function initDpsLogs(app) {
     recoverPendingJobs().catch(error => {
       console.error('[dps-logs] recover pending failed', error)
     })
+    startLogsBackupScheduler()
   }
 }
 
