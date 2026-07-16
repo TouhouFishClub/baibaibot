@@ -4,7 +4,7 @@ const { findReportByRunId } = require('./db')
 const { matchBossByHp } = require('./bossConfig')
 const { extractSkillName } = require('./classDetect')
 
-const MAX_SKILLS = 10
+const MAX_SKILLS = 5
 
 function getSkillDamage(skill) {
   if (!skill || typeof skill !== 'object') return 0
@@ -67,14 +67,26 @@ function buildSkillBreakdownFromTargets(targets, characterId) {
   const total = [...damageBySkill.values()].reduce((sum, value) => sum + value, 0)
   if (total <= 0) return []
 
-  return [...damageBySkill.entries()]
+  const ranked = [...damageBySkill.entries()]
     .map(([name, damage]) => ({
       name,
       damage,
       percent: (damage / total) * 100
     }))
     .sort((a, b) => b.damage - a.damage)
-    .slice(0, MAX_SKILLS)
+
+  const top = ranked.slice(0, MAX_SKILLS)
+  const rest = ranked.slice(MAX_SKILLS)
+  if (rest.length) {
+    const damage = rest.reduce((sum, item) => sum + item.damage, 0)
+    top.push({
+      name: '其他',
+      damage,
+      percent: (damage / total) * 100
+    })
+  }
+
+  return top
 }
 
 function buildSkillBreakdownForRecord(data, record) {

@@ -52,19 +52,18 @@ function getDpsTone(dps) {
 
 function renderSkills(skills, theme) {
   if (!skills?.length) return ''
-  const rows = skills.map(skill => {
+  const segments = skills.map((skill, index) => {
     const pct = Math.max(0, Math.min(100, Number(skill.percent) || 0))
-    return `
-      <div class="skill-item">
-        <span class="skill-name">${escapeHtml(truncate(skill.name, 10))}</span>
-        <div class="skill-track">
-          <div class="skill-fill" style="width:${pct.toFixed(1)}%; background:${theme.primary}"></div>
-        </div>
-        <span class="skill-pct">${pct.toFixed(1)}%</span>
-      </div>`
+    if (pct <= 0) return ''
+    const isOther = skill.name === '其他'
+    const bg = isOther
+      ? hexToRgba(theme.secondary, 0.28)
+      : hexToRgba(theme.primary, 0.55 - index * 0.07)
+    const label = `${truncate(skill.name, 8)} ${pct.toFixed(0)}%`
+    return `<div class="skill-seg" style="flex:${pct.toFixed(2)}; background:${bg}" title="${escapeHtml(label)}">${escapeHtml(label)}</div>`
   }).join('')
 
-  return `<div class="skills">${rows}</div>`
+  return `<div class="skills">${segments}</div>`
 }
 
 function renderRow(row, index, withSkill) {
@@ -268,43 +267,31 @@ function buildHtml(option) {
       font-size: 14px;
     }
     .skills {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 3px 16px;
+      display: flex;
+      width: 100%;
+      height: 18px;
       margin-top: 8px;
-      padding-top: 6px;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.22);
     }
-    .skill-item {
-      display: grid;
-      grid-template-columns: 72px 1fr 42px;
+    .skill-seg {
+      display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: flex-start;
       min-width: 0;
-    }
-    .skill-name {
-      font-size: 11px;
-      color: rgba(255,255,255,0.78);
+      height: 100%;
+      padding: 0 6px;
+      font-size: 10px;
+      line-height: 1;
+      color: rgba(255,255,255,0.92);
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      border-right: 1px solid rgba(0,0,0,0.25);
     }
-    .skill-track {
-      height: 5px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      overflow: hidden;
-    }
-    .skill-fill {
-      height: 100%;
-      border-radius: 999px;
-      opacity: 0.9;
-    }
-    .skill-pct {
-      font-size: 10px;
-      color: rgba(255,255,255,0.55);
-      text-align: right;
-      font-variant-numeric: tabular-nums;
+    .skill-seg:last-child {
+      border-right: 0;
     }
     .empty {
       padding: 18px;
