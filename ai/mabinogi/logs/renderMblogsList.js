@@ -26,7 +26,7 @@ const addZero = n => (n < 10 ? `0${n}` : `${n}`)
 function formatTime(ts) {
   if (!ts) return '-'
   const d = new Date(ts)
-  return `${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} ${addZero(d.getHours())}:${addZero(d.getMinutes())}`
+  return `${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} ${addZero(d.getHours())}:${addZero(d.getMinutes())}`
 }
 
 function formatHpDamageShare(row) {
@@ -46,21 +46,18 @@ function renderRow(row, index) {
 
   return `
     <div class="row" style="background:${bg}; border-left-color:${border}">
-      <div class="rank" style="color:${theme.secondary}">#${index + 1}</div>
-      <div class="cell time">${escapeHtml(formatTime(row.recordTime))}</div>
-      <div class="cell class">
-        <span class="class-chip" style="background:${hexToRgba(theme.primary, 0.35)}; border-color:${theme.primary}; color:${theme.secondary}">
-          ${escapeHtml(row.characterClass || '未知')}
-        </span>
+      <div class="meta">#${index + 1} · ${escapeHtml(formatTime(row.recordTime))}</div>
+      <div class="main">
+        <div class="cell class">${escapeHtml(row.characterClass || '未知')}</div>
+        <div class="cell name">${escapeHtml(truncate(row.characterName, 12))}</div>
+        <div class="cell dungeon">${escapeHtml(truncate(row.dungeonName, 10))}</div>
+        <div class="cell team-size">${escapeHtml(row.teamSize ?? '-')}</div>
+        <div class="cell teammates" title="${escapeHtml(row.teammateNames)}">${escapeHtml(truncate(row.teammateNames, 18))}</div>
+        <div class="cell duration">${escapeHtml(formatDuration(row.duration))}</div>
+        <div class="cell dps">${escapeHtml(formatDps(row.dps))}</div>
+        <div class="cell share">${escapeHtml(formatHpDamageShare(row))}</div>
+        <div class="cell runid">${escapeHtml(shortRunId(row.runId))}</div>
       </div>
-      <div class="cell name">${escapeHtml(truncate(row.characterName, 12))}</div>
-      <div class="cell dungeon">${escapeHtml(truncate(row.dungeonName, 10))}</div>
-      <div class="cell team-size">${escapeHtml(row.teamSize ?? '-')}</div>
-      <div class="cell teammates" title="${escapeHtml(row.teammateNames)}">${escapeHtml(truncate(row.teammateNames, 18))}</div>
-      <div class="cell duration">${escapeHtml(formatDuration(row.duration))}</div>
-      <div class="cell dps">${escapeHtml(formatDps(row.dps))}</div>
-      <div class="cell share">${escapeHtml(formatHpDamageShare(row))}</div>
-      <div class="cell runid">${escapeHtml(shortRunId(row.runId))}</div>
     </div>`
 }
 
@@ -78,8 +75,6 @@ function renderSection(section) {
     <div class="section">
       ${title}
       <div class="list-head">
-        <div class="rank">#</div>
-        <div class="cell time">时间</div>
         <div class="cell class">职业</div>
         <div class="cell name">角色</div>
         <div class="cell dungeon">副本</div>
@@ -152,11 +147,9 @@ function buildHtml(option) {
       padding: 2px 8px;
     }
     .list-head,
-    .row {
+    .main {
       display: grid;
       grid-template-columns:
-        42px
-        128px
         108px
         110px
         96px
@@ -168,43 +161,37 @@ function buildHtml(option) {
         72px;
       align-items: center;
       column-gap: 8px;
-      padding: 0 12px 0 10px;
     }
     .list-head {
-      height: 34px;
-      margin-bottom: 6px;
+      height: 28px;
+      margin: 0 12px 6px 14px;
       color: #7d848e;
       font-size: 12px;
       letter-spacing: 0.3px;
     }
     .list-body { display: flex; flex-direction: column; gap: 6px; }
     .row {
-      min-height: 46px;
+      position: relative;
+      min-height: 52px;
       border-radius: 10px;
       border-left: 4px solid #666;
       font-size: 13px;
       color: #eef0f3;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+      padding: 16px 12px 8px 14px;
     }
-    .rank {
-      font-size: 12px;
-      font-weight: 700;
-      opacity: 0.9;
+    .meta {
+      position: absolute;
+      top: 4px;
+      left: 14px;
+      font-size: 10px;
+      line-height: 1;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.2px;
+      pointer-events: none;
     }
-    .cell { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .class-chip {
-      display: inline-block;
-      max-width: 100%;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid;
-      font-size: 12px;
-      line-height: 1.3;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      vertical-align: middle;
-    }
+    .cell { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #eef0f3; }
+    .class { color: #fff; font-weight: 400; }
     .name { font-weight: 700; }
     .dps { font-weight: 700; color: #ffe082; }
     .share { color: #cfd6df; font-size: 12px; }
