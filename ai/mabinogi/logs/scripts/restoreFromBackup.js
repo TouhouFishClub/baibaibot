@@ -4,7 +4,9 @@
  * clearData --with-files 会同时删库和 mabidata/logs；本脚本：
  * 1. 把备份里的 *.json.gz 拷回 SOURCE_ROOT（可跳过）
  * 2. 为每个包插入 upload + 可识别的 dps_records
- * 3. 同 playerId+contentSha256 已存在则跳过，不覆盖
+ * 3. 同 playerId+contentSha256 已存在：
+ *    - 若已有 records → 跳过（already_in_db）
+ *    - 若 upload 在但 records 为空 → 补写 records（backfill_records）
  *
  * 用法:
  *   node ai/mabinogi/logs/scripts/restoreFromBackup.js --from "D:/backup/logs"
@@ -32,6 +34,14 @@ const {
 
 const DB_NAME = 'db_bot'
 const COL_UPLOADS = 'cl_mabinogi_dps_upload'
+const COL_RECORDS = 'cl_mabinogi_dps_records'
+
+async function countRecordsForRun(runId) {
+  const client = await getClient()
+  return client.db(DB_NAME).collection(COL_RECORDS).countDocuments({
+    runId: String(runId)
+  })
+}
 
 function parseArgs(argv) {
   const args = {
@@ -139,9 +149,6 @@ async function importOne({ absolutePath, relativePath, playerDir, fileName }, { 
     contentSha256,
     fileName: `${playerDir}_${contentSha256.slice(0, 12)}.json.gz`
   })
-  if (dup) {
-    return { status: 'skip', reason: 'already_in_db', reportId: dup._id }
-  }
 
   const parsed = parseGzipJson(buffer)
   if (!parsed.ok) {
@@ -153,6 +160,73 @@ async function importOne({ absolutePath, relativePath, playerDir, fileName }, { 
   const storeRelPath = noCopy
     ? relativePath.replace(/\\/g, '/')
     : copyFileToSource(relativePath, buffer)
+
+  // upload 已在：有 records 则跳过；无 records 则补写
+  if (dup) {
+    const existingCount = await countRecordsForRun(dup._id)
+    if (existingCount > 0) {
+      return {
+        status: 'skip',
+        reason: 'already_in_db',
+        reportId: dup._id,
+        uploadStatus: dup.status,
+        recordCount: existingCount,
+        validRecordCount: dup.validRecordCount
+      }
+    }
+
+    if (!semantic.ok) {
+      return {
+        status: 'skip',
+        reason: `already_in_db_empty_records_semantic:${semantic.reason}`,
+        reportId: dup._id,
+        uploadStatus: dup.status
+      }
+    }
+
+    if (!yes) {
+      const preview = buildDpsRecords({
+        runId: dup._id,
+        dungeonName: dup.dungeonName || dungeonName,
+        uploadedAt: dup.uploadedAt || inferUploadedAt(absolutePath, parsed.data),
+        data: parsed.data
+      })
+      return {
+        status: 'dry',
+        playerId: player.playerId,
+        playerName: player.playerName,
+        dungeonName: dup.dungeonName || dungeonName,
+        semantic: 'backfill_records',
+        sourceRelPath: storeRelPath,
+        reportId: dup._id,
+        records: preview.length
+      }
+    }
+
+    const uploadedAt = dup.uploadedAt || inferUploadedAt(absolutePath, parsed.data)
+    const summary = extractSummary(parsed.data)
+    const dpsRecords = buildDpsRecords({
+      runId: dup._id,
+      dungeonName: dup.dungeonName || dungeonName,
+      uploadedAt,
+      data: parsed.data
+    })
+    await updateReportParsed(dup._id, {
+      ...summary,
+      validRecordCount: dpsRecords.length,
+      backfilledAt: new Date()
+    })
+    if (dpsRecords.length) {
+      await insertDpsRecords(dpsRecords)
+    }
+    return {
+      status: 'backfill',
+      reportId: dup._id,
+      records: dpsRecords.length,
+      dungeonName: dup.dungeonName || dungeonName,
+      playerName: player.playerName || player.playerId
+    }
+  }
 
   if (!yes) {
     return {
@@ -248,6 +322,7 @@ async function main() {
     scanned: 0,
     dry: 0,
     ok: 0,
+    backfill: 0,
     failed: 0,
     skip: 0,
     records: 0,
@@ -262,15 +337,25 @@ async function main() {
         summary.ok++
         summary.records += result.records || 0
         console.log(`[ok] ${file.relativePath} report=${result.reportId} records=${result.records} dungeon=${result.dungeonName}`)
+      } else if (result.status === 'backfill') {
+        summary.backfill++
+        summary.records += result.records || 0
+        console.log(`[backfill] ${file.relativePath} report=${result.reportId} records=${result.records} dungeon=${result.dungeonName}`)
       } else if (result.status === 'dry') {
         summary.dry++
-        console.log(`[dry] ${file.relativePath} player=${result.playerName || result.playerId} dungeon=${result.dungeonName} semantic=${result.semantic}`)
+        const extra = result.reportId
+          ? ` report=${result.reportId} wouldRecords=${result.records || 0}`
+          : ''
+        console.log(`[dry] ${file.relativePath} player=${result.playerName || result.playerId} dungeon=${result.dungeonName} semantic=${result.semantic}${extra}`)
       } else if (result.status === 'failed') {
         summary.failed++
         console.log(`[failed] ${file.relativePath} ${result.reason} report=${result.reportId}`)
       } else {
         summary.skip++
-        console.log(`[skip] ${file.relativePath} ${result.reason}`)
+        const extra = result.reportId
+          ? ` report=${result.reportId} uploadStatus=${result.uploadStatus || '?'} records=${result.recordCount ?? 0}`
+          : ''
+        console.log(`[skip] ${file.relativePath} ${result.reason}${extra}`)
       }
     } catch (error) {
       summary.errors++
