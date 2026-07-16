@@ -50,14 +50,32 @@ function getDpsTone(dps) {
   return 'white'
 }
 
-function renderRow(row, index) {
+function renderSkills(skills, theme) {
+  if (!skills?.length) return ''
+  const rows = skills.map(skill => {
+    const pct = Math.max(0, Math.min(100, Number(skill.percent) || 0))
+    return `
+      <div class="skill-item">
+        <span class="skill-name">${escapeHtml(truncate(skill.name, 10))}</span>
+        <div class="skill-track">
+          <div class="skill-fill" style="width:${pct.toFixed(1)}%; background:${theme.primary}"></div>
+        </div>
+        <span class="skill-pct">${pct.toFixed(1)}%</span>
+      </div>`
+  }).join('')
+
+  return `<div class="skills">${rows}</div>`
+}
+
+function renderRow(row, index, withSkill) {
   const theme = getClassTheme(row.characterClass)
   const alpha = 0.22
   const bg = `linear-gradient(90deg, ${hexToRgba(theme.primary, alpha)} 0%, ${hexToRgba(theme.secondary, alpha)} 100%)`
   const dpsTone = getDpsTone(row.dps)
+  const skillsHtml = withSkill ? renderSkills(row.skills, theme) : ''
 
   return `
-    <div class="row" style="background:${bg}">
+    <div class="row${withSkill ? ' row-with-skills' : ''}" style="background:${bg}">
       <div class="meta">#${index + 1} · ${escapeHtml(formatTime(row.recordTime))}</div>
       <div class="main">
         <div class="cell class">${escapeHtml(row.characterClass || '未知')}</div>
@@ -70,10 +88,11 @@ function renderRow(row, index) {
         <div class="cell share">${escapeHtml(formatHpDamageShare(row))}</div>
         <div class="cell runid">${escapeHtml(shortRunId(row.runId))}</div>
       </div>
+      ${skillsHtml}
     </div>`
 }
 
-function renderSection(section) {
+function renderSection(section, withSkill) {
   const rows = section.rows || []
   const title = section.title
     ? `<div class="section-title">${escapeHtml(section.title)}<span class="section-count">${rows.length}</span></div>`
@@ -98,13 +117,14 @@ function renderSection(section) {
         <div class="cell runid">场次</div>
       </div>
       <div class="list-body">
-        ${rows.map((row, index) => renderRow(row, index)).join('')}
+        ${rows.map((row, index) => renderRow(row, index, withSkill)).join('')}
       </div>
     </div>`
 }
 
 function buildHtml(option) {
   const sections = option.sections || [{ rows: option.rows || [] }]
+  const withSkill = Boolean(option.withSkill)
   const width = 1280
 
   return `<!DOCTYPE html>
@@ -194,7 +214,8 @@ function buildHtml(option) {
     .row {
       position: relative;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      justify-content: center;
       min-height: 56px;
       border-radius: 10px;
       font-size: 15px;
@@ -202,6 +223,9 @@ function buildHtml(option) {
       color: #eef0f3;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
       padding: 18px 12px 12px 14px;
+    }
+    .row-with-skills {
+      padding-bottom: 10px;
     }
     .main {
       width: 100%;
@@ -243,6 +267,45 @@ function buildHtml(option) {
       font-family: HANYIWENHEI, sans-serif;
       font-size: 14px;
     }
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3px 16px;
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .skill-item {
+      display: grid;
+      grid-template-columns: 72px 1fr 42px;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+    .skill-name {
+      font-size: 11px;
+      color: rgba(255,255,255,0.78);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .skill-track {
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      overflow: hidden;
+    }
+    .skill-fill {
+      height: 100%;
+      border-radius: 999px;
+      opacity: 0.9;
+    }
+    .skill-pct {
+      font-size: 10px;
+      color: rgba(255,255,255,0.55);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
     .empty {
       padding: 18px;
       color: #777;
@@ -257,7 +320,7 @@ function buildHtml(option) {
     <div class="title">${escapeHtml(option.title)}</div>
     <div class="desc">${escapeHtml(option.description)}</div>
   </div>
-  ${sections.map(renderSection).join('')}
+  ${sections.map(section => renderSection(section, withSkill)).join('')}
 </body>
 </html>`
 }

@@ -59,5 +59,6 @@ module.exports = {
   collectSkillNames,
   collectCharacterSkills,
   detectClassBySkills,
-  buildRunCharacterClasses
+  buildRunCharacterClasses,
+  extractSkillName
 }
