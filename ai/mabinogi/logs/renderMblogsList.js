@@ -50,15 +50,20 @@ function getDpsTone(dps) {
   return 'white'
 }
 
+function skillSegColor(primary, index, isOther) {
+  // 仅用主色，相邻段用高低透明度交替拉开对比
+  if (isOther) return hexToRgba(primary, 0.22)
+  const alphas = [0.92, 0.38, 0.78, 0.32, 0.62]
+  return hexToRgba(primary, alphas[index] ?? 0.45)
+}
+
 function renderSkills(skills, theme) {
   if (!skills?.length) return ''
   const segments = skills.map((skill, index) => {
     const pct = Math.max(0, Math.min(100, Number(skill.percent) || 0))
     if (pct <= 0) return ''
     const isOther = skill.name === '其他'
-    const bg = isOther
-      ? hexToRgba(theme.secondary, 0.28)
-      : hexToRgba(theme.primary, 0.55 - index * 0.07)
+    const bg = skillSegColor(theme.primary, index, isOther)
     const label = `${truncate(skill.name, 8)} ${pct.toFixed(0)}%`
     return `<div class="skill-seg" style="flex:${pct.toFixed(2)}; background:${bg}" title="${escapeHtml(label)}">${escapeHtml(label)}</div>`
   }).join('')
@@ -284,11 +289,12 @@ function buildHtml(option) {
       padding: 0 6px;
       font-size: 10px;
       line-height: 1;
-      color: rgba(255,255,255,0.92);
+      color: rgba(255,255,255,0.95);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      border-right: 1px solid rgba(0,0,0,0.25);
+      border-right: 1px solid rgba(0,0,0,0.45);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
     }
     .skill-seg:last-child {
       border-right: 0;
