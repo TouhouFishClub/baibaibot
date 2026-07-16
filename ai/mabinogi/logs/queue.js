@@ -32,8 +32,16 @@ async function processReportJob(job) {
   }
 
   const semantic = validateSemantic(parsed.data, dungeonName)
-  if (!semantic.ok) {
-    const summary = extractSummary(parsed.data)
+  const summary = extractSummary(parsed.data)
+  const dpsRecords = buildDpsRecords({
+    runId: reportId,
+    dungeonName,
+    uploadedAt: upload?.uploadedAt || new Date(),
+    data: parsed.data
+  })
+
+  // 语义校验用于挡脏包；若仍能识别出有效击杀，优先入库（避免残局拖死整包）
+  if (!semantic.ok && !dpsRecords.length) {
     logReceive({
       event: 'parse_fail',
       reportId,
@@ -51,17 +59,10 @@ async function processReportJob(job) {
     return
   }
 
-  const summary = extractSummary(parsed.data)
-  const dpsRecords = buildDpsRecords({
-    runId: reportId,
-    dungeonName,
-    uploadedAt: upload?.uploadedAt || new Date(),
-    data: parsed.data
-  })
-
   await updateReportParsed(reportId, {
     ...summary,
-    validRecordCount: dpsRecords.length
+    validRecordCount: dpsRecords.length,
+    semanticNote: semantic.ok ? null : semantic.reason
   })
   if (dpsRecords.length) {
     await insertDpsRecords(dpsRecords)

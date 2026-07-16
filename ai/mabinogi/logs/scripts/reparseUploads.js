@@ -148,12 +148,6 @@ async function main() {
       }
 
       const semantic = validateSemantic(parsed.data, dungeonName)
-      if (!semantic.ok) {
-        console.log(`[skip] ${label} semantic ${semantic.reason}`)
-        summary.skipSemantic++
-        continue
-      }
-
       let built = buildDpsRecords({
         runId: reportId,
         dungeonName,
@@ -162,9 +156,18 @@ async function main() {
       })
       built = filterByBoss(built, args.boss)
 
+      // 语义失败但能算出击杀记录时仍补缺（残局不应拖死有效击杀）
       if (!built.length) {
-        summary.skipNoNew++
+        if (!semantic.ok) {
+          console.log(`[skip] ${label} semantic ${semantic.reason}`)
+          summary.skipSemantic++
+        } else {
+          summary.skipNoNew++
+        }
         continue
+      }
+      if (!semantic.ok) {
+        console.log(`[warn] ${label} semantic ${semantic.reason} but built=${built.length}, continue`)
       }
 
       const existingBossGroups = await loadExistingBossGroups(recordsCol, reportId)

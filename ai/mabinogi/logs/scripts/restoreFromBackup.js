@@ -162,7 +162,8 @@ async function importOne({ absolutePath, relativePath, playerDir, fileName }, { 
     ? relativePath.replace(/\\/g, '/')
     : copyFileToSource(relativePath, buffer)
 
-  // upload 已在：有 records 则跳过；无 records 则补写
+  // upload 已在：有 records 则跳过；无 records 则尽量补写
+  // 语义校验失败时仍尝试 buildDpsRecords（残局可能拖垮整包校验，但有效击杀仍可入库）
   if (dup) {
     const existingCount = await countRecordsForRun(dup._id)
     if (existingCount > 0) {
@@ -176,55 +177,53 @@ async function importOne({ absolutePath, relativePath, playerDir, fileName }, { 
       }
     }
 
-    if (!semantic.ok) {
+    const uploadedAt = dup.uploadedAt || inferUploadedAt(absolutePath, parsed.data)
+    const previewDungeon = dup.dungeonName || dungeonName
+    const preview = buildDpsRecords({
+      runId: dup._id,
+      dungeonName: previewDungeon,
+      uploadedAt,
+      data: parsed.data
+    })
+
+    if (!preview.length) {
       return {
         status: 'skip',
-        reason: `already_in_db_empty_records_semantic:${semantic.reason}`,
+        reason: semantic.ok
+          ? 'already_in_db_empty_no_records'
+          : `already_in_db_empty_semantic:${semantic.reason}`,
         reportId: dup._id,
-        uploadStatus: dup.status
+        uploadStatus: dup.status,
+        recordCount: 0
       }
     }
 
     if (!yes) {
-      const preview = buildDpsRecords({
-        runId: dup._id,
-        dungeonName: dup.dungeonName || dungeonName,
-        uploadedAt: dup.uploadedAt || inferUploadedAt(absolutePath, parsed.data),
-        data: parsed.data
-      })
       return {
         status: 'dry',
         playerId: player.playerId,
         playerName: player.playerName,
-        dungeonName: dup.dungeonName || dungeonName,
-        semantic: 'backfill_records',
+        dungeonName: previewDungeon,
+        semantic: semantic.ok ? 'backfill_records' : `backfill_despite_${semantic.reason}`,
         sourceRelPath: storeRelPath,
         reportId: dup._id,
         records: preview.length
       }
     }
 
-    const uploadedAt = dup.uploadedAt || inferUploadedAt(absolutePath, parsed.data)
     const summary = extractSummary(parsed.data)
-    const dpsRecords = buildDpsRecords({
-      runId: dup._id,
-      dungeonName: dup.dungeonName || dungeonName,
-      uploadedAt,
-      data: parsed.data
-    })
     await updateReportParsed(dup._id, {
       ...summary,
-      validRecordCount: dpsRecords.length,
-      backfilledAt: new Date()
+      validRecordCount: preview.length,
+      backfilledAt: new Date(),
+      semanticNote: semantic.ok ? null : semantic.reason
     })
-    if (dpsRecords.length) {
-      await insertDpsRecords(dpsRecords)
-    }
+    await insertDpsRecords(preview)
     return {
       status: 'backfill',
       reportId: dup._id,
-      records: dpsRecords.length,
-      dungeonName: dup.dungeonName || dungeonName,
+      records: preview.length,
+      dungeonName: previewDungeon,
       playerName: player.playerName || player.playerId
     }
   }
@@ -263,11 +262,6 @@ async function importOne({ absolutePath, relativePath, playerDir, fileName }, { 
     restoredAt: new Date()
   })
 
-  if (!semantic.ok) {
-    await updateReportFailed(reportId, semantic.reason)
-    return { status: 'failed', reportId, reason: semantic.reason }
-  }
-
   const summary = extractSummary(parsed.data)
   const dpsRecords = buildDpsRecords({
     runId: reportId,
@@ -275,9 +269,16 @@ async function importOne({ absolutePath, relativePath, playerDir, fileName }, { 
     uploadedAt,
     data: parsed.data
   })
+
+  if (!semantic.ok && !dpsRecords.length) {
+    await updateReportFailed(reportId, semantic.reason)
+    return { status: 'failed', reportId, reason: semantic.reason }
+  }
+
   await updateReportParsed(reportId, {
     ...summary,
-    validRecordCount: dpsRecords.length
+    validRecordCount: dpsRecords.length,
+    semanticNote: semantic.ok ? null : semantic.reason
   })
   if (dpsRecords.length) {
     await insertDpsRecords(dpsRecords)
