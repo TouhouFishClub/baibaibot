@@ -19,6 +19,11 @@ const DEFAULT_DUNGEON = '布里列赫'
 const DEFAULT_RANK = 10
 const BOSS_DEFAULT_RANK = 30
 const CHARACTER_DEFAULT_RANK = 3
+const USER_MAX_RANK = 30
+
+function isAdminUser(from) {
+  return String(from || '') === ADMIN_QQ
+}
 
 function isMblogsHelpRequest(content) {
   const tokens = String(content || '').trim().split(/\s+/).filter(Boolean)
@@ -41,7 +46,7 @@ function buildMblogsHelp() {
     '  mblogs <场次ID>           查询单场战斗详情图（支持短 ID）',
     '',
     '参数：',
-    '  --rank N    显示前 N 名（副本默认 10，Boss 默认 30，角色默认 3）',
+    '  --rank N    显示前 N 名（副本默认 10，Boss 默认 30，角色默认 3；普通用户最多 30）',
     '  --job 职业名  只显示指定职业（模糊匹配）',
     '  --all       显示全部记录，不做「每角色仅保留最高 DPS」去重',
     '  --withskill 列表模式在角色条目下显示技能占比进度条',
@@ -113,11 +118,22 @@ function parseMblogsInput(content) {
   }
 }
 
-function resolveRank(query, rank) {
-  if (rank) return rank
-  if (query.type === 'boss') return BOSS_DEFAULT_RANK
-  if (query.type === 'character') return CHARACTER_DEFAULT_RANK
-  return DEFAULT_RANK
+function resolveRank(query, rank, { isAdmin = false } = {}) {
+  let limit
+  if (rank) {
+    limit = rank
+  } else if (query.type === 'boss') {
+    limit = BOSS_DEFAULT_RANK
+  } else if (query.type === 'character') {
+    limit = CHARACTER_DEFAULT_RANK
+  } else {
+    limit = DEFAULT_RANK
+  }
+
+  if (!isAdmin && limit > USER_MAX_RANK) {
+    return USER_MAX_RANK
+  }
+  return limit
 }
 
 function buildRankDescription({ mode, showAll, rank, job, withSkill }) {
@@ -173,7 +189,7 @@ function mapSections(groups) {
   }))
 }
 
-async function queryMblogs(content, { showAll = false, rank, job, withSkill = false } = {}) {
+async function queryMblogs(content, { showAll = false, rank, job, withSkill = false, isAdmin = false } = {}) {
   if (isMblogsHelpRequest(content)) {
     return { help: buildMblogsHelp() }
   }
@@ -195,7 +211,7 @@ async function queryMblogs(content, { showAll = false, rank, job, withSkill = fa
     return { error: '用法：mblogs 角色名 / mblogs 布里列赫 / mblogs Boss名 / mblogs 布里列赫 --all / mblogs 布里列赫 --rank 20 / mblogs Boss名 --job 流星射手 / mblogs Boss名 --withskill' }
   }
 
-  const limit = resolveRank(query, rank)
+  const limit = resolveRank(query, rank, { isAdmin })
   const resolvedJob = job ? resolveClassQuery(job) : undefined
   const queryOptions = {
     bestPerCharacter: !showAll,
@@ -271,9 +287,10 @@ async function mblogs(content, from, callback, groupid) {
 
   const { keyword: queryKeyword, showAll, rank, job, withSkill } = parsed
   const resolvedKeyword = queryKeyword || DEFAULT_DUNGEON
+  const isAdmin = isAdminUser(from)
 
   try {
-    const result = await queryMblogs(resolvedKeyword, { showAll, rank, job, withSkill })
+    const result = await queryMblogs(resolvedKeyword, { showAll, rank, job, withSkill, isAdmin })
     if (result.help) {
       callback(result.help)
       return
