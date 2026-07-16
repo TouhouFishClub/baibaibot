@@ -313,7 +313,7 @@ function canUseMblogs(from, groupid) {
 
 async function mblogs(content, from, callback, groupid) {
   if (!canUseMblogs(from, groupid)) {
-    callback('无权限查询 DPS 记录（仅限指定群内使用）')
+    // callback('无权限查询 DPS 记录（仅限指定群内使用）')
     return
   }
 
