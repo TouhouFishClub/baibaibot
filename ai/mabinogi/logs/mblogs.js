@@ -1,7 +1,6 @@
 const path = require('path-extra')
-const { render } = require('../Television/render')
 const { IMAGE_DATA } = require('../../../baibaiConfigs')
-const { resolveQueryType, formatHp, formatDuration, formatPercent, formatDps, formatDamage, shortRunId, BOSSES, DUNGEONS } = require('./bossConfig')
+const { resolveQueryType, BOSSES, DUNGEONS } = require('./bossConfig')
 const { CLASSES, formatClassHelpLine, resolveClassQuery } = require('./classConfig')
 const {
   listRecordsByCharacter,
@@ -10,6 +9,7 @@ const {
 } = require('./db')
 const { isRunIdKeyword, loadRunDetail } = require('./runQuery')
 const { renderRunDetail } = require('./renderRunDetail')
+const { renderMblogsList } = require('./renderMblogsList')
 
 const ADMIN_QQ = '799018865'
 const ALLOWED_GROUPS = new Set(['668217870', '885309800'])
@@ -18,29 +18,6 @@ const DEFAULT_DUNGEON = '布里列赫'
 const DEFAULT_RANK = 10
 const BOSS_DEFAULT_RANK = 30
 const CHARACTER_DEFAULT_RANK = 3
-
-const addZero = n => (n < 10 ? '0' + n : n)
-
-const formatTime = ts => {
-  const d = new Date(ts)
-  return `${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} ${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}`
-}
-
-const truncate = (text, max = 18) => {
-  const value = String(text || '')
-  if (value.length <= max) return value
-  return `${value.slice(0, max - 1)}…`
-}
-
-function flattenGroups(groups) {
-  const rows = []
-  for (const group of groups) {
-    for (const record of group.records) {
-      rows.push(record)
-    }
-  }
-  return rows
-}
 
 function isMblogsHelpRequest(content) {
   const tokens = String(content || '').trim().split(/\s+/).filter(Boolean)
@@ -57,7 +34,7 @@ function buildMblogsHelp() {
     '',
     '基本用法：',
     `  mblogs                    默认查询${DEFAULT_DUNGEON}，各 Boss 前${DEFAULT_RANK}名`,
-    '  mblogs 角色名             查询该角色各 Boss 最高 DPS',
+    '  mblogs 角色名             查询该角色各 Boss 最高 DPS（按 Boss 分段）',
     `  mblogs ${DEFAULT_DUNGEON}           查询副本各 Boss 排行榜`,
     `  mblogs Boss名             查询单个 Boss，默认前${BOSS_DEFAULT_RANK}名`,
     '  mblogs <场次ID>           查询单场战斗详情图（支持短 ID）',
@@ -157,62 +134,6 @@ function buildTitle(baseTitle, job) {
   return `${baseTitle} · ${job}`
 }
 
-function buildColumns(mode) {
-  const common = [
-    { label: '副本', key: 'dungeonName', format: v => truncate(v, 8) },
-    { label: '记录时间', key: 'recordTime', format: v => formatTime(v) },
-    { label: '队友数', key: 'teamSize' },
-    { label: '队友', key: 'teammateNames', format: v => truncate(v, 14) },
-    { label: '攻略时间', key: 'duration', format: v => formatDuration(v) },
-    { label: 'DPS', key: 'dps', format: v => formatDps(v) },
-    { label: 'Boss血量', key: 'bossHp', format: v => formatHp(v) },
-    { label: '角色伤害', key: 'totalDamage', format: v => formatDamage(v) },
-    { label: '占比', key: 'damagePercent', format: v => formatPercent(v) },
-    { label: '场次ID', key: 'runId', format: v => shortRunId(v) }
-  ]
-
-  if (mode === 'dungeon') {
-    return [
-      { label: '角色', key: 'characterName', format: v => truncate(v, 10) },
-      { label: '职业', key: 'characterClass', format: v => truncate(v, 8) },
-      ...common
-    ]
-  }
-
-  if (mode === 'boss') {
-    return [
-      { label: '角色', key: 'characterName', format: v => truncate(v, 10) },
-      { label: '职业', key: 'characterClass', format: v => truncate(v, 8) },
-      { label: '副本', key: 'dungeonName', format: v => truncate(v, 8) },
-      { label: '记录时间', key: 'recordTime', format: v => formatTime(v) },
-      { label: '队友数', key: 'teamSize' },
-      { label: '队友', key: 'teammateNames', format: v => truncate(v, 14) },
-      { label: 'Boss', key: 'bossName', format: v => truncate(v, 12) },
-      { label: '攻略时间', key: 'duration', format: v => formatDuration(v) },
-      { label: 'DPS', key: 'dps', format: v => formatDps(v) },
-      { label: 'Boss血量', key: 'bossHp', format: v => formatHp(v) },
-      { label: '角色伤害', key: 'totalDamage', format: v => formatDamage(v) },
-      { label: '占比', key: 'damagePercent', format: v => formatPercent(v) },
-      { label: '场次ID', key: 'runId', format: v => shortRunId(v) }
-    ]
-  }
-
-  return [
-    { label: '职业', key: 'characterClass', format: v => truncate(v, 8) },
-    { label: '副本', key: 'dungeonName', format: v => truncate(v, 8) },
-    { label: '记录时间', key: 'recordTime', format: v => formatTime(v) },
-    { label: '队友数', key: 'teamSize' },
-    { label: '队友', key: 'teammateNames', format: v => truncate(v, 14) },
-    { label: 'Boss', key: 'bossName', format: v => truncate(v, 12) },
-    { label: '攻略时间', key: 'duration', format: v => formatDuration(v) },
-    { label: 'DPS', key: 'dps', format: v => formatDps(v) },
-    { label: 'Boss血量', key: 'bossHp', format: v => formatHp(v) },
-    { label: '角色伤害', key: 'totalDamage', format: v => formatDamage(v) },
-    { label: '占比', key: 'damagePercent', format: v => formatPercent(v) },
-    { label: '场次ID', key: 'runId', format: v => shortRunId(v) }
-  ]
-}
-
 function mapRow(record) {
   return {
     characterName: record.characterName,
@@ -229,6 +150,13 @@ function mapRow(record) {
     damagePercent: record.damagePercent,
     runId: record.runId
   }
+}
+
+function mapSections(groups) {
+  return groups.map(group => ({
+    title: group.bossName,
+    rows: group.records.map(mapRow)
+  }))
 }
 
 async function queryMblogs(content, { showAll = false, rank, job } = {}) {
@@ -262,8 +190,8 @@ async function queryMblogs(content, { showAll = false, rank, job } = {}) {
 
   if (query.type === 'character') {
     const groups = await listRecordsByCharacter(query.name, limit, queryOptions)
-    const rows = flattenGroups(groups).map(mapRow)
-    if (!rows.length) {
+    const sections = mapSections(groups)
+    if (!sections.some(section => section.rows.length)) {
       const suffix = job ? `（职业：${resolvedJob || job}）` : ''
       return { error: `未找到角色「${query.name}」的通关 DPS 记录${suffix}` }
     }
@@ -271,7 +199,7 @@ async function queryMblogs(content, { showAll = false, rank, job } = {}) {
       title: buildTitle(`DPS记录：${query.name}`, resolvedJob || job),
       description: buildRankDescription({ mode: 'character', showAll, rank: limit, job: resolvedJob || job }),
       mode: 'character',
-      rows
+      sections
     }
   }
 
@@ -285,10 +213,7 @@ async function queryMblogs(content, { showAll = false, rank, job } = {}) {
       title: buildTitle(`DPS记录：${query.dungeon.name}`, resolvedJob || job),
       description: buildRankDescription({ mode: 'dungeon', showAll, rank: limit, job: resolvedJob || job }),
       mode: 'dungeon',
-      sections: groups.map(group => ({
-        title: group.bossName,
-        rows: group.records.map(mapRow)
-      }))
+      sections: mapSections(groups)
     }
   }
 
@@ -302,7 +227,7 @@ async function queryMblogs(content, { showAll = false, rank, job } = {}) {
     title: buildTitle(`DPS记录：${query.boss.displayName}`, resolvedJob || job),
     description: buildRankDescription({ mode: 'boss', showAll, rank: limit, job: resolvedJob || job }),
     mode: 'boss',
-    rows
+    sections: [{ rows }]
   }
 }
 
@@ -351,18 +276,12 @@ async function mblogs(content, from, callback, groupid) {
     }
 
     const outputDir = path.join(IMAGE_DATA, 'mabi_other', 'MabiLogs.png')
-    const columns = buildColumns(result.mode)
-    const renderOption = {
+    await renderMblogsList({
       title: result.title,
       description: result.description,
       output: outputDir,
-      columns
-    }
-    if (result.sections) {
-      await render([], { ...renderOption, sections: result.sections })
-    } else {
-      await render(result.rows, renderOption)
-    }
+      sections: result.sections || [{ rows: result.rows || [] }]
+    })
 
     callback(`[CQ:image,file=${path.join('send', 'mabi_other', 'MabiLogs.png')}]`)
   } catch (error) {
