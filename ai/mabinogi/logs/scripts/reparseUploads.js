@@ -191,7 +191,8 @@ async function main() {
 
       const afterGroups = new Set([...existingBossGroups, ...toInsert.map(recordBossGroup)])
       const summaryData = extractSummary(parsed.data)
-      const totalRecords = await recordsCol.countDocuments({ runId: String(reportId) })
+      // mongodb@2.x 无 countDocuments，用 count
+      const totalRecords = await recordsCol.count({ runId: String(reportId) })
       await updateReportParsed(reportId, {
         ...summaryData,
         validRecordCount: totalRecords,

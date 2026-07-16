@@ -38,7 +38,8 @@ const COL_RECORDS = 'cl_mabinogi_dps_records'
 
 async function countRecordsForRun(runId) {
   const client = await getClient()
-  return client.db(DB_NAME).collection(COL_RECORDS).countDocuments({
+  // mongodb@2.x 无 countDocuments，用 count
+  return client.db(DB_NAME).collection(COL_RECORDS).count({
     runId: String(runId)
   })
 }
