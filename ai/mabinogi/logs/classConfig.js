@@ -38,7 +38,8 @@ function resolveClassQuery(keyword) {
 
 function formatClassHelpLine(cls) {
   if (!cls.aliases?.length) return cls.name
-  return `${cls.name}（${cls.aliases.join('、')}）`
+  // return `${cls.name}（${cls.aliases.join('、')}）`
+  return `${cls.name}`
 }
 
 module.exports = {

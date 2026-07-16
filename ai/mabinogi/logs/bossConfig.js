@@ -20,47 +20,47 @@ const BOSSES = [
   {
     key: 'petak_p1',
     displayName: '枯木之佩塔克',
-    aliases: ['枯木之佩塔克', '枯木的佩塔克', '佩塔克'],
+    aliases: ['枯木之佩塔克', '枯木的佩塔克', '佩塔克', '一王'],
     groupKey: 'petak',
     maxHp: 698_516_992
   },
   {
     key: 'petak_p2',
     displayName: '枯木之佩塔克',
-    aliases: ['枯木之佩塔克', '枯木的佩塔克', '佩塔克'],
+    aliases: ['枯木之佩塔克', '枯木的佩塔克', '佩塔克', '一王'],
     groupKey: 'petak',
     maxHp: 850_368_576
   },
   {
     key: 'brontanas',
     displayName: '布隆塔纳斯',
-    aliases: ['布隆塔纳斯'],
+    aliases: ['布隆塔纳斯', '二王', '老马'],
     groupKey: 'brontanas',
     referenceHp: 1_143_400_000
   },
   {
     key: 'mayer',
     displayName: '雷内恩的米耶尔',
-    aliases: ['雷内恩的米耶尔', '米耶尔'],
+    aliases: ['雷内恩的米耶尔', '米耶尔', '三王'],
     groupKey: 'mayer',
     referenceHp: 1_968_000_000
   },
   {
     key: 'mayer_regret',
     displayName: '雷内恩的米耶尔：悔恨',
-    aliases: ['雷内恩的米耶尔：悔恨', '悔恨', '米耶尔：悔恨'],
+    aliases: ['雷内恩的米耶尔：悔恨', '悔恨', '米耶尔：悔恨', '四王'],
     groupKey: 'mayer_regret',
     referenceHp: 3_449_000_000
   },
-  {
-    key: 'galta',
-    displayName: '塔赫杜因盖尔塔',
-    aliases: ['塔赫杜因盖尔塔', '盖尔塔'],
-    groupKey: 'galta',
-    referenceHp: 262_500,
-    hpTolerance: 50_000,
-    minDuration: 0.1
-  }
+  // {
+  //   key: 'galta',
+  //   displayName: '塔赫杜因盖尔塔',
+  //   aliases: ['塔赫杜因盖尔塔', '盖尔塔'],
+  //   groupKey: 'galta',
+  //   referenceHp: 262_500,
+  //   hpTolerance: 50_000,
+  //   minDuration: 0.1
+  // }
 ]
 
 function getBossMatchHp(boss) {
