@@ -12,6 +12,7 @@ const { isRunIdKeyword, loadRunDetail } = require('./runQuery')
 const { renderRunDetail } = require('./renderRunDetail')
 
 const ADMIN_QQ = '799018865'
+const ALLOWED_GROUPS = new Set(['668217870'])
 
 const DEFAULT_DUNGEON = '布里列赫'
 const DEFAULT_RANK = 10
@@ -305,9 +306,14 @@ async function queryMblogs(content, { showAll = false, rank, job } = {}) {
   }
 }
 
-async function mblogs(content, from, callback) {
-  if (String(from) !== ADMIN_QQ) {
-    callback('无权限查询 DPS 记录')
+function canUseMblogs(from, groupid) {
+  if (String(from) === ADMIN_QQ) return true
+  return ALLOWED_GROUPS.has(String(groupid || ''))
+}
+
+async function mblogs(content, from, callback, groupid) {
+  if (!canUseMblogs(from, groupid)) {
+    callback('无权限查询 DPS 记录（仅限指定群内使用）')
     return
   }
 

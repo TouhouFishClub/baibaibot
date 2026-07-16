@@ -10,7 +10,7 @@ const CLASSES = [
   { name: '枪炮师', aliases: ['双枪', '枪炮'], skills: ['致命狙击', '迅捷射击'] },
   { name: '禁术炼金师', aliases: ['炼金'], skills: ['螺旋爆裂', '化学狂欢'] },
   { name: '旋律操纵师', aliases: ['旋律', '操纵师', '人偶', '颂乐人偶'], skills: ['灵线织网'] },
-  { name: '狂怒斗士', aliases: ['狂怒', '斗士', '格斗', '炎拳'], skills: ['疾风突刺', '烈焰三击'] }
+  { name: '狂怒斗士', aliases: ['狂怒', '斗士', '格斗', '炎拳', '拳套'], skills: ['疾风突刺', '烈焰三击'] }
 ]
 
 const UNKNOWN_CLASS = '未知'

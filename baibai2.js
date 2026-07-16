@@ -1937,7 +1937,7 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return
   }
   if(con.length >= 6 && con.toLowerCase().startsWith('mblogs')) {
-    mblogs(con.substring(6).trim(), from, callback).catch(err => { console.log(err) })
+    mblogs(con.substring(6).trim(), from, callback, groupid).catch(err => { console.log(err) })
     return
   }
   if(con.length >= 5 && con.toLowerCase().startsWith('mbzzs')) {
