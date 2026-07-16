@@ -12,7 +12,7 @@ const { isRunIdKeyword, loadRunDetail } = require('./runQuery')
 const { renderRunDetail } = require('./renderRunDetail')
 
 const ADMIN_QQ = '799018865'
-const ALLOWED_GROUPS = new Set(['668217870'])
+const ALLOWED_GROUPS = new Set(['668217870', '885309800'])
 
 const DEFAULT_DUNGEON = '布里列赫'
 const DEFAULT_RANK = 10
