@@ -41,7 +41,8 @@ function truncate(text, max = 20) {
 
 function renderRow(row, index) {
   const theme = getClassTheme(row.characterClass)
-  const bg = `linear-gradient(90deg, ${hexToRgba(theme.primary, 0.28)} 0%, ${hexToRgba(theme.secondary, 0.12)} 55%, ${hexToRgba(theme.primary, 0.06)} 100%)`
+  const alpha = 0.22
+  const bg = `linear-gradient(90deg, ${hexToRgba(theme.primary, alpha)} 0%, ${hexToRgba(theme.secondary, alpha)} 100%)`
   const border = theme.primary
 
   return `
@@ -150,39 +151,45 @@ function buildHtml(option) {
     .main {
       display: grid;
       grid-template-columns:
-        108px
-        110px
+        118px
+        120px
+        100px
+        60px
+        minmax(130px, 1.2fr)
         96px
-        56px
-        minmax(120px, 1.2fr)
-        88px
-        78px
-        minmax(200px, 1.6fr)
-        72px;
+        86px
+        minmax(210px, 1.6fr)
+        80px;
       align-items: center;
       column-gap: 8px;
     }
     .list-head {
-      height: 28px;
+      height: 30px;
       margin: 0 12px 6px 14px;
       color: #7d848e;
-      font-size: 12px;
+      font-size: 13px;
       letter-spacing: 0.3px;
     }
     .list-body { display: flex; flex-direction: column; gap: 6px; }
     .row {
       position: relative;
-      min-height: 52px;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
       border-radius: 10px;
       border-left: 4px solid #666;
-      font-size: 13px;
+      font-size: 15px;
+      line-height: 1.35;
       color: #eef0f3;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-      padding: 16px 12px 8px 14px;
+      padding: 18px 12px 12px 14px;
+    }
+    .main {
+      width: 100%;
     }
     .meta {
       position: absolute;
-      top: 4px;
+      top: 5px;
       left: 14px;
       font-size: 10px;
       line-height: 1;
@@ -193,9 +200,18 @@ function buildHtml(option) {
     .cell { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #eef0f3; }
     .class { color: #fff; font-weight: 400; }
     .name { font-weight: 700; }
+    .teammates {
+      color: #9aa3ad;
+      font-family: monospace;
+      font-size: 13px;
+    }
     .dps { font-weight: 700; color: #ffe082; }
-    .share { color: #cfd6df; font-size: 12px; }
-    .runid { color: #9aa3ad; font-family: monospace; font-size: 12px; }
+    .share { color: #cfd6df; font-size: 14px; }
+    .runid {
+      color: #eef0f3;
+      font-family: HANYIWENHEI, sans-serif;
+      font-size: 14px;
+    }
     .empty {
       padding: 18px;
       color: #777;

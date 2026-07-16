@@ -7,8 +7,8 @@ const CLASSES = [
   { name: '流星射手', aliases: ['弓', '流子', '瘤子'], skills: ['爆炎箭', '水流箭'], theme: { primary: '#FFD84A', secondary: '#FFF3A0' } },
   { name: '圣盾骑士', aliases: ['圣盾', 'T', '坦克'], skills: ['铁壁猛击', '审判一击'], theme: { primary: '#F0A020', secondary: '#FFE08A' } },
   { name: '爆裂骑士枪', aliases: ['骑士枪', '骑枪', '铳枪', '爆骑'], skills: ['爆裂冲刺', '湮灭'], theme: { primary: '#1AD4C0', secondary: '#7FF5E0' } },
-  { name: '枪炮师', aliases: ['双枪', '枪炮'], skills: ['致命狙击', '迅捷射击'], theme: { primary: '#C5D12A', secondary: '#F0E060' } },
-  { name: '禁术炼金师', aliases: ['炼金'], skills: ['螺旋爆裂', '化学狂欢'], theme: { primary: '#7B6CFF', secondary: '#C4B8FF' } },
+  { name: '枪炮师', aliases: ['双枪', '枪炮'], skills: ['致命狙击', '迅捷射击'], theme: { primary: '#7B6CFF', secondary: '#C4B8FF' } },
+  { name: '禁术炼金师', aliases: ['炼金'], skills: ['螺旋爆裂', '化学狂欢'], theme: { primary: '#C5D12A', secondary: '#F0E060' } },
   { name: '旋律操纵师', aliases: ['旋律', '操纵师', '人偶', '颂乐人偶'], skills: ['灵线织网'], theme: { primary: '#FF4FA3', secondary: '#4DE8D0' } },
   { name: '狂怒斗士', aliases: ['狂怒', '斗士', '格斗', '炎拳', '拳套'], skills: ['疾风突刺', '烈焰三击'], theme: { primary: '#E01830', secondary: '#8B0A28' } }
 ]
