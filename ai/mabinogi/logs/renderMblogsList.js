@@ -39,14 +39,25 @@ function truncate(text, max = 20) {
   return `${value.slice(0, max - 1)}…`
 }
 
+function getDpsTone(dps) {
+  const n = Number(dps)
+  if (!Number.isFinite(n)) return 'white'
+  if (n > 2_000_000) return 'rainbow'
+  if (n >= 1_500_000) return 'gold'
+  if (n >= 1_000_000) return 'magenta'
+  if (n >= 700_000) return 'blue'
+  if (n >= 400_000) return 'green'
+  return 'white'
+}
+
 function renderRow(row, index) {
   const theme = getClassTheme(row.characterClass)
   const alpha = 0.22
   const bg = `linear-gradient(90deg, ${hexToRgba(theme.primary, alpha)} 0%, ${hexToRgba(theme.secondary, alpha)} 100%)`
-  const border = theme.primary
+  const dpsTone = getDpsTone(row.dps)
 
   return `
-    <div class="row" style="background:${bg}; border-left-color:${border}">
+    <div class="row" style="background:${bg}">
       <div class="meta">#${index + 1} · ${escapeHtml(formatTime(row.recordTime))}</div>
       <div class="main">
         <div class="cell class">${escapeHtml(row.characterClass || '未知')}</div>
@@ -55,7 +66,7 @@ function renderRow(row, index) {
         <div class="cell team-size">${escapeHtml(row.teamSize ?? '-')}</div>
         <div class="cell teammates" title="${escapeHtml(row.teammateNames)}">${escapeHtml(truncate(row.teammateNames, 18))}</div>
         <div class="cell duration">${escapeHtml(formatDuration(row.duration))}</div>
-        <div class="cell dps">${escapeHtml(formatDps(row.dps))}</div>
+        <div class="cell dps dps-${dpsTone}">${escapeHtml(formatDps(row.dps))}</div>
         <div class="cell share">${escapeHtml(formatHpDamageShare(row))}</div>
         <div class="cell runid">${escapeHtml(shortRunId(row.runId))}</div>
       </div>
@@ -83,7 +94,7 @@ function renderSection(section) {
         <div class="cell teammates">队友</div>
         <div class="cell duration">攻略时间</div>
         <div class="cell dps">DPS</div>
-        <div class="cell share">Boss血量 / 角色伤害（占比）</div>
+        <div class="cell share">贡献度</div>
         <div class="cell runid">场次</div>
       </div>
       <div class="list-body">
@@ -170,6 +181,15 @@ function buildHtml(option) {
       font-size: 13px;
       letter-spacing: 0.3px;
     }
+    .list-head .cell {
+      color: #7d848e;
+      font-family: HANYIWENHEI, sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+    }
+    .list-head .dps {
+      color: #fff;
+    }
     .list-body { display: flex; flex-direction: column; gap: 6px; }
     .row {
       position: relative;
@@ -177,7 +197,6 @@ function buildHtml(option) {
       align-items: center;
       min-height: 56px;
       border-radius: 10px;
-      border-left: 4px solid #666;
       font-size: 15px;
       line-height: 1.35;
       color: #eef0f3;
@@ -200,12 +219,24 @@ function buildHtml(option) {
     .cell { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #eef0f3; }
     .class { color: #fff; font-weight: 400; }
     .name { font-weight: 700; }
-    .teammates {
+    .row .teammates {
       color: #9aa3ad;
       font-family: monospace;
       font-size: 13px;
     }
-    .dps { font-weight: 700; color: #ffe082; }
+    .dps { font-weight: 700; }
+    .dps-rainbow {
+      background: linear-gradient(90deg, #ff4d4d, #ffb84d, #ffe14d, #5dff8a, #4db8ff, #b84dff, #ff4da6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+    .dps-gold { color: #ffd54f; }
+    .dps-magenta { color: #ff4fcf; }
+    .dps-blue { color: #4da3ff; }
+    .dps-green { color: #52d67a; }
+    .dps-white { color: #ffffff; }
     .share { color: #cfd6df; font-size: 14px; }
     .runid {
       color: #eef0f3;
