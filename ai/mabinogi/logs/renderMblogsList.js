@@ -57,26 +57,44 @@ function maskTeammateNames(text) {
     .join('、') || '-'
 }
 
-function formatDisplayNames(row, showMode) {
+function resolveNameVisibility(showMode) {
   const mode = showMode || 'hidden'
-  let characterName = '-'
-  let teammateNames = '-'
+  return {
+    showCharacter: mode === 'all' || mode === 'character' || mode === 'mask' || mode === 'maskCharacter',
+    showTeammates: mode === 'all' || mode === 'mask' || mode === 'maskTeammate'
+  }
+}
 
-  if (mode === 'all') {
-    characterName = row.characterName || '-'
-    teammateNames = row.teammateNames || '-'
-  } else if (mode === 'character') {
-    characterName = row.characterName || '-'
-  } else if (mode === 'mask') {
-    characterName = maskPersonName(row.characterName)
-    teammateNames = maskTeammateNames(row.teammateNames)
-  } else if (mode === 'maskCharacter') {
-    characterName = maskPersonName(row.characterName)
-  } else if (mode === 'maskTeammate') {
-    teammateNames = maskTeammateNames(row.teammateNames)
+function buildGridTemplate({ showCharacter, showTeammates }) {
+  const cols = ['118px'] // 职业
+  if (showCharacter) cols.push('120px')
+  cols.push('100px', '60px') // 副本、队友数
+  if (showTeammates) cols.push('minmax(130px, 1.2fr)')
+  cols.push('96px', '86px', 'minmax(210px, 1.6fr)', '80px') // 攻略时间、DPS、贡献度、场次
+  return cols.join(' ')
+}
+
+function formatDisplayNames(row, showMode) {
+  const { showCharacter, showTeammates } = resolveNameVisibility(showMode)
+  let characterName = ''
+  let teammateNames = ''
+
+  if (showCharacter) {
+    if (showMode === 'mask' || showMode === 'maskCharacter') {
+      characterName = maskPersonName(row.characterName)
+    } else {
+      characterName = row.characterName || '-'
+    }
+  }
+  if (showTeammates) {
+    if (showMode === 'mask' || showMode === 'maskTeammate') {
+      teammateNames = maskTeammateNames(row.teammateNames)
+    } else {
+      teammateNames = row.teammateNames || '-'
+    }
   }
 
-  return { characterName, teammateNames }
+  return { characterName, teammateNames, showCharacter, showTeammates }
 }
 
 // 上传者名遵循 --show 的「角色名」规则：all/角色 显示全名，脱敏/脱敏角色名 显示脱敏，其余隐藏
@@ -129,16 +147,22 @@ function renderRow(row, index, withSkill, showMode) {
   const skillsHtml = withSkill ? renderSkills(row.skills, theme) : ''
   const names = formatDisplayNames(row, showMode)
   const uploaderName = formatUploaderName(row, showMode)
+  const nameCell = names.showCharacter
+    ? `<div class="cell name">${escapeHtml(truncate(names.characterName, 12))}</div>`
+    : ''
+  const teammatesCell = names.showTeammates
+    ? `<div class="cell teammates" title="${escapeHtml(names.teammateNames)}">${escapeHtml(truncate(names.teammateNames, 18))}</div>`
+    : ''
 
   return `
     <div class="row${withSkill ? ' row-with-skills' : ''}" style="background:${bg}">
       <div class="meta">#${index + 1} · ${escapeHtml(formatTime(row.recordTime))} · 上传者：${escapeHtml(uploaderName)}</div>
       <div class="main">
         <div class="cell class">${escapeHtml(row.characterClass || '未知')}</div>
-        <div class="cell name">${escapeHtml(truncate(names.characterName, 12))}</div>
+        ${nameCell}
         <div class="cell dungeon">${escapeHtml(truncate(row.dungeonName, 10))}</div>
         <div class="cell team-size">${escapeHtml(row.teamSize ?? '-')}</div>
-        <div class="cell teammates" title="${escapeHtml(names.teammateNames)}">${escapeHtml(truncate(names.teammateNames, 18))}</div>
+        ${teammatesCell}
         <div class="cell duration">${escapeHtml(formatDuration(row.duration))}</div>
         <div class="cell dps dps-${dpsTone}">${escapeHtml(formatDps(row.dps))}</div>
         <div class="cell share">${escapeHtml(formatHpDamageShare(row))}</div>
@@ -153,20 +177,24 @@ function renderSection(section, withSkill, showMode) {
   const title = section.title
     ? `<div class="section-title">${escapeHtml(section.title)}<span class="section-count">${rows.length}</span></div>`
     : ''
+  const { showCharacter, showTeammates } = resolveNameVisibility(showMode)
 
   if (!rows.length) {
     return `<div class="section">${title}<div class="empty">暂无记录</div></div>`
   }
+
+  const nameHead = showCharacter ? '<div class="cell name">角色</div>' : ''
+  const teammatesHead = showTeammates ? '<div class="cell teammates">队友</div>' : ''
 
   return `
     <div class="section">
       ${title}
       <div class="list-head">
         <div class="cell class">职业</div>
-        <div class="cell name">角色</div>
+        ${nameHead}
         <div class="cell dungeon">副本</div>
         <div class="cell team-size">队友数</div>
-        <div class="cell teammates">队友</div>
+        ${teammatesHead}
         <div class="cell duration">攻略时间</div>
         <div class="cell dps">DPS</div>
         <div class="cell share">贡献度</div>
@@ -182,6 +210,8 @@ function buildHtml(option) {
   const sections = option.sections || [{ rows: option.rows || [] }]
   const withSkill = Boolean(option.withSkill)
   const showMode = option.showMode || 'hidden'
+  const visibility = resolveNameVisibility(showMode)
+  const gridTemplate = buildGridTemplate(visibility)
   const width = 1280
 
   return `<!DOCTYPE html>
@@ -238,16 +268,7 @@ function buildHtml(option) {
     .list-head,
     .main {
       display: grid;
-      grid-template-columns:
-        118px
-        120px
-        100px
-        60px
-        minmax(130px, 1.2fr)
-        96px
-        86px
-        minmax(210px, 1.6fr)
-        80px;
+      grid-template-columns: ${gridTemplate};
       align-items: center;
       column-gap: 8px;
     }
