@@ -39,41 +39,39 @@ function formatTokenUsage(usage) {
 function buildHighlightTerms(report) {
   // priority: class > boss > skill（同名时取更高优先级）
   const map = new Map()
+  const rank = { class: 3, boss: 2, skill: 1 }
 
-  const add = (text, type, minLen = 2) => {
+  const add = (text, meta, minLen = 2) => {
     const value = String(text || '').trim()
     if (!value || [...value].length < minLen) return
     const prev = map.get(value)
-    const rank = { class: 3, boss: 2, skill: 1 }
-    if (prev && rank[prev] >= rank[type]) return
-    map.set(value, type)
+    if (prev && rank[prev.type] >= rank[meta.type]) return
+    map.set(value, meta)
   }
 
   for (const cls of CLASSES) {
-    add(cls.name, 'class', 2)
+    add(cls.name, { type: 'class', className: cls.name }, 2)
     for (const alias of cls.aliases || []) {
       // 过短别名（如 T、弓、奶）易误伤正文，跳过
       if ([...String(alias)].length < 2) continue
       if (['T', '弓', '奶'].includes(alias)) continue
-      add(alias, 'class', 2)
+      add(alias, { type: 'class', className: cls.name }, 2)
     }
   }
 
-  const bossNames = new Set()
   for (const boss of BOSSES) {
-    add(boss.displayName, 'boss', 2)
-    bossNames.add(boss.displayName)
+    add(boss.displayName, { type: 'boss' }, 2)
     for (const alias of boss.aliases || []) {
       if ([...String(alias)].length < 2) continue
       if (/^[一二三四]王$/.test(alias)) continue
-      add(alias, 'boss', 2)
+      add(alias, { type: 'boss' }, 2)
     }
   }
 
   for (const cls of CLASSES) {
-    for (const skill of cls.skills || []) add(skill, 'skill', 2)
+    for (const skill of cls.skills || []) add(skill, { type: 'skill' }, 2)
   }
-  for (const skill of report?.lexicon?.skills || []) add(skill, 'skill', 2)
+  for (const skill of report?.lexicon?.skills || []) add(skill, { type: 'skill' }, 2)
 
   return map
 }
@@ -86,9 +84,17 @@ function highlightText(text, termMap) {
 
   const re = new RegExp(`(${keys.map(escapeRegExp).join('|')})`, 'g')
   return raw.split(re).map(part => {
-    const type = termMap.get(part)
-    if (!type) return escapeHtml(part)
-    return `<span class="hl hl-${type}">${escapeHtml(part)}</span>`
+    const meta = termMap.get(part)
+    if (!meta) return escapeHtml(part)
+    const label = escapeHtml(part)
+    if (meta.type === 'class') {
+      const theme = getClassTheme(meta.className)
+      const primary = theme.primary || '#FBBF24'
+      const bg = hexToRgba(primary, 0.2)
+      const underline = hexToRgba(primary, 0.55)
+      return `<span class="hl hl-class" style="color:${primary};background:${bg};box-shadow:inset 0 -1px 0 ${underline}">${label}</span>`
+    }
+    return `<span class="hl hl-${meta.type}">${label}</span>`
   }).join('')
 }
 
@@ -105,7 +111,7 @@ function renderClassCard(item, termMap) {
   return `
   <section class="class-card" style="--c1:${primary};--c2:${secondary};--bg:${hexToRgba(primary, 0.08)};--border:${hexToRgba(primary, 0.28)}">
     <header>
-      <div class="class-name">${highlightText(item.name || '', termMap)}</div>
+      <div class="class-name">${escapeHtml(item.name || '')}</div>
       <div class="class-summary">${highlightText(item.summary || '', termMap)}</div>
     </header>
     <div class="grid">
@@ -204,9 +210,7 @@ function generateHtml(report) {
     padding: 0 3px;
   }
   .hl-class {
-    color: #fef3c7;
-    background: rgba(251, 191, 36, 0.18);
-    box-shadow: inset 0 -1px 0 rgba(251, 191, 36, 0.55);
+    /* 具体颜色由 inline style 按职业配色注入 */
   }
   .hl-boss {
     color: #cffafe;
