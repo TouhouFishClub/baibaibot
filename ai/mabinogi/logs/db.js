@@ -103,6 +103,10 @@ async function getReportById(reportId) {
   return client.db(DB_NAME).collection(COL_UPLOADS).findOne({ _id: reportId })
 }
 
+function normalizeRunId(id) {
+  return String(id || '').trim().toLowerCase().replace(/-/g, '')
+}
+
 async function findReportByRunId(runId) {
   const raw = String(runId || '').trim()
   if (!raw) return null
@@ -279,22 +283,75 @@ function groupTopByBoss(records, limitPerBoss, { bestPerCharacter = false } = {}
 }
 
 async function getUploadersByRunIds(runIds) {
-  const ids = [...new Set((runIds || []).map(id => String(id || '').trim()).filter(Boolean))]
+  const rawIds = [...new Set((runIds || []).filter(id => id != null && String(id).trim()))]
   const map = new Map()
-  if (!ids.length) return map
+  if (!rawIds.length) return map
+
+  const put = (key, info) => {
+    if (!key) return
+    map.set(String(key), info)
+    const norm = normalizeRunId(key)
+    if (norm) map.set(norm, info)
+  }
+
+  const pick = (runId) => {
+    if (runId == null) return null
+    return map.get(String(runId)) || map.get(normalizeRunId(runId)) || null
+  }
 
   await ensureIndexes()
   const client = await getClient()
-  const rows = await client.db(DB_NAME).collection(COL_UPLOADS)
-    .find({ _id: { $in: ids } }, { projection: { playerName: 1, playerId: 1 } })
-    .toArray()
+  const col = client.db(DB_NAME).collection(COL_UPLOADS)
+
+  const queryIds = [...new Set([
+    ...rawIds,
+    ...rawIds.map(id => String(id))
+  ])]
+
+  const rows = await col.find(
+    { _id: { $in: queryIds } },
+    { projection: { playerName: 1, playerId: 1 } }
+  ).toArray()
 
   for (const row of rows) {
-    map.set(String(row._id), {
+    put(row._id, {
       playerName: row.playerName || '',
       playerId: row.playerId || ''
     })
   }
+
+  const unresolved = rawIds.filter(id => {
+    const hit = pick(id)
+    return !hit || (!hit.playerName && !hit.playerId)
+  })
+
+  if (unresolved.length) {
+    const recent = await col.find(
+      { status: { $in: ['parsed', 'failed'] } },
+      { projection: { playerName: 1, playerId: 1 } }
+    )
+      .sort({ uploadedAt: -1 })
+      .limit(500)
+      .toArray()
+
+    for (const row of recent) {
+      const uploadNorm = normalizeRunId(row._id)
+      if (!uploadNorm) continue
+      const info = {
+        playerName: row.playerName || '',
+        playerId: row.playerId || ''
+      }
+      for (const runId of unresolved) {
+        const wantNorm = normalizeRunId(runId)
+        if (!wantNorm) continue
+        if (uploadNorm === wantNorm || uploadNorm.startsWith(wantNorm) || wantNorm.startsWith(uploadNorm)) {
+          put(runId, info)
+          put(row._id, info)
+        }
+      }
+    }
+  }
+
   return map
 }
 
@@ -309,6 +366,7 @@ module.exports = {
   getReportById,
   findReportByRunId,
   getUploadersByRunIds,
+  normalizeRunId,
   listReports,
   listPendingReports,
   listDpsRecords,

@@ -6,7 +6,8 @@ const {
   listRecordsByCharacter,
   listRecordsByDungeon,
   listRecordsByBoss,
-  getUploadersByRunIds
+  getUploadersByRunIds,
+  normalizeRunId
 } = require('./db')
 const { isRunIdKeyword, loadRunDetail } = require('./runQuery')
 const { renderRunDetail } = require('./renderRunDetail')
@@ -245,6 +246,7 @@ async function attachUploaders(sections) {
   for (const section of sections || []) {
     for (const row of section.rows || []) {
       const uploader = uploaderMap.get(String(row.runId))
+        || uploaderMap.get(normalizeRunId(row.runId))
       row.uploaderName = uploader?.playerName || ''
       row.uploaderId = uploader?.playerId || ''
     }
