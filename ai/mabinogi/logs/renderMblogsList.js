@@ -65,13 +65,29 @@ function resolveNameVisibility(showMode) {
   }
 }
 
-function buildGridTemplate({ showCharacter, showTeammates }) {
-  const cols = ['118px'] // 职业
-  if (showCharacter) cols.push('120px')
-  cols.push('100px', '60px') // 副本、队友数
-  if (showTeammates) cols.push('minmax(130px, 1.2fr)')
-  cols.push('96px', '86px', 'minmax(210px, 1.6fr)', '80px') // 攻略时间、DPS、贡献度、场次
-  return cols.join(' ')
+function buildLayout({ showCharacter, showTeammates }) {
+  // 固定列宽，隐藏列时同步缩小整体宽度，避免贡献度被 fr 拉得很开
+  const cols = [
+    { key: 'class', width: 118 },
+    showCharacter ? { key: 'name', width: 120 } : null,
+    { key: 'dungeon', width: 100 },
+    { key: 'teamSize', width: 60 },
+    showTeammates ? { key: 'teammates', width: 180 } : null,
+    { key: 'duration', width: 96 },
+    { key: 'dps', width: 86 },
+    { key: 'share', width: 250 },
+    { key: 'runid', width: 80 }
+  ].filter(Boolean)
+
+  const gap = 8
+  const sidePad = 14 + 12
+  const contentWidth = cols.reduce((sum, col) => sum + col.width, 0) + gap * (cols.length - 1)
+  const bodyWidth = contentWidth + sidePad + 64 // body padding 32*2
+
+  return {
+    gridTemplate: cols.map(col => `${col.width}px`).join(' '),
+    bodyWidth
+  }
 }
 
 function formatDisplayNames(row, showMode) {
@@ -97,12 +113,12 @@ function formatDisplayNames(row, showMode) {
   return { characterName, teammateNames, showCharacter, showTeammates }
 }
 
-// 上传者名遵循 --show 的「角色名」规则：all/角色 显示全名，脱敏/脱敏角色名 显示脱敏，其余隐藏
+// 上传者名：all/角色/上传者 → 全名；脱敏/脱敏角色名 → 脱敏；其余 → ***
 function formatUploaderName(row, showMode) {
   const mode = showMode || 'hidden'
   const name = row.uploaderName || row.uploaderId || ''
   if (!name) return '未知'
-  if (mode === 'all' || mode === 'character') return name
+  if (mode === 'all' || mode === 'character' || mode === 'uploader') return name
   if (mode === 'mask' || mode === 'maskCharacter') return maskPersonName(name)
   return '***'
 }
@@ -211,8 +227,8 @@ function buildHtml(option) {
   const withSkill = Boolean(option.withSkill)
   const showMode = option.showMode || 'hidden'
   const visibility = resolveNameVisibility(showMode)
-  const gridTemplate = buildGridTemplate(visibility)
-  const width = 1280
+  const layout = buildLayout(visibility)
+  const width = layout.bodyWidth
 
   return `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -268,7 +284,7 @@ function buildHtml(option) {
     .list-head,
     .main {
       display: grid;
-      grid-template-columns: ${gridTemplate};
+      grid-template-columns: ${layout.gridTemplate};
       align-items: center;
       column-gap: 8px;
     }

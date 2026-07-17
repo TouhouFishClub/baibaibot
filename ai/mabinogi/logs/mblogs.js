@@ -52,8 +52,8 @@ function buildMblogsHelp() {
     '  --job 职业名  只显示指定职业（模糊匹配）',
     '  --all       显示全部记录，不做「每角色仅保留最高 DPS」去重',
     '  --withskill 列表模式在角色条目下显示技能占比进度条',
-    '  --show 模式  控制角色/队友名显示（默认均隐藏）',
-    '              脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / all',
+    '  --show 模式  控制角色/队友/上传者显示（默认均隐藏）',
+    '              脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / 上传者 / all',
     '  --help      显示本帮助',
     '',
     '示例：',
@@ -79,6 +79,7 @@ const SHOW_MODES = {
   maskTeammate: 'maskTeammate',
   mask: 'mask',
   character: 'character',
+  uploader: 'uploader',
   all: 'all'
 }
 
@@ -87,6 +88,7 @@ function resolveShowMode(value) {
   if (!raw) return SHOW_MODES.hidden
   if (raw === 'all' || raw === '全部') return SHOW_MODES.all
   if (raw === '角色' || raw === 'character' || raw === 'name') return SHOW_MODES.character
+  if (raw === '上传者' || raw === 'uploader') return SHOW_MODES.uploader
   if (raw === '脱敏') return SHOW_MODES.mask
   if (raw === '脱敏角色名' || raw === '脱敏角色') return SHOW_MODES.maskCharacter
   if (raw === '脱敏队友' || raw === '脱敏队友名') return SHOW_MODES.maskTeammate
@@ -141,7 +143,7 @@ function parseMblogsInput(content) {
       const showValue = showParts.join(' ').trim()
       const resolved = resolveShowMode(showValue)
       if (!resolved) {
-        showModeError = `无效的 --show 参数「${showValue || '(空)'}」，可选：脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / all`
+        showModeError = `无效的 --show 参数「${showValue || '(空)'}」，可选：脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / 上传者 / all`
       } else {
         showMode = resolved
       }
