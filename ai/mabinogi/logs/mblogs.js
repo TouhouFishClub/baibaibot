@@ -13,6 +13,7 @@ const { isRunIdKeyword, loadRunDetail } = require('./runQuery')
 const { renderRunDetail } = require('./renderRunDetail')
 const { renderMblogsList } = require('./renderMblogsList')
 const { attachSkillBreakdowns } = require('./skillBreakdown')
+const { resolveAiAnalysisCommand, runAiAnalysis } = require('./aiAnalysis')
 
 const ADMIN_QQ = '799018865'
 const ALLOWED_GROUPS = new Set(['668217870', '885309800'])
@@ -46,6 +47,8 @@ function buildMblogsHelp() {
     `  mblogs ${DEFAULT_DUNGEON}           查询副本各 Boss 排行榜`,
     `  mblogs Boss名             查询单个 Boss，默认前${BOSS_DEFAULT_RANK}名`,
     '  mblogs <场次ID>           查询单场战斗详情图（支持短 ID）',
+    '  mblogs AI分析             生成/查看当日 AI 分析报告（当天缓存，仅管理员）',
+    '  mblogs 重新生成AI分析     强制重新采集并生成 AI 分析（仅管理员）',
     '',
     '参数：',
     '  --rank N    显示前 N 名（副本默认 10，Boss 默认 30，角色默认 3；普通用户最多 30）',
@@ -64,6 +67,8 @@ function buildMblogsHelp() {
     '  mblogs 雷内恩的米耶尔 --withskill',
     '  mblogs 布里列赫 --show 脱敏',
     '  mblogs 布里列赫 --show all',
+    '  mblogs AI分析',
+    '  mblogs 重新生成AI分析',
     '  mblogs c31651e9',
     '  mblogs --help',
     '',
@@ -361,6 +366,30 @@ async function mblogs(content, from, callback, groupid) {
     return
   }
 
+  const aiCommand = resolveAiAnalysisCommand(parsed.keyword || keyword)
+  if (aiCommand) {
+    if (!isAdminUser(from)) {
+      return
+    }
+    const outputDir = path.join(IMAGE_DATA, 'mabi_other', 'MabiAiAnalysis.png')
+    try {
+      callback(aiCommand.force
+        ? '正在重新采集排行并生成 AI 分析，请稍候…'
+        : '正在生成/读取 AI 分析，请稍候…')
+      const result = await runAiAnalysis({ force: aiCommand.force, outputPath: outputDir })
+      if (result.status === 'busy') {
+        callback(result.message)
+        return
+      }
+      const msg = result.message ? `${result.message}\n` : ''
+      callback(`${msg}[CQ:image,file=${path.join('send', 'mabi_other', 'MabiAiAnalysis.png')}]`)
+    } catch (error) {
+      console.error('[mblogs] ai analysis error', error)
+      callback(`AI 分析失败：${error.message || '请稍后再试'}`)
+    }
+    return
+  }
+
   if (parsed.showModeError) {
     callback(parsed.showModeError)
     return
@@ -419,5 +448,7 @@ module.exports = {
   SHOW_MODES,
   buildMblogsHelp,
   isMblogsHelpRequest,
-  isRunIdKeyword
+  isRunIdKeyword,
+  resolveAiAnalysisCommand,
+  runAiAnalysis
 }

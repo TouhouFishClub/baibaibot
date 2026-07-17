@@ -5,6 +5,7 @@ const { matchBossByHp } = require('./bossConfig')
 const { extractSkillName } = require('./classDetect')
 
 const MAX_SKILLS = 5
+const AI_MAX_SKILLS = 10
 
 function getSkillDamage(skill) {
   if (!skill || typeof skill !== 'object') return 0
@@ -19,6 +20,18 @@ function getSkillDamage(skill) {
   return sum
 }
 
+function getSkillHitCount(skill) {
+  if (!skill || typeof skill !== 'object') return 0
+  for (const key of ['hitCount', 'count', 'casts', 'useCount', 'times', 'hitTimes']) {
+    const n = Number(skill[key])
+    if (Number.isFinite(n) && n > 0) return Math.floor(n)
+  }
+  if (Array.isArray(skill.hitRecords) && skill.hitRecords.length) {
+    return skill.hitRecords.length
+  }
+  return 0
+}
+
 function accumulateAttackerSkills(attacker, damageBySkill) {
   if (!attacker?.isPC) return
   const details = attacker.skillsDetail
@@ -31,7 +44,12 @@ function accumulateAttackerSkills(attacker, damageBySkill) {
     if (!name) continue
     const damage = getSkillDamage(skill)
     if (damage <= 0) continue
-    damageBySkill.set(name, (damageBySkill.get(name) || 0) + damage)
+    const count = getSkillHitCount(skill)
+    const prev = damageBySkill.get(name) || { damage: 0, count: 0 }
+    damageBySkill.set(name, {
+      damage: prev.damage + damage,
+      count: prev.count + count
+    })
   }
 }
 
@@ -52,7 +70,7 @@ function matchTargetsForRecord(data, record) {
   })
 }
 
-function buildSkillBreakdownFromTargets(targets, characterId) {
+function buildSkillBreakdownFromTargets(targets, characterId, { maxSkills = MAX_SKILLS } = {}) {
   const damageBySkill = new Map()
   const cid = String(characterId || '').trim()
   if (!cid) return []
@@ -64,24 +82,28 @@ function buildSkillBreakdownFromTargets(targets, characterId) {
     }
   }
 
-  const total = [...damageBySkill.values()].reduce((sum, value) => sum + value, 0)
+  const total = [...damageBySkill.values()].reduce((sum, value) => sum + value.damage, 0)
   if (total <= 0) return []
 
   const ranked = [...damageBySkill.entries()]
-    .map(([name, damage]) => ({
+    .map(([name, info]) => ({
       name,
-      damage,
-      percent: (damage / total) * 100
+      damage: info.damage,
+      count: info.count || 0,
+      percent: (info.damage / total) * 100
     }))
     .sort((a, b) => b.damage - a.damage)
 
-  const top = ranked.slice(0, MAX_SKILLS)
-  const rest = ranked.slice(MAX_SKILLS)
+  const limit = Number.isFinite(maxSkills) && maxSkills > 0 ? maxSkills : ranked.length
+  const top = ranked.slice(0, limit)
+  const rest = ranked.slice(limit)
   if (rest.length) {
     const damage = rest.reduce((sum, item) => sum + item.damage, 0)
+    const count = rest.reduce((sum, item) => sum + (item.count || 0), 0)
     top.push({
       name: '其他',
       damage,
+      count,
       percent: (damage / total) * 100
     })
   }
@@ -89,9 +111,9 @@ function buildSkillBreakdownFromTargets(targets, characterId) {
   return top
 }
 
-function buildSkillBreakdownForRecord(data, record) {
+function buildSkillBreakdownForRecord(data, record, options) {
   const targets = matchTargetsForRecord(data, record)
-  return buildSkillBreakdownFromTargets(targets, record.characterId)
+  return buildSkillBreakdownFromTargets(targets, record.characterId, options)
 }
 
 async function loadRunCombatData(runId) {
@@ -104,8 +126,8 @@ async function loadRunCombatData(runId) {
   return parsed.data
 }
 
-async function attachSkillBreakdowns(sections) {
-  const runCache = new Map()
+async function attachSkillBreakdowns(sections, { maxSkills = MAX_SKILLS, runCache } = {}) {
+  const cache = runCache || new Map()
   const result = []
 
   for (const section of sections || []) {
@@ -114,12 +136,12 @@ async function attachSkillBreakdowns(sections) {
       const runId = row.runId
       let skills = []
       if (runId && row.characterId) {
-        if (!runCache.has(runId)) {
-          runCache.set(runId, await loadRunCombatData(runId))
+        if (!cache.has(runId)) {
+          cache.set(runId, await loadRunCombatData(runId))
         }
-        const data = runCache.get(runId)
+        const data = cache.get(runId)
         if (data) {
-          skills = buildSkillBreakdownForRecord(data, row)
+          skills = buildSkillBreakdownForRecord(data, row, { maxSkills })
         }
       }
       rows.push({ ...row, skills })
@@ -132,7 +154,9 @@ async function attachSkillBreakdowns(sections) {
 
 module.exports = {
   MAX_SKILLS,
+  AI_MAX_SKILLS,
   getSkillDamage,
+  getSkillHitCount,
   buildSkillBreakdownFromTargets,
   buildSkillBreakdownForRecord,
   attachSkillBreakdowns,
