@@ -222,7 +222,9 @@ function mapRow(record) {
     bossHp: record.bossHp,
     totalDamage: record.totalDamage,
     damagePercent: record.damagePercent,
-    runId: record.runId
+    runId: record.runId,
+    uploaderName: record.uploaderName || '',
+    uploaderId: record.uploaderId || ''
   }
 }
 
@@ -234,17 +236,22 @@ function mapSections(groups) {
 }
 
 async function attachUploaders(sections) {
-  const runIds = []
+  const needLookup = []
   for (const section of sections || []) {
     for (const row of section.rows || []) {
-      if (row.runId) runIds.push(row.runId)
+      if (row.runId && !row.uploaderName && !row.uploaderId) {
+        needLookup.push(row.runId)
+      }
     }
   }
-  if (!runIds.length) return sections
 
-  const uploaderMap = await getUploadersByRunIds(runIds)
+  const uploaderMap = needLookup.length
+    ? await getUploadersByRunIds(needLookup)
+    : new Map()
+
   for (const section of sections || []) {
     for (const row of section.rows || []) {
+      if (row.uploaderName || row.uploaderId) continue
       const uploader = uploaderMap.get(String(row.runId))
         || uploaderMap.get(normalizeRunId(row.runId))
       row.uploaderName = uploader?.playerName || ''

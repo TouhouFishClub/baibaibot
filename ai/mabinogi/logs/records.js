@@ -16,7 +16,9 @@ function buildRecordForTarget({
   uploadTime,
   target,
   boss,
-  characterClasses
+  characterClasses,
+  uploaderName,
+  uploaderId
 }) {
   const pcAttackers = collectPcAttackers({ targets: [target] })
   if (!pcAttackers.length) return []
@@ -51,6 +53,8 @@ function buildRecordForTarget({
       dps: Number(attacker.dps) || 0,
       totalDamage: Number(attacker.totalDamage) || 0,
       damagePercent: Number(attacker.percent) || 0,
+      uploaderName: uploaderName || '',
+      uploaderId: uploaderId || '',
       uploadedAt: uploadTime,
       uploadedTs: uploadTime.getTime()
     })
@@ -109,7 +113,9 @@ function buildPetakCombinedRecords({
   dungeonName,
   uploadTime,
   phases,
-  characterClasses
+  characterClasses,
+  uploaderName,
+  uploaderId
 }) {
   if (!phases.length) return []
 
@@ -159,6 +165,8 @@ function buildPetakCombinedRecords({
       dps,
       totalDamage,
       damagePercent,
+      uploaderName: uploaderName || '',
+      uploaderId: uploaderId || '',
       uploadedAt: uploadTime,
       uploadedTs: uploadTime.getTime()
     })
@@ -171,13 +179,19 @@ function buildDpsRecords({
   runId,
   dungeonName,
   uploadedAt,
-  data
+  data,
+  uploaderName,
+  uploaderId
 }) {
   const records = []
   const uploadTime = uploadedAt instanceof Date ? uploadedAt : new Date(uploadedAt)
   const characterClasses = buildRunCharacterClasses(data)
   const targets = data.targets || []
   const petakPairs = collectPetakPhasePairs(targets)
+  const uploader = {
+    uploaderName: uploaderName || '',
+    uploaderId: uploaderId || ''
+  }
 
   for (const target of targets) {
     const maxHp = Number(target?.bossHP?.maxHp)
@@ -191,7 +205,8 @@ function buildDpsRecords({
       uploadTime,
       target,
       boss,
-      characterClasses
+      characterClasses,
+      ...uploader
     }))
   }
 
@@ -202,7 +217,8 @@ function buildDpsRecords({
       dungeonName,
       uploadTime,
       phases,
-      characterClasses
+      characterClasses,
+      ...uploader
     }))
   }
 

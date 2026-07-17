@@ -288,26 +288,18 @@ async function getUploadersByRunIds(runIds) {
   if (!rawIds.length) return map
 
   const put = (key, info) => {
-    if (!key) return
+    if (key == null || key === '') return
     map.set(String(key), info)
     const norm = normalizeRunId(key)
     if (norm) map.set(norm, info)
-  }
-
-  const pick = (runId) => {
-    if (runId == null) return null
-    return map.get(String(runId)) || map.get(normalizeRunId(runId)) || null
   }
 
   await ensureIndexes()
   const client = await getClient()
   const col = client.db(DB_NAME).collection(COL_UPLOADS)
 
-  const queryIds = [...new Set([
-    ...rawIds,
-    ...rawIds.map(id => String(id))
-  ])]
-
+  // 仅按本次需要的 runId 精确查，不做全表扫描（日常查询兜底用）
+  const queryIds = [...new Set(rawIds.flatMap(id => [id, String(id)]))]
   const rows = await col.find(
     { _id: { $in: queryIds } },
     { projection: { playerName: 1, playerId: 1 } }
@@ -320,36 +312,18 @@ async function getUploadersByRunIds(runIds) {
     })
   }
 
-  const unresolved = rawIds.filter(id => {
-    const hit = pick(id)
-    return !hit || (!hit.playerName && !hit.playerId)
-  })
-
-  if (unresolved.length) {
-    const recent = await col.find(
-      { status: { $in: ['parsed', 'failed'] } },
-      { projection: { playerName: 1, playerId: 1 } }
-    )
-      .sort({ uploadedAt: -1 })
-      .limit(500)
-      .toArray()
-
-    for (const row of recent) {
-      const uploadNorm = normalizeRunId(row._id)
-      if (!uploadNorm) continue
-      const info = {
-        playerName: row.playerName || '',
-        playerId: row.playerId || ''
-      }
-      for (const runId of unresolved) {
-        const wantNorm = normalizeRunId(runId)
-        if (!wantNorm) continue
-        if (uploadNorm === wantNorm || uploadNorm.startsWith(wantNorm) || wantNorm.startsWith(uploadNorm)) {
-          put(runId, info)
-          put(row._id, info)
-        }
-      }
-    }
+  for (const runId of rawIds) {
+    if (map.get(String(runId)) || map.get(normalizeRunId(runId))) continue
+    const report = await findReportByRunId(runId)
+    if (!report) continue
+    put(runId, {
+      playerName: report.playerName || '',
+      playerId: report.playerId || ''
+    })
+    put(report._id, {
+      playerName: report.playerName || '',
+      playerId: report.playerId || ''
+    })
   }
 
   return map

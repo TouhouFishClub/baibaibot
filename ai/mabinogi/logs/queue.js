@@ -37,7 +37,9 @@ async function processReportJob(job) {
     runId: reportId,
     dungeonName,
     uploadedAt: upload?.uploadedAt || new Date(),
-    data: parsed.data
+    data: parsed.data,
+    uploaderName: upload?.playerName || '',
+    uploaderId: upload?.playerId || ''
   })
 
   // 语义校验用于挡脏包；若仍能识别出有效击杀，优先入库（避免残局拖死整包）

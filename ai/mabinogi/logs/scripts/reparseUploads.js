@@ -152,7 +152,9 @@ async function main() {
         runId: reportId,
         dungeonName,
         uploadedAt: upload.uploadedAt || new Date(),
-        data: parsed.data
+        data: parsed.data,
+        uploaderName: upload.playerName || '',
+        uploaderId: upload.playerId || ''
       })
       built = filterByBoss(built, args.boss)
 

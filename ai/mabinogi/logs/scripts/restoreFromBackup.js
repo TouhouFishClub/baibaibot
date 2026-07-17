@@ -183,7 +183,9 @@ async function importOne({ absolutePath, relativePath, playerDir, fileName }, { 
       runId: dup._id,
       dungeonName: previewDungeon,
       uploadedAt,
-      data: parsed.data
+      data: parsed.data,
+      uploaderName: player.playerName || '',
+      uploaderId: player.playerId || ''
     })
 
     if (!preview.length) {
@@ -267,7 +269,9 @@ async function importOne({ absolutePath, relativePath, playerDir, fileName }, { 
     runId: reportId,
     dungeonName,
     uploadedAt,
-    data: parsed.data
+    data: parsed.data,
+    uploaderName: player.playerName || '',
+    uploaderId: player.playerId || ''
   })
 
   if (!semantic.ok && !dpsRecords.length) {
