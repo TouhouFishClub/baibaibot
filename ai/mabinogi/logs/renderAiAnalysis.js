@@ -2,6 +2,7 @@ const path = require('path-extra')
 const fs = require('fs')
 const nodeHtmlToImage = require('node-html-to-image')
 const font2base64 = require('node-font2base64')
+const { BOSSES } = require('./bossConfig')
 const { CLASSES, getClassTheme, hexToRgba } = require('./classConfig')
 
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'hk4e_zh-cn.ttf'))
@@ -15,6 +16,10 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;')
 }
 
+function escapeRegExp(text) {
+  return String(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 function formatGeneratedAt(value) {
   if (!value) return '-'
   const d = new Date(value)
@@ -23,51 +28,117 @@ function formatGeneratedAt(value) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
-function renderList(items) {
-  const list = (items || []).map(item => String(item || '').trim()).filter(Boolean)
-  if (!list.length) return '<div class="muted">暂无</div>'
-  return `<ul>${list.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+function formatTokenUsage(usage) {
+  const prompt = Number(usage?.prompt_tokens) || 0
+  const completion = Number(usage?.completion_tokens) || 0
+  const total = Number(usage?.total_tokens) || (prompt + completion)
+  if (!prompt && !completion && !total) return 'Tokens: -'
+  return `Tokens: 输入 ${prompt.toLocaleString('en-US')} / 输出 ${completion.toLocaleString('en-US')}（合计 ${total.toLocaleString('en-US')}）`
 }
 
-function renderClassCard(item) {
+function buildHighlightTerms(report) {
+  // priority: class > boss > skill（同名时取更高优先级）
+  const map = new Map()
+
+  const add = (text, type, minLen = 2) => {
+    const value = String(text || '').trim()
+    if (!value || [...value].length < minLen) return
+    const prev = map.get(value)
+    const rank = { class: 3, boss: 2, skill: 1 }
+    if (prev && rank[prev] >= rank[type]) return
+    map.set(value, type)
+  }
+
+  for (const cls of CLASSES) {
+    add(cls.name, 'class', 2)
+    for (const alias of cls.aliases || []) {
+      // 过短别名（如 T、弓、奶）易误伤正文，跳过
+      if ([...String(alias)].length < 2) continue
+      if (['T', '弓', '奶'].includes(alias)) continue
+      add(alias, 'class', 2)
+    }
+  }
+
+  const bossNames = new Set()
+  for (const boss of BOSSES) {
+    add(boss.displayName, 'boss', 2)
+    bossNames.add(boss.displayName)
+    for (const alias of boss.aliases || []) {
+      if ([...String(alias)].length < 2) continue
+      if (/^[一二三四]王$/.test(alias)) continue
+      add(alias, 'boss', 2)
+    }
+  }
+
+  for (const cls of CLASSES) {
+    for (const skill of cls.skills || []) add(skill, 'skill', 2)
+  }
+  for (const skill of report?.lexicon?.skills || []) add(skill, 'skill', 2)
+
+  return map
+}
+
+function highlightText(text, termMap) {
+  const raw = String(text ?? '')
+  if (!raw) return ''
+  const keys = [...termMap.keys()].sort((a, b) => b.length - a.length)
+  if (!keys.length) return escapeHtml(raw)
+
+  const re = new RegExp(`(${keys.map(escapeRegExp).join('|')})`, 'g')
+  return raw.split(re).map(part => {
+    const type = termMap.get(part)
+    if (!type) return escapeHtml(part)
+    return `<span class="hl hl-${type}">${escapeHtml(part)}</span>`
+  }).join('')
+}
+
+function renderList(items, termMap) {
+  const list = (items || []).map(item => String(item || '').trim()).filter(Boolean)
+  if (!list.length) return '<div class="muted">暂无</div>'
+  return `<ul>${list.map(item => `<li>${highlightText(item, termMap)}</li>`).join('')}</ul>`
+}
+
+function renderClassCard(item, termMap) {
   const theme = getClassTheme(item.name)
   const primary = theme.primary || '#6B7280'
   const secondary = theme.secondary || '#9CA3AF'
   return `
   <section class="class-card" style="--c1:${primary};--c2:${secondary};--bg:${hexToRgba(primary, 0.08)};--border:${hexToRgba(primary, 0.28)}">
     <header>
-      <div class="class-name">${escapeHtml(item.name)}</div>
-      <div class="class-summary">${escapeHtml(item.summary || '')}</div>
+      <div class="class-name">${highlightText(item.name || '', termMap)}</div>
+      <div class="class-summary">${highlightText(item.summary || '', termMap)}</div>
     </header>
     <div class="grid">
       <div>
         <h4>优点</h4>
-        ${renderList(item.pros)}
+        ${renderList(item.pros, termMap)}
       </div>
       <div>
         <h4>缺点</h4>
-        ${renderList(item.cons)}
+        ${renderList(item.cons, termMap)}
       </div>
     </div>
     <div class="block">
       <h4>技能数据</h4>
-      <p>${escapeHtml(item.skills || '暂无')}</p>
+      <p>${highlightText(item.skills || '暂无', termMap)}</p>
     </div>
     <div class="block">
       <h4>各 Boss 表现</h4>
-      <p>${escapeHtml(item.bossPerformance || '暂无')}</p>
+      <p>${highlightText(item.bossPerformance || '暂无', termMap)}</p>
     </div>
     <div class="block">
       <h4>趋势</h4>
-      <p>${escapeHtml(item.trend || '暂无')}</p>
+      <p>${highlightText(item.trend || '暂无', termMap)}</p>
     </div>
   </section>`
 }
 
 function generateHtml(report) {
-  const classesHtml = (report.classes || []).map(renderClassCard).join('')
-  const bossNotes = renderList(report.bossNotes)
+  const termMap = buildHighlightTerms(report)
+  const classesHtml = (report.classes || []).map(item => renderClassCard(item, termMap)).join('')
+  const bossNotes = renderList(report.bossNotes, termMap)
   const classOrderHint = CLASSES.map(cls => cls.name).join(' / ')
+  const tokenText = formatTokenUsage(report.usage)
 
   return `<!DOCTYPE html>
 <html>
@@ -127,6 +198,26 @@ function generateHtml(report) {
     padding-left: 18px;
   }
   li { margin: 4px 0; line-height: 1.55; }
+  .hl {
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 0 3px;
+  }
+  .hl-class {
+    color: #fef3c7;
+    background: rgba(251, 191, 36, 0.18);
+    box-shadow: inset 0 -1px 0 rgba(251, 191, 36, 0.55);
+  }
+  .hl-boss {
+    color: #cffafe;
+    background: rgba(34, 211, 238, 0.16);
+    box-shadow: inset 0 -1px 0 rgba(34, 211, 238, 0.5);
+  }
+  .hl-skill {
+    color: #fce7f3;
+    background: rgba(244, 114, 182, 0.16);
+    box-shadow: inset 0 -1px 0 rgba(244, 114, 182, 0.5);
+  }
   .class-card {
     margin-top: 14px;
     border: 1px solid var(--border);
@@ -172,7 +263,18 @@ function generateHtml(report) {
     margin-top: 18px;
     color: #64748b;
     font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .footer-left {
+    text-align: left;
+    color: #94a3b8;
+  }
+  .footer-right {
     text-align: right;
+    white-space: nowrap;
   }
 </style>
 </head>
@@ -186,7 +288,7 @@ function generateHtml(report) {
     </div>
 
     <div class="section-title">整体概述</div>
-    <div class="panel">${escapeHtml(report.overview || '暂无')}</div>
+    <div class="panel">${highlightText(report.overview || '暂无', termMap)}</div>
 
     <div class="section-title">Boss 观察</div>
     <div class="panel">${bossNotes}</div>
@@ -195,9 +297,12 @@ function generateHtml(report) {
     ${classesHtml || '<div class="panel muted">暂无职业分析</div>'}
 
     <div class="section-title">宏观趋势</div>
-    <div class="panel">${escapeHtml(report.macroTrend || '暂无')}</div>
+    <div class="panel">${highlightText(report.macroTrend || '暂无', termMap)}</div>
 
-    <div class="footer">mblogs AI 分析 · 报告中不展示角色名</div>
+    <div class="footer">
+      <div class="footer-left">${escapeHtml(tokenText)}</div>
+      <div class="footer-right">mblogs AI 分析 · 报告中不展示角色名</div>
+    </div>
   </div>
 </body>
 </html>`
@@ -231,5 +336,8 @@ async function renderAiAnalysisReport(report, outputPath) {
 
 module.exports = {
   generateHtml,
-  renderAiAnalysisReport
+  renderAiAnalysisReport,
+  buildHighlightTerms,
+  highlightText,
+  formatTokenUsage
 }

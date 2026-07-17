@@ -76,13 +76,18 @@ function mapRecordRow(record) {
   }
 }
 
+function sanitizeSkillName(name) {
+  // 旋律操纵师等职业技能名末尾常带客户端标记「AI」，易被 LLM 误解
+  return String(name || '').replace(/(?:\s|　)*AI$/i, '').trim()
+}
+
 function compactSkills(skills) {
   return (skills || []).map(skill => ({
-    name: skill.name,
+    name: sanitizeSkillName(skill.name),
     percent: Number((Number(skill.percent) || 0).toFixed(2)),
     count: Number(skill.count) || 0,
     damage: Number(skill.damage) || 0
-  }))
+  })).filter(skill => skill.name)
 }
 
 function compactRow(row, rank) {
@@ -174,7 +179,7 @@ function anonymizeRow(row) {
     totalDamage: row.totalDamage,
     damagePercent: row.damagePercent,
     teamSize: row.teamSize,
-    skills: row.skills || []
+    skills: compactSkills(row.skills)
   }
 }
 
@@ -215,6 +220,7 @@ function buildSystemPrompt() {
 5. 最后必须有宏观趋势：职业强弱格局、技能流派倾向、相较上一期（如有）的变化。
 6. 只依据给定数据，不要编造不存在的技能或数值；数据不足时明确说明。
 7. 分析尽量详细、可执行，面向玩家与版本观察者。
+8. 技能名末尾的「AI」是游戏客户端标记（尤其旋律操纵师常见），与人工智能无关；数据中已去除该后缀。正文引用技能时也不要再带「AI」，更不要把「AI」理解成人工智能或自动战斗。
 
 请严格返回 JSON（不要 Markdown 代码块）：
 {
@@ -244,7 +250,7 @@ function buildUserPrompt(currentAnon, previousAnon) {
       ? '已提供上一期快照。请对比同 playerKey 的 DPS/技能变化，归纳提升与退步趋势，但不要写出可识别身份信息。'
       : '这是首次分析，没有上一期快照。'
   }
-  return `以下是匿名化后的 DPS 排行快照 JSON。current.bosses[].top20 为各 Boss 前20；current.byClass 为各职业在每 Boss 的前10，均含 skills(name/percent/count/damage)。\n\n${JSON.stringify(payload)}`
+  return `以下是匿名化后的 DPS 排行快照 JSON。current.bosses[].top20 为各 Boss 前20；current.byClass 为各职业在每 Boss 的前10，均含 skills(name/percent/count/damage)。skills.name 已去除末尾客户端标记「AI」。\n\n${JSON.stringify(payload)}`
 }
 
 function normalizeReport(parsed, { generatedAt, hasPrevious }) {
@@ -410,6 +416,40 @@ function scrubReportNames(report, snapshots) {
   }
 }
 
+function collectSkillLexicon(snapshot) {
+  const skills = new Set()
+  for (const cls of CLASSES) {
+    for (const skill of cls.skills || []) {
+      const name = sanitizeSkillName(skill)
+      if (name) skills.add(name)
+    }
+  }
+  const data = snapshot?.data || snapshot || {}
+  const absorbRow = (row) => {
+    for (const skill of row.skills || []) {
+      const name = sanitizeSkillName(skill.name)
+      if (name && name !== '其他') skills.add(name)
+    }
+  }
+  for (const boss of data.bosses || []) {
+    for (const row of boss.top20 || []) absorbRow(row)
+  }
+  for (const info of Object.values(data.byClass || {})) {
+    for (const boss of info.bosses || []) {
+      for (const row of boss.top10 || []) absorbRow(row)
+    }
+  }
+  return [...skills]
+}
+
+function normalizeUsage(usage) {
+  return {
+    prompt_tokens: Number(usage?.prompt_tokens) || 0,
+    completion_tokens: Number(usage?.completion_tokens) || 0,
+    total_tokens: Number(usage?.total_tokens) || 0
+  }
+}
+
 async function generateAiReport(currentSnapshot, previousSnapshot) {
   const currentAnon = anonymizeSnapshot(currentSnapshot)
   const previousAnon = previousSnapshot ? anonymizeSnapshot(previousSnapshot) : null
@@ -424,7 +464,11 @@ async function generateAiReport(currentSnapshot, previousSnapshot) {
     hasPrevious: Boolean(previousAnon)
   })
   report = scrubReportNames(report, [currentSnapshot, previousSnapshot])
-  return { report, usage, rawText: text }
+  report.usage = normalizeUsage(usage)
+  report.lexicon = {
+    skills: collectSkillLexicon(currentSnapshot)
+  }
+  return { report, usage: report.usage, rawText: text }
 }
 
 function newSnapshotId() {
@@ -441,11 +485,15 @@ async function runAiAnalysis({ force = false, outputPath } = {}) {
   if (!force) {
     const cached = await getDailyAiReport(dateKey)
     if (cached?.report) {
-      await renderAiAnalysisReport(cached.report, outputPath)
+      const report = {
+        ...cached.report,
+        usage: cached.report.usage || normalizeUsage(cached.usage)
+      }
+      await renderAiAnalysisReport(report, outputPath)
       return {
         status: 'cached',
         dateKey,
-        report: cached.report,
+        report,
         message: `已返回今日缓存的 AI 分析（${dateKey}）。如需刷新请使用：mblogs 重新生成AI分析`
       }
     }
