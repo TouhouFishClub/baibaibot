@@ -300,9 +300,10 @@ async function getUploadersByRunIds(runIds) {
 
   // 仅按本次需要的 runId 精确查，不做全表扫描（日常查询兜底用）
   const queryIds = [...new Set(rawIds.flatMap(id => [id, String(id)]))]
+  // mongodb@2.x：第二参是 fields，不能用 projection（会被当成只要名叫 projection 的字段）
   const rows = await col.find(
     { _id: { $in: queryIds } },
-    { projection: { playerName: 1, playerId: 1 } }
+    { _id: 1, playerName: 1, playerId: 1 }
   ).toArray()
 
   for (const row of rows) {

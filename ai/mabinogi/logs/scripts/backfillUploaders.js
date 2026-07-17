@@ -1,6 +1,8 @@
 /**
  * 为已有 DPS 记录回填 uploaderName / uploaderId（从 cl_mabinogi_dps_upload 按 runId 关联）。
  *
+ * 注意：项目使用 mongodb@2.x，find 第二参是 fields，不是 projection。
+ *
  * 用法:
  *   node ai/mabinogi/logs/scripts/backfillUploaders.js           # dry-run
  *   node ai/mabinogi/logs/scripts/backfillUploaders.js --yes    # 实际写入
@@ -25,8 +27,8 @@ function buildUploadIndex(uploads) {
 
   for (const upload of uploads) {
     const info = {
-      uploaderName: upload.playerName || '',
-      uploaderId: upload.playerId || ''
+      uploaderName: String(upload.playerName || '').trim(),
+      uploaderId: String(upload.playerId || '').trim()
     }
     if (!info.uploaderName && !info.uploaderId) continue
 
@@ -48,7 +50,6 @@ function resolveUploader(runId, index) {
   const byNorm = index.byNorm.get(norm)
   if (byNorm) return byNorm
 
-  // 短 ID 前缀匹配（兼容历史展示用的 8 位短场次）
   if (norm.length >= 6 && norm.length < 32) {
     for (const [uploadNorm, info] of index.byNorm) {
       if (uploadNorm.startsWith(norm)) return info
@@ -74,49 +75,69 @@ async function main() {
   const recordsCol = client.db(DB_NAME).collection(COL_RECORDS)
 
   console.log('[backfillUploaders] loading uploads…')
-  const uploads = await uploadsCol.find(
-    {},
-    { projection: { playerName: 1, playerId: 1 } }
-  ).toArray()
+  // mongodb@2.x：不要传 projection；第二参会被当成 fields 过滤器
+  const uploads = await uploadsCol.find({}).toArray()
+  console.log(`[backfillUploaders] sample upload keys=${Object.keys(uploads[0] || {}).join(',')}`)
+  console.log(`[backfillUploaders] sample upload=`, {
+    _id: uploads[0] && uploads[0]._id,
+    playerId: uploads[0] && uploads[0].playerId,
+    playerName: uploads[0] && uploads[0].playerName
+  })
+
   const index = buildUploadIndex(uploads)
   console.log(`[backfillUploaders] uploads=${uploads.length} indexed=${index.byNorm.size}`)
 
-  console.log('[backfillUploaders] scanning records missing uploader…')
-  const cursor = recordsCol.find({
-    $or: [
-      { uploaderName: { $exists: false } },
-      { uploaderName: null },
-      { uploaderName: '' },
-      { uploaderId: { $exists: false } },
-      { uploaderId: null },
-      { uploaderId: '' }
-    ]
-  }, {
-    projection: { _id: 1, runId: 1, uploaderName: 1, uploaderId: 1, characterName: 1 }
+  console.log('[backfillUploaders] loading records…')
+  const records = await recordsCol.find({}).toArray()
+  console.log(`[backfillUploaders] sample record keys=${Object.keys(records[0] || {}).join(',')}`)
+  console.log(`[backfillUploaders] sample record=`, {
+    _id: records[0] && records[0]._id,
+    runId: records[0] && records[0].runId,
+    characterName: records[0] && records[0].characterName,
+    uploaderName: records[0] && records[0].uploaderName
   })
 
   let scanned = 0
   let matched = 0
   let skippedHasValue = 0
   let missingUpload = 0
+  let missingRunId = 0
   let updated = 0
   const sampleMissing = []
-
   const bulk = []
+
   const flushBulk = async () => {
     if (!bulk.length) return
     if (args.yes) {
-      const result = await recordsCol.bulkWrite(bulk, { ordered: false })
-      updated += result.modifiedCount || 0
+      // mongodb@2.x 也可能没有 bulkWrite；退化为逐条 update
+      if (typeof recordsCol.bulkWrite === 'function') {
+        const result = await recordsCol.bulkWrite(bulk, { ordered: false })
+        updated += (result.modifiedCount || result.nModified || bulk.length)
+      } else {
+        for (const op of bulk) {
+          const r = await recordsCol.updateOne(op.updateOne.filter, op.updateOne.update)
+          updated += (r.modifiedCount || r.result && r.result.nModified || 0)
+        }
+      }
     }
     bulk.length = 0
   }
 
-  while (await cursor.hasNext()) {
-    const record = await cursor.next()
+  for (const record of records) {
     scanned += 1
     if (!needsBackfill(record)) {
       skippedHasValue += 1
+      continue
+    }
+    if (record.runId == null || record.runId === '') {
+      missingRunId += 1
+      if (sampleMissing.length < 10) {
+        sampleMissing.push({
+          reason: 'no-runId',
+          recordId: record._id,
+          keys: Object.keys(record)
+        })
+      }
       continue
     }
 
@@ -125,6 +146,7 @@ async function main() {
       missingUpload += 1
       if (sampleMissing.length < 10) {
         sampleMissing.push({
+          reason: 'no-upload',
           recordId: record._id,
           runId: record.runId,
           characterName: record.characterName
@@ -146,7 +168,7 @@ async function main() {
       }
     })
 
-    if (bulk.length >= 500) {
+    if (bulk.length >= 200) {
       await flushBulk()
     }
   }
@@ -154,11 +176,11 @@ async function main() {
   await flushBulk()
 
   console.log(`[backfillUploaders] mode=${args.yes ? 'WRITE' : 'DRY-RUN'}`)
-  console.log(`[backfillUploaders] scanned=${scanned} matched=${matched} missingUpload=${missingUpload} skippedHasValue=${skippedHasValue} updated=${updated}`)
+  console.log(`[backfillUploaders] scanned=${scanned} matched=${matched} missingUpload=${missingUpload} missingRunId=${missingRunId} skippedHasValue=${skippedHasValue} updated=${updated}`)
   if (sampleMissing.length) {
-    console.log('[backfillUploaders] sample missing upload mapping:')
+    console.log('[backfillUploaders] sample issues:')
     for (const item of sampleMissing) {
-      console.log(`  runId=${item.runId} character=${item.characterName} record=${item.recordId}`)
+      console.log(' ', JSON.stringify(item))
     }
   }
   if (!args.yes) {
