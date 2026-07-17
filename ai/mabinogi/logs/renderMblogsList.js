@@ -39,6 +39,56 @@ function truncate(text, max = 20) {
   return `${value.slice(0, max - 1)}…`
 }
 
+function maskPersonName(name) {
+  const value = String(name || '').trim()
+  if (!value || value === '-') return '-'
+  const chars = Array.from(value)
+  if (chars.length <= 1) return chars[0] || '-'
+  return `${chars[0]}${'*'.repeat(chars.length - 1)}`
+}
+
+function maskTeammateNames(text) {
+  const value = String(text || '').trim()
+  if (!value || value === '-') return '-'
+  return value
+    .split(/[、,，]/)
+    .map(part => maskPersonName(part.trim()))
+    .filter(Boolean)
+    .join('、') || '-'
+}
+
+function formatDisplayNames(row, showMode) {
+  const mode = showMode || 'hidden'
+  let characterName = '-'
+  let teammateNames = '-'
+
+  if (mode === 'all') {
+    characterName = row.characterName || '-'
+    teammateNames = row.teammateNames || '-'
+  } else if (mode === 'character') {
+    characterName = row.characterName || '-'
+  } else if (mode === 'mask') {
+    characterName = maskPersonName(row.characterName)
+    teammateNames = maskTeammateNames(row.teammateNames)
+  } else if (mode === 'maskCharacter') {
+    characterName = maskPersonName(row.characterName)
+  } else if (mode === 'maskTeammate') {
+    teammateNames = maskTeammateNames(row.teammateNames)
+  }
+
+  return { characterName, teammateNames }
+}
+
+// 上传者名遵循 --show 的「角色名」规则：all/角色 显示全名，脱敏/脱敏角色名 显示脱敏，其余隐藏
+function formatUploaderName(row, showMode) {
+  const mode = showMode || 'hidden'
+  const name = row.uploaderName || row.uploaderId || ''
+  if (!name) return '未知'
+  if (mode === 'all' || mode === 'character') return name
+  if (mode === 'mask' || mode === 'maskCharacter') return maskPersonName(name)
+  return '***'
+}
+
 function getDpsTone(dps) {
   const n = Number(dps)
   if (!Number.isFinite(n)) return 'white'
@@ -71,22 +121,24 @@ function renderSkills(skills, theme) {
   return `<div class="skills">${segments}</div>`
 }
 
-function renderRow(row, index, withSkill) {
+function renderRow(row, index, withSkill, showMode) {
   const theme = getClassTheme(row.characterClass)
   const alpha = 0.22
   const bg = `linear-gradient(90deg, ${hexToRgba(theme.primary, alpha)} 0%, ${hexToRgba(theme.secondary, alpha)} 100%)`
   const dpsTone = getDpsTone(row.dps)
   const skillsHtml = withSkill ? renderSkills(row.skills, theme) : ''
+  const names = formatDisplayNames(row, showMode)
+  const uploaderName = formatUploaderName(row, showMode)
 
   return `
     <div class="row${withSkill ? ' row-with-skills' : ''}" style="background:${bg}">
-      <div class="meta">#${index + 1} · ${escapeHtml(formatTime(row.recordTime))}</div>
+      <div class="meta">#${index + 1} · ${escapeHtml(formatTime(row.recordTime))} · 上传者：${escapeHtml(uploaderName)}</div>
       <div class="main">
         <div class="cell class">${escapeHtml(row.characterClass || '未知')}</div>
-        <div class="cell name">${escapeHtml(truncate(row.characterName, 12))}</div>
+        <div class="cell name">${escapeHtml(truncate(names.characterName, 12))}</div>
         <div class="cell dungeon">${escapeHtml(truncate(row.dungeonName, 10))}</div>
         <div class="cell team-size">${escapeHtml(row.teamSize ?? '-')}</div>
-        <div class="cell teammates" title="${escapeHtml(row.teammateNames)}">${escapeHtml(truncate(row.teammateNames, 18))}</div>
+        <div class="cell teammates" title="${escapeHtml(names.teammateNames)}">${escapeHtml(truncate(names.teammateNames, 18))}</div>
         <div class="cell duration">${escapeHtml(formatDuration(row.duration))}</div>
         <div class="cell dps dps-${dpsTone}">${escapeHtml(formatDps(row.dps))}</div>
         <div class="cell share">${escapeHtml(formatHpDamageShare(row))}</div>
@@ -96,7 +148,7 @@ function renderRow(row, index, withSkill) {
     </div>`
 }
 
-function renderSection(section, withSkill) {
+function renderSection(section, withSkill, showMode) {
   const rows = section.rows || []
   const title = section.title
     ? `<div class="section-title">${escapeHtml(section.title)}<span class="section-count">${rows.length}</span></div>`
@@ -121,7 +173,7 @@ function renderSection(section, withSkill) {
         <div class="cell runid">场次</div>
       </div>
       <div class="list-body">
-        ${rows.map((row, index) => renderRow(row, index, withSkill)).join('')}
+        ${rows.map((row, index) => renderRow(row, index, withSkill, showMode)).join('')}
       </div>
     </div>`
 }
@@ -129,6 +181,7 @@ function renderSection(section, withSkill) {
 function buildHtml(option) {
   const sections = option.sections || [{ rows: option.rows || [] }]
   const withSkill = Boolean(option.withSkill)
+  const showMode = option.showMode || 'hidden'
   const width = 1280
 
   return `<!DOCTYPE html>
@@ -313,7 +366,7 @@ function buildHtml(option) {
     <div class="title">${escapeHtml(option.title)}</div>
     <div class="desc">${escapeHtml(option.description)}</div>
   </div>
-  ${sections.map(section => renderSection(section, withSkill)).join('')}
+  ${sections.map(section => renderSection(section, withSkill, showMode)).join('')}
 </body>
 </html>`
 }

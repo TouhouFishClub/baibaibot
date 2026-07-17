@@ -278,6 +278,26 @@ function groupTopByBoss(records, limitPerBoss, { bestPerCharacter = false } = {}
   return result
 }
 
+async function getUploadersByRunIds(runIds) {
+  const ids = [...new Set((runIds || []).map(id => String(id || '').trim()).filter(Boolean))]
+  const map = new Map()
+  if (!ids.length) return map
+
+  await ensureIndexes()
+  const client = await getClient()
+  const rows = await client.db(DB_NAME).collection(COL_UPLOADS)
+    .find({ _id: { $in: ids } }, { projection: { playerName: 1, playerId: 1 } })
+    .toArray()
+
+  for (const row of rows) {
+    map.set(String(row._id), {
+      playerName: row.playerName || '',
+      playerId: row.playerId || ''
+    })
+  }
+  return map
+}
+
 module.exports = {
   newReportId,
   findDuplicate,
@@ -288,6 +308,7 @@ module.exports = {
   updateReportFailed,
   getReportById,
   findReportByRunId,
+  getUploadersByRunIds,
   listReports,
   listPendingReports,
   listDpsRecords,

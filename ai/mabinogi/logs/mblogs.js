@@ -5,7 +5,8 @@ const { CLASSES, formatClassHelpLine, resolveClassQuery } = require('./classConf
 const {
   listRecordsByCharacter,
   listRecordsByDungeon,
-  listRecordsByBoss
+  listRecordsByBoss,
+  getUploadersByRunIds
 } = require('./db')
 const { isRunIdKeyword, loadRunDetail } = require('./runQuery')
 const { renderRunDetail } = require('./renderRunDetail')
@@ -50,6 +51,8 @@ function buildMblogsHelp() {
     '  --job 职业名  只显示指定职业（模糊匹配）',
     '  --all       显示全部记录，不做「每角色仅保留最高 DPS」去重',
     '  --withskill 列表模式在角色条目下显示技能占比进度条',
+    '  --show 模式  控制角色/队友名显示（默认均隐藏）',
+    '              脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / all',
     '  --help      显示本帮助',
     '',
     '示例：',
@@ -58,6 +61,8 @@ function buildMblogsHelp() {
     '  mblogs 枯木之佩塔克 --rank 15 --job 黑魔导士',
     '  mblogs 布里列赫 --all',
     '  mblogs 雷内恩的米耶尔 --withskill',
+    '  mblogs 布里列赫 --show 脱敏',
+    '  mblogs 布里列赫 --show all',
     '  mblogs c31651e9',
     '  mblogs --help',
     '',
@@ -67,11 +72,33 @@ function buildMblogsHelp() {
   ].join('\n')
 }
 
+const SHOW_MODES = {
+  hidden: 'hidden',
+  maskCharacter: 'maskCharacter',
+  maskTeammate: 'maskTeammate',
+  mask: 'mask',
+  character: 'character',
+  all: 'all'
+}
+
+function resolveShowMode(value) {
+  const raw = String(value || '').trim().toLowerCase()
+  if (!raw) return SHOW_MODES.hidden
+  if (raw === 'all' || raw === '全部') return SHOW_MODES.all
+  if (raw === '角色' || raw === 'character' || raw === 'name') return SHOW_MODES.character
+  if (raw === '脱敏') return SHOW_MODES.mask
+  if (raw === '脱敏角色名' || raw === '脱敏角色') return SHOW_MODES.maskCharacter
+  if (raw === '脱敏队友' || raw === '脱敏队友名') return SHOW_MODES.maskTeammate
+  return null
+}
+
 function parseMblogsInput(content) {
   const tokens = String(content || '').trim().split(/\s+/).filter(Boolean)
   let showAll = false
   let help = false
   let withSkill = false
+  let showMode = SHOW_MODES.hidden
+  let showModeError = null
   let rank = null
   let job = null
   const keywordParts = []
@@ -105,6 +132,20 @@ function parseMblogsInput(content) {
       job = jobParts.join(' ').trim() || null
       continue
     }
+    if (token === '--show') {
+      const showParts = []
+      while (i + 1 < tokens.length && !String(tokens[i + 1]).startsWith('--')) {
+        showParts.push(tokens[++i])
+      }
+      const showValue = showParts.join(' ').trim()
+      const resolved = resolveShowMode(showValue)
+      if (!resolved) {
+        showModeError = `无效的 --show 参数「${showValue || '(空)'}」，可选：脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / all`
+      } else {
+        showMode = resolved
+      }
+      continue
+    }
     keywordParts.push(token)
   }
 
@@ -113,6 +154,8 @@ function parseMblogsInput(content) {
     showAll,
     help,
     withSkill,
+    showMode,
+    showModeError,
     rank,
     job
   }
@@ -189,6 +232,26 @@ function mapSections(groups) {
   }))
 }
 
+async function attachUploaders(sections) {
+  const runIds = []
+  for (const section of sections || []) {
+    for (const row of section.rows || []) {
+      if (row.runId) runIds.push(row.runId)
+    }
+  }
+  if (!runIds.length) return sections
+
+  const uploaderMap = await getUploadersByRunIds(runIds)
+  for (const section of sections || []) {
+    for (const row of section.rows || []) {
+      const uploader = uploaderMap.get(String(row.runId))
+      row.uploaderName = uploader?.playerName || ''
+      row.uploaderId = uploader?.playerId || ''
+    }
+  }
+  return sections
+}
+
 async function queryMblogs(content, { showAll = false, rank, job, withSkill = false, isAdmin = false } = {}) {
   if (isMblogsHelpRequest(content)) {
     return { help: buildMblogsHelp() }
@@ -259,6 +322,8 @@ async function queryMblogs(content, { showAll = false, rank, job, withSkill = fa
     }
   }
 
+  result.sections = await attachUploaders(result.sections)
+
   if (withSkill) {
     result.sections = await attachSkillBreakdowns(result.sections)
     result.withSkill = true
@@ -285,7 +350,12 @@ async function mblogs(content, from, callback, groupid) {
     return
   }
 
-  const { keyword: queryKeyword, showAll, rank, job, withSkill } = parsed
+  if (parsed.showModeError) {
+    callback(parsed.showModeError)
+    return
+  }
+
+  const { keyword: queryKeyword, showAll, rank, job, withSkill, showMode } = parsed
   const resolvedKeyword = queryKeyword || DEFAULT_DUNGEON
   const isAdmin = isAdminUser(from)
 
@@ -318,6 +388,7 @@ async function mblogs(content, from, callback, groupid) {
       description: result.description,
       output: outputDir,
       withSkill: Boolean(result.withSkill),
+      showMode,
       sections: result.sections || [{ rows: result.rows || [] }]
     })
 
@@ -333,6 +404,8 @@ module.exports = {
   queryMblogs,
   parseMblogsInput,
   resolveRank,
+  resolveShowMode,
+  SHOW_MODES,
   buildMblogsHelp,
   isMblogsHelpRequest,
   isRunIdKeyword
