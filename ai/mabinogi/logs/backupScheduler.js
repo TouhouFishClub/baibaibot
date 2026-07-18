@@ -30,45 +30,76 @@ function listFilesRecursive(dir, base = dir) {
   return results
 }
 
+function getArchiveWindow(date) {
+  const start = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    backupHourLocal,
+    0,
+    0,
+    0
+  )
+  const end = new Date(start)
+  end.setDate(end.getDate() + 1)
+  return { start, end }
+}
+
+function getCurrentArchiveDate(now = new Date()) {
+  const date = new Date(now)
+  const boundary = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    backupHourLocal,
+    0,
+    0,
+    0
+  )
+  if (now.getTime() < boundary.getTime()) {
+    date.setDate(date.getDate() - 1)
+  }
+  return date
+}
+
 /**
  * 将 mabidata/logs 备份到 mabidata/arch/YYYY-MM-DD/
- * 已存在且同大小的文件跳过，不覆盖。
+ * 每个日期目录只保存当天 03:00 到次日 03:00 之间写入的文件。
  */
-function backupLogsToArch({ date = new Date() } = {}) {
+function backupLogsToArch({
+  date = getCurrentArchiveDate(),
+  sourceRoot = SOURCE_ROOT,
+  archRoot = ARCH_ROOT
+} = {}) {
   const dayFolder = formatDateFolder(date)
-  const destRoot = path.join(ARCH_ROOT, dayFolder)
+  const destRoot = path.join(archRoot, dayFolder)
+  const { start, end } = getArchiveWindow(date)
   fs.mkdirSync(destRoot, { recursive: true })
 
-  if (!fs.existsSync(SOURCE_ROOT)) {
-    console.warn(`[dps-logs][backup] 源目录不存在: ${SOURCE_ROOT}`)
+  if (!fs.existsSync(sourceRoot)) {
+    console.warn(`[dps-logs][backup] 源目录不存在: ${sourceRoot}`)
     return { dayFolder, copied: 0, skipped: 0, total: 0 }
   }
 
-  const files = listFilesRecursive(SOURCE_ROOT)
+  const files = listFilesRecursive(sourceRoot)
+    .filter(file => file.relativePath.toLowerCase().endsWith('.json.gz'))
   let copied = 0
   let skipped = 0
 
   for (const file of files) {
+    const modifiedAt = fs.statSync(file.absolutePath).mtimeMs
+    if (modifiedAt < start.getTime() || modifiedAt >= end.getTime()) {
+      skipped++
+      continue
+    }
     const dest = path.join(destRoot, file.relativePath)
     fs.mkdirSync(path.dirname(dest), { recursive: true })
-    if (fs.existsSync(dest)) {
-      try {
-        const srcStat = fs.statSync(file.absolutePath)
-        const destStat = fs.statSync(dest)
-        if (srcStat.size === destStat.size) {
-          skipped++
-          continue
-        }
-      } catch (error) {
-        // fall through to copy
-      }
-    }
     fs.copyFileSync(file.absolutePath, dest)
     copied++
   }
 
-  console.log(`[dps-logs][backup] ${dayFolder} total=${files.length} copied=${copied} skipped=${skipped} -> ${destRoot}`)
-  return { dayFolder, copied, skipped, total: files.length, destRoot }
+  console.log(`[dps-logs][backup] ${dayFolder} 03:00 -> next day 03:00 total=${files.length} copied=${copied} skipped=${skipped} -> ${destRoot}`)
+  return { dayFolder, start, end, copied, skipped, total: files.length, destRoot }
 }
 
 function msUntilNextBackupHour(hour = backupHourLocal) {
@@ -99,13 +130,17 @@ function startLogsBackupScheduler() {
 
   setTimeout(() => {
     try {
-      backupLogsToArch()
+      const archiveDate = new Date()
+      archiveDate.setDate(archiveDate.getDate() - 1)
+      backupLogsToArch({ date: archiveDate })
     } catch (error) {
       console.error('[dps-logs][backup] 执行失败', error)
     }
     setInterval(() => {
       try {
-        backupLogsToArch()
+        const archiveDate = new Date()
+        archiveDate.setDate(archiveDate.getDate() - 1)
+        backupLogsToArch({ date: archiveDate })
       } catch (error) {
         console.error('[dps-logs][backup] 执行失败', error)
       }
@@ -117,5 +152,7 @@ module.exports = {
   ARCH_ROOT,
   backupLogsToArch,
   startLogsBackupScheduler,
-  formatDateFolder
+  formatDateFolder,
+  getArchiveWindow,
+  getCurrentArchiveDate
 }
