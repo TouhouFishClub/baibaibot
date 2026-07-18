@@ -3,6 +3,7 @@ const { getClient } = require('../../../mongo/index')
 const DB_NAME = 'db_bot'
 const COL_SNAPSHOTS = 'cl_mabinogi_dps_ai_snapshots'
 const COL_REPORTS = 'cl_mabinogi_dps_ai_reports'
+const COL_REVIEWS = 'cl_mabinogi_dps_ai_reviews'
 
 let indexesReady = false
 
@@ -20,10 +21,12 @@ async function ensureIndexes() {
   const client = await getClient()
   const snapshots = client.db(DB_NAME).collection(COL_SNAPSHOTS)
   const reports = client.db(DB_NAME).collection(COL_REPORTS)
+  const reviews = client.db(DB_NAME).collection(COL_REVIEWS)
 
   await snapshots.createIndex({ createdAt: -1 }, { name: 'createdAt_desc' })
   await snapshots.createIndex({ dateKey: 1, createdAt: -1 }, { name: 'dateKey_createdAt' })
   await reports.createIndex({ dateKey: 1 }, { unique: true, name: 'uniq_dateKey' })
+  await reviews.createIndex({ dateKey: 1 }, { unique: true, name: 'uniq_dateKey' })
 
   indexesReady = true
 }
@@ -79,11 +82,41 @@ async function upsertDailyAiReport(doc) {
   return payload
 }
 
+async function getDailyAiReview(dateKey = getShanghaiDateKey()) {
+  await ensureIndexes()
+  const client = await getClient()
+  return client.db(DB_NAME).collection(COL_REVIEWS).findOne({ dateKey })
+}
+
+async function upsertDailyAiReview(doc) {
+  await ensureIndexes()
+  const client = await getClient()
+  const col = client.db(DB_NAME).collection(COL_REVIEWS)
+  const dateKey = doc.dateKey || getShanghaiDateKey()
+  const now = new Date()
+  const payload = {
+    ...doc,
+    dateKey,
+    updatedAt: now
+  }
+  await col.updateOne(
+    { dateKey },
+    {
+      $set: payload,
+      $setOnInsert: { createdAt: now }
+    },
+    { upsert: true }
+  )
+  return payload
+}
+
 module.exports = {
   getShanghaiDateKey,
   insertAiSnapshot,
   getLatestAiSnapshot,
   getAiSnapshotById,
   getDailyAiReport,
-  upsertDailyAiReport
+  upsertDailyAiReport,
+  getDailyAiReview,
+  upsertDailyAiReview
 }

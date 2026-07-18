@@ -1,5 +1,5 @@
 /**
- * 重置 AI 分析快照与日报缓存，不删除 DPS 排行、上传记录或源文件。
+ * 重置 AI 分析快照、日报与锐评缓存，不删除 DPS 排行、上传记录或源文件。
  *
  * 默认仅预览：
  *   node ai/mabinogi/logs/scripts/clearAnalysisHistory.js
@@ -12,7 +12,8 @@ const { getClient } = require('../../../../mongo/index')
 const DB_NAME = 'db_bot'
 const COLLECTIONS = [
   'cl_mabinogi_dps_ai_snapshots',
-  'cl_mabinogi_dps_ai_reports'
+  'cl_mabinogi_dps_ai_reports',
+  'cl_mabinogi_dps_ai_reviews'
 ]
 
 function parseArgs(argv) {

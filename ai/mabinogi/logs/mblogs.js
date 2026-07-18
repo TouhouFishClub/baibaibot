@@ -14,6 +14,7 @@ const { renderRunDetail } = require('./renderRunDetail')
 const { renderMblogsList } = require('./renderMblogsList')
 const { attachSkillBreakdowns } = require('./skillBreakdown')
 const { resolveAiAnalysisCommand, runAiAnalysis } = require('./aiAnalysis')
+const { resolveAiReviewCommand, runAiReview } = require('./aiReview')
 
 const ADMIN_QQ = '799018865'
 // const ALLOWED_GROUPS = new Set(['668217870', '885309800'])
@@ -48,6 +49,8 @@ function buildMblogsHelp() {
     `  mblogs ${DEFAULT_DUNGEON}           查询副本各 Boss 排行榜`,
     `  mblogs Boss名             查询单个 Boss，默认前${BOSS_DEFAULT_RANK}名`,
     '  mblogs <场次ID>           查询单场战斗详情图（支持短 ID）',
+    '  mblogs AI锐评             从夯到拉，对比各阿尔卡纳职业（当天缓存，仅管理员）',
+    '  mblogs 重新生成AI锐评     强制刷新职业锐评（仅管理员）',
     '  mblogs AI分析             生成/查看当日 AI 分析报告（当天缓存，仅管理员）',
     '  mblogs 重新生成AI分析     强制重新采集并生成 AI 分析（仅管理员）',
     '',
@@ -68,6 +71,8 @@ function buildMblogsHelp() {
     '  mblogs 雷内恩的米耶尔 --withskill',
     '  mblogs 布里列赫 --show 脱敏',
     '  mblogs 布里列赫 --show all',
+    '  mblogs AI锐评',
+    '  mblogs 重新生成AI锐评',
     '  mblogs AI分析',
     '  mblogs 重新生成AI分析',
     '  mblogs c31651e9',
@@ -367,6 +372,30 @@ async function mblogs(content, from, callback, groupid) {
     return
   }
 
+  const aiReviewCommand = resolveAiReviewCommand(parsed.keyword || keyword)
+  if (aiReviewCommand) {
+    if (!isAdminUser(from)) {
+      return
+    }
+    const outputDir = path.join(IMAGE_DATA, 'mabi_other', 'MabiAiReview.png')
+    try {
+      callback(aiReviewCommand.force
+        ? '正在重新采集排行并生成 AI 锐评，请稍候…'
+        : '正在生成/读取「从夯到拉」AI 锐评，请稍候…')
+      const result = await runAiReview({ force: aiReviewCommand.force, outputPath: outputDir })
+      if (result.status === 'busy') {
+        callback(result.message)
+        return
+      }
+      const msg = result.message ? `${result.message}\n` : ''
+      callback(`${msg}[CQ:image,file=${path.join('send', 'mabi_other', 'MabiAiReview.png')}]`)
+    } catch (error) {
+      console.error('[mblogs] ai review error', error)
+      callback(`AI 锐评失败：${error.message || '请稍后再试'}`)
+    }
+    return
+  }
+
   const aiCommand = resolveAiAnalysisCommand(parsed.keyword || keyword)
   if (aiCommand) {
     if (!isAdminUser(from)) {
@@ -450,6 +479,8 @@ module.exports = {
   buildMblogsHelp,
   isMblogsHelpRequest,
   isRunIdKeyword,
+  resolveAiReviewCommand,
+  runAiReview,
   resolveAiAnalysisCommand,
   runAiAnalysis
 }

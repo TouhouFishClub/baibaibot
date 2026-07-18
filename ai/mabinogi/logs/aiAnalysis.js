@@ -743,9 +743,17 @@ function resolveAiAnalysisCommand(content) {
 module.exports = {
   TOP_ALL,
   TOP_CLASS,
+  ANALYSIS_KNOWLEDGE_VERSION,
+  ANALYSIS_KNOWLEDGE,
   resolveAiAnalysisCommand,
   runAiAnalysis,
   collectSnapshotData,
   anonymizeSnapshot,
-  listBossGroups
+  listBossGroups,
+  callDeepSeek,
+  extractJson,
+  normalizeUsage,
+  collectSkillLexicon,
+  scrubReportNames,
+  newSnapshotId
 }
