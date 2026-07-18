@@ -17,6 +17,12 @@ const { renderAiAnalysisReport } = require('./renderAiAnalysis')
 
 const TOP_ALL = 20
 const TOP_CLASS = 10
+const BOSS_SHORTHAND_NAMES = [
+  ['一王', '枯木之佩塔克'],
+  ['二王', '布隆塔纳斯'],
+  ['三王', '雷内恩的米耶尔'],
+  ['四王', '雷内恩的米耶尔：悔恨']
+]
 
 // Update this knowledge together with game balance/mechanic changes. Keep skill names aligned
 // with the combat log; aliases are only explanatory and must not be emitted as new skills.
@@ -56,9 +62,9 @@ const ANALYSIS_KNOWLEDGE = {
     },
     {
       name: '雷内恩的米耶尔：悔恨',
-      profile: '三王变种，但属于独立副本。血量超过三王1.5倍且攻略时限约为三王的一半，并周期刷新必须处理的安全屋，对队伍DPS和机制执行要求更高，样本存在明显准入与玩家强度筛选。',
+      profile: '雷内恩的米耶尔的强化变种，但属于独立副本。血量超过雷内恩的米耶尔1.5倍且攻略时限约为后者的一半，并周期刷新必须处理的安全屋，对队伍DPS和机制执行要求更高，样本存在明显准入与玩家强度筛选。',
       mechanics: [
-        '80%：刷新5球，每轮必须击杀2个；其余特点类似三王40%；Boss无敌。',
+        '80%：刷新5球，每轮必须击杀2个；其余特点类似雷内恩的米耶尔40%机制；Boss无敌。',
         '65%：在安全区内击杀3球，需拾取分裂的灵魂才有足够伤害，灵魂越多攻击越高，达到6个会即死；Boss无敌。',
         '50%：纯跑位；Boss无敌。',
         '35%至25%：加强版角力压血机制，只能尝试2次，失败后场地缩小；Boss仍可攻击。',
@@ -86,7 +92,7 @@ const ANALYSIS_KNOWLEDGE = {
       role: '中射程远程输出',
       exclusiveSkills: ['龙炎', '闪电链', '暴风雪', '魔法封锁'],
       commonSkills: ['雷击', '火球', '火-雷', '流星'],
-      notes: '存在单手魔杖+魔法书的火-雷魔组流派，以及双手法杖雷击流派；只能按技能构成推测流派，不能断言装备。龙炎是10秒CD必杀技，可用扭曲连续释放5次。部分毁坏法杖玩家因装备等级无法进入四王，四王样本存在准入偏差。'
+      notes: '存在单手魔杖+魔法书的火-雷魔组流派，以及双手法杖雷击流派；只能按技能构成推测流派，不能断言装备。龙炎是10秒CD必杀技，可用扭曲连续释放5次。部分毁坏法杖玩家因装备等级无法进入雷内恩的米耶尔：悔恨，该Boss样本存在准入偏差。'
     },
     {
       name: '流星射手',
@@ -100,7 +106,7 @@ const ANALYSIS_KNOWLEDGE = {
       role: '坦克/团队减伤',
       exclusiveSkills: ['圣域庇护', '瞬间挑衅', '盾牌冲撞', '铁壁猛击', '审判一击', '牺牲之惩戒'],
       commonSkills: ['重击', '风车', '无限连击'],
-      notes: '通过承伤为队友减伤，并把承受伤害转化为自身攻击。牺牲之惩戒是90秒CD必杀技，可通过被击减少CD；三王和四王打球时的高频闪电可使其快速刷新。日志不能完整量化减伤、控怪和承伤贡献，不得只按DPS评价。盾牌冲撞是专用技能，冲撞是通用技能。'
+      notes: '通过承伤为队友减伤，并把承受伤害转化为自身攻击。牺牲之惩戒是90秒CD必杀技，可通过被击减少CD；雷内恩的米耶尔及雷内恩的米耶尔：悔恨打球时的高频闪电可使其快速刷新。日志不能完整量化减伤、控怪和承伤贡献，不得只按DPS评价。盾牌冲撞是专用技能，冲撞是通用技能。'
     },
     {
       name: '爆裂骑士枪',
@@ -340,6 +346,7 @@ function anonymizeSnapshot(snapshot) {
 
 function buildSystemPrompt() {
   const classNames = CLASSES.map(cls => cls.name).join('、')
+  const bossNames = BOSSES.map(boss => boss.displayName).filter((name, index, all) => all.indexOf(name) === index).join('、')
   const knowledge = JSON.stringify({
     version: ANALYSIS_KNOWLEDGE_VERSION,
     ...ANALYSIS_KNOWLEDGE
@@ -359,6 +366,9 @@ function buildSystemPrompt() {
 10. 跨期变化只在同 playerKey、同 Boss 且队伍人数和战斗时长具有可比性时重点讨论；否则明确样本条件变化。首次分析不得伪造历史趋势。
 11. 技能名末尾的「AI」是客户端标记，与人工智能无关；数据中已去除该后缀。正文不得恢复该后缀，也不要把它理解为自动战斗。
 12. 引用数值是为了支撑判断：每个重点结论选择1至2个最关键的占比、DPS、时长或排名即可，不要连续罗列数据。建议必须具体到输出窗口、技能构成、追击或队伍配置，不写泛泛的「提升装备和操作」。
+13. current.bosses[].top20 才是全职业总榜，只有这里的 rank 才是全榜排名。current.byClass[class].bosses[].top10 是该职业内部榜，其 rank 只能解释为 classRank；职业内 rank=1 只能写「该职业内最佳样本」，绝对不能写成全榜第一、榜首或领跑。宏观职业格局与标题必须以 current.bosses[].top20 为准，byClass 只用于观察职业内部技能构成。
+14. 严格使用榜单措辞：「某职业领跑某Boss」仅限该职业占据该Boss全榜第1；「领跑多个Boss」至少占据两个Boss全榜第1；「领跑各Boss」必须占据全部Boss全榜第1。「头部强势」必须有多个全榜前3或前5席位支撑，并写明范围；仅有少量前20样本只能写「有少量样本进入前20」。输出前逐项核对 title、overview、bossNotes、macroTrend 中的榜首、领跑、统治、头部等词是否得到全榜名次支持。
+15. 在 title、overview、bossNotes、classes 的全部文本及 macroTrend 中，Boss只能使用正式名称：${bossNames}。禁止使用「一王」「二王」「三王」「四王」等序号简称，即使为了避免重复也不得简称。
 
 版本知识（版本 ${ANALYSIS_KNOWLEDGE_VERSION}，只能使用其中已有事实；后续版本可能变化）：
 ${knowledge}
@@ -391,7 +401,35 @@ function buildUserPrompt(currentAnon, previousAnon) {
       ? '已提供上一期快照。请对比同 playerKey 的 DPS/技能变化，归纳提升与退步趋势，但不要写出可识别身份信息。'
       : '这是首次分析，没有上一期快照。'
   }
-  return `以下是匿名化后的 DPS 排行快照 JSON。current.bosses[].top20 是各 Boss 每名角色最佳成绩中的前20；current.byClass 是各职业在每个 Boss 的最佳成绩前10，两部分可能包含同一场记录。skills 含 name/percent/count/damage，其中 count 是命中次数而不是施放次数；skills.name 已去除末尾客户端标记「AI」。请先识别真正有证据的异常、职业内技能构成差异和可比的跨期变化，再按指定 JSON 输出，不要按输入顺序逐行复述。\n\n${JSON.stringify(payload)}`
+  return `以下是匿名化后的 DPS 排行快照 JSON。current.bosses[].top20 是各 Boss 每名角色最佳成绩中的全职业前20，其中 rank 是全榜排名；current.byClass 是各职业在每个 Boss 的职业内部最佳成绩前10，其中 rank 仅表示该职业内部的 classRank，两部分可能包含同一场记录。禁止把职业内部第1名描述成全榜第1名或领跑。skills 含 name/percent/count/damage，其中 count 是命中次数而不是施放次数；skills.name 已去除末尾客户端标记「AI」。请先以 current.bosses[].top20 核对职业在全榜中的实际名次和出现次数，再识别真正有证据的异常、职业内技能构成差异和可比的跨期变化，最后按指定 JSON 输出，不要按输入顺序逐行复述。\n\n${JSON.stringify(payload)}`
+}
+
+function normalizeBossNamesInText(value) {
+  let text = String(value || '').trim()
+  for (const [shortName, formalName] of BOSS_SHORTHAND_NAMES) {
+    text = text.split(shortName).join(formalName)
+  }
+  return text
+}
+
+function normalizeBossNamesInReport(report) {
+  if (!report) return report
+  return {
+    ...report,
+    title: normalizeBossNamesInText(report.title),
+    overview: normalizeBossNamesInText(report.overview),
+    bossNotes: (report.bossNotes || []).map(normalizeBossNamesInText).filter(Boolean),
+    macroTrend: normalizeBossNamesInText(report.macroTrend),
+    classes: (report.classes || []).map(item => ({
+      ...item,
+      summary: normalizeBossNamesInText(item.summary),
+      pros: (item.pros || []).map(normalizeBossNamesInText).filter(Boolean),
+      cons: (item.cons || []).map(normalizeBossNamesInText).filter(Boolean),
+      skills: normalizeBossNamesInText(item.skills),
+      bossPerformance: normalizeBossNamesInText(item.bossPerformance),
+      trend: normalizeBossNamesInText(item.trend)
+    }))
+  }
 }
 
 function normalizeReport(parsed, { generatedAt, hasPrevious }) {
@@ -402,12 +440,12 @@ function normalizeReport(parsed, { generatedAt, hasPrevious }) {
     if (!name) continue
     byName.set(name, {
       name,
-      summary: String(item.summary || '').trim(),
-      pros: Array.isArray(item.pros) ? item.pros.map(v => String(v || '').trim()).filter(Boolean) : [],
-      cons: Array.isArray(item.cons) ? item.cons.map(v => String(v || '').trim()).filter(Boolean) : [],
-      skills: String(item.skills || '').trim(),
-      bossPerformance: String(item.bossPerformance || '').trim(),
-      trend: String(item.trend || '').trim()
+      summary: normalizeBossNamesInText(item.summary),
+      pros: Array.isArray(item.pros) ? item.pros.map(normalizeBossNamesInText).filter(Boolean) : [],
+      cons: Array.isArray(item.cons) ? item.cons.map(normalizeBossNamesInText).filter(Boolean) : [],
+      skills: normalizeBossNamesInText(item.skills),
+      bossPerformance: normalizeBossNamesInText(item.bossPerformance),
+      trend: normalizeBossNamesInText(item.trend)
     })
   }
 
@@ -424,13 +462,13 @@ function normalizeReport(parsed, { generatedAt, hasPrevious }) {
   })
 
   return {
-    title: String(parsed?.title || 'mblogs AI 分析报告').trim(),
-    overview: String(parsed?.overview || '').trim(),
+    title: normalizeBossNamesInText(parsed?.title || 'mblogs AI 分析报告'),
+    overview: normalizeBossNamesInText(parsed?.overview),
     bossNotes: Array.isArray(parsed?.bossNotes)
-      ? parsed.bossNotes.map(v => String(v || '').trim()).filter(Boolean)
+      ? parsed.bossNotes.map(normalizeBossNamesInText).filter(Boolean)
       : [],
     classes: orderedClasses,
-    macroTrend: String(parsed?.macroTrend || '').trim(),
+    macroTrend: normalizeBossNamesInText(parsed?.macroTrend),
     generatedAt,
     hasPrevious: Boolean(hasPrevious)
   }
@@ -626,10 +664,10 @@ async function runAiAnalysis({ force = false, outputPath } = {}) {
   if (!force) {
     const cached = await getDailyAiReport(dateKey)
     if (cached?.report) {
-      const report = {
+      const report = normalizeBossNamesInReport({
         ...cached.report,
         usage: cached.report.usage || normalizeUsage(cached.usage)
-      }
+      })
       await renderAiAnalysisReport(report, outputPath)
       return {
         status: 'cached',

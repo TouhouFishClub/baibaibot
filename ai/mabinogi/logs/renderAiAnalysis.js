@@ -7,6 +7,7 @@ const { CLASSES, getClassTheme, hexToRgba } = require('./classConfig')
 
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'hk4e_zh-cn.ttf'))
 const REPORT_WIDTH = 920
+const EXTRA_SKILL_TERMS = ['炼金领域']
 
 function escapeHtml(text) {
   return String(text ?? '')
@@ -72,6 +73,7 @@ function buildHighlightTerms(report) {
     for (const skill of cls.skills || []) add(skill, { type: 'skill' }, 2)
   }
   for (const skill of report?.lexicon?.skills || []) add(skill, { type: 'skill' }, 2)
+  for (const skill of EXTRA_SKILL_TERMS) add(skill, { type: 'skill' }, 2)
 
   return map
 }
