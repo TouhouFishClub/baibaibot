@@ -16,7 +16,8 @@ const { attachSkillBreakdowns } = require('./skillBreakdown')
 const { resolveAiAnalysisCommand, runAiAnalysis } = require('./aiAnalysis')
 
 const ADMIN_QQ = '799018865'
-const ALLOWED_GROUPS = new Set(['668217870', '885309800'])
+// const ALLOWED_GROUPS = new Set(['668217870', '885309800'])
+const ALLOWED_GROUPS = new Set([])
 
 const DEFAULT_DUNGEON = '布里列赫'
 const DEFAULT_RANK = 10
