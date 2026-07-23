@@ -25,19 +25,19 @@ function connectMongo(){
 }
 connectMongo();
 
-async function s2n() {
+async function s2n(proxy) {
   console.log('now s2n:');
-  var url = 'https://w08r.kancolle-server.com/kcsapi/api_start2/getData';
+  var url = 'https://raw.githubusercontent.com/a26214311/kc_ship/refs/heads/main/shipstr';
   var now = new Date().getTime();
   var req = {
     url: url,
-    method: "POST",
+    method: "GET",
     headers:{
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Referer':'https://w08r.kancolle-server.com/kcs2/index.php?api_root=/kcsapi&voice_root=/kcs/sound&osapi_root=osapi.dmm.com&version=5.1.4.1&api_token='+tk2+'&api_starttime='+now,
       'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
-    },
-    body:'api_token='+tk2+'&api_verno=1'
+    }
+  }
+  if(proxy==1){
+    req.proxy = 'http://192.168.17.236:2346'
   }
   console.log(req);
   // if(noproxy==1){
@@ -58,26 +58,19 @@ async function s2n() {
   // }
   request(req, function(error, response, body) {
     if (error && error.code) {
-
+      setTimeout(function(){
+        s2n(1);
+      },delay);
     } else {
-      if (body.startsWith("svdata=")) {
-        body = body.substring(7);
-        try {
-          var dat = JSON.parse(body);
-          console.log(dat);
-          var slst = dat.api_data.api_mst_ship;
-          for(var p in slst){
-            var isd = slst[p].api_id;
-            var nn = slst[p].api_name;
-            shipid2name[isd]=nn;
-          }
+      try {
+        var bda = body.split(',');
+        for(var i=0;i<bda.length;i++){
+          shipid2name[i]=bda[i];
         }
-        catch(e){
-
-        }
+      }
+      catch(e){
 
       }
-
     }
   });
 
