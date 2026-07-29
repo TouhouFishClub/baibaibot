@@ -1,5 +1,10 @@
 const assert = require('assert')
-const { parseGachaEntryFromArticle } = require('./parser')
+const {
+	PRIVATE_DETECTIVE_POOL,
+	normalizeGachaItemName,
+	normalizeGachaRareMap,
+	parseGachaEntryFromArticle
+} = require('./parser')
 
 const maintenanceNotice = `
 <dd class="cur" id="newscontent">
@@ -24,5 +29,25 @@ assert.strictEqual(parseGachaEntryFromArticle(`
 assert.strictEqual(parseGachaEntryFromArticle(`
 <dd id="newscontent"><p>ordinary maintenance notice</p></dd>
 `), null)
+
+assert.strictEqual(
+	normalizeGachaItemName(PRIVATE_DETECTIVE_POOL, '\u9ed1\u6697\u7684\u79c1\u5bb6\u4fa6\u63a2\u5916\u5957'),
+	'\u7eaf\u6d01\u7684\u79c1\u5bb6\u4fa6\u63a2\u5916\u5957'
+)
+assert.strictEqual(
+	normalizeGachaItemName('older pool', '\u9ed1\u6697\u7684\u79c1\u5bb6\u4fa6\u63a2\u5916\u5957'),
+	'\u9ed1\u6697\u7684\u79c1\u5bb6\u4fa6\u63a2\u5916\u5957'
+)
+assert.deepStrictEqual(normalizeGachaRareMap(PRIVATE_DETECTIVE_POOL, {
+	S: ['eeffb1', '5.86', [
+		'\u9ed1\u6697\u7684\u79c1\u5bb6\u4fa6\u63a2\u5916\u5957',
+		'\u9ed1\u6697\u7684\u79c1\u5bb6\u4fa6\u63a2\u5939\u514b'
+	]]
+}), {
+	S: ['eeffb1', '5.86', [
+		'\u7eaf\u6d01\u7684\u79c1\u5bb6\u4fa6\u63a2\u5916\u5957',
+		'\u7eaf\u6d01\u7684\u79c1\u5bb6\u4fa6\u63a2\u5939\u514b'
+	]]
+})
 
 console.log('gacha article parser tests passed')

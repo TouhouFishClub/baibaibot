@@ -11,6 +11,34 @@ const splitStr = (str, start, end, ignoreSearch = false) => {
 	return subStr
 }
 
+const PRIVATE_DETECTIVE_POOL = '\u79c1\u5bb6\u4fa6\u63a2\u624b\u5e15\u793c\u5305'
+const PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS = {
+	'\u9ed1\u6697\u7684\u79c1\u5bb6\u4fa6\u63a2\u5916\u5957': '\u7eaf\u6d01\u7684\u79c1\u5bb6\u4fa6\u63a2\u5916\u5957',
+	'\u9ed1\u6697\u7684\u79c1\u5bb6\u4fa6\u63a2\u5939\u514b': '\u7eaf\u6d01\u7684\u79c1\u5bb6\u4fa6\u63a2\u5939\u514b'
+}
+
+const normalizeGachaItemName = (poolName, itemName) => {
+	if(poolName !== PRIVATE_DETECTIVE_POOL) return itemName
+	return PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS[itemName] || itemName
+}
+
+const normalizeGachaRareMap = (poolName, raremap) => {
+	const normalized = {}
+	for(const rareTag of Object.keys(raremap || {})) {
+		const rareInfo = raremap[rareTag]
+		if(!Array.isArray(rareInfo) || !Array.isArray(rareInfo[2])) {
+			normalized[rareTag] = rareInfo
+			continue
+		}
+		normalized[rareTag] = [
+			rareInfo[0],
+			rareInfo[1],
+			rareInfo[2].map(itemName => normalizeGachaItemName(poolName, itemName))
+		]
+	}
+	return normalized
+}
+
 const parseGachaEntryFromArticle = article => {
 	if(String(article || '').indexOf('id="newscontent"') === -1) {
 		return null
@@ -60,5 +88,9 @@ const parseGachaEntryFromArticle = article => {
 }
 
 module.exports = {
+	PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS,
+	PRIVATE_DETECTIVE_POOL,
+	normalizeGachaItemName,
+	normalizeGachaRareMap,
 	parseGachaEntryFromArticle
 }

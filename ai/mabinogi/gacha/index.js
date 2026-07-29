@@ -4,7 +4,7 @@ const path = require('path-extra')
 const _ = require('lodash')
 const HTMLParser = require('node-html-parser');
 const { drawTxtImage } = require('../../../cq/drawImageBytxt')
-const { parseGachaEntryFromArticle } = require('./parser')
+const { normalizeGachaRareMap, parseGachaEntryFromArticle } = require('./parser')
 
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../../baibaiConfigs').mongourl;
@@ -300,6 +300,7 @@ const loadGachaGroup = async (page = 1, source = false) => {
 				let raremap = {}
 				// console.log(`raremap = ${pl.trim()}`)
 				eval(`raremap = ${pl.trim()}`)
+				raremap = normalizeGachaRareMap(info.name, raremap)
 				info.rare = raremap
 				gachaInfo.push(info)
 				if(source) {

@@ -2,14 +2,23 @@
 
 ## fixLatestGachaPoolName.js
 
-修复 2026-07-29 维护公告被整段解析成蛋池名称的问题。脚本会同时处理
-`cl_mabinogi_gacha_info.info[].pool` 和 `cl_mbcd_ylx` / `cl_mbcd_yate` 的
-`draw_pool`。默认只扫描，不写入。
+修复 2026-07-29 最近一期“私家侦探手帕礼包”的两类数据问题：
+
+- 维护公告被整段解析成蛋池名称；
+- 官网把“纯洁的私家侦探外套 / 夹克”误写成“黑暗的私家侦探外套 / 夹克”。
+
+脚本会修复 `cl_mabinogi_gacha_info.info[].pool`，将这两个道具的当期 `info`
+迁移到正确名称文档（保留源、目标文档的历史 `info`），并处理
+`cl_mbcd_ylx` / `cl_mbcd_yate` 的错误或未知 `draw_pool`。未知蛋池回填
+只扫描北京时间 2026-07-29 起这两个正确道具名的记录。默认只扫描，不写入。
 
 ```bash
 node script/fixLatestGachaPoolName.js
 node script/fixLatestGachaPoolName.js yes
 ```
+
+先执行第一条核对各类待修复数量，确认后再执行带 `yes` 的第二条。写入完成后
+重启机器人，使内存中的蛋池资料重新加载。
 
 在项目根目录执行（需能访问 `baibaiConfigs` 中配置的 MongoDB）。本项目使用 **mongodb@2.x** 驱动，脚本已使用 `count` / `remove` 等旧版 API。
 
