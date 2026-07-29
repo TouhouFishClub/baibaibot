@@ -1,5 +1,16 @@
 # 洛奇推送数据维护脚本
 
+## fixLatestGachaPoolName.js
+
+修复 2026-07-29 维护公告被整段解析成蛋池名称的问题。脚本会同时处理
+`cl_mabinogi_gacha_info.info[].pool` 和 `cl_mbcd_ylx` / `cl_mbcd_yate` 的
+`draw_pool`。默认只扫描，不写入。
+
+```bash
+node script/fixLatestGachaPoolName.js
+node script/fixLatestGachaPoolName.js yes
+```
+
 在项目根目录执行（需能访问 `baibaiConfigs` 中配置的 MongoDB）。本项目使用 **mongodb@2.x** 驱动，脚本已使用 `count` / `remove` 等旧版 API。
 
 ```bash

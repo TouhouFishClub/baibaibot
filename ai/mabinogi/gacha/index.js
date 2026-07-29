@@ -4,6 +4,7 @@ const path = require('path-extra')
 const _ = require('lodash')
 const HTMLParser = require('node-html-parser');
 const { drawTxtImage } = require('../../../cq/drawImageBytxt')
+const { parseGachaEntryFromArticle } = require('./parser')
 
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../../baibaiConfigs').mongourl;
@@ -243,17 +244,6 @@ const randomGacha = (gachaInfo, count, rareLimitSet) => {
 	return { items, matchInfo }
 }
 
-const parseGachaNameFromLine = tar => {
-	let name = splitStr(tar, '-', '<a', true).replace(/<\/?\w+>/g, '').replace(/【/g, '').trim()
-	if(name.indexOf('[') > -1) {
-		name = name.substring(0, name.indexOf('[')).trim()
-	}
-	if(name.indexOf('<') > -1) {
-		name = name.substring(0, name.indexOf('<')).trim()
-	}
-	return name.match(/礼包|手帕|钥匙/) ? name : ''
-}
-
 const loadGachaGroup = async (page = 1, source = false) => {
 	let article = await fetchData(`https://luoqi.tiancity.com/homepage/article/Class_231_Time_${page}.html`)
 	// 拆分
@@ -266,15 +256,11 @@ const loadGachaGroup = async (page = 1, source = false) => {
 			// 遍历url
 			// console.log(`=== fetch ${urls[i]} ===`)
 			let data = await fetchData(urls[i])
-			data = splitStr(data, 'id="newscontent"', '</dd>')
-			let tar = data.split('\n').filter(x => x.indexOf('查看概率') > -1)[0]
+			let entry = parseGachaEntryFromArticle(data)
 			console.log('=========')
-			console.log(tar)
-			if(tar) {
-				let obj = {}
-				obj.name = parseGachaNameFromLine(tar)
-				obj.link = splitStr(tar, '<a href="', '"', true)
-				target.push(obj)
+			console.log(entry)
+			if(entry) {
+				target.push(entry)
 			}
 		}
 		target = target.filter(x => (x.link.startsWith('https://') || x.link.startsWith('http://')) && x.name)
@@ -452,5 +438,6 @@ module.exports = {
 	mabiGacha,
 	fetchData,
 	loadGachaGroup,
+	parseGachaEntryFromArticle,
 	selectGachaGroup
 }
