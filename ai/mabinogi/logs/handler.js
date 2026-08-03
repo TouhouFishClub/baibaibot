@@ -51,6 +51,10 @@ function getRawJsonBody(req) {
   return Buffer.from(JSON.stringify(req.body))
 }
 
+function getControlRequestBody(req) {
+  return req.method === 'GET' ? Buffer.alloc(0) : getRawJsonBody(req)
+}
+
 function consentMode(value) {
   const mode = String(value || '').trim().toLowerCase()
   return ['none', 'anonymous', 'public'].includes(mode) ? mode : null
@@ -68,7 +72,9 @@ async function handleRankingConsent(req, res) {
     return sendJson(res, 400, { ok: false, error: 'invalid_player_id' })
   }
 
-  const auth = await verifyControlRequest(req, playerId, getRawJsonBody(req))
+  // Express may initialise a bodyless GET as {}, but it is not signed content.
+  const signedBody = getControlRequestBody(req)
+  const auth = await verifyControlRequest(req, playerId, signedBody)
   if (!auth.ok) return sendJson(res, auth.status, { ok: false, error: auth.error })
 
   const rate = isRateLimited(ip, playerId)
@@ -422,5 +428,6 @@ module.exports = {
   registerRoutes,
   handleUpload,
   handleRankingConsent,
-  handleAnnouncement
+  handleAnnouncement,
+  getControlRequestBody
 }
