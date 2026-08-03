@@ -1,5 +1,9 @@
 const assert = require('assert')
-const { getControlRequestBody, getRankingNameRefreshes } = require('../handler')
+const {
+  getControlRequestBody,
+  getRankingConsentPlayerName,
+  getRankingNameRefreshes
+} = require('../handler')
 
 const getBody = getControlRequestBody({ method: 'GET', body: {} })
 assert(Buffer.isBuffer(getBody))
@@ -8,6 +12,13 @@ assert.strictEqual(getBody.length, 0)
 const rawBody = Buffer.from('{"mode":"public"}')
 const putBody = getControlRequestBody({ method: 'PUT', body: { mode: 'public' }, rawBody })
 assert.strictEqual(putBody, rawBody)
+
+const playerName = '\u4e2d\u6587\u89d2\u8272'
+const mojibakeHeader = Buffer.from(playerName, 'utf8').toString('latin1')
+assert.strictEqual(getRankingConsentPlayerName({
+  body: { playerName },
+  headers: { 'x-player-name': mojibakeHeader }
+}), playerName)
 
 const nameRefreshes = getRankingNameRefreshes({
   targets: [{

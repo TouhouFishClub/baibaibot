@@ -56,6 +56,10 @@ function getControlRequestBody(req) {
   return req.method === 'GET' ? Buffer.alloc(0) : getRawJsonBody(req)
 }
 
+function getRankingConsentPlayerName(req) {
+  return req.body?.playerName || ''
+}
+
 function getRankingNameRefreshes(data) {
   return collectPcAttackers(data)
     .filter(item => item.name && item.name !== item.id)
@@ -97,17 +101,21 @@ async function handleRankingConsent(req, res) {
   const mode = consentMode(req.body?.mode)
   if (!mode) return sendJson(res, 400, { ok: false, error: 'invalid_mode' })
 
+  // Non-ASCII custom HTTP headers are decoded as Latin-1 by Node. The JSON
+  // body is UTF-8 and covered by HMAC, so it is the authoritative name source.
+  const playerName = getRankingConsentPlayerName(req)
+
   const saved = await upsertRankingConsent({
     playerId,
     mode,
-    playerName: getHeader(req, 'x-player-name') || req.body?.playerName || '',
+    playerName,
     clientVersion: req.body?.clientVersion || ''
   })
   logReceive({
     event: 'ranking_consent_update',
     ip,
     playerId,
-    playerName: getHeader(req, 'x-player-name') || req.body?.playerName || '',
+    playerName,
     mode,
     clientVersion: req.body?.clientVersion || ''
   })
@@ -444,5 +452,6 @@ module.exports = {
   handleRankingConsent,
   handleAnnouncement,
   getControlRequestBody,
+  getRankingConsentPlayerName,
   getRankingNameRefreshes
 }
