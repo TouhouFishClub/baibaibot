@@ -87,18 +87,25 @@ async function run() {
     }
   ]
 
-  assert.strictEqual(getDefaultCharacterName(rows[0]), 'public-id')
+  assert.strictEqual(getDefaultCharacterName(rows[0]), '公开角色名')
   assert.strictEqual(getDefaultCharacterName(rows[1]), ANONYMOUS_CHARACTER_NAME)
   assert.strictEqual(getDefaultCharacterName(rows[2]), '')
+
+  assert.strictEqual(getDefaultCharacterName({
+    characterId: 'fallback-id',
+    characterName: '',
+    rankingVisibility: 'public'
+  }), 'fallback-id')
 
   const html = buildHtml({
     title: 'DPS',
     description: 'default',
     sections: [{ rows }]
   })
-  assert(html.includes('public-id'))
+  assert(html.includes('公开角色名'))
   assert(html.includes(ANONYMOUS_CHARACTER_NAME))
-  assert(!html.includes('公开角色名'))
+  assert(!html.includes('public-id'))
+  assert(!html.includes('匿名角色名'))
   assert(!html.includes('不参与角色名'))
   assert(!html.includes('队友甲'))
   assert(!html.includes('>队友<'))

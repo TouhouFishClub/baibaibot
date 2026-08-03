@@ -88,7 +88,9 @@ function getDefaultCharacterName(row) {
   const visibility = getRankingVisibility(row)
   if (visibility === RANKING_VISIBILITY.anonymous) return ANONYMOUS_CHARACTER_NAME
   if (visibility === RANKING_VISIBILITY.public) {
-    return String(row?.characterId || '').trim() || '-'
+    return String(row?.characterName || '').trim()
+      || String(row?.characterId || '').trim()
+      || '-'
   }
   return ''
 }
