@@ -42,6 +42,7 @@ async function ensureIndexes() {
   await rankingConsent.createIndex({ playerId: 1 }, { unique: true, name: 'uniq_player_id' })
   await rankingConsent.createIndex({ mode: 1, playerId: 1 }, { name: 'mode_player_id' })
   await announcements.createIndex({ timestamp: -1 }, { name: 'timestamp_desc' })
+  await announcements.createIndex({ sourceHash: 1 }, { unique: true, sparse: true, name: 'uniq_source_hash' })
 
   indexesReady = true
 }
@@ -247,6 +248,37 @@ async function listAnnouncements() {
     .toArray()
 }
 
+async function publishAnnouncement({ title, html, sourceHash, sourceMtimeMs }) {
+  await ensureIndexes()
+  const client = await getClient()
+  const col = client.db(DB_NAME).collection(COL_ANNOUNCEMENTS)
+  const existing = await col.findOne({ sourceHash })
+  if (existing) return { created: false, announcement: existing }
+
+  const latest = await col.find({}).sort({ timestamp: -1 }).limit(1).toArray()
+  const latestTimestamp = Number(latest[0]?.timestamp) || 0
+  const timestamp = Math.max(Math.floor(Date.now() / 1000), latestTimestamp + 1)
+  const announcement = {
+    timestamp,
+    title: String(title),
+    html: String(html),
+    sourceHash,
+    sourceMtimeMs: Number(sourceMtimeMs) || null,
+    source: 'announcement.html',
+    publishedAt: new Date()
+  }
+
+  try {
+    await col.insertOne(announcement)
+    return { created: true, announcement }
+  } catch (error) {
+    if (error?.code === 11000) {
+      return { created: false, announcement: await col.findOne({ sourceHash }) }
+    }
+    throw error
+  }
+}
+
 async function findTeamDuplicate({ dungeonName, teamSignature }) {
   if (!teamSignature) return null
   await ensureIndexes()
@@ -425,5 +457,6 @@ module.exports = {
   getRankingConsentsByPlayerIds,
   upsertRankingConsent,
   listAnnouncements,
+  publishAnnouncement,
   listConsentedPlayerIds
 }

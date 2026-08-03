@@ -97,6 +97,10 @@ async function initIndexes() {
     { timestamp: -1 },
     { name: 'timestamp_desc' }
   )
+  await announcements.createIndex(
+    { sourceHash: 1 },
+    { unique: true, sparse: true, name: 'uniq_source_hash' }
+  )
 
   console.log('[dps-logs] 索引创建完成')
   console.log('  - cl_mabinogi_dps_upload')
