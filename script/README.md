@@ -1,5 +1,35 @@
 # 洛奇推送数据维护脚本
 
+## fixRankingConsentNames.js
+
+修复 `cl_mabinogi_dps_ranking_consent.playerName` 中因 UTF-8 中文角色名被
+HTTP header 按 Latin-1 解码而产生的乱码。脚本只处理可以无损反向还原的名称，
+不会修改排行模式和设置时间；写入时只更新 `playerName` 与 `nameUpdatedAt`。
+
+默认仅预览，不写入数据库：
+
+```bash
+node script/fixRankingConsentNames.js
+```
+
+核对输出的原名和还原名后执行：
+
+```bash
+node script/fixRankingConsentNames.js --apply
+```
+
+也可以先指定一个角色测试：
+
+```bash
+node script/fixRankingConsentNames.js --player-id 4503599642404785
+node script/fixRankingConsentNames.js --player-id 4503599642404785 --apply
+```
+
+脚本更新条件包含扫描时的旧 `playerName`，运行期间若用户自行更新了名称，
+该条记录会跳过，不会覆盖较新的值。
+
+---
+
 ## fixLatestGachaPoolName.js
 
 修复 2026-07-29 最近一期“私家侦探手帕礼包”的两类数据问题：
