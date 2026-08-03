@@ -7,6 +7,8 @@ const {
   listRecordsByDungeon,
   listRecordsByBoss,
   getUploadersByRunIds,
+  getRankingConsentsByPlayerIds,
+  listConsentedPlayerIds,
   normalizeRunId
 } = require('./db')
 const { isRunIdKeyword, loadRunDetail } = require('./runQuery')
@@ -17,8 +19,6 @@ const { resolveAiAnalysisCommand, runAiAnalysis } = require('./aiAnalysis')
 const { resolveAiReviewCommand, runAiReview } = require('./aiReview')
 
 const ADMIN_QQ = '799018865'
-// const ALLOWED_GROUPS = new Set(['668217870', '885309800'])
-const ALLOWED_GROUPS = new Set([])
 
 const DEFAULT_DUNGEON = '布里列赫'
 const DEFAULT_RANK = 10
@@ -36,11 +36,11 @@ function isMblogsHelpRequest(content) {
   return tokens.some(token => token === '--help' || token.toLowerCase() === 'help' || token === '帮助')
 }
 
-function buildMblogsHelp() {
+function buildMblogsHelp({ isAdmin = false } = {}) {
   const bossNames = [...new Set(BOSSES.map(boss => boss.displayName))].join('、')
   const classNames = CLASSES.map(formatClassHelpLine).join('、')
 
-  return [
+  const lines = [
     '【mblogs DPS 查询帮助】',
     '',
     '基本用法：',
@@ -48,19 +48,23 @@ function buildMblogsHelp() {
     '  mblogs 角色名             查询该角色各 Boss 最高 DPS（按 Boss 分段）',
     `  mblogs ${DEFAULT_DUNGEON}           查询副本各 Boss 排行榜`,
     `  mblogs Boss名             查询单个 Boss，默认前${BOSS_DEFAULT_RANK}名`,
-    '  mblogs <场次ID>           查询单场战斗详情图（支持短 ID）',
-    '  mblogs AI锐评             从夯到拉，对比各阿尔卡纳职业（当天缓存，仅管理员）',
-    '  mblogs 重新生成AI锐评     强制刷新职业锐评（仅管理员）',
-    '  mblogs AI分析             生成/查看当日 AI 分析报告（当天缓存，仅管理员）',
-    '  mblogs 重新生成AI分析     强制重新采集并生成 AI 分析（仅管理员）',
+    ...(isAdmin ? [
+      '  mblogs <场次ID>           查询单场战斗详情图（支持短 ID）',
+      '  mblogs AI锐评             从夯到拉，对比各阿尔卡纳职业（当天缓存）',
+      '  mblogs 重新生成AI锐评     强制刷新职业锐评',
+      '  mblogs AI分析             生成/查看当日 AI 分析报告（当天缓存）',
+      '  mblogs 重新生成AI分析     强制重新采集并生成 AI 分析'
+    ] : []),
     '',
     '参数：',
     '  --rank N    显示前 N 名（副本默认 10，Boss 默认 30，角色默认 3；普通用户最多 30）',
     '  --job 职业名  只显示指定职业（模糊匹配）',
     '  --all       显示全部记录，不做「每角色仅保留最高 DPS」去重',
     '  --withskill 列表模式在角色条目下显示技能占比进度条',
-    '  --show 模式  控制角色/队友/上传者显示（默认均隐藏）',
-    '              脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / 上传者 / all',
+    '  --show 模式  控制角色/队友/上传者显示（默认按排行隐私设置）',
+    ...(isAdmin
+      ? ['              脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / 上传者 / all']
+      : ['              脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / 上传者']),
     '  --help      显示本帮助',
     '',
     '示例：',
@@ -70,18 +74,22 @@ function buildMblogsHelp() {
     '  mblogs 布里列赫 --all',
     '  mblogs 雷内恩的米耶尔 --withskill',
     '  mblogs 布里列赫 --show 脱敏',
-    '  mblogs 布里列赫 --show all',
-    '  mblogs AI锐评',
-    '  mblogs 重新生成AI锐评',
-    '  mblogs AI分析',
-    '  mblogs 重新生成AI分析',
-    '  mblogs c31651e9',
+    ...(isAdmin ? ['  mblogs 布里列赫 --show all'] : []),
+    ...(isAdmin ? [
+      '  mblogs AI锐评',
+      '  mblogs 重新生成AI锐评',
+      '  mblogs AI分析',
+      '  mblogs 重新生成AI分析',
+      '  mblogs c31651e9'
+    ] : []),
     '  mblogs --help',
     '',
     `支持副本：${DUNGEONS.map(item => item.name).join('、')}`,
     `支持 Boss：${bossNames}`,
     `支持职业：${classNames}`
-  ].join('\n')
+  ]
+
+  return lines.join('\n')
 }
 
 const SHOW_MODES = {
@@ -237,7 +245,8 @@ function mapRow(record) {
     damagePercent: record.damagePercent,
     runId: record.runId,
     uploaderName: record.uploaderName || '',
-    uploaderId: record.uploaderId || ''
+    uploaderId: record.uploaderId || '',
+    rankingVisibility: record.rankingVisibility || record.rankingMode || record.rankVisibility || ''
   }
 }
 
@@ -274,13 +283,31 @@ async function attachUploaders(sections) {
   return sections
 }
 
+async function applyRankingConsents(sections) {
+  const rows = (sections || []).flatMap(section => section.rows || [])
+  const consentMap = await getRankingConsentsByPlayerIds(rows.map(row => row.characterId))
+
+  return (sections || []).map(section => ({
+    ...section,
+    rows: (section.rows || []).filter(row => {
+      const consent = consentMap.get(String(row.characterId || ''))
+      const mode = ['anonymous', 'public'].includes(consent?.mode) ? consent.mode : 'none'
+      row.rankingVisibility = mode
+      return mode !== 'none'
+    })
+  }))
+}
+
 async function queryMblogs(content, { showAll = false, rank, job, withSkill = false, isAdmin = false } = {}) {
   if (isMblogsHelpRequest(content)) {
-    return { help: buildMblogsHelp() }
+    return { help: buildMblogsHelp({ isAdmin }) }
   }
 
   const keyword = String(content || '').trim()
   if (isRunIdKeyword(keyword)) {
+    if (!isAdmin) {
+      return { unauthorized: true }
+    }
     const detail = await loadRunDetail(keyword)
     if (detail.error) {
       return { error: detail.error }
@@ -298,9 +325,11 @@ async function queryMblogs(content, { showAll = false, rank, job, withSkill = fa
 
   const limit = resolveRank(query, rank, { isAdmin })
   const resolvedJob = job ? resolveClassQuery(job) : undefined
+  const consentedCharacterIds = await listConsentedPlayerIds()
   const queryOptions = {
     bestPerCharacter: !showAll,
-    characterClass: resolvedJob || undefined
+    characterClass: resolvedJob || undefined,
+    characterIds: consentedCharacterIds
   }
 
   let result
@@ -344,6 +373,11 @@ async function queryMblogs(content, { showAll = false, rank, job, withSkill = fa
     }
   }
 
+  result.sections = await applyRankingConsents(result.sections)
+  if (!result.sections.some(section => section.rows.length)) {
+    return { error: '未找到已同意参与公开排行的 DPS 记录' }
+  }
+
   result.sections = await attachUploaders(result.sections)
 
   if (withSkill) {
@@ -355,8 +389,7 @@ async function queryMblogs(content, { showAll = false, rank, job, withSkill = fa
 }
 
 function canUseMblogs(from, groupid) {
-  if (String(from) === ADMIN_QQ) return true
-  return ALLOWED_GROUPS.has(String(groupid || ''))
+  return true
 }
 
 async function mblogs(content, from, callback, groupid) {
@@ -367,12 +400,19 @@ async function mblogs(content, from, callback, groupid) {
 
   const keyword = String(content || '').trim()
   const parsed = parseMblogsInput(keyword)
+  const isAdmin = isAdminUser(from)
+  const requestedAiReview = resolveAiReviewCommand(parsed.keyword || keyword)
+  const requestedAiAnalysis = resolveAiAnalysisCommand(parsed.keyword || keyword)
+  const requestedRunDetail = isRunIdKeyword(parsed.keyword)
+  if (!isAdmin && (parsed.showMode === SHOW_MODES.all || requestedRunDetail || requestedAiReview || requestedAiAnalysis)) {
+    return
+  }
   if (isMblogsHelpRequest(keyword) || parsed.help) {
-    callback(buildMblogsHelp())
+    callback(buildMblogsHelp({ isAdmin }))
     return
   }
 
-  const aiReviewCommand = resolveAiReviewCommand(parsed.keyword || keyword)
+  const aiReviewCommand = requestedAiReview
   if (aiReviewCommand) {
     if (!isAdminUser(from)) {
       return
@@ -396,7 +436,7 @@ async function mblogs(content, from, callback, groupid) {
     return
   }
 
-  const aiCommand = resolveAiAnalysisCommand(parsed.keyword || keyword)
+  const aiCommand = requestedAiAnalysis
   if (aiCommand) {
     if (!isAdminUser(from)) {
       return
@@ -427,12 +467,14 @@ async function mblogs(content, from, callback, groupid) {
 
   const { keyword: queryKeyword, showAll, rank, job, withSkill, showMode } = parsed
   const resolvedKeyword = queryKeyword || DEFAULT_DUNGEON
-  const isAdmin = isAdminUser(from)
 
   try {
     const result = await queryMblogs(resolvedKeyword, { showAll, rank, job, withSkill, isAdmin })
     if (result.help) {
       callback(result.help)
+      return
+    }
+    if (result.unauthorized) {
       return
     }
     if (result.error) {

@@ -45,7 +45,12 @@ const ports = new Set([
 let PORT = 24334
 
 var bodyParser = require('body-parser');
-app.use(bodyParser.json({limit: '10mb'}))
+app.use(bodyParser.json({
+  limit: '10mb',
+  verify: (req, res, buffer) => {
+    req.rawBody = Buffer.from(buffer)
+  }
+}))
 var request = require("request");
 app.use(express.static(path.join(__dirname, 'public')));
 

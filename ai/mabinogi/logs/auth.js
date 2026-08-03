@@ -17,6 +17,17 @@ function buildSignature(timestamp, nonce, playerId, fileHashHex) {
   return buildSignatureWithKey(uploadSecretKey, timestamp, nonce, playerId, fileHashHex)
 }
 
+function buildRequestSignatureWithKey(secretKey, timestamp, nonce, method, playerId, body) {
+  const bodyBuffer = Buffer.isBuffer(body) ? body : Buffer.from(body || '')
+  const bodyHash = sha256Hex(bodyBuffer)
+  const payload = `${timestamp}\n${nonce}\n${String(method || '').toUpperCase()}\n${playerId}\n${bodyHash}`
+  return crypto.createHmac('sha256', secretKey).update(payload).digest('hex')
+}
+
+function buildRequestSignature(timestamp, nonce, method, playerId, body) {
+  return buildRequestSignatureWithKey(uploadSecretKey, timestamp, nonce, method, playerId, body)
+}
+
 function verifyTimestamp(timestamp) {
   const ts = Number(timestamp)
   if (!Number.isFinite(ts)) {
@@ -97,11 +108,48 @@ async function verifyUploadRequest(req, gzData, playerId) {
   return { ok: true, fileHashHex: signResult.fileHashHex }
 }
 
+async function verifySignedBodyRequest(req, { playerId, body = Buffer.alloc(0), reserve = true } = {}) {
+  if (!uploadSecretKey.length) {
+    return { ok: false, reason: 'server_secret_missing' }
+  }
+  const headerResult = await verifyUploadHeaders(req, { reserve: false })
+  if (!headerResult.ok) return headerResult
+
+  const authHeader = req.headers.authorization || req.headers.Authorization
+  if (!authHeader || !authHeader.startsWith(AUTH_PREFIX)) {
+    return { ok: false, reason: 'invalid_auth_header' }
+  }
+
+  const provided = authHeader.slice(AUTH_PREFIX.length).trim()
+  const expected = buildRequestSignature(
+    headerResult.timestamp,
+    headerResult.nonce,
+    req.method,
+    playerId,
+    body
+  )
+  const expectedBuf = Buffer.from(expected, 'utf8')
+  const providedBuf = Buffer.from(provided, 'utf8')
+  if (expectedBuf.length !== providedBuf.length || !crypto.timingSafeEqual(expectedBuf, providedBuf)) {
+    return { ok: false, reason: 'signature_mismatch' }
+  }
+
+  if (reserve) {
+    const nonceOk = await reserveNonce(headerResult.nonce)
+    if (!nonceOk) return { ok: false, reason: 'nonce_replay' }
+  }
+
+  return { ok: true, timestamp: headerResult.timestamp, nonce: headerResult.nonce }
+}
+
 module.exports = {
   sha256Hex,
   buildSignature,
   buildSignatureWithKey,
+  buildRequestSignature,
+  buildRequestSignatureWithKey,
   verifyUploadHeaders,
   verifySignature,
-  verifyUploadRequest
+  verifyUploadRequest,
+  verifySignedBodyRequest
 }

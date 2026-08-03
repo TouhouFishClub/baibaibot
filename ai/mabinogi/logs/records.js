@@ -10,6 +10,14 @@ const {
 const { collectPcAttackers, buildTeammateNames } = require('./team')
 const { buildRunCharacterClasses } = require('./classDetect')
 
+function getRankingVisibility(attacker) {
+  return attacker?.rankingVisibility
+    || attacker?.rankingMode
+    || attacker?.rankVisibility
+    || attacker?.privacyMode
+    || ''
+}
+
 function buildRecordForTarget({
   runId,
   dungeonName,
@@ -49,6 +57,7 @@ function buildRecordForTarget({
       teammateNames: buildTeammateNames(pcAttackers, characterId),
       characterId,
       characterName: String(attacker.name || '').trim() || characterId,
+      rankingVisibility: getRankingVisibility(attacker),
       characterClass: characterClasses.get(characterId) || '未知',
       dps: Number(attacker.dps) || 0,
       totalDamage: Number(attacker.totalDamage) || 0,
@@ -130,6 +139,7 @@ function buildPetakCombinedRecords({
 
   const damageByCharacter = new Map()
   const nameByCharacter = new Map()
+  const visibilityByCharacter = new Map()
   for (const { target } of sortedPhases) {
     for (const attacker of target.attackers || []) {
       if (!attacker?.isPC) continue
@@ -138,6 +148,8 @@ function buildPetakCombinedRecords({
       const damage = Number(attacker.totalDamage) || 0
       damageByCharacter.set(characterId, (damageByCharacter.get(characterId) || 0) + damage)
       nameByCharacter.set(characterId, String(attacker.name || '').trim() || characterId)
+      const rankingVisibility = getRankingVisibility(attacker)
+      if (rankingVisibility) visibilityByCharacter.set(characterId, rankingVisibility)
     }
   }
 
@@ -161,6 +173,7 @@ function buildPetakCombinedRecords({
       teammateNames: buildTeammateNames(pcAttackers, characterId),
       characterId,
       characterName: nameByCharacter.get(characterId) || characterId,
+      rankingVisibility: visibilityByCharacter.get(characterId) || '',
       characterClass: characterClasses.get(characterId) || '未知',
       dps,
       totalDamage,

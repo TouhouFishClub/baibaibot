@@ -12,6 +12,12 @@ const {
 const { getClassTheme, hexToRgba } = require('./classConfig')
 
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'hk4e_zh-cn.ttf'))
+const ANONYMOUS_CHARACTER_NAME = '神秘的米莱西安'
+const RANKING_VISIBILITY = {
+  optOut: 'optOut',
+  anonymous: 'anonymous',
+  public: 'public'
+}
 
 function escapeHtml(text) {
   return String(text ?? '')
@@ -57,8 +63,44 @@ function maskTeammateNames(text) {
     .join('、') || '-'
 }
 
-function resolveNameVisibility(showMode) {
+function normalizeRankingVisibility(value) {
+  const raw = String(value || '').trim().toLowerCase()
+  if (!raw) return RANKING_VISIBILITY.optOut
+  if (['public', '公开', '公开排行', 'show', 'visible'].includes(raw)) {
+    return RANKING_VISIBILITY.public
+  }
+  if (['anonymous', '匿名', '匿名排行', 'anon', 'masked'].includes(raw)) {
+    return RANKING_VISIBILITY.anonymous
+  }
+  return RANKING_VISIBILITY.optOut
+}
+
+function getRankingVisibility(row) {
+  return normalizeRankingVisibility(
+    row?.rankingVisibility
+      || row?.rankingMode
+      || row?.rankVisibility
+      || row?.privacyMode
+  )
+}
+
+function getDefaultCharacterName(row) {
+  const visibility = getRankingVisibility(row)
+  if (visibility === RANKING_VISIBILITY.anonymous) return ANONYMOUS_CHARACTER_NAME
+  if (visibility === RANKING_VISIBILITY.public) {
+    return String(row?.characterId || '').trim() || '-'
+  }
+  return ''
+}
+
+function resolveNameVisibility(showMode, rows = []) {
   const mode = showMode || 'hidden'
+  if (mode === 'hidden') {
+    return {
+      showCharacter: rows.some(row => Boolean(getDefaultCharacterName(row))),
+      showTeammates: false
+    }
+  }
   return {
     showCharacter: mode === 'all' || mode === 'character' || mode === 'mask' || mode === 'maskCharacter',
     showTeammates: mode === 'all' || mode === 'mask' || mode === 'maskTeammate'
@@ -90,13 +132,15 @@ function buildLayout({ showCharacter, showTeammates }) {
   }
 }
 
-function formatDisplayNames(row, showMode) {
-  const { showCharacter, showTeammates } = resolveNameVisibility(showMode)
+function formatDisplayNames(row, showMode, visibility) {
+  const { showCharacter, showTeammates } = visibility || resolveNameVisibility(showMode, [row])
   let characterName = ''
   let teammateNames = ''
 
   if (showCharacter) {
-    if (showMode === 'mask' || showMode === 'maskCharacter') {
+    if (showMode === 'hidden') {
+      characterName = getDefaultCharacterName(row)
+    } else if (showMode === 'mask' || showMode === 'maskCharacter') {
       characterName = maskPersonName(row.characterName)
     } else {
       characterName = row.characterName || '-'
@@ -155,13 +199,13 @@ function renderSkills(skills, theme) {
   return `<div class="skills">${segments}</div>`
 }
 
-function renderRow(row, index, withSkill, showMode) {
+function renderRow(row, index, withSkill, showMode, visibility) {
   const theme = getClassTheme(row.characterClass)
   const alpha = 0.22
   const bg = `linear-gradient(90deg, ${hexToRgba(theme.primary, alpha)} 0%, ${hexToRgba(theme.secondary, alpha)} 100%)`
   const dpsTone = getDpsTone(row.dps)
   const skillsHtml = withSkill ? renderSkills(row.skills, theme) : ''
-  const names = formatDisplayNames(row, showMode)
+  const names = formatDisplayNames(row, showMode, visibility)
   const uploaderName = formatUploaderName(row, showMode)
   const nameCell = names.showCharacter
     ? `<div class="cell name">${escapeHtml(truncate(names.characterName, 12))}</div>`
@@ -188,12 +232,15 @@ function renderRow(row, index, withSkill, showMode) {
     </div>`
 }
 
-function renderSection(section, withSkill, showMode) {
+function renderSection(section, withSkill, showMode, globalVisibility) {
   const rows = section.rows || []
   const title = section.title
     ? `<div class="section-title">${escapeHtml(section.title)}<span class="section-count">${rows.length}</span></div>`
     : ''
-  const { showCharacter, showTeammates } = resolveNameVisibility(showMode)
+  const visibility = showMode === 'hidden'
+    ? globalVisibility
+    : resolveNameVisibility(showMode, rows)
+  const { showCharacter, showTeammates } = visibility
 
   if (!rows.length) {
     return `<div class="section">${title}<div class="empty">暂无记录</div></div>`
@@ -217,7 +264,7 @@ function renderSection(section, withSkill, showMode) {
         <div class="cell runid">场次</div>
       </div>
       <div class="list-body">
-        ${rows.map((row, index) => renderRow(row, index, withSkill, showMode)).join('')}
+        ${rows.map((row, index) => renderRow(row, index, withSkill, showMode, visibility)).join('')}
       </div>
     </div>`
 }
@@ -226,7 +273,8 @@ function buildHtml(option) {
   const sections = option.sections || [{ rows: option.rows || [] }]
   const withSkill = Boolean(option.withSkill)
   const showMode = option.showMode || 'hidden'
-  const visibility = resolveNameVisibility(showMode)
+  const allRows = sections.flatMap(section => section.rows || [])
+  const visibility = resolveNameVisibility(showMode, allRows)
   const layout = buildLayout(visibility)
   const width = layout.bodyWidth
 
@@ -403,7 +451,7 @@ function buildHtml(option) {
     <div class="title">${escapeHtml(option.title)}</div>
     <div class="desc">${escapeHtml(option.description)}</div>
   </div>
-  ${sections.map(section => renderSection(section, withSkill, showMode)).join('')}
+  ${sections.map(section => renderSection(section, withSkill, showMode, visibility)).join('')}
 </body>
 </html>`
 }
@@ -421,5 +469,10 @@ async function renderMblogsList(option) {
 
 module.exports = {
   renderMblogsList,
-  buildHtml
+  buildHtml,
+  normalizeRankingVisibility,
+  getDefaultCharacterName,
+  resolveNameVisibility,
+  ANONYMOUS_CHARACTER_NAME,
+  RANKING_VISIBILITY
 }

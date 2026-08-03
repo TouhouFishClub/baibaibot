@@ -18,6 +18,8 @@ async function initIndexes() {
   const uploads = db.collection('cl_mabinogi_dps_upload')
   const records = db.collection('cl_mabinogi_dps_records')
   const nonces = db.collection('cl_mabinogi_dps_nonce')
+  const rankingConsent = db.collection('cl_mabinogi_dps_ranking_consent')
+  const announcements = db.collection('cl_mabinogi_dps_announcements')
 
   console.log(`[dps-logs] 初始化数据库 ${DB_NAME} 索引...`)
 
@@ -83,11 +85,25 @@ async function initIndexes() {
     { createdAt: 1 },
     { expireAfterSeconds: nonceTtlSeconds, name: 'nonce_ttl' }
   )
+  await rankingConsent.createIndex(
+    { playerId: 1 },
+    { unique: true, name: 'uniq_player_id' }
+  )
+  await rankingConsent.createIndex(
+    { mode: 1, playerId: 1 },
+    { name: 'mode_player_id' }
+  )
+  await announcements.createIndex(
+    { timestamp: -1 },
+    { name: 'timestamp_desc' }
+  )
 
   console.log('[dps-logs] 索引创建完成')
   console.log('  - cl_mabinogi_dps_upload')
   console.log('  - cl_mabinogi_dps_records')
   console.log('  - cl_mabinogi_dps_nonce (TTL 600s)')
+  console.log('  - cl_mabinogi_dps_ranking_consent')
+  console.log('  - cl_mabinogi_dps_announcements')
 }
 
 initIndexes()

@@ -27,15 +27,21 @@ const DEFAULTS = {
 }
 
 function loadSecretFile() {
-  if (process.env.BLONY_UPLOAD_SECRET) {
-    return {
-      BLONY_UPLOAD_SECRET: process.env.BLONY_UPLOAD_SECRET,
-      BLONY_UPLOAD_ENDPOINT: process.env.BLONY_UPLOAD_ENDPOINT || ''
-    }
+  const envConfig = {
+    BLONY_UPLOAD_SECRET: process.env.BLONY_UPLOAD_SECRET,
+    BLONY_UPLOAD_ENDPOINT: process.env.BLONY_UPLOAD_ENDPOINT,
+    BLONY_RANKING_CONSENT_ENDPOINT: process.env.BLONY_RANKING_CONSENT_ENDPOINT,
+    BLONY_ANNOUNCEMENT_ENDPOINT: process.env.BLONY_ANNOUNCEMENT_ENDPOINT
   }
   try {
-    return JSON.parse(fs.readFileSync(SECRET_PATH, 'utf8'))
+    const fileConfig = JSON.parse(fs.readFileSync(SECRET_PATH, 'utf8'))
+    const merged = { ...fileConfig }
+    for (const [key, value] of Object.entries(envConfig)) {
+      if (value !== undefined) merged[key] = value
+    }
+    return merged
   } catch (error) {
+    if (envConfig.BLONY_UPLOAD_SECRET) return envConfig
     console.warn('[dps-logs] 未找到 .secret.json，上传鉴权将不可用:', error.message)
     console.warn(`[dps-logs] 请在 ${SECRET_PATH} 配置 BLONY_UPLOAD_SECRET，或设置环境变量 BLONY_UPLOAD_SECRET`)
     return {}
@@ -64,5 +70,7 @@ module.exports = {
   uploadSecret: secretFile.BLONY_UPLOAD_SECRET || '',
   uploadSecretKey: resolveSecretKey(secretFile.BLONY_UPLOAD_SECRET || ''),
   uploadEndpoint: secretFile.BLONY_UPLOAD_ENDPOINT || '',
+  rankingConsentEndpoint: secretFile.BLONY_RANKING_CONSENT_ENDPOINT || '',
+  announcementEndpoint: secretFile.BLONY_ANNOUNCEMENT_ENDPOINT || '',
   ...DEFAULTS
 }

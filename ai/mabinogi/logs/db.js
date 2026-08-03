@@ -8,6 +8,8 @@ const DB_NAME = 'db_bot'
 const COL_UPLOADS = 'cl_mabinogi_dps_upload'
 const COL_RECORDS = 'cl_mabinogi_dps_records'
 const COL_NONCE = 'cl_mabinogi_dps_nonce'
+const COL_RANKING_CONSENT = 'cl_mabinogi_dps_ranking_consent'
+const COL_ANNOUNCEMENTS = 'cl_mabinogi_dps_announcements'
 
 let indexesReady = false
 
@@ -17,6 +19,8 @@ async function ensureIndexes() {
   const uploads = client.db(DB_NAME).collection(COL_UPLOADS)
   const records = client.db(DB_NAME).collection(COL_RECORDS)
   const nonces = client.db(DB_NAME).collection(COL_NONCE)
+  const rankingConsent = client.db(DB_NAME).collection(COL_RANKING_CONSENT)
+  const announcements = client.db(DB_NAME).collection(COL_ANNOUNCEMENTS)
 
   await uploads.createIndex({ playerId: 1, contentSha256: 1 }, { unique: true, name: 'uniq_player_sha' })
   await uploads.createIndex({ playerId: 1, fileName: 1 }, { unique: true, name: 'uniq_player_filename' })
@@ -35,6 +39,9 @@ async function ensureIndexes() {
   await records.createIndex({ characterId: 1, bossKey: 1, dps: -1 }, { name: 'charId_boss_dps' })
 
   await nonces.createIndex({ createdAt: 1 }, { expireAfterSeconds: nonceTtlSeconds, name: 'nonce_ttl' })
+  await rankingConsent.createIndex({ playerId: 1 }, { unique: true, name: 'uniq_player_id' })
+  await rankingConsent.createIndex({ mode: 1, playerId: 1 }, { name: 'mode_player_id' })
+  await announcements.createIndex({ timestamp: -1 }, { name: 'timestamp_desc' })
 
   indexesReady = true
 }
@@ -180,6 +187,66 @@ async function reserveNonce(nonce) {
   }
 }
 
+async function getRankingConsent(playerId) {
+  await ensureIndexes()
+  const client = await getClient()
+  return client.db(DB_NAME).collection(COL_RANKING_CONSENT).findOne({ playerId: String(playerId) })
+}
+
+async function getRankingConsentsByPlayerIds(playerIds) {
+  const ids = [...new Set((playerIds || []).map(id => String(id || '').trim()).filter(Boolean))]
+  const result = new Map()
+  if (!ids.length) return result
+
+  await ensureIndexes()
+  const client = await getClient()
+  const rows = await client.db(DB_NAME).collection(COL_RANKING_CONSENT)
+    .find({ playerId: { $in: ids } })
+    .toArray()
+  for (const row of rows) result.set(String(row.playerId), row)
+  return result
+}
+
+async function listConsentedPlayerIds() {
+  await ensureIndexes()
+  const client = await getClient()
+  const rows = await client.db(DB_NAME).collection(COL_RANKING_CONSENT)
+    .find({ mode: { $in: ['anonymous', 'public'] } }, { playerId: 1 })
+    .toArray()
+  return rows.map(row => String(row.playerId || '')).filter(Boolean)
+}
+
+async function upsertRankingConsent({ playerId, mode, playerName = '', clientVersion = '' }) {
+  await ensureIndexes()
+  const client = await getClient()
+  const now = new Date()
+  const id = String(playerId)
+  await client.db(DB_NAME).collection(COL_RANKING_CONSENT).updateOne(
+    { playerId: id },
+    {
+      $set: {
+        mode,
+        playerName: String(playerName || '').trim(),
+        clientVersion: String(clientVersion || '').trim(),
+        updatedAt: now
+      },
+      $setOnInsert: { playerId: id, createdAt: now }
+    },
+    { upsert: true }
+  )
+  return { playerId: id, mode, updatedAt: now }
+}
+
+async function listAnnouncements() {
+  await ensureIndexes()
+  const client = await getClient()
+  return client.db(DB_NAME).collection(COL_ANNOUNCEMENTS)
+    .find({}, { _id: 0, timestamp: 1, title: 1, html: 1 })
+    .sort({ timestamp: -1 })
+    .limit(100)
+    .toArray()
+}
+
 async function findTeamDuplicate({ dungeonName, teamSignature }) {
   if (!teamSignature) return null
   await ensureIndexes()
@@ -224,31 +291,35 @@ function dedupeBestPerCharacter(records) {
   return [...best.values()]
 }
 
-function appendClassFilter(query, characterClass) {
-  if (!characterClass) return query
-  return { ...query, characterClass: String(characterClass) }
+function appendRecordFilters(query, { characterClass, characterIds } = {}) {
+  const result = { ...query }
+  if (characterClass) result.characterClass = String(characterClass)
+  if (Array.isArray(characterIds)) {
+    result.characterId = { $in: characterIds.map(id => String(id)) }
+  }
+  return result
 }
 
-async function listRecordsByCharacter(characterName, limitPerBoss = 3, { characterClass } = {}) {
+async function listRecordsByCharacter(characterName, limitPerBoss = 3, { characterClass, characterIds } = {}) {
   const regex = new RegExp(characterName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-  const all = await listDpsRecords(appendClassFilter({ characterName: regex }, characterClass), { limit: 500 })
+  const all = await listDpsRecords(appendRecordFilters({ characterName: regex }, { characterClass, characterIds }), { limit: 500 })
   return groupTopByBoss(all, limitPerBoss)
 }
 
-async function listRecordsByDungeon(dungeonName, limitPerBoss = 10, { bestPerCharacter = true, characterClass } = {}) {
+async function listRecordsByDungeon(dungeonName, limitPerBoss = 10, { bestPerCharacter = true, characterClass, characterIds } = {}) {
   const regex = new RegExp(dungeonName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-  const all = await listDpsRecords(appendClassFilter({ dungeonName: regex }, characterClass), { limit: 1000 })
+  const all = await listDpsRecords(appendRecordFilters({ dungeonName: regex }, { characterClass, characterIds }), { limit: 1000 })
   return groupTopByBoss(all, limitPerBoss, { bestPerCharacter })
 }
 
-async function listRecordsByBoss(groupKey, limit = 10, { bestPerCharacter = true, characterClass } = {}) {
+async function listRecordsByBoss(groupKey, limit = 10, { bestPerCharacter = true, characterClass, characterIds } = {}) {
   const bossKeys = getBossKeysByGroup(groupKey)
-  const all = await listDpsRecords(appendClassFilter({
+  const all = await listDpsRecords(appendRecordFilters({
     $or: [
       { bossGroup: groupKey },
       { bossKey: { $in: bossKeys } }
     ]
-  }, characterClass), { limit: 500 })
+  }, { characterClass, characterIds }), { limit: 500 })
   let sorted = all.sort((a, b) => b.dps - a.dps)
   if (bestPerCharacter) {
     sorted = dedupeBestPerCharacter(sorted)
@@ -349,5 +420,10 @@ module.exports = {
   listRecordsByDungeon,
   listRecordsByBoss,
   dedupeBestPerCharacter,
-  reserveNonce
+  reserveNonce,
+  getRankingConsent,
+  getRankingConsentsByPlayerIds,
+  upsertRankingConsent,
+  listAnnouncements,
+  listConsentedPlayerIds
 }

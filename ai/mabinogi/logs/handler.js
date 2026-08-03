@@ -1,6 +1,11 @@
 const multer = require('multer')
-const { verifyUploadHeaders, verifySignature } = require('./auth')
-const { reserveNonce } = require('./db')
+const { verifyUploadHeaders, verifySignature, verifySignedBodyRequest } = require('./auth')
+const {
+  reserveNonce,
+  getRankingConsent,
+  upsertRankingConsent,
+  listAnnouncements
+} = require('./db')
 const { uploadSecretKey } = require('./config')
 const { isRateLimited, isLoopback } = require('./ratelimit')
 const { parseGzipJson, validateUploadFields } = require('./validate')
@@ -34,6 +39,87 @@ function getClientIp(req) {
 
 function sendJson(res, status, body) {
   res.status(status).json(body)
+}
+
+function getHeader(req, name) {
+  return req.headers[name.toLowerCase()] || req.headers[name]
+}
+
+function getRawJsonBody(req) {
+  if (Buffer.isBuffer(req.rawBody)) return req.rawBody
+  if (req.body == null) return Buffer.alloc(0)
+  return Buffer.from(JSON.stringify(req.body))
+}
+
+function consentMode(value) {
+  const mode = String(value || '').trim().toLowerCase()
+  return ['none', 'anonymous', 'public'].includes(mode) ? mode : null
+}
+
+async function verifyControlRequest(req, playerId, body) {
+  const result = await verifySignedBodyRequest(req, { playerId, body })
+  return result.ok ? result : { ok: false, status: 401, error: result.reason }
+}
+
+async function handleRankingConsent(req, res) {
+  const ip = getClientIp(req)
+  const playerId = String(getHeader(req, 'x-player-id') || '').trim()
+  if (!/^[0-9]{1,20}$/.test(playerId)) {
+    return sendJson(res, 400, { ok: false, error: 'invalid_player_id' })
+  }
+
+  const auth = await verifyControlRequest(req, playerId, getRawJsonBody(req))
+  if (!auth.ok) return sendJson(res, auth.status, { ok: false, error: auth.error })
+
+  const rate = isRateLimited(ip, playerId)
+  if (rate.limited) return sendJson(res, 429, { ok: false, error: 'rate_limited', scope: rate.reason })
+
+  if (req.method === 'GET') {
+    const current = await getRankingConsent(playerId)
+    return sendJson(res, 200, {
+      mode: consentMode(current?.mode) || 'none',
+      updatedAt: current?.updatedAt || null
+    })
+  }
+
+  const mode = consentMode(req.body?.mode)
+  if (!mode) return sendJson(res, 400, { ok: false, error: 'invalid_mode' })
+
+  const saved = await upsertRankingConsent({
+    playerId,
+    mode,
+    playerName: getHeader(req, 'x-player-name') || req.body?.playerName || '',
+    clientVersion: req.body?.clientVersion || ''
+  })
+  logReceive({
+    event: 'ranking_consent_update',
+    ip,
+    playerId,
+    playerName: getHeader(req, 'x-player-name') || req.body?.playerName || '',
+    mode,
+    clientVersion: req.body?.clientVersion || ''
+  })
+  return sendJson(res, 200, { mode: saved.mode, updatedAt: saved.updatedAt })
+}
+
+async function handleAnnouncement(req, res) {
+  const ip = getClientIp(req)
+  const auth = await verifyControlRequest(req, 'announcement', Buffer.alloc(0))
+  if (!auth.ok) return sendJson(res, auth.status, { ok: false, error: auth.error })
+
+  const rate = isRateLimited(ip, 'announcement')
+  if (rate.limited) return sendJson(res, 429, { ok: false, error: 'rate_limited', scope: rate.reason })
+
+  const announcements = await listAnnouncements()
+  const normalized = announcements
+    .filter(item => Number.isFinite(Number(item.timestamp)) && item.title != null && item.html != null)
+    .map(item => ({
+      timestamp: Number(item.timestamp),
+      title: String(item.title),
+      html: String(item.html)
+    }))
+    .sort((a, b) => b.timestamp - a.timestamp)
+  return sendJson(res, 200, { announcements: normalized })
 }
 
 function logUploadReject(ip, reason, fields = {}, extra = {}) {
@@ -289,6 +375,27 @@ function registerRoutes(app) {
     })
   })
 
+  app.get('/mabinogi/rankingConsent', (req, res) => {
+    handleRankingConsent(req, res).catch(error => {
+      console.error('[dps-logs] ranking consent GET error', error)
+      sendJson(res, 500, { ok: false, error: 'internal_error' })
+    })
+  })
+
+  app.put('/mabinogi/rankingConsent', (req, res) => {
+    handleRankingConsent(req, res).catch(error => {
+      console.error('[dps-logs] ranking consent PUT error', error)
+      sendJson(res, 500, { ok: false, error: 'internal_error' })
+    })
+  })
+
+  app.get('/mabinogi/announcement', (req, res) => {
+    handleAnnouncement(req, res).catch(error => {
+      console.error('[dps-logs] announcement error', error)
+      sendJson(res, 500, { ok: false, error: 'internal_error' })
+    })
+  })
+
   app.get('/mabinogi/dps/reports', (req, res) => {
     handleListReports(req, res).catch(error => {
       console.error('[dps-logs] list error', error)
@@ -313,5 +420,7 @@ function registerRoutes(app) {
 
 module.exports = {
   registerRoutes,
-  handleUpload
+  handleUpload,
+  handleRankingConsent,
+  handleAnnouncement
 }
