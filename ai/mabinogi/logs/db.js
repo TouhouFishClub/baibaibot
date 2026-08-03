@@ -238,6 +238,20 @@ async function upsertRankingConsent({ playerId, mode, playerName = '', clientVer
   return { playerId: id, mode, updatedAt: now }
 }
 
+async function updateRankingConsentName(playerId, playerName) {
+  const id = String(playerId || '').trim()
+  const name = String(playerName || '').trim()
+  if (!id || !name) return false
+
+  await ensureIndexes()
+  const client = await getClient()
+  const result = await client.db(DB_NAME).collection(COL_RANKING_CONSENT).updateOne(
+    { playerId: id, mode: 'public', playerName: { $ne: name } },
+    { $set: { playerName: name, nameUpdatedAt: new Date() } }
+  )
+  return Boolean(result.modifiedCount || result.nModified)
+}
+
 async function listAnnouncements() {
   await ensureIndexes()
   const client = await getClient()
@@ -456,6 +470,7 @@ module.exports = {
   getRankingConsent,
   getRankingConsentsByPlayerIds,
   upsertRankingConsent,
+  updateRankingConsentName,
   listAnnouncements,
   publishAnnouncement,
   listConsentedPlayerIds

@@ -4,6 +4,7 @@ const {
   reserveNonce,
   getRankingConsent,
   upsertRankingConsent,
+  updateRankingConsentName,
   listAnnouncements
 } = require('./db')
 const { uploadSecretKey } = require('./config')
@@ -20,7 +21,7 @@ const {
 } = require('./db')
 const { enqueueParseJob } = require('./queue')
 const { maxFileBytes } = require('./config')
-const { buildTeamSignature } = require('./team')
+const { buildTeamSignature, collectPcAttackers } = require('./team')
 const { extractSummary } = require('./parser')
 const { logReceive } = require('./receiveLog')
 
@@ -53,6 +54,11 @@ function getRawJsonBody(req) {
 
 function getControlRequestBody(req) {
   return req.method === 'GET' ? Buffer.alloc(0) : getRawJsonBody(req)
+}
+
+function getRankingNameRefreshes(data) {
+  return collectPcAttackers(data)
+    .filter(item => item.name && item.name !== item.id)
 }
 
 function consentMode(value) {
@@ -225,6 +231,14 @@ async function handleUpload(req, res) {
     logUploadReject(ip, parsed.reason, fields, { fileBytes: gzData.length })
     return sendJson(res, 400, { ok: false, error: parsed.reason })
   }
+
+  // The gzip payload is covered by HMAC, so current character names can
+  // refresh public ranking display names. Multipart fields such as playerName
+  // are metadata and are intentionally not trusted here.
+  const currentCharacters = getRankingNameRefreshes(parsed.data)
+  await Promise.all(currentCharacters.map(item => (
+    updateRankingConsentName(item.id, item.name)
+  )))
 
   const teamSignature = buildTeamSignature(parsed.data)
   const skipTeamDedup = isLoopback(ip) && String(req.headers['x-mock-skip-team-dedup'] || '') === '1'
@@ -429,5 +443,6 @@ module.exports = {
   handleUpload,
   handleRankingConsent,
   handleAnnouncement,
-  getControlRequestBody
+  getControlRequestBody,
+  getRankingNameRefreshes
 }
