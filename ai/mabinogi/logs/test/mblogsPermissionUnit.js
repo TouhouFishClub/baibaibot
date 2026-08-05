@@ -16,13 +16,14 @@ async function run() {
   const ordinaryHelp = buildMblogsHelp()
   const adminHelp = buildMblogsHelp({ isAdmin: true })
   assert(!ordinaryHelp.includes('<场次ID>'))
-  assert(!ordinaryHelp.includes('--show all'))
+  assert(!ordinaryHelp.includes('--show'))
   assert(!ordinaryHelp.includes('AI锐评'))
   assert(adminHelp.includes('<场次ID>'))
   assert(adminHelp.includes('--show all'))
   assert(adminHelp.includes('AI锐评'))
 
   const parsed = parseMblogsInput('布里列赫 --show all --rank 99')
+  assert.strictEqual(parsed.showRequested, true)
   assert.strictEqual(parsed.showMode, 'all')
   assert.strictEqual(parsed.rank, 99)
   assert.strictEqual(resolveRank({ type: 'dungeon' }, 99, { isAdmin: false }), 30)
@@ -33,8 +34,13 @@ async function run() {
   const callbackMessages = []
   await mblogs('--help', '123456789', message => callbackMessages.push(message), 'any-group')
   assert.strictEqual(callbackMessages.length, 1)
+  const adminMessages = []
+  await mblogs('--show 角色 --help', '799018865', message => adminMessages.push(message), 'any-group')
+  assert.strictEqual(adminMessages.length, 1)
   const unauthorizedMessages = []
   await mblogs('--show all --help', '123456789', message => unauthorizedMessages.push(message), 'any-group')
+  await mblogs('布里列赫 --job 人偶 --show 角色', '123456789', message => unauthorizedMessages.push(message), 'any-group')
+  await mblogs('布里列赫 --show 不存在', '123456789', message => unauthorizedMessages.push(message), 'any-group')
   await mblogs('abcdef --help', '123456789', message => unauthorizedMessages.push(message), 'any-group')
   await mblogs('AI锐评 --help', '123456789', message => unauthorizedMessages.push(message), 'any-group')
   assert.strictEqual(unauthorizedMessages.length, 0)

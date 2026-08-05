@@ -61,10 +61,10 @@ function buildMblogsHelp({ isAdmin = false } = {}) {
     '  --job 职业名  只显示指定职业（模糊匹配）',
     '  --all       显示全部记录，不做「每角色仅保留最高 DPS」去重',
     '  --withskill 列表模式在角色条目下显示技能占比进度条',
-    '  --show 模式  控制角色/队友/上传者显示（默认按排行隐私设置）',
-    ...(isAdmin
-      ? ['              脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / 上传者 / all']
-      : ['              脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / 上传者']),
+    ...(isAdmin ? [
+      '  --show 模式  控制角色/队友/上传者显示（默认按排行隐私设置）',
+      '              脱敏角色名 / 脱敏队友 / 脱敏 / 角色 / 上传者 / all'
+    ] : []),
     '  --help      显示本帮助',
     '',
     '示例：',
@@ -73,8 +73,10 @@ function buildMblogsHelp({ isAdmin = false } = {}) {
     '  mblogs 枯木之佩塔克 --rank 15 --job 黑魔导士',
     '  mblogs 布里列赫 --all',
     '  mblogs 雷内恩的米耶尔 --withskill',
-    '  mblogs 布里列赫 --show 脱敏',
-    ...(isAdmin ? ['  mblogs 布里列赫 --show all'] : []),
+    ...(isAdmin ? [
+      '  mblogs 布里列赫 --show 脱敏',
+      '  mblogs 布里列赫 --show all'
+    ] : []),
     ...(isAdmin ? [
       '  mblogs AI锐评',
       '  mblogs 重新生成AI锐评',
@@ -119,6 +121,7 @@ function parseMblogsInput(content) {
   let showAll = false
   let help = false
   let withSkill = false
+  let showRequested = false
   let showMode = SHOW_MODES.hidden
   let showModeError = null
   let rank = null
@@ -155,6 +158,7 @@ function parseMblogsInput(content) {
       continue
     }
     if (token === '--show') {
+      showRequested = true
       const showParts = []
       while (i + 1 < tokens.length && !String(tokens[i + 1]).startsWith('--')) {
         showParts.push(tokens[++i])
@@ -176,6 +180,7 @@ function parseMblogsInput(content) {
     showAll,
     help,
     withSkill,
+    showRequested,
     showMode,
     showModeError,
     rank,
@@ -407,7 +412,7 @@ async function mblogs(content, from, callback, groupid) {
   const requestedAiReview = resolveAiReviewCommand(parsed.keyword || keyword)
   const requestedAiAnalysis = resolveAiAnalysisCommand(parsed.keyword || keyword)
   const requestedRunDetail = isRunIdKeyword(parsed.keyword)
-  if (!isAdmin && (parsed.showMode === SHOW_MODES.all || requestedRunDetail || requestedAiReview || requestedAiAnalysis)) {
+  if (!isAdmin && (parsed.showRequested || requestedRunDetail || requestedAiReview || requestedAiAnalysis)) {
     return
   }
   if (isMblogsHelpRequest(keyword) || parsed.help) {
