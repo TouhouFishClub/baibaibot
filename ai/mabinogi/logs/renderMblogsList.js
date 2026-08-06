@@ -426,12 +426,12 @@ function buildHtml(option) {
     .dps-legendary::before {
       color: #ff2f45;
       -webkit-text-fill-color: #ff2f45;
-      transform: translate(-3px, -2px);
+      transform: translate(-1px, -0.8px);
     }
     .dps-legendary::after {
       color: #00f0ff;
       -webkit-text-fill-color: #00f0ff;
-      transform: translate(3px, 2px);
+      transform: translate(1px, 0.8px);
     }
     .dps-gold { color: #ffd54f; }
     .dps-magenta { color: #ff4fcf; }
