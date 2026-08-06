@@ -8,6 +8,7 @@ const {
 } = require('../mblogs')
 const {
   buildHtml,
+  getDpsTone,
   getDefaultCharacterName,
   ANONYMOUS_CHARACTER_NAME
 } = require('../renderMblogsList')
@@ -102,6 +103,10 @@ async function run() {
     characterName: '',
     rankingVisibility: 'public'
   }), 'fallback-id')
+
+  assert.strictEqual(getDpsTone(3_000_001), 'legendary')
+  assert.strictEqual(getDpsTone(3_000_000), 'rainbow')
+  assert.strictEqual(getDpsTone(2_000_001), 'rainbow')
 
   const html = buildHtml({
     title: 'DPS',
