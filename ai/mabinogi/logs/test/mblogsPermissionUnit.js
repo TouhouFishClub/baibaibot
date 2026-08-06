@@ -104,12 +104,8 @@ async function run() {
     rankingVisibility: 'public'
   }), 'fallback-id')
 
-  assert.strictEqual(getDpsTone(2_500_000), 'prismatic-white')
-  assert.strictEqual(getDpsTone(3_000_000), 'prismatic-green')
-  assert.strictEqual(getDpsTone(3_500_000), 'prismatic-blue')
-  assert.strictEqual(getDpsTone(4_000_000), 'prismatic-red')
-  assert.strictEqual(getDpsTone(4_500_000), 'prismatic-yellow')
-  assert.strictEqual(getDpsTone(5_000_000), 'prismatic-rainbow')
+  assert.strictEqual(getDpsTone(3_000_001), 'legendary')
+  assert.strictEqual(getDpsTone(3_000_000), 'rainbow')
   assert.strictEqual(getDpsTone(2_000_001), 'rainbow')
 
   const html = buildHtml({
@@ -117,6 +113,8 @@ async function run() {
     description: 'default',
     sections: [{ rows }]
   })
+  assert(html.includes('-webkit-text-stroke: 1px'))
+  assert(html.includes('0 0 9px rgba(96, 214, 255, 0.7)'))
   assert(html.includes('公开角色名'))
   assert(html.includes(ANONYMOUS_CHARACTER_NAME))
   assert(!html.includes('public-id'))
