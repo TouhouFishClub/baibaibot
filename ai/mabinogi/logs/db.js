@@ -217,25 +217,29 @@ async function listConsentedPlayerIds() {
   return rows.map(row => String(row.playerId || '')).filter(Boolean)
 }
 
-async function upsertRankingConsent({ playerId, mode, playerName = '', clientVersion = '' }) {
+async function upsertRankingConsent({ playerId, mode, playerName = '', serverId = '', clientVersion = '' }) {
   await ensureIndexes()
   const client = await getClient()
   const now = new Date()
   const id = String(playerId)
+  const set = {
+    mode,
+    playerName: String(playerName || '').trim(),
+    clientVersion: String(clientVersion || '').trim(),
+    updatedAt: now
+  }
+  const normalizedServerId = String(serverId || '').trim().toLowerCase()
+  if (normalizedServerId) set.serverId = normalizedServerId
+
   await client.db(DB_NAME).collection(COL_RANKING_CONSENT).updateOne(
     { playerId: id },
     {
-      $set: {
-        mode,
-        playerName: String(playerName || '').trim(),
-        clientVersion: String(clientVersion || '').trim(),
-        updatedAt: now
-      },
+      $set: set,
       $setOnInsert: { playerId: id, createdAt: now }
     },
     { upsert: true }
   )
-  return { playerId: id, mode, updatedAt: now }
+  return { playerId: id, mode, serverId: normalizedServerId, updatedAt: now }
 }
 
 async function updateRankingConsentName(playerId, playerName) {

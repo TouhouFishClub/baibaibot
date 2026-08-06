@@ -19,6 +19,11 @@ const RANKING_VISIBILITY = {
   anonymous: 'anonymous',
   public: 'public'
 }
+const SERVER_NAMES = {
+  yiluxia: '伊鲁夏',
+  ylx: '伊鲁夏',
+  yate: '亚特'
+}
 
 function escapeHtml(text) {
   return String(text ?? '')
@@ -96,6 +101,11 @@ function getDefaultCharacterName(row) {
   return ''
 }
 
+function getServerName(row) {
+  const value = String(row?.serverName || row?.serverId || row?.server || '').trim().toLowerCase()
+  return SERVER_NAMES[value] || (value ? String(row?.serverName || row?.serverId || row?.server).trim() : '未知')
+}
+
 function resolveNameVisibility(showMode, rows = []) {
   const mode = showMode || 'hidden'
   if (mode === 'hidden') {
@@ -114,6 +124,7 @@ function buildLayout({ showCharacter, showTeammates }) {
   // 固定列宽，隐藏列时同步缩小整体宽度，避免贡献度被 fr 拉得很开
   const cols = [
     { key: 'class', width: 118 },
+    { key: 'server', width: 72 },
     showCharacter ? { key: 'name', width: 120 } : null,
     { key: 'dungeon', width: 100 },
     { key: 'teamSize', width: 60 },
@@ -225,6 +236,7 @@ function renderRow(row, index, withSkill, showMode, visibility) {
       <div class="meta">#${index + 1} · ${escapeHtml(formatTime(row.recordTime))} · 上传者：${escapeHtml(uploaderName)}</div>
       <div class="main">
         <div class="cell class">${escapeHtml(row.characterClass || '未知')}</div>
+        <div class="cell server">${escapeHtml(getServerName(row))}</div>
         ${nameCell}
         <div class="cell dungeon">${escapeHtml(truncate(row.dungeonName, 10))}</div>
         <div class="cell team-size">${escapeHtml(row.teamSize ?? '-')}</div>
@@ -260,6 +272,7 @@ function renderSection(section, withSkill, showMode, globalVisibility) {
       ${title}
       <div class="list-head">
         <div class="cell class">职业</div>
+        <div class="cell server">服务器</div>
         ${nameHead}
         <div class="cell dungeon">副本</div>
         <div class="cell team-size">队友数</div>
@@ -396,6 +409,7 @@ function buildHtml(option) {
     }
     .cell { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #eef0f3; }
     .class { color: #fff; font-weight: 400; }
+    .server { color: #8fdcff; font-size: 12px; font-weight: 700; }
     .name { font-weight: 700; }
     .row .teammates {
       color: #9aa3ad;

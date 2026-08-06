@@ -298,6 +298,7 @@ async function applyRankingConsents(sections) {
       const consent = consentMap.get(String(row.characterId || ''))
       const mode = ['anonymous', 'public'].includes(consent?.mode) ? consent.mode : 'none'
       row.rankingVisibility = mode
+      row.serverId = String(consent?.serverId || consent?.server || '').trim().toLowerCase()
       if (mode === 'public' && String(consent?.playerName || '').trim()) {
         row.characterName = String(consent.playerName).trim()
       }

@@ -1,5 +1,29 @@
 # 洛奇推送数据维护脚本
 
+## backfillRankingConsentServers.js
+
+为 `cl_mabinogi_dps_ranking_consent` 补填服务器字段 `serverId`。历史 DPS 数据本身
+没有可靠的服务器来源，因此脚本只接受明确的 `playerId -> serverId` 映射，不根据角色名猜测。
+支持的服务器 ID 为 `yate`（亚特）和 `yiluxia`（伊鲁夏）。
+
+映射文件示例：
+
+```json
+{
+  "4503599642404785": "yate",
+  "4503599642404786": "yiluxia"
+}
+```
+
+默认仅预览，确认后加 `--apply` 写入：
+
+```bash
+node script/backfillRankingConsentServers.js --mapping ranking-servers.json
+node script/backfillRankingConsentServers.js --mapping ranking-servers.json --apply
+```
+
+已有非空 `serverId` 的记录不会被覆盖。
+
 ## fixRankingConsentNames.js
 
 修复 `cl_mabinogi_dps_ranking_consent.playerName` 中因 UTF-8 中文角色名被

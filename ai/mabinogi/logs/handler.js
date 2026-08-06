@@ -70,6 +70,13 @@ function consentMode(value) {
   return ['none', 'anonymous', 'public'].includes(mode) ? mode : null
 }
 
+function consentServerId(value) {
+  const raw = String(value || '').trim().toLowerCase()
+  if (['yiluxia', 'ylx', '伊鲁夏'].includes(raw)) return 'yiluxia'
+  if (['yate', '亚特'].includes(raw)) return 'yate'
+  return ''
+}
+
 async function verifyControlRequest(req, playerId, body) {
   const result = await verifySignedBodyRequest(req, { playerId, body })
   return result.ok ? result : { ok: false, status: 401, error: result.reason }
@@ -94,6 +101,7 @@ async function handleRankingConsent(req, res) {
     const current = await getRankingConsent(playerId)
     return sendJson(res, 200, {
       mode: consentMode(current?.mode) || 'none',
+      serverId: current?.serverId || null,
       updatedAt: current?.updatedAt || null
     })
   }
@@ -104,11 +112,13 @@ async function handleRankingConsent(req, res) {
   // Non-ASCII custom HTTP headers are decoded as Latin-1 by Node. The JSON
   // body is UTF-8 and covered by HMAC, so it is the authoritative name source.
   const playerName = getRankingConsentPlayerName(req)
+  const serverId = consentServerId(req.body?.serverId)
 
   const saved = await upsertRankingConsent({
     playerId,
     mode,
     playerName,
+    serverId,
     clientVersion: req.body?.clientVersion || ''
   })
   logReceive({
@@ -117,9 +127,10 @@ async function handleRankingConsent(req, res) {
     playerId,
     playerName,
     mode,
+    serverId,
     clientVersion: req.body?.clientVersion || ''
   })
-  return sendJson(res, 200, { mode: saved.mode, updatedAt: saved.updatedAt })
+  return sendJson(res, 200, { mode: saved.mode, serverId: saved.serverId || null, updatedAt: saved.updatedAt })
 }
 
 async function handleAnnouncement(req, res) {
@@ -453,5 +464,6 @@ module.exports = {
   handleAnnouncement,
   getControlRequestBody,
   getRankingConsentPlayerName,
+  consentServerId,
   getRankingNameRefreshes
 }

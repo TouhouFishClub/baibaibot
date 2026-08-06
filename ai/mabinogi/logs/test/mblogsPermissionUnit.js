@@ -51,6 +51,7 @@ async function run() {
       characterId: 'public-id',
       characterName: '公开角色名',
       characterClass: '战士',
+      serverId: 'yate',
       rankingVisibility: 'public',
       teammateNames: '队友甲、队友乙',
       dungeonName: '布里列赫',
@@ -66,6 +67,7 @@ async function run() {
       characterId: 'anonymous-id',
       characterName: '匿名角色名',
       characterClass: '弓箭手',
+      serverId: 'yiluxia',
       rankingVisibility: 'anonymous',
       teammateNames: '队友丙、队友丁',
       dungeonName: '布里列赫',
@@ -122,6 +124,8 @@ async function run() {
   assert(html.includes('transform: translate(1px, 0.8px)'))
   assert(!html.includes('-webkit-text-stroke: 1px #090b11'))
   assert(html.includes('公开角色名'))
+  assert(html.includes('亚特'))
+  assert(html.includes('伊鲁夏'))
   assert(html.includes(ANONYMOUS_CHARACTER_NAME))
   assert(!html.includes('public-id'))
   assert(!html.includes('匿名角色名'))

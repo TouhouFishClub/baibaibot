@@ -2,6 +2,7 @@ const assert = require('assert')
 const {
   getControlRequestBody,
   getRankingConsentPlayerName,
+  consentServerId,
   getRankingNameRefreshes
 } = require('../handler')
 
@@ -19,6 +20,9 @@ assert.strictEqual(getRankingConsentPlayerName({
   body: { playerName },
   headers: { 'x-player-name': mojibakeHeader }
 }), playerName)
+assert.strictEqual(consentServerId('亚特'), 'yate')
+assert.strictEqual(consentServerId('yiluxia'), 'yiluxia')
+assert.strictEqual(consentServerId('unknown'), '')
 
 const nameRefreshes = getRankingNameRefreshes({
   targets: [{
