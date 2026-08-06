@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>酷炫静态 CSS 文字特效</title>
+    <style>
+        /* ===== 全局重置 & 布局 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0e17;
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 48px 32px;
+            justify-items: center;
+        }
+
+        /* 每个特效卡片 */
+        .card {
+            background: #141a26;
+            border-radius: 24px;
+            padding: 50px 30px 42px;
+            width: 100%;
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 22px 52px rgba(0, 0, 0, 0.9);
+        }
+
+        .card-label {
+            position: absolute;
+            top: 16px;
+            left: 24px;
+            color: rgba(255, 255, 255, 0.18);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            user-select: none;
+            pointer-events: none;
+            font-family: 'Segoe UI', monospace;
+        }
+
+        .demo-text {
+            font-size: clamp(44px, 7vw, 76px);
+            font-weight: 900;
+            line-height: 1.2;
+            text-align: center;
+            letter-spacing: 0.02em;
+            word-break: keep-all;
+        }
+
+        /* ============================================================
+                   1. 霓虹光效 — 粉蓝双色辉光
+                   ============================================================ */
+        .neon-glow {
+            color: #fff;
+            text-shadow:
+                0 0 4px #ff3bcd,
+                0 0 10px #ff3bcd,
+                0 0 21px #ff3bcd,
+                0 0 46px #6c47ff,
+                0 0 82px #6c47ff,
+                0 0 102px #6c47ff,
+                0 0 140px #6c47ff;
+            animation: neonPulse 2.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes neonPulse {
+            0% {
+                text-shadow:
+                    0 0 4px #ff3bcd,
+                    0 0 10px #ff3bcd,
+                    0 0 21px #ff3bcd,
+                    0 0 38px #6c47ff,
+                    0 0 68px #6c47ff,
+                    0 0 88px #6c47ff;
+                opacity: 0.92;
+            }
+            100% {
+                text-shadow:
+                    0 0 6px #ff3bcd,
+                    0 0 15px #ff3bcd,
+                    0 0 35px #ff3bcd,
+                    0 0 60px #6c47ff,
+                    0 0 106px #6c47ff,
+                    0 0 142px #6c47ff,
+                    0 0 190px #6c47ff;
+                opacity: 1;
+            }
+        }
+
+        /* ============================================================
+                   2. 金属质感 — 拉丝铬 + 立体斜面
+                   ============================================================ */
+        .metallic-chrome {
+            color: #d9d9d9;
+            background: linear-gradient(135deg, #f0f0f0 0%, #b8b8b8 45%, #6b6b6b 55%, #e8e8e8 80%, #ffffff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow:
+                0 1px 0 #999,
+                0 2px 0 #888,
+                0 3px 0 #777,
+                0 4px 0 #666,
+                0 5px 0 #555,
+                0 6px 0 #444,
+                0 7px 0 #333,
+                0 8px 6px rgba(0, 0, 0, 0.65),
+                0 10px 12px rgba(0, 0, 0, 0.4);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        /* ============================================================
+                   3. 渐变彩虹 — 流动光谱
+                   ============================================================ */
+        .rainbow-flow {
+            background: linear-gradient(90deg,
+                    #ff0000, #ff8800, #ffee00,
+                    #00dd44, #0088ff, #6600ff,
+                    #ff0088, #ff0000);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbowSlide 4s linear infinite;
+            filter: drop-shadow(0 0 28px rgba(255, 200, 50, 0.13));
+        }
+
+        @keyframes rainbowSlide {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 300% 50%;
+            }
+        }
+
+        /* ============================================================
+                   4. 3D 浮雕 — 厚实立体凿刻
+                   ============================================================ */
+        .emboss-3d {
+            color: #f2e9d0;
+            text-shadow:
+                0 1px 0 #ccc,
+                0 2px 0 #b3a88a,
+                0 3px 0 #a89b7a,
+                0 4px 0 #9c8f6b,
+                0 5px 0 #90825b,
+                0 6px 0 #84754c,
+                0 7px 0 #78683c,
+                0 8px 6px rgba(0, 0, 0, 0.55),
+                0 12px 14px rgba(0, 0, 0, 0.35);
+            transform: perspective(800px) rotateX(4deg) rotateY(-2deg);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .emboss-3d {
+            transform: perspective(800px) rotateX(2deg) rotateY(-1deg) scale(1.01);
+        }
+
+        /* ============================================================
+                   5. 玻璃拟态 — 磨砂通透
+                   ============================================================ */
+        .glassmorphism {
+            color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(2px);
+            text-shadow:
+                0 0 12px rgba(120, 180, 255, 0.4),
+                0 0 30px rgba(160, 210, 255, 0.15);
+            background: linear-gradient(135deg,
+                    rgba(220, 240, 255, 0.70) 0%,
+                    rgba(185, 215, 245, 0.34) 50%,
+                    rgba(230, 248, 255, 0.72) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 12px rgba(64, 128, 224, 0.20));
+            letter-spacing: 0.04em;
+            font-weight: 700;
+        }
+
+        /* 给玻璃卡片的背景增加微光晕 */
+        .card-bg-glass {
+            background: radial-gradient(ellipse at 30% 40%, rgba(96, 164, 252, 0.09), transparent 70%),
+                radial-gradient(ellipse at 80% 70%, rgba(192, 132, 254, 0.06), transparent 60%),
+                #141a26;
+        }
+
+        /* ============================================================
+                   6. 火焰之息 — 炽热跃动
+                   ============================================================ */
+        .fire-blaze {
+            color: transparent;
+            background: linear-gradient(180deg,
+                    #fffbcc 0%,
+                    #ffe066 18%,
+                    #ff9900 42%,
+                    #ff4400 66%,
+                    #991100 86%,
+                    #330500 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255, 94, 0, 0.45)) drop-shadow(0 0 56px rgba(255, 170, 0, 0.23));
+            text-shadow: none;
+            animation: fireFlicker 2.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes fireFlicker {
+            0% {
+                filter: drop-shadow(0 0 18px rgba(255, 80, 0, 0.50)) drop-shadow(0 0 58px rgba(255, 150, 0, 0.20));
+                opacity: 0.97;
+                transform: scale(1);
+            }
+            33% {
+                filter: drop-shadow(0 0 30px rgba(255, 130, 0, 0.62)) drop-shadow(0 0 74px rgba(255, 200, 50, 0.27));
+                opacity: 1;
+                transform: scale(1.005);
+            }
+            67% {
+                filter: drop-shadow(0 0 14px rgba(255, 60, 0, 0.43)) drop-shadow(0 0 48px rgba(255, 174, 0, 0.19));
+                opacity: 0.93;
+                transform: scale(0.997);
+            }
+            100% {
+                filter: drop-shadow(0 0 32px rgba(255, 98, 0, 0.57)) drop-shadow(0 0 84px rgba(255, 212, 59, 0.31));
+                opacity: 1;
+                transform: scale(1.004);
+            }
+        }
+
+        /* ============================================================
+                   7. 水墨丹青 — 枯笔飞白
+                   ============================================================ */
+        .ink-wash {
+            color: #222;
+            background: linear-gradient(170deg,
+                    #1a1a1a 0%,
+                    #3d3d3d 18%,
+                    #5a5a5a 37%,
+                    #3a3a3a 53%,
+                    #1f1f1f 71%,
+                    #0d0d0d 91%,
+                    #000 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow:
+                2px 2px 0 rgba(0, 0, 0, 0.03),
+                -1px -1px 0 rgba(255, 255, 250, 0.05);
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.11));
+            font-weight: 860;
+            letter-spacing: 0.06em;
+            transform: rotate(-0.8deg) scale(1.01);
+        }
+
+        /* 水墨衬底装饰 */
+        .card-ink {
+            background: radial-gradient(ellipse at 75% 85%, rgba(225, 218, 196, 0.05), transparent 63%),
+                radial-gradient(ellipse at 25% 15%, rgba(235, 226, 204, 0.035), transparent 51%),
+                #12171f;
+        }
+
+        /* ============================================================
+                   8. 赛博光栅 — 扫描线 + 故障位移
+                   ============================================================ */
+        .cyber-raster {
+            color: #0cf;
+            text-shadow:
+                0 0 7px #0cf,
+                0 0 18px #0cf,
+                0 0 39px #0cf,
+                0 0 78px #00aaff,
+                2px 0 0 rgba(255, 0, 144, 0.45),
+                -2px 0 0 rgba(0, 229, 255, 0.45);
+            letter-spacing: 0.06em;
+            animation: glitchShift 3.2s steps(1) infinite;
+            font-family: 'Segoe UI', 'Courier New', monospace;
+        }
+
+        @keyframes glitchShift {
+            0%,
+            87% {
+                transform: skew(0deg, 0deg);
+                text-shadow: 0 0 7px #0cf, 0 0 18px #0cf, 0 0 39px #0cf, 0 0 78px #00aaff, 2px 0 0 rgba(255, 0, 144, 0.45), -2px 0 0 rgba(0, 229, 255, 0.45);
+            }
+            90% {
+                transform: skew(0.6deg, -0.4deg) translateX(2px);
+                text-shadow: -3px 0 0 rgba(255, 0, 144, 0.6), 3px 0 0 rgba(0, 229, 255, 0.6), 0 0 49px #0cf;
+            }
+            93% {
+                transform: skew(-0.8deg, 0.5deg) translateX(-2px);
+                text-shadow: 4px 0 0 rgba(255, 0, 144, 0.5), -4px 0 0 rgba(0, 229, 255, 0.5), 0 0 69px #0cf;
+            }
+            96% {
+                transform: skew(0.2deg, -0.1deg) translateX(1px);
+                text-shadow: -2px 0 0 rgba(255, 0, 144, 0.35), 2px 0 0 rgba(0, 229, 255, 0.35), 0 0 29px #0cf;
+            }
+            100% {
+                transform: skew(0deg, 0deg);
+                text-shadow: 0 0 7px #0cf, 0 0 18px #0cf, 0 0 39px #0cf, 0 0 78px #00aaff, 2px 0 0 rgba(255, 0, 144, 0.45), -2px 0 0 rgba(0, 229, 255, 0.45);
+            }
+        }
+
+        /* ===== 响应式适配 ===== */
+        @media (max-width: 540px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .card {
+                padding: 40px 18px 34px;
+                min-height: 200px;
+            }
+            .demo-text {
+                font-size: 32px;
+            }
+            .card-label {
+                font-size: 11px;
+                top: 12px;
+                left: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- 1. 霓虹光效 -->
+        <div class="card">
+            <span class="card-label">✦ 霓虹光效</span>
+            <div class="demo-text neon-glow">NEON DREAM</div>
+        </div>
+
+        <!-- 2. 金属质感 -->
+        <div class="card">
+            <span class="card-label">✦ 金属拉丝</span>
+            <div class="demo-text metallic-chrome">CHROME</div>
+        </div>
+
+        <!-- 3. 渐变彩虹 -->
+        <div class="card">
+            <span class="card-label">✦ 流动彩虹</span>
+            <div class="demo-text rainbow-flow">RAINBOW</div>
+        </div>
+
+        <!-- 4. 3D 浮雕 -->
+        <div class="card">
+            <span class="card-label">✦ 3D 浮雕</span>
+            <div class="demo-text emboss-3d">RELIEF</div>
+        </div>
+
+        <!-- 5. 玻璃拟态 -->
+        <div class="card card-bg-glass">
+            <span class="card-label">✦ 玻璃拟态</span>
+            <div class="demo-text glassmorphism">FROST</div>
+        </div>
+
+        <!-- 6. 火焰之息 -->
+        <div class="card">
+            <span class="card-label">✦ 火焰之息</span>
+            <div class="demo-text fire-blaze">BLAZE</div>
+        </div>
+
+        <!-- 7. 水墨丹青 -->
+        <div class="card card-ink">
+            <span class="card-label">✦ 水墨丹青</span>
+            <div class="demo-text ink-wash">墨韵</div>
+        </div>
+
+        <!-- 8. 赛博光栅 -->
+        <div class="card">
+            <span class="card-label">✦ 赛博光栅</span>
+            <div class="demo-text cyber-raster">CYBER</div>
+        </div>
+
+    </div>
+
+</body>
+</html>
