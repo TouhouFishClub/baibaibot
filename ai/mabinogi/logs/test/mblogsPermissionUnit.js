@@ -104,8 +104,12 @@ async function run() {
     rankingVisibility: 'public'
   }), 'fallback-id')
 
-  assert.strictEqual(getDpsTone(3_000_001), 'legendary')
-  assert.strictEqual(getDpsTone(3_000_000), 'rainbow')
+  assert.strictEqual(getDpsTone(2_500_000), 'prismatic-white')
+  assert.strictEqual(getDpsTone(3_000_000), 'prismatic-green')
+  assert.strictEqual(getDpsTone(3_500_000), 'prismatic-blue')
+  assert.strictEqual(getDpsTone(4_000_000), 'prismatic-red')
+  assert.strictEqual(getDpsTone(4_500_000), 'prismatic-yellow')
+  assert.strictEqual(getDpsTone(5_000_000), 'prismatic-rainbow')
   assert.strictEqual(getDpsTone(2_000_001), 'rainbow')
 
   const html = buildHtml({

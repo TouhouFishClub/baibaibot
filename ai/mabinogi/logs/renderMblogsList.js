@@ -172,7 +172,12 @@ function formatUploaderName(row, showMode) {
 function getDpsTone(dps) {
   const n = Number(dps)
   if (!Number.isFinite(n)) return 'white'
-  if (n > 3_000_000) return 'legendary'
+  if (n >= 5_000_000) return 'prismatic-rainbow'
+  if (n >= 4_500_000) return 'prismatic-yellow'
+  if (n >= 4_000_000) return 'prismatic-red'
+  if (n >= 3_500_000) return 'prismatic-blue'
+  if (n >= 3_000_000) return 'prismatic-green'
+  if (n >= 2_500_000) return 'prismatic-white'
   if (n > 2_000_000) return 'rainbow'
   if (n >= 1_500_000) return 'gold'
   if (n >= 1_000_000) return 'magenta'
@@ -207,6 +212,9 @@ function renderRow(row, index, withSkill, showMode, visibility) {
   const alpha = 0.22
   const bg = `linear-gradient(90deg, ${hexToRgba(theme.primary, alpha)} 0%, ${hexToRgba(theme.secondary, alpha)} 100%)`
   const dpsTone = getDpsTone(row.dps)
+  const dpsClass = dpsTone.startsWith('prismatic-')
+    ? `dps-prismatic dps-${dpsTone}`
+    : `dps-${dpsTone}`
   const skillsHtml = withSkill ? renderSkills(row.skills, theme) : ''
   const names = formatDisplayNames(row, showMode, visibility)
   const uploaderName = formatUploaderName(row, showMode)
@@ -227,7 +235,7 @@ function renderRow(row, index, withSkill, showMode, visibility) {
         <div class="cell team-size">${escapeHtml(row.teamSize ?? '-')}</div>
         ${teammatesCell}
         <div class="cell duration">${escapeHtml(formatDuration(row.duration))}</div>
-        <div class="cell dps dps-${dpsTone}">${escapeHtml(formatDps(row.dps))}</div>
+        <div class="cell dps ${dpsClass}"><span class="dps-value">${escapeHtml(formatDps(row.dps))}</span></div>
         <div class="cell share">${escapeHtml(formatHpDamageShare(row))}</div>
         <div class="cell runid">${escapeHtml(shortRunId(row.runId))}</div>
       </div>
@@ -394,21 +402,54 @@ function buildHtml(option) {
       font-size: 13px;
     }
     .dps { font-weight: 700; }
-    .dps-rainbow {
+    .dps-value { display: inline-block; }
+    .dps-rainbow .dps-value {
       background: linear-gradient(90deg, #ff4d4d, #ffb84d, #ffe14d, #5dff8a, #4db8ff, #b84dff, #ff4da6);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
     }
-    .dps-legendary {
-      background: linear-gradient(90deg, #fff7ad 0%, #ff8a65 18%, #ffe066 36%, #5de2a0 54%, #68d5ff 72%, #c6a0ff 88%, #fff7ad 100%);
+    .dps-prismatic {
+      position: relative;
+      z-index: 0;
+      overflow: visible;
+      padding: 3px 7px;
+      border-radius: 6px;
+      background: linear-gradient(270deg, #ff4d7d 0%, #ff9f43 18%, #ffe45c 36%, #55dc89 54%, #51c8ff 72%, #a873ff 88%, #ff4d7d 100%);
+      background-size: 220% 100%;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2), 0 0 7px 2px rgba(255, 190, 86, 0.42);
+      isolation: isolate;
+    }
+    .dps-prismatic::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      z-index: -1;
+      border-radius: 8px;
+      background: inherit;
+      filter: blur(5px);
+      opacity: 0.62;
+    }
+    .dps-prismatic .dps-value {
+      position: relative;
+      z-index: 1;
+      font-weight: 800;
+      -webkit-text-stroke: 1px rgba(8, 10, 16, 0.94);
+      paint-order: stroke fill;
+      text-shadow: 0 0 2px rgba(0,0,0,0.95), 0 0 5px rgba(255, 211, 92, 0.9);
+    }
+    .dps-prismatic-white .dps-value { color: #fffdf2; }
+    .dps-prismatic-green .dps-value { color: #79f2a6; }
+    .dps-prismatic-blue .dps-value { color: #79cfff; }
+    .dps-prismatic-red .dps-value { color: #ff8b8b; }
+    .dps-prismatic-yellow .dps-value { color: #fff078; }
+    .dps-prismatic-rainbow .dps-value {
+      background: linear-gradient(90deg, #ff6b6b 0%, #ffd166 20%, #6ef3a5 40%, #63d8ff 60%, #b992ff 80%, #ff6bba 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
-      -webkit-text-stroke: 0.45px rgba(255,255,255,0.82);
-      filter: drop-shadow(0 0 2px rgba(255, 225, 110, 0.72)) drop-shadow(0 0 4px rgba(96, 214, 255, 0.42));
     }
     .dps-gold { color: #ffd54f; }
     .dps-magenta { color: #ff4fcf; }
