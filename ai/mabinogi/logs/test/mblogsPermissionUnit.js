@@ -113,8 +113,9 @@ async function run() {
     description: 'default',
     sections: [{ rows }]
   })
-  assert(html.includes('-webkit-text-stroke: 1px'))
-  assert(html.includes('0 0 9px rgba(96, 214, 255, 0.7)'))
+  assert(html.includes('color: #ff4f4f'))
+  assert(html.includes('-webkit-text-stroke: 1px #090b11'))
+  assert(html.includes('clip-path: polygon'))
   assert(html.includes('公开角色名'))
   assert(html.includes(ANONYMOUS_CHARACTER_NAME))
   assert(!html.includes('public-id'))

@@ -402,14 +402,35 @@ function buildHtml(option) {
       color: transparent;
     }
     .dps-legendary {
-      background: linear-gradient(90deg, #fff7ad 0%, #ff8a65 18%, #ffe066 36%, #5de2a0 54%, #68d5ff 72%, #c6a0ff 88%, #fff7ad 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(9, 11, 17, 0.96);
+      position: relative;
+      z-index: 0;
+      isolation: isolate;
+      color: #ff4f4f;
+      -webkit-text-fill-color: #ff4f4f;
+      -webkit-text-stroke: 1px #090b11;
       paint-order: stroke fill;
-      filter: drop-shadow(0 0 3px rgba(255, 225, 110, 0.95)) drop-shadow(0 0 9px rgba(96, 214, 255, 0.7)) drop-shadow(0 0 14px rgba(255, 105, 175, 0.38));
+      text-shadow: 0 0 2px rgba(255,255,255,0.95), 0 0 6px rgba(255,255,255,0.7), 0 0 11px rgba(255, 62, 62, 0.72);
+    }
+    .dps-legendary::before,
+    .dps-legendary::after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      z-index: -1;
+      width: 7px;
+      background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.1) 12%, #fff 36%, rgba(255,255,255,0.86) 49%, transparent 54%, #fff 70%, transparent 88%);
+      clip-path: polygon(42% 0, 100% 0, 66% 31%, 94% 31%, 18% 100%, 38% 56%, 0 56%);
+      filter: drop-shadow(0 0 3px rgba(255,255,255,0.95));
+      opacity: 0.9;
+    }
+    .dps-legendary::before {
+      left: 12%;
+      transform: rotate(18deg);
+    }
+    .dps-legendary::after {
+      right: 9%;
+      transform: rotate(-16deg) scale(0.82);
     }
     .dps-gold { color: #ffd54f; }
     .dps-magenta { color: #ff4fcf; }
