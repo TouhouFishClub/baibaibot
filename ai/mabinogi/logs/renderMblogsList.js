@@ -402,19 +402,13 @@ function buildHtml(option) {
       color: transparent;
     }
     .dps-legendary {
-      background: linear-gradient(90deg, #fff7ad 0%, #ff6b8a 15%, #ff9d4d 30%, #fff06a 45%, #63f5b0 60%, #5dd8ff 75%, #b889ff 90%, #fff7ad 100%);
-      background-size: 280% 100%;
+      background: linear-gradient(90deg, #fff7ad 0%, #ff8a65 18%, #ffe066 36%, #5de2a0 54%, #68d5ff 72%, #c6a0ff 88%, #fff7ad 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
-      -webkit-text-stroke: 0.35px rgba(255,255,255,0.78);
-      filter: drop-shadow(0 0 3px rgba(255, 225, 110, 0.9)) drop-shadow(0 0 7px rgba(96, 214, 255, 0.58));
-      animation: dps-spectrum 2.4s linear infinite;
-    }
-    @keyframes dps-spectrum {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
+      -webkit-text-stroke: 0.45px rgba(255,255,255,0.82);
+      filter: drop-shadow(0 0 2px rgba(255, 225, 110, 0.72)) drop-shadow(0 0 4px rgba(96, 214, 255, 0.42));
     }
     .dps-gold { color: #ffd54f; }
     .dps-magenta { color: #ff4fcf; }
