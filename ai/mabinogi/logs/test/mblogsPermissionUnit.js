@@ -114,6 +114,8 @@ async function run() {
     sections: [{ rows }]
   })
   assert(html.includes('content: attr(data-text)'))
+  assert(html.includes("font-family: 'Orbitron'"))
+  assert(html.includes('Orbitron-VariableFont_wght.ttf') === false)
   assert(html.includes('color: #ff2f45'))
   assert(html.includes('color: #00f0ff'))
   assert(html.includes('transform: translate(-1px, -0.8px)'))

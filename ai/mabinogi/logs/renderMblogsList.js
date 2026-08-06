@@ -12,6 +12,7 @@ const {
 const { getClassTheme, hexToRgba } = require('./classConfig')
 
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'hk4e_zh-cn.ttf'))
+const ORBITRON = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'Orbitron-VariableFont_wght.ttf'))
 const ANONYMOUS_CHARACTER_NAME = '神秘的米莱西安'
 const RANKING_VISIBILITY = {
   optOut: 'optOut',
@@ -292,6 +293,12 @@ function buildHtml(option) {
       font-family: 'HANYIWENHEI';
       src: url(${HANYIWENHEI}) format('truetype');
     }
+    @font-face {
+      font-family: 'Orbitron';
+      src: url(${ORBITRON}) format('truetype');
+      font-style: normal;
+      font-weight: 400 900;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       width: ${width}px;
@@ -407,7 +414,7 @@ function buildHtml(option) {
       position: relative;
       z-index: 0;
       isolation: isolate;
-      font-family: 'Arial Black', HANYIWENHEI, sans-serif;
+      font-family: 'Orbitron', HANYIWENHEI, sans-serif;
       font-weight: 900;
       letter-spacing: 0.02em;
       color: #fff;
