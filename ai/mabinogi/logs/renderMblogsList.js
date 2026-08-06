@@ -412,9 +412,6 @@ function buildHtml(option) {
       letter-spacing: 0.02em;
       color: #fff;
       -webkit-text-fill-color: #fff;
-      -webkit-text-stroke: 1px #090b11;
-      paint-order: stroke fill;
-      text-shadow: 0 0 3px rgba(255,255,255,0.55);
     }
     .dps-legendary::before,
     .dps-legendary::after {
@@ -429,14 +426,12 @@ function buildHtml(option) {
     .dps-legendary::before {
       color: #ff2f45;
       -webkit-text-fill-color: #ff2f45;
-      transform: translate(-3px, 0);
-      filter: drop-shadow(-2px 0 5px rgba(255, 47, 69, 0.7));
+      transform: translate(-3px, -2px);
     }
     .dps-legendary::after {
       color: #00f0ff;
       -webkit-text-fill-color: #00f0ff;
-      transform: translate(3px, 0);
-      filter: drop-shadow(2px 0 5px rgba(0, 240, 255, 0.65));
+      transform: translate(3px, 2px);
     }
     .dps-gold { color: #ffd54f; }
     .dps-magenta { color: #ff4fcf; }

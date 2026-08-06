@@ -114,9 +114,11 @@ async function run() {
     sections: [{ rows }]
   })
   assert(html.includes('content: attr(data-text)'))
-  assert(html.includes('-webkit-text-stroke: 1px #090b11'))
   assert(html.includes('color: #ff2f45'))
   assert(html.includes('color: #00f0ff'))
+  assert(html.includes('transform: translate(-3px, -2px)'))
+  assert(html.includes('transform: translate(3px, 2px)'))
+  assert(!html.includes('-webkit-text-stroke: 1px #090b11'))
   assert(html.includes('公开角色名'))
   assert(html.includes(ANONYMOUS_CHARACTER_NAME))
   assert(!html.includes('public-id'))
