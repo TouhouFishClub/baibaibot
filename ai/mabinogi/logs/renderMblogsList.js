@@ -207,6 +207,8 @@ function renderRow(row, index, withSkill, showMode, visibility) {
   const alpha = 0.22
   const bg = `linear-gradient(90deg, ${hexToRgba(theme.primary, alpha)} 0%, ${hexToRgba(theme.secondary, alpha)} 100%)`
   const dpsTone = getDpsTone(row.dps)
+  const dpsText = escapeHtml(formatDps(row.dps))
+  const dpsTextAttr = dpsTone === 'legendary' ? ` data-text="${dpsText}"` : ''
   const skillsHtml = withSkill ? renderSkills(row.skills, theme) : ''
   const names = formatDisplayNames(row, showMode, visibility)
   const uploaderName = formatUploaderName(row, showMode)
@@ -227,7 +229,7 @@ function renderRow(row, index, withSkill, showMode, visibility) {
         <div class="cell team-size">${escapeHtml(row.teamSize ?? '-')}</div>
         ${teammatesCell}
         <div class="cell duration">${escapeHtml(formatDuration(row.duration))}</div>
-        <div class="cell dps dps-${dpsTone}">${escapeHtml(formatDps(row.dps))}</div>
+        <div class="cell dps dps-${dpsTone}"${dpsTextAttr}>${dpsText}</div>
         <div class="cell share">${escapeHtml(formatHpDamageShare(row))}</div>
         <div class="cell runid">${escapeHtml(shortRunId(row.runId))}</div>
       </div>
@@ -405,32 +407,36 @@ function buildHtml(option) {
       position: relative;
       z-index: 0;
       isolation: isolate;
-      color: #ff4f4f;
-      -webkit-text-fill-color: #ff4f4f;
+      font-family: 'Arial Black', HANYIWENHEI, sans-serif;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      color: #fff;
+      -webkit-text-fill-color: #fff;
       -webkit-text-stroke: 1px #090b11;
       paint-order: stroke fill;
-      text-shadow: 0 0 2px rgba(255,255,255,0.95), 0 0 6px rgba(255,255,255,0.7), 0 0 11px rgba(255, 62, 62, 0.72);
+      text-shadow: 0 0 3px rgba(255,255,255,0.55);
     }
     .dps-legendary::before,
     .dps-legendary::after {
-      content: '';
+      content: attr(data-text);
       position: absolute;
-      top: -5px;
-      bottom: -5px;
+      inset: 0;
       z-index: -1;
-      width: 7px;
-      background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.1) 12%, #fff 36%, rgba(255,255,255,0.86) 49%, transparent 54%, #fff 70%, transparent 88%);
-      clip-path: polygon(42% 0, 100% 0, 66% 31%, 94% 31%, 18% 100%, 38% 56%, 0 56%);
-      filter: drop-shadow(0 0 3px rgba(255,255,255,0.95));
-      opacity: 0.9;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      white-space: nowrap;
     }
     .dps-legendary::before {
-      left: 12%;
-      transform: rotate(18deg);
+      color: #ff2f45;
+      -webkit-text-fill-color: #ff2f45;
+      transform: translate(-3px, 0);
+      filter: drop-shadow(-2px 0 5px rgba(255, 47, 69, 0.7));
     }
     .dps-legendary::after {
-      right: 9%;
-      transform: rotate(-16deg) scale(0.82);
+      color: #00f0ff;
+      -webkit-text-fill-color: #00f0ff;
+      transform: translate(3px, 0);
+      filter: drop-shadow(2px 0 5px rgba(0, 240, 255, 0.65));
     }
     .dps-gold { color: #ffd54f; }
     .dps-magenta { color: #ff4fcf; }
