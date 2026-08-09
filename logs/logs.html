@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#11120f">
+  <title>mblogs DPS 排行样式预览</title>
+  <style>
+    @font-face { font-family: "MabiHei"; src: url("../font/hk4e_zh-cn.ttf") format("truetype"); font-display: swap; }
+    @font-face { font-family: "Orbitron"; src: url("../font/Orbitron-VariableFont_wght.ttf") format("truetype"); font-display: swap; }
+    @font-face { font-family: "Corp"; src: url("../font/Corp-Bold.otf") format("opentype"); font-display: swap; }
+    @font-face { font-family: "Typewriter"; src: url("../font/FPTypewriterDEMO-Bold.otf") format("opentype"); font-display: swap; }
+    @font-face { font-family: "ZZZDisplay"; src: url("../font/ArupalaGroteskTrial-SuperBold.ttf") format("truetype"); font-display: swap; }
+    @font-face { font-family: "FZJiHei"; src: url("../font/FZJiHJW.TTF") format("truetype"); font-display: swap; }
+    @font-face { font-family: "GeelyDesign"; src: url("../font/GeelyDesignType-R.TTF") format("truetype"); font-display: swap; }
+    @font-face { font-family: "FZYouShang"; src: url("../font/FZYouSTJW-R.TTF") format("truetype"); font-display: swap; }
+
+    /* Style sandbox: start with these tokens when adjusting the visual direction. */
+    :root {
+      --ink: #11120f;
+      --paper: #080906;
+      --paper-deep: #252720;
+      --surface: #11130f;
+      --surface-raised: #181a15;
+      --text: #f2f3ea;
+      --acid: #e7ff2f;
+      --orange: #ff5938;
+      --cyan: #31d5df;
+      --violet: #815bff;
+      --muted: #92968a;
+      --line: rgba(255, 255, 255, .11);
+      --border: #3b3e35;
+      --page-width: 1480px;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--paper); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+        var(--paper);
+      background-size: 26px 26px;
+      font-family: "MabiHei", "Microsoft YaHei", sans-serif;
+    }
+
+    button, select { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+
+    .topline {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 max(18px, calc((100vw - var(--page-width)) / 2));
+      color: #fff;
+      background: #050604;
+      border-bottom: 4px solid var(--acid);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      font: 800 12px/1 "Orbitron", sans-serif;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 27px;
+      height: 27px;
+      color: var(--ink);
+      background: var(--acid);
+      transform: rotate(-5deg);
+      font-size: 9px;
+    }
+
+    .sync {
+      color: #c8c9c2;
+      font: 700 9px/1 "Orbitron", sans-serif;
+    }
+
+    .sync::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: var(--acid);
+      box-shadow: 0 0 0 4px rgba(231,255,47,.14);
+    }
+
+    main {
+      width: min(var(--page-width), calc(100% - 36px));
+      margin: 0 auto;
+      padding: 34px 0 62px;
+    }
+
+    .masthead {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr);
+      min-height: 228px;
+      margin-bottom: 26px;
+      border: 3px solid var(--border);
+      background: var(--surface);
+      box-shadow: 7px 7px 0 #000;
+      overflow: hidden;
+    }
+
+    .masthead-copy { position: relative; padding: 27px clamp(24px, 4vw, 56px); }
+
+    .masthead-copy::after {
+      content: "";
+      position: absolute;
+      right: 18px;
+      bottom: -58px;
+      width: 154px;
+      height: 154px;
+      border: 24px solid var(--acid);
+      border-radius: 50%;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 5px 8px;
+      color: #fff;
+      background: #050604;
+      font: 800 9px/1 "Orbitron", sans-serif;
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      margin: 14px 0 10px;
+      font: 900 clamp(42px, 5.6vw, 78px)/.9 "Corp", "MabiHei", sans-serif;
+      letter-spacing: 0;
+    }
+
+    h1 em {
+      color: var(--orange);
+      font-style: normal;
+      -webkit-text-stroke: 1px #fff;
+      text-shadow: 4px 4px 0 #000;
+    }
+
+    .desc {
+      position: relative;
+      z-index: 1;
+      color: #a8aca0;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .masthead-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      color: var(--ink);
+      border-left: 3px solid var(--border);
+      background:
+        radial-gradient(circle, rgba(17,18,15,.19) 1.4px, transparent 1.8px) 0 0 / 13px 13px,
+        var(--acid);
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 22px;
+      border-right: 2px solid var(--ink);
+    }
+
+    .stat:last-child { border-right: 0; }
+    .stat-label { font: 800 8px/1.4 "Orbitron", sans-serif; }
+    .stat-value { margin-top: 7px; font: 900 34px/1 "Orbitron", sans-serif; }
+    .stat-value small { font-size: 10px; }
+
+    .boss-nav {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0 0 18px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding: 4px 4px 8px 0;
+    }
+
+    .boss-tab {
+      flex: 0 0 auto;
+      min-height: 39px;
+      padding: 0 15px;
+      color: #c9ccc2;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .boss-tab:hover, .boss-tab:focus-visible { color: #fff; border-color: #777b6d; background: var(--surface-raised); }
+    .boss-tab.active { color: var(--ink); border-color: var(--acid); background: var(--acid); box-shadow: 4px 4px 0 var(--orange); }
+
+    .rank-section {
+      margin-top: 24px;
+      border: 3px solid var(--border);
+      background: rgba(17,19,15,.97);
+    }
+
+    .rank-section[hidden] { display: none; }
+
+    .section-head {
+      position: relative;
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 11px 17px 10px 22px;
+      border-bottom: 3px solid var(--border);
+      background: #0d0f0c;
+    }
+
+    .section-title { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+    .section-title h2 { margin: 0; color: #fff; font-size: 25px; line-height: 1; }
+    .section-title span { color: var(--muted); font: 700 8px/1 "Orbitron", sans-serif; }
+    .record-count { padding: 7px 9px; color: var(--ink); background: var(--acid); font: 800 8px/1 "Orbitron", sans-serif; }
+
+    .rank-head, .rank-row {
+      display: grid;
+      grid-template-columns: 64px minmax(170px, .85fr) 150px 72px 110px 126px minmax(220px, 1fr) 90px;
+      column-gap: 10px;
+      align-items: center;
+    }
+
+    .rank-head {
+      min-height: 36px;
+      padding: 0 14px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+      font: 700 8px/1 "Orbitron", "MabiHei", sans-serif;
+    }
+
+    .rank-row {
+      position: relative;
+      min-height: 112px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      transition: background .15s ease, transform .15s ease;
+    }
+
+    .rank-row:hover { z-index: 1; background: var(--surface-raised); transform: translateX(3px); box-shadow: -6px 0 0 var(--class-color); }
+
+    .rank {
+      font: 900 19px/1 "Orbitron", sans-serif;
+      text-align: center;
+    }
+
+    .rank-row:nth-child(-n + 3) .rank {
+      display: grid;
+      place-items: center;
+      width: 39px;
+      height: 39px;
+      color: var(--ink);
+      background: var(--acid);
+      transform: rotate(-5deg);
+      box-shadow: 3px 3px 0 var(--orange);
+    }
+
+    .player { min-width: 0; }
+
+    .arcana-visual {
+      position: relative;
+      width: 136px;
+      height: 88px;
+      overflow: hidden;
+      background: color-mix(in srgb, var(--class-color) 20%, #090a08);
+    }
+
+    .arcana-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      border-top: 2px solid var(--class-color);
+      background: linear-gradient(to bottom, transparent 34%, rgba(9,10,8,.12) 52%, #090a08 91%);
+      pointer-events: none;
+    }
+
+    .arcana-visual img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: var(--art-position, center 18%);
+      filter: var(--art-filter, saturate(.88) contrast(1.12));
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 48%, rgba(0,0,0,.82) 65%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 0%, #000 48%, rgba(0,0,0,.82) 65%, transparent 100%);
+    }
+
+    .arcana-name {
+      position: absolute;
+      z-index: 2;
+      left: 8px;
+      right: 8px;
+      bottom: 6px;
+      overflow: hidden;
+      color: #fff;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 900;
+      text-shadow: 0 1px 5px #000;
+    }
+
+    .arcana-name::before { content: "// "; color: var(--class-color); }
+
+    .player-copy { min-width: 0; }
+    .player-copy strong { display: block; overflow: hidden; color: #fff; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+    .player-copy small { display: block; margin-top: 5px; color: var(--muted); font: 700 8px/1 "Typewriter", monospace; }
+
+    .plain-value { font: 800 11px/1.3 "Orbitron", "MabiHei", sans-serif; }
+    .plain-value small { display: block; margin-top: 5px; color: var(--muted); font-size: 7px; }
+
+    .dps strong { display: block; font: 900 18px/1 "Orbitron", sans-serif; }
+    .dps small { display: block; margin-top: 5px; color: var(--muted); font: 700 7px/1 "Orbitron", sans-serif; }
+    .dps.legendary strong { color: #fff; -webkit-text-stroke: 2px var(--ink); text-shadow: 2px 2px 0 var(--orange), -2px -1px 0 var(--cyan); }
+    .dps.gold strong { color: #f1c63b; }
+
+    .contribution strong { display: block; font: 800 11px/1 "Orbitron", sans-serif; }
+    .contribution small { display: block; margin-top: 6px; color: var(--muted); font-size: 9px; }
+    .share-track { width: 100%; height: 6px; margin-top: 7px; background: var(--paper-deep); overflow: hidden; }
+    .share-track i { display: block; height: 100%; background: var(--class-color); }
+
+    .run-id { display: inline-block; padding: 5px 6px; color: #d9dcd1; border: 1px solid var(--border); background: #090a08; font: 700 8px/1 "Orbitron", sans-serif; }
+
+    .skill-strip {
+      grid-column: 2 / -1;
+      display: flex;
+      height: 14px;
+      margin-top: -3px;
+      border: 1px solid #4c5045;
+      overflow: hidden;
+      background: #080906;
+    }
+
+    .skill-strip span {
+      min-width: 0;
+      padding: 2px 4px 0;
+      overflow: hidden;
+      color: #fff;
+      border-right: 1px solid rgba(0,0,0,.55);
+      white-space: nowrap;
+      font-size: 7px;
+      font-weight: 900;
+    }
+
+    .skill-strip span:last-child { border-right: 0; }
+
+    .footnote {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 17px 3px 0;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .footnote b { color: #fff; }
+
+    @media (max-width: 1120px) {
+      .rank-head, .rank-row { grid-template-columns: 58px minmax(160px, .8fr) 138px 68px 105px 115px minmax(180px, 1fr); }
+      .run-head, .run-cell { display: none; }
+    }
+
+    @media (max-width: 820px) {
+      main { width: min(100% - 20px, 660px); padding-top: 22px; }
+      .sync { display: none; }
+      .masthead { grid-template-columns: 1fr; box-shadow: 4px 4px 0 #000; }
+      .masthead-copy { padding: 23px 18px; }
+      h1 { font-size: clamp(40px, 12vw, 62px); }
+      .masthead-stats { min-height: 118px; border-left: 0; border-top: 3px solid var(--ink); }
+      .stat { padding: 17px; }
+      .stat-value { font-size: 26px; }
+      .section-head { min-height: 78px; align-items: flex-start; padding: 15px 112px 12px 16px; }
+      .section-title { display: block; }
+      .section-title h2 { overflow: hidden; font-size: 21px; text-overflow: ellipsis; white-space: nowrap; }
+      .section-title span { display: block; margin-top: 6px; }
+      .record-count { position: absolute; top: 14px; right: 12px; }
+      .rank-head, .rank-row { grid-template-columns: 36px 96px minmax(82px, 1fr) 76px; column-gap: 5px; }
+      .rank-head { padding: 0 7px; }
+      .rank-row { min-height: 84px; padding: 8px 7px; }
+      .rank-head > :not(.rank-label):not(.arcana-label):not(.player-label):not(.dps-label),
+      .rank-row > :not(.rank):not(.arcana-visual):not(.player):not(.dps):not(.contribution):not(.skill-strip) { display: none; }
+      .rank-row:nth-child(-n + 3) .rank { width: 31px; height: 31px; }
+      .rank { font-size: 14px; }
+      .arcana-visual { width: 92px; height: 72px; }
+      .arcana-name { left: 5px; right: 5px; bottom: 5px; font-size: 9px; }
+      .player-copy strong { font-size: 12px; }
+      .player-copy small { font-size: 7px; }
+      .dps strong { font-size: 12px; }
+      .skill-strip { grid-column: 2 / -1; margin-top: 2px; }
+      .footnote { display: block; line-height: 1.7; }
+    }
+
+    /* mblogs image-render layout */
+    main {
+      width: 1050px;
+      padding: 24px 0 34px;
+    }
+
+    .rank-section {
+      margin: 0 0 30px;
+      border: 0;
+      background: transparent;
+    }
+
+    .section-head {
+      min-height: 0;
+      padding: 0 8px 12px;
+      border: 0;
+      background: transparent;
+    }
+
+    .section-title h2 {
+      font: 900 25px/1 "ZZZDisplay", "MabiHei", sans-serif;
+      text-shadow: 3px 4px 0 #000;
+    }
+
+    .record-count {
+      color: var(--ink);
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .rank-head,
+    .rank-row {
+      grid-template-columns: 180px minmax(160px, 1fr) 64px 92px 106px 146px;
+      column-gap: 12px;
+    }
+
+    .rank-head {
+      min-height: 30px;
+      margin: 0 20px 7px 0;
+      padding: 0 18px 0 0;
+      border: 0;
+    }
+
+    .row-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rank-row {
+      position: relative;
+      grid-template-rows: 60px;
+      height: 60px;
+      min-height: 0;
+      padding: 0 12px 0 0;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 8px;
+      background: linear-gradient(
+        104deg,
+        color-mix(in srgb, var(--class-color) 30%, #151713) 0%,
+        color-mix(in srgb, var(--class-color) 20%, #151713) 32%,
+        color-mix(in srgb, var(--class-color) 8%, #11130f) 62%,
+        #0c0d0b 100%
+      );
+      overflow: hidden;
+    }
+
+    .rank-row.with-skills {
+      grid-template-rows: 60px 20px;
+      height: 80px;
+    }
+
+    .rank-row.with-skills .arcana-visual { border-radius: 7px 0 0 0; }
+
+    .rank-row::before {
+      content: none;
+    }
+
+    .rank-row:hover {
+      background: linear-gradient(
+        104deg,
+        color-mix(in srgb, var(--class-color) 36%, #1b1d18) 0%,
+        color-mix(in srgb, var(--class-color) 24%, #171914) 34%,
+        color-mix(in srgb, var(--class-color) 10%, #12140f) 64%,
+        #0e0f0d 100%
+      );
+      transform: translateX(3px);
+      box-shadow: none;
+    }
+
+    .arcana-visual {
+      grid-row: 1;
+      align-self: stretch;
+      width: 100%;
+      height: 100%;
+      min-height: 60px;
+      border-radius: 7px 0 0 7px;
+      background: transparent;
+      clip-path: polygon(0 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
+    }
+
+    .arcana-visual::before {
+      border: 0;
+      background: transparent;
+    }
+
+    .arcana-visual img {
+      object-fit: cover;
+      object-position: center center;
+      filter: none;
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 78%);
+      mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 78%);
+    }
+
+    .arcana-name {
+      display: block;
+      left: 10px;
+      right: 22px;
+      bottom: 0;
+      overflow: hidden;
+      color: transparent;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font: 400 28px/.9 "FZYouShang", "MabiHei", sans-serif;
+      background: linear-gradient(to bottom, transparent 0%, var(--class-color) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: none;
+    }
+
+    .arcana-name::before { content: none; }
+
+    .rank {
+      position: absolute;
+      z-index: 4;
+      top: -35px;
+      right: 10px;
+      left: auto;
+      display: block;
+      width: auto;
+      height: auto;
+      color: rgba(255,255,255,.2);
+      background: none;
+      border: 0;
+      box-shadow: none;
+      transform: none;
+      font: 400 60px/.9 "FZJiHei", "MabiHei", sans-serif;
+    }
+
+    .rank-row:nth-child(-n + 3) .rank {
+      width: auto;
+      height: auto;
+      color: rgba(255,255,255,.2);
+      background: none;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .rank-row:nth-child(1) .rank { color: rgba(255,199,46,.2); }
+    .rank-row:nth-child(2) .rank { color: rgba(216,224,232,.2); }
+    .rank-row:nth-child(3) .rank { color: rgba(205,127,50,.2); }
+
+    .player-copy strong {
+      display: block;
+      overflow: visible;
+      color: transparent;
+      text-overflow: clip;
+      white-space: normal;
+      font: 400 35px/.95 "FZJiHei", "MabiHei", sans-serif;
+      background: linear-gradient(to bottom, #f4f5f1 10%, #b9bcb5 88%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 4px 0 #000);
+    }
+
+    .uploader-meta {
+      position: absolute;
+      z-index: 4;
+      top: 4px;
+      left: 192px;
+      color: #7f8479;
+      font: 700 6px/1 "Orbitron", "MabiHei", sans-serif;
+    }
+
+    .plain-value,
+    .dps,
+    .contribution,
+    .run-cell,
+    .player {
+      position: relative;
+      z-index: 2;
+    }
+
+    .player { padding-right: 44px; }
+
+    .dps strong { font-size: 17px; }
+
+    .dps.legendary strong {
+      color: #fff;
+      -webkit-text-stroke: 0;
+      text-shadow: -2px 1.5px 0 var(--orange), 2px -1.5px 0 var(--cyan);
+    }
+
+    .dps.rainbow strong {
+      color: transparent;
+      background: linear-gradient(90deg, #ff4d4d, #ffb84d, #ffe14d, #5dff8a, #4db8ff, #b84dff, #ff4da6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .dps.gold strong { color: #ffd54f; }
+    .dps.magenta strong { color: #ff4fcf; }
+    .dps.blue strong { color: #4da3ff; }
+    .dps.green strong { color: #52d67a; }
+    .dps.white strong { color: #fff; }
+
+    .plain-value { font-size: 14px; }
+    .plain-value small { margin-top: 4px; font-size: 7px; }
+    .duration-value,
+    .duration-value small { font-family: "GeelyDesign", sans-serif; }
+
+    .contribution {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .share-ring {
+      --share: 0;
+      position: relative;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 43px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: conic-gradient(var(--class-color) calc(var(--share) * 1%), #2b2e27 0);
+      box-shadow: 0 0 18px color-mix(in srgb, var(--class-color) 18%, transparent);
+    }
+
+    .share-ring::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border-radius: 50%;
+      background: #11130f;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+
+    .share-ring span {
+      position: relative;
+      z-index: 1;
+      color: #fff;
+      font: 900 10px/1 "Orbitron", sans-serif;
+    }
+
+    .contribution-copy {
+      min-width: 0;
+      margin-top: 12px;
+    }
+    .contribution-copy strong { white-space: nowrap; }
+    .damage-unit { margin-left: 5px; }
+    .contribution-copy small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font: 700 7px/1 "Orbitron", sans-serif;
+    }
+
+    .share-track { display: none; }
+
+    .run-head { display: none; }
+
+    .run-cell {
+      position: absolute;
+      z-index: 5;
+      top: -5px;
+      right: 0;
+      left: auto;
+      display: block;
+    }
+
+    .run-id {
+      padding: 4px 6px;
+      border-color: rgba(255,255,255,.28);
+      border-top: 0;
+      border-right: 0;
+      background: rgba(9,10,8,.82);
+      font-size: 10px;
+    }
+
+    .skill-strip {
+      position: absolute;
+      z-index: 3;
+      grid-column: 1 / -1;
+      right: -12px;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      height: 20px;
+      margin: 0;
+      border: 0;
+      border-top: 1px solid rgba(255,255,255,.12);
+      border-radius: 0;
+      background: #080906;
+      overflow: hidden;
+    }
+
+    .skill-strip span {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      min-width: 0;
+      height: 100%;
+      padding: 0 6px;
+      overflow: hidden;
+      color: rgba(255,255,255,.95);
+      border-right: 1px solid rgba(0,0,0,.45);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font: 800 14px/1 "GeelyDesign", "MabiHei", sans-serif;
+    }
+
+    @media (max-width: 820px) {
+      main { width: 1050px; padding: 12px 0 24px; }
+      .rank-section { margin-bottom: 24px; }
+      .section-head { min-height: 62px; padding: 8px 98px 9px 6px; }
+      .section-title h2 { font-size: 19px; }
+      .record-count { top: 7px; right: 7px; }
+      .rank-head { display: none; }
+      .row-list { gap: 8px; }
+      .rank-row {
+        grid-template-columns: 98px minmax(78px, 1fr) 70px 54px;
+        grid-template-rows: 60px;
+        height: 60px;
+        min-height: 0;
+        padding-right: 7px;
+        column-gap: 5px;
+      }
+      .rank-row.with-skills { grid-template-rows: 60px 20px; height: 80px; }
+      .rank-row.with-skills .arcana-visual { border-radius: 7px 0 0 0; }
+      .rank-row > :not(.rank):not(.arcana-visual):not(.player):not(.dps):not(.contribution):not(.run-cell):not(.skill-strip) { display: none; }
+      .arcana-visual { min-height: 60px; border-radius: 7px 0 0 7px; clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%); }
+      .arcana-name { left: 5px; right: 12px; bottom: 0; font-size: 28px; }
+      .rank,
+      .rank-row:nth-child(-n + 3) .rank { top: -35px; right: 10px; left: auto; width: auto; height: auto; font-size: 60px; transform: none; }
+      .run-cell { top: -5px; right: 0; left: auto; }
+      .run-id { padding: 3px 4px; font-size: 10px; }
+      .player-copy strong { font-size: 35px; line-height: .98; filter: drop-shadow(0 2px 0 #000); }
+      .uploader-meta { top: 3px; left: 105px; font-size: 4px; }
+      .dps strong { font-size: 13px; }
+      .dps small { font-size: 6px; line-height: 1.25; }
+      .plain-value small { font-size: 6px; }
+      .share-ring { width: 38px; }
+      .share-ring::before { inset: 5px; }
+      .share-ring span { font-size: 10px; }
+      .contribution-copy { display: none; }
+      .skill-strip { grid-column: 1 / -1; left: 0; right: -7px; bottom: 0; margin: 0; }
+      .skill-strip span { padding-top: 2px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div id="rankingRoot"></div>
+  </main>
+
+  <script>
+    const classColors = {
+      "元素骑士": "#ff5938",
+      "圣光颂唱者": "#31d5df",
+      "黑魔导师": "#815bff",
+      "流星射手": "#efc52e",
+      "爆裂骑士枪": "#13bda8",
+      "枪炮师": "#7668ee",
+      "禁术炼金师": "#b4c521",
+      "旋律操纵师": "#ff4fa3"
+    };
+
+    const arcanaArt = {
+      "元素骑士": "./arcana/元素骑士.png",
+      "圣光颂唱者": "./arcana/圣光颂唱者.png",
+      "圣盾骑士": "./arcana/圣盾骑士.png",
+      "黑魔导师": "./arcana/黑魔导士.png",
+      "流星射手": "./arcana/流星射手.png",
+      "爆裂骑士枪": "./arcana/爆裂骑士枪.png",
+      "枪炮师": "./arcana/枪炮师.png",
+      "禁术炼金师": "./arcana/禁术炼金师.png",
+      "旋律操纵师": "./arcana/旋律操纵师.png",
+      "狂怒斗士": "./arcana/狂怒斗士.png"
+    };
+
+    const rankingSections = [
+      {
+        boss: "枯木之佩塔克",
+        code: "PETAK / PHASE I + II",
+        rows: [
+          { name: "青空下的风铃", server: "YATE", job: "黑魔导师", dungeon: "布里列赫", team: 8, duration: "6分18秒", dps: "3.84M", dpsValue: 3840000, hp: "1.55B", damage: "1.45B", share: 93.4, time: "08-09 21:34", uploader: "***", runId: "c31651e9", image: "../help/avatar.png", tone: "", skills: [["龙焰", 44], ["闪电链", 31], ["其他", 25]] },
+          { name: "神秘的米莱西安", server: "ANON", job: "流星射手", dungeon: "布里列赫", team: 8, duration: "6分41秒", dps: "3.29M", dpsValue: 3290000, hp: "1.55B", damage: "1.32B", share: 85.2, time: "08-08 23:17", uploader: "***", runId: "b807ad21", image: "../avatar.jpg", tone: "warm", skills: [["爆裂箭", 51], ["水流箭", 29], ["其他", 20]] },
+          { name: "月光邮差", server: "YILU", job: "元素骑士", dungeon: "布里列赫", team: 8, duration: "7分02秒", dps: "2.76M", dpsValue: 2760000, hp: "1.55B", damage: "1.16B", share: 74.8, time: "08-08 20:05", uploader: "***", runId: "4fd213aa", image: "../help/avatar.png", tone: "alt", skills: [["突进斩", 39], ["雷霆重击", 34], ["其他", 27]] },
+          { name: "录像店夜班", server: "YATE", job: "爆裂骑士枪", dungeon: "布里列赫", team: 8, duration: "7分16秒", dps: "2.41M", dpsValue: 2410000, hp: "1.55B", damage: "1.05B", share: 67.7, time: "08-07 22:49", uploader: "***", runId: "9be0412c", image: "../avatar.jpg", tone: "", skills: [["爆裂冲刺", 42], ["潮涌", 36], ["其他", 22]] }
+        ]
+      },
+      {
+        boss: "布隆塔纳斯",
+        code: "BRONTANAS / SECOND KING",
+        rows: [
+          { name: "灯塔与鲸", server: "YATE", job: "流星射手", dungeon: "布里列赫", team: 8, duration: "5分54秒", dps: "3.52M", dpsValue: 3520000, hp: "1.14B", damage: "1.08B", share: 94.6, time: "08-09 20:12", uploader: "***", runId: "752cae10", image: "../help/avatar.png", tone: "warm", skills: [["爆裂箭", 48], ["水流箭", 35], ["其他", 17]] },
+          { name: "神秘的米莱西安", server: "ANON", job: "禁术炼金师", dungeon: "布里列赫", team: 8, duration: "6分09秒", dps: "3.17M", dpsValue: 3170000, hp: "1.14B", damage: "1.03B", share: 90.1, time: "08-09 19:43", uploader: "***", runId: "21e09db7", image: "../avatar.jpg", tone: "alt", skills: [["螺旋爆裂", 55], ["化学狂欢", 28], ["其他", 17]] },
+          { name: "猫头鹰车站", server: "YILU", job: "枪炮师", dungeon: "布里列赫", team: 7, duration: "6分38秒", dps: "2.63M", dpsValue: 2630000, hp: "1.14B", damage: "936.4M", share: 81.9, time: "08-08 18:27", uploader: "***", runId: "887f10d3", image: "../help/avatar.png", tone: "", skills: [["致命狙击", 46], ["迅捷射击", 32], ["其他", 22]] },
+          { name: "红茶加冰", server: "YATE", job: "圣光颂唱者", dungeon: "布里列赫", team: 8, duration: "7分01秒", dps: "1.82M", dpsValue: 1820000, hp: "1.14B", damage: "765.9M", share: 67.0, time: "08-07 21:06", uploader: "***", runId: "0d5ce402", image: "../avatar.jpg", tone: "warm", skills: [["净化传播", 58], ["其他", 42]] }
+        ]
+      },
+      {
+        boss: "雷内恩的米耶尔",
+        code: "MAYER / THIRD KING",
+        rows: [
+          { name: "十一号唱片", server: "YATE", job: "黑魔导师", dungeon: "布里列赫", team: 8, duration: "8分14秒", dps: "3.41M", dpsValue: 3410000, hp: "1.97B", damage: "1.69B", share: 85.8, time: "08-09 16:40", uploader: "***", runId: "ef30c722", image: "../help/avatar.png", tone: "alt", skills: [["龙焰", 47], ["闪电链", 33], ["其他", 20]] },
+          { name: "神秘的米莱西安", server: "ANON", job: "元素骑士", dungeon: "布里列赫", team: 8, duration: "8分36秒", dps: "2.94M", dpsValue: 2940000, hp: "1.97B", damage: "1.52B", share: 77.2, time: "08-08 22:11", uploader: "***", runId: "a9b3f841", image: "../avatar.jpg", tone: "", skills: [["雷霆重击", 43], ["突进斩", 38], ["其他", 19]] },
+          { name: "星尘观测员", server: "YILU", job: "旋律操纵师", dungeon: "布里列赫", team: 8, duration: "9分07秒", dps: "2.28M", dpsValue: 2280000, hp: "1.97B", damage: "1.25B", share: 63.6, time: "08-08 19:32", uploader: "***", runId: "3e762bc0", image: "../help/avatar.png", tone: "warm", skills: [["灵线织网", 61], ["其他", 39]] },
+          { name: "黄昏信号", server: "YATE", job: "爆裂骑士枪", dungeon: "布里列赫", team: 7, duration: "9分42秒", dps: "1.96M", dpsValue: 1960000, hp: "1.97B", damage: "1.14B", share: 57.9, time: "08-07 20:55", uploader: "***", runId: "621ba4f0", image: "../avatar.jpg", tone: "alt", skills: [["爆裂冲刺", 49], ["潮涌", 34], ["其他", 17]] }
+        ]
+      },
+      {
+        boss: "雷内恩的米耶尔：悔恨",
+        code: "MAYER REGRET / FINAL KING",
+        rows: [
+          { name: "无声放映室", server: "YATE", job: "流星射手", dungeon: "布里列赫", team: 8, duration: "12分18秒", dps: "3.08M", dpsValue: 3080000, hp: "3.45B", damage: "2.27B", share: 65.8, time: "08-09 15:28", uploader: "***", runId: "fa80d21b", image: "../help/avatar.png", tone: "", skills: [["爆裂箭", 52], ["水流箭", 31], ["其他", 17]] },
+          { name: "神秘的米莱西安", server: "ANON", job: "黑魔导师", dungeon: "布里列赫", team: 8, duration: "12分44秒", dps: "2.71M", dpsValue: 2710000, hp: "3.45B", damage: "2.07B", share: 60.0, time: "08-08 21:03", uploader: "***", runId: "188ca73e", image: "../avatar.jpg", tone: "warm", skills: [["龙焰", 45], ["闪电链", 36], ["其他", 19]] },
+          { name: "灰色星期日", server: "YILU", job: "枪炮师", dungeon: "布里列赫", team: 8, duration: "13分29秒", dps: "2.19M", dpsValue: 2190000, hp: "3.45B", damage: "1.77B", share: 51.4, time: "08-08 17:16", uploader: "***", runId: "c4309ad1", image: "../help/avatar.png", tone: "alt", skills: [["致命狙击", 49], ["迅捷射击", 29], ["其他", 22]] },
+          { name: "晚风事务所", server: "YATE", job: "禁术炼金师", dungeon: "布里列赫", team: 8, duration: "14分02秒", dps: "1.74M", dpsValue: 1740000, hp: "3.45B", damage: "1.47B", share: 42.7, time: "08-07 19:58", uploader: "***", runId: "0aa53f29", image: "../avatar.jpg", tone: "", skills: [["螺旋爆裂", 53], ["化学狂欢", 27], ["其他", 20]] }
+        ]
+      }
+    ];
+
+    const showSkillDetails = true;
+
+    function dpsTone(value) {
+      if (value > 3_000_000) return "legendary";
+      if (value > 2_000_000) return "rainbow";
+      if (value >= 1_500_000) return "gold";
+      if (value >= 1_000_000) return "magenta";
+      if (value >= 700_000) return "blue";
+      if (value >= 400_000) return "green";
+      return "white";
+    }
+
+    function formatDamageValue(value) {
+      return String(value).replace(/([A-Za-z]+)$/, '<span class="damage-unit">$1</span>');
+    }
+
+    function renderSkills(skills, color) {
+      return `<div class="skill-strip">${skills.map(([name, percent], index) =>
+        `<span style="flex:${percent}; background:${index % 2 ? `${color}66` : `${color}bb`}">${name} ${percent}%</span>`
+      ).join("")}</div>`;
+    }
+
+    function renderArcana(job) {
+      const art = arcanaArt[job] || arcanaArt["元素骑士"];
+      return `
+        <div class="arcana-visual">
+          <img src="${art}" alt="${job}">
+          <span class="arcana-name">${job}</span>
+        </div>`;
+    }
+
+    function renderRow(row, index) {
+      const color = classColors[row.job] || "#73756d";
+      const withSkills = showSkillDetails && Array.isArray(row.skills) && row.skills.length > 0;
+      return `
+        <div class="rank-row${withSkills ? " with-skills" : ""}" style="--class-color:${color}">
+          ${renderArcana(row.job)}
+          <div class="uploader-meta">UPLOADER · ${row.uploader}</div>
+          <div class="player">
+            <span class="rank">${String(index + 1).padStart(2, "0")}</span>
+            <div class="player-copy"><strong>${row.name}</strong></div>
+          </div>
+          <div class="plain-value">${row.team}<small>TEAM SIZE</small></div>
+          <div class="plain-value duration-value">${row.duration}<small>DURATION</small></div>
+          <div class="dps ${dpsTone(row.dpsValue)}"><strong>${row.dps}</strong><small>DAMAGE / SEC</small></div>
+          <div class="contribution">
+            <div class="share-ring" style="--share:${row.share}"><span>${row.share.toFixed(0)}%</span></div>
+            <div class="contribution-copy"><strong>${formatDamageValue(row.damage)} / ${formatDamageValue(row.hp)}</strong><small>DAMAGE / BOSS HP</small></div>
+          </div>
+          <div class="run-cell"><span class="run-id">${row.runId}</span></div>
+          ${withSkills ? renderSkills(row.skills, color) : ""}
+        </div>`;
+    }
+
+    function renderSection(section, index) {
+      return `
+        <section class="rank-section" data-section="${index}">
+          <header class="section-head">
+            <div class="section-title"><h2>${section.boss}</h2></div>
+            <span class="record-count">${String(section.rows.length).padStart(2, "0")} RECORDS</span>
+          </header>
+          <div class="row-list">${section.rows.map(renderRow).join("")}</div>
+        </section>`;
+    }
+
+    const root = document.getElementById("rankingRoot");
+    root.innerHTML = rankingSections.map(renderSection).join("");
+  </script>
+</body>
+</html>

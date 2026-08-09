@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f2e9">
+  <title>零号战绩 / DPS RANKING</title>
+  <style>
+    @font-face { font-family: "Corp"; src: url("../font/Corp-Bold.otf") format("opentype"); font-display: swap; }
+    @font-face { font-family: "Orbitron"; src: url("../font/Orbitron-VariableFont_wght.ttf") format("truetype"); font-display: swap; }
+    @font-face { font-family: "Typewriter"; src: url("../font/FPTypewriterDEMO-Bold.otf") format("opentype"); font-display: swap; }
+    @font-face { font-family: "Hei"; src: url("../font/hk4e_zh-cn.ttf") format("truetype"); font-display: swap; }
+    @font-face { font-family: "Mas"; src: url("../font/MasSimple_1.0.ttf") format("truetype"); font-display: swap; }
+
+    :root {
+      --ink: #151515;
+      --paper: #f4f2e9;
+      --paper-2: #e8e6dc;
+      --acid: #e9ff32;
+      --orange: #ff5c35;
+      --cyan: #30d9e8;
+      --muted: #77776f;
+      --line: rgba(21, 21, 21, .16);
+      --shadow: 7px 7px 0 #151515;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--paper); scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(21, 21, 21, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21, 21, 21, .035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 28px 28px;
+      font-family: "Hei", "Microsoft YaHei", sans-serif;
+      min-height: 100vh;
+    }
+
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      opacity: .075;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+    }
+
+    .topbar {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(18px, 4vw, 64px);
+      background: var(--ink);
+      color: #fff;
+      border-bottom: 5px solid var(--acid);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: "Corp", "Hei", sans-serif;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 29px;
+      height: 29px;
+      color: var(--ink);
+      background: var(--acid);
+      transform: rotate(-5deg);
+      font-family: "Orbitron", sans-serif;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .live-status {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font: 700 10px/1 "Orbitron", sans-serif;
+      color: #d5d5cf;
+    }
+    .live-status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--acid);
+      box-shadow: 0 0 0 4px rgba(233, 255, 50, .16);
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse { 50% { box-shadow: 0 0 0 8px transparent; } }
+
+    main { width: min(1500px, calc(100% - 36px)); margin: 0 auto; padding: 38px 0 64px; }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(330px, .7fr);
+      min-height: 260px;
+      margin-bottom: 34px;
+      border: 3px solid var(--ink);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "BATTLE ARCHIVE  /  07";
+      position: absolute;
+      right: -54px;
+      top: 31px;
+      width: 250px;
+      padding: 6px 0;
+      color: #fff;
+      background: var(--orange);
+      text-align: center;
+      font: 900 10px/1 "Orbitron", sans-serif;
+      transform: rotate(38deg);
+      z-index: 3;
+    }
+    .hero-copy {
+      position: relative;
+      padding: 28px clamp(24px, 4vw, 58px) 30px;
+      overflow: hidden;
+    }
+    .hero-copy::before {
+      content: "";
+      position: absolute;
+      width: 210px;
+      height: 210px;
+      left: -84px;
+      bottom: -108px;
+      border: 30px solid var(--acid);
+      border-radius: 50%;
+      opacity: .8;
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 9px;
+      background: var(--ink);
+      color: #fff;
+      font: 800 10px/1 "Orbitron", sans-serif;
+      transform: rotate(-1deg);
+    }
+    .kicker::before { content: "//"; color: var(--acid); }
+    h1 {
+      position: relative;
+      margin: 15px 0 6px;
+      max-width: 760px;
+      font: 900 clamp(50px, 7vw, 96px)/.82 "Corp", "Hei", sans-serif;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    h1 span { color: var(--orange); -webkit-text-stroke: 2px var(--ink); text-shadow: 4px 4px 0 var(--ink); }
+    .hero-sub {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      margin-top: 21px;
+      color: #55564f;
+      font: 700 12px/1.4 "Typewriter", "Hei", monospace;
+    }
+    .hero-sub b { color: var(--ink); }
+    .hero-side {
+      position: relative;
+      display: grid;
+      align-content: end;
+      min-height: 250px;
+      padding: 26px;
+      background:
+        radial-gradient(circle at 8px 8px, rgba(21,21,21,.22) 2px, transparent 2.5px) 0 0 / 16px 16px,
+        var(--acid);
+      border-left: 3px solid var(--ink);
+    }
+    .hero-side::before {
+      content: "\2736";
+      position: absolute;
+      left: 22px;
+      top: 14px;
+      font-size: 64px;
+      line-height: 1;
+    }
+    .session-label { font: 800 11px/1 "Orbitron", sans-serif; }
+    .session-number { margin-top: 6px; font: 900 clamp(42px, 5vw, 68px)/.9 "Orbitron", sans-serif; }
+    .session-unit { margin-top: 8px; font: 700 12px/1 "Typewriter", monospace; }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: auto minmax(200px, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      margin: 0 0 26px;
+    }
+    .tabs { display: flex; gap: 6px; }
+    .tab {
+      min-height: 42px;
+      padding: 0 18px;
+      border: 2px solid var(--ink);
+      background: transparent;
+      font: 900 12px/1 "Hei", sans-serif;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+    .tab:hover, .tab:focus-visible { background: #fff; transform: translateY(-2px); }
+    .tab.active { background: var(--ink); color: var(--acid); box-shadow: 4px 4px 0 var(--orange); }
+    .search {
+      position: relative;
+      justify-self: end;
+      width: min(100%, 350px);
+    }
+    .search input {
+      width: 100%;
+      height: 42px;
+      padding: 0 42px 0 14px;
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      outline: 0;
+      background: rgba(255,255,255,.56);
+      font-size: 13px;
+    }
+    .search input:focus { background: #fff; box-shadow: 4px 4px 0 var(--cyan); }
+    .search::after { content: "\2315"; position: absolute; right: 12px; top: 7px; font: 900 25px/1 "Orbitron"; transform: rotate(-20deg); }
+    .season {
+      height: 42px;
+      padding: 0 36px 0 12px;
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      background: var(--acid);
+      font: 800 11px/1 "Orbitron", sans-serif;
+      cursor: pointer;
+    }
+
+    .dashboard { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 22px; align-items: start; }
+    .rank-panel, .side-panel { border: 3px solid var(--ink); background: rgba(244,242,233,.94); }
+    .panel-head {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 11px 16px 10px 22px;
+      border-bottom: 3px solid var(--ink);
+      background: #fff;
+    }
+    .panel-title { display: flex; align-items: baseline; gap: 13px; }
+    .panel-title h2 { margin: 0; font: 900 26px/1 "Corp", "Hei", sans-serif; }
+    .panel-title span { color: var(--muted); font: 700 9px/1 "Orbitron", sans-serif; }
+    .record-count { padding: 7px 9px 6px; background: var(--acid); font: 800 9px/1 "Orbitron"; }
+
+    .leaderboard { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .leaderboard th {
+      height: 38px;
+      padding: 0 10px;
+      color: #6c6d66;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font: 700 9px/1 "Orbitron", "Hei", sans-serif;
+      user-select: none;
+    }
+    .leaderboard th:hover { color: var(--ink); background: rgba(233,255,50,.28); }
+    .sort-button {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      text-align: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+    .leaderboard th:first-child, .leaderboard td:first-child { text-align: center; }
+    .leaderboard tbody tr { position: relative; border-bottom: 1px solid var(--line); transition: .15s ease; }
+    .leaderboard tbody tr:last-child { border-bottom: 0; }
+    .leaderboard tbody tr:hover { background: #fff; transform: translateX(3px); box-shadow: -5px 0 0 var(--orange); }
+    .leaderboard td { height: 88px; padding: 9px 10px; vertical-align: middle; }
+    .rank-no { font: 900 22px/1 "Orbitron", sans-serif; }
+    tr.top .rank-no { display: inline-grid; place-items: center; width: 38px; height: 38px; color: #fff; background: var(--ink); transform: rotate(-5deg); box-shadow: 3px 3px 0 var(--acid); }
+    .agent { display: grid; grid-template-columns: 66px minmax(0, 1fr); gap: 13px; align-items: center; }
+    .portrait {
+      position: relative;
+      width: 66px;
+      height: 66px;
+      border: 2px solid var(--ink);
+      background: var(--cyan);
+      overflow: hidden;
+      clip-path: polygon(0 0, 90% 0, 100% 15%, 100% 100%, 10% 100%, 0 85%);
+    }
+    .portrait img { width: 100%; height: 100%; display: block; object-fit: cover; filter: saturate(.86) contrast(1.12); }
+    .portrait.alt img { filter: hue-rotate(128deg) saturate(.68) contrast(1.2); transform: scale(1.08); }
+    .portrait.warm img { filter: hue-rotate(295deg) saturate(.85) contrast(1.15); transform: scale(1.12); }
+    .portrait::after { content: attr(data-code); position: absolute; right: 0; bottom: 0; padding: 3px 4px; color: #fff; background: var(--ink); font: 700 7px/1 "Orbitron"; }
+    .agent-name { min-width: 0; }
+    .agent-name strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; line-height: 1.2; }
+    .agent-name small { display: block; margin-top: 6px; color: var(--muted); font: 700 9px/1 "Typewriter", monospace; }
+    .role { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; }
+    .role::before { content: ""; width: 7px; height: 7px; background: var(--role-color, var(--orange)); transform: rotate(45deg); }
+    .dps strong { display: block; font: 800 19px/1 "Orbitron", sans-serif; }
+    .dps small { color: var(--muted); font: 700 8px/1 "Orbitron"; }
+    .damage { font: 800 12px/1 "Orbitron", sans-serif; }
+    .trend { display: inline-flex; align-items: center; gap: 5px; padding: 6px 7px; color: #173f1d; background: #d9f2d7; font: 800 10px/1 "Orbitron"; }
+    .trend.down { color: #701f17; background: #f6d8d2; }
+    .trend.flat { color: #4d4d47; background: #dfded7; }
+    .mobile-trend { display: none; }
+
+    .side-panel { position: sticky; top: 16px; }
+    .side-block { padding: 21px; border-bottom: 2px solid var(--ink); }
+    .side-block:last-child { border-bottom: 0; }
+    .side-kicker { color: var(--muted); font: 700 9px/1 "Orbitron"; }
+    .side-value { margin-top: 7px; font: 900 33px/1 "Orbitron"; }
+    .side-value span { font-size: 12px; color: var(--muted); }
+    .meter { height: 9px; margin-top: 14px; border: 2px solid var(--ink); background: #fff; }
+    .meter i { display: block; width: 78%; height: 100%; background: var(--orange); }
+    .composition { display: grid; gap: 15px; margin-top: 16px; }
+    .comp-row { display: grid; grid-template-columns: 58px 1fr 30px; gap: 8px; align-items: center; font-size: 11px; font-weight: 800; }
+    .comp-bar { height: 8px; background: #dddcd4; overflow: hidden; }
+    .comp-bar i { display: block; height: 100%; background: var(--ink); }
+    .stamp {
+      position: relative;
+      padding: 18px 16px 16px;
+      background: var(--ink);
+      color: #fff;
+      overflow: hidden;
+    }
+    .stamp::after { content: "07"; position: absolute; right: -8px; bottom: -20px; color: rgba(255,255,255,.08); font: 900 94px/1 "Orbitron"; }
+    .stamp-label { color: var(--acid); font: 800 9px/1 "Orbitron"; }
+    .stamp p { position: relative; z-index: 1; margin: 10px 0 0; color: #d5d5cf; font: 700 11px/1.65 "Typewriter", "Hei", monospace; }
+    .empty { display: none; padding: 58px 20px; text-align: center; color: var(--muted); font: 800 12px/1.6 "Orbitron", "Hei"; }
+
+    .ticker {
+      position: fixed;
+      z-index: 20;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 25px;
+      overflow: hidden;
+      background: var(--acid);
+      border-top: 2px solid var(--ink);
+      white-space: nowrap;
+    }
+    .ticker span { display: inline-block; padding-top: 5px; font: 900 10px/1 "Orbitron"; animation: ticker 24s linear infinite; }
+    @keyframes ticker { to { transform: translateX(-50%); } }
+
+    @media (max-width: 1040px) {
+      .dashboard { grid-template-columns: 1fr; }
+      .side-panel { position: static; display: grid; grid-template-columns: 1fr 1fr 1fr; }
+      .side-block { border-right: 2px solid var(--ink); border-bottom: 0; }
+      .side-block:last-child { border-right: 0; }
+      .toolbar { grid-template-columns: 1fr auto; }
+      .tabs { grid-column: 1 / -1; }
+      .search { justify-self: stretch; width: 100%; }
+    }
+
+    @media (max-width: 760px) {
+      .topbar { padding: 0 15px; }
+      .live-status span { display: none; }
+      main { width: min(100% - 20px, 650px); padding-top: 22px; }
+      .hero { grid-template-columns: 1fr; min-height: 0; box-shadow: 4px 4px 0 var(--ink); }
+      .hero-copy { padding: 23px 18px 24px; }
+      h1 { font-size: clamp(45px, 15vw, 72px); }
+      .hero-side { min-height: 142px; border-left: 0; border-top: 3px solid var(--ink); }
+      .hero-side::before { font-size: 48px; }
+      .session-number { font-size: 44px; }
+      .toolbar { grid-template-columns: 1fr; gap: 10px; }
+      .tabs { display: grid; grid-template-columns: repeat(3, 1fr); }
+      .tab { padding: 0 8px; }
+      .season { width: 100%; }
+      .panel-head { align-items: flex-start; }
+      .panel-title { display: block; }
+      .panel-title span { display: block; margin-top: 6px; }
+      .leaderboard col.role-col, .leaderboard col.damage-col { width: 0 !important; }
+      .leaderboard th.role-head, .leaderboard th.damage-head,
+      .leaderboard td.role-cell, .leaderboard td.damage-cell { display: none; }
+      .leaderboard col.rank-col { width: 48px !important; }
+      .leaderboard col.dps-col { width: 91px !important; }
+      .leaderboard col.trend-col { width: 0 !important; }
+      .leaderboard th.trend-head, .leaderboard td.trend-cell { display: none; }
+      .leaderboard td { height: 77px; padding: 7px 5px; }
+      .rank-no { font-size: 16px; }
+      tr.top .rank-no { width: 31px; height: 31px; }
+      .agent { grid-template-columns: 50px minmax(0, 1fr); gap: 8px; }
+      .portrait { width: 50px; height: 58px; }
+      .agent-name strong { font-size: 13px; }
+      .agent-name small { font-size: 7px; }
+      .dps strong { font-size: 13px; }
+      .mobile-trend { display: inline-block; margin-top: 5px; padding: 3px 4px; color: #173f1d; background: #d9f2d7; font: 800 7px/1 "Orbitron"; }
+      .mobile-trend.down { color: #701f17; background: #f6d8d2; }
+      .mobile-trend.flat { color: #4d4d47; background: #dfded7; }
+      .trend { padding: 5px 4px; font-size: 8px; }
+      .side-panel { grid-template-columns: 1fr; }
+      .side-block { border-right: 0; border-bottom: 2px solid var(--ink); }
+      .side-block:last-child { border-bottom: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">01</span><span>零号战绩</span></div>
+    <div class="live-status"><span>DATA SYNCED · 21:40</span></div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <div class="kicker">SHIYU DEFENSE / 深渊记录</div>
+        <h1 id="page-title">DPS <span>RANK</span></h1>
+        <div class="hero-sub">
+          <span>战区：<b>旧都列车 · 核心区</b></span>
+          <span>难度：<b>侵蚀 Ⅶ</b></span>
+          <span>最后更新：<b>21:40:18</b></span>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="session-label">COMBAT DURATION</div>
+        <div class="session-number">04:32</div>
+        <div class="session-unit">TOTAL SAMPLE · 186 RECORDS</div>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="排行筛选">
+      <div class="tabs" role="tablist" aria-label="职业筛选">
+        <button class="tab active" type="button" data-role="全部">全部</button>
+        <button class="tab" type="button" data-role="强攻">强攻</button>
+        <button class="tab" type="button" data-role="异常">异常</button>
+      </div>
+      <label class="search">
+        <input id="searchInput" type="search" placeholder="搜索代理人 / 玩家编号" aria-label="搜索代理人或玩家编号">
+      </label>
+      <select class="season" id="seasonSelect" aria-label="选择统计周期">
+        <option value="本期">PHASE 07 · 本期</option>
+        <option value="上期">PHASE 06 · 上期</option>
+        <option value="赛季">SEASON · 全赛季</option>
+      </select>
+    </section>
+
+    <div class="dashboard">
+      <section class="rank-panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <h2>伤害输出榜</h2>
+            <span>AVERAGE DAMAGE / SECOND</span>
+          </div>
+          <div class="record-count"><span id="recordCount">08</span> RECORDS</div>
+        </div>
+
+        <table class="leaderboard">
+          <colgroup>
+            <col class="rank-col" style="width: 68px">
+            <col>
+            <col class="role-col" style="width: 108px">
+            <col class="dps-col" style="width: 146px">
+            <col class="damage-col" style="width: 128px">
+            <col class="trend-col" style="width: 86px">
+          </colgroup>
+          <thead>
+            <tr>
+              <th><button class="sort-button" type="button" data-sort="rank">RANK</button></th>
+              <th><button class="sort-button" type="button" data-sort="name">代理人 / AGENT</button></th>
+              <th class="role-head"><button class="sort-button" type="button" data-sort="role">定位</button></th>
+              <th><button class="sort-button" type="button" data-sort="dps">DPS ↕</button></th>
+              <th class="damage-head"><button class="sort-button" type="button" data-sort="damage">总伤害</button></th>
+              <th class="trend-head"><button class="sort-button" type="button" data-sort="trend">趋势</button></th>
+            </tr>
+          </thead>
+          <tbody id="rankBody"></tbody>
+        </table>
+        <div class="empty" id="emptyState">NO MATCHED RECORDS<br>未找到对应战斗记录</div>
+      </section>
+
+      <aside class="side-panel" aria-label="战斗数据摘要">
+        <div class="side-block">
+          <div class="side-kicker">SQUAD PEAK / 峰值输出</div>
+          <div class="side-value">98.7<span> K</span></div>
+          <div class="meter"><i></i></div>
+        </div>
+        <div class="side-block">
+          <div class="side-kicker">ROLE DISTRIBUTION / 构成</div>
+          <div class="composition">
+            <div class="comp-row"><span>强攻</span><div class="comp-bar"><i style="width: 75%; background: var(--orange)"></i></div><b>4</b></div>
+            <div class="comp-row"><span>异常</span><div class="comp-bar"><i style="width: 56%; background: var(--cyan)"></i></div><b>3</b></div>
+            <div class="comp-row"><span>支援</span><div class="comp-bar"><i style="width: 22%; background: var(--acid)"></i></div><b>1</b></div>
+          </div>
+        </div>
+        <div class="stamp">
+          <div class="stamp-label">INTER-KNOT NOTICE</div>
+          <p>统计已排除离场与重连时段。排名以有效战斗时间内的平均秒伤为准。</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="ticker" aria-hidden="true"><span>/// HOLLOW COMBAT DATABASE · DAMAGE RECORD UPDATED · PHASE 07 · KEEP YOUR SIGNAL STABLE · HOLLOW COMBAT DATABASE · DAMAGE RECORD UPDATED · PHASE 07 · KEEP YOUR SIGNAL STABLE ·&nbsp;</span></div>
+
+  <script>
+    const fighters = [
+      { rank: 1, name: "霓虹失真", id: "UID 1007-032", role: "强攻", dps: 98742, baseDps: 98742, damage: 26857426, trend: 12.8, image: "../help/avatar.png", tone: "" },
+      { rank: 2, name: "凌晨四点半", id: "UID 0440-218", role: "异常", dps: 94618, baseDps: 94618, damage: 25736142, trend: 8.4, image: "../avatar.jpg", tone: "warm" },
+      { rank: 3, name: "纸袋侦探", id: "UID 0771-053", role: "强攻", dps: 91205, baseDps: 91205, damage: 24807860, trend: 5.2, image: "../help/avatar.png", tone: "alt" },
+      { rank: 4, name: "录像店夜班", id: "UID 0659-901", role: "异常", dps: 88731, baseDps: 88731, damage: 24134832, trend: -1.7, image: "../avatar.jpg", tone: "" },
+      { rank: 5, name: "以太薄荷糖", id: "UID 0235-847", role: "支援", dps: 84629, baseDps: 84629, damage: 23019088, trend: 3.1, image: "../help/avatar.png", tone: "warm" },
+      { rank: 6, name: "第六街信号塔", id: "UID 0904-116", role: "强攻", dps: 82116, baseDps: 82116, damage: 22335552, trend: 0, image: "../avatar.jpg", tone: "alt" },
+      { rank: 7, name: "空洞漫游指南", id: "UID 0318-722", role: "异常", dps: 79453, baseDps: 79453, damage: 21611216, trend: -4.3, image: "../help/avatar.png", tone: "" },
+      { rank: 8, name: "拉面加双份肉", id: "UID 0812-409", role: "强攻", dps: 76884, baseDps: 76884, damage: 20912448, trend: 1.9, image: "../avatar.jpg", tone: "warm" }
+    ];
+
+    const roleColors = { "强攻": "#ff5c35", "异常": "#30d9e8", "支援": "#e9ff32" };
+    const body = document.getElementById("rankBody");
+    const empty = document.getElementById("emptyState");
+    const count = document.getElementById("recordCount");
+    const searchInput = document.getElementById("searchInput");
+    let activeRole = "全部";
+    let sortKey = "rank";
+    let sortAsc = true;
+
+    const compact = value => new Intl.NumberFormat("zh-CN", { notation: "compact", maximumFractionDigits: 2 }).format(value);
+    const trendLabel = value => value === 0 ? "— 0.0%" : `${value > 0 ? "↑" : "↓"} ${Math.abs(value).toFixed(1)}%`;
+
+    function render() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      const filtered = fighters
+        .filter(item => activeRole === "全部" || item.role === activeRole)
+        .filter(item => !keyword || `${item.name} ${item.id}`.toLowerCase().includes(keyword))
+        .sort((a, b) => {
+          const av = a[sortKey];
+          const bv = b[sortKey];
+          const result = typeof av === "string" ? av.localeCompare(bv, "zh-CN") : av - bv;
+          return sortAsc ? result : -result;
+        });
+
+      body.innerHTML = filtered.map(item => `
+        <tr class="${item.rank <= 3 ? "top" : ""}">
+          <td><span class="rank-no">${String(item.rank).padStart(2, "0")}</span></td>
+          <td>
+            <div class="agent">
+              <div class="portrait ${item.tone}" data-code="${item.role === "异常" ? "ANO" : item.role === "支援" ? "SUP" : "ATK"}">
+                <img src="${item.image}" alt="" loading="lazy">
+              </div>
+              <div class="agent-name"><strong>${item.name}</strong><small>${item.id}</small></div>
+            </div>
+          </td>
+          <td class="role-cell"><span class="role" style="--role-color:${roleColors[item.role]}">${item.role}</span></td>
+          <td class="dps"><strong>${item.dps.toLocaleString()}</strong><small>DMG / SEC</small><span class="mobile-trend ${item.trend < 0 ? "down" : item.trend === 0 ? "flat" : ""}">${trendLabel(item.trend)}</span></td>
+          <td class="damage-cell damage">${compact(item.damage)}</td>
+          <td class="trend-cell"><span class="trend ${item.trend < 0 ? "down" : item.trend === 0 ? "flat" : ""}">${trendLabel(item.trend)}</span></td>
+        </tr>`).join("");
+
+      count.textContent = String(filtered.length).padStart(2, "0");
+      empty.style.display = filtered.length ? "none" : "block";
+      document.querySelector(".leaderboard").style.display = filtered.length ? "table" : "none";
+    }
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(item => item.classList.remove("active"));
+        tab.classList.add("active");
+        activeRole = tab.dataset.role;
+        render();
+      });
+    });
+
+    document.querySelectorAll(".sort-button").forEach(button => {
+      button.addEventListener("click", () => {
+        const nextKey = button.dataset.sort;
+        sortAsc = nextKey === sortKey ? !sortAsc : nextKey === "name" || nextKey === "role";
+        sortKey = nextKey;
+        render();
+      });
+    });
+
+    searchInput.addEventListener("input", render);
+    document.getElementById("seasonSelect").addEventListener("change", event => {
+      const offsets = { "本期": 0, "上期": -1830, "赛季": 2650 };
+      fighters.forEach((fighter, index) => { fighter.dps = fighter.baseDps + offsets[event.target.value] + index * 17; });
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

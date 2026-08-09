@@ -120,18 +120,33 @@ async function run() {
   assert(html.includes('Orbitron-VariableFont_wght.ttf') === false)
   assert(html.includes('color: #ff2f45'))
   assert(html.includes('color: #00f0ff'))
-  assert(html.includes('transform: translate(-1px, -0.8px)'))
-  assert(html.includes('transform: translate(1px, 0.8px)'))
+  assert(html.includes('transform: translate(-2px, 1.5px)'))
+  assert(html.includes('transform: translate(2px, -1.5px)'))
   assert(!html.includes('-webkit-text-stroke: 1px #090b11'))
   assert(html.includes('公开角色名'))
-  assert(html.includes('亚特'))
-  assert(html.includes('伊鲁夏'))
+  assert(!html.includes('亚特'))
+  assert(!html.includes('伊鲁夏'))
+  assert(!html.includes('>服务器<'))
+  assert(!html.includes('>场次<'))
+  assert(!html.includes('abcdef12'))
   assert(html.includes(ANONYMOUS_CHARACTER_NAME))
   assert(!html.includes('public-id'))
   assert(!html.includes('匿名角色名'))
   assert(!html.includes('不参与角色名'))
   assert(!html.includes('队友甲'))
   assert(!html.includes('>队友<'))
+
+  const showAllHtml = buildHtml({
+    title: 'DPS',
+    description: 'admin show all',
+    showMode: 'all',
+    sections: [{ rows }]
+  })
+  assert(!showAllHtml.includes('>服务器<'))
+  assert(!showAllHtml.includes('亚特'))
+  assert(!showAllHtml.includes('伊鲁夏'))
+  assert(!showAllHtml.includes('>场次<'))
+  assert(showAllHtml.includes('abcdef12'))
 
   console.log('mblogsPermissionUnit: passed')
 }

@@ -1,4 +1,5 @@
 const path = require('path-extra')
+const fs = require('fs')
 const nodeHtmlToImage = require('node-html-to-image')
 const font2base64 = require('node-font2base64')
 const {
@@ -13,18 +14,42 @@ const { getClassTheme, hexToRgba } = require('./classConfig')
 
 const HANYIWENHEI = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'hk4e_zh-cn.ttf'))
 const ORBITRON = font2base64.encodeToDataUrlSync(path.join(__dirname, '..', '..', '..', 'font', 'Orbitron-VariableFont_wght.ttf'))
+const FONT_DIR = path.join(__dirname, '..', '..', '..', 'font')
+const encodeTtf = file => `data:font/ttf;base64,${fs.readFileSync(path.join(FONT_DIR, file)).toString('base64')}`
+const FZJIHEI = encodeTtf('FZJiHJW.TTF')
+const FZYOUSHANG = encodeTtf('FZYouSTJW-R.TTF')
+const GEELY_DESIGN = encodeTtf('GeelyDesignType-R.TTF')
+const ZZZ_DISPLAY = encodeTtf('ArupalaGroteskTrial-SuperBold.ttf')
 const ANONYMOUS_CHARACTER_NAME = '神秘的米莱西安'
+const ARCANA_ART = new Map()
+const ARCANA_DIR = path.join(__dirname, '..', '..', '..', 'logs', 'arcana')
+try {
+  for (const file of fs.readdirSync(ARCANA_DIR)) {
+    if (!file.toLowerCase().endsWith('.png')) continue
+    const data = fs.readFileSync(path.join(ARCANA_DIR, file)).toString('base64')
+    ARCANA_ART.set(path.basename(file, '.png'), `data:image/png;base64,${data}`)
+  }
+} catch (error) {
+  console.warn('[mblogs] arcana assets unavailable', error.message)
+}
+
+function getArcanaArt(characterClass) {
+  const name = String(characterClass || '').trim()
+  const exact = ARCANA_ART.get(name)
+  if (exact) return exact
+  if (name.length < 2) return ''
+  const prefix = name.slice(0, -1)
+  const fallback = [...ARCANA_ART.entries()].find(([assetName]) => (
+    assetName.length === name.length && assetName.slice(0, -1) === prefix
+  ))
+  return fallback?.[1] || ''
+}
+
 const RANKING_VISIBILITY = {
   optOut: 'optOut',
   anonymous: 'anonymous',
   public: 'public'
 }
-const SERVER_NAMES = {
-  yiluxia: '伊鲁夏',
-  ylx: '伊鲁夏',
-  yate: '亚特'
-}
-
 function escapeHtml(text) {
   return String(text ?? '')
     .replace(/&/g, '&amp;')
@@ -101,11 +126,6 @@ function getDefaultCharacterName(row) {
   return ''
 }
 
-function getServerName(row) {
-  const value = String(row?.serverName || row?.serverId || row?.server || '').trim().toLowerCase()
-  return SERVER_NAMES[value] || (value ? String(row?.serverName || row?.serverId || row?.server).trim() : '未知')
-}
-
 function resolveNameVisibility(showMode, rows = []) {
   const mode = showMode || 'hidden'
   if (mode === 'hidden') {
@@ -120,29 +140,10 @@ function resolveNameVisibility(showMode, rows = []) {
   }
 }
 
-function buildLayout({ showCharacter, showTeammates }) {
-  // 固定列宽，隐藏列时同步缩小整体宽度，避免贡献度被 fr 拉得很开
-  const cols = [
-    { key: 'class', width: 118 },
-    { key: 'server', width: 72 },
-    showCharacter ? { key: 'name', width: 120 } : null,
-    { key: 'dungeon', width: 100 },
-    { key: 'teamSize', width: 60 },
-    showTeammates ? { key: 'teammates', width: 180 } : null,
-    { key: 'duration', width: 96 },
-    { key: 'dps', width: 86 },
-    { key: 'share', width: 250 },
-    { key: 'runid', width: 80 }
-  ].filter(Boolean)
-
-  const gap = 8
-  const sidePad = 14 + 12
-  const contentWidth = cols.reduce((sum, col) => sum + col.width, 0) + gap * (cols.length - 1)
-  const bodyWidth = contentWidth + sidePad + 64 // body padding 32*2
-
+function buildLayout({ showCharacter, showTeammates, showRunId }) {
   return {
-    gridTemplate: cols.map(col => `${col.width}px`).join(' '),
-    bodyWidth
+    gridTemplate: '180px minmax(0, 1fr) 64px 92px 106px 146px',
+    bodyWidth: 1050
   }
 }
 
@@ -214,46 +215,62 @@ function renderSkills(skills, theme) {
   return `<div class="skills">${segments}</div>`
 }
 
-function renderRow(row, index, withSkill, showMode, visibility) {
+function formatContributionValue(value) {
+  return escapeHtml(value).replace(/([A-Za-z]+)$/, '<span class="damage-unit">$1</span>')
+}
+
+function renderRow(row, index, withSkill, showMode, visibility, showRunId) {
   const theme = getClassTheme(row.characterClass)
-  const alpha = 0.22
-  const bg = `linear-gradient(90deg, ${hexToRgba(theme.primary, alpha)} 0%, ${hexToRgba(theme.secondary, alpha)} 100%)`
+  const bg = `linear-gradient(104deg, ${hexToRgba(theme.primary, 0.30)} 0%, ${hexToRgba(theme.primary, 0.20)} 32%, ${hexToRgba(theme.primary, 0.08)} 62%, #0c0d0b 100%)`
   const dpsTone = getDpsTone(row.dps)
   const dpsText = escapeHtml(formatDps(row.dps))
   const dpsTextAttr = dpsTone === 'legendary' ? ` data-text="${dpsText}"` : ''
   const skillsHtml = withSkill ? renderSkills(row.skills, theme) : ''
   const names = formatDisplayNames(row, showMode, visibility)
   const uploaderName = formatUploaderName(row, showMode)
-  const nameCell = names.showCharacter
-    ? `<div class="cell name">${escapeHtml(truncate(names.characterName, 12))}</div>`
+  const characterClass = String(row.characterClass || '未知').trim()
+  const art = getArcanaArt(characterClass)
+  const characterName = names.characterName || '-'
+  const teammateMeta = names.showTeammates
+    ? `<small class="teammates" title="${escapeHtml(names.teammateNames)}">${escapeHtml(truncate(names.teammateNames, 18))}</small>`
     : ''
-  const teammatesCell = names.showTeammates
-    ? `<div class="cell teammates" title="${escapeHtml(names.teammateNames)}">${escapeHtml(truncate(names.teammateNames, 18))}</div>`
+  const runIdCell = showRunId
+    ? `<div class="run-cell"><span class="run-id">${escapeHtml(shortRunId(row.runId))}</span></div>`
     : ''
+  const share = Number(row.damagePercent)
+  const shareValue = Number.isFinite(share) ? Math.max(0, Math.min(100, share)) : 0
+  const shareText = Number.isFinite(share) ? share.toFixed(0) : '-'
+  const hpValue = formatHp(row.bossHp)
+  const damageValue = formatDamage(row.totalDamage)
 
   return `
-    <div class="row${withSkill ? ' row-with-skills' : ''}" style="background:${bg}">
-      <div class="meta">#${index + 1} · ${escapeHtml(formatTime(row.recordTime))} · 上传者：${escapeHtml(uploaderName)}</div>
-      <div class="main">
-        <div class="cell class">${escapeHtml(row.characterClass || '未知')}</div>
-        <div class="cell server">${escapeHtml(getServerName(row))}</div>
-        ${nameCell}
-        <div class="cell dungeon">${escapeHtml(truncate(row.dungeonName, 10))}</div>
-        <div class="cell team-size">${escapeHtml(row.teamSize ?? '-')}</div>
-        ${teammatesCell}
-        <div class="cell duration">${escapeHtml(formatDuration(row.duration))}</div>
-        <div class="cell dps dps-${dpsTone}"${dpsTextAttr}>${dpsText}</div>
-        <div class="cell share">${escapeHtml(formatHpDamageShare(row))}</div>
-        <div class="cell runid">${escapeHtml(shortRunId(row.runId))}</div>
+    <div class="row${withSkill ? ' row-with-skills' : ''}" style="--class-color:${theme.primary}; background:${bg}">
+      <div class="arcana-visual">
+        ${art ? `<img src="${art}" alt="${escapeHtml(characterClass)}">` : ''}
+        <span class="arcana-name">${escapeHtml(characterClass)}</span>
       </div>
+      <div class="uploader-meta">UPLOADER · ${escapeHtml(uploaderName)}</div>
+      <div class="player">
+        <span class="rank">${String(index + 1).padStart(2, '0')}</span>
+        <div class="player-copy"><strong>${escapeHtml(truncate(characterName, 12))}</strong>${teammateMeta}</div>
+      </div>
+      <div class="plain-value">${escapeHtml(row.teamSize ?? '-')}<small>TEAM SIZE</small></div>
+      <div class="plain-value duration-value">${escapeHtml(formatDuration(row.duration))}<small>DURATION</small></div>
+      <div class="dps dps-${dpsTone}"><strong${dpsTextAttr}>${dpsText}</strong><small>DAMAGE / SEC</small></div>
+      <div class="contribution">
+        <div class="share-ring" style="--share:${shareValue}"><span>${shareText}%</span></div>
+        <div class="contribution-copy"><strong>${formatContributionValue(damageValue)} / ${formatContributionValue(hpValue)}</strong><small>DAMAGE / BOSS HP</small></div>
+      </div>
+      ${runIdCell}
       ${skillsHtml}
     </div>`
 }
 
-function renderSection(section, withSkill, showMode, globalVisibility) {
+function renderSection(section, withSkill, showMode, globalVisibility, showRunId) {
   const rows = section.rows || []
-  const title = section.title
-    ? `<div class="section-title">${escapeHtml(section.title)}<span class="section-count">${rows.length}</span></div>`
+  const sectionName = section.title || rows[0]?.bossName || ''
+  const title = sectionName
+    ? `<div class="section-head"><div class="section-title"><h2>${escapeHtml(sectionName)}</h2></div><span class="record-count">${String(rows.length).padStart(2, '0')} RECORDS</span></div>`
     : ''
   const visibility = showMode === 'hidden'
     ? globalVisibility
@@ -264,26 +281,11 @@ function renderSection(section, withSkill, showMode, globalVisibility) {
     return `<div class="section">${title}<div class="empty">暂无记录</div></div>`
   }
 
-  const nameHead = showCharacter ? '<div class="cell name">角色</div>' : ''
-  const teammatesHead = showTeammates ? '<div class="cell teammates">队友</div>' : ''
-
   return `
     <div class="section">
       ${title}
-      <div class="list-head">
-        <div class="cell class">职业</div>
-        <div class="cell server">服务器</div>
-        ${nameHead}
-        <div class="cell dungeon">副本</div>
-        <div class="cell team-size">队友数</div>
-        ${teammatesHead}
-        <div class="cell duration">攻略时间</div>
-        <div class="cell dps">DPS</div>
-        <div class="cell share">贡献度</div>
-        <div class="cell runid">场次</div>
-      </div>
       <div class="list-body">
-        ${rows.map((row, index) => renderRow(row, index, withSkill, showMode, visibility)).join('')}
+        ${rows.map((row, index) => renderRow(row, index, withSkill, showMode, visibility, showRunId)).join('')}
       </div>
     </div>`
 }
@@ -292,9 +294,252 @@ function buildHtml(option) {
   const sections = option.sections || [{ rows: option.rows || [] }]
   const withSkill = Boolean(option.withSkill)
   const showMode = option.showMode || 'hidden'
+  const showRunId = showMode === 'all'
   const allRows = sections.flatMap(section => section.rows || [])
   const visibility = resolveNameVisibility(showMode, allRows)
-  const layout = buildLayout(visibility)
+  const layout = buildLayout({ ...visibility, showRunId })
+
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @font-face { font-family: "MabiHei"; src: url(${HANYIWENHEI}) format("truetype"); }
+    @font-face { font-family: "Orbitron"; src: url(${ORBITRON}) format("truetype"); font-weight: 400 900; }
+    @font-face { font-family: "FZJiHei"; src: url(${FZJIHEI}) format("truetype"); }
+    @font-face { font-family: "FZYouShang"; src: url(${FZYOUSHANG}) format("truetype"); }
+    @font-face { font-family: "GeelyDesign"; src: url(${GEELY_DESIGN}) format("truetype"); }
+    @font-face { font-family: "ZZZDisplay"; src: url(${ZZZ_DISPLAY}) format("truetype"); }
+    :root {
+      --paper: #090a08;
+      --surface: #11130f;
+      --muted: #7f8479;
+      --line: rgba(255,255,255,.14);
+      --ink: #11120f;
+      --acid: #eaff19;
+      --orange: #ff6b35;
+      --cyan: #35d8ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+    body {
+      width: ${layout.bodyWidth}px;
+      padding: 24px 0 34px;
+      color: #f4f5f1;
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+        var(--paper);
+      background-size: 26px 26px;
+      font-family: "MabiHei", sans-serif;
+    }
+    .section { margin: 0 0 30px; }
+    .section-head {
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 0 8px 12px;
+    }
+    .section-title h2 {
+      color: #fff;
+      font: 900 25px/1 "ZZZDisplay", "MabiHei", sans-serif;
+      text-shadow: 3px 4px 0 #000;
+    }
+    .record-count {
+      padding: 7px 9px;
+      color: var(--ink);
+      background: var(--acid);
+      box-shadow: 3px 3px 0 #000;
+      font: 800 8px/1 "Orbitron", sans-serif;
+    }
+    .list-body { display: flex; flex-direction: column; gap: 10px; }
+    .row {
+      position: relative;
+      display: grid;
+      grid-template-columns: ${layout.gridTemplate};
+      grid-template-rows: 60px;
+      column-gap: 12px;
+      align-items: center;
+      width: 100%;
+      height: 60px;
+      min-height: 0;
+      padding: 0 12px 0 0;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: background .15s ease, transform .15s ease;
+    }
+    .row-with-skills {
+      grid-template-rows: 60px 20px;
+      height: 80px;
+    }
+    .row:hover {
+      transform: translateX(3px);
+      background: linear-gradient(104deg, color-mix(in srgb, var(--class-color) 36%, #1b1d18) 0%, color-mix(in srgb, var(--class-color) 24%, #171914) 34%, color-mix(in srgb, var(--class-color) 10%, #12140f) 64%, #0e0f0d 100%) !important;
+    }
+    .arcana-visual {
+      position: relative;
+      grid-row: 1;
+      align-self: stretch;
+      width: 100%;
+      height: 100%;
+      min-height: 60px;
+      background: transparent;
+      clip-path: polygon(0 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
+    }
+    .row-with-skills .arcana-visual { border-radius: 7px 0 0 0; }
+    .arcana-visual::before { content: ""; position: absolute; inset: 0; z-index: 1; background: transparent; pointer-events: none; }
+    .arcana-visual img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 78%);
+      mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 78%);
+    }
+    .arcana-name {
+      position: absolute;
+      z-index: 2;
+      left: 10px;
+      right: 22px;
+      bottom: 0;
+      display: block;
+      overflow: hidden;
+      color: transparent;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font: 400 28px/.9 "FZYouShang", "MabiHei", sans-serif;
+      background: linear-gradient(to bottom, transparent 0%, var(--class-color) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .player {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+      padding-right: 44px;
+    }
+    .rank {
+      position: absolute;
+      z-index: 4;
+      top: -35px;
+      right: 10px;
+      color: rgba(255,255,255,.2);
+      font: 400 60px/.9 "FZJiHei", "MabiHei", sans-serif;
+      pointer-events: none;
+    }
+    .row:nth-child(1) .rank { color: rgba(255,199,46,.2); }
+    .row:nth-child(2) .rank { color: rgba(216,224,232,.2); }
+    .row:nth-child(3) .rank { color: rgba(205,127,50,.2); }
+    .player-copy strong {
+      display: block;
+      overflow: hidden;
+      color: transparent;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font: 400 35px/.95 "FZJiHei", "MabiHei", sans-serif;
+      background: linear-gradient(to bottom, #f4f5f1 10%, #b9bcb5 88%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 4px 0 #000);
+    }
+    .player-copy .teammates {
+      display: block;
+      margin-top: 4px;
+      overflow: hidden;
+      color: var(--muted);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font: 700 7px/1 "Orbitron", sans-serif;
+    }
+    .uploader-meta {
+      position: absolute;
+      z-index: 4;
+      top: 4px;
+      left: 192px;
+      color: #7f8479;
+      font: 700 6px/1 "Orbitron", sans-serif;
+    }
+    .plain-value, .dps, .contribution { position: relative; z-index: 2; }
+    .plain-value { color: #f4f5f1; font: 800 14px/1.3 "Orbitron", sans-serif; }
+    .plain-value small,
+    .dps small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font: 700 7px/1 "Orbitron", sans-serif;
+    }
+    .duration-value, .duration-value small { font-family: "GeelyDesign", sans-serif; }
+    .dps strong { display: block; font: 900 17px/1 "Orbitron", sans-serif; }
+    .dps.legendary strong { position: relative; z-index: 0; isolation: isolate; color: #fff; font-family: 'Orbitron', sans-serif; }
+    .dps.legendary strong::before,
+    .dps.legendary strong::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      white-space: nowrap;
+    }
+    .dps.legendary strong::before { color: #ff2f45; transform: translate(-2px, 1.5px); }
+    .dps.legendary strong::after { color: #00f0ff; transform: translate(2px, -1.5px); }
+    .dps.rainbow strong {
+      color: transparent;
+      background: linear-gradient(90deg, #ff4d4d, #ffb84d, #ffe14d, #5dff8a, #4db8ff, #b84dff, #ff4da6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .dps.gold strong { color: #ffd54f; }
+    .dps.magenta strong { color: #ff4fcf; }
+    .dps.blue strong { color: #4da3ff; }
+    .dps.green strong { color: #52d67a; }
+    .dps.white strong { color: #fff; }
+    .contribution { display: flex; align-items: center; justify-content: flex-start; gap: 11px; min-width: 0; margin-top: 12px; }
+    .share-ring {
+      position: relative;
+      display: grid;
+      place-items: center;
+      flex: 0 0 52px;
+      width: 52px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: conic-gradient(var(--class-color) calc(var(--share) * 1%), #26302c 0);
+    }
+    .share-ring::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: #11130f; }
+    .share-ring span { position: relative; z-index: 1; color: #fff; font: 900 10px/1 "Orbitron", sans-serif; }
+    .contribution-copy { min-width: 0; }
+    .contribution-copy strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 800 11px/1 "Orbitron", sans-serif; }
+    .contribution-copy small { display: block; margin-top: 5px; color: var(--muted); font: 700 7px/1 "Orbitron", sans-serif; }
+    .damage-unit { margin-left: 5px; }
+    .run-cell { position: absolute; z-index: 5; top: -5px; right: 0; display: block; }
+    .run-id { display: inline-block; padding: 4px 6px; color: #d9dcd1; border: 1px solid rgba(255,255,255,.28); border-top: 0; border-right: 0; background: rgba(9,10,8,.82); font: 400 10px/1 "Orbitron", sans-serif; }
+    .skills { position: absolute; z-index: 3; grid-column: 1 / -1; left: 0; right: -12px; bottom: 0; display: flex; height: 20px; border-top: 1px solid rgba(255,255,255,.12); border-radius: 0; background: #080906; overflow: hidden; }
+    .skill-seg { display: flex; align-items: center; min-width: 0; height: 100%; padding: 0 6px; overflow: hidden; color: rgba(255,255,255,.95); border-right: 1px solid rgba(0,0,0,.45); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); white-space: nowrap; text-overflow: ellipsis; font: 800 14px/1 "GeelyDesign", "MabiHei", sans-serif; }
+    .skill-seg:last-child { border-right: 0; }
+    .empty { padding: 18px; color: #777; text-align: center; background: rgba(255,255,255,.03); border-radius: 8px; }
+  </style>
+</head>
+<body>
+  ${sections.map(section => renderSection(section, withSkill, showMode, visibility, showRunId)).join('')}
+</body>
+</html>`
+}
+
+function buildLegacyHtml(option) {
+  const sections = option.sections || [{ rows: option.rows || [] }]
+  const withSkill = Boolean(option.withSkill)
+  const showMode = option.showMode || 'hidden'
+  const showRunId = showMode === 'all'
+  const allRows = sections.flatMap(section => section.rows || [])
+  const visibility = resolveNameVisibility(showMode, allRows)
+  const layout = buildLayout({ ...visibility, showRunId })
   const width = layout.bodyWidth
 
   return `<!DOCTYPE html>
@@ -409,7 +654,6 @@ function buildHtml(option) {
     }
     .cell { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #eef0f3; }
     .class { color: #fff; font-weight: 400; }
-    .server { color: #8fdcff; font-size: 12px; font-weight: 700; }
     .name { font-weight: 700; }
     .row .teammates {
       color: #9aa3ad;
@@ -507,7 +751,7 @@ function buildHtml(option) {
     <div class="title">${escapeHtml(option.title)}</div>
     <div class="desc">${escapeHtml(option.description)}</div>
   </div>
-  ${sections.map(section => renderSection(section, withSkill, showMode, visibility)).join('')}
+  ${sections.map(section => renderSection(section, withSkill, showMode, visibility, showRunId)).join('')}
 </body>
 </html>`
 }
