@@ -128,7 +128,7 @@ async function run() {
   assert(!html.includes('伊鲁夏'))
   assert(!html.includes('>服务器<'))
   assert(!html.includes('>场次<'))
-  assert(!html.includes('abcdef12'))
+  assert(html.includes('abcdef12'))
   assert(html.includes(ANONYMOUS_CHARACTER_NAME))
   assert(!html.includes('public-id'))
   assert(!html.includes('匿名角色名'))

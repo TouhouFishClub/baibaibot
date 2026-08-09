@@ -143,7 +143,8 @@ function resolveNameVisibility(showMode, rows = []) {
 function buildLayout({ showCharacter, showTeammates, showRunId }) {
   return {
     gridTemplate: '180px minmax(0, 1fr) 64px 92px 106px 146px',
-    bodyWidth: 1050
+    bodyWidth: 1120,
+    contentWidth: 1050
   }
 }
 
@@ -219,6 +220,15 @@ function formatContributionValue(value) {
   return escapeHtml(value).replace(/([A-Za-z]+)$/, '<span class="damage-unit">$1</span>')
 }
 
+function formatContributionAmount(value) {
+  const amount = Number(value)
+  if (!Number.isFinite(amount)) return '-'
+  if (amount >= 1_000_000_000) return `${(amount / 1_000_000_000).toFixed(2)}B`
+  if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(1)}M`
+  if (amount >= 1_000) return `${(amount / 1_000).toFixed(1)}K`
+  return String(Math.round(amount))
+}
+
 function renderRow(row, index, withSkill, showMode, visibility, showRunId) {
   const theme = getClassTheme(row.characterClass)
   const bg = `linear-gradient(104deg, ${hexToRgba(theme.primary, 0.30)} 0%, ${hexToRgba(theme.primary, 0.20)} 32%, ${hexToRgba(theme.primary, 0.08)} 62%, #0c0d0b 100%)`
@@ -240,8 +250,8 @@ function renderRow(row, index, withSkill, showMode, visibility, showRunId) {
   const share = Number(row.damagePercent)
   const shareValue = Number.isFinite(share) ? Math.max(0, Math.min(100, share)) : 0
   const shareText = Number.isFinite(share) ? share.toFixed(0) : '-'
-  const hpValue = formatHp(row.bossHp)
-  const damageValue = formatDamage(row.totalDamage)
+  const hpValue = formatContributionAmount(row.bossHp)
+  const damageValue = formatContributionAmount(row.totalDamage)
 
   return `
     <div class="row${withSkill ? ' row-with-skills' : ''}" style="--class-color:${theme.primary}; background:${bg}">
@@ -294,7 +304,7 @@ function buildHtml(option) {
   const sections = option.sections || [{ rows: option.rows || [] }]
   const withSkill = Boolean(option.withSkill)
   const showMode = option.showMode || 'hidden'
-  const showRunId = showMode === 'all'
+  const showRunId = true
   const allRows = sections.flatMap(section => section.rows || [])
   const visibility = resolveNameVisibility(showMode, allRows)
   const layout = buildLayout({ ...visibility, showRunId })
@@ -333,7 +343,7 @@ function buildHtml(option) {
       background-size: 26px 26px;
       font-family: "MabiHei", sans-serif;
     }
-    .section { margin: 0 0 30px; }
+    .section { width: ${layout.contentWidth}px; margin: 0 auto 30px; }
     .section-head {
       min-height: 0;
       display: flex;
