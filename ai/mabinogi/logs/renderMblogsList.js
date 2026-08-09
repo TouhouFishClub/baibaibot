@@ -442,9 +442,9 @@ function buildHtml(option) {
       font: 400 60px/.9 "FZJiHei", "MabiHei", sans-serif;
       pointer-events: none;
     }
-    .row:nth-child(1) .rank { color: rgba(255,199,46,.2); }
-    .row:nth-child(2) .rank { color: rgba(216,224,232,.2); }
-    .row:nth-child(3) .rank { color: rgba(205,127,50,.2); }
+    .row:nth-child(1) .rank { color: rgba(255,199,46,.5); }
+    .row:nth-child(2) .rank { color: rgba(216,224,232,.5); }
+    .row:nth-child(3) .rank { color: rgba(205,127,50,.5); }
     .player-copy strong {
       display: block;
       overflow: hidden;
@@ -476,16 +476,16 @@ function buildHtml(option) {
       font: 700 6px/1 "Orbitron", sans-serif;
     }
     .plain-value, .dps, .contribution { position: relative; z-index: 2; }
-    .plain-value { color: #f4f5f1; font: 800 14px/1.3 "Orbitron", sans-serif; }
+    .plain-value { color: #f4f5f1; font: 800 16px/1.3 "Orbitron", sans-serif; }
     .plain-value small,
     .dps small {
       display: block;
       margin-top: 4px;
       color: var(--muted);
-      font: 700 7px/1 "Orbitron", sans-serif;
+      font: 700 9px/1 "Orbitron", sans-serif;
     }
     .duration-value, .duration-value small { font-family: "GeelyDesign", sans-serif; }
-    .dps strong { display: block; font: 900 17px/1 "Orbitron", sans-serif; }
+    .dps strong { display: block; font: 900 19px/1 "Orbitron", sans-serif; }
     .dps-legendary strong { position: relative; z-index: 0; isolation: isolate; color: #fff; font-family: 'Orbitron', sans-serif; }
     .dps-legendary strong::before,
     .dps-legendary strong::after {
@@ -523,10 +523,10 @@ function buildHtml(option) {
       background: conic-gradient(var(--class-color) calc(var(--share) * 1%), #26302c 0);
     }
     .share-ring::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: #11130f; }
-    .share-ring span { position: relative; z-index: 1; color: #fff; font: 900 10px/1 "Orbitron", sans-serif; }
+    .share-ring span { position: relative; z-index: 1; color: #fff; font: 900 14px/1 "Orbitron", sans-serif; }
     .contribution-copy { min-width: 0; margin-top: 12px; }
-    .contribution-copy strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 800 11px/1 "Orbitron", sans-serif; }
-    .contribution-copy small { display: block; margin-top: 5px; color: var(--muted); font: 700 7px/1 "Orbitron", sans-serif; }
+    .contribution-copy strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 800 13px/1 "Orbitron", sans-serif; }
+    .contribution-copy small { display: block; margin-top: 5px; color: var(--muted); font: 700 9px/1 "Orbitron", sans-serif; }
     .damage-unit { margin-left: 5px; }
     .run-cell { position: absolute; z-index: 5; top: -5px; right: 0; display: block; }
     .run-id { display: inline-block; padding: 4px 6px; color: #d9dcd1; border: 1px solid rgba(255,255,255,.28); border-top: 0; border-right: 0; background: rgba(9,10,8,.82); font: 400 10px/1 "Orbitron", sans-serif; }
