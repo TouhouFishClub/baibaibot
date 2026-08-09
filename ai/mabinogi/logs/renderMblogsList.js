@@ -142,7 +142,7 @@ function resolveNameVisibility(showMode, rows = []) {
 
 function buildLayout({ showCharacter, showTeammates, showRunId }) {
   return {
-    gridTemplate: '180px minmax(0, 1fr) 64px 92px 106px 146px',
+    gridTemplate: '180px minmax(0, 1fr) 64px 92px 106px 190px',
     bodyWidth: 1120,
     contentWidth: 1050
   }
@@ -486,9 +486,9 @@ function buildHtml(option) {
     }
     .duration-value, .duration-value small { font-family: "GeelyDesign", sans-serif; }
     .dps strong { display: block; font: 900 17px/1 "Orbitron", sans-serif; }
-    .dps.legendary strong { position: relative; z-index: 0; isolation: isolate; color: #fff; font-family: 'Orbitron', sans-serif; }
-    .dps.legendary strong::before,
-    .dps.legendary strong::after {
+    .dps-legendary strong { position: relative; z-index: 0; isolation: isolate; color: #fff; font-family: 'Orbitron', sans-serif; }
+    .dps-legendary strong::before,
+    .dps-legendary strong::after {
       content: attr(data-text);
       position: absolute;
       inset: 0;
@@ -497,21 +497,21 @@ function buildHtml(option) {
       mix-blend-mode: screen;
       white-space: nowrap;
     }
-    .dps.legendary strong::before { color: #ff2f45; transform: translate(-2px, 1.5px); }
-    .dps.legendary strong::after { color: #00f0ff; transform: translate(2px, -1.5px); }
-    .dps.rainbow strong {
+    .dps-legendary strong::before { color: #ff2f45; transform: translate(-2px, 1.5px); }
+    .dps-legendary strong::after { color: #00f0ff; transform: translate(2px, -1.5px); }
+    .dps-rainbow strong {
       color: transparent;
       background: linear-gradient(90deg, #ff4d4d, #ffb84d, #ffe14d, #5dff8a, #4db8ff, #b84dff, #ff4da6);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .dps.gold strong { color: #ffd54f; }
-    .dps.magenta strong { color: #ff4fcf; }
-    .dps.blue strong { color: #4da3ff; }
-    .dps.green strong { color: #52d67a; }
-    .dps.white strong { color: #fff; }
-    .contribution { display: flex; align-items: center; justify-content: flex-start; gap: 11px; min-width: 0; margin-top: 12px; }
+    .dps-gold strong { color: #ffd54f; }
+    .dps-magenta strong { color: #ff4fcf; }
+    .dps-blue strong { color: #4da3ff; }
+    .dps-green strong { color: #52d67a; }
+    .dps-white strong { color: #fff; }
+    .contribution { display: flex; align-items: center; justify-content: flex-start; gap: 11px; min-width: 0; }
     .share-ring {
       position: relative;
       display: grid;
@@ -524,7 +524,7 @@ function buildHtml(option) {
     }
     .share-ring::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: #11130f; }
     .share-ring span { position: relative; z-index: 1; color: #fff; font: 900 10px/1 "Orbitron", sans-serif; }
-    .contribution-copy { min-width: 0; }
+    .contribution-copy { min-width: 0; margin-top: 12px; }
     .contribution-copy strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 800 11px/1 "Orbitron", sans-serif; }
     .contribution-copy small { display: block; margin-top: 5px; color: var(--muted); font: 700 7px/1 "Orbitron", sans-serif; }
     .damage-unit { margin-left: 5px; }
