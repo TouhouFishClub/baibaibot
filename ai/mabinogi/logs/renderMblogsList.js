@@ -484,7 +484,7 @@ function buildHtml(option) {
       color: var(--muted);
       font: 700 9px/1 "Orbitron", sans-serif;
     }
-    .duration-value, .duration-value small { font-family: "GeelyDesign", sans-serif; }
+    .duration-value { font-family: "GeelyDesign", sans-serif; }
     .dps strong { display: block; font: 900 19px/1 "Orbitron", sans-serif; }
     .dps-legendary strong { position: relative; z-index: 0; isolation: isolate; color: #fff; font-family: 'Orbitron', sans-serif; }
     .dps-legendary strong::before,
@@ -525,11 +525,11 @@ function buildHtml(option) {
     .share-ring::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: #11130f; }
     .share-ring span { position: relative; z-index: 1; color: #fff; font: 900 14px/1 "Orbitron", sans-serif; }
     .contribution-copy { min-width: 0; margin-top: 12px; }
-    .contribution-copy strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 800 13px/1 "Orbitron", sans-serif; }
+    .contribution-copy strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 800 15px/1 "Orbitron", sans-serif; }
     .contribution-copy small { display: block; margin-top: 5px; color: var(--muted); font: 700 9px/1 "Orbitron", sans-serif; }
     .damage-unit { margin-left: 5px; }
     .run-cell { position: absolute; z-index: 5; top: -5px; right: 0; display: block; }
-    .run-id { display: inline-block; padding: 4px 6px; color: #d9dcd1; border: 1px solid rgba(255,255,255,.28); border-top: 0; border-right: 0; background: rgba(9,10,8,.82); font: 400 10px/1 "Orbitron", sans-serif; }
+    .run-id { display: inline-block; padding: 4px 6px; color: #fff; border: 1px solid rgba(255,255,255,.28); border-top: 0; border-right: 0; background: rgba(9,10,8,.82); font: 900 10px/1 "Orbitron", sans-serif; letter-spacing: 1px; }
     .skills { position: absolute; z-index: 3; grid-column: 1 / -1; left: 0; right: -12px; bottom: 0; display: flex; height: 20px; border-top: 1px solid rgba(255,255,255,.12); border-radius: 0; background: #080906; overflow: hidden; }
     .skill-seg { display: flex; align-items: center; min-width: 0; height: 100%; padding: 0 6px; overflow: hidden; color: rgba(255,255,255,.95); border-right: 1px solid rgba(0,0,0,.45); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); white-space: nowrap; text-overflow: ellipsis; font: 800 14px/1 "GeelyDesign", "MabiHei", sans-serif; }
     .skill-seg:last-child { border-right: 0; }
