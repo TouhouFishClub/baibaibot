@@ -22,7 +22,7 @@ const GEELY_DESIGN = encodeTtf('GeelyDesignType-R.TTF')
 const ZZZ_DISPLAY = encodeTtf('ArupalaGroteskTrial-SuperBold.ttf')
 const ANONYMOUS_CHARACTER_NAME = '神秘的米莱西安'
 const ARCANA_ART = new Map()
-const ARCANA_DIR = path.join(__dirname, '..', '..', '..', 'logs', 'arcana')
+const ARCANA_DIR = path.join(__dirname, 'arcana')
 try {
   for (const file of fs.readdirSync(ARCANA_DIR)) {
     if (!file.toLowerCase().endsWith('.png')) continue
