@@ -10,12 +10,14 @@ const {
 const { uploadSecretKey } = require('./config')
 const { isRateLimited, isLoopback } = require('./ratelimit')
 const { parseGzipJson, validateUploadFields } = require('./validate')
+const { parseBuffMonitorUpload } = require('./buffMonitor')
 const { saveSourceFile, readSourceFile } = require('./storage')
 const {
   newReportId,
   findDuplicate,
   findTeamDuplicate,
   insertPendingReport,
+  upsertBuffMonitor,
   getReportById,
   listReports
 } = require('./db')
@@ -224,8 +226,25 @@ async function handleUpload(req, res) {
     return sendJson(res, 400, { ok: false, error: 'content_sha256_mismatch' })
   }
 
+  const parsed = parseGzipJson(gzData)
+  if (!parsed.ok) {
+    logUploadReject(ip, parsed.reason, fields, { fileBytes: gzData.length })
+    return sendJson(res, 400, { ok: false, error: parsed.reason })
+  }
+
+  const buffMonitor = parseBuffMonitorUpload(fields, req.files, parsed.data)
+  if (!buffMonitor.ok) {
+    logUploadReject(ip, buffMonitor.reason, fields, {
+      buffMonitorFileBytes: (req.files || []).find(item => item.fieldname === 'buffMonitorFile')?.buffer?.length
+    })
+    return sendJson(res, 400, { ok: false, error: buffMonitor.reason })
+  }
+
   const duplicate = await findDuplicate({ playerId, contentSha256, fileName })
   if (duplicate) {
+    if (buffMonitor.present) {
+      await persistBuffMonitor(duplicate._id, buffMonitor)
+    }
     logReceive({
       event: 'upload_duplicate',
       ip,
@@ -235,20 +254,16 @@ async function handleUpload(req, res) {
       playerName,
       dungeonName,
       fileName,
-      reportId: duplicate._id
+      reportId: duplicate._id,
+      buffMonitor: buffMonitor.present ? buffMonitor.stats : undefined
     })
     return sendJson(res, 200, {
       ok: true,
       reportId: duplicate._id,
       duplicate: true,
-      reason: 'content_or_filename_duplicate'
+      reason: 'content_or_filename_duplicate',
+      buffMonitor: buffMonitor.present ? { stored: true, stats: buffMonitor.stats } : undefined
     })
-  }
-
-  const parsed = parseGzipJson(gzData)
-  if (!parsed.ok) {
-    logUploadReject(ip, parsed.reason, fields, { fileBytes: gzData.length })
-    return sendJson(res, 400, { ok: false, error: parsed.reason })
   }
 
   // The gzip payload is covered by HMAC, so current character names can
@@ -265,6 +280,10 @@ async function handleUpload(req, res) {
     const teamDuplicate = await findTeamDuplicate({ dungeonName, teamSignature })
     if (teamDuplicate) {
       const summary = extractSummary(parsed.data)
+      let buffMonitorStore
+      if (buffMonitor.present) {
+        buffMonitorStore = await persistBuffMonitor(teamDuplicate._id, buffMonitor, { onlyIfMissing: true })
+      }
       logReceive({
         event: 'upload_duplicate',
         ip,
@@ -287,7 +306,8 @@ async function handleUpload(req, res) {
         ok: true,
         reportId: teamDuplicate._id,
         duplicate: true,
-        reason: 'team_duplicate'
+        reason: 'team_duplicate',
+        buffMonitor: buffMonitor.present ? { stored: buffMonitorStore?.stored !== false, stats: buffMonitor.stats } : undefined
       })
     }
   }
@@ -316,6 +336,9 @@ async function handleUpload(req, res) {
   } catch (error) {
     if (error && error.code === 11000) {
       const dup = await findDuplicate({ playerId, contentSha256, fileName })
+      if (dup && buffMonitor.present) {
+        await persistBuffMonitor(dup._id, buffMonitor)
+      }
       logReceive({
         event: 'upload_duplicate',
         ip,
@@ -331,10 +354,15 @@ async function handleUpload(req, res) {
         ok: true,
         reportId: dup?._id,
         duplicate: true,
-        reason: 'content_or_filename_duplicate'
+        reason: 'content_or_filename_duplicate',
+        buffMonitor: buffMonitor.present ? { stored: true, stats: buffMonitor.stats } : undefined
       })
     }
     throw error
+  }
+
+  if (buffMonitor.present) {
+    await persistBuffMonitor(reportId, buffMonitor)
   }
 
   const summary = extractSummary(parsed.data)
@@ -349,6 +377,7 @@ async function handleUpload(req, res) {
     contentSha256,
     fileBytes: gzData.length,
     reportId,
+    buffMonitor: buffMonitor.present ? buffMonitor.stats : undefined,
     targetCount: summary.targetCount,
     totalDamage: summary.totalDamage,
     targets: summary.targets.map(item => ({
@@ -361,7 +390,11 @@ async function handleUpload(req, res) {
   })
 
   enqueueParseJob({ reportId, sourceRelPath, dungeonName })
-  return sendJson(res, 200, { ok: true, reportId })
+  return sendJson(res, 200, {
+    ok: true,
+    reportId,
+    buffMonitor: buffMonitor.present ? { stored: true, stats: buffMonitor.stats } : undefined
+  })
 }
 
 async function handleListReports(req, res) {
@@ -466,4 +499,16 @@ module.exports = {
   getRankingConsentPlayerName,
   consentServerId,
   getRankingNameRefreshes
+}
+
+async function persistBuffMonitor(reportId, monitor, options = {}) {
+  if (!monitor?.present) return { stored: false, absent: true }
+  return upsertBuffMonitor(reportId, {
+    source: monitor.source,
+    schemaVersion: monitor.schemaVersion,
+    contentSha256: monitor.contentSha256,
+    definitions: monitor.data.definitions,
+    targets: monitor.data.targets,
+    stats: monitor.stats
+  }, options)
 }

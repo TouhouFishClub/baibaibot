@@ -10,6 +10,7 @@ const COL_RECORDS = 'cl_mabinogi_dps_records'
 const COL_NONCE = 'cl_mabinogi_dps_nonce'
 const COL_RANKING_CONSENT = 'cl_mabinogi_dps_ranking_consent'
 const COL_ANNOUNCEMENTS = 'cl_mabinogi_dps_announcements'
+const COL_BUFF_MONITOR = 'cl_mabinogi_dps_buff_monitor'
 
 let indexesReady = false
 
@@ -21,6 +22,7 @@ async function ensureIndexes() {
   const nonces = client.db(DB_NAME).collection(COL_NONCE)
   const rankingConsent = client.db(DB_NAME).collection(COL_RANKING_CONSENT)
   const announcements = client.db(DB_NAME).collection(COL_ANNOUNCEMENTS)
+  const buffMonitors = client.db(DB_NAME).collection(COL_BUFF_MONITOR)
 
   await uploads.createIndex({ playerId: 1, contentSha256: 1 }, { unique: true, name: 'uniq_player_sha' })
   await uploads.createIndex({ playerId: 1, fileName: 1 }, { unique: true, name: 'uniq_player_filename' })
@@ -43,6 +45,9 @@ async function ensureIndexes() {
   await rankingConsent.createIndex({ mode: 1, playerId: 1 }, { name: 'mode_player_id' })
   await announcements.createIndex({ timestamp: -1 }, { name: 'timestamp_desc' })
   await announcements.createIndex({ sourceHash: 1 }, { unique: true, sparse: true, name: 'uniq_source_hash' })
+  await buffMonitors.createIndex({ 'targets.targetId': 1 }, { name: 'target_id' })
+  await buffMonitors.createIndex({ 'targets.players.playerId': 1 }, { name: 'player_id' })
+  await buffMonitors.createIndex({ 'targets.players.buffs.conditionId': 1 }, { name: 'condition_id' })
 
   indexesReady = true
 }
@@ -186,6 +191,64 @@ async function reserveNonce(nonce) {
     }
     throw error
   }
+}
+
+async function upsertBuffMonitor(reportId, payload, { onlyIfMissing = false } = {}) {
+  await ensureIndexes()
+  const client = await getClient()
+  const db = client.db(DB_NAME)
+  const col = db.collection(COL_BUFF_MONITOR)
+  const id = String(reportId)
+
+  if (onlyIfMissing) {
+    const existing = await col.findOne({ _id: id }, { _id: 1 })
+    if (existing) return { stored: false, existing: true }
+  }
+
+  const now = new Date()
+  try {
+    await col.updateOne(
+      { _id: id },
+      {
+        $set: {
+          source: payload.source,
+          schemaVersion: payload.schemaVersion,
+          contentSha256: payload.contentSha256,
+          definitions: payload.definitions,
+          targets: payload.targets,
+          stats: payload.stats,
+          updatedAt: now
+        },
+        $setOnInsert: { createdAt: now }
+      },
+      { upsert: true }
+    )
+  } catch (error) {
+    if (!(onlyIfMissing && error?.code === 11000)) throw error
+    return { stored: false, existing: true }
+  }
+
+  await db.collection(COL_UPLOADS).updateOne(
+    { _id: reportId },
+    {
+      $set: {
+        buffMonitor: {
+          available: true,
+          schemaVersion: payload.schemaVersion,
+          contentSha256: payload.contentSha256,
+          stats: payload.stats,
+          updatedAt: now
+        }
+      }
+    }
+  )
+  return { stored: true, existing: false }
+}
+
+async function getBuffMonitorByReportId(reportId) {
+  await ensureIndexes()
+  const client = await getClient()
+  return client.db(DB_NAME).collection(COL_BUFF_MONITOR).findOne({ _id: String(reportId) })
 }
 
 async function getRankingConsent(playerId) {
@@ -456,6 +519,8 @@ module.exports = {
   findDuplicate,
   findTeamDuplicate,
   insertPendingReport,
+  upsertBuffMonitor,
+  getBuffMonitorByReportId,
   insertDpsRecords,
   updateReportParsed,
   updateReportFailed,

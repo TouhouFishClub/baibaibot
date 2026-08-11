@@ -14,7 +14,8 @@ const DB_NAME = 'db_bot'
 const COLLECTIONS = [
   'cl_mabinogi_dps_upload',
   'cl_mabinogi_dps_records',
-  'cl_mabinogi_dps_nonce'
+  'cl_mabinogi_dps_nonce',
+  'cl_mabinogi_dps_buff_monitor'
 ]
 
 function parseArgs(argv) {
