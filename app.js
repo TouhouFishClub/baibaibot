@@ -210,7 +210,14 @@ const checkKnowledgeAuth = (req, res) => new Promise((resolve, reject) => {
   }
 })
 
+const _pushMsgStore = new Map()
 app.get('/pushMsg', (req, res) => {
+  const key = req.ip
+  const now = Date.now()
+  const rec = _pushMsgStore.get(key) || { count: 0, start: now }
+  if (now - rec.start > 60000) { rec.count = 0; rec.start = now }
+  if (++rec.count > 30) return res.status(429).send('Too Many Requests')
+  _pushMsgStore.set(key, rec)
 	// console.log('\n\n\n=======')
 	// console.log(req)
 	// console.log(req.query)
