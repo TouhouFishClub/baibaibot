@@ -4,7 +4,7 @@ const path = require('path-extra')
 const _ = require('lodash')
 const HTMLParser = require('node-html-parser');
 const { drawTxtImage } = require('../../../cq/drawImageBytxt')
-const { normalizeGachaRareMap, parseGachaEntryFromArticle } = require('./parser')
+const { normalizeGachaRareMap, parseGachaEntriesFromArticle, parseGachaEntryFromArticle } = require('./parser')
 
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../../baibaiConfigs').mongourl;
@@ -86,7 +86,7 @@ const mabiGacha = async (user, groupId, callback, gachaCount = 60, gachaGroup, i
     isChongwu = true
   } else if(gacha.name.indexOf('圣地钥匙') > -1) {
     isShengDi = true
-  } else if(gacha.rare['C'][2].length == 0 && gacha.rare['D'][2].length == 0) {
+	} else if(gacha.rare['B'][2].length == 0 && gacha.rare['C'][2].length == 0 && gacha.rare['D'][2].length == 0) {
 		isHunDan = true
 	}
 
@@ -252,15 +252,16 @@ const loadGachaGroup = async (page = 1, source = false) => {
 	}).map(x => x.trim()).filter(x => x.startsWith('luoqi.tiancity.com')).map(x => `https://${x}`)
 	if(urls.length) {
 		let target = []
+		let sourceOutput = []
 		for(let i = 0; i < urls.length; i ++) {
 			// 遍历url
 			// console.log(`=== fetch ${urls[i]} ===`)
 			let data = await fetchData(urls[i])
-			let entry = parseGachaEntryFromArticle(data)
+			let entries = parseGachaEntriesFromArticle(data)
 			console.log('=========')
-			console.log(entry)
-			if(entry) {
-				target.push(entry)
+			console.log(entries)
+			if(entries.length) {
+				target.push(...entries)
 			}
 		}
 		target = target.filter(x => (x.link.startsWith('https://') || x.link.startsWith('http://')) && x.name)
@@ -318,7 +319,8 @@ const loadGachaGroup = async (page = 1, source = false) => {
 							})
 						}
 					}
-					return out
+					sourceOutput.push(...out)
+					continue
 				}
 
 				if(!client) {
@@ -375,8 +377,10 @@ const loadGachaGroup = async (page = 1, source = false) => {
 				console.log(e)
 			}
 		}
+		if(source) return sourceOutput
 		// console.log(gachaInfo)
 	}
+	if(source) return []
 }
 
 const fetchData = async url => {
@@ -439,6 +443,7 @@ module.exports = {
 	mabiGacha,
 	fetchData,
 	loadGachaGroup,
+	parseGachaEntriesFromArticle,
 	parseGachaEntryFromArticle,
 	selectGachaGroup
 }
