@@ -210,14 +210,15 @@ const checkKnowledgeAuth = (req, res) => new Promise((resolve, reject) => {
   }
 })
 
-app.get('/pushMsg', (req, res) => {
-	// console.log('\n\n\n=======')
-	// console.log(req)
-	// console.log(req.query)
-	analyzerMessage(req.query.message)
-	// console.log('=======\n\n\n')
-	res.send('ok')
-})
+// 屏蔽米游社（原神）签到模块
+// app.get('/pushMsg', (req, res) => {
+// 	// console.log('\n\n\n=======')
+// 	// console.log(req)
+// 	// console.log(req.query)
+// 	analyzerMessage(req.query.message)
+// 	// console.log('=======\n\n\n')
+// 	res.send('ok')
+// })
 
 app.get('/chathistory',function(req,res){
   var querydata = req.query;
