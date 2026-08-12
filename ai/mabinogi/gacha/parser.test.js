@@ -2,6 +2,7 @@ const assert = require('assert')
 const {
 	PRIVATE_DETECTIVE_POOL,
 	normalizeGachaItemName,
+	normalizeGachaPoolName,
 	normalizeGachaRareMap,
 	parseGachaEntriesFromArticle,
 	parseGachaEntryFromArticle
@@ -31,6 +32,8 @@ assert.strictEqual(parseGachaEntryFromArticle(`
 <dd id="newscontent"><p>ordinary maintenance notice</p></dd>
 `), null)
 
+assert.strictEqual(normalizeGachaPoolName(' - 新增神秘手帕礼包 '), '神秘手帕礼包')
+
 const multiplePoolsNotice = `
 <dd class="cur" id="newscontent"><p>
 - \u6ca7\u6f9c\u6d77\u97f5\u624b\u5e15\u793c\u5305[<a href="https://example.test/old">\u70b9\u51fb\u67e5\u770b\u6982\u7387</a>]<br>
@@ -40,6 +43,12 @@ const multiplePoolsNotice = `
 assert.deepStrictEqual(parseGachaEntriesFromArticle(multiplePoolsNotice), [
 	{ name: '\u6ca7\u6f9c\u6d77\u97f5\u624b\u5e15\u793c\u5305', link: 'https://example.test/old' },
 	{ name: '\u795e\u79d8\u624b\u5e15\u793c\u5305', link: 'https://example.test/new' }
+])
+
+assert.deepStrictEqual(parseGachaEntriesFromArticle(`
+<dd id="newscontent"><p>- 新增神秘手帕礼包[<a href="https://example.test/new">点击查看概率</a>]</p></dd>
+`), [
+	{ name: '神秘手帕礼包', link: 'https://example.test/new' }
 ])
 
 assert.strictEqual(

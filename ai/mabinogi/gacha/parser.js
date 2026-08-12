@@ -25,6 +25,10 @@ const GACHA_RARE_TAG_ALIASES = {
 
 const STANDARD_RARE_TAGS = ['S', 'A', 'B', 'C', 'D']
 
+const normalizeGachaPoolName = name => String(name || '')
+	.replace(/^\s*[-\u2013\u2014]?\s*新增\s*/, '')
+	.trim()
+
 const normalizeGachaItemName = (poolName, itemName) => {
 	if(poolName !== PRIVATE_DETECTIVE_POOL) return itemName
 	return PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS[itemName] || itemName
@@ -84,7 +88,7 @@ const parseGachaEntriesFromArticle = article => {
 		const linkText = candidate[2].replace(/<[^>]*>/g, '').trim()
 		if(linkText.indexOf('\u67e5\u770b\u6982\u7387') === -1) continue
 
-		const name = extractGachaNameBeforeLink(newsContent, candidate.index)
+		const name = normalizeGachaPoolName(extractGachaNameBeforeLink(newsContent, candidate.index))
 		if(!name || !name.match(/\u793c\u5305|\u624b\u5e15|\u94a5\u5319/)) continue
 
 		entries.push({
@@ -99,6 +103,7 @@ const parseGachaEntryFromArticle = article => parseGachaEntriesFromArticle(artic
 
 module.exports = {
 	GACHA_RARE_TAG_ALIASES,
+	normalizeGachaPoolName,
 	PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS,
 	PRIVATE_DETECTIVE_POOL,
 	normalizeGachaItemName,

@@ -4,7 +4,7 @@ const path = require('path-extra')
 const _ = require('lodash')
 const HTMLParser = require('node-html-parser');
 const { drawTxtImage } = require('../../../cq/drawImageBytxt')
-const { normalizeGachaRareMap, parseGachaEntriesFromArticle, parseGachaEntryFromArticle } = require('./parser')
+const { normalizeGachaRareMap, normalizeGachaPoolName, parseGachaEntriesFromArticle, parseGachaEntryFromArticle } = require('./parser')
 
 const MongoClient = require('mongodb').MongoClient
 const MONGO_URL = require('../../../baibaiConfigs').mongourl;
@@ -278,7 +278,7 @@ const loadGachaGroup = async (page = 1, source = false) => {
 			if(formatName.indexOf('<') > -1) {
 				formatName = formatName.substring(0, formatName.indexOf('<'))
 			}
-			info.name = formatName
+			info.name = normalizeGachaPoolName(formatName)
 			let data = await fetchData(t.link)
 			// let sp = splitStr(data, '<body', '</body>')
 			// console.log(splitStr(data, 'var pl', '}'))
