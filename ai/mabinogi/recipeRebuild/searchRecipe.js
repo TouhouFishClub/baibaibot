@@ -1,4 +1,4 @@
-const { loadAllRecipes, getAllItems, getNameToIds } = require('./dataLoader')
+const { loadAllRecipes, getAllItems } = require('./dataLoader')
 
 // 延迟加载 renderRecipe（避免在 puppeteer 不可用时崩溃）
 let _renderRecipeImage = null
@@ -18,6 +18,56 @@ const filterRecipesForDisplay = (recipes) => {
   return nonDissol.length > 0 ? nonDissol : recipes
 }
 
+const normalizeSearchText = text => String(text || '').trim().replace(/:/g, '：')
+
+const getRecipeAliases = recipe => {
+  const aliases = new Set()
+  const add = value => {
+    const normalized = normalizeSearchText(value)
+    if (!normalized) return
+    aliases.add(normalized)
+    aliases.add(normalized.replace(/^(?:图纸|衣物样本)\s*-\s*/, ''))
+    aliases.add(normalized.replace(/^制作(?=(?:名匠|特化)：)/, ''))
+  }
+  add(recipe.title)
+  add(recipe.manualName)
+  return [...aliases].filter(Boolean)
+}
+
+/**
+ * 按成品名和官方配方标题搜索。标题命中时只返回命中的配方变体。
+ */
+const findRecipeTargets = (content, recipesByProduct, allItems) => {
+  const query = normalizeSearchText(content)
+  const keywords = query.replace(/[， ]/g, ',').split(',').filter(Boolean)
+  const targets = []
+
+  for (const [productId, allRecipes] of recipesByProduct) {
+    const recipes = filterRecipesForDisplay(allRecipes)
+    const item = allItems.get(productId)
+    const productName = normalizeSearchText(item ? item.name : (recipes[0] ? recipes[0].productName : ''))
+    const productMatches = productName && keywords.every(keyword => productName.includes(keyword))
+    const matchingRecipes = recipes.filter(recipe =>
+      getRecipeAliases(recipe).some(alias => keywords.every(keyword => alias.includes(keyword)))
+    )
+
+    if (!productMatches && matchingRecipes.length === 0) continue
+
+    const exactProduct = productName === query
+    const exactRecipes = recipes.filter(recipe => getRecipeAliases(recipe).includes(query))
+    targets.push({
+      id: productId,
+      name: productName || `物品${productId}`,
+      recipes: exactProduct
+        ? recipes
+        : (exactRecipes.length > 0 ? exactRecipes : (productMatches ? recipes : matchingRecipes)),
+      exact: exactProduct || exactRecipes.length > 0,
+    })
+  }
+
+  return targets
+}
+
 /**
  * 搜索配方主入口
  * @param {string} content - 搜索关键词（物品名 or ID）
@@ -28,10 +78,9 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
   if (!content.trim()) return
 
   try {
-    const [recipesByProduct, allItems, nameToIds] = await Promise.all([
+    const [recipesByProduct, allItems] = await Promise.all([
       loadAllRecipes(),
       getAllItems(),
-      getNameToIds(),
     ])
 
     let targets = [] // [{id, name}]
@@ -49,27 +98,7 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
         targets.push({ id, name })
       }
     } else {
-      // 按名称搜索 - 支持多关键词（空格或逗号分隔）
-      const keywords = content.replace(/[， ]/g, ',').split(',').filter(x => x)
-
-      // 先从有配方的产品中搜索
-      const productNames = new Map() // name → id
-      for (const [productId, recipes] of recipesByProduct) {
-        const item = allItems.get(productId)
-        const name = item ? item.name : (recipes[0] ? recipes[0].productName : '')
-        if (name) productNames.set(name, productId)
-      }
-
-      // 关键词过滤
-      let matchedNames = Array.from(productNames.keys())
-      for (const keyword of keywords) {
-        matchedNames = matchedNames.filter(name => name.includes(keyword))
-      }
-
-      targets = matchedNames.map(name => ({
-        id: productNames.get(name),
-        name
-      }))
+      targets = findRecipeTargets(content, recipesByProduct, allItems)
     }
 
     if (targets.length === 0) {
@@ -80,7 +109,7 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
     if (targets.length === 1) {
       // 精确匹配到一个
       const target = targets[0]
-      const recipes = filterRecipesForDisplay(recipesByProduct.get(target.id) || [])
+      const recipes = target.recipes || filterRecipesForDisplay(recipesByProduct.get(target.id) || [])
       if (recipes.length > 0) {
         getRender()(target, recipes, allItems, recipesByProduct, showDesc, callback)
       } else {
@@ -88,9 +117,9 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
       }
     } else {
       // 多个匹配 - 检查是否有完全匹配
-      const exactMatch = targets.find(t => t.name === content)
+      const exactMatch = targets.find(t => t.exact || t.name === normalizeSearchText(content))
       if (exactMatch) {
-        const recipes = filterRecipesForDisplay(recipesByProduct.get(exactMatch.id) || [])
+        const recipes = exactMatch.recipes || filterRecipesForDisplay(recipesByProduct.get(exactMatch.id) || [])
         if (recipes.length > 0) {
           const listMsg = `找到${targets.length}个匹配\n${targets.slice(0, 10).map(t => `mbi ${t.id} | ${t.name}`).join('\n')}\n已为您定位到「${exactMatch.name}」`
           getRender()(exactMatch, recipes, allItems, recipesByProduct, showDesc, callback, listMsg, 'MF')
@@ -107,5 +136,7 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
 }
 
 module.exports = {
-  searchMabiRecipe
+  searchMabiRecipe,
+  findRecipeTargets,
+  getRecipeAliases,
 }

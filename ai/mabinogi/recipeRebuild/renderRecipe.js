@@ -183,6 +183,45 @@ const buildSubRecipes = (recipes, allItems, recipesByProduct) => {
   return subRecipeMap
 }
 
+const serializeRecipeForRender = r => ({
+  type: r.type,
+  skillName: r.skillName,
+  skillId: r.skillId || 0,
+  title: r.title || '',
+  desc: r.desc || '',
+  essentialDesc: r.essentialDesc || '',
+  difficulty: r.difficulty || 0,
+  level: r.level || 0,
+  maxProgress: r.maxProgress || 0,
+  price: r.price || 0,
+  productCount: r.productCount || 1,
+  action: r.action || '',
+  actionCn: r.actionCn || '',
+  specialTalent: r.specialTalent || '',
+  requiresSightOfOtherSide: r.requiresSightOfOtherSide || false,
+  unlockCondition: r.unlockCondition || '',
+  specialityEffectValueId: r.specialityEffectValueId || 0,
+  livingSeason: r.livingSeason || '',
+  materials: (r.materials || []).map(m => ({
+    id: m.id,
+    name: m.name,
+    count: m.count,
+    ...(m.percent !== undefined && { percent: m.percent }),
+    ...(m.noRecipe && { noRecipe: true }),
+  })),
+  completeMaterials: (r.completeMaterials || []).map(m => ({
+    id: m.id,
+    name: m.name,
+    count: m.count,
+    ...(m.percent !== undefined && { percent: m.percent }),
+    ...(m.noRecipe && { noRecipe: true }),
+  })),
+  successRates: r.successRates || {},
+  merchantExp: r.merchantExp || 0,
+  rainBonus: r.rainBonus || 0,
+  cookExp: r.cookExp || 0,
+})
+
 /**
  * 渲染配方图片
  * @param {Object} product - {id, name}
@@ -224,41 +263,7 @@ const renderRecipeImage = async (product, recipes, allItems, recipesByProduct, s
     await page.goto(TEMPLATE_PATH, { waitUntil: 'domcontentloaded' })
 
     // 准备数据 - 将配方数据序列化
-    const recipeData = recipes.map(r => ({
-      type: r.type,
-      skillName: r.skillName,
-      skillId: r.skillId || 0,
-      title: r.title || '',
-      desc: r.desc || '',
-      essentialDesc: r.essentialDesc || '',
-      difficulty: r.difficulty || 0,
-      level: r.level || 0,
-      maxProgress: r.maxProgress || 0,
-      price: r.price || 0,
-      productCount: r.productCount || 1,
-      action: r.action || '',
-      actionCn: r.actionCn || '',
-      specialTalent: r.specialTalent || '',
-      requiresSightOfOtherSide: r.requiresSightOfOtherSide || false,
-      materials: (r.materials || []).map(m => ({
-        id: m.id,
-        name: m.name,
-        count: m.count,
-        ...(m.percent !== undefined && { percent: m.percent }),
-        ...(m.noRecipe && { noRecipe: true }),
-      })),
-      completeMaterials: (r.completeMaterials || []).map(m => ({
-        id: m.id,
-        name: m.name,
-        count: m.count,
-        ...(m.percent !== undefined && { percent: m.percent }),
-        ...(m.noRecipe && { noRecipe: true }),
-      })),
-      successRates: r.successRates || {},
-      merchantExp: r.merchantExp || 0,
-      rainBonus: r.rainBonus || 0,
-      cookExp: r.cookExp || 0,
-    }))
+    const recipeData = recipes.map(serializeRecipeForRender)
 
     // mbd 模式：构建子配方
     const subRecipes = showDesc ? buildSubRecipes(recipes, allItems, recipesByProduct) : {}
@@ -358,4 +363,5 @@ const renderRecipeImage = async (product, recipes, allItems, recipesByProduct, s
 
 module.exports = {
   renderRecipeImage,
+  serializeRecipeForRender,
 }

@@ -143,6 +143,7 @@ const isBetterMaterialCandidate = (candidate, currentBest) => {
 const ITEM_DB_FILES = [
   { xml: 'itemdb.xml', txt: 'itemdb.china.txt', tag: 'itemdb' },
   { xml: 'itemdb_etc.xml', txt: 'itemdb_etc.china.txt', tag: 'itemdb_etc' },
+  { xml: 'itemdb_script.xml', txt: 'itemdb_script.china.txt', tag: 'itemdb_script' },
   { xml: 'itemdb_weapon.xml', txt: 'itemdb_weapon.china.txt', tag: 'itemdb_weapon' },
   { xml: 'itemdb_mainequip.xml', txt: 'itemdb_mainequip.china.txt', tag: 'itemdb_mainequip' },
   { xml: 'itemdb_subequip.xml', txt: 'itemdb_subequip.china.txt', tag: 'itemdb_subequip' },
@@ -471,6 +472,7 @@ const loadProductionRecipes = async (allItems) => {
       const materials = resolveEssentials($.Essentials, allItems)
       const productItem = allItems.get(productId)
       const requiresSightOfOtherSide = $.ApplySpecialization === 'true'
+      const unlockCondition = $.RecipeUnlockCondition || ''
 
       // 同ProductionId后方覆盖前方（新版本feature条目排在后面）
       recipeMap.set(`${section}_${prodId}`, {
@@ -488,6 +490,9 @@ const loadProductionRecipes = async (allItems) => {
         rainBonus: parseInt($.SuccessRateBonusInRain) || 0,
         specialTalent: '',
         requiresSightOfOtherSide,
+        unlockCondition,
+        specialityEffectValueId: parseInt($.SpecialityEffectValueID) || 0,
+        livingSeason: $.LivingSeason || '',
       })
     }
   }
@@ -538,6 +543,7 @@ const loadManualFormRecipes = async (allItems) => {
 
       // 第三只眼标记：根据 ApplySpecialization="true"
       const requiresSightOfOtherSide = $.ApplySpecialization === 'true'
+      const unlockCondition = $.RecipeUnlockCondition || ''
 
       recipes.push({
         type: 'manual',
@@ -559,6 +565,9 @@ const loadManualFormRecipes = async (allItems) => {
         price: parseInt($.Price) || 0,
         specialTalent,
         requiresSightOfOtherSide,
+        unlockCondition,
+        specialityEffectValueId: parseInt($.SpecialityEffectValueID) || 0,
+        livingSeason: $.LivingSeason || '',
       })
     }
   }
@@ -610,6 +619,7 @@ const loadCookingRecipes = async (allItems) => {
     }
 
     const productItem = allItems.get(productId)
+    const unlockCondition = $.RecipeUnlockCondition || ''
     recipes.push({
       type: 'cooking',
       productId,
@@ -626,6 +636,9 @@ const loadCookingRecipes = async (allItems) => {
       cookExp: parseInt($.cookexp) || 0,
       specialTalent: '',
       requiresSightOfOtherSide: false,
+      unlockCondition,
+      specialityEffectValueId: parseInt($.SpecialityEffectValueID) || 0,
+      livingSeason: $.LivingSeason || '',
     })
   }
   return recipes

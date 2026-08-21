@@ -127,6 +127,8 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      min-width: 0;
+      flex: 1;
     }
     .card-header .skill-icon {
       width: 22px;
@@ -142,6 +144,7 @@
       font-size: 11px;
       color: rgba(255,255,255,0.4);
       margin-left: 6px;
+      overflow-wrap: anywhere;
     }
     .level-badge {
       display: inline-flex;
@@ -161,6 +164,30 @@
       background: rgba(100,149,237,0.12);
       border: 1px solid rgba(100,149,237,0.25);
       color: #87ceeb;
+    }
+    .card-flags {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .unlock-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .unlock-badge.speciality {
+      background: rgba(46,204,113,0.12);
+      border: 1px solid rgba(46,204,113,0.3);
+      color: #72d99b;
+    }
+    .unlock-badge.master {
+      background: rgba(218,165,32,0.14);
+      border: 1px solid rgba(218,165,32,0.35);
+      color: #f1cf62;
     }
 
     /* 卡片内容 - 紧凑 */
@@ -558,6 +585,13 @@
       }
       html += '</div>'
 
+      html += '<div class="card-flags">'
+      if (recipe.unlockCondition === 'LifeSpeciality') {
+        html += '<span class="unlock-badge speciality">生活特化</span>'
+      } else if (recipe.unlockCondition === 'Master') {
+        html += '<span class="unlock-badge master">名匠</span>'
+      }
+
       if (recipe.type === 'manual') {
         html += `<span class="level-badge manual-level">难度: ${rankLabel(recipe.level)}</span>`
       } else if (recipe.type === 'production' && recipe.difficulty >= 0) {
@@ -565,7 +599,7 @@
       } else if (recipe.type === 'cooking') {
         html += `<span class="cooking-action"><img src="${getCookingActionIconUrl(recipe.actionCn)}" onerror="this.style.display='none'" />${recipe.actionCn || recipe.action}</span>`
       }
-      html += '</div>'
+      html += '</div></div>'
 
       // 卡片内容
       html += '<div class="card-body">'
