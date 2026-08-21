@@ -5,6 +5,11 @@ const {
   loadChinaFeaturesByItemId,
   pickMabiItemAmongDuplicates,
 } = require(path.join(__dirname, '..', 'lib', 'chinaFeatureItemMap.js'))
+const {
+  loadItemSources,
+  serializeItemSources,
+  buildItemSourcesFromCache,
+} = require('./sourceLoader')
 
 // ====== 路径常量 ======
 const DATA_DIR = path.join(__dirname, '..', 'data', 'IT')
@@ -36,11 +41,28 @@ const getDataVersion = () => {
   }
   try {
     const loaderMtime = fs.statSync(__filename).mtimeMs
+    let sourceLoaderMtime = 0
+    try { sourceLoaderMtime = fs.statSync(path.join(__dirname, 'sourceLoader.js')).mtimeMs } catch (eSource) { /* ignore */ }
     let cf = 0
     try {
       cf = fs.statSync(path.join(__dirname, '..', 'lib', 'chinaFeatureItemMap.js')).mtimeMs
     } catch (e2) { /* ignore */ }
-    return `${base}_L${loaderMtime}_CF${cf}`
+    const sourceFiles = [
+      'CollectingForm.xml',
+      'CollectingForm.china.txt',
+      path.join('NPCShop', 'NPCShop.xml'),
+      'npcinfo.xml',
+      'npcinfo.china.txt',
+      'npcshop.china.txt',
+      'DungeonGuide.xml',
+      'DungeonGuide2025.xml',
+      'dungeonguide.china.txt',
+      'dungeonguide2025.china.txt',
+    ]
+    const sourceMtime = sourceFiles.map(file => {
+      try { return fs.statSync(path.join(DATA_DIR, file)).mtimeMs } catch (e3) { return 0 }
+    }).join('_')
+    return `${base}_L${loaderMtime}_SL${sourceLoaderMtime}_CF${cf}_SRC${sourceMtime}`
   } catch (e) { return base }
 }
 
@@ -836,7 +858,7 @@ const loadSynthesisRecipes = (allItems) => {
 // ====== 缓存管理 ======
 
 /** 保存缓存到JSON文件 */
-const saveCache = (version, itemMap, nameMap, allRecipes) => {
+const saveCache = (version, itemMap, nameMap, allRecipes, itemSources) => {
   try {
     if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true })
 
@@ -856,6 +878,7 @@ const saveCache = (version, itemMap, nameMap, allRecipes) => {
       items: itemsArr,
       names: namesArr,
       recipes: allRecipes,
+      itemSources: serializeItemSources(itemSources || new Map()),
     }
 
     fs.writeFileSync(CACHE_FILE, JSON.stringify(cacheData), 'utf-8')
@@ -909,7 +932,8 @@ const buildFromCache = (cacheData) => {
     }
   }
 
-  return { allItems, recipesByProduct, nameToIds, productIndex }
+  const itemSources = buildItemSourcesFromCache(cacheData.itemSources)
+  return { allItems, recipesByProduct, nameToIds, productIndex, itemSources }
 }
 
 // ====== 主加载流程 ======
@@ -947,13 +971,19 @@ const _doLoad = async () => {
   ])
   const synthRecipes = loadSynthesisRecipes(itemMap)
   const allRecipes = [...prodRecipes, ...manualRecipes, ...cookingRecipes, ...dissolRecipes, ...synthRecipes]
+  const itemSources = await loadItemSources()
+  for (const recipe of allRecipes) {
+    for (const material of [...(recipe.materials || []), ...(recipe.completeMaterials || [])]) {
+      material.sources = itemSources.get(material.id) || []
+    }
+  }
   console.log(`[dataLoader] 配方加载完成: 生产${prodRecipes.length}, 手工${manualRecipes.length}, 料理${cookingRecipes.length}, 分解${dissolRecipes.length}, 合成${synthRecipes.length} (${Date.now() - t1}ms) [唯一pattern数: ${_patternCache.size}]`)
 
   // 清空 pattern 缓存释放内存
   _patternCache.clear()
 
   // 保存缓存
-  saveCache(version, itemMap, nameMap, allRecipes)
+  saveCache(version, itemMap, nameMap, allRecipes, itemSources)
 
   // 构建内存索引
   const recipesByProduct = new Map()
@@ -969,7 +999,7 @@ const _doLoad = async () => {
     }
   }
 
-  _cache = { allItems: itemMap, recipesByProduct, nameToIds: nameMap, productIndex }
+  _cache = { allItems: itemMap, recipesByProduct, nameToIds: nameMap, productIndex, itemSources }
   console.log(`[dataLoader] \u5168\u90E8\u5C31\u7EEA (${Date.now() - t0}ms) - ${recipesByProduct.size}\u79CD\u4EA7\u54C1\u914D\u65B9`)
   return _cache
 }
@@ -992,6 +1022,7 @@ const loadAllRecipes = async () => (await ensureData()).recipesByProduct
 const getAllItems = async () => (await ensureData()).allItems
 const getNameToIds = async () => (await ensureData()).nameToIds
 const getProductIndex = async () => (await ensureData()).productIndex
+const getItemSources = async () => (await ensureData()).itemSources
 
 // 模块加载时自动预热（不阻塞require）
 ensureData().catch(err => {
@@ -1003,6 +1034,7 @@ module.exports = {
   getAllItems,
   getNameToIds,
   getProductIndex,
+  getItemSources,
   matchCategory,
   resolveEssentials,
 }

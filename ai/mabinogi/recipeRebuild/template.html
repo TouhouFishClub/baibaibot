@@ -273,6 +273,34 @@
       color: rgba(255,215,0,0.65);
       font-weight: 600;
     }
+    .product-sources {
+      margin: 0 0 8px;
+      padding: 5px 8px;
+      background: rgba(112, 160, 180, 0.06);
+      border: 1px solid rgba(112, 160, 180, 0.12);
+      border-radius: 5px;
+    }
+    .product-source {
+      color: #a9bdc5;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .material-sources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px 5px;
+      margin-top: 3px;
+      color: #8da3ad;
+      font-size: 10px;
+      line-height: 1.25;
+    }
+    .material-source {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
     /* 完成材料 */
     .complete-materials .material-item {
@@ -562,6 +590,15 @@
         </div>
       `
 
+      if (Array.isArray(product.sources) && product.sources.length > 0) {
+        const escapeSource = value => String(value || '').replace(/[&<>\"']/g, ch => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;'
+        }[ch]))
+        html += '<div class="product-sources"><div class="section-title">物品来源</div>'
+        html += product.sources.slice(0, 12).map(source => `<div class="product-source">${escapeSource(source.label || '')}</div>`).join('')
+        html += '</div>'
+      }
+
       // 每个配方一个卡片
       for (const recipe of recipes) {
         html += renderRecipeCard(recipe, showDesc, subRecipes || {})
@@ -688,6 +725,13 @@
 
     function renderMaterialItem(mat) {
       const imgSrc = mat.id > 0 ? getImageUrl(mat.id) : ''
+      const escapeHtml = value => String(value || '').replace(/[&<>\"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;'
+      }[ch]))
+      const sourceList = Array.isArray(mat.sources) ? mat.sources : []
+      const sourceHtml = sourceList.length > 0
+        ? `<div class="material-sources">${sourceList.slice(0, 3).map(source => `<span class="material-source">${escapeHtml(source.label || '')}</span>`).join('')}</div>`
+        : ''
       return `
         <div class="material-item">
           ${mat.id > 0 ? `<span class="material-id">${mat.id}</span>` : ''}
@@ -700,6 +744,7 @@
           <div class="material-info">
             <span class="material-name">${mat.name}</span>
             ${mat.percent !== undefined ? `<span class="material-count">${mat.percent}%</span>` : (mat.count > 0 ? `<span class="material-count">×${mat.count}</span>` : '')}
+            ${sourceHtml}
           </div>
         </div>
       `

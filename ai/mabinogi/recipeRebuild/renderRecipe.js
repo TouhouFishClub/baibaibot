@@ -6,9 +6,6 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 // 确保输出目录存在
 const OUTPUT_DIR = path.join(IMAGE_DATA, 'mabi_recipe')
-if (!fs.existsSync(OUTPUT_DIR)) {
-  fs.mkdirSync(OUTPUT_DIR, { recursive: true })
-}
 
 // ====== 浏览器实例池（复用，减少CPU开销） ======
 let _browser = null
@@ -168,12 +165,14 @@ const buildSubRecipes = (recipes, allItems, recipesByProduct) => {
             name: m.name,
             count: m.count,
             ...(m.percent !== undefined && { percent: m.percent }),
+            ...(m.sources && m.sources.length > 0 && { sources: m.sources }),
           })),
           completeMaterials: (r.completeMaterials || []).map(m => ({
             id: m.id,
             name: m.name,
             count: m.count,
             ...(m.percent !== undefined && { percent: m.percent }),
+            ...(m.sources && m.sources.length > 0 && { sources: m.sources }),
           })),
         }))
       }
@@ -208,6 +207,7 @@ const serializeRecipeForRender = r => ({
     count: m.count,
     ...(m.percent !== undefined && { percent: m.percent }),
     ...(m.noRecipe && { noRecipe: true }),
+    ...(m.sources && m.sources.length > 0 && { sources: m.sources }),
   })),
   completeMaterials: (r.completeMaterials || []).map(m => ({
     id: m.id,
@@ -215,6 +215,7 @@ const serializeRecipeForRender = r => ({
     count: m.count,
     ...(m.percent !== undefined && { percent: m.percent }),
     ...(m.noRecipe && { noRecipe: true }),
+    ...(m.sources && m.sources.length > 0 && { sources: m.sources }),
   })),
   successRates: r.successRates || {},
   merchantExp: r.merchantExp || 0,
@@ -236,6 +237,7 @@ const serializeRecipeForRender = r => ({
 const renderRecipeImage = async (product, recipes, allItems, recipesByProduct, showDesc, callback, msg = '', order = 'IF') => {
   let page = null
   try {
+    if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true })
     // 收集所有需要的物品图片ID
     const allItemIds = [product.id]
     for (const r of recipes) {
@@ -269,7 +271,7 @@ const renderRecipeImage = async (product, recipes, allItems, recipesByProduct, s
     const subRecipes = showDesc ? buildSubRecipes(recipes, allItems, recipesByProduct) : {}
 
     const renderData = {
-      product: { id: product.id, name: product.name },
+      product: { id: product.id, name: product.name, sources: product.sources || [] },
       recipes: recipeData,
       showDesc,
       subRecipes,

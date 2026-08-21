@@ -1,4 +1,4 @@
-const { loadAllRecipes, getAllItems } = require('./dataLoader')
+const { loadAllRecipes, getAllItems, getItemSources } = require('./dataLoader')
 
 // 延迟加载 renderRecipe（避免在 puppeteer 不可用时崩溃）
 let _renderRecipeImage = null
@@ -32,6 +32,37 @@ const getRecipeAliases = recipe => {
   add(recipe.title)
   add(recipe.manualName)
   return [...aliases].filter(Boolean)
+}
+
+const formatItemSources = (item, sources) => {
+  const lines = []
+  const sourceList = sources || []
+  for (const source of sourceList.slice(0, 30)) {
+    let detail = source.label || source.kind || '未知来源'
+    if (source.kind === 'npc_shop' || source.kind === 'npc_exchange') {
+      const price = source.priceType === 'gold'
+        ? `${source.price || 0}金币`
+        : `${source.price || 0} ${source.priceType || '兑换货币'}${source.priceValue ? `（物品${source.priceValue}）` : ''}`
+      detail += `，${price}${source.bundle > 1 ? `，每组${source.bundle}` : ''}`
+    }
+    lines.push(`- ${detail}`)
+  }
+  if (sourceList.length > 30) lines.push(`- 还有 ${sourceList.length - 30} 条来源`)
+  return `物品：${item.name}（ID ${item.id}）\n${lines.length ? lines.join('\n') : '暂无来源数据'}`
+}
+
+const findSourceTargets = (content, allItems, itemSources) => {
+  const query = normalizeSearchText(content)
+  const keywords = query.replace(/[， ]/g, ',').split(',').filter(Boolean)
+  const targets = []
+  for (const [id, item] of allItems) {
+    const sources = itemSources.get(id) || []
+    if (!sources.length || !item.name) continue
+    if (keywords.every(keyword => normalizeSearchText(item.name).includes(keyword))) {
+      targets.push({ id, name: item.name, sourceOnly: true })
+    }
+  }
+  return targets
 }
 
 /**
@@ -78,9 +109,10 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
   if (!content.trim()) return
 
   try {
-    const [recipesByProduct, allItems] = await Promise.all([
+    const [recipesByProduct, allItems, itemSources] = await Promise.all([
       loadAllRecipes(),
       getAllItems(),
+      getItemSources(),
     ])
 
     let targets = [] // [{id, name}]
@@ -99,6 +131,7 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
       }
     } else {
       targets = findRecipeTargets(content, recipesByProduct, allItems)
+      if (targets.length === 0) targets = findSourceTargets(content, allItems, itemSources)
     }
 
     if (targets.length === 0) {
@@ -109,9 +142,12 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
     if (targets.length === 1) {
       // 精确匹配到一个
       const target = targets[0]
+      target.sources = itemSources.get(target.id) || []
       const recipes = target.recipes || filterRecipesForDisplay(recipesByProduct.get(target.id) || [])
       if (recipes.length > 0) {
         getRender()(target, recipes, allItems, recipesByProduct, showDesc, callback)
+      } else if (itemSources.has(target.id)) {
+        callback(formatItemSources(allItems.get(target.id) || { id: target.id, name: target.name }, itemSources.get(target.id)))
       } else {
         callback(`找到「${target.name}」但没有配方数据`)
       }
@@ -119,10 +155,13 @@ const searchMabiRecipe = async (content, callback, showDesc = false) => {
       // 多个匹配 - 检查是否有完全匹配
       const exactMatch = targets.find(t => t.exact || t.name === normalizeSearchText(content))
       if (exactMatch) {
+        exactMatch.sources = itemSources.get(exactMatch.id) || []
         const recipes = exactMatch.recipes || filterRecipesForDisplay(recipesByProduct.get(exactMatch.id) || [])
         if (recipes.length > 0) {
           const listMsg = `找到${targets.length}个匹配\n${targets.slice(0, 10).map(t => `mbi ${t.id} | ${t.name}`).join('\n')}\n已为您定位到「${exactMatch.name}」`
           getRender()(exactMatch, recipes, allItems, recipesByProduct, showDesc, callback, listMsg, 'MF')
+        } else if (itemSources.has(exactMatch.id)) {
+          callback(`找到${targets.length}个匹配\n${targets.slice(0, 10).map(t => `mbi ${t.id} | ${t.name}`).join('\n')}\n已为您定位到「${exactMatch.name}」\n\n${formatItemSources(allItems.get(exactMatch.id) || exactMatch, itemSources.get(exactMatch.id))}`)
         }
       } else {
         // 显示列表
