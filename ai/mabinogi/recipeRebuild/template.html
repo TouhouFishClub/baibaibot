@@ -274,7 +274,7 @@
       font-weight: 600;
     }
     .product-sources {
-      margin: 0 0 8px;
+      margin: 8px 0 0;
       padding: 5px 8px;
       background: rgba(112, 160, 180, 0.06);
       border: 1px solid rgba(112, 160, 180, 0.12);
@@ -286,18 +286,74 @@
       line-height: 1.45;
     }
     .material-sources {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2px 5px;
+      display: block;
       margin-top: 3px;
       color: #8da3ad;
       font-size: 10px;
       line-height: 1.25;
     }
     .material-source {
-      display: inline-block;
+      display: block;
       max-width: 100%;
       overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .source-recipe-block {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      margin-bottom: 5px;
+      padding: 6px 9px;
+      background: rgba(112,160,180,0.045);
+      border: 1px solid rgba(112,160,180,0.12);
+      border-radius: 5px;
+    }
+    .source-recipe-icon {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid rgba(112,160,180,0.2);
+      border-radius: 4px;
+      background: rgba(112,160,180,0.08);
+    }
+    .source-recipe-icon img {
+      max-width: 28px;
+      max-height: 28px;
+      object-fit: contain;
+    }
+    .source-recipe-content {
+      min-width: 0;
+      flex: 1;
+    }
+    .source-recipe-header {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+    }
+    .source-recipe-name {
+      color: #e5c978;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .source-recipe-kind {
+      color: #79a9bd;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+    .source-recipe-label {
+      display: block;
+      overflow: hidden;
+      color: #a9bdc5;
+      font-size: 11px;
+      line-height: 1.35;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -590,18 +646,13 @@
         </div>
       `
 
-      if (Array.isArray(product.sources) && product.sources.length > 0) {
-        const escapeSource = value => String(value || '').replace(/[&<>\"']/g, ch => ({
-          '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;'
-        }[ch]))
-        html += '<div class="product-sources"><div class="section-title">物品来源</div>'
-        html += product.sources.slice(0, 12).map(source => `<div class="product-source">${escapeSource(source.label || '')}</div>`).join('')
-        html += '</div>'
-      }
-
       // 每个配方一个卡片
       for (const recipe of recipes) {
         html += renderRecipeCard(recipe, showDesc, subRecipes || {})
+      }
+
+      if (Array.isArray(product.sources) && product.sources.length > 0) {
+        html += renderProductSources(product)
       }
 
       html += `<div class="footer">爱琳配方百科 · Powered by Baibaibot</div>`
@@ -721,6 +772,33 @@
 
       html += '</div></div>'
       return html
+    }
+
+    function renderProductSources(product) {
+      const escapeSource = value => String(value || '').replace(/[&<>\"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;'
+      }[ch]))
+      const sources = product.sources || []
+      let html = '<div class="product-sources"><div class="section-title">物品来源</div>'
+      for (const source of sources.slice(0, 20)) {
+        const kind = source.kind === 'collect' ? '采集' : (source.kind === 'npc_shop' ? 'NPC购买' : (source.kind === 'npc_exchange' ? 'NPC兑换' : '地下城奖励'))
+        html += `
+          <div class="source-recipe-block">
+            <div class="source-recipe-icon"><img src="${getImageUrl(product.id)}" onerror="this.style.display='none'" /></div>
+            <div class="source-recipe-content">
+              <div class="source-recipe-header">
+                <span class="source-recipe-name">${escapeSource(product.name)}</span>
+                <span class="source-recipe-kind">${escapeSource(kind)}</span>
+              </div>
+              <span class="source-recipe-label">${escapeSource(source.label || '')}</span>
+            </div>
+          </div>
+        `
+      }
+      if (sources.length > 20) {
+        html += `<div class="product-source">还有 ${sources.length - 20} 条来源</div>`
+      }
+      return html + '</div>'
     }
 
     function renderMaterialItem(mat) {

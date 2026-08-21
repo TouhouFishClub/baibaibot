@@ -971,7 +971,7 @@ const _doLoad = async () => {
   ])
   const synthRecipes = loadSynthesisRecipes(itemMap)
   const allRecipes = [...prodRecipes, ...manualRecipes, ...cookingRecipes, ...dissolRecipes, ...synthRecipes]
-  const itemSources = await loadItemSources()
+  const itemSources = await loadItemSources(itemMap)
   for (const recipe of allRecipes) {
     for (const material of [...(recipe.materials || []), ...(recipe.completeMaterials || [])]) {
       material.sources = itemSources.get(material.id) || []

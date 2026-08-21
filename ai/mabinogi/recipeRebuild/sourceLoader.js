@@ -32,19 +32,59 @@ const loadTranslation = (fileName, tag) => {
 }
 
 const parseProducts = value => String(value || '').split(';').map(part => {
-  const [id, weight] = part.split(',').map(v => parseInt(String(v).trim(), 10))
-  return id > 0 ? { id, weight: Number.isFinite(weight) ? weight : 0 } : null
+  const [id, weight, count] = part.split(',').map(v => parseInt(String(v).trim(), 10))
+  return id > 0 ? {
+    id,
+    weight: Number.isFinite(weight) ? weight : 0,
+    count: Number.isFinite(count) ? count : 0,
+  } : null
 }).filter(Boolean)
 
 const shortTarget = targetId => {
   const parts = String(targetId || '').split('/').filter(Boolean)
   if (!parts.length) return '采集点'
-  return parts.slice(-3).join(' / ')
+  const labels = {
+    d2_extra_big: '希里安',
+    raretimelimit: '稀有时限采集',
+    unlimitedcollecting: '无限采集',
+    sea_anemone_mushroom: '海葵蘑菇',
+    cowrare: '稀有奶牛',
+    animal: '动物',
+    sheep: '羊',
+    cattle: '牛棚',
+    sulien_ore: '希里安矿',
+    dungeon: '地下城',
+    field: '野外',
+  }
+  return parts.slice(-3).map(part => labels[part] || part).join(' / ')
 }
 
 const toolName = value => {
-  const parts = String(value || '').split('/').filter(Boolean)
+  const parts = String(value || '').split('/').map(part => part.trim()).filter(Boolean)
   return parts.length ? parts[parts.length - 1] : ''
+}
+
+const TOOL_LABELS = {
+  barehand: '徒手',
+  blade: '刀具',
+  pickaxe: '十字镐',
+  shorthoe: '短锄',
+  shorthoe2: '短锄',
+  sickle: '镰刀',
+  empty_bottle: '空瓶',
+  arbeit_bottle: '打工用瓶子',
+  sieve: '淘金筛子',
+  water: '水瓶',
+  lightning_wand: '雷属性魔杖',
+  fire_wand: '火属性魔杖',
+  ice_wand: '冰属性魔杖',
+  thunderstruck_oak_staff: '遭受雷击的柞木法杖',
+}
+
+const cleanToolName = value => toolName(String(value || '').replace(/\s+/g, ' '))
+const readableToolName = value => {
+  const id = cleanToolName(value)
+  return id ? (TOOL_LABELS[id] || id) : ''
 }
 
 const loadIndexedTranslation = fileName => {
@@ -91,7 +131,7 @@ const addSource = (index, id, source) => {
   if (!list.some(item => JSON.stringify(item) === key)) list.push(source)
 }
 
-const loadCollectingSources = async index => {
+const loadCollectingSources = async (index, itemMap) => {
   const data = await readXml('CollectingForm.xml')
   const forms = data && data.CollectingForm && data.CollectingForm.CollectingFormList
     ? data.CollectingForm.CollectingFormList[0].CollectingForm || []
@@ -99,17 +139,22 @@ const loadCollectingSources = async index => {
   for (const form of forms) {
     const attrs = form.$ || {}
     const target = shortTarget(attrs.TargetId)
-    const tool = toolName(attrs.PrimeTool)
-    const source = {
-      kind: 'collect',
-      label: `采集：${target}${tool ? `（${tool}）` : ''}`,
-      formId: parseInt(attrs.ID, 10) || 0,
-      targetId: attrs.TargetId || '',
-      skillId: parseInt(attrs.SkillID, 10) || 0,
-      weight: 0,
-    }
     for (const product of parseProducts(attrs.Products)) {
-      addSource(index, product.id, { ...source, weight: product.weight })
+      const toolId = cleanToolName(attrs.PrimeTool)
+      const tool = readableToolName(attrs.PrimeTool)
+      const source = {
+        kind: 'collect',
+        label: `采集：${target}${tool ? `（${tool}）` : ''} → ${itemMap && itemMap.get(product.id) ? itemMap.get(product.id).name : `物品${product.id}`}${product.count > 1 ? `×${product.count}` : ''}`,
+        formId: parseInt(attrs.ID, 10) || 0,
+        targetId: attrs.TargetId || '',
+        toolId,
+        toolName: tool,
+        skillId: parseInt(attrs.SkillID, 10) || 0,
+        productId: product.id,
+        weight: product.weight,
+        productCount: product.count || 0,
+      }
+      addSource(index, product.id, source)
     }
   }
 }
@@ -215,9 +260,9 @@ const loadDungeonSources = async index => {
   }
 }
 
-const loadItemSources = async () => {
+const loadItemSources = async itemMap => {
   const index = new Map()
-  await loadCollectingSources(index)
+  await loadCollectingSources(index, itemMap)
   await loadNpcSources(index)
   await loadDungeonSources(index)
   return index
