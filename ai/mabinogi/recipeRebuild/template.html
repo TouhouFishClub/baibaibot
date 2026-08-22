@@ -286,18 +286,7 @@
       line-height: 1.45;
     }
     .material-sources {
-      display: block;
-      margin-top: 3px;
-      color: #8da3ad;
-      font-size: 10px;
-      line-height: 1.25;
-    }
-    .material-source {
-      display: block;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      display: none;
     }
     .source-recipe-block {
       display: flex;
@@ -356,6 +345,11 @@
       line-height: 1.35;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+    .material-source-section {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(112,160,180,0.16);
     }
 
     /* 完成材料 */
@@ -706,6 +700,7 @@
       }
 
       // 材料
+      const sourcedMaterials = (recipe.materials || []).filter(hasMaterialSources)
       if (recipe.materials && recipe.materials.length > 0) {
         html += '<div class="section-title">所需材料</div>'
         html += '<div class="materials-grid">'
@@ -716,6 +711,8 @@
       }
 
       // 完成材料 (manual 类型)
+      const sourcedCompleteMaterials = (recipe.completeMaterials || []).filter(hasMaterialSources)
+      sourcedMaterials.push(...sourcedCompleteMaterials)
       if (recipe.completeMaterials && recipe.completeMaterials.length > 0) {
         html += '<div class="complete-materials">'
         html += '<div class="section-title">完成材料</div>'
@@ -724,6 +721,10 @@
           html += renderMaterialItem(mat)
         }
         html += '</div></div>'
+      }
+
+      if (sourcedMaterials.length > 0) {
+        html += renderMaterialSources(sourcedMaterials)
       }
 
       // 成功率（详情模式）
@@ -774,14 +775,62 @@
       return html
     }
 
+    function hasMaterialSources(mat) {
+      return Array.isArray(mat.sources) && mat.sources.length > 0
+    }
+
+    function renderMaterialSources(materials) {
+      const escapeSource = value => String(value || '').replace(/[&<>\"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;'
+      }[ch]))
+      let html = '<div class="material-source-section"><div class="section-title">材料出处</div>'
+      for (const material of materials) {
+        const seen = new Set()
+        const sources = (material.sources || []).filter(source => {
+          const label = String(source.label || '').replace(/×\d+$/, '')
+          const key = [source.kind || '', source.formId || '', source.shopName || '', source.tabId || '', source.guideId || '', label].join('|')
+          if (seen.has(key)) return false
+          seen.add(key)
+          return true
+        })
+        if (!sources.length) continue
+        for (const source of sources) {
+          const kind = source.kind === 'collect' ? '采集' : (source.kind === 'npc_shop' ? 'NPC购买' : (source.kind === 'npc_exchange' ? 'NPC兑换' : '地下城奖励'))
+          const label = String(source.label || '').replace(/×\d+$/, '')
+          html += `
+            <div class="source-recipe-block">
+              <div class="source-recipe-icon"><img src="${getImageUrl(material.id)}" onerror="this.style.display='none'" /></div>
+              <div class="source-recipe-content">
+                <div class="source-recipe-header">
+                  <span class="source-recipe-name">${escapeSource(material.name)}</span>
+                  <span class="source-recipe-kind">${escapeSource(kind)}</span>
+                </div>
+                <span class="source-recipe-label">${escapeSource(label)}</span>
+              </div>
+            </div>
+          `
+        }
+      }
+      return html + '</div>'
+    }
+
     function renderProductSources(product) {
       const escapeSource = value => String(value || '').replace(/[&<>\"']/g, ch => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;'
       }[ch]))
       const sources = product.sources || []
       let html = '<div class="product-sources"><div class="section-title">物品来源</div>'
-      for (const source of sources.slice(0, 20)) {
+      const seen = new Set()
+      const uniqueSources = sources.filter(source => {
+        const label = String(source.label || '').replace(/×\d+$/, '')
+        const key = [source.kind || '', source.formId || '', source.shopName || '', source.tabId || '', source.guideId || '', label].join('|')
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      })
+      for (const source of uniqueSources.slice(0, 20)) {
         const kind = source.kind === 'collect' ? '采集' : (source.kind === 'npc_shop' ? 'NPC购买' : (source.kind === 'npc_exchange' ? 'NPC兑换' : '地下城奖励'))
+        const label = String(source.label || '').replace(/×\d+$/, '')
         html += `
           <div class="source-recipe-block">
             <div class="source-recipe-icon"><img src="${getImageUrl(product.id)}" onerror="this.style.display='none'" /></div>
@@ -790,26 +839,19 @@
                 <span class="source-recipe-name">${escapeSource(product.name)}</span>
                 <span class="source-recipe-kind">${escapeSource(kind)}</span>
               </div>
-              <span class="source-recipe-label">${escapeSource(source.label || '')}</span>
+              <span class="source-recipe-label">${escapeSource(label)}</span>
             </div>
           </div>
         `
       }
-      if (sources.length > 20) {
-        html += `<div class="product-source">还有 ${sources.length - 20} 条来源</div>`
+      if (uniqueSources.length > 20) {
+        html += `<div class="product-source">还有 ${uniqueSources.length - 20} 条来源</div>`
       }
       return html + '</div>'
     }
 
     function renderMaterialItem(mat) {
       const imgSrc = mat.id > 0 ? getImageUrl(mat.id) : ''
-      const escapeHtml = value => String(value || '').replace(/[&<>\"']/g, ch => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;'
-      }[ch]))
-      const sourceList = Array.isArray(mat.sources) ? mat.sources : []
-      const sourceHtml = sourceList.length > 0
-        ? `<div class="material-sources">${sourceList.slice(0, 3).map(source => `<span class="material-source">${escapeHtml(source.label || '')}</span>`).join('')}</div>`
-        : ''
       return `
         <div class="material-item">
           ${mat.id > 0 ? `<span class="material-id">${mat.id}</span>` : ''}
@@ -822,7 +864,6 @@
           <div class="material-info">
             <span class="material-name">${mat.name}</span>
             ${mat.percent !== undefined ? `<span class="material-count">${mat.percent}%</span>` : (mat.count > 0 ? `<span class="material-count">×${mat.count}</span>` : '')}
-            ${sourceHtml}
           </div>
         </div>
       `
