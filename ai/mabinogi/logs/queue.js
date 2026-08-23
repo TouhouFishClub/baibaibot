@@ -41,6 +41,12 @@ async function processReportJob(job) {
     uploaderName: upload?.playerName || '',
     uploaderId: upload?.playerId || ''
   })
+  const timingAnomalies = summary.targets
+    .filter(item => item.timingAnomaly)
+    .map(item => `${item.targetName}: active=${item.activeDuration.toFixed(2)}s elapsed=${item.elapsedDuration.toFixed(2)}s`)
+  const semanticNote = semantic.ok
+    ? (timingAnomalies.length ? `timing_anomaly; ${timingAnomalies.join('; ')}` : null)
+    : semantic.reason
 
   // 语义校验用于挡脏包；若仍能识别出有效击杀，优先入库（避免残局拖死整包）
   if (!semantic.ok && !dpsRecords.length) {
@@ -64,7 +70,7 @@ async function processReportJob(job) {
   await updateReportParsed(reportId, {
     ...summary,
     validRecordCount: dpsRecords.length,
-    semanticNote: semantic.ok ? null : semantic.reason
+    semanticNote
   })
   if (dpsRecords.length) {
     await insertDpsRecords(dpsRecords)

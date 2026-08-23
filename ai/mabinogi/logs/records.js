@@ -9,6 +9,7 @@ const {
 } = require('./bossConfig')
 const { collectPcAttackers, buildTeammateNames } = require('./team')
 const { buildRunCharacterClasses } = require('./classDetect')
+const { deriveTargetTiming } = require('./timing')
 
 function getRankingVisibility(attacker) {
   return attacker?.rankingVisibility
@@ -34,6 +35,8 @@ function buildRecordForTarget({
   const recordTimeMs = centiToMs(target.cleanedAt) || uploadTime.getTime()
   const recordTime = new Date(recordTimeMs)
   const teamSize = pcAttackers.length
+  const timing = deriveTargetTiming(target)
+  const targetTotalDamage = Number(target.totalDamage) || 0
   const duration = Number(target.duration) || 0
   const records = []
 
@@ -52,16 +55,23 @@ function buildRecordForTarget({
       bossHp: getBossKillHp(boss),
       recordTime,
       recordTs: recordTime.getTime(),
-      duration,
+      duration: timing.duration || duration,
       teamSize,
       teammateNames: buildTeammateNames(pcAttackers, characterId),
       characterId,
       characterName: String(attacker.name || '').trim() || characterId,
       rankingVisibility: getRankingVisibility(attacker),
       characterClass: characterClasses.get(characterId) || '未知',
-      dps: Number(attacker.dps) || 0,
+      dps: timing.duration > 0 ? (Number(attacker.totalDamage) || 0) / timing.duration : 0,
       totalDamage: Number(attacker.totalDamage) || 0,
-      damagePercent: Number(attacker.percent) || 0,
+      damagePercent: targetTotalDamage > 0
+        ? ((Number(attacker.totalDamage) || 0) / targetTotalDamage) * 100
+        : 0,
+      reportedDuration: timing.reportedDuration,
+      activeDuration: timing.activeDuration,
+      elapsedDuration: timing.elapsedDuration,
+      timingAnomaly: timing.timingAnomaly,
+      durationSource: timing.durationSource,
       uploaderName: uploaderName || '',
       uploaderId: uploaderId || '',
       uploadedAt: uploadTime,
@@ -131,7 +141,11 @@ function buildPetakCombinedRecords({
   const sortedPhases = [...phases].sort((a, b) => getBossKillHp(a.boss) - getBossKillHp(b.boss))
   const sampleBoss = sortedPhases[0].boss
   const bossHp = getPetakCombinedKillHp(sortedPhases)
-  const duration = sortedPhases.reduce((sum, phase) => sum + (Number(phase.target.duration) || 0), 0)
+  const phaseTimings = sortedPhases.map(phase => deriveTargetTiming(phase.target))
+  const duration = phaseTimings.reduce((sum, timing) => sum + timing.duration, 0)
+  const activeDuration = phaseTimings.reduce((sum, timing) => sum + timing.activeDuration, 0)
+  const elapsedDuration = phaseTimings.reduce((sum, timing) => sum + timing.elapsedDuration, 0)
+  const timingAnomaly = phaseTimings.some(timing => timing.timingAnomaly)
   const recordTimeMs = Math.max(...sortedPhases.map(phase => centiToMs(phase.target.cleanedAt) || uploadTime.getTime()))
   const recordTime = new Date(recordTimeMs)
   const pcAttackers = collectPcAttackers({ targets: sortedPhases.map(phase => phase.target) })
@@ -178,6 +192,10 @@ function buildPetakCombinedRecords({
       dps,
       totalDamage,
       damagePercent,
+      activeDuration,
+      elapsedDuration,
+      timingAnomaly,
+      durationSource: timingAnomaly ? 'elapsed' : 'client',
       uploaderName: uploaderName || '',
       uploaderId: uploaderId || '',
       uploadedAt: uploadTime,

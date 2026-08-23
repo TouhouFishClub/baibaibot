@@ -7,12 +7,13 @@ const {
   maxFileBytes
 } = require('./config')
 const { matchesDungeonName, isKnownBossTarget, matchBossByHp, getBossMinDuration } = require('./bossConfig')
+const { deriveTargetTiming } = require('./timing')
 
 function centiToMs(value) {
   if (value == null || value === '') return null
   const n = Number(value)
   if (!Number.isFinite(n)) return null
-  return Math.floor(n / 100) * 1000
+  return Math.round(n * 10)
 }
 
 function parseGzipJson(buffer) {
@@ -84,7 +85,8 @@ function validateSemantic(data, dungeonName) {
     const requiredMinDuration = boss
       ? getBossMinDuration(boss, minDuration)
       : minDuration
-    if (!Number.isFinite(target.duration) || target.duration < requiredMinDuration || target.duration > maxDuration) {
+    const timing = deriveTargetTiming(target)
+    if (!Number.isFinite(timing.duration) || timing.duration < requiredMinDuration || timing.duration > maxDuration) {
       continue
     }
     if (!Number.isFinite(target.totalDamage) || target.totalDamage <= 0) {
