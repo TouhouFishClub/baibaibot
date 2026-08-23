@@ -135,20 +135,22 @@ async function findReportByRunId(runId) {
 
   const client = await getClient()
   const col = client.db(DB_NAME).collection(COL_UPLOADS)
+  // UUIDs contain hyphens, while users normally paste the compact prefix
+  // shown in the ranking image. Query the prefix directly instead of only
+  // scanning the latest 300 uploads, which made older valid runs invisible.
+  const escapedPrefix = normalized
+    .split('')
+    .map(char => `${char}-?`)
+    .join('')
   const rows = await col.find({
+    _id: { $regex: new RegExp(`^${escapedPrefix}`, 'i') },
     status: { $in: ['parsed', 'failed'] }
   })
     .sort({ uploadedAt: -1 })
-    .limit(300)
+    .limit(2)
     .toArray()
 
-  for (const item of rows) {
-    const id = String(item._id || '').toLowerCase().replace(/-/g, '')
-    if (id === normalized || id.startsWith(normalized)) {
-      return item
-    }
-  }
-  return null
+  return rows[0] || null
 }
 
 async function listReports({ playerId, limit = 20, skip = 0 } = {}) {

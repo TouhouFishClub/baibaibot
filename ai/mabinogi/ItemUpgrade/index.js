@@ -104,10 +104,10 @@ const filterItem = async () => {
 					}
 					if(item.$.XML) {
 						try {
-							let d = await parser.parseStringPromise(fixXMLKey(item.$.XML))
-							injectData['xmlParser'] = d.xml.$
-							injectData['xmlParserStatus'] = 'ok'
-              injectData['xmlParserSource'] = d
+							const parsedItemXml = await parseItemXml(item.$.XML)
+							injectData['xmlParser'] = parsedItemXml.data.xml.$
+							injectData['xmlParserStatus'] = parsedItemXml.status
+							injectData['xmlParserSource'] = parsedItemXml.data
 						} catch (err) {
               injectData['xmlParserStatus'] = 'err'
 							console.log(`FAILED TO ${item.$.ID}`)
@@ -134,6 +134,28 @@ const filterItem = async () => {
 
 const fixXMLKey = xmlString => {
   return xmlString.replace(/(\d+=")/g, 'key$1');
+}
+
+// Some item XML fragments in the unpack are truncated inside a nested tag.
+// Recover the root attributes so random_product and base stats remain usable.
+const parseItemXml = async xmlString => {
+  try {
+    return {
+      data: await parser.parseStringPromise(fixXMLKey(xmlString)),
+      status: 'ok'
+    }
+  } catch (strictError) {
+    const rootMatch = xmlString.match(/^\s*<xml\b([\s\S]*?)>/i)
+    if(!rootMatch) {
+      throw strictError
+    }
+    const rootAttrs = rootMatch[1].replace(/\/\s*$/, '').trim()
+    const repairedXml = `<xml ${rootAttrs} />`
+    return {
+      data: await parser.parseStringPromise(fixXMLKey(repairedXml)),
+      status: 'recovered'
+    }
+  }
 }
 
 const formatUpgradeInfo = async () => {
