@@ -4,7 +4,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const { HttpsProxyAgent } = require('https-proxy-agent');
 const fs = require('fs');
 // ========== 配置区域 ==========
-const TOKEN = '7728677679:AAG4laTaQ4VbskLICECnB_i_bXAKyFu1Mow';
+const TOKEN = '8476804214:AAHlvtVYy7ozHJVMZciklAWRKB96QaXeTqc';
 
 // 代理配置
 const PROXY_CONFIG = {
