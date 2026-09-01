@@ -123,6 +123,19 @@ async function handleRankingConsent(req, res) {
     serverId,
     clientVersion: req.body?.clientVersion || ''
   })
+  if (saved.ignored) {
+    logReceive({
+      event: 'ranking_consent_ignored',
+      reason: saved.ignoredReason || 'blocked_ranking_consent',
+      ip,
+      playerId,
+      playerName,
+      mode,
+      serverId,
+      clientVersion: req.body?.clientVersion || ''
+    })
+    return sendJson(res, 200, { mode: saved.mode, serverId: saved.serverId || null, updatedAt: null })
+  }
   logReceive({
     event: 'ranking_consent_update',
     ip,

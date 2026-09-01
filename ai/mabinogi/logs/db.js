@@ -11,6 +11,7 @@ const COL_NONCE = 'cl_mabinogi_dps_nonce'
 const COL_RANKING_CONSENT = 'cl_mabinogi_dps_ranking_consent'
 const COL_ANNOUNCEMENTS = 'cl_mabinogi_dps_announcements'
 const COL_BUFF_MONITOR = 'cl_mabinogi_dps_buff_monitor'
+const BLOCKED_RANKING_CONSENT_CLIENT_VERSIONS = new Set(['2.7.1'])
 
 let indexesReady = false
 
@@ -254,13 +255,16 @@ async function getBuffMonitorByReportId(reportId) {
 }
 
 async function getRankingConsent(playerId) {
+  if (!isRankingConsentPlayerIdAllowed(playerId)) return null
   await ensureIndexes()
   const client = await getClient()
   return client.db(DB_NAME).collection(COL_RANKING_CONSENT).findOne({ playerId: String(playerId) })
 }
 
 async function getRankingConsentsByPlayerIds(playerIds) {
-  const ids = [...new Set((playerIds || []).map(id => String(id || '').trim()).filter(Boolean))]
+  const ids = [...new Set((playerIds || [])
+    .map(id => String(id || '').trim())
+    .filter(isRankingConsentPlayerIdAllowed))]
   const result = new Map()
   if (!ids.length) return result
 
@@ -277,23 +281,53 @@ async function listConsentedPlayerIds() {
   await ensureIndexes()
   const client = await getClient()
   const rows = await client.db(DB_NAME).collection(COL_RANKING_CONSENT)
-    .find({ mode: { $in: ['anonymous', 'public'] } }, { playerId: 1 })
+    .find({ mode: { $in: ['anonymous', 'public'] }, playerId: /^45[0-9]{1,18}$/ }, { playerId: 1 })
     .toArray()
   return rows.map(row => String(row.playerId || '')).filter(Boolean)
 }
 
+function isRankingConsentClientVersionBlocked(clientVersion) {
+  return BLOCKED_RANKING_CONSENT_CLIENT_VERSIONS.has(String(clientVersion || '').trim())
+}
+
+function isRankingConsentPlayerIdAllowed(playerId) {
+  return /^45[0-9]{1,18}$/.test(String(playerId || '').trim())
+}
+
 async function upsertRankingConsent({ playerId, mode, playerName = '', serverId = '', clientVersion = '' }) {
+  const id = String(playerId)
+  const normalizedClientVersion = String(clientVersion || '').trim()
+  const normalizedServerId = String(serverId || '').trim().toLowerCase()
+  if (!isRankingConsentPlayerIdAllowed(id)) {
+    return {
+      playerId: id,
+      mode,
+      serverId: normalizedServerId,
+      updatedAt: null,
+      ignored: true,
+      ignoredReason: 'blocked_player_id_prefix'
+    }
+  }
+  if (isRankingConsentClientVersionBlocked(normalizedClientVersion)) {
+    return {
+      playerId: id,
+      mode,
+      serverId: normalizedServerId,
+      updatedAt: null,
+      ignored: true,
+      ignoredReason: 'blocked_client_version'
+    }
+  }
+
   await ensureIndexes()
   const client = await getClient()
   const now = new Date()
-  const id = String(playerId)
   const set = {
     mode,
     playerName: String(playerName || '').trim(),
-    clientVersion: String(clientVersion || '').trim(),
+    clientVersion: normalizedClientVersion,
     updatedAt: now
   }
-  const normalizedServerId = String(serverId || '').trim().toLowerCase()
   if (normalizedServerId) set.serverId = normalizedServerId
 
   await client.db(DB_NAME).collection(COL_RANKING_CONSENT).updateOne(
@@ -310,7 +344,7 @@ async function upsertRankingConsent({ playerId, mode, playerName = '', serverId 
 async function updateRankingConsentName(playerId, playerName) {
   const id = String(playerId || '').trim()
   const name = String(playerName || '').trim()
-  if (!id || !name) return false
+  if (!isRankingConsentPlayerIdAllowed(id) || !name) return false
 
   await ensureIndexes()
   const client = await getClient()
@@ -541,6 +575,8 @@ module.exports = {
   getRankingConsent,
   getRankingConsentsByPlayerIds,
   upsertRankingConsent,
+  isRankingConsentClientVersionBlocked,
+  isRankingConsentPlayerIdAllowed,
   updateRankingConsentName,
   listAnnouncements,
   publishAnnouncement,

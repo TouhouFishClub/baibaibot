@@ -5,6 +5,11 @@ const {
   consentServerId,
   getRankingNameRefreshes
 } = require('../handler')
+const {
+  isRankingConsentClientVersionBlocked,
+  isRankingConsentPlayerIdAllowed,
+  upsertRankingConsent
+} = require('../db')
 
 const getBody = getControlRequestBody({ method: 'GET', body: {} })
 assert(Buffer.isBuffer(getBody))
@@ -23,6 +28,13 @@ assert.strictEqual(getRankingConsentPlayerName({
 assert.strictEqual(consentServerId('亚特'), 'yate')
 assert.strictEqual(consentServerId('yiluxia'), 'yiluxia')
 assert.strictEqual(consentServerId('unknown'), '')
+assert.strictEqual(isRankingConsentClientVersionBlocked('2.7.1'), true)
+assert.strictEqual(isRankingConsentClientVersionBlocked(' 2.7.1 '), true)
+assert.strictEqual(isRankingConsentClientVersionBlocked('2.7.10'), false)
+assert.strictEqual(isRankingConsentClientVersionBlocked('2.7.2'), false)
+assert.strictEqual(isRankingConsentPlayerIdAllowed('4503599631735307'), true)
+assert.strictEqual(isRankingConsentPlayerIdAllowed('4767482444036715'), false)
+assert.strictEqual(isRankingConsentPlayerIdAllowed('4503599631735307x'), false)
 
 const nameRefreshes = getRankingNameRefreshes({
   targets: [{
@@ -35,4 +47,26 @@ const nameRefreshes = getRankingNameRefreshes({
 })
 assert.deepStrictEqual(nameRefreshes, [{ id: '100', name: '改名后的角色' }])
 
-console.log('controlRequestUnit: passed')
+upsertRankingConsent({
+  playerId: '123',
+  mode: 'public',
+  playerName: 'blocked-version-name',
+  serverId: 'yate',
+  clientVersion: '2.7.1'
+}).then(result => {
+  assert.strictEqual(result.ignored, true)
+  assert.strictEqual(result.updatedAt, null)
+  return upsertRankingConsent({
+    playerId: '4767482444036715',
+    mode: 'public',
+    playerName: 'invalid-pet-name',
+    clientVersion: '2.7.5'
+  })
+}).then(result => {
+  assert.strictEqual(result.ignored, true)
+  assert.strictEqual(result.ignoredReason, 'blocked_player_id_prefix')
+  console.log('controlRequestUnit: passed')
+}).catch(error => {
+  console.error(error)
+  process.exitCode = 1
+})
