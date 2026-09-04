@@ -50,6 +50,10 @@ const RANKING_VISIBILITY = {
   anonymous: 'anonymous',
   public: 'public'
 }
+const SERVER_NAMES = {
+  yate: '亚特',
+  yiluxia: '伊鲁夏'
+}
 function escapeHtml(text) {
   return String(text ?? '')
     .replace(/&/g, '&amp;')
@@ -124,6 +128,10 @@ function getDefaultCharacterName(row) {
       || '-'
   }
   return ''
+}
+
+function getServerName(serverId) {
+  return SERVER_NAMES[String(serverId || '').trim().toLowerCase()] || ''
 }
 
 function resolveNameVisibility(showMode, rows = []) {
@@ -241,6 +249,10 @@ function renderRow(row, index, withSkill, showMode, visibility, showRunId) {
   const characterClass = String(row.characterClass || '未知').trim()
   const art = getArcanaArt(characterClass)
   const characterName = names.characterName || '-'
+  const serverName = getServerName(row.serverId)
+  const serverMeta = serverName
+    ? `<small class="player-server">@${escapeHtml(serverName)}</small>`
+    : ''
   const teammateMeta = names.showTeammates
     ? `<small class="teammates" title="${escapeHtml(names.teammateNames)}">${escapeHtml(truncate(names.teammateNames, 18))}</small>`
     : ''
@@ -262,7 +274,7 @@ function renderRow(row, index, withSkill, showMode, visibility, showRunId) {
       <div class="uploader-meta">UPLOADER · ${escapeHtml(uploaderName)}</div>
       <div class="player">
         <span class="rank">${String(index + 1).padStart(2, '0')}</span>
-        <div class="player-copy"><strong>${escapeHtml(truncate(characterName, 12))}</strong>${teammateMeta}</div>
+        <div class="player-copy"><div class="player-name"><strong>${escapeHtml(truncate(characterName, 12))}</strong>${serverMeta}</div>${teammateMeta}</div>
       </div>
       <div class="plain-value">${escapeHtml(row.teamSize ?? '-')}<small>TEAM SIZE</small></div>
       <div class="plain-value duration-value">${escapeHtml(formatDuration(row.duration))}<small>DURATION</small></div>
@@ -445,8 +457,15 @@ function buildHtml(option) {
     .row:nth-child(1) .rank { color: rgba(255,199,46,.5); }
     .row:nth-child(2) .rank { color: rgba(216,224,232,.5); }
     .row:nth-child(3) .rank { color: rgba(205,127,50,.5); }
+    .player-name {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      min-width: 0;
+    }
     .player-copy strong {
       display: block;
+      min-width: 0;
       overflow: hidden;
       color: transparent;
       text-overflow: ellipsis;
@@ -457,6 +476,13 @@ function buildHtml(option) {
       background-clip: text;
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 4px 0 #000);
+    }
+    .player-server {
+      flex: 0 0 auto;
+      color: #fff;
+      font: 400 11px/1 "MabiHei", sans-serif;
+      text-shadow: 0 1px 2px #000;
+      white-space: nowrap;
     }
     .player-copy .teammates {
       display: block;
@@ -784,6 +810,7 @@ module.exports = {
   normalizeRankingVisibility,
   getDefaultCharacterName,
   resolveNameVisibility,
+  getServerName,
   ANONYMOUS_CHARACTER_NAME,
   RANKING_VISIBILITY
 }

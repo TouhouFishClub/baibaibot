@@ -10,6 +10,7 @@ const {
   buildHtml,
   getDpsTone,
   getDefaultCharacterName,
+  getServerName,
   ANONYMOUS_CHARACTER_NAME
 } = require('../renderMblogsList')
 
@@ -109,6 +110,10 @@ async function run() {
   assert.strictEqual(getDpsTone(3_000_001), 'legendary')
   assert.strictEqual(getDpsTone(3_000_000), 'rainbow')
   assert.strictEqual(getDpsTone(2_000_001), 'rainbow')
+  assert.strictEqual(getServerName('yate'), '亚特')
+  assert.strictEqual(getServerName('YILUXIA'), '伊鲁夏')
+  assert.strictEqual(getServerName(''), '')
+  assert.strictEqual(getServerName('unknown'), '')
 
   const html = buildHtml({
     title: 'DPS',
@@ -124,8 +129,9 @@ async function run() {
   assert(html.includes('transform: translate(2px, -1.5px)'))
   assert(!html.includes('-webkit-text-stroke: 1px #090b11'))
   assert(html.includes('公开角色名'))
-  assert(!html.includes('亚特'))
-  assert(!html.includes('伊鲁夏'))
+  assert(html.includes('@亚特'))
+  assert(html.includes('@伊鲁夏'))
+  assert.strictEqual((html.match(/class="player-server"/g) || []).length, 2)
   assert(!html.includes('>服务器<'))
   assert(!html.includes('>场次<'))
   assert(html.includes('abcdef12'))
@@ -143,8 +149,8 @@ async function run() {
     sections: [{ rows }]
   })
   assert(!showAllHtml.includes('>服务器<'))
-  assert(!showAllHtml.includes('亚特'))
-  assert(!showAllHtml.includes('伊鲁夏'))
+  assert(showAllHtml.includes('@亚特'))
+  assert(showAllHtml.includes('@伊鲁夏'))
   assert(!showAllHtml.includes('>场次<'))
   assert(showAllHtml.includes('abcdef12'))
 

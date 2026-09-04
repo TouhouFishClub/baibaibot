@@ -14,6 +14,7 @@ const STALE_DOC_THRESHOLD_MS = 50 * 60 * 1000
 
 const products = require('./assets/product.json')
 const vehicles = require('./assets/vehicle.json')
+const { calcVehicleLoad } = require('./vehicleCapacity')
 
 const FONT_PATH = path.join(__dirname, '..', '..', '..', 'font', 'hk4e_zh-cn.ttf')
 const FONT_DATA = fs.existsSync(FONT_PATH)
@@ -41,10 +42,7 @@ const findProduct = itemName => products.find(p => p.name === itemName) || null
 const calcVehicles = product => {
   if (!product) return []
   return vehicles.map(v => {
-    const perSlotWeight = product.weight * product.boxCount
-    const slotsByWeight = perSlotWeight > 0 ? Math.floor(v.weight / perSlotWeight) : 0
-    const actualSlots = Math.min(v.block, slotsByWeight)
-    const totalItems = actualSlots * product.boxCount
+    const { actualSlots, totalItems } = calcVehicleLoad(v, product)
     const totalCost = totalItems * product.price
     return { ...v, actualSlots, totalItems, totalCost }
   }).sort((a, b) => {
