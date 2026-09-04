@@ -480,7 +480,7 @@ function buildHtml(option) {
     .player-server {
       flex: 0 0 auto;
       color: #fff;
-      font: 400 11px/1 "MabiHei", sans-serif;
+      font: 800 16px/1.3 "GeelyDesign", sans-serif;
       text-shadow: 0 1px 2px #000;
       white-space: nowrap;
     }

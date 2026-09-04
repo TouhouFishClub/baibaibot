@@ -132,6 +132,7 @@ async function run() {
   assert(html.includes('@亚特'))
   assert(html.includes('@伊鲁夏'))
   assert.strictEqual((html.match(/class="player-server"/g) || []).length, 2)
+  assert(html.includes('font: 800 16px/1.3 "GeelyDesign", sans-serif'))
   assert(!html.includes('>服务器<'))
   assert(!html.includes('>场次<'))
   assert(html.includes('abcdef12'))
