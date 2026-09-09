@@ -281,7 +281,11 @@ app.get('/listimg',function(req,res){
 
 app.get('/ngaImgPipe/*',function(req,res){
   var path = req.path;
-  var url = 'https://img.nga.178.com/'+path.substring(12);
+  var subPath = path.substring(12);
+  if(/(^|\/)\.\.(\/|$)/.test(decodeURIComponent(subPath))){
+    return res.status(400).send('invalid path');
+  }
+  var url = 'https://img.nga.178.com/'+subPath;
   console.log(url);
   request({
     url: url,
@@ -297,7 +301,11 @@ app.get('/ngaImgPipe/*',function(req,res){
 app.get('/Data/*',function(req,res){
   var path = req.path;
   console.log('path:'+path);
-  var url = 'http://ffxivtools.polaris.xin/Data/'+path.substring(6);
+  var subPath = path.substring(6);
+  if(/(^|\/)\.\.(\/|$)/.test(decodeURIComponent(subPath))){
+    return res.status(400).send('invalid path');
+  }
+  var url = 'http://ffxivtools.polaris.xin/Data/'+subPath;
   console.log(url);
   request({
     url: url,
@@ -314,7 +322,11 @@ app.get('/Content/*',function(req,res){
   var path = req.path;
   console.log('path:'+path);
 
-  var url = 'http://ffxivtools.polaris.xin/Content/'+path.substring(9);
+  var subPath = path.substring(9);
+  if(/(^|\/)\.\.(\/|$)/.test(decodeURIComponent(subPath))){
+    return res.status(400).send('invalid path');
+  }
+  var url = 'http://ffxivtools.polaris.xin/Content/'+subPath;
   console.log(url);
   request({
     url: url,
