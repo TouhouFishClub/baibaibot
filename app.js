@@ -23,8 +23,8 @@ const {
   socketManager
 } = require('./reverseWsUtils')
 const {setPushWs,pushToGroup} = require('./ai/push');
-// 导入openApi路由
-const openApiRouter = require('./openApi/index');
+// baibai-qq-bot 已弃用并迁移到 baibai-official-bot，/openapi 暂不启用，需要时再恢复
+// const openApiRouter = require('./openApi/index');
 // 导入知识库模块
 const knowledge = require('./ai/chat/core/knowledge');
 try {
@@ -58,8 +58,8 @@ app.use(bodyParser.json({
 var request = require("request");
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 配置openApi路由
-app.use('/openapi', openApiRouter);
+// baibai-qq-bot 已弃用并迁移到 baibai-official-bot，/openapi 暂不启用，需要时再恢复
+// app.use('/openapi', openApiRouter);
 
 /* set public path */
 
