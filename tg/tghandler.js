@@ -15,48 +15,61 @@ const PROXY_CONFIG = {
 
 // ========== 创建代理 Agent ==========
 let proxyAgent = null;
-let botConfig = {
-  polling: true,
-  // 设置轮询超时
+let bot = null;
+let telegramDisabled = false;
+const botConfig = {
   polling: {
     interval: 1000,
-    autoStart: true,
+    autoStart: false,
     params: {
       timeout: 10
     }
   }
 };
 
-if (PROXY_CONFIG.enabled && PROXY_CONFIG.url) {
-  console.log(`✓ 启用代理: ${PROXY_CONFIG.url}`);
-
-  proxyAgent = new HttpsProxyAgent(PROXY_CONFIG.url);
-
-  // 为所有请求配置代理
-  botConfig.request = {
-    agent: proxyAgent,
-    // 可选: 设置超时时间
-    timeout: 30000
-  };
-} else {
-  console.log('✓ 直连模式（未启用代理）');
+function disableTelegram(reason) {
+  if (telegramDisabled) return;
+  telegramDisabled = true;
+  console.error('❌ Telegram 功能已禁用，不影响其他功能:', reason);
+  console.error('请检查: 1) Token 是否正确 2) 代理是否可用 3) 网络连接');
+  if (bot && typeof bot.stopPolling === 'function') {
+    Promise.resolve(bot.stopPolling({ cancel: true })).catch(() => {});
+  }
 }
 
-// 创建 bot 实例
-const bot = new TelegramBot(TOKEN, botConfig);
+try {
+  if (PROXY_CONFIG.enabled && PROXY_CONFIG.url) {
+    console.log(`✓ 启用代理: ${PROXY_CONFIG.url}`);
+    proxyAgent = new HttpsProxyAgent(PROXY_CONFIG.url);
+    botConfig.request = {
+      agent: proxyAgent,
+      timeout: 30000
+    };
+  } else {
+    console.log('✓ 直连模式（未启用代理）');
+  }
 
-// ========== 测试代理连接 ==========
-bot.getMe()
-  .then(me => {
-    console.log('✅ Bot 连接成功！');
-    console.log(`Bot 名称: ${me.first_name} (@${me.username})`);
-    console.log('等待消息中...\n');
-  })
-  .catch(err => {
-    console.error('❌ Bot 连接失败:', err.message);
-    console.error('请检查: 1) Token 是否正确 2) 代理是否可用 3) 网络连接');
-    process.exit(1);
-  });
+  bot = new TelegramBot(TOKEN, botConfig);
+
+  bot.getMe()
+    .then(me => {
+      if (telegramDisabled) return;
+      console.log('✅ Bot 连接成功！');
+      console.log(`Bot 名称: ${me.first_name} (@${me.username})`);
+      console.log('等待消息中...\n');
+      return bot.startPolling();
+    })
+    .catch(err => {
+      disableTelegram(err && err.message ? err.message : String(err));
+    });
+} catch (err) {
+  disableTelegram(err && err.message ? err.message : String(err));
+  bot = null;
+}
+
+if (!bot) {
+  console.warn('⚠️ Telegram 功能未启动，主程序继续运行');
+} else {
 
 
 function parseCQMessage(msg) {
@@ -447,14 +460,20 @@ bot.on('location', (msg) => {
 
 // ========== 15. 错误处理 ==========
 bot.on('polling_error', (error) => {
-  console.error('❌ 轮询错误:', error.message);
-  if (error.code === 'EFATAL') {
-    console.error('严重错误，Bot 已停止');
+  const message = (error && error.message) || String(error);
+  const unauthorized = (error && error.statusCode === 401) || /401|Unauthorized/i.test(message);
+  if (unauthorized) {
+    disableTelegram(message);
+    return;
   }
+  if (telegramDisabled) return;
+  console.error('❌ 轮询错误:', message);
 });
 
 bot.on('error', (error) => {
-  console.error('❌ Bot 错误:', error.message);
+  const message = (error && error.message) || String(error);
+  if (telegramDisabled) return;
+  console.error('❌ Bot 错误:', message);
 });
 
 // ========== 16. 主动发送消息示例 ==========
@@ -743,9 +762,10 @@ bot.onText(/\/stats/, (msg) => {
 
 // ========== 启动完成 ==========
 console.log('\n' + '='.repeat(50));
-console.log('🤖 Telegram Bot 已启动');
+console.log('🤖 Telegram 模块已加载（连接成功后才会开始收消息）');
 console.log('🌐 代理状态:', PROXY_CONFIG.enabled ? '已启用' : '未启用');
 if (PROXY_CONFIG.enabled) {
   console.log('🔗 代理地址:', PROXY_CONFIG.url);
 }
 console.log('='.repeat(50) + '\n');
+}

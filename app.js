@@ -27,7 +27,11 @@ const {setPushWs,pushToGroup} = require('./ai/push');
 const openApiRouter = require('./openApi/index');
 // 导入知识库模块
 const knowledge = require('./ai/chat/core/knowledge');
-require('./tg/tghandler');
+try {
+  require('./tg/tghandler');
+} catch (err) {
+  console.error('❌ Telegram 模块加载失败，已跳过 Telegram 功能:', err && err.message ? err.message : err);
+}
 
 const ports = new Set([
 	// 23334,
