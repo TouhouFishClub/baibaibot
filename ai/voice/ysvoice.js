@@ -1,4 +1,4 @@
-const { exec } = require('child_process')
+const { exec, execFile } = require('child_process')
 var request = require('request');
 var fs = require('fs')
 
@@ -128,9 +128,9 @@ function ysVoiceReply000(content,gid,qq,callback){
   }
   var nowts = new Date().getTime();
   var py='run_new.py'
-  var cmdStr = '../plugin/Python-3.8.16/python ../plugin/vits_yunzai_plugin/vits/'+ py +' --character=' + characternum + ' --text=' + txt +' --out=../coolq-data/cq/data/record/send/'+nowts+'.wav';
+  var args = ['../plugin/vits_yunzai_plugin/vits/' + py, '--character=' + characternum, '--text=' + txt, '--out=../coolq-data/cq/data/record/send/' + nowts + '.wav'];
 
-  exec(cmdStr, async function (error, stdout, stderr) {
+  execFile('../plugin/Python-3.8.16/python', args, async function (error, stdout, stderr) {
     if (error) {
       console.log("生成失败", stderr);
     } else {
