@@ -499,7 +499,7 @@ function getRank(page,retarr,proxy){
                 for (let [left, right] of _d.pos) {
                   let func = _d.body.slice(left, right);
 
-                  let var_cnt = [...func.matchAll(/var /g)].length;
+                  let var_cnt = [...func.matchAll(/const /g)].length;
                   let for_cnt = [...func.matchAll(/for\(/g)].length;
                   let while_cnt = [...func.matchAll(/while\(/g)].length;
                   let if_cnt = [...func.matchAll(/if\(/g)].length;
@@ -2270,7 +2270,7 @@ function searchShip(name,callback){
 setTimeout(function(){
 
   //handleSenkaReply('z8-マロン','','',function(r){console.log(r)})
-  //handleSenkaReply('z8','','',function(r){console.log(r)})
+  handleSenkaReply('z8','','',function(r){console.log(r)})
   //addShipUser('Liberos',function(r){console.log(r)})
   //getRank(1,[]);
   //searchShip('Apate',function(r){console.log(r)})
