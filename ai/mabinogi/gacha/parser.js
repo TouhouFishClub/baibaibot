@@ -32,8 +32,9 @@ const normalizeGachaPoolName = name => String(name || '')
 	.trim()
 
 const normalizeGachaItemName = (poolName, itemName) => {
-	if(poolName !== PRIVATE_DETECTIVE_POOL) return itemName
-	return PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS[itemName] || itemName
+	const trimmed = String(itemName || '').trim()
+	if(poolName !== PRIVATE_DETECTIVE_POOL) return trimmed
+	return PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS[trimmed] || trimmed
 }
 
 const normalizeGachaRareMap = (poolName, raremap) => {
@@ -48,7 +49,9 @@ const normalizeGachaRareMap = (poolName, raremap) => {
 		normalized[normalizedRareTag] = [
 			rareInfo[0],
 			rareInfo[1],
-			rareInfo[2].map(itemName => normalizeGachaItemName(poolName, itemName))
+			rareInfo[2]
+				.map(itemName => normalizeGachaItemName(poolName, itemName))
+				.filter(Boolean)
 		]
 	}
 	for(const rareTag of STANDARD_RARE_TAGS) {

@@ -336,14 +336,17 @@ const loadGachaGroup = async (page = 1, source = false) => {
 					let rareInfo = raremap[rareKeys[i]]
 					let [color, rare, rareList] = rareInfo
 					for(let j = 0; j < rareList.length; j ++) {
-						let target = await col.findOne({_id: rareList[j]})
+						let itemName = String(rareList[j] || '').trim()
+						if(!itemName) continue
+						let alias = itemName.replace(/[()（）]/g, '')
+						let target = await col.findOne({_id: itemName})
 						if(target) {
 							if(target.info.findIndex(x => x.pool === info.name) === -1) {
 								await col.updateOne(
-									{ _id: rareList[j] },
+									{ _id: itemName },
 									{
 										'$set': {
-											alias: rareList[j].replace(/[()（）]/g, ''),
+											alias,
 											info: target.info.concat([{
 												pool: info.name,
 												rare,
@@ -356,8 +359,8 @@ const loadGachaGroup = async (page = 1, source = false) => {
 							}
 						} else {
 							await col.save({
-								_id: rareList[j],
-								alias: rareList[j].replace(/[()（）]/g, ''),
+								_id: itemName,
+								alias,
 								info: [
 									{
 										pool: info.name,
