@@ -26,7 +26,9 @@ const GACHA_RARE_TAG_ALIASES = {
 const STANDARD_RARE_TAGS = ['S', 'A', 'B', 'C', 'D']
 
 const normalizeGachaPoolName = name => String(name || '')
+	.replace(/更新内容\s*[:：]\s*/, '')
 	.replace(/^\s*[-\u2013\u2014]?\s*新增\s*/, '')
+	.replace(/^\s*[-\u2013\u2014]\s*/, '')
 	.trim()
 
 const normalizeGachaItemName = (poolName, itemName) => {
@@ -57,10 +59,20 @@ const normalizeGachaRareMap = (poolName, raremap) => {
 
 const extractGachaNameBeforeLink = (newsContent, linkIndex) => {
 	const beforeLink = newsContent.substring(0, linkIndex)
+	// Maintenance notices separate items with <br> or adjacent <p> blocks.
+	// Only the block immediately before the probability link is the pool name.
 	const lines = beforeLink
 		.replace(/<br\s*\/?>/gi, '\n')
+		.replace(/<\/(?:p|div|li|h[1-6]|tr|dd|dt)\s*>/gi, '\n')
 		.split(/\r?\n/)
-	return lines[lines.length - 1]
+	let line = ''
+	for(let i = lines.length - 1; i >= 0; i--) {
+		if(lines[i].replace(/<[^>]*>/g, '').replace(/&nbsp;|&#160;/gi, ' ').trim()) {
+			line = lines[i]
+			break
+		}
+	}
+	return line
 		.replace(/<[^>]*>/g, '')
 		.replace(/&nbsp;|&#160;/gi, ' ')
 		.replace(/^>\s*/, '')

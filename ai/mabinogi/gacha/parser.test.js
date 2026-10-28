@@ -33,6 +33,17 @@ assert.strictEqual(parseGachaEntryFromArticle(`
 `), null)
 
 assert.strictEqual(normalizeGachaPoolName(' - 新增神秘手帕礼包 '), '神秘手帕礼包')
+assert.strictEqual(normalizeGachaPoolName('更新内容：        - 埃莉诺阿复古手帕礼包'), '埃莉诺阿复古手帕礼包')
+
+const updateContentNotice = `
+<dd class="cur" id="newscontent">
+<p>亲爱的玩家：</p><p><br></p><p>\u00a0 \u00a0 \u00a0 更新内容：</p><p>\u00a0 \u00a0 \u00a0 \u00a0 - 音效修复</p><p>\u00a0 \u00a0 \u00a0 \u00a0 - 埃莉诺阿复古手帕礼包[<u><font color="#0000ff"><a href="https://luoqi.tiancity.com/homepage/event/2026/1028alnpl/" target="_blank">点击查看概率</a></font></u>]</p>
+</dd>`
+
+assert.deepStrictEqual(parseGachaEntryFromArticle(updateContentNotice), {
+	name: '埃莉诺阿复古手帕礼包',
+	link: 'https://luoqi.tiancity.com/homepage/event/2026/1028alnpl/'
+})
 
 const multiplePoolsNotice = `
 <dd class="cur" id="newscontent"><p>
