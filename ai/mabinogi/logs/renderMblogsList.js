@@ -419,8 +419,6 @@ function buildHtml(option) {
       height: 100%;
       object-fit: cover;
       object-position: center center;
-      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 78%);
-      mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 78%);
     }
     .record-time {
       position: absolute;
