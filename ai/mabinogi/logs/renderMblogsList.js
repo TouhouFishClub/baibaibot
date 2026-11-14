@@ -270,7 +270,6 @@ function renderRow(row, index, withSkill, showMode, visibility, showRunId) {
       <div class="arcana-visual">
         ${art ? `<img src="${art}" alt="${escapeHtml(characterClass)}">` : ''}
         <span class="record-time">${escapeHtml(formatTime(row.recordTime))}</span>
-        <span class="arcana-name">${escapeHtml(characterClass)}</span>
       </div>
       <div class="uploader-meta">UPLOADER · ${escapeHtml(uploaderName)}</div>
       <div class="player">
@@ -423,33 +422,26 @@ function buildHtml(option) {
       -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 78%);
       mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 78%);
     }
-    .arcana-name {
-      position: absolute;
-      z-index: 2;
-      left: 10px;
-      right: 22px;
-      bottom: 0;
-      display: block;
-      overflow: hidden;
-      color: transparent;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font: 400 28px/.9 "FZYouShang", "MabiHei", sans-serif;
-      background: linear-gradient(to bottom, transparent 0%, var(--class-color) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
     .record-time {
       position: absolute;
       z-index: 3;
-      top: 2px;
-      left: 8px;
+      left: 10px;
+      right: 22px;
+      bottom: 4px;
+      overflow: hidden;
       color: #fff;
-      font: 800 16px/1 "Orbitron", sans-serif;
+      text-overflow: ellipsis;
       white-space: nowrap;
-      -webkit-text-stroke: 3px #000;
-      paint-order: stroke fill;
+      font: 800 16px/1 "Orbitron", sans-serif;
+      text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000,
+        0 -1px 0 #000,
+        0 1px 0 #000,
+        -1px 0 0 #000,
+        1px 0 0 #000;
     }
     .player {
       position: relative;
