@@ -11,6 +11,11 @@ const DUNGEONS = [
     key: 'pespiade',
     name: '佩斯皮亚德',
     aliases: ['佩斯皮亚德']
+  },
+  {
+    key: 'abyss_crom_bas',
+    name: '深渊之科隆巴斯',
+    aliases: ['深渊之科隆巴斯']
   }
 ]
 
@@ -51,6 +56,13 @@ const BOSSES = [
     aliases: ['雷内恩的米耶尔：悔恨', '悔恨', '米耶尔：悔恨', '四王'],
     groupKey: 'mayer_regret',
     referenceHp: 3_449_000_000
+  },
+  {
+    key: 'peron',
+    displayName: '佩隆',
+    aliases: ['佩隆', '千猫'],
+    groupKey: 'peron',
+    maxHp: 1_800_000_000
   },
   // {
   //   key: 'galta',
@@ -95,7 +107,36 @@ function matchesDungeonName(dungeonName) {
 function isKnownBossTarget(target) {
   const maxHp = Number(target?.bossHP?.maxHp)
   if (!Number.isFinite(maxHp)) return false
-  return matchBossByHp(maxHp) != null
+  return matchBossTarget(target) != null
+}
+
+function isPeronTarget(target) {
+  const name = String(target?.targetName || '').split(' #')[0].trim()
+  const raceId = Number(target?.bossHP?.raceId || 0)
+  return name === '佩隆' && (!raceId || raceId === 193810)
+}
+
+function matchBossTarget(target) {
+  const boss = matchBossByHp(Number(target?.bossHP?.maxHp))
+  if (boss?.key === 'peron' && !isPeronTarget(target)) return null
+  return boss
+}
+
+// 本地存档中完整佩隆击杀：18 亿伤害、HP 归零、存在死亡事件。
+function isCompletePeronKill(target) {
+  if (!isPeronTarget(target)) return false
+  const maxHp = Number(target?.bossHP?.maxHp)
+  const damage = Number(target?.totalDamage)
+  const history = target?.bossHP?.history
+  if (!Number.isFinite(maxHp) || Math.abs(maxHp - 1_800_000_000) > HP_TOLERANCE ||
+      !Number.isFinite(damage) || Math.abs(damage - 1_800_000_000) > HP_TOLERANCE ||
+      !(Number(target?.deathTime) > 0) || !Array.isArray(history) || !history.length) return false
+  // 客户端只保留最近的 HP 历史，完整性以累计伤害判断。
+  return history[history.length - 1].currentHp === 0
+}
+
+function isTargetAllowedForDungeon(target, dungeonName) {
+  return !String(dungeonName || '').includes('深渊之科隆巴斯') || isCompletePeronKill(target)
 }
 
 function matchBossByHp(packageMaxHp) {
@@ -195,6 +236,7 @@ function isBossKillCompleted(target) {
   }
 
   const boss = matchBossByHp(packageMaxHp)
+  if (boss?.key === 'peron') return isCompletePeronKill(target)
   // 佩塔克必须 P1+P2 成对判定，单阶段不算击杀
   if (boss?.groupKey === 'petak') {
     return false
@@ -340,6 +382,9 @@ module.exports = {
   DUNGEONS,
   BOSSES,
   matchBossByHp,
+  matchBossTarget,
+  isCompletePeronKill,
+  isTargetAllowedForDungeon,
   isBossKillCompleted,
   isPetakPhaseKillCompleted,
   isPetakP1KillCompleted,

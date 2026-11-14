@@ -6,7 +6,7 @@ const {
   maxHistoryDays,
   maxFileBytes
 } = require('./config')
-const { matchesDungeonName, isKnownBossTarget, matchBossByHp, getBossMinDuration } = require('./bossConfig')
+const { matchesDungeonName, isKnownBossTarget, matchBossTarget, getBossMinDuration, isTargetAllowedForDungeon } = require('./bossConfig')
 const { deriveTargetTiming } = require('./timing')
 
 function centiToMs(value) {
@@ -76,12 +76,13 @@ function validateSemantic(data, dungeonName) {
 
   // 一场战斗包里常混有残局/秒退；不应因单个 target 不合格而整包拒绝
   for (const target of data.targets) {
+    if (!isTargetAllowedForDungeon(target, dungeonName)) continue
     const maxHp = target?.bossHP?.maxHp
     if (!Number.isFinite(maxHp) || (maxHp < minBossMaxHp && !isKnownBossTarget(target))) {
       continue
     }
 
-    const boss = matchBossByHp(maxHp)
+    const boss = matchBossTarget(target)
     const requiredMinDuration = boss
       ? getBossMinDuration(boss, minDuration)
       : minDuration

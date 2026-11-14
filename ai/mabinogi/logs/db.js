@@ -440,24 +440,29 @@ function dedupeBestPerCharacter(records) {
   return [...best.values()]
 }
 
-function appendRecordFilters(query, { characterClass, characterIds } = {}) {
+function appendRecordFilters(query, { characterClass, characterIds, bossGroup } = {}) {
   const result = { ...query }
   if (characterClass) result.characterClass = String(characterClass)
   if (Array.isArray(characterIds)) {
     result.characterId = { $in: characterIds.map(id => String(id)) }
   }
+  if (bossGroup) {
+    result.$and = [...(result.$and || []), {
+      $or: [{ bossGroup }, { bossKey: { $in: getBossKeysByGroup(bossGroup) } }]
+    }]
+  }
   return result
 }
 
-async function listRecordsByCharacter(characterName, limitPerBoss = 3, { characterClass, characterIds } = {}) {
+async function listRecordsByCharacter(characterName, limitPerBoss = 3, { characterClass, characterIds, bossGroup } = {}) {
   const regex = new RegExp(characterName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-  const all = await listDpsRecords(appendRecordFilters({ characterName: regex }, { characterClass, characterIds }), { limit: 500 })
+  const all = await listDpsRecords(appendRecordFilters({ characterName: regex }, { characterClass, characterIds, bossGroup }), { limit: 500 })
   return groupTopByBoss(all, limitPerBoss)
 }
 
-async function listRecordsByDungeon(dungeonName, limitPerBoss = 10, { bestPerCharacter = true, characterClass, characterIds } = {}) {
+async function listRecordsByDungeon(dungeonName, limitPerBoss = 10, { bestPerCharacter = true, characterClass, characterIds, bossGroup } = {}) {
   const regex = new RegExp(dungeonName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-  const all = await listDpsRecords(appendRecordFilters({ dungeonName: regex }, { characterClass, characterIds }), { limit: 1000 })
+  const all = await listDpsRecords(appendRecordFilters({ dungeonName: regex }, { characterClass, characterIds, bossGroup }), { limit: 1000 })
   return groupTopByBoss(all, limitPerBoss, { bestPerCharacter })
 }
 

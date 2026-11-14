@@ -1,6 +1,6 @@
 const path = require('path-extra')
 const { IMAGE_DATA } = require('../../../baibaiConfigs')
-const { resolveQueryType, BOSSES, DUNGEONS } = require('./bossConfig')
+const { resolveQueryType, resolveBossQuery, BOSSES, DUNGEONS } = require('./bossConfig')
 const { CLASSES, formatClassHelpLine, resolveClassQuery } = require('./classConfig')
 const {
   listRecordsByCharacter,
@@ -59,6 +59,7 @@ function buildMblogsHelp({ isAdmin = false } = {}) {
     '参数：',
     '  --rank N    显示前 N 名（副本默认 10，Boss 默认 30，角色默认 3；普通用户最多 30）',
     '  --job 职业名  只显示指定职业（模糊匹配）',
+    '  --boss Boss名  只查询指定 Boss（佩隆支持别名：千猫）',
     '  --all       显示全部记录，不做「每角色仅保留最高 DPS」去重',
     '  --withskill 列表模式在角色条目下显示技能占比进度条',
     ...(isAdmin ? [
@@ -72,6 +73,9 @@ function buildMblogsHelp({ isAdmin = false } = {}) {
     '  mblogs 枯木之佩塔克 --job 流子',
     '  mblogs 枯木之佩塔克 --rank 15 --job 黑魔导士',
     '  mblogs 布里列赫 --all',
+    '  mblogs --boss 佩隆',
+    '  mblogs 角色名 --boss 千猫',
+    '  mblogs 深渊之科隆巴斯 --boss 佩隆',
     '  mblogs 雷内恩的米耶尔 --withskill',
     ...(isAdmin ? [
       '  mblogs 布里列赫 --show 脱敏',
@@ -126,6 +130,7 @@ function parseMblogsInput(content) {
   let showModeError = null
   let rank = null
   let job = null
+  let boss = null
   const keywordParts = []
 
   for (let i = 0; i < tokens.length; i++) {
@@ -157,6 +162,14 @@ function parseMblogsInput(content) {
       job = jobParts.join(' ').trim() || null
       continue
     }
+    if (token === '--boss') {
+      const bossParts = []
+      while (i + 1 < tokens.length && !String(tokens[i + 1]).startsWith('--')) {
+        bossParts.push(tokens[++i])
+      }
+      boss = bossParts.join(' ').trim()
+      continue
+    }
     if (token === '--show') {
       showRequested = true
       const showParts = []
@@ -184,7 +197,8 @@ function parseMblogsInput(content) {
     showMode,
     showModeError,
     rank,
-    job
+    job,
+    boss
   }
 }
 
@@ -307,7 +321,7 @@ async function applyRankingConsents(sections) {
   }))
 }
 
-async function queryMblogs(content, { showAll = false, rank, job, withSkill = false, isAdmin = false } = {}) {
+async function queryMblogs(content, { showAll = false, rank, job, boss, withSkill = false, isAdmin = false } = {}) {
   if (isMblogsHelpRequest(content)) {
     return { help: buildMblogsHelp({ isAdmin }) }
   }
@@ -327,7 +341,14 @@ async function queryMblogs(content, { showAll = false, rank, job, withSkill = fa
     }
   }
 
-  const query = resolveQueryType(content)
+  const bossQuery = boss != null ? resolveBossQuery(boss) : null
+  if (boss != null && !bossQuery) {
+    return { error: `无效的 --boss 参数「${boss || '(空)'}」，可用 Boss：${[...new Set(BOSSES.map(item => item.displayName))].join('、')}（佩隆也可用千猫）` }
+  }
+  const query = resolveQueryType(content || (bossQuery ? bossQuery.displayName : DEFAULT_DUNGEON))
+  if (query.type === 'boss' && bossQuery && query.boss.groupKey !== bossQuery.groupKey) {
+    return { error: '查询的 Boss 与 --boss 参数不一致' }
+  }
   if (query.type === 'help') {
     return { error: '用法：mblogs 角色名 / mblogs 布里列赫 / mblogs Boss名 / mblogs 布里列赫 --all / mblogs 布里列赫 --rank 20 / mblogs Boss名 --job 流星射手 / mblogs Boss名 --withskill' }
   }
@@ -338,7 +359,8 @@ async function queryMblogs(content, { showAll = false, rank, job, withSkill = fa
   const queryOptions = {
     bestPerCharacter: !showAll,
     characterClass: resolvedJob || undefined,
-    characterIds: consentedCharacterIds
+    characterIds: consentedCharacterIds,
+    bossGroup: bossQuery?.groupKey
   }
 
   let result
@@ -382,6 +404,9 @@ async function queryMblogs(content, { showAll = false, rank, job, withSkill = fa
     }
   }
 
+  if (bossQuery && result.mode !== 'boss') {
+    result.title += ` · ${bossQuery.displayName}`
+  }
   result.sections = await applyRankingConsents(result.sections)
   if (!result.sections.some(section => section.rows.length)) {
     return { error: '未找到已同意参与公开排行的 DPS 记录' }
@@ -474,11 +499,11 @@ async function mblogs(content, from, callback, groupid) {
     return
   }
 
-  const { keyword: queryKeyword, showAll, rank, job, withSkill, showMode } = parsed
-  const resolvedKeyword = queryKeyword || DEFAULT_DUNGEON
+  const { keyword: queryKeyword, showAll, rank, job, boss, withSkill, showMode } = parsed
+  const resolvedKeyword = queryKeyword || (boss != null ? '' : DEFAULT_DUNGEON)
 
   try {
-    const result = await queryMblogs(resolvedKeyword, { showAll, rank, job, withSkill, isAdmin })
+    const result = await queryMblogs(resolvedKeyword, { showAll, rank, job, boss, withSkill, isAdmin })
     if (result.help) {
       callback(result.help)
       return

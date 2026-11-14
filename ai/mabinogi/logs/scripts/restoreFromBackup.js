@@ -112,6 +112,7 @@ function inferDungeonName(data, fileName) {
     return fromFile[1]
   }
   // 从 targets 粗略猜：有佩塔克/布隆/米耶尔 → 布里列赫；有盖尔塔 → 佩斯皮亚德
+  if ((data.targets || []).some(target => target.bossHP?.raceId === 193810 && target.bossHP?.maxHp === 1_800_000_000)) return '深渊之科隆巴斯'
   const names = (data.targets || []).map(t => String(t.targetName || ''))
   if (names.some(n => n.includes('盖尔塔') || n.includes('塔赫杜因'))) return '佩斯皮亚德'
   if (names.some(n => n.includes('佩塔克') || n.includes('布隆') || n.includes('米耶尔'))) return '布里列赫'

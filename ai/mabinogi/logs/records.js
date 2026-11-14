@@ -2,6 +2,8 @@ const crypto = require('crypto')
 const { centiToMs } = require('./validate')
 const {
   matchBossByHp,
+  matchBossTarget,
+  isTargetAllowedForDungeon,
   isBossKillCompleted,
   isPetakCombinedKillCompleted,
   getBossKillHp,
@@ -216,8 +218,8 @@ function buildDpsRecords({
 }) {
   const records = []
   const uploadTime = uploadedAt instanceof Date ? uploadedAt : new Date(uploadedAt)
-  const characterClasses = buildRunCharacterClasses(data)
-  const targets = data.targets || []
+  const targets = (data.targets || []).filter(target => isTargetAllowedForDungeon(target, dungeonName))
+  const characterClasses = buildRunCharacterClasses({ ...data, targets })
   const petakPairs = collectPetakPhasePairs(targets)
   const uploader = {
     uploaderName: uploaderName || '',
@@ -225,8 +227,7 @@ function buildDpsRecords({
   }
 
   for (const target of targets) {
-    const maxHp = Number(target?.bossHP?.maxHp)
-    const boss = matchBossByHp(maxHp)
+    const boss = matchBossTarget(target)
     if (!boss || boss.groupKey === 'petak') continue
     if (!isBossKillCompleted(target)) continue
 

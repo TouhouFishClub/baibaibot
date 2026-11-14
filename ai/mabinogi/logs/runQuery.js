@@ -2,7 +2,7 @@ const { parseGzipJson } = require('./validate')
 const { readSourceFile } = require('./storage')
 const { findReportByRunId, listDpsRecords } = require('./db')
 const { buildRunPanels } = require('./runChartData')
-const { shortRunId } = require('./bossConfig')
+const { shortRunId, isTargetAllowedForDungeon } = require('./bossConfig')
 
 function isRunIdKeyword(keyword) {
   const kw = String(keyword || '').trim()
@@ -40,7 +40,10 @@ async function loadRunDetail(runId) {
     return { error: `场次「${shortRunId(report._id)}」原始文件无法解析：${parsed.reason}` }
   }
 
-  const panels = buildRunPanels(parsed.data)
+  const panels = buildRunPanels({
+    ...parsed.data,
+    targets: parsed.data.targets.filter(target => isTargetAllowedForDungeon(target, report.dungeonName))
+  })
   if (!panels.length) {
     return { error: `场次「${shortRunId(report._id)}」没有已击杀的 Boss 数据` }
   }

@@ -42,7 +42,7 @@ ai/banana/
 - `apiKey`（必填）：速创API的授权密钥
 - `endpoint`（必填）：服务器的公网访问地址，用于临时托管私有域名图片
   - 格式：`http://域名或IP:端口`
-  - 示例：`http://flanb.msharebox.com:10086`
+  - 示例：`[PRIVATE_SERVICE_URL]`
   - 注意：不要在末尾加斜杠
 
 ### 2. 获取API密钥

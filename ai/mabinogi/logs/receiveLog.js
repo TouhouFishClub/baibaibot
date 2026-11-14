@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const { MODULE_DIR } = require('./config')
+const { maskUploadText } = require('./privacy')
 
 const LOG_PATH = path.join(MODULE_DIR, 'receive.log')
 
@@ -18,13 +19,13 @@ function formatBrief(entry) {
 
 function logReceive(entry) {
   const record = { ts: new Date().toISOString(), ...entry }
-  const line = `${JSON.stringify(record)}\n`
+  const line = `${maskUploadText(JSON.stringify(record))}\n`
   fs.appendFile(LOG_PATH, line, error => {
     if (error) {
       console.error('[dps-logs] receive.log 写入失败', error.message)
     }
   })
-  console.log(`[dps-logs] receive ${formatBrief(record)}`)
+  console.log(maskUploadText(`[dps-logs] receive ${formatBrief(record)}`))
 }
 
 module.exports = {

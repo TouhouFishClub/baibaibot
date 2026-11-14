@@ -1,7 +1,7 @@
 const { parseGzipJson } = require('./validate')
 const { readSourceFile } = require('./storage')
 const { findReportByRunId } = require('./db')
-const { matchBossByHp } = require('./bossConfig')
+const { matchBossTarget, isCompletePeronKill } = require('./bossConfig')
 const { extractSkillName } = require('./classDetect')
 
 const MAX_SKILLS = 5
@@ -59,8 +59,9 @@ function matchTargetsForRecord(data, record) {
   const bossKey = record.bossKey
 
   return targets.filter(target => {
-    const boss = matchBossByHp(Number(target?.bossHP?.maxHp))
+    const boss = matchBossTarget(target)
     if (!boss) return false
+    if (boss.key === 'peron' && !isCompletePeronKill(target)) return false
     if (bossGroup === 'petak' || bossKey === 'petak') {
       return boss.groupKey === 'petak'
     }

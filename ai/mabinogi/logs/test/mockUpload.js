@@ -271,7 +271,7 @@ async function main() {
 
   const samples = packages.map(fileName => buildSampleForFile(fileName, manifestIndex.get(fileName), manifest))
 
-  console.log(`Endpoint: ${endpoint}`)
+  console.log('Endpoint: [server]')
   console.log(`Packages: ${samples.length} (scan mock/*.json.gz)`)
   console.log(`Secret: ${secret ? '(loaded)' : '(missing)'}`)
   console.log(`Force: ${args.force ? 'on（跳过同队伍去重）' : 'off（启用同队伍去重）'}`)
@@ -291,15 +291,17 @@ async function main() {
       const expect = shouldUpload ? 'accept' : 'reject-or-skip'
       const dup = result.json?.duplicate ? ' [重复，未入库]' : ''
       const reason = result.json?.reason ? ` reason=${result.json.reason}` : ''
-      console.log(`[${result.sample}] HTTP ${result.status} expect=${expect}${dup}${reason}${metaHint}`)
-      console.log(result.json || result.text)
+      const { maskUploadText } = require('../privacy')
+      console.log(maskUploadText(`[${result.sample}] HTTP ${result.status} expect=${expect}${dup}${reason}${metaHint}`, { endpoint, secret }))
+      console.log(maskUploadText(result.json ? JSON.stringify(result.json) : result.text, { endpoint, secret }))
     } catch (error) {
-      console.error(`[${sample.id || sample.file}] 上传失败:`, error.message)
+      const { maskUploadText } = require('../privacy')
+      console.error(maskUploadText(`[${sample.id || sample.file}] 上传失败: ${error.message}`, { endpoint, secret }))
     }
   }
 }
 
 main().catch(error => {
-  console.error(error)
+  console.error('测试上传失败，请检查本地配置或样本文件')
   process.exit(1)
 })

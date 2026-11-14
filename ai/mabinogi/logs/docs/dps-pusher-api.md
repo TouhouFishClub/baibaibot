@@ -49,7 +49,7 @@ BlonyMonitorV2 客户端在本地保存战斗历史后，会按条件自动将�
 | 名称 | 必填 | 说明 |
 |------|------|------|
 | `BLONY_UPLOAD_ENDPOINT` | 是 | 推送地址 |
-| `BLONY_UPLOAD_DUNGEON_KEYWORD` | 否 | 副本关键字，默认 `布里列赫` |
+| `BLONY_UPLOAD_DUNGEON_KEYWORD` | 否 | 副本关键字（逗号分隔），默认 `布里列赫,深渊之科隆巴斯` |
 | `BLONY_UPLOAD_ENABLED` | 否 | `true` / `false`，默认 `true` |
 
 添加步骤：
@@ -94,7 +94,7 @@ config.go 默认值 < CI ldflags 注入 < .env < 系统环境变量
 
 1. `UploadEndpoint` 非空
 2. `UploadSecret` 已配置且不是占位符
-3. 保存时的副本/场景名包含 `布里列赫`（`UploadDungeonKeyword`）
+3. 保存时的副本/场景名匹配 `UploadDungeonKeyword`，默认包含 `布里列赫` 或 `深渊之科隆巴斯`
 4. 已识别到玩家自身 ID（`selfId`）
 5. 过滤后至少保留 1 个目标
 
@@ -227,7 +227,7 @@ curl -X POST "https://your-server.example/dpsPusher" \
 
 | 检查项 | 规则 |
 |--------|------|
-| dungeonName | 包含 `布里列赫` |
+| dungeonName | 包含 `布里列赫`、`深渊之科隆巴斯` 或兼容副本 `佩斯皮亚德` |
 | targets[].bossHP.maxHp | ≥ 200,000,000 |
 | targets[].duration | 10 ~ 7200 秒 |
 | targets[].totalDamage | > 0 |
@@ -252,9 +252,16 @@ curl -X POST "https://your-server.example/dpsPusher" \
 
 | 规则 | 说明 |
 |------|------|
-| 副本过滤 | 仅 `布里列赫` 副本触发上传 |
+| 副本过滤 | 默认 `布里列赫`、`深渊之科隆巴斯` 触发上传；普通 `科隆巴斯` 不触发 |
 | 血量过滤 | 仅保留 `bossHP.maxHp >= 200000000` 的目标 |
+| 深渊目标过滤 | 仅保留佩隆本体：名称 `佩隆`（允许 ` #实体编号` 后缀），`raceId` 若存在且非零须为 `193810`，最大血量和累计伤害均在 `1,800,000,000 ± 10,000,000` 内，并有 `deathTime > 0`、非空 HP 历史且最终 `currentHp = 0` |
 | 宠物数据 | **保留**（移除会造成 totalDamage / percent 偏差） |
+
+深渊没有完整佩隆击杀时跳过上传；自动保存和手动上传使用相同过滤规则。HP 历史有长度上限，完整性以累计伤害判断，无需保留满血起点。服务端在语义校验和排行记录生成时再次过滤，混合存档中的其他 Boss、幻影、团灭与残局均不计入佩隆排行和技能占比。
+
+`mblogs --boss 佩隆` 和 `mblogs --boss 千猫` 查询佩隆排行榜；也可用 `mblogs 角色名 --boss 佩隆` 或 `mblogs 深渊之科隆巴斯 --boss 千猫` 限定角色或副本。直接查询 `mblogs 佩隆`、`mblogs 千猫` 同样有效。`--boss` 可以与 `--job`、`--rank`、`--all`、`--withskill` 组合。
+
+如果 CI Variables、`.env` 或系统环境变量显式配置了 `BLONY_UPLOAD_DUNGEON_KEYWORD`，需要在其逗号列表中加入 `深渊之科隆巴斯`。
 
 ---
 
