@@ -1,11 +1,12 @@
 const path = require('path-extra')
 const { IMAGE_DATA } = require('../../../baibaiConfigs')
-const { resolveQueryType, resolveBossQuery, BOSSES, DUNGEONS } = require('./bossConfig')
+const { resolveQueryType, resolveBossQuery, BOSSES, DUNGEONS, DEFAULT_BOARD_GROUP_KEYS } = require('./bossConfig')
 const { CLASSES, formatClassHelpLine, resolveClassQuery } = require('./classConfig')
 const {
   listRecordsByCharacter,
   listRecordsByDungeon,
   listRecordsByBoss,
+  listRecordsByBossGroups,
   getUploadersByRunIds,
   getRankingConsentsByPlayerIds,
   listConsentedPlayerIds,
@@ -21,6 +22,7 @@ const { resolveAiReviewCommand, runAiReview } = require('./aiReview')
 const ADMIN_QQ = '799018865'
 
 const DEFAULT_DUNGEON = '布里列赫'
+const DEFAULT_BOARD_TITLE = '三王、四王、佩隆'
 const DEFAULT_RANK = 10
 const BOSS_DEFAULT_RANK = 30
 const CHARACTER_DEFAULT_RANK = 3
@@ -44,9 +46,9 @@ function buildMblogsHelp({ isAdmin = false } = {}) {
     '【mblogs DPS 查询帮助】',
     '',
     '基本用法：',
-    `  mblogs                    默认查询${DEFAULT_DUNGEON}，各 Boss 前${DEFAULT_RANK}名`,
+    `  mblogs                    默认查询${DEFAULT_BOARD_TITLE}，各前${DEFAULT_RANK}名`,
     '  mblogs 角色名             查询该角色各 Boss 最高 DPS（按 Boss 分段）',
-    `  mblogs ${DEFAULT_DUNGEON}           查询副本各 Boss 排行榜`,
+    `  mblogs ${DEFAULT_DUNGEON}           查询该副本全部 Boss 排行榜`,
     `  mblogs Boss名             查询单个 Boss，默认前${BOSS_DEFAULT_RANK}名`,
     ...(isAdmin ? [
       '  mblogs <场次ID>           查询单场战斗详情图（支持短 ID）',
@@ -58,8 +60,8 @@ function buildMblogsHelp({ isAdmin = false } = {}) {
     '',
     '参数：',
     '  --rank N    显示前 N 名（副本默认 10，Boss 默认 30，角色默认 3；普通用户最多 30）',
-    '  --job 职业名  只显示指定职业（模糊匹配）',
-    '  --boss Boss名  只查询指定 Boss（佩隆支持别名：千猫）',
+    '  --job 职业名  只显示指定职业（模糊匹配）。不写副本和 Boss 时，只查三王、四王、佩隆',
+    '  --boss Boss名  只查询指定 Boss（佩隆也可用：--boss 千猫）',
     '  --all       显示全部记录，不做「每角色仅保留最高 DPS」去重',
     '  --withskill 列表模式在角色条目下显示技能占比进度条',
     ...(isAdmin ? [
@@ -69,6 +71,7 @@ function buildMblogsHelp({ isAdmin = false } = {}) {
     '  --help      显示本帮助',
     '',
     '示例：',
+    '  mblogs --job 流子',
     '  mblogs 布里列赫 --rank 20',
     '  mblogs 枯木之佩塔克 --job 流子',
     '  mblogs 枯木之佩塔克 --rank 15 --job 黑魔导士',
@@ -90,7 +93,10 @@ function buildMblogsHelp({ isAdmin = false } = {}) {
     ] : []),
     '  mblogs --help',
     '',
-    `支持副本：${DUNGEONS.map(item => item.name).join('、')}`,
+    `支持副本：${DUNGEONS.map(item => {
+      const extra = (item.aliases || []).filter(alias => alias !== item.name)
+      return extra.length ? `${item.name}（${extra.join('、')}）` : item.name
+    }).join('、')}`,
     `支持 Boss：${bossNames}`,
     `支持职业：${classNames}`
   ]
@@ -345,15 +351,7 @@ async function queryMblogs(content, { showAll = false, rank, job, boss, withSkil
   if (boss != null && !bossQuery) {
     return { error: `无效的 --boss 参数「${boss || '(空)'}」，可用 Boss：${[...new Set(BOSSES.map(item => item.displayName))].join('、')}（佩隆也可用千猫）` }
   }
-  const query = resolveQueryType(content || (bossQuery ? bossQuery.displayName : DEFAULT_DUNGEON))
-  if (query.type === 'boss' && bossQuery && query.boss.groupKey !== bossQuery.groupKey) {
-    return { error: '查询的 Boss 与 --boss 参数不一致' }
-  }
-  if (query.type === 'help') {
-    return { error: '用法：mblogs 角色名 / mblogs 布里列赫 / mblogs Boss名 / mblogs 布里列赫 --all / mblogs 布里列赫 --rank 20 / mblogs Boss名 --job 流星射手 / mblogs Boss名 --withskill' }
-  }
 
-  const limit = resolveRank(query, rank, { isAdmin })
   const resolvedJob = job ? resolveClassQuery(job) : undefined
   const consentedCharacterIds = await listConsentedPlayerIds()
   const queryOptions = {
@@ -364,49 +362,74 @@ async function queryMblogs(content, { showAll = false, rank, job, boss, withSkil
   }
 
   let result
-  if (query.type === 'character') {
-    const groups = await listRecordsByCharacter(query.name, limit, queryOptions)
-    const sections = mapSections(groups)
-    if (!sections.some(section => section.rows.length)) {
-      const suffix = job ? `（职业：${resolvedJob || job}）` : ''
-      return { error: `未找到角色「${query.name}」的通关 DPS 记录${suffix}` }
-    }
-    result = {
-      title: buildTitle(`DPS记录：${query.name}`, resolvedJob || job),
-      description: buildRankDescription({ mode: 'character', showAll, rank: limit, job: resolvedJob || job, withSkill }),
-      mode: 'character',
-      sections
-    }
-  } else if (query.type === 'dungeon') {
-    const groups = await listRecordsByDungeon(query.dungeon.name, limit, queryOptions)
+  if (!keyword && boss == null) {
+    const limit = resolveRank({ type: 'dungeon' }, rank, { isAdmin })
+    const groups = await listRecordsByBossGroups(DEFAULT_BOARD_GROUP_KEYS, limit, queryOptions)
     if (!groups.length) {
       const suffix = job ? `（职业：${resolvedJob || job}）` : ''
-      return { error: `未找到副本「${query.dungeon.name}」的 DPS 记录${suffix}` }
+      return { error: `未找到${DEFAULT_BOARD_TITLE}的 DPS 记录${suffix}` }
     }
     result = {
-      title: buildTitle(`DPS记录：${query.dungeon.name}`, resolvedJob || job),
+      title: buildTitle(`DPS记录：${DEFAULT_BOARD_TITLE}`, resolvedJob || job),
       description: buildRankDescription({ mode: 'dungeon', showAll, rank: limit, job: resolvedJob || job, withSkill }),
       mode: 'dungeon',
       sections: mapSections(groups)
     }
   } else {
-    const records = await listRecordsByBoss(query.boss.groupKey, limit, queryOptions)
-    const rows = records.map(mapRow)
-    if (!rows.length) {
-      const suffix = job ? `（职业：${job}）` : ''
-      return { error: `未找到 Boss「${query.boss.displayName}」的 DPS 记录${suffix}` }
+    const query = resolveQueryType(keyword || bossQuery.displayName)
+    if (query.type === 'boss' && bossQuery && query.boss.groupKey !== bossQuery.groupKey) {
+      return { error: '查询的 Boss 与 --boss 参数不一致' }
     }
-    result = {
-      title: buildTitle(`DPS记录：${query.boss.displayName}`, resolvedJob || job),
-      description: buildRankDescription({ mode: 'boss', showAll, rank: limit, job: resolvedJob || job, withSkill }),
-      mode: 'boss',
-      sections: [{ rows }]
+    if (query.type === 'help') {
+      return { error: '用法：mblogs 角色名 / mblogs 布里列赫 / mblogs Boss名 / mblogs 布里列赫 --all / mblogs 布里列赫 --rank 20 / mblogs Boss名 --job 流星射手 / mblogs Boss名 --withskill' }
+    }
+
+    const limit = resolveRank(query, rank, { isAdmin })
+    if (query.type === 'character') {
+      const groups = await listRecordsByCharacter(query.name, limit, queryOptions)
+      const sections = mapSections(groups)
+      if (!sections.some(section => section.rows.length)) {
+        const suffix = job ? `（职业：${resolvedJob || job}）` : ''
+        return { error: `未找到角色「${query.name}」的通关 DPS 记录${suffix}` }
+      }
+      result = {
+        title: buildTitle(`DPS记录：${query.name}`, resolvedJob || job),
+        description: buildRankDescription({ mode: 'character', showAll, rank: limit, job: resolvedJob || job, withSkill }),
+        mode: 'character',
+        sections
+      }
+    } else if (query.type === 'dungeon') {
+      const groups = await listRecordsByDungeon(query.dungeon.name, limit, queryOptions)
+      if (!groups.length) {
+        const suffix = job ? `（职业：${resolvedJob || job}）` : ''
+        return { error: `未找到副本「${query.dungeon.name}」的 DPS 记录${suffix}` }
+      }
+      result = {
+        title: buildTitle(`DPS记录：${query.dungeon.name}`, resolvedJob || job),
+        description: buildRankDescription({ mode: 'dungeon', showAll, rank: limit, job: resolvedJob || job, withSkill }),
+        mode: 'dungeon',
+        sections: mapSections(groups)
+      }
+    } else {
+      const records = await listRecordsByBoss(query.boss.groupKey, limit, queryOptions)
+      const rows = records.map(mapRow)
+      if (!rows.length) {
+        const suffix = job ? `（职业：${job}）` : ''
+        return { error: `未找到 Boss「${query.boss.displayName}」的 DPS 记录${suffix}` }
+      }
+      result = {
+        title: buildTitle(`DPS记录：${query.boss.displayName}`, resolvedJob || job),
+        description: buildRankDescription({ mode: 'boss', showAll, rank: limit, job: resolvedJob || job, withSkill }),
+        mode: 'boss',
+        sections: [{ rows }]
+      }
+    }
+
+    if (bossQuery && result.mode !== 'boss') {
+      result.title += ` · ${bossQuery.displayName}`
     }
   }
 
-  if (bossQuery && result.mode !== 'boss') {
-    result.title += ` · ${bossQuery.displayName}`
-  }
   result.sections = await applyRankingConsents(result.sections)
   if (!result.sections.some(section => section.rows.length)) {
     return { error: '未找到已同意参与公开排行的 DPS 记录' }
@@ -500,10 +523,9 @@ async function mblogs(content, from, callback, groupid) {
   }
 
   const { keyword: queryKeyword, showAll, rank, job, boss, withSkill, showMode } = parsed
-  const resolvedKeyword = queryKeyword || (boss != null ? '' : DEFAULT_DUNGEON)
 
   try {
-    const result = await queryMblogs(resolvedKeyword, { showAll, rank, job, boss, withSkill, isAdmin })
+    const result = await queryMblogs(queryKeyword, { showAll, rank, job, boss, withSkill, isAdmin })
     if (result.help) {
       callback(result.help)
       return

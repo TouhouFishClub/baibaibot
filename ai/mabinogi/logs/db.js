@@ -2,7 +2,7 @@ const crypto = require('crypto')
 const { getClient } = require('../../../mongo/index')
 const { TEAM_DEDUP_MS } = require('./team')
 const { nonceTtlSeconds } = require('./config')
-const { getBossKeysByGroup, getGroupSortHp, resolveBossGroupKey } = require('./bossConfig')
+const { BOSSES, getBossKeysByGroup, getGroupSortHp, resolveBossGroupKey } = require('./bossConfig')
 
 const DB_NAME = 'db_bot'
 const COL_UPLOADS = 'cl_mabinogi_dps_upload'
@@ -417,14 +417,73 @@ async function insertDpsRecords(items) {
   await client.db(DB_NAME).collection(COL_RECORDS).insertMany(items)
 }
 
-async function listDpsRecords(query, { sort = { dps: -1 }, limit = 100 } = {}) {
+async function listDpsRecords(query, { sort = { dps: -1 }, limit = 100, hint } = {}) {
   await ensureIndexes()
   const client = await getClient()
-  return client.db(DB_NAME).collection(COL_RECORDS)
+  let cursor = client.db(DB_NAME).collection(COL_RECORDS)
     .find(query)
     .sort(sort)
     .limit(limit)
-    .toArray()
+  if (hint) cursor = cursor.hint(hint)
+  return cursor.toArray()
+}
+
+// 副本榜按 Boss 分开取，避免低血量的一王被三王、四王挤出全局 DPS 窗口。
+// 每个 Boss 沿 dungeon_bossGroup_dps 索引按 DPS 从高到低翻页，凑满不同角色就停。
+// 同一个人的历史记录会跳过，几百场最高记录盖不住其他玩家。单 Boss 最多读 2000 条。
+const DUNGEON_BOSS_PAGE_SIZE = 100
+const DUNGEON_BOSS_RAW_CAP = 2000
+const DUNGEON_BOSS_INDEX = 'dungeon_bossGroup_dps'
+
+function listBossGroupKeys() {
+  const keys = []
+  const seen = new Set()
+  for (const boss of BOSSES) {
+    if (!boss.groupKey || seen.has(boss.groupKey)) continue
+    seen.add(boss.groupKey)
+    keys.push(boss.groupKey)
+  }
+  return keys
+}
+
+async function listDungeonBossRecords(baseQuery, limitPerBoss, bestPerCharacter, hint = DUNGEON_BOSS_INDEX) {
+  const target = Math.max(1, Math.floor(Number(limitPerBoss) || 1))
+  if (!bestPerCharacter) {
+    return listDpsRecords(baseQuery, {
+      limit: Math.min(target, DUNGEON_BOSS_RAW_CAP),
+      hint
+    })
+  }
+
+  const pageSize = Math.min(DUNGEON_BOSS_RAW_CAP, Math.max(DUNGEON_BOSS_PAGE_SIZE, target))
+  const records = []
+  const seen = new Set()
+  let scanned = 0
+  let upper = null
+
+  while (seen.size < target && scanned < DUNGEON_BOSS_RAW_CAP) {
+    const requested = Math.min(pageSize, DUNGEON_BOSS_RAW_CAP - scanned)
+    const query = { ...baseQuery }
+    if (upper != null) query.dps = { $lt: upper }
+    const batch = await listDpsRecords(query, {
+      limit: requested,
+      hint
+    })
+    if (!batch.length) break
+    scanned += batch.length
+    for (const record of batch) {
+      const key = String(record.characterId || record.characterName || '').trim()
+      if (!key || seen.has(key)) continue
+      seen.add(key)
+      records.push(record)
+      if (seen.size >= target) break
+    }
+    const lastDps = Number(batch[batch.length - 1].dps)
+    if (!Number.isFinite(lastDps) || (upper != null && lastDps >= upper)) break
+    upper = lastDps
+    if (batch.length < requested) break
+  }
+  return records
 }
 
 function dedupeBestPerCharacter(records) {
@@ -461,9 +520,35 @@ async function listRecordsByCharacter(characterName, limitPerBoss = 3, { charact
 }
 
 async function listRecordsByDungeon(dungeonName, limitPerBoss = 10, { bestPerCharacter = true, characterClass, characterIds, bossGroup } = {}) {
-  const regex = new RegExp(dungeonName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-  const all = await listDpsRecords(appendRecordFilters({ dungeonName: regex }, { characterClass, characterIds, bossGroup }), { limit: 1000 })
+  const name = String(dungeonName || '').trim()
+  const groups = bossGroup ? [String(bossGroup)] : listBossGroupKeys()
+  const batches = await Promise.all(groups.map(groupKey => listDungeonBossRecords(
+    appendRecordFilters({
+      dungeonName: name,
+      bossGroup: groupKey
+    }, { characterClass, characterIds }),
+    limitPerBoss,
+    bestPerCharacter
+  )))
+  const all = []
+  for (const batch of batches) all.push(...batch)
   return groupTopByBoss(all, limitPerBoss, { bestPerCharacter })
+}
+
+async function listRecordsByBossGroups(groupKeys, limitPerBoss = 10, { bestPerCharacter = true, characterClass, characterIds } = {}) {
+  const keys = [...new Set((groupKeys || []).map(key => String(key || '').trim()).filter(Boolean))]
+  const sections = await Promise.all(keys.map(async groupKey => {
+    const records = await listDungeonBossRecords(appendRecordFilters({
+      bossGroup: groupKey
+    }, { characterClass, characterIds }), limitPerBoss, bestPerCharacter, 'bossGroup_dps')
+    const sample = BOSSES.find(boss => boss.groupKey === groupKey)
+    return {
+      bossKey: groupKey,
+      bossName: records[0]?.bossName || sample?.displayName || groupKey,
+      records
+    }
+  }))
+  return sections.filter(section => section.records.length)
 }
 
 async function listRecordsByBoss(groupKey, limit = 10, { bestPerCharacter = true, characterClass, characterIds } = {}) {
@@ -575,6 +660,7 @@ module.exports = {
   listRecordsByCharacter,
   listRecordsByDungeon,
   listRecordsByBoss,
+  listRecordsByBossGroups,
   dedupeBestPerCharacter,
   reserveNonce,
   getRankingConsent,

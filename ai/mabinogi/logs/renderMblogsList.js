@@ -269,6 +269,7 @@ function renderRow(row, index, withSkill, showMode, visibility, showRunId) {
     <div class="row${withSkill ? ' row-with-skills' : ''}" style="--class-color:${theme.primary}; background:${bg}">
       <div class="arcana-visual">
         ${art ? `<img src="${art}" alt="${escapeHtml(characterClass)}">` : ''}
+        <span class="record-time">${escapeHtml(formatTime(row.recordTime))}</span>
         <span class="arcana-name">${escapeHtml(characterClass)}</span>
       </div>
       <div class="uploader-meta">UPLOADER · ${escapeHtml(uploaderName)}</div>
@@ -438,6 +439,17 @@ function buildHtml(option) {
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+    .record-time {
+      position: absolute;
+      z-index: 3;
+      top: 2px;
+      left: 8px;
+      color: #fff;
+      font: 800 16px/1 "Orbitron", sans-serif;
+      white-space: nowrap;
+      -webkit-text-stroke: 3px #000;
+      paint-order: stroke fill;
     }
     .player {
       position: relative;

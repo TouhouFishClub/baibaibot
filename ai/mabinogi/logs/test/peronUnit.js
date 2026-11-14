@@ -27,10 +27,16 @@ function target() {
 assert(matchesDungeonName('深渊之科隆巴斯'))
 assert(!matchesDungeonName('科隆巴斯'))
 assert.strictEqual(resolveQueryType('深渊之科隆巴斯').type, 'dungeon')
-for (const name of ['佩隆', '千猫']) {
-  assert.strictEqual(resolveBossQuery(name).groupKey, 'peron')
-  assert.strictEqual(resolveQueryType(name).type, 'boss')
+assert.strictEqual(resolveQueryType('佩隆').type, 'boss')
+assert.strictEqual(resolveBossQuery('佩隆').groupKey, 'peron')
+assert.strictEqual(resolveBossQuery('千猫').groupKey, 'peron')
+for (const name of ['千猫', '深渊猫', '深渊科隆巴斯']) {
+  const query = resolveQueryType(name)
+  assert.strictEqual(query.type, 'dungeon', name)
+  assert.strictEqual(query.dungeon.name, '深渊之科隆巴斯', name)
 }
+assert.strictEqual(resolveQueryType('布本').type, 'dungeon')
+assert.strictEqual(resolveQueryType('布本').dungeon.name, '布里列赫')
 
 const variants = [
   ['complete', () => {}, true],

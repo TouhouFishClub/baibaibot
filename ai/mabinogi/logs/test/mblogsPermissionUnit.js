@@ -62,7 +62,8 @@ async function run() {
       bossHp: 1000,
       totalDamage: 1000,
       damagePercent: 50,
-      runId: 'abcdef12'
+      runId: 'abcdef12',
+      recordTime: new Date(2026, 10, 14, 23, 21)
     },
     {
       characterId: 'anonymous-id',
@@ -128,7 +129,10 @@ async function run() {
   assert(html.includes('transform: translate(-2px, 1.5px)'))
   assert(html.includes('transform: translate(2px, -1.5px)'))
   assert(!html.includes('-webkit-text-stroke: 1px #090b11'))
-  assert(html.includes('公开角色名'))
+  assert(html.includes('class="record-time"'))
+  assert(html.includes('11-14 23:21'))
+  assert(html.includes('font: 800 16px/1 "Orbitron", sans-serif'))
+  assert(html.includes('-webkit-text-stroke: 3px #000'))
   assert(html.includes('@亚特'))
   assert(html.includes('@伊鲁夏'))
   assert.strictEqual((html.match(/class="player-server"/g) || []).length, 2)

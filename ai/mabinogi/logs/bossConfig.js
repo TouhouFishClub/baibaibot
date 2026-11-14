@@ -5,7 +5,7 @@ const DUNGEONS = [
   {
     key: 'bri_lech',
     name: '布里列赫',
-    aliases: ['布里列赫']
+    aliases: ['布里列赫', '布本']
   },
   {
     key: 'pespiade',
@@ -15,7 +15,7 @@ const DUNGEONS = [
   {
     key: 'abyss_crom_bas',
     name: '深渊之科隆巴斯',
-    aliases: ['深渊之科隆巴斯']
+    aliases: ['深渊之科隆巴斯', '千猫', '深渊猫', '深渊科隆巴斯']
   }
 ]
 
@@ -272,6 +272,9 @@ function getPetakCombinedKillHp(phases) {
   return petakBosses.reduce((sum, boss) => sum + getBossKillHp(boss), 0)
 }
 
+// 不带副本、不带 Boss 的 mblogs 只展示这三组，顺序固定。
+const DEFAULT_BOARD_GROUP_KEYS = ['mayer', 'mayer_regret', 'peron']
+
 function getGroupSortHp(groupKey) {
   const bosses = BOSSES.filter(boss => boss.groupKey === groupKey)
   if (!bosses.length) return 0
@@ -316,6 +319,15 @@ function resolveBossQuery(keyword) {
 function resolveQueryType(keyword) {
   const kw = String(keyword || '').trim()
   if (!kw) return { type: 'help' }
+
+  // 千猫既是副本别名，也是 --boss 的佩隆别名。裸写时优先当成副本。
+  const exactDungeon = DUNGEONS.find(dungeon => {
+    const names = [dungeon.name, ...(dungeon.aliases || [])]
+    return names.includes(kw)
+  })
+  if (exactDungeon) {
+    return { type: 'dungeon', dungeon: exactDungeon }
+  }
 
   const bossQuery = resolveBossQuery(kw)
   if (bossQuery) {
@@ -381,6 +393,7 @@ module.exports = {
   PETAK_KILL_MAXHP_RATIO,
   DUNGEONS,
   BOSSES,
+  DEFAULT_BOARD_GROUP_KEYS,
   matchBossByHp,
   matchBossTarget,
   isCompletePeronKill,

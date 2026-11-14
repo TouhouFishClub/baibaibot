@@ -10,6 +10,14 @@ require.cache[dbPath] = { id: dbPath, filename: dbPath, loaded: true, exports: {
   listRecordsByCharacter: async (...args) => { calls.push(['character', ...args]); return [{ bossName: '佩隆', records: [row] }] },
   listRecordsByDungeon: async (...args) => { calls.push(['dungeon', ...args]); return [{ bossName: '佩隆', records: [row] }] },
   listRecordsByBoss: async (...args) => { calls.push(['boss', ...args]); return [row] },
+  listRecordsByBossGroups: async (...args) => {
+    calls.push(['board', ...args])
+    return [
+      { bossKey: 'mayer', bossName: '雷内恩的米耶尔', records: [row] },
+      { bossKey: 'mayer_regret', bossName: '雷内恩的米耶尔：悔恨', records: [row] },
+      { bossKey: 'peron', bossName: '佩隆', records: [row] }
+    ]
+  },
   listConsentedPlayerIds: async () => ['12345'],
   getRankingConsentsByPlayerIds: async () => new Map([['12345', { mode: 'public' }]]),
   getUploadersByRunIds: async () => new Map(),
@@ -49,6 +57,35 @@ async function run() {
   assert.strictEqual(calls.length, count)
   assert(buildMblogsHelp().includes('--boss 佩隆'))
   assert(buildMblogsHelp().includes('千猫'))
+  assert(buildMblogsHelp().includes('三王、四王、佩隆'))
+
+  const board = await queryMblogs('')
+  assert.strictEqual(board.mode, 'dungeon')
+  assert.strictEqual(board.title, 'DPS记录：三王、四王、佩隆')
+  assert.deepStrictEqual(board.sections.map(section => section.title), [
+    '雷内恩的米耶尔', '雷内恩的米耶尔：悔恨', '佩隆'
+  ])
+  assert.deepStrictEqual(calls.at(-1).slice(0, 3), ['board', ['mayer', 'mayer_regret', 'peron'], 10])
+  assert.strictEqual(calls.at(-1)[3].characterClass, undefined)
+
+  const jobBoard = await queryMblogs('', { job: '流子' })
+  assert.strictEqual(jobBoard.title, 'DPS记录：三王、四王、佩隆 · 流星射手')
+  assert.strictEqual(calls.at(-1)[3].characterClass, '流星射手')
+
+  const dungeon = await queryMblogs('布里列赫')
+  assert.strictEqual(dungeon.title, 'DPS记录：布里列赫')
+  assert.strictEqual(calls.at(-1)[0], 'dungeon')
+
+  const aliasDungeon = await queryMblogs('布本')
+  assert.strictEqual(aliasDungeon.title, 'DPS记录：布里列赫')
+  assert.strictEqual(calls.at(-1)[0], 'dungeon')
+  assert.strictEqual(calls.at(-1)[1], '布里列赫')
+
+  const peronDungeon = await queryMblogs('千猫')
+  assert.strictEqual(peronDungeon.mode, 'dungeon')
+  assert.strictEqual(peronDungeon.title, 'DPS记录：深渊之科隆巴斯')
+  assert.strictEqual(calls.at(-1)[0], 'dungeon')
+  assert.strictEqual(calls.at(-1)[1], '深渊之科隆巴斯')
   console.log('mblogsBossUnit: ok')
 }
 run().catch(error => { console.error(error); process.exitCode = 1 })
