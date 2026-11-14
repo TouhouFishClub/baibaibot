@@ -74,6 +74,14 @@ assert.deepStrictEqual(normalizeGachaRareMap('埃莉诺阿复古手帕礼包', {
 	S: ['eeffb1', '6.13', ['特殊埃莉诺阿复古雅致服饰(女式) ', '   ']]
 }).S[2], ['特殊埃莉诺阿复古雅致服饰(女式)'])
 assert.strictEqual(
+	normalizeGachaItemName('埃莉诺阿复古手帕礼包', '埃莉诺阿复古雅致十字弩外形咒语书'),
+	'埃莉诺阿复古雅致破坏者十字弩外形咒语书'
+)
+assert.strictEqual(
+	normalizeGachaItemName('older pool', '埃莉诺阿复古雅致十字弩外形咒语书'),
+	'埃莉诺阿复古雅致十字弩外形咒语书'
+)
+assert.strictEqual(
 	normalizeGachaItemName('older pool', '\u9ed1\u6697\u7684\u79c1\u5bb6\u4fa6\u63a2\u5916\u5957'),
 	'\u9ed1\u6697\u7684\u79c1\u5bb6\u4fa6\u63a2\u5916\u5957'
 )

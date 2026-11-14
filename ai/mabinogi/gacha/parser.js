@@ -17,6 +17,16 @@ const PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS = {
 	'\u9ed1\u6697\u7684\u79c1\u5bb6\u4fa6\u63a2\u5939\u514b': '\u7eaf\u6d01\u7684\u79c1\u5bb6\u4fa6\u63a2\u5939\u514b'
 }
 
+const ELEANOR_RETRO_POOL = '埃莉诺阿复古手帕礼包'
+const ELEANOR_RETRO_ITEM_NAME_CORRECTIONS = {
+	'埃莉诺阿复古雅致十字弩外形咒语书': '埃莉诺阿复古雅致破坏者十字弩外形咒语书'
+}
+
+const ITEM_NAME_CORRECTIONS_BY_POOL = {
+	[PRIVATE_DETECTIVE_POOL]: PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS,
+	[ELEANOR_RETRO_POOL]: ELEANOR_RETRO_ITEM_NAME_CORRECTIONS
+}
+
 const GACHA_RARE_TAG_ALIASES = {
 	'\u81f3\u5c0a': 'S',
 	'\u65f6\u5c1a': 'A',
@@ -33,8 +43,8 @@ const normalizeGachaPoolName = name => String(name || '')
 
 const normalizeGachaItemName = (poolName, itemName) => {
 	const trimmed = String(itemName || '').trim()
-	if(poolName !== PRIVATE_DETECTIVE_POOL) return trimmed
-	return PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS[trimmed] || trimmed
+	const corrections = ITEM_NAME_CORRECTIONS_BY_POOL[poolName]
+	return (corrections && corrections[trimmed]) || trimmed
 }
 
 const normalizeGachaRareMap = (poolName, raremap) => {
@@ -119,6 +129,8 @@ const parseGachaEntryFromArticle = article => parseGachaEntriesFromArticle(artic
 module.exports = {
 	GACHA_RARE_TAG_ALIASES,
 	normalizeGachaPoolName,
+	ELEANOR_RETRO_ITEM_NAME_CORRECTIONS,
+	ELEANOR_RETRO_POOL,
 	PRIVATE_DETECTIVE_ITEM_NAME_CORRECTIONS,
 	PRIVATE_DETECTIVE_POOL,
 	normalizeGachaItemName,

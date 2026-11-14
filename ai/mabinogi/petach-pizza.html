@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>브리 레흐 · 고목의 페타크 피자 포지션</title>
+  <style>
+    :root {
+      --bg: #f1f1f1;
+      --green: #5eae62;
+      --white: #ffffff;
+      --line: #3f3f3f;
+      --dot: #1e3a22;
+      --text: #4a4a4a;
+      --muted: #8a8a8a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #d9d9d9;
+      font-family: "微软雅黑", "Apple SD Gothic Neo", sans-serif;
+    }
+    .board {
+      width: min(960px, 96vw);
+      background: var(--bg);
+      padding: 28px 36px 32px;
+      border-radius: 4px;
+    }
+    .section + .section {
+      margin-top: 18px;
+      padding-top: 22px;
+      border-top: 2px solid #cfcfcf;
+    }
+    .head {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .title {
+      margin: 0;
+      color: var(--text);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .clocks {
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 3px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 8px;
+    }
+    .cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .num {
+      color: var(--text);
+      font-size: 22px;
+      font-weight: 700;
+    }
+    svg { width: 100%; height: auto; display: block; }
+  </style>
+</head>
+<body>
+  <div class="board" id="board"></div>
+  <script>
+    const GREEN = '#5eae62'
+    const WHITE = '#ffffff'
+    const LINE = '#404040'
+    const DOT = '#1e3a22'
+    const R = 46
+    const CX = 50
+    const CY = 50
+
+    // 8 slices, index 0 = 12 o'clock, clockwise. W = safe, G = explode
+    const DATA = [
+      {
+        title: '顺时针的情况下',
+        clocks: '',
+        pies: [
+          { slices: 'WWWGGGGG', clock: 0, twin: false },
+          { slices: 'WGGGGGGG', clock: 1.5, twin: false },
+          { slices: 'WGGGGGGG', clock: 3, twin: false },
+          { slices: 'WGGGGGGG', clock: 4.5, twin: false },
+          { slices: 'WGGGGGGG', clock: 6, twin: false },
+          { slices: 'WGGGGGGG', clock: 7.5, twin: false },
+          { slices: 'WGGGGGGG', clock: 9, twin: false },
+          { slices: 'WGGGGGGG', clock: 10.5, twin: false },
+          { slices: 'WGGGGGGG', clock: 12, twin: false },
+        ],
+      },
+      {
+        title: '逆时针的情况下',
+        clocks: '',
+        pies: [
+          { slices: 'WGGGGGWW', clock: 0, twin: false },
+          { slices: 'WGGGGGGG', clock: 10.5, twin: false },
+          { slices: 'WGGGGGGG', clock: 9, twin: false },
+          { slices: 'WGGGGGGG', clock: 7.5, twin: false },
+          { slices: 'WGGGGGGG', clock: 6, twin: false },
+          { slices: 'WGGGGGGG', clock: 4.5, twin: false },
+          { slices: 'WGGGGGGG', clock: 3, twin: false },
+          { slices: 'WGGGGGGG', clock: 1.5, twin: false },
+          { slices: 'WGGGGGGG', clock: 0, twin: false },
+        ],
+      },
+    ]
+
+    function polar(deg, r) {
+      const rad = (deg - 90) * Math.PI / 180
+      return [CX + r * Math.cos(rad), CY + r * Math.sin(rad)]
+    }
+
+    function slicePath(index) {
+      const a0 = index * 45 - 22.5
+      const a1 = index * 45 + 22.5
+      const [x0, y0] = polar(a0, R)
+      const [x1, y1] = polar(a1, R)
+      return `M ${CX} ${CY} L ${x0.toFixed(2)} ${y0.toFixed(2)} A ${R} ${R} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z`
+    }
+
+    function dots(clock, twin) {
+      const deg = clock * 30
+      const r = clock === 12 ? R * 0.58 : R * 0.62
+      const [x, y] = polar(deg, r)
+      if (!twin) {
+        return `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="3.1" fill="${DOT}" />`
+      }
+      return (
+        `<circle cx="${x.toFixed(2)}" cy="${(y - 3.35).toFixed(2)}" r="3.1" fill="${DOT}" />` +
+        `<circle cx="${x.toFixed(2)}" cy="${(y + 3.35).toFixed(2)}" r="3.1" fill="${DOT}" />`
+      )
+    }
+
+    function pieSvg(pie) {
+      const slices = pie.slices.split('').map((ch, i) =>
+        `<path d="${slicePath(i)}" fill="${ch === 'W' ? WHITE : GREEN}" />`
+      ).join('')
+      const spokes = Array.from({ length: 8 }, (_, i) => {
+        const [x, y] = polar(i * 45 - 22.5, R)
+        return `<line x1="${CX}" y1="${CY}" x2="${x.toFixed(2)}" y2="${y.toFixed(2)}" stroke="${LINE}" stroke-width="1.15" />`
+      }).join('')
+      return `
+        <svg viewBox="0 0 100 100">
+          ${slices}
+          ${spokes}
+          <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${LINE}" stroke-width="1.35" />
+          ${dots(pie.clock, pie.twin)}
+        </svg>`
+    }
+
+    document.getElementById('board').innerHTML = DATA.map(section => `
+      <section class="section">
+        <div class="head">
+          <h2 class="title">${section.title}</h2>
+          <div class="clocks">${section.clocks}</div>
+        </div>
+        <div class="row">
+          ${section.pies.map((pie, i) => `
+            <div class="cell">
+              <div class="num">${i + 1}</div>
+              ${pieSvg(pie)}
+            </div>
+          `).join('')}
+        </div>
+      </section>
+    `).join('')
+  </script>
+</body>
+</html>
