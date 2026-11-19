@@ -1,6 +1,6 @@
 const https = require('https');
 const http = require('http');
-const { IMAGE_DATA, myip } = require('../../baibaiConfigs');
+const { IMAGE_DATA } = require('../../baibaiConfigs');
 const path = require('path');
 const fs = require('fs');
 
@@ -11,22 +11,18 @@ const fs = require('fs');
  * 仅支持图片修改模式（图片+文字转图片）
  */
 
-// 从.secret.json文件中获取API密钥和公网域名
+// LinkAPI 与小豆包不是同一个站，密钥放在 .secret.json 的 "linkapi.ai" 下
 let API_KEY = '';
-let PUBLIC_ENDPOINT = '';
 try {
   const secretPath = path.join(__dirname, '.secret.json');
   if (fs.existsSync(secretPath)) {
     const secret = JSON.parse(fs.readFileSync(secretPath, 'utf8'));
-    API_KEY = secret.apiKeyXiaodoubao || '';
-    PUBLIC_ENDPOINT = secret.endpoint || '';
+    const linkapi = secret['linkapi.ai'] || {};
+    API_KEY = linkapi.apiKey || '';
     if (API_KEY) {
       console.log(`✅ [G4H] 已加载 LinkAPI 密钥`);
     } else {
-      console.log('⚠️ [G4H] 未配置apiKeyXiaodoubao，请在.secret.json中添加');
-    }
-    if (PUBLIC_ENDPOINT) {
-      console.log(`✅ [G4H] 已加载公网访问端点: ${PUBLIC_ENDPOINT}`);
+      console.log('⚠️ [G4H] 未配置 linkapi.ai.apiKey，请在.secret.json中添加');
     }
   } else {
     console.log('[G4H] 未找到.secret.json文件');
@@ -118,7 +114,7 @@ async function downloadImageAsBase64(imageUrl) {
  */
 async function callGeminiAPI(prompt, images) {
   if (!API_KEY) {
-    throw new Error('错误：未配置apiKeyXiaodoubao，请在ai/banana/.secret.json中添加配置');
+    throw new Error('错误：未配置 linkapi.ai.apiKey，请在ai/banana/.secret.json中添加配置');
   }
 
   console.log(`========== [G4H] 准备调用Gemini API ==========`);
@@ -504,156 +500,6 @@ async function getMessageDetail(messageId, botName) {
 }
 
 /**
- * 检查和修复图片URL
- * @param {string} url - 原始URL
- * @returns {Object} {url: 修复后的URL, isPrivate: 是否是私有域名}
- */
-function fixImageUrl(url) {
-  if (url.includes('multimedia.nt.qq.com.cn')) {
-    return { url: url, isPrivate: true };
-  }
-  return { url: url, isPrivate: false };
-}
-
-/**
- * 下载私有域名图片到本地临时目录，并返回公网可访问的URL
- * @param {string} privateUrl - 私有域名的图片URL
- * @param {string} userId - 用户ID
- * @returns {Promise<Object>} {publicUrl: 公网URL, localPath: 本地路径}
- */
-async function downloadAndHostPrivateImage(privateUrl, userId = 'unknown') {
-  if (!PUBLIC_ENDPOINT) {
-    throw new Error('未配置公网访问端点，请在.secret.json中添加endpoint字段');
-  }
-  
-  const tempDir = path.join(__dirname, '../../public/temp_banana_images');
-  
-  if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir, { recursive: true });
-  }
-  
-  const timestamp = Date.now();
-  const randomStr = Math.random().toString(36).substring(2, 10);
-  const uniqueId = `${userId}_${timestamp}_${randomStr}`;
-  const fileName = `temp_${uniqueId}.jpg`;
-  const localPath = path.join(tempDir, fileName);
-  
-  console.log(`[G4H] 📥 开始下载私有域名图片到本地...`);
-  
-  return new Promise((resolve, reject) => {
-    const protocol = privateUrl.startsWith('https:') ? https : http;
-    
-    const req = protocol.get(privateUrl, (res) => {
-      if (res.statusCode === 302 || res.statusCode === 301) {
-        const redirectUrl = res.headers.location;
-        downloadAndHostPrivateImage(redirectUrl, userId).then(resolve).catch(reject);
-        return;
-      }
-      
-      if (res.statusCode !== 200) {
-        reject(new Error(`下载失败，HTTP状态码: ${res.statusCode}`));
-        return;
-      }
-      
-      const fileStream = fs.createWriteStream(localPath);
-      let downloadedBytes = 0;
-      
-      res.on('data', (chunk) => {
-        downloadedBytes += chunk.length;
-      });
-      
-      res.pipe(fileStream);
-      
-      fileStream.on('finish', () => {
-        fileStream.close();
-        
-        if (fs.existsSync(localPath)) {
-          const stats = fs.statSync(localPath);
-          if (stats.size > 0) {
-            const publicUrl = `${PUBLIC_ENDPOINT}/temp_banana_images/${fileName}`;
-            console.log(`[G4H] ✅ 图片下载成功: ${stats.size} 字节`);
-            resolve({ 
-              publicUrl: publicUrl, 
-              localPath: localPath,
-              fileName: fileName
-            });
-          } else {
-            reject(new Error('下载的文件大小为0'));
-          }
-        } else {
-          reject(new Error('文件保存失败'));
-        }
-      });
-      
-      fileStream.on('error', (error) => {
-        reject(new Error(`文件写入失败: ${error.message}`));
-      });
-    });
-    
-    req.on('error', (error) => {
-      reject(new Error(`下载请求失败: ${error.message}`));
-    });
-    
-    req.setTimeout(30000, () => {
-      req.destroy();
-      reject(new Error('下载超时（30秒）'));
-    });
-  });
-}
-
-/**
- * 删除临时托管的图片文件
- * @param {string} localPath - 本地文件路径
- */
-function deleteTempImage(localPath) {
-  try {
-    if (fs.existsSync(localPath)) {
-      fs.unlinkSync(localPath);
-      console.log(`[G4H] 🗑️ 已删除临时图片: ${localPath}`);
-    }
-  } catch (error) {
-    console.error(`[G4H] 删除临时图片失败: ${error.message}`);
-  }
-}
-
-/**
- * 处理URL数组，返回可用的URL列表
- * @param {Array|string} urls - URL数组或单个URL
- * @param {string} userId - 用户ID
- * @returns {Promise<Object>} {processedUrls: 处理后的URL数组, tempPaths: 临时文件路径数组}
- */
-async function processImageUrls(urls, userId) {
-  const urlArray = Array.isArray(urls) ? urls : [urls];
-  const processedUrls = [];
-  const tempPaths = [];
-  
-  console.log(`[G4H] 🔍 开始处理 ${urlArray.length} 个图片URL...`);
-  
-  for (let i = 0; i < urlArray.length; i++) {
-    const url = urlArray[i];
-    const urlInfo = fixImageUrl(url);
-    
-    if (urlInfo.isPrivate) {
-      console.log(`[G4H] ⚠️ 检测到私有域名，需要下载并临时发布`);
-      try {
-        const result = await downloadAndHostPrivateImage(urlInfo.url, userId);
-        processedUrls.push(result.publicUrl);
-        tempPaths.push(result.localPath);
-      } catch (error) {
-        throw new Error(`处理第 ${i + 1} 张图片失败: ${error.message}`);
-      }
-    } else {
-      processedUrls.push(urlInfo.url);
-    }
-  }
-  
-  return {
-    processedUrls: processedUrls,
-    tempPaths: tempPaths
-  };
-}
-
-/**
  * 从消息中提取图片URL
  * @param {Object} messageDetail - 消息详情
  * @returns {Array|null} 图片URL数组
@@ -752,23 +598,7 @@ async function g4hReply(content, from, name, groupid, callback, groupName, nickn
     console.log(`[G4H] 使用预置prompt: ${presetResult.presetName}`);
   }
 
-  let finalImgUrl = parseResult.imgUrl;
-  let allTempPaths = [];
-
-  // 处理命令中的图片URL
-  if (finalImgUrl) {
-    try {
-      const result = await processImageUrls(finalImgUrl, from);
-      finalImgUrl = result.processedUrls;
-      allTempPaths.push(...result.tempPaths);
-    } catch (error) {
-      callback(`❌ 处理图片失败: ${error.message}`);
-      for (const tempPath of allTempPaths) {
-        deleteTempImage(tempPath);
-      }
-      return;
-    }
-  }
+  let finalImgUrl = parseResult.imgUrl ? [].concat(parseResult.imgUrl) : [];
 
   // 如果有回复消息ID，获取被回复的消息详情
   if (parseResult.replyMessageId && port) {
@@ -778,50 +608,23 @@ async function g4hReply(content, from, name, groupid, callback, groupName, nickn
       
       if (replyImageUrls && replyImageUrls.length > 0) {
         console.log(`[G4H] ✅ 从回复消息中提取到 ${replyImageUrls.length} 张图片`);
-        
-        try {
-          const result = await processImageUrls(replyImageUrls, from);
-          const processedReplyUrls = result.processedUrls;
-          allTempPaths.push(...result.tempPaths);
-          
-          if (!finalImgUrl) {
-            finalImgUrl = processedReplyUrls;
-          } else {
-            finalImgUrl = [...finalImgUrl, ...processedReplyUrls];
-          }
-        } catch (error) {
-          callback(`❌ 处理图片失败: ${error.message}`);
-          for (const tempPath of allTempPaths) {
-            deleteTempImage(tempPath);
-          }
-          return;
-        }
-      } else {
-        if (!finalImgUrl) {
-          callback('❌ 回复的消息中没有图片。\nG4H仅支持图片修改模式，请回复包含图片的消息或直接发送图片。');
-          return;
-        }
+        finalImgUrl = finalImgUrl.concat(replyImageUrls);
+      } else if (finalImgUrl.length === 0) {
+        callback('❌ 回复的消息中没有图片。\nG4H仅支持图片修改模式，请回复包含图片的消息或直接发送图片。');
+        return;
       }
     } catch (error) {
-      if (!finalImgUrl) {
+      if (finalImgUrl.length === 0) {
         callback(`❌ 获取回复消息失败: ${error.message}\n请直接发送图片或提供图片URL。`);
-        for (const tempPath of allTempPaths) {
-          deleteTempImage(tempPath);
-        }
         return;
       }
     }
   }
 
   // G4H仅支持图片修改模式，必须有图片输入
-  if (!finalImgUrl || finalImgUrl.length === 0) {
+  if (finalImgUrl.length === 0) {
     callback('❌ G4H仅支持图片修改模式（图片+文字转图片）\n请回复图片消息或在命令中附带图片。\n用法: g4h [提示词] + [回复图片/发送图片]');
     return;
-  }
-
-  // 存储临时文件路径
-  if (allTempPaths.length > 0 && context) {
-    context._tempImagePaths = allTempPaths;
   }
 
   // 显示处理中的消息
@@ -856,15 +659,6 @@ async function g4hReply(content, from, name, groupid, callback, groupName, nickn
   } catch (error) {
     console.error('[G4H] 生成失败:', error);
     callback(`❌ 图片生成失败: ${error.message}`);
-  } finally {
-    // 清理临时文件
-    if (context && context._tempImagePaths && context._tempImagePaths.length > 0) {
-      console.log(`[G4H] 🧹 清理 ${context._tempImagePaths.length} 个临时文件...`);
-      for (const tempPath of context._tempImagePaths) {
-        deleteTempImage(tempPath);
-      }
-      delete context._tempImagePaths;
-    }
   }
 }
 
