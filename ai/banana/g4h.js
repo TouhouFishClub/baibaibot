@@ -311,10 +311,10 @@ async function callGeminiAPI(prompt, images) {
       reject(new Error('网络请求失败，请稍后重试'));
     });
 
-    req.setTimeout(180000, () => {
+    req.setTimeout(360000, () => {
       req.destroy();
       console.error('[G4H] API请求超时');
-      reject(new Error('API请求超时（180秒）'));
+      reject(new Error('API请求超时（360秒）'));
     });
 
     req.write(postData);
