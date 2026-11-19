@@ -182,6 +182,7 @@ const {chujue} = require('./ai/image/generator/chujue/index.js')
 const {nanoBananaReply, getNanoBananaHelp, getNanoBananaPresets} = require('./ai/banana')
 const {gptImageReply, getGptImageHelp, getGptImagePresets} = require('./ai/banana/gptimage')
 const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao')
+const {g4hReply, getG4hHelp, getG4hPresets} = require('./ai/banana/g4h')
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
 const { handleAnnualReportCommand, handleUserAnnualReportCommand } = require('./ai/chat/QQgroup-annual-report-analyzer')
 const { handleGroupDailyAnalysisCommand, matchGroupAnalysisCommand } = require('./ai/chat/group-daily-analysis')
@@ -2120,6 +2121,32 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   // 规则：非回复时必须关键词开头，回复时关键词可以在中间
   const isReply = content.includes('[CQ:reply,id=');
   const lowerContent = content.toLowerCase();
+
+  // g4h (Gemini 4 Hydrogen) 功能检测
+  let shouldTriggerG4h = false;
+  if (isReply) {
+    shouldTriggerG4h = lowerContent.includes('g4h');
+  } else {
+    shouldTriggerG4h = lowerContent.startsWith('g4h');
+  }
+
+  if (shouldTriggerG4h) {
+    if (lowerContent.trim() === 'g4h' || lowerContent.trim() === 'g4h help') {
+      getG4hHelp(callback, from, groupid);
+    }
+    else if (lowerContent.trim() === 'g4h 词条' ||
+            lowerContent.trim() === 'g4h 内置' ||
+            lowerContent.trim() === 'g4h 内置词条' ||
+            lowerContent.trim() === 'g4h词条' ||
+            lowerContent.trim() === 'g4h内置' ||
+            lowerContent.trim() === 'g4h内置词条') {
+      getG4hPresets(callback);
+    }
+    else {
+      g4hReply(content, from, name, groupid, callback, groupName, nickname, 'group', port, msgObjSource);
+    }
+    return;
+  }
 
   // gpi (GPT-Image-2) 功能检测
   let shouldTriggerGpi = false;
