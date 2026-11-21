@@ -355,7 +355,7 @@ function saveResponseToImageFile(res, imageUrl, dir, baseName) {
   });
 }
 
-async function downloadImage(imageUrl, imageId) {
+async function downloadImage(imageUrl, imageId, timeout = 30000) {
   const dir = path.join(IMAGE_DATA, 'gptImage2');
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -368,7 +368,7 @@ async function downloadImage(imageUrl, imageId) {
         const redirectUrl = res.headers.location;
         res.resume();
         if (!redirectUrl) return reject(new Error('重定向失败，无重定向地址'));
-        return downloadImage(redirectUrl, imageId).then(resolve).catch(reject);
+        return downloadImage(redirectUrl, imageId, timeout).then(resolve).catch(reject);
       }
 
       if (res.statusCode !== 200) {
@@ -382,9 +382,9 @@ async function downloadImage(imageUrl, imageId) {
     });
 
     req.on('error', (error) => reject(new Error(`下载请求失败: ${error.message}`)));
-    req.setTimeout(30000, () => {
+    req.setTimeout(timeout, () => {
       req.destroy();
-      reject(new Error('下载超时（30秒）'));
+      reject(new Error(`下载超时（${Math.round(timeout / 1000)}秒）`));
     });
   });
 }
@@ -622,13 +622,18 @@ async function callGPTImage2API(prompt, urls = null, imageOptions = {}) {
     throw new Error(createResponse.msg || 'GPT-Image-2.6 Sunburst 提交任务失败');
   }
 
-  const detailResponse = await getAsyncTaskDetail(createResponse.data.id);
+  const longWait = String(imageOptions.resolution || '').toUpperCase() === '4K'
+    || String(imageOptions.outputFormat || '').toLowerCase() === 'gif';
+  const maxRetries = longWait ? 200 : 60;
+  if (longWait) console.log('[GPI] GIF 或 4K，结果等待延长到约 10 分钟');
+
+  const detailResponse = await getAsyncTaskDetail(createResponse.data.id, 3000, maxRetries);
   const imageUrls = extractImageUrlsFromAsyncResponse(detailResponse);
   if (!imageUrls || imageUrls.length === 0) {
     throw new Error('任务已完成，但未找到可下载的图片URL');
   }
 
-  const localPath = await downloadImage(imageUrls[0], createResponse.data.id);
+  const localPath = await downloadImage(imageUrls[0], createResponse.data.id, longWait ? 120000 : 30000);
   return `[CQ:image,file=${localPath}]`;
 }
 
