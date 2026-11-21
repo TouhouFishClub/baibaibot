@@ -2234,6 +2234,32 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     return;
   }
 
+  // nb2 (Nano Banana 2.1) 必须先于 nb，避免被 nb 吃掉
+  let shouldTriggerNb2 = false;
+  if (isReply) {
+    shouldTriggerNb2 = lowerContent.includes('nb2');
+  } else {
+    shouldTriggerNb2 = lowerContent.startsWith('nb2');
+  }
+
+  if (shouldTriggerNb2) {
+    if (lowerContent.trim() === 'nb2' || lowerContent.trim() === 'nb2 help') {
+      getNanoBananaHelp(callback, from, groupid);
+    }
+    else if (lowerContent.trim() === 'nb2 词条' ||
+           lowerContent.trim() === 'nb2 内置' ||
+           lowerContent.trim() === 'nb2 内置词条' ||
+           lowerContent.trim() === 'nb2词条' ||
+           lowerContent.trim() === 'nb2内置' ||
+           lowerContent.trim() === 'nb2内置词条') {
+      getNanoBananaPresets(callback);
+    }
+    else {
+      nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, 'group', port, msgObjSource, false, 'nb2');
+    }
+    return;
+  }
+
   // banana 功能检测（支持 banana 和 nb 两个触发词）
   let shouldTriggerBanana = false;
   if (isReply) {

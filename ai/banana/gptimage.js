@@ -386,21 +386,27 @@ function extractImageUrlsFromMessage(messageDetail) {
   return urls.length > 0 ? urls : null;
 }
 
-async function callGPTImage2API(prompt, urls = null, size = 'auto') {
+async function callGPTImage2API(prompt, urls = null) {
   if (!API_KEY) {
     throw new Error('错误：未配置API密钥，请在ai/banana/.secret.json中添加配置');
   }
 
-  const body = { prompt, size };
+  // GPT-Image-2，保留以便切回
+  // const body = { prompt, size: 'auto' };
+  // if (urls && Array.isArray(urls) && urls.length > 0) body.urls = urls;
+  // path: '/api/async/image_gpt'
+
+  // GPT-Image-2.6：urls 用英文逗号拼接，比例字段是像素尺寸 aspectRatio
+  const body = { prompt };
   if (urls && Array.isArray(urls) && urls.length > 0) {
-    body.urls = urls;
+    body.urls = urls.join(',');
   }
 
   const postData = JSON.stringify(body);
   const createOptions = {
     hostname: 'api.wuyinkeji.com',
     port: 443,
-    path: '/api/async/image_gpt',
+    path: '/api/async/image_gpt_2.6',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -411,7 +417,7 @@ async function callGPTImage2API(prompt, urls = null, size = 'auto') {
 
   const createResponse = await requestJson(createOptions, postData, 15000);
   if (!(createResponse.code === 200 && createResponse.data && createResponse.data.id)) {
-    throw new Error(createResponse.msg || 'GPT-Image-2 提交任务失败');
+    throw new Error(createResponse.msg || 'GPT-Image-2.6 提交任务失败');
   }
 
   const detailResponse = await getAsyncTaskDetail(createResponse.data.id);
@@ -462,7 +468,7 @@ async function gptImageReply(content, from, name, groupid, callback, groupName, 
     context._tempImagePaths = allTempPaths;
   }
 
-  let statusMessage = '🎨 正在使用 GPT-Image-2';
+  let statusMessage = '🎨 正在使用 GPT-Image-2.6';
   if (presetResult.isPreset) {
     statusMessage += `[${presetResult.presetName}]`;
   }
@@ -475,7 +481,7 @@ async function gptImageReply(content, from, name, groupid, callback, groupName, 
   callback(statusMessage);
 
   try {
-    const result = await callGPTImage2API(finalPrompt, finalImgUrl, 'auto');
+    const result = await callGPTImage2API(finalPrompt, finalImgUrl);
     callback(result);
   } catch (error) {
     callback(`图片生成失败: ${error.message}`);
@@ -494,7 +500,7 @@ function getGptImagePresets(callback) {
   }
 
   const presetKeys = Object.keys(PRESETS_CONFIG);
-  let message = `🎨 GPT-Image-2 内置词条列表\n`;
+  let message = `🎨 GPT-Image-2.6 内置词条列表\n`;
   message += `━━━━━━━━━━━━━━━━━━\n`;
   message += `共 ${presetKeys.length} 个预置效果\n\n`;
   message += presetKeys.join(' | ');
@@ -507,7 +513,7 @@ function getGptImagePresets(callback) {
 }
 
 function getGptImageHelp(callback, from = null, groupid = null) {
-  let helpText = `🖼️ GPT-Image-2 图片生成帮助
+  let helpText = `🖼️ GPT-Image-2.6 图片生成帮助
 
 用法（支持 gpi 指令）：
 gpi [提示词] - 根据提示词生成图片

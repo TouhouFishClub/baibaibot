@@ -46,7 +46,14 @@ try {
 }
 
 const API_URL = 'https://api.wuyinkeji.com/api/img/nanoBanana';
-const API_URL_PRO = 'https://api.wuyinkeji.com/api/img/nanoBanana-pro';
+// 旧 Pro 接口，速创已换成 /api/async/image_nanoBanana_pro，主机仍是 wuyinkeji
+// const API_URL_PRO = 'https://api.wuyinkeji.com/api/img/nanoBanana-pro';
+const API_URL_PRO = 'https://api.wuyinkeji.com/api/async/image_nanoBanana_pro';
+const API_URL_NB2 = 'https://api.wuyinkeji.com/api/async/NanoBanana2.1';
+
+const IMAGE_SIZES = ['1K', '2K', '4K'];
+const NBP_RATIOS = ['auto', '1:1', '16:9', '9:16', '4:3', '3:4', '3:2', '2:3', '5:4', '4:5', '21:9'];
+const NB2_RATIOS = NBP_RATIOS.concat(['1:4', '1:8', '4:1', '8:1']);
 
 /**
  * 调用NanoBanana API生成图片（Promise版本）
@@ -55,14 +62,95 @@ const API_URL_PRO = 'https://api.wuyinkeji.com/api/img/nanoBanana-pro';
  * @param {boolean} isPro - 是否使用Pro版本（默认false）
  * @returns {Promise<string>} 返回Promise，resolve时传递图片路径
  */
-async function callNanoBananaAPI(prompt, imgUrl, isPro = false) {
+function normalizeImageSize(raw) {
+  if (!raw) return null;
+  const value = String(raw).toUpperCase();
+  if (!IMAGE_SIZES.includes(value)) {
+    return { error: `不支持的尺寸 ${raw}，可选 ${IMAGE_SIZES.join(' ')}` };
+  }
+  return { value };
+}
+
+function normalizeAspectRatio(raw, allowed) {
+  if (!raw) return null;
+  const value = String(raw).replace(/：/g, ':').toLowerCase();
+  if (!allowed.includes(value)) {
+    return { error: `不支持的比例 ${raw}，可选 ${allowed.join(' ')}` };
+  }
+  return { value };
+}
+
+function takeImageFlags(input, allowedRatios) {
+  const tokens = input.split(/\s+/).filter(Boolean);
+  const kept = [];
+  let size = null;
+  let aspectRatio = null;
+
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i].toLowerCase();
+    if (token === '--size' || token === '-s') {
+      size = tokens[++i];
+      if (!size) return { error: '请在 --size/-s 后面写尺寸，例如 4k' };
+      continue;
+    }
+    if (token === '--ratio' || token === '-r') {
+      aspectRatio = tokens[++i];
+      if (!aspectRatio) return { error: '请在 --ratio/-r 后面写比例，例如 5:4' };
+      continue;
+    }
+    kept.push(tokens[i]);
+  }
+
+  const sizeResult = normalizeImageSize(size);
+  if (sizeResult && sizeResult.error) return sizeResult;
+  const ratioResult = normalizeAspectRatio(aspectRatio, allowedRatios);
+  if (ratioResult && ratioResult.error) return ratioResult;
+
+  return {
+    text: kept.join(' ').trim(),
+    size: sizeResult ? sizeResult.value : null,
+    aspectRatio: ratioResult ? ratioResult.value : null
+  };
+}
+
+function findGeneratedImageUrl(response) {
+  if (response && response.data && typeof response.data.image_url === 'string') {
+    return response.data.image_url;
+  }
+
+  const found = [];
+  const walk = (obj) => {
+    if (!obj) return;
+    if (typeof obj === 'string' && (obj.startsWith('http://') || obj.startsWith('https://'))) {
+      found.push(obj);
+      return;
+    }
+    if (Array.isArray(obj)) {
+      obj.forEach(walk);
+      return;
+    }
+    if (typeof obj === 'object') {
+      Object.keys(obj).forEach((key) => walk(obj[key]));
+    }
+  };
+  walk(response);
+
+  const imageExtRegex = /\.(png|jpg|jpeg|webp|gif|bmp|avif)(\?|$)/i;
+  return found.find((url) => imageExtRegex.test(url) || url.includes('image')) || found[0] || null;
+}
+
+async function callNanoBananaAPI(prompt, imgUrl, isPro = false, options = {}) {
   if (!API_KEY) {
     throw new Error('错误：未配置NanoBanana API密钥，请在ai/banana/.secret.json中添加配置');
   }
 
-  const apiPath = isPro ? '/api/img/nanoBanana-pro' : '/api/img/nanoBanana';
-  const modelName = isPro ? 'nano-banana-pro' : 'nano-banana';
-  const versionText = isPro ? 'Pro' : '标准';
+  const mode = options.mode || (isPro ? 'pro' : 'standard');
+  // 旧 Pro 路径：/api/img/nanoBanana-pro，结果走 /api/img/drawDetail
+  const apiPath = mode === 'nb2'
+    ? '/api/async/NanoBanana2.1'
+    : (mode === 'pro' ? '/api/async/image_nanoBanana_pro' : '/api/img/nanoBanana');
+  const modelName = 'nano-banana';
+  const versionText = mode === 'nb2' ? '2.1' : (mode === 'pro' ? 'Pro' : '标准');
 
   // 调试日志：打印即将发送的参数
   console.log(`========== 准备调用NanoBanana API (${versionText}版) ==========`);
@@ -79,13 +167,20 @@ async function callNanoBananaAPI(prompt, imgUrl, isPro = false) {
     console.log('完整URL:', imgUrl);
   }
 
-  // 构建请求体
-  // 注意：Pro版本不需要model参数，标准版需要model参数
-  const requestBody = isPro ? { prompt: prompt } : { model: modelName, prompt: prompt };
-  
-  // 只在imgUrl有效时才添加img_url字段
-  if (imgUrl) {
-    requestBody.img_url = imgUrl;
+  // 标准版仍走旧接口。Pro / nb2 走异步接口，主机不变。
+  const requestBody = mode === 'standard' ? { model: modelName, prompt: prompt } : { prompt: prompt };
+  const urlList = imgUrl ? (Array.isArray(imgUrl) ? imgUrl : [imgUrl]) : null;
+
+  if (mode === 'standard') {
+    if (urlList) requestBody.img_url = urlList;
+  } else if (mode === 'nb2') {
+    if (options.size) requestBody.imageSize = options.size;
+    if (options.aspectRatio) requestBody.aspectRatio = options.aspectRatio;
+    if (urlList) requestBody.urls = urlList.join(',');
+  } else {
+    if (options.size) requestBody.size = options.size;
+    if (options.aspectRatio) requestBody.aspectRatio = options.aspectRatio;
+    if (urlList) requestBody.urls = urlList;
   }
   
   const postData = JSON.stringify(requestBody);
@@ -94,7 +189,7 @@ async function callNanoBananaAPI(prompt, imgUrl, isPro = false) {
   console.log('JSON对象:', JSON.stringify(requestBody, null, 2).substring(0, 500));
   console.log('========================================');
 
-  const options = {
+  const requestOptions = {
     hostname: 'api.wuyinkeji.com',
     port: 443,
     path: apiPath,
@@ -107,7 +202,7 @@ async function callNanoBananaAPI(prompt, imgUrl, isPro = false) {
   };
 
   return new Promise((resolve, reject) => {
-    const req = https.request(options, (res) => {
+    const req = https.request(requestOptions, (res) => {
       let data = '';
 
       res.on('data', (chunk) => {
@@ -123,7 +218,9 @@ async function callNanoBananaAPI(prompt, imgUrl, isPro = false) {
             
             // 使用图片详情查询接口获取真正的图片URL
             try {
-              const imageUrl = await getImageDetail(response.data.id, isPro);
+              const imageUrl = mode === 'standard'
+                ? await getImageDetail(response.data.id, false)
+                : await getAsyncGeneratedImageUrl(response.data.id, mode);
               console.log(`获取到图片URL: ${imageUrl}`);
               
               // 下载图片到本地
@@ -262,6 +359,58 @@ async function getImageDetail(imageId, isPro = false) {
       // 否则继续重试（仅针对网络错误等临时性错误）
       console.error('图片详情请求失败，重试中:', error.message);
     }
+  }
+
+  throw new Error('获取图片详情超时，已达到最大重试次数');
+}
+
+async function getAsyncGeneratedImageUrl(taskId, mode) {
+  if (!API_KEY) throw new Error('未配置API密钥');
+
+  const pollInterval = 5000;
+  const maxRetries = mode === 'pro' ? 96 : 60;
+  const options = {
+    hostname: 'api.wuyinkeji.com',
+    port: 443,
+    path: `/api/async/detail?id=${encodeURIComponent(taskId)}`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': API_KEY
+    }
+  };
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    const response = await new Promise((resolve, reject) => {
+      const req = https.request(options, (res) => {
+        let data = '';
+        res.on('data', (chunk) => { data += chunk; });
+        res.on('end', () => {
+          try { resolve(JSON.parse(data)); }
+          catch (error) { reject(new Error(`解析响应失败: ${error.message}`)); }
+        });
+      });
+      req.on('error', (error) => reject(new Error(`网络请求失败: ${error.message}`)));
+      req.setTimeout(10000, () => {
+        req.destroy();
+        reject(new Error('请求超时'));
+      });
+      req.end();
+    });
+
+    const status = response && response.data ? Number(response.data.status) : NaN;
+    if (response.code !== 200) throw new Error(response.msg || '查询任务结果失败');
+    if (status === 2) {
+      const imageUrl = findGeneratedImageUrl(response);
+      if (!imageUrl) throw new Error('任务已完成，但未找到可下载的图片URL');
+      return imageUrl;
+    }
+    if (status === 3) {
+      throw new Error(response.data.fail_reason || response.data.message || response.msg || '图片生成失败');
+    }
+
+    console.log(`异步任务处理中，状态: ${status}，等待${pollInterval / 1000}秒 (${attempt + 1}/${maxRetries})`);
+    await new Promise((resolve) => setTimeout(resolve, pollInterval));
   }
 
   throw new Error('获取图片详情超时，已达到最大重试次数');
@@ -423,7 +572,8 @@ function applyPresetPrompt(userPrompt) {
  * @param {boolean} isPro - 是否是Pro版本（用于识别nbp）
  * @returns {Object} 解析结果 {prompt, imgUrl, replyMessageId}
  */
-function parseUserInput(content, isPro = false) {
+function parseUserInput(content, isPro = false, variant = null) {
+  const mode = variant === 'nb2' ? 'nb2' : (isPro ? 'pro' : 'standard');
   let input = content;
   let replyMessageId = null;
 
@@ -435,28 +585,19 @@ function parseUserInput(content, isPro = false) {
     replyMessageId = replyMatch[1];
     console.log(`检测到回复消息，消息ID: ${replyMessageId}`);
     
-    // 在回复模式下，找到 banana、nbp 或 nb 关键词的位置
     const lowerContent = content.toLowerCase();
-    const bananaIndex = lowerContent.indexOf('banana');
-    const nbpIndex = lowerContent.indexOf('nbp');
-    const nbIndex = lowerContent.indexOf('nb');
-    
-    // 使用最早出现的关键词位置
+    const keyword = mode === 'nb2' ? 'nb2' : (mode === 'pro' ? 'nbp' : null);
     let keywordIndex = -1;
-    const indices = [];
-    if (bananaIndex !== -1) indices.push(bananaIndex);
-    if (nbpIndex !== -1) indices.push(nbpIndex);
-    if (nbIndex !== -1) indices.push(nbIndex);
-    
-    if (indices.length > 0) {
-      keywordIndex = Math.min(...indices);
+    if (keyword) {
+      keywordIndex = lowerContent.indexOf(keyword);
+    } else {
+      const indices = ['banana', 'nb'].map((item) => lowerContent.indexOf(item)).filter((index) => index !== -1);
+      if (indices.length > 0) keywordIndex = Math.min(...indices);
     }
     
     if (keywordIndex !== -1) {
-      // 只保留关键词及其后面的内容，忽略前面所有内容（包括 CQ码、@等）
       input = content.substring(keywordIndex);
     } else {
-      // 如果没有找到关键词（理论上不应该发生），保留原有逻辑
       input = content
         .replace(replyRegex, '')
         .replace(/\[CQ:at[^\]]*\]/g, '')
@@ -464,11 +605,22 @@ function parseUserInput(content, isPro = false) {
     }
   }
 
-  // 移除"banana"、"nbp"或"nb"前缀（注意顺序：先匹配长的）
-  if (isPro) {
+  if (mode === 'nb2') {
+    input = input.replace(/^nb2\s*/i, '').trim();
+  } else if (mode === 'pro') {
     input = input.replace(/^(banana|nbp)\s*/i, '').trim();
   } else {
     input = input.replace(/^(banana|nb)\s*/i, '').trim();
+  }
+
+  let size = null;
+  let aspectRatio = null;
+  if (mode === 'pro' || mode === 'nb2') {
+    const flagged = takeImageFlags(input, mode === 'nb2' ? NB2_RATIOS : NBP_RATIOS);
+    if (flagged.error) return { error: flagged.error };
+    input = flagged.text;
+    size = flagged.size;
+    aspectRatio = flagged.aspectRatio;
   }
 
   // 调试日志（可选）
@@ -530,7 +682,9 @@ function parseUserInput(content, isPro = false) {
   return {
     prompt: prompt,
     imgUrl: imgUrl,
-    replyMessageId: replyMessageId
+    replyMessageId: replyMessageId,
+    size: size,
+    aspectRatio: aspectRatio
   };
 }
 
@@ -893,8 +1047,9 @@ function checkPermission(from, groupid) {
  * @param {Object} context - 消息上下文（可选）
  * @param {boolean} isPro - 是否使用Pro版本（可选，默认false）
  */
-async function nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, message_type, port, context, isPro = false) {
-  const versionText = isPro ? 'Pro' : '标准';
+async function nanoBananaReply(content, from, name, groupid, callback, groupName, nickname, message_type, port, context, isPro = false, variant = null) {
+  const mode = variant === 'nb2' ? 'nb2' : (isPro ? 'pro' : 'standard');
+  const versionText = mode === 'nb2' ? '2.1' : (mode === 'pro' ? 'Pro' : '标准');
   console.log(`NanoBanana请求 (${versionText}版) - 用户: ${name}(${from}), 群组: ${groupid}, 内容: ${content}`);
   
   // 检查权限（无权限时静默返回，不回复提示）
@@ -903,7 +1058,7 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
     return;
   }
   
-  const parseResult = parseUserInput(content, isPro);
+  const parseResult = parseUserInput(content, isPro, variant);
   
   if (parseResult.error) {
     callback(parseResult.error);
@@ -1007,7 +1162,10 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
   }
 
   // 显示处理中的消息
-  let statusMessage = isPro ? '🎨 正在使用NanoBanana Pro' : '🎨 正在使用NanoBanana';
+  let statusMessage = mode === 'nb2' ? '🎨 正在使用NanoBanana 2.1' : (mode === 'pro' ? '🎨 正在使用NanoBanana Pro' : '🎨 正在使用NanoBanana');
+  if (parseResult.size || parseResult.aspectRatio) {
+    statusMessage += ` ${[parseResult.size, parseResult.aspectRatio].filter(Boolean).join(' ')}`;
+  }
   if (presetResult.isPreset) {
     statusMessage += `[${presetResult.presetName}]`;
   }
@@ -1021,7 +1179,7 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
 
   // 调试日志：确认最终参数
   console.log('========== 即将调用API ==========');
-  console.log('版本:', isPro ? 'Pro' : '标准');
+  console.log('版本:', versionText);
   console.log('最终Prompt:', finalPrompt.substring(0, 200) + (finalPrompt.length > 200 ? '...' : ''));
   console.log('最终Image URL:', finalImgUrl ? (Array.isArray(finalImgUrl) ? `数组(${finalImgUrl.length}个)` : '单个URL') : '无');
   if (finalImgUrl) {
@@ -1031,7 +1189,11 @@ async function nanoBananaReply(content, from, name, groupid, callback, groupName
 
   // 调用API生成图片（使用 Promise 版本，使用最终的prompt）
   try {
-    const result = await callNanoBananaAPI(finalPrompt, finalImgUrl, isPro);
+    const result = await callNanoBananaAPI(finalPrompt, finalImgUrl, isPro, {
+      mode: mode,
+      size: parseResult.size,
+      aspectRatio: parseResult.aspectRatio
+    });
     callback(result);
   } catch (error) {
     console.error('NanoBanana生成失败:', error);
@@ -1079,9 +1241,9 @@ function getNanoBananaPresets(callback) {
   
   message += `\n\n━━━━━━━━━━━━━━━━━━\n`;
   message += `使用方法：\n`;
-  message += `回复图片 + banana/nb/nbp [词条名]\n`;
-  message += `例如：banana 手办化 或 nb 手办化 或 nbp 手办化\n`;
-  message += `注：nbp为Pro增强版\n\n`;
+  message += `回复图片 + banana/nb/nb2/nbp [词条名]\n`;
+  message += `例如：nb2 手办化 或 nbp -s 4k -r 5:4 手办化\n`;
+  message += `注：nbp为Pro，nb2为2.1\n\n`;
   message += `查看帮助：banana help 或 nb help 或 nbp help`;
   
   callback(message);
@@ -1096,13 +1258,18 @@ function getNanoBananaPresets(callback) {
 function getNanoBananaHelp(callback, from = null, groupid = null) {
   let helpText = `🍌 NanoBanana AI图片生成帮助
 
-用法（支持 banana / nb / nbp 指令）：
-banana/nb/nbp [提示词] - 根据提示词生成图片
-banana/nb/nbp [提示词] [图片URL] - 基于参考图片和提示词生成图片
-banana/nb/nbp [提示词] [发送图片] - 基于发送的图片和提示词生成图片
-回复图片消息 + banana/nb/nbp [提示词] - 基于回复的图片生成新图片
+用法（支持 banana / nb / nb2 / nbp 指令）：
+banana/nb/nb2/nbp [提示词] - 根据提示词生成图片
+banana/nb/nb2/nbp [提示词] [图片URL] - 基于参考图片和提示词生成图片
+回复图片消息 + banana/nb/nb2/nbp [提示词] - 基于回复的图片生成新图片
 
-注：nbp 为 Pro 增强版，效果更好
+nbp / nb2 可指定尺寸和比例：
+nbp --size 4k --ratio 5:4 [提示词]
+nbp -s 4k -r 5:4 [提示词]
+尺寸：1K 2K 4K，默认 1K
+比例：auto 1:1 16:9 9:16 4:3 3:4 3:2 2:3 5:4 4:5 21:9，nb2 另支持 1:4 1:8 4:1 8:1
+
+注：nbp 为 Pro，nb2 为 Nano Banana 2.1
 
 查看功能：
 banana/nb/nbp 词条 / banana/nb/nbp 内置 / banana/nb/nbp 内置词条 - 查看所有预置效果
