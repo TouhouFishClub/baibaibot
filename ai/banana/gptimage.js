@@ -157,7 +157,7 @@ function parseUserInput(content) {
     return { error: '请提供有效的图片生成提示词' };
   }
 
-  return { prompt, imgUrl, replyMessageId, resolution, ratio };
+  return { prompt, imgUrl, replyMessageId, resolution, ratio, hasGif: contentHasGifImage(content) };
 }
 
 function requestJson(options, requestBody = null, timeout = 10000) {
@@ -271,6 +271,22 @@ function extensionFromContentType(contentType) {
     'image/svg+xml': 'svg'
   };
   return map[type] || null;
+}
+
+function contentHasGifImage(content) {
+  const tags = String(content || '').match(/\[CQ:image[^\]]*\]/gi) || [];
+  if (tags.some((tag) => cqImageTagIsGif(tag))) return true;
+  const urls = String(content || '').match(/https?:\/\/[^\s\]]+/g) || [];
+  return urls.some((url) => extensionFromUrl(url.replace(/&amp;/g, '&')) === 'gif');
+}
+
+function cqImageTagIsGif(tag) {
+  const fileMatch = tag.match(/\bfile=([^,\]]+)/i);
+  const urlMatch = tag.match(/\burl=([^,\]]+)/i);
+  const fileName = fileMatch ? fileMatch[1] : '';
+  const url = urlMatch ? urlMatch[1].replace(/&amp;/g, '&').replace(/&#44;/g, ',') : '';
+  if (/\.gif$/i.test(fileName)) return true;
+  return extensionFromUrl(url) === 'gif';
 }
 
 function extensionFromUrl(imageUrl) {
@@ -500,6 +516,72 @@ function extractImageUrlsFromMessage(messageDetail) {
   return urls.length > 0 ? urls : null;
 }
 
+function messageDetailHasGif(messageDetail) {
+  if (!messageDetail || !messageDetail.message) return false;
+  const message = messageDetail.message;
+  if (Array.isArray(message)) {
+    return message.some((segment) => {
+      if (!segment || segment.type !== 'image' || !segment.data) return false;
+      const fileName = segment.data.file || '';
+      const url = segment.data.url || '';
+      return /\.gif$/i.test(fileName) || extensionFromUrl(url) === 'gif';
+    });
+  }
+  if (typeof message === 'string') return contentHasGifImage(message);
+  return false;
+}
+
+function sniffGif(imageUrl, redirectsLeft = 3) {
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (value) => {
+      if (settled) return;
+      settled = true;
+      resolve(value);
+    };
+    const protocol = imageUrl.startsWith('https:') ? https : http;
+    const req = protocol.get(imageUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0', Range: 'bytes=0-15' }
+    }, (res) => {
+      if ((res.statusCode === 301 || res.statusCode === 302) && res.headers.location && redirectsLeft > 0) {
+        res.resume();
+        sniffGif(res.headers.location, redirectsLeft - 1).then(finish);
+        return;
+      }
+      const contentType = String(res.headers['content-type'] || '').toLowerCase();
+      const chunks = [];
+      const decide = () => {
+        const header = Buffer.concat(chunks);
+        finish(contentType.includes('image/gif') || header.toString('ascii', 0, 4) === 'GIF8');
+      };
+      res.on('data', (chunk) => {
+        chunks.push(chunk);
+        const size = chunks.reduce((total, item) => total + item.length, 0);
+        if (size >= 6) res.destroy();
+      });
+      res.on('end', decide);
+      res.on('close', decide);
+      res.on('error', decide);
+    });
+    req.on('error', () => finish(false));
+    req.setTimeout(8000, () => {
+      req.destroy();
+      finish(false);
+    });
+  });
+}
+
+async function anyImageIsGif(urls) {
+  const list = Array.isArray(urls) ? urls : (urls ? [urls] : []);
+  for (const url of list) {
+    const ext = extensionFromUrl(url);
+    if (ext === 'gif') return true;
+    if (ext) continue;
+    if (await sniffGif(url)) return true;
+  }
+  return false;
+}
+
 async function callGPTImage2API(prompt, urls = null, imageOptions = {}) {
   if (!API_KEY) {
     throw new Error('错误：未配置API密钥，请在ai/banana/.secret.json中添加配置');
@@ -520,6 +602,7 @@ async function callGPTImage2API(prompt, urls = null, imageOptions = {}) {
   }
   if (imageOptions.ratio) body.size = imageOptions.ratio;
   if (imageOptions.resolution) body.resolution = imageOptions.resolution;
+  if (imageOptions.outputFormat) body.output_format = imageOptions.outputFormat;
 
   const postData = JSON.stringify(body);
   const createOptions = {
@@ -569,8 +652,10 @@ async function gptImageReply(content, from, name, groupid, callback, groupName, 
     allTempPaths.push(...result.tempPaths);
   }
 
+  let outputGif = !!parseResult.hasGif;
   if (parseResult.replyMessageId && port) {
     const messageDetail = await getMessageDetail(parseResult.replyMessageId, port);
+    if (messageDetailHasGif(messageDetail)) outputGif = true;
     const replyImageUrls = extractImageUrlsFromMessage(messageDetail);
     if (replyImageUrls && replyImageUrls.length > 0) {
       const result = await processImageUrls(replyImageUrls, from);
@@ -581,6 +666,9 @@ async function gptImageReply(content, from, name, groupid, callback, groupName, 
       callback('❌ 回复的消息中没有图片，无法生成图片。');
       return;
     }
+  }
+  if (!outputGif && finalImgUrl) {
+    outputGif = await anyImageIsGif(finalImgUrl);
   }
 
   if (allTempPaths.length > 0 && context) {
@@ -597,12 +685,17 @@ async function gptImageReply(content, from, name, groupid, callback, groupName, 
   } else {
     statusMessage += '生成图片，请稍候...';
   }
+  if (outputGif) {
+    statusMessage += '（输出 GIF）';
+    console.log('[GPI] 参考图含 GIF，output_format=gif');
+  }
   callback(statusMessage);
 
   try {
     const result = await callGPTImage2API(finalPrompt, finalImgUrl, {
       resolution: parseResult.resolution,
-      ratio: parseResult.ratio
+      ratio: parseResult.ratio,
+      outputFormat: outputGif ? 'gif' : null
     });
     callback(result);
   } catch (error) {
@@ -640,6 +733,7 @@ function getGptImageSizeHelp(callback) {
 --size / -s：${GPI_RESOLUTIONS.join(' ')}，清晰度，不写默认 1K
 --ratio / -r：${GPI_RATIOS.join(' ')}，画面比例，不写默认 1:1
 quality 固定为 max
+参考图里有 GIF 时，output_format 会设为 gif
 写了列表以外的尺寸或比例会忽略
 
 示例：gpi -s 4k -r 4:3 手办化`);
