@@ -54,6 +54,46 @@ function applyPresetPrompt(userPrompt) {
   return { prompt: userPrompt, isPreset: false };
 }
 
+// Sunburst：-s 对应 resolution（1K/2K/4K），-r 对应 size（比例）。对不上的参数丢掉。
+const GPI_RESOLUTIONS = ['1K', '2K', '4K'];
+const GPI_RATIOS = ['1:1', '16:9', '9:16', '4:3', '3:4', '3:2', '2:3', '5:4', '4:5', '21:9', '9:21', '1:3', '3:1', '2:1', '1:2'];
+
+function takeGpiFlags(input) {
+  const tokens = input.split(/\s+/).filter(Boolean);
+  const kept = [];
+  let rawSize = null;
+  let rawRatio = null;
+
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i].toLowerCase();
+    if (token === '--size' || token === '-s') {
+      rawSize = tokens[++i];
+      continue;
+    }
+    if (token === '--ratio' || token === '-r') {
+      rawRatio = tokens[++i];
+      continue;
+    }
+    kept.push(tokens[i]);
+  }
+
+  let resolution = null;
+  if (rawSize) {
+    const normalized = String(rawSize).toUpperCase();
+    if (GPI_RESOLUTIONS.includes(normalized)) resolution = normalized;
+    else console.log(`[GPI] 忽略不支持的尺寸参数: ${rawSize}`);
+  }
+
+  let ratio = null;
+  if (rawRatio) {
+    const normalized = String(rawRatio).replace(/：/g, ':').toLowerCase();
+    if (GPI_RATIOS.includes(normalized)) ratio = normalized;
+    else console.log(`[GPI] 忽略不支持的比例参数: ${rawRatio}`);
+  }
+
+  return { text: kept.join(' ').trim(), resolution, ratio };
+}
+
 function parseUserInput(content) {
   let input = content;
   let replyMessageId = null;
@@ -73,6 +113,10 @@ function parseUserInput(content) {
   }
 
   input = input.replace(/^gpi\s*/i, '').trim();
+  const flagged = takeGpiFlags(input);
+  input = flagged.text;
+  const resolution = flagged.resolution;
+  const ratio = flagged.ratio;
 
   if (!input) {
     return {
@@ -113,7 +157,7 @@ function parseUserInput(content) {
     return { error: '请提供有效的图片生成提示词' };
   }
 
-  return { prompt, imgUrl, replyMessageId };
+  return { prompt, imgUrl, replyMessageId, resolution, ratio };
 }
 
 function requestJson(options, requestBody = null, timeout = 10000) {
@@ -386,27 +430,32 @@ function extractImageUrlsFromMessage(messageDetail) {
   return urls.length > 0 ? urls : null;
 }
 
-async function callGPTImage2API(prompt, urls = null) {
+async function callGPTImage2API(prompt, urls = null, imageOptions = {}) {
   if (!API_KEY) {
     throw new Error('错误：未配置API密钥，请在ai/banana/.secret.json中添加配置');
   }
 
   // GPT-Image-2，保留以便切回
   // const body = { prompt, size: 'auto' };
-  // if (urls && Array.isArray(urls) && urls.length > 0) body.urls = urls;
   // path: '/api/async/image_gpt'
 
-  // GPT-Image-2.6：urls 用英文逗号拼接，比例字段是像素尺寸 aspectRatio
-  const body = { prompt };
+  // GPT-Image-2.6，保留以便切回
+  // path: '/api/async/image_gpt_2.6'
+  // aspectRatio 为像素尺寸，例如 1152*864
+
+  // GPT-Image-2.6 Sunburst：urls 为数组，size 是比例，resolution 是清晰度
+  const body = { prompt, quality: 'max' };
   if (urls && Array.isArray(urls) && urls.length > 0) {
-    body.urls = urls.join(',');
+    body.urls = urls;
   }
+  if (imageOptions.ratio) body.size = imageOptions.ratio;
+  if (imageOptions.resolution) body.resolution = imageOptions.resolution;
 
   const postData = JSON.stringify(body);
   const createOptions = {
     hostname: 'api.wuyinkeji.com',
     port: 443,
-    path: '/api/async/image_gpt_2.6',
+    path: '/api/async/image_gpt_2.6_sunburst',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -417,7 +466,7 @@ async function callGPTImage2API(prompt, urls = null) {
 
   const createResponse = await requestJson(createOptions, postData, 15000);
   if (!(createResponse.code === 200 && createResponse.data && createResponse.data.id)) {
-    throw new Error(createResponse.msg || 'GPT-Image-2.6 提交任务失败');
+    throw new Error(createResponse.msg || 'GPT-Image-2.6 Sunburst 提交任务失败');
   }
 
   const detailResponse = await getAsyncTaskDetail(createResponse.data.id);
@@ -468,7 +517,7 @@ async function gptImageReply(content, from, name, groupid, callback, groupName, 
     context._tempImagePaths = allTempPaths;
   }
 
-  let statusMessage = '🎨 正在使用 GPT-Image-2.6';
+  let statusMessage = '🎨 正在使用 GPT-Image-2.6 Sunburst';
   if (presetResult.isPreset) {
     statusMessage += `[${presetResult.presetName}]`;
   }
@@ -481,7 +530,10 @@ async function gptImageReply(content, from, name, groupid, callback, groupName, 
   callback(statusMessage);
 
   try {
-    const result = await callGPTImage2API(finalPrompt, finalImgUrl);
+    const result = await callGPTImage2API(finalPrompt, finalImgUrl, {
+      resolution: parseResult.resolution,
+      ratio: parseResult.ratio
+    });
     callback(result);
   } catch (error) {
     callback(`图片生成失败: ${error.message}`);
@@ -500,7 +552,7 @@ function getGptImagePresets(callback) {
   }
 
   const presetKeys = Object.keys(PRESETS_CONFIG);
-  let message = `🎨 GPT-Image-2.6 内置词条列表\n`;
+  let message = `🎨 GPT-Image-2.6 Sunburst 内置词条列表\n`;
   message += `━━━━━━━━━━━━━━━━━━\n`;
   message += `共 ${presetKeys.length} 个预置效果\n\n`;
   message += presetKeys.join(' | ');
@@ -513,7 +565,7 @@ function getGptImagePresets(callback) {
 }
 
 function getGptImageHelp(callback, from = null, groupid = null) {
-  let helpText = `🖼️ GPT-Image-2.6 图片生成帮助
+  let helpText = `🖼️ GPT-Image-2.6 Sunburst 图片生成帮助
 
 用法（支持 gpi 指令）：
 gpi [提示词] - 根据提示词生成图片
