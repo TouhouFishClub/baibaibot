@@ -258,12 +258,89 @@ async function getAsyncTaskDetail(taskId, pollInterval = 3000, maxRetries = 60) 
   throw new Error('查询任务结果超时，已达到最大重试次数');
 }
 
-async function downloadImage(imageUrl, imageId) {
-  const fileName = `gptImage2_${imageId}_${Date.now()}.jpg`;
-  const localPath = path.join(IMAGE_DATA, 'gptImage2', fileName);
-  const relativePath = path.join('send', 'gptImage2', fileName);
+function extensionFromContentType(contentType) {
+  const type = String(contentType || '').split(';')[0].trim().toLowerCase();
+  const map = {
+    'image/jpeg': 'jpg',
+    'image/jpg': 'jpg',
+    'image/png': 'png',
+    'image/gif': 'gif',
+    'image/webp': 'webp',
+    'image/bmp': 'bmp',
+    'image/avif': 'avif',
+    'image/svg+xml': 'svg'
+  };
+  return map[type] || null;
+}
 
-  const dir = path.dirname(localPath);
+function extensionFromUrl(imageUrl) {
+  try {
+    const match = new URL(imageUrl).pathname.match(/\.([a-z0-9]+)$/i);
+    if (!match) return null;
+    const ext = match[1].toLowerCase();
+    if (ext === 'jpeg') return 'jpg';
+    if (['jpg', 'png', 'gif', 'webp', 'bmp', 'avif', 'svg'].includes(ext)) return ext;
+  } catch (error) {}
+  return null;
+}
+
+function detectImageExtension(header, contentType, imageUrl) {
+  if (header && header.length >= 3 && header[0] === 0xFF && header[1] === 0xD8 && header[2] === 0xFF) return 'jpg';
+  if (header && header.length >= 4 && header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4E && header[3] === 0x47) return 'png';
+  if (header && header.length >= 4 && header.toString('ascii', 0, 4) === 'GIF8') return 'gif';
+  if (header && header.length >= 12 && header.toString('ascii', 0, 4) === 'RIFF' && header.toString('ascii', 8, 12) === 'WEBP') return 'webp';
+  if (header && header.length >= 2 && header[0] === 0x42 && header[1] === 0x4D) return 'bmp';
+  if (header && header.length >= 12 && header.toString('ascii', 4, 8) === 'ftyp') {
+    const brand = header.toString('ascii', 8, 12);
+    if (brand === 'avif' || brand === 'avis') return 'avif';
+  }
+  if (header && header.length > 0) {
+    const text = header.toString('utf8').trim().toLowerCase();
+    if (text.startsWith('<svg') || text.startsWith('<?xml') || text.includes('<svg')) return 'svg';
+  }
+  return extensionFromContentType(contentType) || extensionFromUrl(imageUrl) || 'jpg';
+}
+
+function readFileHeader(filePath) {
+  const fd = fs.openSync(filePath, 'r');
+  try {
+    const header = Buffer.alloc(64);
+    const bytesRead = fs.readSync(fd, header, 0, 64, 0);
+    return header.subarray(0, bytesRead);
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
+function saveResponseToImageFile(res, imageUrl, dir, baseName) {
+  return new Promise((resolve, reject) => {
+    const tempPath = path.join(dir, `${baseName}.download`);
+    const fileStream = fs.createWriteStream(tempPath);
+    res.pipe(fileStream);
+    fileStream.on('finish', () => {
+      fileStream.close((closeError) => {
+        if (closeError) return reject(new Error(`文件写入失败: ${closeError.message}`));
+        const stats = fs.existsSync(tempPath) ? fs.statSync(tempPath) : null;
+        if (!stats || stats.size <= 0) {
+          if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
+          return reject(new Error('下载的文件为空'));
+        }
+        const ext = detectImageExtension(readFileHeader(tempPath), res.headers['content-type'], imageUrl);
+        const fileName = `${baseName}.${ext}`;
+        const localPath = path.join(dir, fileName);
+        fs.rename(tempPath, localPath, (renameError) => {
+          if (renameError) return reject(new Error(`文件写入失败: ${renameError.message}`));
+          console.log(`[GPI] 下载图片格式: ${ext}`);
+          resolve({ fileName, localPath });
+        });
+      });
+    });
+    fileStream.on('error', (error) => reject(new Error(`文件写入失败: ${error.message}`)));
+  });
+}
+
+async function downloadImage(imageUrl, imageId) {
+  const dir = path.join(IMAGE_DATA, 'gptImage2');
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -273,23 +350,19 @@ async function downloadImage(imageUrl, imageId) {
     const req = protocol.get(imageUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
       if (res.statusCode === 302 || res.statusCode === 301) {
         const redirectUrl = res.headers.location;
+        res.resume();
         if (!redirectUrl) return reject(new Error('重定向失败，无重定向地址'));
         return downloadImage(redirectUrl, imageId).then(resolve).catch(reject);
       }
 
       if (res.statusCode !== 200) {
+        res.resume();
         return reject(new Error(`下载失败，HTTP状态码: ${res.statusCode}`));
       }
 
-      const fileStream = fs.createWriteStream(localPath);
-      res.pipe(fileStream);
-      fileStream.on('finish', () => {
-        fileStream.close();
-        const stats = fs.existsSync(localPath) ? fs.statSync(localPath) : null;
-        if (!stats || stats.size <= 0) return reject(new Error('下载的文件为空'));
-        resolve(relativePath);
-      });
-      fileStream.on('error', (error) => reject(new Error(`文件写入失败: ${error.message}`)));
+      saveResponseToImageFile(res, imageUrl, dir, `gptImage2_${imageId}_${Date.now()}`)
+        .then((saved) => resolve(path.join('send', 'gptImage2', saved.fileName)))
+        .catch(reject);
     });
 
     req.on('error', (error) => reject(new Error(`下载请求失败: ${error.message}`)));
@@ -315,31 +388,28 @@ async function downloadAndHostPrivateImage(privateUrl, userId = 'unknown') {
   const tempDir = path.join(__dirname, '../../public/temp_banana_images');
   if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
 
-  const fileName = `temp_${userId}_${Date.now()}_${Math.random().toString(36).substring(2, 10)}.jpg`;
-  const localPath = path.join(tempDir, fileName);
+  const baseName = `temp_${userId}_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
 
   return new Promise((resolve, reject) => {
     const protocol = privateUrl.startsWith('https:') ? https : http;
     const req = protocol.get(privateUrl, (res) => {
       if (res.statusCode === 302 || res.statusCode === 301) {
         const redirectUrl = res.headers.location;
+        res.resume();
         if (!redirectUrl) return reject(new Error('重定向失败，无重定向地址'));
         return downloadAndHostPrivateImage(redirectUrl, userId).then(resolve).catch(reject);
       }
-      if (res.statusCode !== 200) return reject(new Error(`下载失败，HTTP状态码: ${res.statusCode}`));
+      if (res.statusCode !== 200) {
+        res.resume();
+        return reject(new Error(`下载失败，HTTP状态码: ${res.statusCode}`));
+      }
 
-      const fileStream = fs.createWriteStream(localPath);
-      res.pipe(fileStream);
-      fileStream.on('finish', () => {
-        fileStream.close();
-        const stats = fs.existsSync(localPath) ? fs.statSync(localPath) : null;
-        if (!stats || stats.size <= 0) return reject(new Error('下载的文件为空'));
-        resolve({
-          publicUrl: `${PUBLIC_ENDPOINT}/temp_banana_images/${fileName}`,
-          localPath
-        });
-      });
-      fileStream.on('error', (error) => reject(new Error(`文件写入失败: ${error.message}`)));
+      saveResponseToImageFile(res, privateUrl, tempDir, baseName)
+        .then((saved) => resolve({
+          publicUrl: `${PUBLIC_ENDPOINT}/temp_banana_images/${saved.fileName}`,
+          localPath: saved.localPath
+        }))
+        .catch(reject);
     });
 
     req.on('error', (error) => reject(new Error(`下载请求失败: ${error.message}`)));
