@@ -179,8 +179,8 @@ const {mabiWeather} = require('./ai/mabinogi/weather')
 const {tcArticle} = require('./ai/mabinogi/newArticle')
 const {LiveInspect, LiveAnalyzer} = require('./ai/mabinogi/live-inspect')
 const {chujue} = require('./ai/image/generator/chujue/index.js')
-const {nanoBananaReply, getNanoBananaHelp, getNanoBananaPresets} = require('./ai/banana')
-const {gptImageReply, getGptImageHelp, getGptImagePresets} = require('./ai/banana/gptimage')
+const {nanoBananaReply, getNanoBananaHelp, getNanoBananaSizeHelp, getNanoBananaPresets} = require('./ai/banana')
+const {gptImageReply, getGptImageHelp, getGptImageSizeHelp, getGptImagePresets} = require('./ai/banana/gptimage')
 const {nbp2Reply, getNbp2Help, getNbp2Presets} = require('./ai/banana/xiaodoubao')
 const {g4hReply, getG4hHelp, getG4hPresets} = require('./ai/banana/g4h')
 const {doubaoReply, getDoubaoHelp} = require('./ai/doubao')
@@ -2156,8 +2156,13 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
     shouldTriggerGpi = lowerContent.startsWith('gpi');
   }
   
+  const wantsFlagHelp = /(?:^|\s)--help(?:\s|$)/i.test(content);
+
   if (shouldTriggerGpi) {
-    if (lowerContent.trim() === 'gpi' || lowerContent.trim() === 'gpi help') {
+    if (wantsFlagHelp) {
+      getGptImageSizeHelp(callback);
+    }
+    else if (lowerContent.trim() === 'gpi' || lowerContent.trim() === 'gpi help') {
       getGptImageHelp(callback, from, groupid);
     }
     else if (lowerContent.trim() === 'gpi 词条' ||
@@ -2214,8 +2219,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   
   if (shouldTriggerBananaPro) {
+    if (wantsFlagHelp) {
+      getNanoBananaSizeHelp('nbp', callback);
+    }
     // 检查是否是帮助命令
-    if(lowerContent.trim() === 'nbp' || lowerContent.trim() === 'nbp help') {
+    else if(lowerContent.trim() === 'nbp' || lowerContent.trim() === 'nbp help') {
       getNanoBananaHelp(callback, from, groupid);
     } 
     // 检查是否是查看词条命令
@@ -2243,7 +2251,10 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
 
   if (shouldTriggerNb2) {
-    if (lowerContent.trim() === 'nb2' || lowerContent.trim() === 'nb2 help') {
+    if (wantsFlagHelp) {
+      getNanoBananaSizeHelp('nb2', callback);
+    }
+    else if (lowerContent.trim() === 'nb2' || lowerContent.trim() === 'nb2 help') {
       getNanoBananaHelp(callback, from, groupid);
     }
     else if (lowerContent.trim() === 'nb2 词条' ||
@@ -2271,8 +2282,11 @@ function handle_msg_D2(content,from,name,groupid,callback,groupName,nickname,msg
   }
   
   if (shouldTriggerBanana) {
+    if (wantsFlagHelp) {
+      getNanoBananaSizeHelp('nb', callback);
+    }
     // 检查是否是帮助命令（只有 banana 触发帮助，nb 不触发）
-    if(lowerContent.trim() === 'banana' || lowerContent.trim() === 'banana help') {
+    else if(lowerContent.trim() === 'banana' || lowerContent.trim() === 'banana help') {
       getNanoBananaHelp(callback, from, groupid);
     } 
     // 检查是否是查看词条命令

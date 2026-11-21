@@ -1255,6 +1255,36 @@ function getNanoBananaPresets(callback) {
  * @param {string} from - 用户ID（可选，用于权限检查）
  * @param {string} groupid - 群组ID（可选，用于权限检查）
  */
+function getNanoBananaSizeHelp(variant, callback) {
+  const sizes = IMAGE_SIZES.join(' ');
+  if (variant === 'nb2') {
+    callback(`nb2 尺寸和比例
+
+--size / -s：${sizes}，不写默认 1K
+--ratio / -r：${NB2_RATIOS.join(' ')}，不写默认 auto
+
+示例：nb2 -s 4k -r 4:1 手办化`);
+    return;
+  }
+  if (variant === 'nbp') {
+    callback(`nbp 尺寸和比例
+
+--size / -s：${sizes}，不写默认 1K
+--ratio / -r：${NBP_RATIOS.join(' ')}，不写默认 auto
+
+示例：nbp -s 4k -r 5:4 手办化`);
+    return;
+  }
+  callback(`nb 使用标准接口，没有尺寸和比例参数。
+
+指定尺寸请用 nbp 或 nb2：
+--size / -s：${sizes}，不写默认 1K
+nbp --ratio / -r：${NBP_RATIOS.join(' ')}
+nb2 --ratio / -r：${NB2_RATIOS.join(' ')}
+
+示例：nbp -s 4k -r 5:4 手办化`);
+}
+
 function getNanoBananaHelp(callback, from = null, groupid = null) {
   let helpText = `🍌 NanoBanana AI图片生成帮助
 
@@ -1274,6 +1304,7 @@ nbp -s 4k -r 5:4 [提示词]
 查看功能：
 banana/nb/nbp 词条 / banana/nb/nbp 内置 / banana/nb/nbp 内置词条 - 查看所有预置效果
 banana/nb/nbp help / banana/nb/nbp - 查看帮助信息
+nb --help / nb2 --help / nbp --help - 查看尺寸和比例
 
 示例：
 banana 一只可爱的小猫咪
@@ -1344,5 +1375,6 @@ nbp 动漫风格 [发送一张图片]
 module.exports = {
   nanoBananaReply,
   getNanoBananaHelp,
+  getNanoBananaSizeHelp,
   getNanoBananaPresets
 };

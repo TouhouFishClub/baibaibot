@@ -564,6 +564,17 @@ function getGptImagePresets(callback) {
   callback(message);
 }
 
+function getGptImageSizeHelp(callback) {
+  callback(`gpi 尺寸和比例
+
+--size / -s：${GPI_RESOLUTIONS.join(' ')}，清晰度，不写默认 1K
+--ratio / -r：${GPI_RATIOS.join(' ')}，画面比例，不写默认 1:1
+quality 固定为 max
+写了列表以外的尺寸或比例会忽略
+
+示例：gpi -s 4k -r 4:3 手办化`);
+}
+
 function getGptImageHelp(callback, from = null, groupid = null) {
   let helpText = `🖼️ GPT-Image-2.6 Sunburst 图片生成帮助
 
@@ -576,6 +587,7 @@ gpi [提示词] [发送图片] - 基于发送的图片和提示词生成图片
 查看功能：
 gpi 词条 / gpi 内置 / gpi 内置词条 - 查看所有预置效果
 gpi help / gpi - 查看帮助信息
+gpi --help - 查看尺寸和比例
 
 示例：
 gpi 一只可爱的小猫咪
@@ -598,5 +610,6 @@ gpi 动漫风格 [发送一张图片]
 module.exports = {
   gptImageReply,
   getGptImageHelp,
+  getGptImageSizeHelp,
   getGptImagePresets
 };
